@@ -42,12 +42,30 @@ export function isPlaceholderSrc(src: string): boolean {
   return src.includes("PLACEHOLDER");
 }
 
+/**
+ * Exclusive-playback registry (additive for the delicacy A/B pair, 2026-07-19):
+ * starting any player stops the one currently sounding — two stimuli at once
+ * is never a valid state in an instrument. Stopping follows the accepted
+ * pause-restarts policy (position resets; banked heard-time persists). With a
+ * single player on screen (the bias flow) this is a no-op.
+ */
+let activeStop: { stop: () => void } | null = null;
+function claimPlayback(self: { stop: () => void }) {
+  if (activeStop && activeStop !== self) activeStop.stop();
+  activeStop = self;
+}
+function releasePlayback(self: { stop: () => void }) {
+  if (activeStop === self) activeStop = null;
+}
+
 export default function ClipPlayer({
   src,
   index,
   caption,
   onArmed,
   onProgress,
+  label,
+  minListenMs = MIN_LISTEN_MS,
 }: {
   src: string;
   /** Position in the pool — seeds the placeholder triad + the label. */
@@ -58,6 +76,14 @@ export default function ClipPlayer({
   onArmed: () => void;
   /** Reports accumulated heard milliseconds (rate-time dataset capture). */
   onProgress: (heardMs: number) => void;
+  /** Display name; defaults to "Clip {index+1}" (bias). Delicacy passes "Clip 3 — A". */
+  label?: string;
+  /**
+   * Arming threshold override (defaults to the bias 5s). Delicacy passes 8s:
+   * its degradations are time-extended (the pitch ramp peaks at clip END), so
+   * a 5s gate could unlock a pick the user has had no real chance to hear.
+   */
+  minListenMs?: number;
 }) {
   const placeholder = isPlaceholderSrc(src);
   const [playing, setPlaying] = useState(false);
@@ -70,7 +96,7 @@ export default function ClipPlayer({
     placeholder ? PLACEHOLDER_TONE_MS : null,
   );
   const [thresholdMs, setThresholdMs] = useState(
-    placeholder ? PLACEHOLDER_TONE_MS : MIN_LISTEN_MS,
+    placeholder ? PLACEHOLDER_TONE_MS : minListenMs,
   );
   // Refs mirror state for the media-event/rAF callbacks (created once per
   // element) so they never read a stale closure — and so banking heard-time
@@ -84,6 +110,24 @@ export default function ClipPlayer({
   const audioCtx = useRef<AudioContext | null>(null);
   const toneTimer = useRef<ReturnType<typeof setInterval> | null>(null);
   const toneStop = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Stable identity in the exclusive-playback registry; the stop body reads
+  // current refs so it never acts on a stale element.
+  const registryEntry = useRef<{ stop: () => void } | null>(null);
+  if (!registryEntry.current) {
+    registryEntry.current = {
+      stop: () => {
+        if (toneTimer.current) clearInterval(toneTimer.current);
+        if (toneStop.current) clearTimeout(toneStop.current);
+        const el = audioRef.current;
+        if (el) {
+          el.pause();
+          el.currentTime = 0; // accepted policy: stopping restarts the clip
+        }
+        setPositionMs(0);
+        setPlaying(false);
+      },
+    };
+  }
 
   function bank(ms: number) {
     const next = Math.max(heardRef.current, Math.round(ms));
@@ -105,6 +149,7 @@ export default function ClipPlayer({
       if (toneStop.current) clearTimeout(toneStop.current);
       audioRef.current?.pause();
       audioRef.current = null;
+      if (registryEntry.current) releasePlayback(registryEntry.current);
     };
   }, [src]);
 
@@ -136,6 +181,7 @@ export default function ClipPlayer({
 
   function playTone() {
     if (playing) return; // triad is fixed-length; no stop control needed
+    claimPlayback(registryEntry.current!);
     try {
       const ctx = (audioCtx.current ??= new AudioContext());
       const base = 196 * Math.pow(2, index / 6);
@@ -181,7 +227,7 @@ export default function ClipPlayer({
         if (el && Number.isFinite(el.duration) && el.duration > 0) {
           const dur = Math.round(el.duration * 1000);
           setDurationMs(dur);
-          const th = Math.min(MIN_LISTEN_MS, dur);
+          const th = Math.min(minListenMs, dur);
           thresholdRef.current = th;
           setThresholdMs(th);
         }
@@ -201,6 +247,7 @@ export default function ClipPlayer({
           bank(el.duration * 1000);
         }
         setPlaying(false);
+        if (registryEntry.current) releasePlayback(registryEntry.current);
       };
       el.onerror = () => {
         setPlaying(false);
@@ -214,10 +261,12 @@ export default function ClipPlayer({
       el.currentTime = 0;
       setPositionMs(0);
       setPlaying(false);
+      releasePlayback(registryEntry.current!);
       return;
     }
     try {
       setFailed(false);
+      claimPlayback(registryEntry.current!);
       // A finished clip replays from the top (don't rely on the browser's
       // rewind-on-ended behavior — observed inconsistent), and the ring
       // resets with it: it shows playback position, nothing else.
@@ -288,7 +337,7 @@ export default function ClipPlayer({
         <button
           type="button"
           onClick={() => (placeholder ? playTone() : void toggleAudio())}
-          aria-label={playing ? `Stop clip ${index + 1}` : `Play clip ${index + 1}`}
+          aria-label={playing ? `Stop ${label ?? `clip ${index + 1}`}` : `Play ${label ?? `clip ${index + 1}`}`}
           className="absolute inset-1 flex items-center justify-center rounded-full border text-2xl transition active:scale-95"
           style={
             playing
@@ -300,7 +349,7 @@ export default function ClipPlayer({
         </button>
       </div>
       <div>
-        <p className="font-display text-lg font-semibold">Clip {index + 1}</p>
+        <p className="font-display text-lg font-semibold">{label ?? `Clip ${index + 1}`}</p>
         <p className="text-xs text-muted">
           {failed ? "clip failed to load — tap to retry" : caption}
         </p>
