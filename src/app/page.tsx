@@ -3,6 +3,7 @@ import Link from "next/link";
 import FluidField from "@/components/FluidField";
 import Track from "@/components/Track";
 import { worldCup } from "@/content/world-cup";
+import { DELICACY_LIVE } from "@/content/delicacy/items";
 
 /**
  * The taste-gym landing (RT-3c, memo §9.7 RESOLVED 2026-07-11): /bias is the
@@ -87,11 +88,25 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
             <p className="mt-1 font-display text-lg font-semibold">The Prestige Test</p>
             <p className="mt-0.5 text-sm text-muted">Freedom from prejudice — can a label move your score?</p>
           </div>
-          <div className="rounded-2xl border border-dashed border-white/20 p-4">
-            <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">MACHINE 02 · LOCKED</p>
-            <p className="mt-1 font-display text-lg font-semibold">Delicacy Trials</p>
-            <p className="mt-0.5 text-sm text-muted">One clip hides a wrong note. Can your ears actually tell?</p>
-          </div>
+          {DELICACY_LIVE ? (
+            <Link
+              href="/delicacy"
+              className="rounded-2xl border p-4 transition hover:bg-white/[0.05]"
+              style={{ borderColor: "hsl(190 60% 55% / 0.35)", background: "rgba(255,255,255,0.03)" }}
+            >
+              <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: "hsl(190 75% 62%)" }}>
+                MACHINE 02 · OPEN — CALIBRATION PHASE
+              </p>
+              <p className="mt-1 font-display text-lg font-semibold">Delicacy Trials</p>
+              <p className="mt-0.5 text-sm text-muted">One of each pair is quietly damaged. Can your ears actually tell?</p>
+            </Link>
+          ) : (
+            <div className="rounded-2xl border border-dashed border-white/20 p-4">
+              <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">MACHINE 02 · LOCKED</p>
+              <p className="mt-1 font-display text-lg font-semibold">Delicacy Trials</p>
+              <p className="mt-0.5 text-sm text-muted">One clip hides a wrong note. Can your ears actually tell?</p>
+            </div>
+          )}
         </div>
 
         {/* Secondary doors — quiet rows, no bare underline/arrow links

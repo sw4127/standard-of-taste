@@ -25,6 +25,15 @@ export const DELICACY_INSTRUMENT_ID = "delicacy-v1";
 /** 0 = dev placeholder pool. The S6 pool of record starts at 1. */
 export const DELICACY_POOL_VERSION = 0;
 
+/**
+ * THE DOOR (D3 → live per PM ruling 2026-07-19, decision 1a): every surface
+ * that gates on the delicacy tier reads this one flag — homepage machine
+ * card, bias-debrief door, /delicacy robots, sitemap. It flips exactly when
+ * S6 ships the pool of record and bumps the version; until then the tier
+ * stays visible-and-locked and the route stays unlinked + noindex.
+ */
+export const DELICACY_LIVE = DELICACY_POOL_VERSION > 0;
+
 /** One playable trial pair. Extends the engine spec with presentation. */
 export interface DelicacyTrialClip extends DelicacyItemSpec {
   /** Static files under /public — PD/CC audio only (memo §8.2). */

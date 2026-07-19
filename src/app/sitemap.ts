@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { baseUrl } from "@/lib/site";
 import { LEARN_PAGES } from "@/content/learn";
+import { DELICACY_LIVE } from "@/content/delicacy/items";
 
 /**
  * sitemap.xml (2026-07-16 brief §3.B4 — serves C2/N1). Stable, canonical
@@ -18,6 +19,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     page("/", 1, "weekly"),
     page("/bias", 0.9, "weekly"),
+    // The second machine enters the map only when its pool of record is live.
+    ...(DELICACY_LIVE ? [page("/delicacy", 0.9, "weekly")] : []),
     page("/learn", 0.8),
     ...LEARN_PAGES.map((p) => page(`/learn/${p.slug}`, 0.7)),
     page("/music/quiz", 0.4),
