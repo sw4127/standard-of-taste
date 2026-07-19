@@ -54,3 +54,5 @@ next-env.d.ts
 scripts/clip-pipeline/.cache/
 public/audio/preview-shortlist/
 public/audio/bias/dev-test-8s.wav
+# S1 delicacy proof pairs: deterministic re-renders (degrade stage), not the pool of record
+public/audio/delicacy/proof-*

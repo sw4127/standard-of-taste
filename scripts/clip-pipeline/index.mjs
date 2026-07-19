@@ -256,8 +256,10 @@ try {
   else if (stage === "snapshot") await snapshot(args);
   else if (stage === "analyze") analyze(args);
   else if (stage === "render") render(args);
+  else if (stage === "degrade") await (await import("./degrade.mjs")).degrade(args);
   else {
-    console.log("usage: node scripts/clip-pipeline/index.mjs <download|snapshot|analyze|render> [--local <file>] [--start N] [--len N] [--out id]");
+    console.log("usage: node scripts/clip-pipeline/index.mjs <download|snapshot|analyze|render|degrade> [--local <file>] [--start N] [--len N] [--out id]");
+    console.log("       degrade: --id <pairId> --source <biasItemId> --start <sec> --family <pitch-drift|timing-smear|lossy-artifact> --magnitude <1|2|3> --seed <int> [--len <sec>]");
     process.exit(2);
   }
 } catch (e) {
