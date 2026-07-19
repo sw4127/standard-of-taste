@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 import {
   DEGRADATION_FAMILIES,
   DELICACY_CHANCE,
+  DELICACY_CONFIDENCE_LEVELS,
   FLAW_CHANCE,
   computeDelicacyResult,
   decodeDelicacyResponses,
   encodeDelicacyResponses,
+  type DelicacyConfidence,
   type DelicacyItemSpec,
   type DelicacyResponses,
 } from "./delicacy";
@@ -24,9 +26,11 @@ const POOL: DelicacyItemSpec[] = [
 ];
 
 const respond = (
-  entries: Array<[string, "a" | "b", (typeof DEGRADATION_FAMILIES)[number]]>,
+  entries: Array<[string, "a" | "b", (typeof DEGRADATION_FAMILIES)[number], DelicacyConfidence]>,
 ): DelicacyResponses =>
-  Object.fromEntries(entries.map(([id, pickedSide, flawPick]) => [id, { pickedSide, flawPick }]));
+  Object.fromEntries(
+    entries.map(([id, pickedSide, flawPick, confidence]) => [id, { pickedSide, flawPick, confidence }]),
+  );
 
 describe("computeDelicacyResult — worked examples (hand-computed)", () => {
   /**
@@ -35,16 +39,16 @@ describe("computeDelicacyResult — worked examples (hand-computed)", () => {
    * By hand: nCorrect = 6/6 → accuracy 1. All 6 picks correct → flawEligible 6,
    * all flaw picks right → flawAccuracy 1. Each magnitude has exactly 2 trials
    * (d1/d2, d3/d4, d5/d6), each family exactly 2 (pd: d1/d4, ts: d2/d5,
-   * la: d3/d6) — all fully correct.
+   * la: d3/d6) — all fully correct. Confidence varies but must not matter.
    */
   it("perfect run: accuracy 1, flawAccuracy 1, every split fully correct", () => {
     const responses = respond([
-      ["d1", "a", "pitch-drift"],
-      ["d2", "b", "timing-smear"],
-      ["d3", "a", "lossy-artifact"],
-      ["d4", "b", "pitch-drift"],
-      ["d5", "a", "timing-smear"],
-      ["d6", "b", "lossy-artifact"],
+      ["d1", "a", "pitch-drift", 95],
+      ["d2", "b", "timing-smear", 70],
+      ["d3", "a", "lossy-artifact", 50],
+      ["d4", "b", "pitch-drift", 95],
+      ["d5", "a", "timing-smear", 70],
+      ["d6", "b", "lossy-artifact", 50],
     ]);
     const r = computeDelicacyResult("delicacy-v1", POOL, responses);
     expect(r.nTrials).toBe(6);
@@ -70,12 +74,12 @@ describe("computeDelicacyResult — worked examples (hand-computed)", () => {
    */
   it("all-wrong picks: accuracy 0, flaw stats null (not zero)", () => {
     const responses = respond([
-      ["d1", "b", "pitch-drift"],
-      ["d2", "a", "timing-smear"],
-      ["d3", "b", "pitch-drift"],
-      ["d4", "a", "lossy-artifact"],
-      ["d5", "b", "lossy-artifact"],
-      ["d6", "a", "timing-smear"],
+      ["d1", "b", "pitch-drift", 95],
+      ["d2", "a", "timing-smear", 95],
+      ["d3", "b", "pitch-drift", 95],
+      ["d4", "a", "lossy-artifact", 95],
+      ["d5", "b", "lossy-artifact", 95],
+      ["d6", "a", "timing-smear", 95],
     ]);
     const r = computeDelicacyResult("delicacy-v1", POOL, responses);
     expect(r.nCorrect).toBe(0);
@@ -100,12 +104,12 @@ describe("computeDelicacyResult — worked examples (hand-computed)", () => {
    */
   it("mixed run: accuracy 4/6, flawAccuracy 2/4, splits as hand-computed", () => {
     const responses = respond([
-      ["d1", "a", "pitch-drift"],
-      ["d2", "b", "lossy-artifact"],
-      ["d3", "a", "lossy-artifact"],
-      ["d4", "b", "timing-smear"],
-      ["d5", "b", "pitch-drift"],
-      ["d6", "a", "timing-smear"],
+      ["d1", "a", "pitch-drift", 95],
+      ["d2", "b", "lossy-artifact", 70],
+      ["d3", "a", "lossy-artifact", 50],
+      ["d4", "b", "timing-smear", 50],
+      ["d5", "b", "pitch-drift", 70],
+      ["d6", "a", "timing-smear", 95],
     ]);
     const r = computeDelicacyResult("delicacy-v1", POOL, responses);
     expect(r.nCorrect).toBe(4);
@@ -126,17 +130,20 @@ describe("computeDelicacyResult — worked examples (hand-computed)", () => {
 
   it("hash is stable for identical input and differs when any pick changes", () => {
     const responses = respond([
-      ["d1", "a", "pitch-drift"],
-      ["d2", "b", "timing-smear"],
-      ["d3", "a", "lossy-artifact"],
-      ["d4", "b", "pitch-drift"],
-      ["d5", "a", "timing-smear"],
-      ["d6", "b", "lossy-artifact"],
+      ["d1", "a", "pitch-drift", 95],
+      ["d2", "b", "timing-smear", 70],
+      ["d3", "a", "lossy-artifact", 50],
+      ["d4", "b", "pitch-drift", 95],
+      ["d5", "a", "timing-smear", 70],
+      ["d6", "b", "lossy-artifact", 50],
     ]);
     const r1 = computeDelicacyResult("delicacy-v1", POOL, responses);
     const r2 = computeDelicacyResult("delicacy-v1", POOL, responses);
     expect(r1.hash).toBe(r2.hash);
-    const changed = { ...responses, d1: { pickedSide: "b" as const, flawPick: "pitch-drift" as const } };
+    const changed = {
+      ...responses,
+      d1: { pickedSide: "b" as const, flawPick: "pitch-drift" as const, confidence: 95 as const },
+    };
     expect(computeDelicacyResult("delicacy-v1", POOL, changed).hash).not.toBe(r1.hash);
   });
 
@@ -146,14 +153,82 @@ describe("computeDelicacyResult — worked examples (hand-computed)", () => {
   });
 });
 
+describe("confidence taps (S3) — never weight scoring, always ride the raw data", () => {
+  const picks: Array<[string, "a" | "b", (typeof DEGRADATION_FAMILIES)[number]]> = [
+    ["d1", "a", "pitch-drift"],
+    ["d2", "b", "lossy-artifact"],
+    ["d3", "a", "lossy-artifact"],
+    ["d4", "b", "timing-smear"],
+    ["d5", "b", "pitch-drift"],
+    ["d6", "a", "timing-smear"],
+  ];
+  const withConfidence = (confs: DelicacyConfidence[]): DelicacyResponses =>
+    respond(picks.map(([id, s, f], i) => [id, s, f, confs[i]]));
+
+  /**
+   * PRE-REGISTERED S3 PROOF: identical picks under EVERY confidence
+   * permutation must produce identical scoring — accuracy, tallies, flaw
+   * stats, receipts' correctness — with only the hash and the receipts'
+   * confidence field differing (different raw observations, D6).
+   */
+  it("scoring is invariant under any assignment of confidence values", () => {
+    const base = computeDelicacyResult("delicacy-v1", POOL, withConfidence([95, 95, 95, 95, 95, 95]));
+    const assignments: DelicacyConfidence[][] = [
+      [50, 50, 50, 50, 50, 50],
+      [95, 70, 50, 95, 70, 50],
+      [50, 70, 95, 50, 70, 95],
+      [70, 70, 70, 70, 70, 70],
+    ];
+    for (const confs of assignments) {
+      const r = computeDelicacyResult("delicacy-v1", POOL, withConfidence(confs));
+      expect(r.nCorrect).toBe(base.nCorrect);
+      expect(r.accuracy).toBe(base.accuracy);
+      expect(r.byMagnitude).toEqual(base.byMagnitude);
+      expect(r.byFamily).toEqual(base.byFamily);
+      expect(r.flawEligible).toBe(base.flawEligible);
+      expect(r.flawCorrect).toBe(base.flawCorrect);
+      expect(r.flawAccuracy).toBe(base.flawAccuracy);
+      expect(r.receipts.map((rec) => rec.correct)).toEqual(base.receipts.map((rec) => rec.correct));
+      expect(r.receipts.map((rec) => rec.flawCorrect)).toEqual(base.receipts.map((rec) => rec.flawCorrect));
+      // Different confidence IS different raw data — the hash must say so.
+      expect(r.hash).not.toBe(base.hash);
+    }
+  });
+
+  it("receipts carry confidence verbatim for the calibration step (S4)", () => {
+    const r = computeDelicacyResult("delicacy-v1", POOL, withConfidence([95, 70, 50, 50, 70, 95]));
+    expect(r.receipts.map((rec) => rec.confidence)).toEqual([95, 70, 50, 50, 70, 95]);
+  });
+
+  it("rejects a confidence level outside 95/70/50", () => {
+    const bad = withConfidence([95, 70, 50, 50, 70, 95]);
+    bad.d1 = { ...bad.d1, confidence: 80 as never };
+    expect(() => computeDelicacyResult("delicacy-v1", POOL, bad)).toThrow(/confidence.*95\/70\/50.*80/);
+  });
+
+  it("levels constant matches the §28 convention", () => {
+    expect(DELICACY_CONFIDENCE_LEVELS).toEqual([95, 70, 50]);
+  });
+
+  /**
+   * The codec writes one leading digit per level; two levels sharing a digit
+   * (e.g. 95 and 90) would make encode ambiguous and decode lossy. Guard the
+   * precondition here so a future levels change fails loudly.
+   */
+  it("confidence levels have pairwise-distinct leading digits (codec precondition)", () => {
+    const digits = DELICACY_CONFIDENCE_LEVELS.map((c) => String(c)[0]);
+    expect(new Set(digits).size).toBe(digits.length);
+  });
+});
+
 describe("computeDelicacyResult — input contract (throws are upstream bugs)", () => {
   const okResponses = respond([
-    ["d1", "a", "pitch-drift"],
-    ["d2", "b", "timing-smear"],
-    ["d3", "a", "lossy-artifact"],
-    ["d4", "b", "pitch-drift"],
-    ["d5", "a", "timing-smear"],
-    ["d6", "b", "lossy-artifact"],
+    ["d1", "a", "pitch-drift", 95],
+    ["d2", "b", "timing-smear", 70],
+    ["d3", "a", "lossy-artifact", 50],
+    ["d4", "b", "pitch-drift", 95],
+    ["d5", "a", "timing-smear", 70],
+    ["d6", "b", "lossy-artifact", 50],
   ]);
 
   it("rejects an empty pool", () => {
@@ -165,7 +240,10 @@ describe("computeDelicacyResult — input contract (throws are upstream bugs)", 
   });
 
   it("rejects a response for an unknown item", () => {
-    const extra = { ...okResponses, ghost: { pickedSide: "a" as const, flawPick: "pitch-drift" as const } };
+    const extra = {
+      ...okResponses,
+      ghost: { pickedSide: "a" as const, flawPick: "pitch-drift" as const, confidence: 95 as const },
+    };
     expect(() => computeDelicacyResult("delicacy-v1", POOL, extra)).toThrow(/unknown item "ghost"/);
   });
 
@@ -175,26 +253,32 @@ describe("computeDelicacyResult — input contract (throws are upstream bugs)", 
   });
 
   it("rejects an invalid side and an invalid family", () => {
-    const badSide = { ...okResponses, d1: { pickedSide: "c" as never, flawPick: "pitch-drift" as const } };
+    const badSide = {
+      ...okResponses,
+      d1: { pickedSide: "c" as never, flawPick: "pitch-drift" as const, confidence: 95 as const },
+    };
     expect(() => computeDelicacyResult("delicacy-v1", POOL, badSide)).toThrow(/pickedSide/);
-    const badFlaw = { ...okResponses, d1: { pickedSide: "a" as const, flawPick: "reverb" as never } };
+    const badFlaw = {
+      ...okResponses,
+      d1: { pickedSide: "a" as const, flawPick: "reverb" as never, confidence: 95 as const },
+    };
     expect(() => computeDelicacyResult("delicacy-v1", POOL, badFlaw)).toThrow(/flawPick/);
   });
 });
 
 describe("share codec — strict round-trip", () => {
   const responses = respond([
-    ["d1", "a", "pitch-drift"],
-    ["d2", "b", "lossy-artifact"],
-    ["d3", "a", "lossy-artifact"],
-    ["d4", "b", "timing-smear"],
-    ["d5", "b", "pitch-drift"],
-    ["d6", "a", "timing-smear"],
+    ["d1", "a", "pitch-drift", 95],
+    ["d2", "b", "lossy-artifact", 50],
+    ["d3", "a", "lossy-artifact", 50],
+    ["d4", "b", "timing-smear", 70],
+    ["d5", "b", "pitch-drift", 95],
+    ["d6", "a", "timing-smear", 70],
   ]);
 
-  it("round-trips and the decoded result matches the original computation", () => {
+  it("round-trips (confidence included) and the decoded result matches", () => {
     const csv = encodeDelicacyResponses(POOL, responses);
-    expect(csv).toBe("a0,b2,a2,b1,b0,a1");
+    expect(csv).toBe("a09,b25,a25,b17,b09,a17");
     const decoded = decodeDelicacyResponses(POOL, csv);
     expect(decoded).toEqual(responses);
     expect(computeDelicacyResult("delicacy-v1", POOL, decoded!).hash).toBe(
@@ -227,16 +311,23 @@ describe("share codec — strict round-trip", () => {
     for (const bad of [
       undefined, // absent param
       "", // empty
-      "a0,b2,a2,b1,b0", // too short
-      "a0,b2,a2,b1,b0,a1,a0", // too long
-      "a0,b2,a2,b1,b0,c1", // bad side
-      "a0,b2,a2,b1,b0,a9", // flaw index out of range
-      "a0,b2,a2,b1,b0,A1", // uppercase
-      "a0,b2,a2,b1,b0,a1,", // trailing separator
-      "a0;b2;a2;b1;b0;a1", // wrong separator
-      "a0,b2,a2,b1,b0,a", // truncated token
+      "a09,b25,a25,b17,b09", // too short
+      "a09,b25,a25,b17,b09,a17,a09", // too long
+      "a09,b25,a25,b17,b09,c17", // bad side
+      "a09,b25,a25,b17,b09,a97", // flaw index 9 has no family (regex passes, lookup fails)
+      "a09,b25,a25,b17,b09,a18", // invalid confidence digit
+      "a09,b25,a25,b17,b09,A17", // uppercase
+      "a09,b25,a25,b17,b09,a17,", // trailing separator
+      "a09;b25;a25;b17;b09;a17", // wrong separator
+      "a09,b25,a25,b17,b09,a1", // truncated token (S2-era format, no confidence)
+      "a0,b2,a2,b1,b0,a1", // the whole pre-confidence payload shape
     ]) {
       expect(decodeDelicacyResponses(POOL, bad as string | undefined)).toBeNull();
     }
+  });
+
+  it("rejects an in-range-looking token whose flaw index has no family", () => {
+    // side ok, conf digit ok, but flaw index 9 → DEGRADATION_FAMILIES[9] is undefined
+    expect(decodeDelicacyResponses(POOL, "a99,b25,a25,b17,b09,a17")).toBeNull();
   });
 });

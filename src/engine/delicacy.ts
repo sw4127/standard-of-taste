@@ -46,6 +46,28 @@ export const DELICACY_CHANCE = 0.5;
  */
 export const FLAW_CHANCE = 1 / DEGRADATION_FAMILIES.length;
 
+/**
+ * Confidence taps (memo §3, format kept from §28's 95/70/50): attached to
+ * performance items ONLY, and confidence NEVER weights scoring — the memo is
+ * explicit that it exists solely to be compared against accuracy later
+ * (calibration/Brier, which operationalizes Hume's "good sense" as a
+ * computed number). Any code path that lets confidence alter accuracy or a
+ * verdict is a bug by decision, not by taste.
+ *
+ * Deliberately NOT unified with weighted.ts's SPLIT_PCTS despite the equal
+ * values: those are answer-blend WEIGHTS — the one semantics the memo forbids
+ * confidence to ever have. Keeping the constants separate keeps the ban
+ * visible; a shared constant would invite exactly the wrong refactor.
+ */
+export const DELICACY_CONFIDENCE_LEVELS = [95, 70, 50] as const;
+export type DelicacyConfidence = (typeof DELICACY_CONFIDENCE_LEVELS)[number];
+
+/** Codec digit ↔ level, DERIVED so encode/decode can never desync. Leading
+ *  digits must stay pairwise distinct (delicacy.test.ts asserts it). */
+const CONFIDENCE_BY_DIGIT: Record<string, DelicacyConfidence> = Object.fromEntries(
+  DELICACY_CONFIDENCE_LEVELS.map((c) => [String(c)[0], c]),
+);
+
 /** What the engine needs to know about one trial. Content supplies the rest. */
 export interface DelicacyItemSpec {
   id: string;
@@ -62,6 +84,12 @@ export interface DelicacyResponse {
   pickedSide: PairSide;
   /** The family the user believes degrades the other side. */
   flawPick: DegradationFamily;
+  /**
+   * Claimed % probability that the SIDE PICK is right — explicitly not about
+   * the flaw pick (one tap, one referent; the S5a prompt copy must ask
+   * "how sure are you that's the original?"). Feeds calibration (S4) only.
+   */
+  confidence: DelicacyConfidence;
 }
 
 /** itemId -> response. */
@@ -77,6 +105,8 @@ export interface DelicacyReceipt {
   flawPick: DegradationFamily;
   /** null when the pick was wrong — flaw judgment about the wrong file is unscoreable. */
   flawCorrect: boolean | null;
+  /** Carried for the calibration computation (S4) — never used in scoring here. */
+  confidence: DelicacyConfidence;
 }
 
 interface Tally {
@@ -106,8 +136,9 @@ export interface DelicacyResult {
 
 /**
  * Compact CSV of responses in item order — the stateless share-URL payload.
- * One `<side><flawIndex>` token per trial (e.g. "a0,b2,a1"), flawIndex into
- * DEGRADATION_FAMILIES. The share page and card RECOMPUTE the result from
+ * One `<side><flawIndex><confDigit>` token per trial (e.g. "a09,b25,a17"),
+ * flawIndex into DEGRADATION_FAMILIES, confDigit the leading digit of the
+ * 95/70/50 level. The share page and card RECOMPUTE the result from
  * these raw picks against the pool's answer key, so a forged URL can only
  * ever show what the engine would actually conclude from those picks (N3;
  * but see the answer-key honesty note in the header).
@@ -123,7 +154,7 @@ export function encodeDelicacyResponses(items: DelicacyItemSpec[], responses: De
     .map((item) => {
       const r = responses[item.id];
       if (!r) throw new Error(`delicacy: cannot encode — missing response for "${item.id}"`);
-      return `${r.pickedSide}${DEGRADATION_FAMILIES.indexOf(r.flawPick)}`;
+      return `${r.pickedSide}${DEGRADATION_FAMILIES.indexOf(r.flawPick)}${String(r.confidence)[0]}`;
     })
     .join(",");
 }
@@ -138,11 +169,13 @@ export function decodeDelicacyResponses(
   if (parts.length !== items.length) return null;
   const out: DelicacyResponses = {};
   for (let i = 0; i < items.length; i++) {
-    const m = /^([ab])([0-9])$/.exec(parts[i]);
+    const m = /^([ab])([0-9])([0-9])$/.exec(parts[i]);
     if (!m) return null;
     const flaw = DEGRADATION_FAMILIES[Number(m[2])];
     if (flaw === undefined) return null;
-    out[items[i].id] = { pickedSide: m[1] as PairSide, flawPick: flaw };
+    const confidence = CONFIDENCE_BY_DIGIT[m[3]];
+    if (confidence === undefined) return null;
+    out[items[i].id] = { pickedSide: m[1] as PairSide, flawPick: flaw, confidence };
   }
   return out;
 }
@@ -153,8 +186,13 @@ export function canonicalDelicacyInput(
   items: DelicacyItemSpec[],
   responses: DelicacyResponses,
 ): string {
+  // Confidence is part of the canonical raw data (D6: two sessions with the
+  // same picks but different confidence are DIFFERENT observations).
   const parts = items
-    .map((item) => `${item.id}=${responses[item.id].pickedSide}>${responses[item.id].flawPick}`)
+    .map((item) => {
+      const r = responses[item.id];
+      return `${item.id}=${r.pickedSide}>${r.flawPick}@${r.confidence}`;
+    })
     .sort();
   return `${instrumentId}|${parts.join("&")}`;
 }
@@ -184,6 +222,11 @@ export function computeDelicacyResult(
     if (!DEGRADATION_FAMILIES.includes(r.flawPick)) {
       throw new Error(`delicacy: flawPick for "${item.id}" is not a known family: ${JSON.stringify(r.flawPick)}`);
     }
+    if (!(DELICACY_CONFIDENCE_LEVELS as readonly number[]).includes(r.confidence)) {
+      throw new Error(
+        `delicacy: confidence for "${item.id}" must be one of ${DELICACY_CONFIDENCE_LEVELS.join("/")}, got ${JSON.stringify(r.confidence)}`,
+      );
+    }
   }
 
   const receipts: DelicacyReceipt[] = items.map((item) => {
@@ -197,6 +240,7 @@ export function computeDelicacyResult(
       correct,
       flawPick: r.flawPick,
       flawCorrect: correct ? r.flawPick === item.family : null,
+      confidence: r.confidence,
     };
   });
 
