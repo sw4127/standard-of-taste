@@ -30,7 +30,7 @@ import {
   type DegradationFamily,
   type PairSide,
 } from "@/engine/delicacy";
-import { computeCalibration } from "@/engine/calibration";
+import { BRIER_COIN_FLIP, binDisplayPct, computeCalibration } from "@/engine/calibration";
 import {
   DELICACY_INSTRUMENT_ID,
   DELICACY_POOL_VERSION,
@@ -39,6 +39,15 @@ import {
   type DelicacyTrialClip,
 } from "@/content/delicacy/items";
 import ClipPlayer from "@/app/bias/ClipPlayer";
+import ShareButton from "@/app/result/ShareButton";
+import DownloadButton from "@/app/result/DownloadButton";
+import {
+  CALIBRATION_PHASE_LINE,
+  MAGNITUDE_WORDS,
+  calibrationLine,
+  delicacyVerdict,
+  shareText,
+} from "@/content/delicacy/copy";
 
 /* One accent in play (design bar): delicacy ice — the cold, fine-grained room
  * of the gym, deliberately opposite the prestige gold. Same formula, new hue. */
@@ -339,30 +348,137 @@ export default function DelicacyFlow() {
     );
   }
 
-  /* ------------------------------------------------------------ done stub */
+  /* --------------------------------------------------------------- reveal */
   if (phase === "done" && result) {
+    const cal = computeCalibration(result.receipts.map((r) => ({ confidence: r.confidence, correct: r.correct })));
+    const v = delicacyVerdict(result.nCorrect);
+    const p = encodeURIComponent(encodeDelicacyResponses(DELICACY_TRIALS, responses));
+    const resultPath = `/delicacy/result?pv=${DELICACY_POOL_VERSION}&p=${p}`;
+    const origin = typeof window === "undefined" ? "" : window.location.origin;
+    const credits = [...new Set(DELICACY_TRIALS.map((t) => `${t.sourceCredit} — ${t.license} · ${t.attribution}`))];
+    const showableBins = cal.bins.filter((b) => binDisplayPct(b) !== null);
     return (
-      <main className={`${shell} justify-center text-center`}>
+      <main className={shell}>
         <FluidField colors={FLUID} baseColor={BASE} intensity={0.72} scrim={false} vignette />
-        <div className="relative z-10 flex flex-col items-center">
-          {kicker}
-          <h1 className="mt-6 font-display text-4xl font-semibold">Trials complete.</h1>
-          <p className="mt-4 max-w-sm text-base leading-relaxed text-muted">
-            You called{" "}
-            <span className="font-semibold" style={{ color: ICE }}>
-              {result.nCorrect} of {result.nTrials}
-            </span>{" "}
-            originals{result.nCorrect / result.nTrials <= DELICACY_CHANCE ? " — a coin flip calls 3" : ""}.
-            The full reveal — your accuracy against the coin flip, whether you knew when you knew,
-            and what each flaw actually was — lands on this screen in the next build slice.
+        <div className="relative z-10">
+          <div className="text-center">
+            <p className="text-xs font-bold tracking-[0.4em] text-muted">YOUR EARS, MEASURED</p>
+            <p className="mt-4 font-display text-8xl font-semibold leading-none" style={{ color: ICE, textShadow: `0 0 60px ${ICE_GLOW}` }}>
+              {result.nCorrect}
+              <span className="text-5xl text-muted">/{result.nTrials}</span>
+            </p>
+            <p className="mt-3 text-sm text-muted">
+              originals identified — a coin flip calls {Math.round(result.nTrials * DELICACY_CHANCE)}
+            </p>
+            <h1 className="mt-7 font-display text-4xl font-semibold">{v.title}</h1>
+            <p className="mx-auto mt-2 max-w-sm text-base leading-relaxed text-muted">{v.sub}</p>
+            {result.flawAccuracy !== null ? (
+              <p className="mt-5 inline-block rounded-full border border-white/10 px-4 py-1.5 text-sm text-muted">
+                And on the ones you caught, you named the flaw{" "}
+                <span className="font-semibold" style={{ color: ICE }}>
+                  {result.flawCorrect} of {result.flawEligible}
+                </span>{" "}
+                times.
+              </p>
+            ) : null}
+          </div>
+
+          {/* Good sense — whole-session numbers lead; bins only when they stand (S4 ruling) */}
+          <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+            <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">DID YOU KNOW WHEN YOU KNEW?</p>
+            <p className="mt-2 text-sm leading-relaxed">{calibrationLine(cal)}</p>
+            <p className="mt-2 text-xs leading-relaxed text-muted">
+              Brier score {cal.brier.toFixed(3)} — pure coin-flip guessing scores {BRIER_COIN_FLIP.toFixed(2)}; lower is better,
+              but only next to the direction above.
+            </p>
+            {showableBins.length > 0 ? (
+              <div className="mt-3 flex flex-col gap-1 text-xs text-muted">
+                {showableBins.map((b) => (
+                  <p key={b.confidencePct}>
+                    When you said {b.confidencePct}%: right {b.correct} of {b.n}.
+                  </p>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-2 text-xs text-muted">
+                Per-level breakdowns need 3+ answers at a level — six trials rarely get there. The whole-session
+                read above is the honest number.
+              </p>
+            )}
+          </div>
+
+          {/* The reveal — every pair, full disclosure (N3) */}
+          <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+            <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">WHAT WAS ACTUALLY WRONG</p>
+            <div className="mt-3 flex flex-col gap-3">
+              {result.receipts.map((r, i) => (
+                <div key={r.id} className="border-b border-white/5 pb-3 text-sm last:border-b-0 last:pb-0">
+                  <p>
+                    <span className="font-semibold" style={{ color: r.correct ? ICE : undefined }}>
+                      Pair {i + 1}: {r.correct ? "caught it" : "fooled you"}
+                    </span>
+                    <span className="text-muted">
+                      {" "}
+                      — the original was {DELICACY_TRIALS.find((t) => t.id === r.id)!.originalSide.toUpperCase()}, you picked {r.pickedSide.toUpperCase()} at {r.confidence}%.
+                    </span>
+                  </p>
+                  <p className="mt-0.5 text-xs text-muted">
+                    The flaw: {FLAW_LABELS[r.family].label.toLowerCase()} ({MAGNITUDE_WORDS[r.magnitude]})
+                    {r.flawCorrect !== null ? (r.flawCorrect ? " — you named it." : ` — you said "${FLAW_LABELS[r.flawPick].label.toLowerCase()}".`) : ""}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Share — the number travels (see the engine's answer-key honesty note) */}
+          <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+            <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">YOUR EARS, PORTABLE</p>
+            <p className="mt-2 text-sm leading-relaxed text-muted">
+              The link carries only your answers — anyone who opens it sees your session rescored, then gets
+              dared to beat it.
+            </p>
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <ShareButton
+                url={`${origin}${resultPath}`}
+                text={shareText(result.nCorrect, result.nTrials)}
+                label="Share your ears"
+                event="delicacy_share"
+                primary
+                accent={ICE}
+              />
+              <DownloadButton
+                url={`/api/delicacy-card?format=story&pv=${DELICACY_POOL_VERSION}&p=${p}`}
+                label="Story card"
+                filename="delicacy-trials-story.png"
+              />
+              <a href={resultPath} className="text-sm text-muted underline underline-offset-4 transition hover:text-white">
+                View your result page →
+              </a>
+            </div>
+          </div>
+
+          <p className="mt-6 text-xs leading-relaxed text-muted">
+            Provisional read — you&apos;re early. {CALIBRATION_PHASE_LINE} Difficulty labels are authored, not yet
+            norm-calibrated.
           </p>
-          <p className="mt-6 text-xs text-muted">
-            Dev pool v{DELICACY_POOL_VERSION} — every pair is the same Chopin mazurka on purpose;
-            the real pool is authored next.
-          </p>
-          <a href="/delicacy" className="mt-8 text-sm text-muted underline underline-offset-4 transition hover:text-white">
-            Run it again →
-          </a>
+
+          {/* Attribution — CC credit is a legal requirement, PD listed anyway. */}
+          <div className="mt-6 text-[0.65rem] leading-relaxed text-muted">
+            <p className="font-bold tracking-[0.3em]">RECORDINGS</p>
+            {credits.map((c) => (
+              <p key={c}>{c}</p>
+            ))}
+          </div>
+
+          <div className="mt-8 flex flex-wrap items-center gap-5">
+            <a href="/delicacy" className="text-sm text-muted underline underline-offset-4 transition hover:text-white">
+              Run it again →
+            </a>
+            <a href="/bias" className="text-sm text-muted underline underline-offset-4 transition hover:text-white">
+              The other machine: the Prestige Test →
+            </a>
+          </div>
         </div>
       </main>
     );

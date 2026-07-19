@@ -25,6 +25,7 @@ import {
   type BiasResult,
 } from "@/engine/bias";
 import { BIAS_CLIPS, BIAS_INSTRUMENT_ID, BIAS_POOL_VERSION, type BiasClip } from "@/content/bias/items";
+import { DELICACY_LIVE } from "@/content/delicacy/items";
 import { VERDICT_COPY, shareText } from "@/content/bias/copy";
 import ShareButton from "@/app/result/ShareButton";
 import DownloadButton from "@/app/result/DownloadButton";
@@ -442,16 +443,35 @@ export default function BiasFlow() {
             </div>
           </div>
 
-          {/* D3 — the visible, locked tier. Honest: it does not exist yet. */}
-          <div className="mt-8 rounded-2xl border border-dashed border-white/20 p-5">
-            <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">NEXT MACHINE · LOCKED</p>
-            <p className="mt-2 font-display text-xl font-semibold">Delicacy Trials</p>
-            <p className="mt-1 text-sm leading-relaxed text-muted">
-              One of two clips has a wrong note buried in the mix. Prestige tested your prejudice —
-              this one tests whether your ears can actually tell. In the gym soon.
-            </p>
-            <LockedTierButton />
-          </div>
+          {/* D3 — the second machine's door: open once the pool of record
+              ships (DELICACY_LIVE, PM ruling 1a), visible-and-locked before. */}
+          {DELICACY_LIVE ? (
+            <a
+              href="/delicacy"
+              onClick={() => track("bias_to_delicacy_tap", {})}
+              className="mt-8 block rounded-2xl border p-5 transition hover:bg-white/[0.05]"
+              style={{ borderColor: "hsl(190 60% 55% / 0.35)", background: "rgba(255,255,255,0.03)" }}
+            >
+              <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: "hsl(190 75% 62%)" }}>
+                NEXT MACHINE · OPEN — CALIBRATION PHASE
+              </p>
+              <p className="mt-2 font-display text-xl font-semibold">Delicacy Trials</p>
+              <p className="mt-1 text-sm leading-relaxed text-muted">
+                Prestige tested your prejudice — this one tests whether your ears can actually tell.
+                Six pairs; one of each is quietly damaged. Free while the gym calibrates →
+              </p>
+            </a>
+          ) : (
+            <div className="mt-8 rounded-2xl border border-dashed border-white/20 p-5">
+              <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">NEXT MACHINE · LOCKED</p>
+              <p className="mt-2 font-display text-xl font-semibold">Delicacy Trials</p>
+              <p className="mt-1 text-sm leading-relaxed text-muted">
+                One of two clips has a wrong note buried in the mix. Prestige tested your prejudice —
+                this one tests whether your ears can actually tell. In the gym soon.
+              </p>
+              <LockedTierButton />
+            </div>
+          )}
 
           {/* Attribution — CC credit is a legal requirement, PD listed anyway. */}
           <div className="mt-8 text-[0.65rem] leading-relaxed text-muted">
