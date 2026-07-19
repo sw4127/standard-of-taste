@@ -1,0 +1,560 @@
+{
+  "instrument": "delicacy-v1",
+  "note": "Degraded-pair pool. `originalSide` is the trial's answer key — the repo being public means answers are technically discoverable (same standing as the bias swap labels in items.ts); disclosed on the methodology page, not defended against.",
+  "clipSeconds": 20,
+  "lufsTarget": -16,
+  "pairs": [
+    {
+      "id": "proof-pd1",
+      "sourceId": "b2",
+      "window": {
+        "startSec": 102.5,
+        "clipSec": 20
+      },
+      "family": "pitch-drift",
+      "magnitude": 1,
+      "seed": 17,
+      "params": {
+        "peakCents": 12,
+        "direction": "sharp"
+      },
+      "originalSide": "a",
+      "files": {
+        "a": "proof-pd1-a.mp3",
+        "b": "proof-pd1-b.mp3",
+        "aM4a": "proof-pd1-a.m4a",
+        "bM4a": "proof-pd1-b.m4a"
+      },
+      "sha256": {
+        "a": "868bb65af828c4ed7b5051382c51d8e053213400ada1d1a097dfe6575c31ae5a",
+        "b": "a8c1f8253564c843af48f3c3f47809b9a9005d5aa1d13f964f4ed819a72d80d0"
+      },
+      "earPass": null,
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.0  b -15.8 LUFS  Δ 0.2 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.0  b -15.9 LUFS  Δ 0.2 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -1.9/-1.5  m4a -2.0/-1.5 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 1.215 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "validatedAt": "2026-07-19"
+      }
+    },
+    {
+      "id": "proof-pd2",
+      "sourceId": "b2",
+      "window": {
+        "startSec": 102.5,
+        "clipSec": 20
+      },
+      "family": "pitch-drift",
+      "magnitude": 2,
+      "seed": 27,
+      "params": {
+        "peakCents": 25,
+        "direction": "flat"
+      },
+      "originalSide": "a",
+      "files": {
+        "a": "proof-pd2-a.mp3",
+        "b": "proof-pd2-b.mp3",
+        "aM4a": "proof-pd2-a.m4a",
+        "bM4a": "proof-pd2-b.m4a"
+      },
+      "sha256": {
+        "a": "868bb65af828c4ed7b5051382c51d8e053213400ada1d1a097dfe6575c31ae5a",
+        "b": "c0e4e17d1886e6a8aa880bc055cc0308d68cdaf4c367f411c9f4f744d014a584"
+      },
+      "earPass": null,
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -1.9/-1.9  m4a -2.0/-1.8 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 1.420 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "validatedAt": "2026-07-19"
+      }
+    },
+    {
+      "id": "proof-pd3",
+      "sourceId": "b2",
+      "window": {
+        "startSec": 102.5,
+        "clipSec": 20
+      },
+      "family": "pitch-drift",
+      "magnitude": 3,
+      "seed": 37,
+      "params": {
+        "peakCents": 50,
+        "direction": "sharp"
+      },
+      "originalSide": "b",
+      "files": {
+        "a": "proof-pd3-a.mp3",
+        "b": "proof-pd3-b.mp3",
+        "aM4a": "proof-pd3-a.m4a",
+        "bM4a": "proof-pd3-b.m4a"
+      },
+      "sha256": {
+        "a": "3e6ff9f383d25a237e7d66a17b39171ae3537d056ec57af5653ef4c5f15217e6",
+        "b": "868bb65af828c4ed7b5051382c51d8e053213400ada1d1a097dfe6575c31ae5a"
+      },
+      "earPass": null,
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -1.8/-1.9  m4a -1.7/-2.0 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 1.478 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "validatedAt": "2026-07-19"
+      }
+    },
+    {
+      "id": "proof-ts1",
+      "sourceId": "b2",
+      "window": {
+        "startSec": 102.5,
+        "clipSec": 20
+      },
+      "family": "timing-smear",
+      "magnitude": 1,
+      "seed": 17,
+      "params": {
+        "maxDevPct": 1.5,
+        "segmentDevPct": [
+          0.78,
+          -0.68,
+          0.34,
+          -0.76,
+          -0.99,
+          1.03,
+          -0.41,
+          0.38,
+          -0.48,
+          0.79
+        ]
+      },
+      "originalSide": "a",
+      "files": {
+        "a": "proof-ts1-a.mp3",
+        "b": "proof-ts1-b.mp3",
+        "aM4a": "proof-ts1-a.m4a",
+        "bM4a": "proof-ts1-b.m4a"
+      },
+      "sha256": {
+        "a": "868bb65af828c4ed7b5051382c51d8e053213400ada1d1a097dfe6575c31ae5a",
+        "b": "913d79736ab35c6e85ecf641fd8fc0e66d3be684a3259545fdcb867b828f42b3"
+      },
+      "earPass": null,
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 19.999 s  Δ 0.001 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -1.9/-1.7  m4a -2.0/-1.7 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 1.442 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "validatedAt": "2026-07-19"
+      }
+    },
+    {
+      "id": "proof-ts2",
+      "sourceId": "b2",
+      "window": {
+        "startSec": 102.5,
+        "clipSec": 20
+      },
+      "family": "timing-smear",
+      "magnitude": 2,
+      "seed": 27,
+      "params": {
+        "maxDevPct": 3,
+        "segmentDevPct": [
+          0.59,
+          -1.67,
+          -1.7,
+          -0.81,
+          3.16,
+          -0.38,
+          -0.2,
+          -1.28,
+          1.01,
+          1.29
+        ]
+      },
+      "originalSide": "a",
+      "files": {
+        "a": "proof-ts2-a.mp3",
+        "b": "proof-ts2-b.mp3",
+        "aM4a": "proof-ts2-a.m4a",
+        "bM4a": "proof-ts2-b.m4a"
+      },
+      "sha256": {
+        "a": "868bb65af828c4ed7b5051382c51d8e053213400ada1d1a097dfe6575c31ae5a",
+        "b": "99b1b00492643f96bffff3e199c23b40215792d84777f9d79e1b29bfda07b67b"
+      },
+      "earPass": null,
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 19.999 s  Δ 0.001 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -1.9/-2.3  m4a -2.0/-2.2 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 1.374 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "validatedAt": "2026-07-19"
+      }
+    },
+    {
+      "id": "proof-ts3",
+      "sourceId": "b2",
+      "window": {
+        "startSec": 102.5,
+        "clipSec": 20
+      },
+      "family": "timing-smear",
+      "magnitude": 3,
+      "seed": 37,
+      "params": {
+        "maxDevPct": 5,
+        "segmentDevPct": [
+          -0.17,
+          4.64,
+          -5.07,
+          2.06,
+          -3.36,
+          0.55,
+          -3.57,
+          4.25,
+          1.05,
+          -0.37
+        ]
+      },
+      "originalSide": "b",
+      "files": {
+        "a": "proof-ts3-a.mp3",
+        "b": "proof-ts3-b.mp3",
+        "aM4a": "proof-ts3-a.m4a",
+        "bM4a": "proof-ts3-b.m4a"
+      },
+      "sha256": {
+        "a": "20293a30ba8dc941d3b783313945cea5745af0c36f417c7f9c65f1cca8582e3f",
+        "b": "868bb65af828c4ed7b5051382c51d8e053213400ada1d1a097dfe6575c31ae5a"
+      },
+      "earPass": null,
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -2.0/-1.9  m4a -2.0/-2.0 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 1.376 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "validatedAt": "2026-07-19"
+      }
+    },
+    {
+      "id": "proof-la1",
+      "sourceId": "b2",
+      "window": {
+        "startSec": 102.5,
+        "clipSec": 20
+      },
+      "family": "lossy-artifact",
+      "magnitude": 1,
+      "seed": 17,
+      "params": {
+        "bitrate": "96k"
+      },
+      "originalSide": "a",
+      "files": {
+        "a": "proof-la1-a.mp3",
+        "b": "proof-la1-b.mp3",
+        "aM4a": "proof-la1-a.m4a",
+        "bM4a": "proof-la1-b.m4a"
+      },
+      "sha256": {
+        "a": "868bb65af828c4ed7b5051382c51d8e053213400ada1d1a097dfe6575c31ae5a",
+        "b": "e22552e1e1ddb7cc1de25c6bb0337d01cf419a7dd00da4d2082de28485fbffc2"
+      },
+      "earPass": null,
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -1.9/-1.9  m4a -2.0/-1.9 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 0.039 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "validatedAt": "2026-07-19"
+      }
+    },
+    {
+      "id": "proof-la2",
+      "sourceId": "b2",
+      "window": {
+        "startSec": 102.5,
+        "clipSec": 20
+      },
+      "family": "lossy-artifact",
+      "magnitude": 2,
+      "seed": 27,
+      "params": {
+        "bitrate": "64k"
+      },
+      "originalSide": "a",
+      "files": {
+        "a": "proof-la2-a.mp3",
+        "b": "proof-la2-b.mp3",
+        "aM4a": "proof-la2-a.m4a",
+        "bM4a": "proof-la2-b.m4a"
+      },
+      "sha256": {
+        "a": "868bb65af828c4ed7b5051382c51d8e053213400ada1d1a097dfe6575c31ae5a",
+        "b": "520817ad7196f51fa23c60863f8801d29256e6198c8d29fba256f6c07c4a3f43"
+      },
+      "earPass": null,
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.0  b -16.1 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -1.9/-1.9  m4a -2.0/-2.0 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 0.063 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "validatedAt": "2026-07-19"
+      }
+    },
+    {
+      "id": "proof-la3",
+      "sourceId": "b2",
+      "window": {
+        "startSec": 102.5,
+        "clipSec": 20
+      },
+      "family": "lossy-artifact",
+      "magnitude": 3,
+      "seed": 37,
+      "params": {
+        "bitrate": "32k"
+      },
+      "originalSide": "b",
+      "files": {
+        "a": "proof-la3-a.mp3",
+        "b": "proof-la3-b.mp3",
+        "aM4a": "proof-la3-a.m4a",
+        "bM4a": "proof-la3-b.m4a"
+      },
+      "sha256": {
+        "a": "a8284aa053340d1b3ac81f50e7d3a273395579f04998022d9962a1bba19b6c58",
+        "b": "868bb65af828c4ed7b5051382c51d8e053213400ada1d1a097dfe6575c31ae5a"
+      },
+      "earPass": null,
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.1  b -16.0 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -1.7/-1.9  m4a -1.8/-2.0 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 0.113 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "validatedAt": "2026-07-19"
+      }
+    }
+  ]
+}
