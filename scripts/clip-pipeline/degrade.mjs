@@ -194,11 +194,17 @@ export async function degrade(args) {
   // One cut feeds both sides — the pair is guaranteed the same source window.
   ff(["-ss", String(startSec), "-t", String(clipSec), "-i", cached, "-vn", "-ac", "2", "-ar", "44100", origWav]);
   const params = degradeWav(family, magnitude, seed, origWav, degWav, clipSec);
+  // Trim the degraded side to EXACTLY the original's length: filter-flush and
+  // codec-round-trip residues leave it a few ms long, and a length straddling
+  // an AAC frame boundary shows up as a ±100ms m4a duration mismatch (seen on
+  // d6). Millisecond-scale tail trim; position continuity unaffected.
+  const degCut = join(TMP, `${id}-deg-cut.wav`);
+  ff(["-i", degWav, "-t", String(clipSec), degCut]);
 
   const originalSide = mulberry32(seed ^ 0x9e3779b9)() < 0.5 ? "a" : "b";
   const degradedSide = originalSide === "a" ? "b" : "a";
   normRender(origWav, `${id}-${originalSide}`, OUT);
-  normRender(degWav, `${id}-${degradedSide}`, OUT);
+  normRender(degCut, `${id}-${degradedSide}`, OUT);
 
   // ------------------------------------------------- validation (all measured)
   // Both delivery formats are validated: ClipPlayer may serve either, and an
@@ -211,7 +217,9 @@ export async function degrade(args) {
   // Determinism: rebuild the degraded side from scratch into TMP, compare hashes.
   const degWav2 = join(TMP, `${id}-deg2.wav`);
   degradeWav(family, magnitude, seed, origWav, degWav2, clipSec);
-  normRender(degWav2, `${id}-redo`, TMP);
+  const degCut2 = join(TMP, `${id}-deg2-cut.wav`);
+  ff(["-i", degWav2, "-t", String(clipSec), degCut2]);
+  normRender(degCut2, `${id}-redo`, TMP);
   const hashA = sha256File(join(OUT, `${id}-a.mp3`));
   const hashB = sha256File(join(OUT, `${id}-b.mp3`));
   const deterministic =
@@ -243,12 +251,14 @@ export async function degrade(args) {
   const manifest = loadDelicacyManifest();
   manifest.pairs = manifest.pairs.filter((p) => p.id !== id);
   manifest.pairs.push({
+    // (sorted by id on save — re-rendering a pair must not reorder the manifest)
     id, sourceId, window: { startSec, clipSec }, family, magnitude, seed, params, originalSide,
     files: allPass ? { a: `${id}-a.mp3`, b: `${id}-b.mp3`, aM4a: `${id}-a.m4a`, bM4a: `${id}-b.m4a` } : null,
     sha256: allPass ? { a: hashA, b: hashB } : null,
     earPass: null, // audibility is a PM ear judgment (S6 gate), never inferred from the checks above
     validation: { ...Object.fromEntries(checks.map(([n, d, ok]) => [n.replace(/[ ()]/g, "_"), { detail: d, pass: ok }])), validatedAt: new Date().toISOString().slice(0, 10) },
   });
+  manifest.pairs.sort((x, y) => x.id.localeCompare(y.id));
   mkdirSync(dirname(DELICACY_MANIFEST), { recursive: true });
   writeFileSync(DELICACY_MANIFEST, JSON.stringify(manifest, null, 2) + "\n");
   console.log(`  manifest: src/content/delicacy/manifest.json updated (${manifest.pairs.length} pair${manifest.pairs.length === 1 ? "" : "s"})`);

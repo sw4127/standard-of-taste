@@ -1,36 +1,38 @@
 /**
- * Delicacy Trials item pool — DEV PLACEHOLDER POOL (pool version 0).
+ * Delicacy Trials item pool — POOL-OF-RECORD CANDIDATES (still version 0).
  *
- * These six pairs are the S1 toolchain PROOF artifacts: every pair is the
- * same 20-second window of the same recording (b2, Chopin Mazurka Op. 68
- * No. 2 — CC0) under different degradations. That is deliberate for flow
- * development and USELESS as an instrument (a real session must vary the
- * material). The pool of record is authored at S6 behind the gatekeeping
- * tests + the PM ear pass, and bumps DELICACY_POOL_VERSION to 1.
+ * Six pairs from six distinct already-licensed sources (decision 4a: reuse
+ * the bias manifest's cleared recordings, FRESH windows non-overlapping with
+ * the bias excerpts so cross-instrument familiarity can't help detect the
+ * degradation). Authored by `scripts/clip-pipeline degrade`; params, seeds,
+ * validation reports and sha256s live in src/content/delicacy/manifest.json.
  *
- * The proof audio is git-ignored (reproducible via scripts/clip-pipeline
- * degrade, same seeds/params in src/content/delicacy/manifest.json), so this
- * pool only plays on a machine that has run the S1 sweep. In production the
- * clips 404 and ClipPlayer's load-failure state keeps the flow locked —
- * /delicacy stays unlinked and noindex until the real pool ships.
+ * GATES before DELICACY_POOL_VERSION bumps to 1 (the door flip — see
+ * DELICACY_LIVE): (1) every pair's machine validation passes — enforced by
+ * delicacy.test.ts; (2) the PM EAR PASS per docs/ear-pass-delicacy.md is
+ * recorded in the manifest (earPass non-null, verdict PASS) — enforced by
+ * delicacy.test.ts the moment the version is ≥1; (3) the PM voice pass on
+ * copy.ts (PM ruling 2026-07-19: pending).
  *
- * DO NOT reorder/edit without bumping DELICACY_POOL_VERSION: share payloads
- * are positional (see the versioning contract in src/engine/delicacy.ts).
+ * VERSIONING (amends the S5a note): v≥1 pools are IMMUTABLE per version —
+ * any item change bumps the version, and share payloads are positional
+ * against it (contract in src/engine/delicacy.ts). v0 is the explicit dev
+ * exception: mutable, and its share surface never exists in production
+ * (SHARE_OPEN gate), so no live URL can silently rescore.
  */
 
 import type { DegradationFamily, DelicacyItemSpec } from "@/engine/delicacy";
 
 export const DELICACY_INSTRUMENT_ID = "delicacy-v1";
 
-/** 0 = dev placeholder pool. The S6 pool of record starts at 1. */
+/** 0 = pre-ear-pass. The pool of record ships as 1. */
 export const DELICACY_POOL_VERSION = 0;
 
 /**
  * THE DOOR (D3 → live per PM ruling 2026-07-19, decision 1a): every surface
  * that gates on the delicacy tier reads this one flag — homepage machine
- * card, bias-debrief door, /delicacy robots, sitemap. It flips exactly when
- * S6 ships the pool of record and bumps the version; until then the tier
- * stays visible-and-locked and the route stays unlinked + noindex.
+ * card, bias-debrief door, /delicacy robots, sitemap, prod share surface.
+ * It flips exactly when the gates above clear and the version bumps.
  */
 export const DELICACY_LIVE = DELICACY_POOL_VERSION > 0;
 
@@ -39,7 +41,7 @@ export interface DelicacyTrialClip extends DelicacyItemSpec {
   /** Static files under /public — PD/CC audio only (memo §8.2). */
   srcA: string;
   srcB: string;
-  /** Truthful credit for the source work (revealed at S5b, N3). */
+  /** Truthful credit for the source work (revealed post-answer, N3). */
   sourceCredit: string;
   license: string;
   /** TASL + excerpt/manipulation notice (CC requirement; PD listed anyway). */
@@ -57,15 +59,14 @@ export const FLAW_LABELS: Record<DegradationFamily, { label: string; hint: strin
   "lossy-artifact": { label: "The detail is crushed", hint: "compression smear — swishy, airless highs" },
 };
 
-const B2_CREDIT = "F. Chopin — Mazurka in A minor, Op. 68 No. 2 (Musopen Complete Chopin project)";
-const B2_ATTR =
-  "“Mazurka in A minor, Op. 68 No. 2” — F. Chopin, perf. Musopen Complete Chopin project · archive.org/details/musopen-chopin-complete-works-flac · CC0 · excerpt (trimmed + loudness-normalized; one side deliberately degraded)";
-
 const pair = (
   id: string,
   family: DegradationFamily,
   magnitude: 1 | 2 | 3,
   originalSide: "a" | "b",
+  sourceCredit: string,
+  license: string,
+  attribution: string,
 ): DelicacyTrialClip => ({
   id,
   family,
@@ -73,22 +74,72 @@ const pair = (
   originalSide,
   srcA: `/audio/delicacy/${id}-a.mp3`,
   srcB: `/audio/delicacy/${id}-b.mp3`,
-  sourceCredit: B2_CREDIT,
-  license: "CC0",
-  attribution: B2_ATTR,
+  sourceCredit,
+  license,
+  attribution,
 });
 
+const MANIP = "excerpt (trimmed + loudness-normalized; one side deliberately degraded)";
+
 /**
- * Presentation order (positional — see header). Families interleaved, no two
- * adjacent trials share one; magnitudes 2× each. originalSide comes from the
- * S1 manifest (seeded) and is imbalanced here (4 a / 2 b) — acceptable for a
- * dev pool, and a named S6 gatekeeping requirement for the pool of record.
+ * Presentation order (positional — see versioning above). Contracts enforced
+ * by delicacy.test.ts: families 2× each and never adjacent, magnitudes 2×
+ * each, original sides balanced 3/3, no two adjacent pairs share a source
+ * sound-world, six distinct source recordings.
  */
 export const DELICACY_TRIALS: DelicacyTrialClip[] = [
-  pair("proof-pd1", "pitch-drift", 1, "a"),
-  pair("proof-ts2", "timing-smear", 2, "a"),
-  pair("proof-la3", "lossy-artifact", 3, "b"),
-  pair("proof-pd3", "pitch-drift", 3, "b"),
-  pair("proof-ts1", "timing-smear", 1, "a"),
-  pair("proof-la2", "lossy-artifact", 2, "a"),
+  pair(
+    "d1",
+    "pitch-drift",
+    1,
+    "a",
+    "J.S. Bach — Kimiko Ishizaka, piano (Open Goldberg Variations)",
+    "CC0",
+    `“Goldberg Variations — Variatio 13 a 2 Clav.” — J.S. Bach, perf. Kimiko Ishizaka · archive.org/details/The_Open_Goldberg_Variations-11823 · CC0 · ${MANIP}`,
+  ),
+  pair(
+    "d2",
+    "lossy-artifact",
+    1,
+    "b",
+    "Komiku — The road we use to travel when we were kids",
+    "CC0",
+    `“The road we use to travel when we were kids” (Tale on the Late) — Komiku · archive.org/details/Komiku-TaleOnTheLate · CC0 · ${MANIP}`,
+  ),
+  pair(
+    "d3",
+    "timing-smear",
+    2,
+    "a",
+    "Jason Shaw (Audionautix) — Folk Bed",
+    "CC-BY 4.0",
+    `“Folk Bed” — music by audionautix.com (Jason Shaw) · audionautix.com/creative-commons-music · CC-BY 4.0 · ${MANIP}`,
+  ),
+  pair(
+    "d4",
+    "pitch-drift",
+    3,
+    "b",
+    "Chris Zabriskie — That Hopeful Future Is All I've Ever Known",
+    "CC-BY 4.0",
+    `“That Hopeful Future Is All I've Ever Known” (Music from Neptune Flux) — Chris Zabriskie · CC-BY 4.0 (teamopen.cc/chris) · ${MANIP}`,
+  ),
+  pair(
+    "d5",
+    "lossy-artifact",
+    2,
+    "b",
+    "F. Chopin — Nocturne Op. 15 No. 3 (Musopen Complete Chopin project)",
+    "CC0",
+    `“Nocturne Op. 15 No. 3 in G minor” — F. Chopin, perf. Musopen Complete Chopin project · archive.org/details/musopen-chopin-complete-works-flac · CC0 · ${MANIP}`,
+  ),
+  pair(
+    "d6",
+    "timing-smear",
+    3,
+    "a",
+    "Komiku — The Wind",
+    "CC0",
+    `“The Wind” (Tale on the Late) — Komiku · archive.org/details/Komiku-TaleOnTheLate · CC0 · ${MANIP}`,
+  ),
 ];
