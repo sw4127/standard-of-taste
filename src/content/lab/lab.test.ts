@@ -103,7 +103,18 @@ describe("lab — panel contract", () => {
     expect(LIVE_PANELS.length + PENDING_PANELS.length).toBe(LAB_PANELS.length);
   });
 
-  it("the S3 shell ships exactly one live panel (no empty chrome — N2)", () => {
-    expect(LIVE_PANELS.map((p) => p.id)).toEqual(["metric-dictionary"]);
+  it("every live panel is REACHABLE (the dictionary lives on the index itself)", () => {
+    // A live panel with no route is a claim with nothing behind it. panels.ts
+    // throws at module load if this is violated; asserted here too so the
+    // failure names the rule rather than surfacing as an import error.
+    for (const p of LIVE_PANELS) {
+      if (p.id === "metric-dictionary") continue;
+      expect(p.href, `${p.id} is live but has no href`).toMatch(/^\/lab\//);
+    }
+  });
+
+  it("no panel is both live and roadmapped", () => {
+    for (const p of LIVE_PANELS) expect(p.plannedIn, p.id).toBeUndefined();
+    for (const p of PENDING_PANELS) expect(p.href, p.id).toBeUndefined();
   });
 });
