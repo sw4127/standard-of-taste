@@ -237,6 +237,40 @@ export function runRecovery(config: RecoveryConfig): RecoveryReport {
   return { dataSource: "SIMULATED", seed, nItems: delicacyItems.length, model, points };
 }
 
+/** One item's known-vs-estimated pair — a single dot on the recovery plot. */
+export interface RecoveryScatterPoint {
+  itemId: string;
+  /** Model-implied proportion correct for this cohort — the KNOWN value. */
+  trueP: number;
+  /** What the estimator returned, knowing none of the above. */
+  estimatedP: number;
+}
+
+/**
+ * ONE replication's raw pairs, for plotting. The aggregate table answers "how
+ * big is the error"; the scatter answers "is it error, or is it bias" — a
+ * cloud hugging the diagonal and a cloud sitting parallel to it can share an
+ * RMSE while meaning entirely different things. Deliberately a single
+ * replication rather than an average: averaging replications would shrink the
+ * visible spread and make the estimator look better than one run of it is.
+ */
+export function recoveryScatter(
+  seed: number,
+  n: number,
+  items: SimDelicacyItem[],
+  model: PersonModel = DEFAULT_PERSON_MODEL,
+): RecoveryScatterPoint[] {
+  const persons = simulatePersons(seed, n, model);
+  const data = simulateDelicacy(seed, items, persons);
+  const estimated = estimateItems(delicacyMatrix("SIMULATED", items, data.responses));
+  const truth = trueItemP(items, persons);
+  return items.map((item, i) => ({
+    itemId: item.id,
+    trueP: truth[i],
+    estimatedP: estimated.items[i].pValue,
+  }));
+}
+
 /** Fixed-width recovery table — the S2 proof artifact and the S4 panel's source. */
 export function formatRecoveryTable(report: RecoveryReport): string {
   const f = (x: number | null, dp = 3) => (x === null ? "  n/a" : x.toFixed(dp).padStart(5));

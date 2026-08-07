@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import SourceBadge from "@/components/lab/SourceBadge";
 import { METRICS, type MetricDefinition } from "@/content/lab/metrics";
-import { LAB_PANELS, PENDING_PANELS } from "@/content/lab/panels";
+import { LAB_PANELS, LIVE_PANELS, PENDING_PANELS } from "@/content/lab/panels";
 
 /**
  * The Lab index (artifact pivot §4) — the analytics surface, in the product,
@@ -79,6 +80,32 @@ export default function LabIndex() {
           pipeline — the only thing that changes is the badge.
         </p>
       </div>
+
+      {/* ------------------------------------------------------- live panels */}
+      {LIVE_PANELS.some((p) => p.href) && (
+        <section className="mt-14" aria-labelledby="panels">
+          <h2 id="panels" className="font-display text-2xl font-semibold tracking-tight">
+            Panels
+          </h2>
+          <div className="mt-5 flex flex-col gap-3">
+            {LIVE_PANELS.filter((p) => p.href).map((p) => (
+              <Link
+                key={p.id}
+                href={p.href!}
+                className="group rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition hover:border-white/25"
+              >
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                  <h3 className="font-display text-lg font-semibold transition-colors group-hover:text-[hsl(42_80%_62%)]">
+                    {p.title}
+                  </h3>
+                  {p.dataSource && <SourceBadge source={p.dataSource} />}
+                </div>
+                <p className="mt-1.5 text-sm text-muted">{p.blurb}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ------------------------------------------------ live panel: dictionary */}
       <section className="mt-14" aria-labelledby="metric-dictionary">

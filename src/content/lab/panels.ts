@@ -34,6 +34,8 @@ export interface LabPanel {
   status: "live" | "pending";
   /** For pending panels: which slice builds it. Keeps the roadmap checkable. */
   plannedIn?: string;
+  /** Route, for panels that have their own page. Required once status is live. */
+  href?: string;
 }
 
 export const LAB_PANELS: LabPanel[] = [
@@ -54,8 +56,8 @@ export const LAB_PANELS: LabPanel[] = [
       "Does the estimator return the parameters that generated the data? Known-vs-estimated, with error against sample size.",
     dataSource: "SIMULATED",
     metricIds: ["item_p_rmse", "theta_recovery_r", "mean_beta_bias"],
-    status: "pending",
-    plannedIn: "S4",
+    status: "live",
+    href: "/lab/recovery",
   },
   {
     id: "instrument-health",
@@ -102,6 +104,9 @@ export const LAB_PANELS: LabPanel[] = [
 // and the test run, not produce a page with a hole in it.
 for (const panel of LAB_PANELS) {
   for (const id of panel.metricIds) metric(id);
+  if (panel.status === "live" && panel.id !== "metric-dictionary" && !panel.href) {
+    throw new Error(`lab: live panel "${panel.id}" has no href — it would be unreachable`);
+  }
 }
 
 export const LIVE_PANELS = LAB_PANELS.filter((p) => p.status === "live");
