@@ -28,6 +28,7 @@
  */
 
 import { fnv1a } from "./hash";
+import type { MetricSpec } from "./metricMeta";
 
 /** The degradation families the toolchain can author (clip-pipeline degrade). */
 export const DEGRADATION_FAMILIES = ["pitch-drift", "timing-smear", "lossy-artifact"] as const;
@@ -276,3 +277,33 @@ export function computeDelicacyResult(
     receipts,
   };
 }
+
+/**
+ * The metrics this module computes (RT-9c). Declared beside the arithmetic so
+ * the two change together; the Lab's dictionary aggregates rather than restates.
+ */
+export const DELICACY_METRICS: MetricSpec[] = [
+  {
+    id: "delicacy_accuracy",
+    label: "Delicacy accuracy",
+    definition:
+      "Share of trials where the respondent correctly identified which of two clips was the unmodified original.",
+    formula: "accuracy = (correct side picks) / (trials)",
+    unit: "proportion",
+    owner: "instrument",
+    target: "above 0.50 chance",
+    caveat: "Two-alternative forced choice: 50% is a coin flip, not a middling score.",
+  },
+  {
+    id: "flaw_accuracy",
+    label: "Flaw-identification accuracy",
+    definition:
+      "Share of correctly-identified trials where the respondent also named the right degradation family.",
+    formula: "accuracy = (correct flaw picks) / (trials where the side pick was correct)",
+    unit: "proportion",
+    owner: "instrument",
+    target: "above 0.33 chance",
+    caveat:
+      "Scored only on trials where the side pick was right — judging the flaw in the wrong file is unscoreable, not wrong.",
+  },
+];

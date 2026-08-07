@@ -9,8 +9,13 @@
  * dishonest one.
  */
 
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { BIAS_METRICS } from "@/engine/bias";
+import { CALIBRATION_METRICS } from "@/engine/calibration";
+import { DELICACY_METRICS } from "@/engine/delicacy";
+import { ESTIMATE_METRICS } from "@/analytics/estimate";
+import { RECOVERY_METRICS } from "@/analytics/recovery";
 import { METRICS, metric, metricIds } from "./metrics";
 import { LAB_PANELS, LIVE_PANELS, PENDING_PANELS } from "./panels";
 
@@ -58,6 +63,86 @@ describe("lab — metric dictionary integrity", () => {
     // Named explicitly: these are the numbers where a naive reading is wrong.
     for (const id of ["item_p_value", "brier", "sway_pct", "alpha", "delicacy_accuracy"]) {
       expect(metric(id).caveat, id).toBeTruthy();
+    }
+  });
+});
+
+describe("lab — metrics are SOURCED from the modules that compute them (RT-9c)", () => {
+  it("every module's declared metrics appear in the dictionary, stamped with that module", () => {
+    const cases = [
+      ["src/engine/bias.ts", BIAS_METRICS],
+      ["src/engine/delicacy.ts", DELICACY_METRICS],
+      ["src/engine/calibration.ts", CALIBRATION_METRICS],
+      ["src/analytics/estimate.ts", ESTIMATE_METRICS],
+      ["src/analytics/recovery.ts", RECOVERY_METRICS],
+    ] as const;
+    for (const [path, specs] of cases) {
+      for (const spec of specs) {
+        const m = metric(spec.id);
+        expect(m.computedIn, spec.id).toBe(path);
+        // The aggregator must pass definitions through untouched — if it ever
+        // starts rewriting them, the module is no longer the source of truth.
+        expect(m.formula, spec.id).toBe(spec.formula);
+        expect(m.definition, spec.id).toBe(spec.definition);
+        expect(m.caveat, spec.id).toBe(spec.caveat);
+      }
+    }
+  });
+
+  it("only the ops metric is hand-written in the lab (the named exception)", () => {
+    const handWritten = METRICS.filter((m) => m.computedIn.endsWith(".mjs"));
+    expect(handWritten.map((m) => m.id)).toEqual(["sessions_completed"]);
+  });
+
+  it("the module declarations account for EVERY metric — none is orphaned here", () => {
+    const sourced = [
+      ...BIAS_METRICS,
+      ...DELICACY_METRICS,
+      ...CALIBRATION_METRICS,
+      ...ESTIMATE_METRICS,
+      ...RECOVERY_METRICS,
+    ].map((m) => m.id);
+    const inDictionary = METRICS.filter((m) => !m.computedIn.endsWith(".mjs")).map((m) => m.id);
+    expect(inDictionary.sort()).toEqual(sourced.sort());
+  });
+
+  it("the acceptance band in the dictionary tracks the CONSTANTS the gate reads", async () => {
+    // The §1 band is enforced by ACCEPT_* in estimate.ts. If someone changes a
+    // threshold and not the prose, these disagree — which is the whole failure
+    // mode RT-9c was raised about, now caught rather than watched for.
+    const { ACCEPT_P_MIN, ACCEPT_P_MAX, ACCEPT_DISCRIMINATION_MIN } = await import("@/analytics/estimate");
+    expect(metric("item_p_value").target).toContain(String(ACCEPT_P_MIN));
+    expect(metric("item_p_value").target).toContain(String(ACCEPT_P_MAX));
+    expect(metric("item_discrimination").target).toContain(String(ACCEPT_DISCRIMINATION_MIN));
+  });
+});
+
+describe("lab — extracted engine package stays in sync", () => {
+  // The package copies are required to be byte-identical to the app modules
+  // apart from a 2-line banner (docs/engine-extraction-checklist.md). Adding
+  // metric declarations to the engine touched both; this guards the invariant
+  // instead of relying on remembering it.
+  const cases = [
+    ["src/engine/bias.ts", "packages/hume-taste-engine/src/bias.ts"],
+    ["src/engine/metricMeta.ts", "packages/hume-taste-engine/src/metricMeta.ts"],
+  ] as const;
+
+  for (const [appPath, pkgPath] of cases) {
+    it(`${pkgPath} matches ${appPath} after its banner`, () => {
+      const app = readFileSync(appPath, "utf8");
+      const pkg = readFileSync(pkgPath, "utf8");
+      const lines = pkg.split("\n");
+      expect(lines[0]).toContain("EXTRACTED COPY");
+      expect(lines.slice(2).join("\n")).toBe(app);
+    });
+  }
+
+  it("the package imports nothing from the app (it must compile standalone)", () => {
+    for (const [, pkgPath] of cases) {
+      const body = readFileSync(pkgPath, "utf8")
+        .split("\n")
+        .filter((l) => /^\s*(import|export)\b.*\bfrom\b/.test(l));
+      for (const line of body) expect(line, pkgPath).not.toMatch(/from\s+["']@\//);
     }
   });
 });
