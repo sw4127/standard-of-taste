@@ -1,0 +1,210 @@
+import type { Metadata } from "next";
+import SourceBadge from "@/components/lab/SourceBadge";
+import { METRICS, type MetricDefinition } from "@/content/lab/metrics";
+import { LAB_PANELS, PENDING_PANELS } from "@/content/lab/panels";
+
+/**
+ * The Lab index (artifact pivot §4) — the analytics surface, in the product,
+ * public. S3 ships the shell plus ONE live panel: the metric dictionary.
+ *
+ * Deliberately NOT shipping empty chrome for the five pending panels. A grid of
+ * hollow cards would look like a dashboard and prove nothing, which is the
+ * theater N2 exists to stop. Pending work is listed as a roadmap, named by the
+ * slice that builds it, so the claim stays checkable.
+ */
+
+export const metadata: Metadata = {
+  title: "The Lab — The Taste Gym",
+  description:
+    "The measurement layer, in the open: every metric defined with its formula, owner, acceptance band, and caveat — plus the provenance of every number shown.",
+  alternates: { canonical: "/lab" },
+  openGraph: {
+    title: "The Lab — The Taste Gym",
+    description: "Every metric this product computes, defined in the open — formula, owner, target, caveat.",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
+  },
+};
+
+const GOLD = "hsl(42 80% 62%)";
+
+const OWNER_LABEL: Record<MetricDefinition["owner"], string> = {
+  instrument: "Instrument",
+  psychometrics: "Psychometrics",
+  ops: "Ops",
+};
+
+/** What each owner is accountable for — the KPI tree's second level. */
+const OWNER_BLURB: Record<MetricDefinition["owner"], string> = {
+  instrument: "What a single session measures about one person.",
+  psychometrics: "Whether the instrument and the estimator can be trusted at all.",
+  ops: "Whether enough people have been through it to say anything.",
+};
+
+/** Group the dictionary by owner so it reads as a structure, not a list. */
+const OWNER_ORDER: MetricDefinition["owner"][] = ["instrument", "psychometrics", "ops"];
+
+export default function LabIndex() {
+  const grouped = OWNER_ORDER.map((owner) => ({
+    owner,
+    metrics: METRICS.filter((m) => m.owner === owner),
+  })).filter((g) => g.metrics.length > 0);
+
+  return (
+    <div>
+      <p className="mt-10 text-[0.65rem] font-bold tracking-[0.3em] text-muted">THE LAB</p>
+      <h1 className="mt-2 max-w-3xl font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl">
+        The measurement layer, with the lid off.
+      </h1>
+      <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-neutral-300">
+        Most products show you a score and hide the machine. This page is the machine. Every number
+        the gym computes is defined here — the formula, who owns it, what good would look like, and
+        the caveat that has to travel with it. Where a number has no defensible target yet, it says
+        so instead of inventing one.
+      </p>
+
+      {/* The honesty notice is not a footnote. It is the first thing that
+          establishes what kind of page this is. */}
+      <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+        <div className="flex flex-wrap items-center gap-3">
+          <SourceBadge source="SIMULATED" />
+          <SourceBadge source="REAL" />
+          <SourceBadge source="MIXED" />
+        </div>
+        <p className="mt-4 text-sm leading-relaxed text-neutral-300">
+          Every panel that shows data carries one of these badges. Right now the instrument has
+          never been fielded, so <strong className="font-semibold text-white">no real cohort
+          exists</strong> and nothing here is a percentile. Numbers generated from a known model to
+          validate the pipeline are labelled <span className="font-mono text-xs">SIMULATED</span>{" "}
+          wherever they appear. When real responses arrive they flow through the identical
+          pipeline — the only thing that changes is the badge.
+        </p>
+      </div>
+
+      {/* ------------------------------------------------ live panel: dictionary */}
+      <section className="mt-14" aria-labelledby="metric-dictionary">
+        <div className="flex flex-wrap items-baseline justify-between gap-3">
+          <h2 id="metric-dictionary" className="font-display text-2xl font-semibold tracking-tight">
+            Metric dictionary
+          </h2>
+          <p className="font-mono text-[0.6rem] tracking-[0.18em] text-muted">
+            {METRICS.length} METRICS · {grouped.length} OWNERS
+          </p>
+        </div>
+        <p className="mt-2 max-w-2xl text-sm text-muted">
+          {LAB_PANELS[0].blurb}
+        </p>
+
+        {/* The index. Sixteen definitions is reference material, and reference
+            material without a way in is hostile — this is the KPI tree at a
+            glance, and it is what makes the cards below anchor targets rather
+            than a scroll. */}
+        <nav aria-label="Metric index" className="mt-7 grid gap-x-8 gap-y-6 sm:grid-cols-3">
+          {grouped.map((group) => (
+            <div key={group.owner}>
+              <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: GOLD }}>
+                {OWNER_LABEL[group.owner].toUpperCase()}
+              </p>
+              <p className="mt-1.5 text-xs leading-relaxed text-muted">{OWNER_BLURB[group.owner]}</p>
+              <ul className="mt-3 flex flex-col gap-1.5">
+                {group.metrics.map((m) => (
+                  <li key={m.id}>
+                    <a
+                      href={`#metric-${m.id}`}
+                      className="group flex items-baseline justify-between gap-3 text-[13px] text-neutral-300 transition hover:text-white"
+                    >
+                      <span className="underline-offset-4 group-hover:underline">{m.label}</span>
+                      <span className="shrink-0 font-mono text-[0.6rem] text-muted">
+                        {m.target ? "▸" : "—"}
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
+        <p className="mt-5 font-mono text-[0.6rem] tracking-[0.15em] text-muted">
+          ▸ HAS AN ACCEPTANCE TARGET · — NO DEFENSIBLE TARGET YET
+        </p>
+
+        {grouped.map((group) => (
+          <div key={group.owner} className="mt-12">
+            <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: GOLD }}>
+              {OWNER_LABEL[group.owner].toUpperCase()}
+            </p>
+            <div className="mt-3 flex flex-col gap-3">
+              {group.metrics.map((m) => (
+                <article
+                  key={m.id}
+                  id={`metric-${m.id}`}
+                  // scroll-mt keeps the heading clear of the viewport edge when
+                  // jumped to from the index.
+                  className="scroll-mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition target:border-white/30"
+                >
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                    <h3 className="font-display text-lg font-semibold">{m.label}</h3>
+                    <code className="font-mono text-[0.6rem] tracking-[0.15em] text-muted">{m.id}</code>
+                  </div>
+                  <p className="mt-2 text-sm leading-relaxed text-neutral-300">{m.definition}</p>
+
+                  {/* Wide content scrolls inside its own box — the page body
+                      must never scroll sideways on a phone. */}
+                  <div className="mt-3 overflow-x-auto">
+                    <code className="block whitespace-pre rounded-lg bg-black/40 px-3 py-2 font-mono text-xs text-neutral-200">
+                      {m.formula}
+                    </code>
+                  </div>
+
+                  <dl className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-xs">
+                    <div className="flex gap-1.5">
+                      <dt className="text-muted">Target</dt>
+                      <dd className={m.target ? "text-neutral-200" : "text-muted italic"}>
+                        {m.target ?? "none defensible yet"}
+                      </dd>
+                    </div>
+                    <div className="flex gap-1.5">
+                      <dt className="text-muted">Unit</dt>
+                      <dd className="text-neutral-200">{m.unit}</dd>
+                    </div>
+                    <div className="flex min-w-0 gap-1.5">
+                      <dt className="text-muted">Computed in</dt>
+                      <dd className="truncate font-mono text-[0.7rem] text-neutral-200">{m.computedIn}</dd>
+                    </div>
+                  </dl>
+
+                  {m.caveat && (
+                    <p className="mt-3 border-l-2 border-white/15 pl-3 text-xs leading-relaxed text-muted">
+                      {m.caveat}
+                    </p>
+                  )}
+                </article>
+              ))}
+            </div>
+          </div>
+        ))}
+      </section>
+
+      {/* ---------------------------------------------------------- roadmap */}
+      <section className="mt-16" aria-labelledby="pending">
+        <h2 id="pending" className="font-display text-2xl font-semibold tracking-tight">
+          Not built yet
+        </h2>
+        <p className="mt-2 max-w-2xl text-sm text-muted">
+          Listed rather than mocked up. An empty panel is not a panel.
+        </p>
+        <ul className="mt-5 flex flex-col gap-2">
+          {PENDING_PANELS.map((p) => (
+            <li
+              key={p.id}
+              className="flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-xl border border-dashed border-white/10 px-4 py-3"
+            >
+              <span className="font-display text-base font-semibold text-neutral-300">{p.title}</span>
+              <span className="font-mono text-[0.6rem] tracking-[0.18em] text-muted">{p.plannedIn}</span>
+              <span className="w-full text-xs text-muted sm:w-auto sm:flex-1">{p.blurb}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  );
+}

@@ -23,6 +23,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...(DELICACY_LIVE ? [page("/delicacy", 0.9, "weekly")] : []),
     page("/learn", 0.8),
     ...LEARN_PAGES.map((p) => page(`/learn/${p.slug}`, 0.7)),
+    // The Lab is a public artifact surface, not an admin console — it is meant
+    // to be found and read (pivot §4).
+    page("/lab", 0.8, "weekly"),
     page("/music/quiz", 0.4),
     page("/quiz", 0.3, "yearly"),
     page("/fan-verdict", 0.3, "yearly"),
