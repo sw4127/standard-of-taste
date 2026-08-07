@@ -24,6 +24,7 @@
  */
 
 import { DELICACY_CONFIDENCE_LEVELS, type DelicacyConfidence } from "./delicacy";
+import type { MetricSpec } from "./metricMeta";
 
 /** One scored performance item: what was claimed, and what happened. */
 export interface CalibrationObservation {
@@ -142,3 +143,31 @@ export function computeCalibration(observations: CalibrationObservation[]): Cali
     bins,
   };
 }
+
+/** The metrics this module computes (RT-9c). See metricMeta.ts for the why. */
+export const CALIBRATION_METRICS: MetricSpec[] = [
+  {
+    id: "brier",
+    label: "Brier score",
+    definition:
+      "Mean squared error between claimed confidence and what actually happened. Lower is better; it rewards knowing how right you are.",
+    formula: "brier = mean((claimed probability − outcome)²)",
+    unit: "proportion",
+    owner: "instrument",
+    target: "below 0.25 (the always-guess-50% anchor)",
+    caveat:
+      "Misleads alone: a perfectly accurate respondent who always claims 50% scores the same 0.25 as someone guessing. Always pair it with the confidence gap.",
+  },
+  {
+    id: "calibration_gap_pts",
+    label: "Confidence gap",
+    definition:
+      "Mean claimed confidence minus actual accuracy. Positive = claiming more than delivered.",
+    formula: "gap = mean(confidence) − accuracy, both in percentage points",
+    unit: "points",
+    owner: "instrument",
+    target: "within ±10 points",
+    caveat:
+      "The ±10 threshold is provisional judgment, not data. At session length the gap's standard error can exceed the threshold itself.",
+  },
+];

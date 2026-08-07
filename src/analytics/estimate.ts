@@ -31,6 +31,7 @@
 
 import { computeBiasResult, type BiasItemSpec, type BiasRatings } from "@/engine/bias";
 import { computeDelicacyResult, type DelicacyItemSpec, type DelicacyResponses } from "@/engine/delicacy";
+import type { MetricSpec } from "@/engine/metricMeta";
 
 /** Provenance of a set of responses. Rendered as the /lab panel badge. */
 export type DataSource = "SIMULATED" | "REAL" | "MIXED";
@@ -230,3 +231,54 @@ export function estimateBiasCohort(
     meanControlDriftPts: withDrift.length > 0 ? mean(withDrift) : null,
   };
 }
+
+/** The metrics this module computes (RT-9c). See engine/metricMeta.ts. */
+export const ESTIMATE_METRICS: MetricSpec[] = [
+  {
+    id: "item_p_value",
+    label: "Item difficulty (p)",
+    definition:
+      "Proportion of respondents who answered the item correctly. Higher means EASIER — the field's unfortunate convention, kept because the acceptance band is written in it.",
+    formula: "p = (number correct) / (number who answered)",
+    unit: "proportion",
+    owner: "psychometrics",
+    target: `${ACCEPT_P_MIN} – ${ACCEPT_P_MAX}`,
+    caveat:
+      "Population-dependent: the same item is 'easier' in an abler cohort. Not an intrinsic property of the item.",
+  },
+  {
+    id: "item_discrimination",
+    label: "Item discrimination (corrected r-pbis)",
+    definition:
+      "How well an item separates strong respondents from weak ones — the correlation between getting this item right and scoring well on everything else.",
+    formula: "r = corr(item score, total score EXCLUDING this item)",
+    unit: "correlation",
+    owner: "psychometrics",
+    target: `≥ ${ACCEPT_DISCRIMINATION_MIN}`,
+    caveat:
+      "Undefined (not zero) when everyone answers alike. Attenuated at extreme difficulty, which caps how well it can track true discrimination.",
+  },
+  {
+    id: "alpha",
+    label: "Reliability (Cronbach's α / KR-20)",
+    definition:
+      "How consistently the trials measure the same underlying ability. Low α means an individual score is mostly noise.",
+    formula: "α = k/(k−1) · (1 − Σp·q / Var(total))",
+    unit: "proportion",
+    owner: "psychometrics",
+    target: "≥ 0.70 (conventional floor)",
+    caveat:
+      "The live 6-trial delicacy pool measures α ≈ 0.25 under simulation — far below the floor. Six two-alternative trials cannot support a reliable individual score.",
+  },
+  {
+    id: "split_half",
+    label: "Split-half reliability",
+    definition:
+      "Reliability estimated by correlating two halves of the test and correcting for the halving.",
+    formula: "r_sb = 2r / (1 + r), halves split odd/even",
+    unit: "proportion",
+    owner: "psychometrics",
+    target: "≥ 0.70 (conventional floor)",
+    caveat: "Odd/even is ONE arbitrary split; a different split gives a different number.",
+  },
+];

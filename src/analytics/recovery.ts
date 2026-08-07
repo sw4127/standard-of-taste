@@ -24,6 +24,7 @@
  * claim is made about mean error, which is the quantity that actually behaves.
  */
 
+import type { MetricSpec } from "@/engine/metricMeta";
 import {
   correlation,
   delicacyMatrix,
@@ -290,3 +291,41 @@ export function formatRecoveryTable(report: RecoveryReport): string {
     "  se(β̄) shrinks with n (sampling error); bias(β̄) does NOT (instrument attenuation).",
   ].join("\n");
 }
+
+/** The metrics this module computes (RT-9c). See engine/metricMeta.ts. */
+export const RECOVERY_METRICS: MetricSpec[] = [
+  {
+    id: "item_p_rmse",
+    label: "Item-difficulty recovery error",
+    definition:
+      "Root mean squared error between estimated item difficulty and the known difficulty that generated the data. The headline evidence that the estimator works.",
+    formula: "rmse = √mean((estimated p − true p)²)",
+    unit: "proportion",
+    owner: "psychometrics",
+    target: "shrinks toward 0 as sample size grows",
+    caveat: "Computable only against simulated data, where the truth is known by construction.",
+  },
+  {
+    id: "theta_recovery_r",
+    label: "Ability recovery correlation",
+    definition:
+      "Correlation between a respondent's score and their true underlying ability. Capped by reliability — it cannot reach 1 on a test of finite length.",
+    formula: "r = corr(proportion correct, true θ)",
+    unit: "correlation",
+    owner: "psychometrics",
+    target: "approaches √reliability",
+    caveat: "Improves with TEST LENGTH, not with sample size.",
+  },
+  {
+    id: "mean_beta_bias",
+    label: "Sway attenuation bias",
+    definition:
+      "How far the cohort's mean measured sway sits below the true mean susceptibility. Systematic, not noise — recruiting more respondents does not reduce it.",
+    formula: "bias = mean(estimated sway) − mean(true β), averaged over replications",
+    unit: "points",
+    owner: "psychometrics",
+    target: "0 (currently ≈ −0.065)",
+    caveat:
+      "Magnitude depends on assumed model parameters and must not be quoted as a measured property of real listeners.",
+  },
+];

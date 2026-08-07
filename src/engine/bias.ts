@@ -25,6 +25,7 @@
  */
 
 import { fnv1a } from "./hash";
+import type { MetricSpec } from "./metricMeta";
 
 /** Rating scale bounds (inclusive). Integers only for v1. */
 export const BIAS_SCALE_MIN = 0;
@@ -264,3 +265,55 @@ export function computeBiasResult(
     movableCount: movable.length,
   };
 }
+
+/**
+ * The metrics this module computes (RT-9c). Declared here so the formula and
+ * the code that implements it change together; the Lab's dictionary aggregates
+ * these rather than restating them.
+ */
+export const BIAS_METRICS: MetricSpec[] = [
+  {
+    id: "sway_pct",
+    label: "Sway (drift-corrected)",
+    definition:
+      "How far ratings moved toward the shown label between the blind and labeled passes, as a share of the rating scale. Positive = swayed by the label; negative = resisted it.",
+    formula: "pct = round((adjusted mean shift / scale span) · 100), adjusted = raw − d̄·(nUp−nDown)/n",
+    unit: "percent",
+    owner: "instrument",
+    target: null,
+    caveat:
+      "Not a percentile. Understates the true effect: re-rating anchors people on their first answer, and the scale ceiling truncates upward movement.",
+  },
+  {
+    id: "sway_raw_pct",
+    label: "Sway (uncorrected)",
+    definition:
+      "The same shift before the control-drift correction is applied. Shown beside the corrected figure so the correction is never invisible.",
+    formula: "rawPct = round((mean shift toward label / scale span) · 100)",
+    unit: "percent",
+    owner: "instrument",
+    target: null,
+  },
+  {
+    id: "control_drift_pts",
+    label: "Control drift",
+    definition:
+      "How much a respondent's ratings move on the second pass for clips that carry NO label — the baseline for memory, familiarity, and regression.",
+    formula: "d̄ = mean(second pass − first pass) over control items",
+    unit: "points",
+    owner: "instrument",
+    target: null,
+    caveat:
+      "Biased toward zero by the scale ceiling: control ratings sitting at the maximum can only fall, so the correction it feeds is systematically too small.",
+  },
+  {
+    id: "sway_share",
+    label: "Sway share",
+    definition:
+      "Of the clips that had room to move toward their label, the share that actually did. The one sway statistic the scale-edge artifact cannot touch.",
+    formula: "share = (items moved toward label) / (items with headroom > 0)",
+    unit: "proportion",
+    owner: "instrument",
+    target: null,
+  },
+];
