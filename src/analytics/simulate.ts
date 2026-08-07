@@ -100,6 +100,20 @@ type Rng = ReturnType<typeof makeRng>;
 const subSeed = (base: number, i: number) => (Math.imul(base ^ (i + 1), 0x9e3779b1) ^ (i << 16)) >>> 0;
 
 const logistic = (x: number) => 1 / (1 + Math.exp(-x));
+
+/**
+ * P(picks the original) for one person on one item — 2PL with the guessing
+ * floor FIXED at chance, because a 2AFC item cannot score below 50% in
+ * expectation and estimating a floor we already know would only add variance.
+ *
+ * EXPORTED ON PURPOSE: the recovery harness computes the model-implied truth
+ * with this exact function. Re-deriving the formula there would mean a subtle
+ * transcription error could make recovery "fail" for the wrong reason — or,
+ * far worse, silently succeed against a wrong truth.
+ */
+export function pCorrectSide(item: Pick<SimDelicacyItem, "a" | "b">, theta: number): number {
+  return GUESS_SIDE + (1 - GUESS_SIDE) * logistic(item.a * (theta - item.b));
+}
 const clampRating = (x: number) =>
   Math.min(BIAS_SCALE_MAX, Math.max(BIAS_SCALE_MIN, Math.round(x)));
 
@@ -241,7 +255,7 @@ export function simulateDelicacy(
     const rng = makeRng(subSeed(seed ^ 0x5eed_de1c, i));
     const out: DelicacyResponses = {};
     for (const item of items) {
-      const pSide = GUESS_SIDE + (1 - GUESS_SIDE) * logistic(item.a * (person.theta - item.b));
+      const pSide = pCorrectSide(item, person.theta);
       const correct = rng.unit() < pSide;
       const pickedSide = correct
         ? item.originalSide
