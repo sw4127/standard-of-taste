@@ -112,22 +112,26 @@ export default function ClipPlayer({
   const toneStop = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Stable identity in the exclusive-playback registry; the stop body reads
   // current refs so it never acts on a stale element.
-  const registryEntry = useRef<{ stop: () => void } | null>(null);
-  if (!registryEntry.current) {
-    registryEntry.current = {
-      stop: () => {
-        if (toneTimer.current) clearInterval(toneTimer.current);
-        if (toneStop.current) clearTimeout(toneStop.current);
-        const el = audioRef.current;
-        if (el) {
-          el.pause();
-          el.currentTime = 0; // accepted policy: stopping restarts the clip
-        }
-        setPositionMs(0);
-        setPlaying(false);
-      },
-    };
-  }
+  //
+  // Lazy useState rather than the lazy-init-ref pattern: reading `.current`
+  // during render is what React's refs-during-render rule forbids, and under
+  // concurrent rendering a discarded render pass could otherwise mint an entry
+  // that never gets released. useState's initializer runs exactly once per
+  // mounted component and the value is stable for its lifetime, which is
+  // precisely the guarantee the playback registry needs.
+  const [registryEntry] = useState<{ stop: () => void }>(() => ({
+    stop: () => {
+      if (toneTimer.current) clearInterval(toneTimer.current);
+      if (toneStop.current) clearTimeout(toneStop.current);
+      const el = audioRef.current;
+      if (el) {
+        el.pause();
+        el.currentTime = 0; // accepted policy: stopping restarts the clip
+      }
+      setPositionMs(0);
+      setPlaying(false);
+    },
+  }));
 
   function bank(ms: number) {
     const next = Math.max(heardRef.current, Math.round(ms));
@@ -149,9 +153,9 @@ export default function ClipPlayer({
       if (toneStop.current) clearTimeout(toneStop.current);
       audioRef.current?.pause();
       audioRef.current = null;
-      if (registryEntry.current) releasePlayback(registryEntry.current);
+      releasePlayback(registryEntry);
     };
-  }, [src]);
+  }, [src, registryEntry]);
 
   useEffect(
     () => () => {
@@ -181,7 +185,7 @@ export default function ClipPlayer({
 
   function playTone() {
     if (playing) return; // triad is fixed-length; no stop control needed
-    claimPlayback(registryEntry.current!);
+    claimPlayback(registryEntry);
     try {
       const ctx = (audioCtx.current ??= new AudioContext());
       const base = 196 * Math.pow(2, index / 6);
@@ -247,7 +251,7 @@ export default function ClipPlayer({
           bank(el.duration * 1000);
         }
         setPlaying(false);
-        if (registryEntry.current) releasePlayback(registryEntry.current);
+        releasePlayback(registryEntry);
       };
       el.onerror = () => {
         setPlaying(false);
@@ -261,12 +265,12 @@ export default function ClipPlayer({
       el.currentTime = 0;
       setPositionMs(0);
       setPlaying(false);
-      releasePlayback(registryEntry.current!);
+      releasePlayback(registryEntry);
       return;
     }
     try {
       setFailed(false);
-      claimPlayback(registryEntry.current!);
+      claimPlayback(registryEntry);
       // A finished clip replays from the top (don't rely on the browser's
       // rewind-on-ended behavior — observed inconsistent), and the ring
       // resets with it: it shows playback position, nothing else.
