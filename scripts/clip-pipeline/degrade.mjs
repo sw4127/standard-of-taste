@@ -26,6 +26,7 @@
 import { createHash } from "node:crypto";
 import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync } from "node:fs";
+import { clippingStats } from "./spectral.mjs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
@@ -232,6 +233,18 @@ export async function degrade(args) {
     sha256File(join(TMP, `${id}-redo.mp3`)) === sha256File(join(OUT, `${id}-${degradedSide}.mp3`)) &&
     sha256File(join(TMP, `${id}-redo.m4a`)) === sha256File(join(OUT, `${id}-${degradedSide}.m4a`));
 
+  // CLIPPING IS CHECKED HERE, BEFORE LOUDNESS NORMALISATION (RT-17a).
+  // Measured 2026-08-08: a deliberately clipped render (+30 dB on a source
+  // peaking at 0.17) came out of normRender + mp3 with 0.00% full-scale
+  // samples AND 0.00% flat-topped crests, because loudnorm rescales the peaks
+  // and the codec rounds the plateaus off. Its LSD was 13 dB — the distortion
+  // was enormous and completely invisible to a post-hoc check on the shipped
+  // file. The pre-normalisation waveform is the only place clipping can
+  // honestly be caught, so it is caught here.
+  const clipOrig = clippingStats(decodeMono(origWav, 44100));
+  const clipDeg = clippingStats(decodeMono(degCut, 44100));
+  const worstClip = Math.max(clipOrig.clippedFraction, clipDeg.clippedFraction);
+
   const pair = (x, y, fmt, u, tol, dp) =>
     [`a ${x.toFixed(dp)}  b ${y.toFixed(dp)} ${u}  Δ ${Math.abs(x - y).toFixed(dp)} (≤${tol}) [${fmt}]`, Math.abs(x - y) <= tol];
   const checks = [
@@ -242,6 +255,7 @@ export async function degrade(args) {
     ["true peak (all 4)", `mp3 ${A.truePeak.toFixed(1)}/${B.truePeak.toFixed(1)}  m4a ${A4.truePeak.toFixed(1)}/${B4.truePeak.toFixed(1)} dBTP (≤ −1.0)`, [A, B, A4, B4].every((x) => x.truePeak <= -1)],
     ["distinct files", `rel-RMS diff ${diff.toFixed(3)} (≥0.020 floor; NOT a perceptual claim)`, diff >= 0.02],
     ["deterministic re-render", deterministic ? "sha256 identical" : "sha256 DIVERGED", deterministic],
+    ["no clipping (pre-loudnorm)", `orig ${(clipOrig.clippedFraction * 100).toFixed(4)}%  degraded ${(clipDeg.clippedFraction * 100).toFixed(4)}% (≤0.0500%)`, worstClip <= 0.0005],
   ];
 
   console.log(`degrade ${id}  (source ${sourceId} @${startSec}s, ${family} m${magnitude}, seed ${seed})`);
