@@ -4,6 +4,17 @@ Status: living doc, created 2026-07-12 (S1 of the approved RT-execution plan).
 Authority chain: `restructuring_decision_memo_2026-07-11.md` → `docs/rt-answers-2026-07-11.md` → this checklist.
 Items under "Launch blockers" gate launch. Fast-follows fire on their named triggers, not on vibes.
 
+## RETIRED GATES (artifact pivot, 2026-08-07)
+
+- **PM ear pass on delicacy clips — RETIRED.** `docs/ear-pass-delicacy.md` is
+  marked RETIRED and gates nothing. Item quality is computed: **Layer A**
+  (`node scripts/clip-pipeline/index.mjs validate` — spectral magnitude against
+  a 320 kbps transparency anchor, temporal drift, clipping checked
+  pre-normalisation, dead air) gates shipping and is enforced by
+  `src/content/delicacy/gates.ts`; **Layer B** (`gradeItems()` in
+  `src/analytics/estimate.ts`) auto-flags items from real responses and is
+  silent at n = 0. The PM approves the RULES, never the clips.
+
 ## Launch blockers
 
 1. **Pool of record wired.** Items 1–8 from `docs/bias-pool-candidates.md` processed through

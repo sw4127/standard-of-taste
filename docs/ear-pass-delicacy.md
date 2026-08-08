@@ -1,3 +1,24 @@
+> # ⛔ RETIRED — 2026-08-07
+>
+> **This procedure no longer gates anything.** The artifact pivot
+> (`docs/artifact-pivot-2026-08-07.md` §1) replaced the PM ear pass with
+> computable item validation, on the PM's own finding that ear-passes by a
+> non-musician produced unstable labels — and an unstable gate is worse than a
+> measured one.
+>
+> **What replaced it**
+> - **Layer A** — `node scripts/clip-pipeline/index.mjs validate`. Log-spectral
+>   distance and temporal drift against a 320 kbps round-trip of each item's own
+>   source, plus clipping (checked pre-normalisation) and dead-air detection.
+>   Gates shipping. Enforced by `src/content/delicacy/gates.ts`.
+> - **Layer B** — `gradeItems()` in `src/analytics/estimate.ts`. Difficulty and
+>   discrimination from real responses; auto-flags items to retire or to move a
+>   rung on the strength ladder. Gates retention, and is silent at n = 0.
+>
+> Kept verbatim below per the CLAUDE.md keep-intact rule, and because the
+> phase-1/phase-2 structure is a useful record of what the gate used to ask.
+> **Do not run it as a gate.**
+
 # Delicacy Ear Pass — PM Handbook (S6 gate, 2026-07-19)
 
 The ear pass is the **audibility gate** the objective pipeline cannot provide: every candidate

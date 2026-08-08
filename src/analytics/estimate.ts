@@ -282,3 +282,194 @@ export const ESTIMATE_METRICS: MetricSpec[] = [
     caveat: "Odd/even is ONE arbitrary split; a different split gives a different number.",
   },
 ];
+
+// --------------------------------------------------- Layer B item auto-flag
+
+/**
+ * The §1 Layer B verdicts. `PENDING` is not a hedge — it is the honest state
+ * of every item in a pool that has never been fielded, and it must be
+ * distinguishable from `ACCEPT` at every surface that renders it.
+ */
+export type ItemVerdict = "ACCEPT" | "TOO_EASY" | "TOO_HARD" | "RETIRE" | "PENDING";
+
+export interface ItemGrade {
+  id: string;
+  verdict: ItemVerdict;
+  /** What to do about it, in the pipeline's own vocabulary. */
+  action: string;
+  reasons: string[];
+  /** Responses behind the verdict. 0 means the verdict is PENDING by definition. */
+  n: number;
+  pValue: number | null;
+  discrimination: number | null;
+  /** Binomial SE of p̂ in proportion units — null at n = 0. */
+  pStandardError: number | null;
+}
+
+/**
+ * Minimum responses before an item may be judged at all.
+ *
+ * At n = 30 the standard error of p̂ near the middle of the band is about 0.09,
+ * which is wider than the distance from the band edge to its centre — so a
+ * verdict there would be a coin flip dressed as a decision. This is the number
+ * that stops the auto-flag from retiring good items on noise. PROVISIONAL: it
+ * is a power argument, not a measured threshold, and it should rise if the
+ * cohort turns out to be heterogeneous.
+ */
+export const MIN_N_TO_GRADE = 30;
+
+/**
+ * Reliability below which DISCRIMINATION verdicts are withheld.
+ *
+ * A corrected point-biserial correlates an item against the rest of the test,
+ * so the test IS the criterion. When the test is unreliable the criterion is
+ * unreliable, and every item's discrimination is attenuated toward zero
+ * regardless of its quality — judging items on it then retires good items for
+ * a defect of the instrument around them.
+ *
+ * MEASURED (2026-08-08, simulated banks at 800 respondents): the number of
+ * items clearing the 0.20 floor is 0/6 at six trials, 2/12, 8/24, 11/40 and
+ * 43/80. At the live pool's length NOTHING can pass, because a two-alternative
+ * task floors at 50% and half the correct answers on hard items are coin
+ * flips. The §1 band was written without reference to what a 2AFC instrument
+ * of this length can achieve.
+ */
+export const MIN_RELIABILITY_TO_JUDGE_DISCRIMINATION = 0.5;
+
+/**
+ * Grade one item against the §1 acceptance band (pivot §1 Layer B).
+ *
+ * This is the computed verdict that REPLACES the PM ear pass. Note what it
+ * does and does not decide: it judges an item by how people actually answered
+ * it, which is the standard of evidence in psychometrics — and it is silent
+ * until people have. An item with no responses is PENDING, never ACCEPT.
+ *
+ * Order matters: non-discrimination is checked FIRST and retires the item
+ * regardless of difficulty. An item everyone gets right at exactly p = 0.70
+ * would otherwise be "accepted" while telling us nothing about anybody, and
+ * discrimination is the property that makes an item worth keeping at all.
+ */
+export function gradeItem(stats: ItemStats, reliability: number | null = 1): ItemGrade {
+  const canJudgeDiscrimination =
+    reliability !== null && reliability >= MIN_RELIABILITY_TO_JUDGE_DISCRIMINATION;
+  const base = {
+    id: stats.id,
+    n: stats.n,
+    pValue: stats.n > 0 ? stats.pValue : null,
+    discrimination: stats.discrimination,
+    pStandardError:
+      stats.n > 0 ? Math.sqrt((stats.pValue * (1 - stats.pValue)) / stats.n) : null,
+  };
+
+  if (stats.n < MIN_N_TO_GRADE) {
+    return {
+      ...base,
+      verdict: "PENDING",
+      action: `collect responses — ${stats.n}/${MIN_N_TO_GRADE} needed before this item can be judged`,
+      reasons: [`n = ${stats.n} is below the ${MIN_N_TO_GRADE} required to grade`],
+    };
+  }
+
+  // DIFFICULTY IS CHECKED FIRST, and the ordering is load-bearing.
+  //
+  // An out-of-band item has a cheap, reversible fix — move it a rung on the
+  // strength ladder. Retirement is terminal. For a two-alternative task the two
+  // conditions overlap badly: p is bounded below by 0.5, so an item near the
+  // floor is BOTH "too hard" and, necessarily, non-discriminating — nothing
+  // correlates with a coin flip. Checking discrimination first would retire
+  // every too-hard item outright, destroying items that would be perfectly good
+  // one rung gentler. Only an item that sits INSIDE the band and still fails to
+  // separate anyone is genuinely dead weight.
+  if (stats.pValue > ACCEPT_P_MAX) {
+    return {
+      ...base,
+      verdict: "TOO_EASY",
+      action: "increase degradation one rung on the strength ladder",
+      reasons: [`p ${stats.pValue.toFixed(2)} > ${ACCEPT_P_MAX} — nearly everyone gets it right`],
+    };
+  }
+  if (stats.pValue < ACCEPT_P_MIN) {
+    return {
+      ...base,
+      verdict: "TOO_HARD",
+      action: "decrease degradation one rung on the strength ladder",
+      reasons: [`p ${stats.pValue.toFixed(2)} < ${ACCEPT_P_MIN} — closer to guessing than to hearing`],
+    };
+  }
+
+  // Discrimination is only judged when the test is reliable enough for the
+  // judgement to mean anything (see MIN_RELIABILITY_TO_JUDGE_DISCRIMINATION).
+  if (!canJudgeDiscrimination) {
+    return {
+      ...base,
+      verdict: "PENDING",
+      action: "lengthen the test — discrimination cannot be judged on an unreliable criterion",
+      reasons: [
+        `difficulty is in band, but reliability ${reliability === null ? "is unknown" : reliability.toFixed(2)} ` +
+          `< ${MIN_RELIABILITY_TO_JUDGE_DISCRIMINATION}: the rest-score this item is correlated against is itself mostly noise`,
+      ],
+    };
+  }
+  if (stats.discrimination === null) {
+    return {
+      ...base,
+      verdict: "RETIRE",
+      action: "retire — every respondent answered identically",
+      reasons: ["discrimination is undefined (no variance in responses)"],
+    };
+  }
+  if (stats.discrimination < ACCEPT_DISCRIMINATION_MIN) {
+    return {
+      ...base,
+      verdict: "RETIRE",
+      action: "retire — the item does not separate strong respondents from weak ones",
+      reasons: [`discrimination ${stats.discrimination.toFixed(2)} < ${ACCEPT_DISCRIMINATION_MIN}`],
+    };
+  }
+
+  return { ...base, verdict: "ACCEPT", action: "keep", reasons: [] };
+}
+
+export interface ItemGradeReport {
+  dataSource: DataSource;
+  nPersons: number;
+  grades: ItemGrade[];
+  /** Counts per verdict — the auto-flag summary the /lab panel renders. */
+  summary: Record<ItemVerdict, number>;
+  /**
+   * Set when the verdicts indict the INSTRUMENT rather than the items.
+   *
+   * Measured 2026-08-08: applying the §1 floor of 0.20 to a healthy simulated
+   * bank retires 24 of 40 items at alpha 0.634, and 6 of 6 at the live pool's
+   * length. A two-alternative task floors at 50%, so half the correct answers
+   * on hard items are coin flips and every item-total correlation is
+   * attenuated; the number of items clearing 0.20 runs 0/6, 2/12, 8/24, 11/40,
+   * 43/80. A gate that condemns most of a good bank is reporting its own
+   * threshold, not the items, and it must say so rather than let someone act
+   * on the verdicts.
+   */
+  warning: string | null;
+}
+
+export function gradeItems(report: ItemStatsReport, reliability: number | null = 1): ItemGradeReport {
+  const grades = report.items.map((i) => gradeItem(i, reliability));
+  const summary: Record<ItemVerdict, number> = {
+    ACCEPT: 0,
+    TOO_EASY: 0,
+    TOO_HARD: 0,
+    RETIRE: 0,
+    PENDING: 0,
+  };
+  for (const g of grades) summary[g.verdict]++;
+
+  const judged = grades.length - summary.PENDING;
+  const warning =
+    judged > 0 && summary.RETIRE / judged > 0.5
+      ? `${summary.RETIRE} of ${judged} judged items were retired. A rate this high usually means the ` +
+        `discrimination floor (${ACCEPT_DISCRIMINATION_MIN}) is unreachable for a test of this length and ` +
+        `format, not that the items are bad — a 2AFC task's guessing floor attenuates every item-total ` +
+        `correlation. Lengthen the test or revisit the floor before acting on these verdicts.`
+      : null;
+
+  return { dataSource: report.dataSource, nPersons: report.nPersons, grades, summary, warning };
+}
