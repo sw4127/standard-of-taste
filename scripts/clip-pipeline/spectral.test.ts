@@ -10,7 +10,7 @@
 
 import { describe, expect, it } from "vitest";
 // Plain Node ESM module; `allowJs` in tsconfig types it by inference.
-import { clippingStats, fft, hann, logBandSpectrogram, logSpectralDistance, longestSilenceSec } from "./spectral.mjs";
+import { clippingStats, fft, hann, logBandSpectrogram, logSpectralDistance, longestSilenceSec, temporalDrift } from "./spectral.mjs";
 
 const SR = 44100; // must match DEFAULT_SPECTRAL_OPTS.sampleRate — band edges derive from it
 const N = 4096;
@@ -245,6 +245,94 @@ describe("spectral — the lossy family is actually visible (RT fix)", () => {
     console.log(`[spec]   same pair measured with the OLD fMax=10000: ${blind.lsdDb.toFixed(3)} dB (vs ${r.lsdDb.toFixed(3)} dB)`);
     expect(blind.lsdDb).toBeLessThan(0.1);
     expect(r.lsdDb).toBeGreaterThan(blind.lsdDb * 10);
+  });
+});
+
+describe("spectral — temporal drift (the timing family's real measure)", () => {
+  /** A rhythmic pulse train — envelope correlation needs onsets to lock onto. */
+  const pulses = (sec: number, bpm = 120, shiftSamples = 0, stretch = 1) => {
+    const n = Math.round(sec * SR);
+    const out = new Float32Array(n);
+    const period = (60 / bpm) * SR;
+    for (let k = 0; k * period * stretch < n; k++) {
+      const at = Math.round(k * period * stretch) + shiftSamples;
+      for (let i = 0; i < 2000 && at + i < n && at + i >= 0; i++) {
+        out[at + i] = Math.sin((2 * Math.PI * 440 * i) / SR) * Math.exp(-i / 600);
+      }
+    }
+    return out;
+  };
+
+  it("reads ~0 for an identical, time-aligned pair", () => {
+    const x = pulses(6);
+    const d = temporalDrift(x, x, { sampleRate: SR });
+    console.log(`[spec] drift, identical pair: IQR ${d.lagIqrMs} ms, confident ${(d.confidentFraction * 100).toFixed(0)}%`);
+    expect(d.maxAbsLagMs).toBe(0);
+    expect(d.lagIqrMs).toBe(0);
+    expect(d.confidentFraction).toBe(1);
+  });
+
+  it("recovers a known constant offset", () => {
+    const shiftMs = 20;
+    const d = temporalDrift(pulses(6), pulses(6, 120, Math.round((shiftMs / 1000) * SR)), { sampleRate: SR });
+    console.log(`[spec] drift, planted ${shiftMs} ms offset: max ${d.maxAbsLagMs} ms`);
+    // The B signal is LATER, so A must look ahead by +shift to match.
+    expect(Math.abs(d.maxAbsLagMs - shiftMs)).toBeLessThanOrEqual(2);
+  });
+
+  it("registers progressive stretch as accumulating drift, and grows with it", () => {
+    const mild = temporalDrift(pulses(6), pulses(6, 120, 0, 1.002), { sampleRate: SR });
+    const worse = temporalDrift(pulses(6), pulses(6, 120, 0, 1.008), { sampleRate: SR });
+    console.log(
+      `[spec] drift vs stretch: 0.2% → IQR ${mild.lagIqrMs} ms, 0.8% → IQR ${worse.lagIqrMs} ms`,
+    );
+    expect(mild.lagIqrMs).toBeGreaterThan(0);
+    expect(worse.lagIqrMs).toBeGreaterThan(mild.lagIqrMs);
+  });
+
+  it("does NOT report drift for a purely spectral change (the discriminating test)", () => {
+    // A lowpassed pair is spectrally very different and perfectly aligned.
+    // If this measure fired here it would just be LSD with extra steps.
+    const x = pulses(6);
+    const d = temporalDrift(x, lowpass(x, 0.15), { sampleRate: SR });
+    const spectral = logSpectralDistance(x, lowpass(x, 0.15), { sampleRate: SR }).lsdDb;
+    console.log(`[spec] lowpassed pair: LSD ${spectral.toFixed(2)} dB but drift IQR ${d.lagIqrMs} ms`);
+    expect(spectral).toBeGreaterThan(3);
+    expect(d.lagIqrMs).toBeLessThanOrEqual(2);
+  });
+
+  it("throws rather than reporting drift it could not compute", () => {
+    expect(() => temporalDrift(new Float32Array(100), new Float32Array(100), { sampleRate: SR })).toThrow(/too short/);
+  });
+
+  it("a single disturbed block produces NO phantom drift (RT fix)", () => {
+    // The failure this pins was found on the live pool: d1 reported 17 ms of
+    // "drift" from one bad block while its interquartile range was 1 ms. Two
+    // defences now stand between that and a reported number — the confidence
+    // gate drops blocks that never aligned, and IQR ignores what survives as
+    // an outlier. Here the gate catches it first, so BOTH statistics come out
+    // clean; on the real pool it was IQR that did the work. Either way the
+    // requirement is the same: an aligned pair with one disturbance must not
+    // report drift.
+    const a = pulses(8);
+    const b = pulses(8);
+    const at = Math.round(3.2 * SR);
+    for (let i = 0; i < 2000; i++) b[at + i] = a[at + i - 1300] ?? 0; // one block shoved sideways
+    const d = temporalDrift(a, b, { sampleRate: SR });
+    console.log(
+      `[spec] one displaced block — peak-to-peak ${d.lagRangeMs} ms, IQR ${d.lagIqrMs} ms, ` +
+        `confident ${(d.confidentFraction * 100).toFixed(0)}%`,
+    );
+    expect(d.lagIqrMs).toBeLessThanOrEqual(2);
+    expect(d.lagRangeMs).toBeLessThanOrEqual(2);
+  });
+
+  it("reports low confidence instead of inventing a lag for uncorrelated audio", () => {
+    // Two unrelated signals have no alignment. The measure must SAY so rather
+    // than returning the least-bad of many equally poor lags as a finding.
+    const d = temporalDrift(pulses(8), noise(8, 0.3, 4242), { sampleRate: SR });
+    console.log(`[spec] uncorrelated pair: confident blocks ${(d.confidentFraction * 100).toFixed(0)}%`);
+    expect(d.confidentFraction).toBeLessThan(0.25);
   });
 });
 

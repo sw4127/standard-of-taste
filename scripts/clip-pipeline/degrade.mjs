@@ -40,11 +40,11 @@ const DELICACY_MANIFEST = join(ROOT, "src", "content", "delicacy", "manifest.jso
 const CACHE = join(HERE, ".cache");
 const TMP = join(CACHE, "degrade-tmp");
 const OUT = join(ROOT, "public", "audio", "delicacy");
-const LUFS = -16; // matches the bias pool target
+export const LUFS = -16; // matches the bias pool target
 const SEGS = 10;
 const XF = 0.03; // crossfade seconds at each join
 
-const FAMILIES = {
+export const FAMILIES = {
   "pitch-drift": { 1: 12, 2: 25, 3: 50 }, // peak detune reached by clip end, cents
   "timing-smear": { 1: 0.015, 2: 0.03, 3: 0.05 }, // max per-segment tempo deviation
   "lossy-artifact": { 1: "96k", 2: "64k", 3: "32k" }, // round-trip mp3 bitrate
@@ -118,7 +118,7 @@ function degradeWav(family, magnitude, seed, inWav, outWav, clipSec) {
 }
 
 /** Two-pass R128 loudnorm (same rationale as render's renderOne) → mp3+m4a. */
-function normRender(inWav, outBase, outDir) {
+export function normRender(inWav, outBase, outDir) {
   mkdirSync(outDir, { recursive: true });
   const probe = spawnSync(FFMPEG, ["-i", inWav, "-af", `loudnorm=I=${LUFS}:TP=-1.5:LRA=11:print_format=json`, "-f", "null", "-"], { encoding: "utf8" });
   const m = (probe.stderr || "").match(/\{[\s\S]*\}/);
@@ -131,15 +131,21 @@ function normRender(inWav, outBase, outDir) {
   ff([...common, "-codec:a", "aac", "-b:a", "160k", join(outDir, `${outBase}.m4a`)]);
 }
 
-function measureFinal(file) {
+export function measureFinal(file) {
   const probe = spawnSync(FFMPEG, ["-i", file, "-af", "loudnorm=print_format=json", "-f", "null", "-"], { encoding: "utf8" });
   const mm = JSON.parse((probe.stderr || "").match(/\{[\s\S]*\}/)[0]);
   const dur = Number(execFileSync(FFPROBE, ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", file]).toString().trim());
   return { lufs: Number(mm.input_i), truePeak: Number(mm.input_tp), durationSec: dur };
 }
 
-function decodeMono(file) {
-  const out = spawnSync(FFMPEG, ["-i", file, "-ac", "1", "-ar", "22050", "-f", "s16le", "-v", "error", "pipe:1"], { maxBuffer: 1 << 28 });
+/**
+ * Decode to mono PCM at `sr`. The rate is a PARAMETER, not a constant: Layer A
+ * spectral analysis needs 44.1 kHz to see the lossy family's high-frequency
+ * signature at all (see spectral.mjs DEFAULT_SPECTRAL_OPTS), while the older
+ * pcmDiff check below is happy at 22.05 kHz.
+ */
+export function decodeMono(file, sr = 22050) {
+  const out = spawnSync(FFMPEG, ["-i", file, "-ac", "1", "-ar", String(sr), "-f", "s16le", "-v", "error", "pipe:1"], { maxBuffer: 1 << 28 });
   if (out.status !== 0) throw new Error(`decode failed: ${out.stderr}`);
   const n = Math.floor(out.stdout.length / 2);
   const s = new Float32Array(n);
