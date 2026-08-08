@@ -1,0 +1,266 @@
+/**
+ * Layer A spectral measurement (artifact pivot §1 — "spectral-distance
+ * magnitude of the manipulation ... without anyone listening").
+ *
+ * WHAT THIS REPLACES: the PM ear pass. The old gate asked a non-musician
+ * whether a degradation was audible; unstable labels made the answer worthless
+ * (pivot §0.1). This measures HOW BIG the manipulation is, objectively and
+ * reproducibly. It does NOT measure audibility — nothing here knows what a
+ * human can hear. Audibility is inferred, in S5b, by comparison against a
+ * control manipulation that is known to be transparent.
+ *
+ * THE MEASURE: log-spectral distance (LSD), the standard objective distance
+ * between two audio signals. Both files are cut into overlapping frames,
+ * each frame is transformed and collapsed into log-spaced band energies in dB,
+ * and the distance is the RMS difference of those dB values across every band
+ * and frame. Units are decibels, which is the point: "these two files differ
+ * by 4.2 dB averaged across the spectrum" is a sentence with meaning, unlike a
+ * unitless similarity score.
+ *
+ * HONEST LIMITS (N3), because a number this convenient invites over-claiming:
+ * - LSD conflates spectral and TEMPORAL difference. A timing-smeared file is
+ *   misaligned against its original, and misalignment registers as spectral
+ *   distance. For a magnitude measure that is acceptable — the manipulation is
+ *   genuinely there — but LSD must never be read as "how much the tone colour
+ *   changed" for the timing family.
+ * - It is unweighted by perception. No equal-loudness contour, no masking
+ *   model. A 3 dB difference in a band nobody can hear counts the same as
+ *   3 dB where the ear is most sensitive. This is exactly why the control
+ *   anchor exists rather than a fixed "audible above X dB" threshold.
+ * - Both sides of our pairs are mp3-encoded, so every measurement includes
+ *   codec noise on both files. The pipeline-noise control quantifies that
+ *   floor so it can be subtracted from the interpretation, not the number.
+ */
+
+/**
+ * In-place iterative radix-2 Cooley-Tukey FFT.
+ *
+ * Hand-rolled rather than imported: this is one well-understood function, and
+ * the alternative is a dependency in a pipeline whose whole value is that its
+ * numbers are inspectable. Correctness is asserted against closed-form cases
+ * (a pure sinusoid must land in exactly one bin; Parseval's theorem must hold)
+ * rather than assumed.
+ *
+ * @param {Float64Array} re real part, length must be a power of two
+ * @param {Float64Array} im imaginary part, same length
+ */
+export function fft(re, im) {
+  const n = re.length;
+  if (n !== im.length) throw new Error("fft: re/im length mismatch");
+  if (n < 2 || (n & (n - 1)) !== 0) throw new Error(`fft: length must be a power of two, got ${n}`);
+
+  // Bit-reversal permutation.
+  for (let i = 1, j = 0; i < n; i++) {
+    let bit = n >> 1;
+    for (; j & bit; bit >>= 1) j ^= bit;
+    j ^= bit;
+    if (i < j) {
+      [re[i], re[j]] = [re[j], re[i]];
+      [im[i], im[j]] = [im[j], im[i]];
+    }
+  }
+
+  for (let len = 2; len <= n; len <<= 1) {
+    const ang = (-2 * Math.PI) / len;
+    const wRe = Math.cos(ang);
+    const wIm = Math.sin(ang);
+    for (let i = 0; i < n; i += len) {
+      let curRe = 1;
+      let curIm = 0;
+      for (let k = 0; k < len / 2; k++) {
+        const uRe = re[i + k];
+        const uIm = im[i + k];
+        const vRe = re[i + k + len / 2] * curRe - im[i + k + len / 2] * curIm;
+        const vIm = re[i + k + len / 2] * curIm + im[i + k + len / 2] * curRe;
+        re[i + k] = uRe + vRe;
+        im[i + k] = uIm + vIm;
+        re[i + k + len / 2] = uRe - vRe;
+        im[i + k + len / 2] = uIm - vIm;
+        const nextRe = curRe * wRe - curIm * wIm;
+        curIm = curRe * wIm + curIm * wRe;
+        curRe = nextRe;
+      }
+    }
+  }
+}
+
+/** Periodic Hann window — the standard choice for overlap-add analysis. */
+export function hann(n) {
+  const w = new Float64Array(n);
+  for (let i = 0; i < n; i++) w[i] = 0.5 * (1 - Math.cos((2 * Math.PI * i) / n));
+  return w;
+}
+
+export const DEFAULT_SPECTRAL_OPTS = {
+  /**
+   * 44.1 kHz, NOT the 22.05 kHz the rest of the pipeline uses for analysis.
+   *
+   * Found while red-teaming S5a: low-bitrate MP3 encoding does most of its
+   * audible damage ABOVE 10 kHz — it lowpasses hard (roughly 11 kHz at 64k,
+   * lower still at 32k) and that brickwall is the single most characteristic
+   * artifact of the `lossy-artifact` family. Decoding at 22.05 kHz puts
+   * Nyquist at 11 kHz and an fMax of 10 kHz would have hidden almost all of
+   * it. We would have measured the lossy family with its own signature cut
+   * off, and reported the resulting small number as evidence.
+   *
+   * CALLERS MUST DECODE AT THIS RATE. The band edges are computed from
+   * `sampleRate`, so passing 44.1 kHz audio while claiming 22.05 kHz silently
+   * mismaps every band.
+   */
+  sampleRate: 44100,
+  /** 2048 at 44.1 kHz keeps frequency resolution (~21 Hz/bin) comparable. */
+  frameSize: 2048,
+  hop: 1024,
+  nBands: 24,
+  fMin: 50,
+  /** Comfortably above the MP3 lowpass knees this has to be able to see. */
+  fMax: 16000,
+  /**
+   * Frames quieter than this (dBFS, RMS) are skipped on BOTH signals. Silence
+   * has no meaningful spectrum, and a pair of near-silent frames would
+   * otherwise contribute a large dB difference between two floors of numerical
+   * noise — inflating the distance with something nobody could hear.
+   */
+  silenceFloorDb: -60,
+};
+
+/** Log-spaced band edges in Hz, as FFT bin indices. */
+function bandEdges({ sampleRate, frameSize, nBands, fMin, fMax }) {
+  const binOf = (hz) => Math.round((hz / sampleRate) * frameSize);
+  const edges = [];
+  for (let i = 0; i <= nBands; i++) {
+    const hz = fMin * Math.pow(fMax / fMin, i / nBands);
+    edges.push(Math.min(frameSize / 2, Math.max(1, binOf(hz))));
+  }
+  return edges;
+}
+
+/**
+ * Short-time log band energies.
+ * @returns {{ frames: Float64Array[], rmsDb: number[] }} one dB vector per frame
+ */
+export function logBandSpectrogram(samples, opts = {}) {
+  const o = { ...DEFAULT_SPECTRAL_OPTS, ...opts };
+  const { frameSize, hop, nBands } = o;
+  const win = hann(frameSize);
+  const edges = bandEdges(o);
+  const frames = [];
+  const rmsDb = [];
+
+  for (let start = 0; start + frameSize <= samples.length; start += hop) {
+    const re = new Float64Array(frameSize);
+    const im = new Float64Array(frameSize);
+    let sumSq = 0;
+    for (let i = 0; i < frameSize; i++) {
+      const s = samples[start + i];
+      sumSq += s * s;
+      re[i] = s * win[i];
+    }
+    rmsDb.push(10 * Math.log10(sumSq / frameSize + 1e-20));
+    fft(re, im);
+
+    const bands = new Float64Array(nBands);
+    for (let b = 0; b < nBands; b++) {
+      let energy = 0;
+      const lo = edges[b];
+      const hi = Math.max(edges[b + 1], lo + 1);
+      for (let k = lo; k < hi; k++) energy += re[k] * re[k] + im[k] * im[k];
+      // +1e-12 keeps log finite in true digital silence without materially
+      // shifting any real measurement.
+      bands[b] = 10 * Math.log10(energy / (hi - lo) + 1e-12);
+    }
+    frames.push(bands);
+  }
+  return { frames, rmsDb };
+}
+
+/**
+ * Log-spectral distance between two signals, in dB.
+ *
+ * Symmetric by construction (it is an RMS of differences), which is asserted by
+ * test — an asymmetric "distance" would make "how far is A from B" depend on
+ * argument order, and every downstream ratio would inherit the ambiguity.
+ *
+ * @returns {{ lsdDb: number, perBandDb: number[], framesCompared: number, framesSkipped: number }}
+ */
+export function logSpectralDistance(a, b, opts = {}) {
+  const o = { ...DEFAULT_SPECTRAL_OPTS, ...opts };
+  const A = logBandSpectrogram(a, o);
+  const B = logBandSpectrogram(b, o);
+  const nFrames = Math.min(A.frames.length, B.frames.length);
+  if (nFrames === 0) throw new Error("lsd: signals too short for a single analysis frame");
+
+  const perBandSum = new Float64Array(o.nBands);
+  let total = 0;
+  let compared = 0;
+  let skipped = 0;
+
+  for (let f = 0; f < nFrames; f++) {
+    // Skip only when BOTH frames are silent: a frame silent on one side and
+    // not the other is a real difference and must be counted.
+    if (A.rmsDb[f] < o.silenceFloorDb && B.rmsDb[f] < o.silenceFloorDb) {
+      skipped++;
+      continue;
+    }
+    for (let band = 0; band < o.nBands; band++) {
+      const d = A.frames[f][band] - B.frames[f][band];
+      perBandSum[band] += d * d;
+      total += d * d;
+    }
+    compared++;
+  }
+  if (compared === 0) throw new Error("lsd: every frame was below the silence floor on both signals");
+
+  return {
+    lsdDb: Math.sqrt(total / (compared * o.nBands)),
+    perBandDb: Array.from(perBandSum, (s) => Math.sqrt(s / compared)),
+    framesCompared: compared,
+    framesSkipped: skipped,
+  };
+}
+
+/**
+ * Peak absolute sample value, and the count of samples at or beyond full
+ * scale. Clipping is a manipulation artifact that would be an unfair tell —
+ * a listener can hear a click without hearing the degradation we intended.
+ */
+export function clippingStats(samples, threshold = 0.999) {
+  let peak = 0;
+  let clipped = 0;
+  for (const s of samples) {
+    const v = Math.abs(s);
+    if (v > peak) peak = v;
+    if (v >= threshold) clipped++;
+  }
+  return { peak, clippedSamples: clipped, clippedFraction: clipped / samples.length };
+}
+
+/**
+ * Longest run of near-silence, in seconds. A dead passage makes a trial
+ * unanswerable regardless of how large the manipulation measures, because the
+ * listener has nothing to compare during it.
+ *
+ * QUANTIZATION, and its direction (measured: a planted 400 ms gap reports as
+ * 350 ms at the default 50 ms window). Windows straddling the edge of a gap
+ * contain some signal and are not counted, so this UNDER-reports by up to one
+ * window. That is the unsafe direction for a reject-dead-air gate, so any
+ * threshold built on it must carry a one-window margin rather than treating
+ * the figure as exact.
+ */
+export function longestSilenceSec(samples, sampleRate, floorDb = -60, windowMs = 50) {
+  const win = Math.max(1, Math.round((windowMs / 1000) * sampleRate));
+  const floor = Math.pow(10, floorDb / 10);
+  let longest = 0;
+  let run = 0;
+  for (let start = 0; start + win <= samples.length; start += win) {
+    let sumSq = 0;
+    for (let i = 0; i < win; i++) sumSq += samples[start + i] * samples[start + i];
+    if (sumSq / win < floor) {
+      run++;
+      if (run > longest) longest = run;
+    } else {
+      run = 0;
+    }
+  }
+  return (longest * win) / sampleRate;
+}
