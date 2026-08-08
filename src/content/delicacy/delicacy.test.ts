@@ -24,17 +24,13 @@ describe("delicacy pool of record — the real thing passes every gate", () => {
     expect(check()).toEqual([]);
   });
 
-  it("passes every gate EXCEPT the ear pass at version 1 (the door's last lock)", () => {
-    // The moment the version bumps, the only thing that may stand between the
-    // pool and the door is the recorded PM ear pass. If this test starts
-    // listing OTHER errors, the bump is blocked on engineering, not the PM.
-    const atV1 = check(DELICACY_TRIALS, manifest, 1);
-    const earOnly = atV1.every((e) => e.includes("ear pass"));
-    expect(earOnly).toBe(true);
-    // …and while earPass is unrecorded, v1 must in fact be blocked:
-    if (manifest.pairs.some((p: { earPass: unknown }) => !p.earPass)) {
-      expect(atV1.length).toBeGreaterThan(0);
-    }
+  it("clears every gate at version 1 — the door is now unlocked by MEASUREMENT", () => {
+    // This test used to assert the opposite: that the pool was blocked at v1
+    // pending a PM ear pass. The ear pass is retired (artifact pivot §1), the
+    // door turns on Layer A, and every pair now carries a recorded PASS from
+    // `clip-pipeline validate`. Nothing human stands between the pool and the
+    // door — which was the entire point of the pivot.
+    expect(check(DELICACY_TRIALS, manifest, 1)).toEqual([]);
   });
 
   it("candidate audio files exist on disk for every trial (both sides, both formats)", () => {
@@ -115,13 +111,28 @@ describe("delicacy gatekeeping — deliberately broken fixtures fail with named 
     expect(check(lopsided).join("\n")).toMatch(/original sides unbalanced: 6a\/0b/);
   });
 
-  it("version 1 without a recorded ear pass is fatal — the door stays shut", () => {
-    expect(check(DELICACY_TRIALS, manifest, 1).join("\n")).toMatch(/requires a recorded PM ear pass/);
+  it("version 1 without a Layer A measurement is fatal — the door stays shut", () => {
+    const m = clone(manifest);
+    for (const p of m.pairs) delete p.layerA;
+    expect(check(DELICACY_TRIALS, m, 1).join("\n")).toMatch(/requires a recorded Layer A measurement/);
   });
 
-  it("version 1 WITH recorded PASS ear passes clears the gate", () => {
+  it("version 1 with a FAILING Layer A verdict is fatal, and names the reason", () => {
     const m = clone(manifest);
-    for (const p of m.pairs) p.earPass = { by: "PM", date: "2026-07-19", verdict: "PASS" };
-    expect(check(DELICACY_TRIALS, m, 1)).toEqual([]);
+    m.pairs[0].layerA = { verdict: "FLAG", reasons: ["magnitude 1.2x anchor (need ≥3x)"] };
+    const errs = check(DELICACY_TRIALS, m, 1).join("\n");
+    expect(errs).toMatch(/Layer A verdict is FLAG/);
+    expect(errs).toMatch(/1\.2x anchor/);
+  });
+
+  it("a recorded PM ear pass no longer grants passage on its own", () => {
+    // Guards against the retired gate being quietly reinstated: an ear pass
+    // with no Layer A measurement must NOT open the door.
+    const m = clone(manifest);
+    for (const p of m.pairs) {
+      delete p.layerA;
+      p.earPass = { by: "PM", date: "2026-07-19", verdict: "PASS" };
+    }
+    expect(check(DELICACY_TRIALS, m, 1).join("\n")).toMatch(/requires a recorded Layer A measurement/);
   });
 });

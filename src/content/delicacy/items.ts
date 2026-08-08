@@ -8,11 +8,16 @@
  * validation reports and sha256s live in src/content/delicacy/manifest.json.
  *
  * GATES before DELICACY_POOL_VERSION bumps to 1 (the door flip — see
- * DELICACY_LIVE): (1) every pair's machine validation passes — enforced by
- * delicacy.test.ts; (2) the PM EAR PASS per docs/ear-pass-delicacy.md is
- * recorded in the manifest (earPass non-null, verdict PASS) — enforced by
- * delicacy.test.ts the moment the version is ≥1; (3) the PM voice pass on
- * copy.ts (PM ruling 2026-07-19: pending).
+ * DELICACY_LIVE): (1) every pair's render validation passes — enforced by
+ * delicacy.test.ts; (2) every pair carries a Layer A measurement with verdict
+ * PASS (`node scripts/clip-pipeline/index.mjs validate`) — enforced by
+ * gates.ts the moment the version is ≥1; (3) the PM voice pass on copy.ts
+ * (PM ruling 2026-07-19: pending).
+ *
+ * THE PM EAR PASS IS RETIRED (artifact pivot §1, PM ruling RT-1a 2026-08-07).
+ * Audibility is no longer gated by a human listener; the door turns on
+ * measured manipulation magnitude against a known-transparent anchor, and item
+ * DIFFICULTY stays explicitly uncalibrated until Layer B has real responses.
  *
  * VERSIONING (amends the S5a note): v≥1 pools are IMMUTABLE per version —
  * any item change bumps the version, and share payloads are positional

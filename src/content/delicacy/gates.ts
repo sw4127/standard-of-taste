@@ -19,8 +19,28 @@
  *  - the source is a bias-manifest item with a license snapshot + proof URL
  *    + source sha256 (the licensing chain of record)
  * Enforced once the pool version is ≥ 1 (the door):
- *  - every pair carries a recorded PM ear pass with verdict PASS
- *    (docs/ear-pass-delicacy.md — audibility never ships on machine checks)
+ *  - every pair carries a recorded Layer A measurement with verdict PASS
+ *    (artifact pivot §1; PM ruling RT-1a 2026-08-07)
+ *
+ * THE PM EAR PASS IS RETIRED (artifact pivot §1, 2026-08-07). It used to gate
+ * this door: no pair shipped without a human confirming the degradation was
+ * audible. It is gone because ear-passes by a non-musician produced unstable
+ * labels — the PM's own finding — and an unstable gate is worse than a
+ * measured one. Item quality is now a computed verdict:
+ *
+ *   Layer A (here): the manipulation is objectively large — measured against a
+ *     320 kbps round-trip of the item's own source, which is a manipulation
+ *     that is real, measurable, and inaudible. Plus clipping and dead-air
+ *     checks. This is what gates SHIPPING.
+ *   Layer B (src/analytics/estimate.ts gradeItems): difficulty and
+ *     discrimination estimated from real responses, auto-flagging items to
+ *     retire or move a rung. This gates RETENTION, and is silent at n = 0.
+ *
+ * What Layer A does NOT establish is audibility — no measure here models
+ * perception. The honest claim is "this manipulation is N times the magnitude
+ * of one nobody can hear", and difficulty stays UNCALIBRATED until Layer B has
+ * responses (PM ruling RT-1a: the door flips on Layer A alone, with difficulty
+ * labelled uncalibrated).
  */
 
 import type { DelicacyTrialClip } from "./items";
@@ -34,8 +54,10 @@ interface ManifestPair {
   params?: Record<string, unknown>;
   files: Record<string, string> | null;
   sha256: Record<string, string> | null;
-  earPass: { verdict: string } | null;
+  /** RETIRED 2026-08-07 — kept in the type so old manifests still parse. */
+  earPass?: { verdict: string } | null;
   validation: Record<string, { pass?: boolean } | string>;
+  layerA?: { verdict?: string; anchorRatio?: number; reasons?: string[] } | null;
 }
 interface DelicacyManifest {
   pairs: ManifestPair[];
@@ -104,8 +126,14 @@ export function checkDelicacyPool(
       if (!src.license?.proofPageUrl) err(`${t.id}: source "${p.sourceId}" has no license proof URL`);
       if (!src.source?.sha256) err(`${t.id}: source "${p.sourceId}" has no source sha256`);
     }
-    if (poolVersion >= 1 && p.earPass?.verdict !== "PASS")
-      err(`${t.id}: pool v${poolVersion} requires a recorded PM ear pass with verdict PASS (docs/ear-pass-delicacy.md)`);
+    if (poolVersion >= 1) {
+      // The door now turns on measurement, not on a listener.
+      if (!p.layerA) {
+        err(`${t.id}: pool v${poolVersion} requires a recorded Layer A measurement — run \`clip-pipeline validate\``);
+      } else if (p.layerA.verdict !== "PASS") {
+        err(`${t.id}: Layer A verdict is ${p.layerA.verdict}${p.layerA.reasons?.length ? ` (${p.layerA.reasons.join("; ")})` : ""}`);
+      }
+    }
   }
 
   return errors;
