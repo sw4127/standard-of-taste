@@ -100,6 +100,33 @@ export const MIN_TEMPORAL_DRIFT_MS = 5;
 export const MIN_CONFIDENT_BLOCK_FRACTION = 0.25;
 /** Clipping is an unfair tell: a click is audible without the degradation being. */
 export const MAX_CLIPPED_FRACTION = 0.0005;
+/**
+ * Flat-topped waveform crests — clipping that survived loudness normalisation.
+ *
+ * The full-scale detector above CANNOT see this: our render path normalises
+ * after the manipulation, so clipped audio arrives at −1.5 dBTP with no
+ * full-scale samples. A deliberately clipped render measured 0.00% clipped and
+ * PASSED the gate (RT-17a).
+ *
+ * MEASURED LIMITATION, and it is severe (RT-17a, 2026-08-08). This detector
+ * works on raw PCM — a clipped-then-scaled signal reads ~49% — but it does NOT
+ * survive our own render path. A deliberately clipped render (+30 dB on a
+ * source peaking at 0.17) came out of loudnorm + mp3 reading 0.00% here and
+ * 0.00% full-scale, while its LSD was 13 dB. Normalisation rescales the
+ * plateaus and the codec rounds them off. Even relTol 0.1 recovered only
+ * 0.004%.
+ *
+ * So this gate CANNOT be relied on to catch clipping in shipped audio, and no
+ * claim that it does may be made. Clipping is caught where it is still visible:
+ * pre-normalisation, in `degrade` (see its "no clipping (pre-loudnorm)" check).
+ * This threshold is kept as a cheap backstop for the case where clipping is bad
+ * enough to survive, not as the primary defence.
+ *
+ * Backstop threshold from measurement: all twelve files in the live pool read
+ * exactly 0.0000%, so 0.1% is three orders of magnitude clear of legitimate
+ * material.
+ */
+export const MAX_FLAT_TOP_FRACTION = 0.001;
 /** Dead air makes a trial unanswerable. One-window margin per spectral.mjs. */
 export const MAX_SILENCE_SEC = 1.5;
 
@@ -186,6 +213,7 @@ export function measurePair(pair) {
     /** Which band moved most — a family fingerprint, useful for S6/S7 triage. */
     peakBand: lsd.perBandDb.indexOf(Math.max(...lsd.perBandDb)),
     clippedFraction: Math.max(clipA.clippedFraction, clipB.clippedFraction),
+    flatTopFraction: Math.max(clipA.flatTopFraction, clipB.flatTopFraction),
     longestSilenceSec: Math.max(longestSilenceSec(a, SR), longestSilenceSec(b, SR)),
   };
 }
@@ -210,6 +238,8 @@ export function gradePair(m, anchors) {
     reasons.push(`magnitude ${ratio.toFixed(1)}x anchor (need ≥${MIN_ANCHOR_RATIO}x)`);
   }
   if (m.clippedFraction > MAX_CLIPPED_FRACTION) reasons.push(`clipping ${(m.clippedFraction * 100).toFixed(3)}%`);
+  if (m.flatTopFraction > MAX_FLAT_TOP_FRACTION)
+    reasons.push(`flat-topped crests ${(m.flatTopFraction * 100).toFixed(2)}% (clipping that survived loudness normalisation)`);
   if (m.longestSilenceSec > MAX_SILENCE_SEC) reasons.push(`dead air ${m.longestSilenceSec.toFixed(2)}s`);
   return {
     ...m,
@@ -278,7 +308,7 @@ export async function validate(args) {
   manifest.layerA = {
     analysisRateHz: SR,
     anchors,
-    thresholds: { MIN_ANCHOR_RATIO, MIN_TEMPORAL_DRIFT_MS, MIN_CONFIDENT_BLOCK_FRACTION, MAX_CLIPPED_FRACTION, MAX_SILENCE_SEC },
+    thresholds: { MIN_ANCHOR_RATIO, MIN_TEMPORAL_DRIFT_MS, MIN_CONFIDENT_BLOCK_FRACTION, MAX_CLIPPED_FRACTION, MAX_FLAT_TOP_FRACTION, MAX_SILENCE_SEC },
     measuredAt: new Date().toISOString().slice(0, 10),
     note:
       "Magnitudes, NOT audibility. anchorRatio compares each pair against a 320 kbps round-trip of its OWN source window — " +
@@ -298,6 +328,7 @@ export async function validate(args) {
       gatedOn: r.gatedOn,
       peakBand: r.peakBand,
       clippedFraction: +r.clippedFraction.toFixed(6),
+      flatTopFraction: +r.flatTopFraction.toFixed(6),
       longestSilenceSec: +r.longestSilenceSec.toFixed(2),
       verdict: r.verdict,
       reasons: r.reasons,

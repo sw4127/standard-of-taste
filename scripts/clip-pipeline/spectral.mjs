@@ -220,11 +220,27 @@ export function logSpectralDistance(a, b, opts = {}) {
 }
 
 /**
- * Peak absolute sample value, and the count of samples at or beyond full
- * scale. Clipping is a manipulation artifact that would be an unfair tell —
- * a listener can hear a click without hearing the degradation we intended.
+ * Clipping detection. Clipping is an unfair tell — a listener can hear the
+ * click without hearing the degradation we intended — so it has to be caught.
+ *
+ * TWO detectors, because the obvious one is not enough (found by RT-17a):
+ *
+ *  1. `clippedFraction` — samples at or beyond full scale. This is what most
+ *     tools report, and it MISSES the way clipping actually reaches our files.
+ *     Our render path applies EBU R128 loudness normalisation after the
+ *     manipulation, so a hard-clipped waveform is rescaled to −1.5 dBTP before
+ *     it is ever measured: the distortion survives, the full-scale samples do
+ *     not. A deliberately clipped test render measured 0.00% by this detector
+ *     and PASSED the gate.
+ *
+ *  2. `flatTopFraction` — samples belonging to a run of `flatRun` or more
+ *     consecutive samples within `relTol` of the signal's OWN peak. Clipping
+ *     flattens waveform crests, and flattening is preserved by any later gain
+ *     change. Level-independent, which is precisely the property detector 1
+ *     lacks. Real music crests are curved and cross the near-peak region in
+ *     roughly a sample, so an unclipped signal scores about zero here.
  */
-export function clippingStats(samples, threshold = 0.999) {
+export function clippingStats(samples, threshold = 0.999, { flatRun = 4, relTol = 1e-3 } = {}) {
   let peak = 0;
   let clipped = 0;
   for (const s of samples) {
@@ -232,7 +248,27 @@ export function clippingStats(samples, threshold = 0.999) {
     if (v > peak) peak = v;
     if (v >= threshold) clipped++;
   }
-  return { peak, clippedSamples: clipped, clippedFraction: clipped / samples.length };
+
+  const nearPeak = peak * (1 - relTol);
+  let flat = 0;
+  let run = 0;
+  for (let i = 0; i <= samples.length; i++) {
+    const near = i < samples.length && Math.abs(samples[i]) >= nearPeak;
+    if (near) {
+      run++;
+    } else {
+      if (run >= flatRun) flat += run;
+      run = 0;
+    }
+  }
+
+  return {
+    peak,
+    clippedSamples: clipped,
+    clippedFraction: clipped / samples.length,
+    flatTopSamples: flat,
+    flatTopFraction: flat / samples.length,
+  };
 }
 
 /**
