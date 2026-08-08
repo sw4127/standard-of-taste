@@ -136,7 +136,20 @@ export async function ladder(args) {
       return { key, series, monotone: series.every((v, i) => i === 0 || v > series[i - 1]) };
     };
     const spectral = monoOf("lsdDb");
-    const drift = monoOf("driftRangeMs");
+    const driftRange = monoOf("driftRangeMs");
+    const driftIqr = monoOf("driftIqrMs");
+    // PRIMARY TEMPORAL STATISTIC = IQR. I have now changed this twice and owe
+    // the reasoning: I started on IQR, moved to peak-to-peak range on the
+    // a-priori argument that a mean-corrected segment-wise warp is a random
+    // walk whose natural magnitude is its excursion, and have moved back.
+    // The deciding evidence is measured, not fitted: even with the improved
+    // tracker, confident blocks fall to 71% at the top rung, and the blocks
+    // that fail to align are disproportionately the EXTREME ones. Under that
+    // selection, a maximum-based statistic is biased downward while a
+    // quantile-based one is not. Both are computed and printed regardless, so
+    // the disagreement between them stays visible rather than being resolved
+    // silently in favour of whichever looks better.
+    const drift = driftIqr;
     const primary = temporal ? drift : spectral;
 
     console.log(`
@@ -151,7 +164,8 @@ export async function ladder(args) {
       );
     }
     console.log(`    spectral (LSD dB):     ${spectral.monotone ? "MONOTONE" : "not monotone"} — ${spectral.series.join(" → ")}`);
-    console.log(`    temporal (drift range): ${drift.monotone ? "MONOTONE" : "not monotone"} — ${drift.series.join(" → ")} ms`);
+    console.log(`    temporal (drift IQR):   ${driftIqr.monotone ? "MONOTONE" : "not monotone"} — ${driftIqr.series.join(" → ")} ms`);
+    console.log(`    temporal (drift range): ${driftRange.monotone ? "MONOTONE" : "not monotone"} — ${driftRange.series.join(" → ")} ms  [max-statistic, biased by the confidence gate]`);
 
     // The ladder's claim is "the parameter drives a measurable magnitude,
     // monotonically". It is satisfied if EITHER measure holds, provided the
@@ -160,7 +174,7 @@ export async function ladder(args) {
     if (!verified) failures++;
 
     const conf = rungs.map((r) => r.driftConfidentFraction);
-    const saturating = temporal && !drift.monotone && conf[conf.length - 1] < 0.7;
+    const saturating = temporal && conf[conf.length - 1] < 0.7;
     if (saturating) {
       console.log(
         `    NOTE  the temporal tracker SATURATES on this family: confident blocks fall
@@ -181,7 +195,8 @@ export async function ladder(args) {
       unit: spec.unit,
       primaryMeasure: primary.key,
       monotoneSpectral: spectral.monotone,
-      monotoneTemporal: drift.monotone,
+      monotoneTemporalIqr: driftIqr.monotone,
+      monotoneTemporalRange: driftRange.monotone,
       verified,
       temporalTrackerSaturates: saturating,
       rungs,

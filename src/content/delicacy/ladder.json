@@ -14,7 +14,8 @@
       "unit": "cents of peak detune",
       "primaryMeasure": "lsdDb",
       "monotoneSpectral": true,
-      "monotoneTemporal": false,
+      "monotoneTemporalIqr": false,
+      "monotoneTemporalRange": false,
       "verified": true,
       "temporalTrackerSaturates": false,
       "rungs": [
@@ -28,7 +29,7 @@
           "lsdDb": 1.356,
           "anchorRatio": 3.22,
           "driftIqrMs": 0,
-          "driftRangeMs": 4,
+          "driftRangeMs": 27,
           "driftConfidentFraction": 1,
           "peakBand": 23,
           "preNormClippedFraction": 0
@@ -57,9 +58,9 @@
           },
           "lsdDb": 1.867,
           "anchorRatio": 4.43,
-          "driftIqrMs": 1,
-          "driftRangeMs": 13,
-          "driftConfidentFraction": 0.95,
+          "driftIqrMs": 2,
+          "driftRangeMs": 31,
+          "driftConfidentFraction": 0.97,
           "peakBand": 2,
           "preNormClippedFraction": 0
         },
@@ -72,9 +73,9 @@
           },
           "lsdDb": 2.607,
           "anchorRatio": 6.18,
-          "driftIqrMs": 1,
-          "driftRangeMs": 13,
-          "driftConfidentFraction": 0.79,
+          "driftIqrMs": 2,
+          "driftRangeMs": 37,
+          "driftConfidentFraction": 0.87,
           "peakBand": 17,
           "preNormClippedFraction": 0
         }
@@ -82,11 +83,12 @@
     },
     "timing-smear": {
       "unit": "max per-segment tempo deviation",
-      "primaryMeasure": "driftRangeMs",
+      "primaryMeasure": "driftIqrMs",
       "monotoneSpectral": true,
-      "monotoneTemporal": false,
+      "monotoneTemporalIqr": true,
+      "monotoneTemporalRange": false,
       "verified": true,
-      "temporalTrackerSaturates": true,
+      "temporalTrackerSaturates": false,
       "rungs": [
         {
           "rung": 1,
@@ -108,9 +110,9 @@
           },
           "lsdDb": 3.107,
           "anchorRatio": 7.37,
-          "driftIqrMs": 13,
-          "driftRangeMs": 38,
-          "driftConfidentFraction": 1,
+          "driftIqrMs": 14,
+          "driftRangeMs": 56,
+          "driftConfidentFraction": 0.97,
           "peakBand": 0,
           "preNormClippedFraction": 0
         },
@@ -134,9 +136,9 @@
           },
           "lsdDb": 3.88,
           "anchorRatio": 9.2,
-          "driftIqrMs": 28,
-          "driftRangeMs": 69,
-          "driftConfidentFraction": 0.92,
+          "driftIqrMs": 27,
+          "driftRangeMs": 99,
+          "driftConfidentFraction": 0.96,
           "peakBand": 2,
           "preNormClippedFraction": 0
         },
@@ -160,9 +162,9 @@
           },
           "lsdDb": 4.766,
           "anchorRatio": 11.31,
-          "driftIqrMs": 27,
-          "driftRangeMs": 101,
-          "driftConfidentFraction": 0.72,
+          "driftIqrMs": 29,
+          "driftRangeMs": 110,
+          "driftConfidentFraction": 0.79,
           "peakBand": 2,
           "preNormClippedFraction": 0
         },
@@ -186,9 +188,9 @@
           },
           "lsdDb": 5.546,
           "anchorRatio": 13.15,
-          "driftIqrMs": 45,
+          "driftIqrMs": 40,
           "driftRangeMs": 91,
-          "driftConfidentFraction": 0.56,
+          "driftConfidentFraction": 0.71,
           "peakBand": 2,
           "preNormClippedFraction": 0
         }
@@ -198,7 +200,8 @@
       "unit": "mp3 round-trip bitrate",
       "primaryMeasure": "lsdDb",
       "monotoneSpectral": true,
-      "monotoneTemporal": false,
+      "monotoneTemporalIqr": false,
+      "monotoneTemporalRange": false,
       "verified": true,
       "temporalTrackerSaturates": false,
       "rungs": [

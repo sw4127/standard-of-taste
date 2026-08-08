@@ -325,7 +325,36 @@ export function longestSilenceSec(samples, sampleRate, floorDb = -60, windowMs =
  * which is far finer than the drift being measured.
  */
 export function temporalDrift(a, b, opts = {}) {
-  const { sampleRate = DEFAULT_SPECTRAL_OPTS.sampleRate, envelopeMs = 1, blockMs = 500, maxLagMs = 60, minScore = 0.9 } = opts;
+  const {
+    sampleRate = DEFAULT_SPECTRAL_OPTS.sampleRate,
+    envelopeMs = 1,
+    // 200 ms, not 500 (S6 saturation fix). A block is itself stretched by the
+    // warp being measured: at 5% deviation a 500 ms block contains 25 ms of
+    // internal stretch, comparable to the lag being estimated, so no single
+    // lag aligns it and the correlation peak collapses. Confident blocks fell
+    // 100% -> 56% across the timing ladder and measured drift UNDER-reported
+    // the warp. A 200 ms block carries ~10 ms of internal stretch instead.
+    blockMs = 200,
+    maxLagMs = 60,
+    minScore = 0.9,
+    /**
+     * Half-width of the local search around the previous confident lag. Drift
+     * is continuous, so once alignment is established the next block's lag is
+     * nearby; searching globally every time invites jumps to spurious peaks in
+     * periodic material. Falls back to the full +/-maxLagMs search whenever
+     * the track is lost.
+     */
+    trackWindowMs = 15,
+    /**
+     * Blocks quieter than this (relative to the loudest block) carry no onset
+     * to align and are SKIPPED, not scored. Correlating near-silence against
+     * near-silence is 0/0 — it produces a degenerate score that reads as "did
+     * not align" when the truth is "there was nothing here to align". With the
+     * shorter blocks this matters: an identical pair reported only 38%
+     * confident because the gaps between onsets were being counted as failures.
+     */
+    silenceRel = 0.05,
+  } = opts;
   const step = Math.max(1, Math.round((envelopeMs / 1000) * sampleRate));
 
   const envelope = (x) => {
@@ -346,10 +375,31 @@ export function temporalDrift(a, b, opts = {}) {
   const lags = [];
   const scores = [];
 
+  const trackWindow = Math.round(trackWindowMs / envelopeMs);
+  let tracked = null; // last confident lag, in envelope samples
+  const loudest = Math.max(...ea, ...eb) || 1;
+  const quietFloor = loudest * silenceRel;
+  let skipped = 0;
+
   for (let start = maxLag; start + block + maxLag <= Math.min(ea.length, eb.length); start += block) {
+    // Local search while the track holds, global search to (re)acquire it.
+    const lo = tracked === null ? -maxLag : Math.max(-maxLag, tracked - trackWindow);
+    const hi = tracked === null ? maxLag : Math.min(maxLag, tracked + trackWindow);
+    // Nothing to align in this block on either side — skip rather than score.
+    let peakA = 0;
+    let peakB = 0;
+    for (let i = 0; i < block; i++) {
+      if (ea[start + i] > peakA) peakA = ea[start + i];
+      if (eb[start + i] > peakB) peakB = eb[start + i];
+    }
+    if (peakA < quietFloor && peakB < quietFloor) {
+      skipped++;
+      continue;
+    }
+
     let bestLag = 0;
     let bestScore = -Infinity;
-    for (let lag = -maxLag; lag <= maxLag; lag++) {
+    for (let lag = lo; lag <= hi; lag++) {
       let dot = 0, na = 0, nb = 0;
       for (let i = 0; i < block; i++) {
         const va = ea[start + i];
@@ -365,6 +415,9 @@ export function temporalDrift(a, b, opts = {}) {
         bestLag = lag;
       }
     }
+    // A block that never locked must not seed the next block's search, or one
+    // bad estimate drags the whole trajectory after it.
+    tracked = bestScore >= minScore ? bestLag : null;
     lags.push(bestLag * envelopeMs);
     scores.push(bestScore);
   }
@@ -391,6 +444,8 @@ export function temporalDrift(a, b, opts = {}) {
   return {
     lagsMs: lags,
     scores,
+    /** Blocks with no onset on either side — excluded from the denominator. */
+    silentBlocks: skipped,
     confidentFraction,
     /** Largest absolute slip among CONFIDENT blocks. */
     maxAbsLagMs: keep.length ? Math.max(...keep.map(Math.abs)) : 0,
