@@ -264,3 +264,110 @@ export function longestSilenceSec(samples, sampleRate, floorDb = -60, windowMs =
   }
   return (longest * win) / sampleRate;
 }
+
+/**
+ * Temporal drift between two signals, in milliseconds (S5b red-team fix).
+ *
+ * WHY THIS EXISTS: log-spectral distance is the wrong instrument for the
+ * timing-smear family. That manipulation stretches segments, so the two files
+ * progressively fall out of step — and LSD compares frame k of A against frame
+ * k of B, which after a few seconds means comparing unrelated moments of music.
+ * The result is a large number driven by misalignment rather than by any
+ * spectral change. Measured on the live pool: d3 (timing, magnitude 2) scored
+ * 22.1x the transparency anchor, the biggest figure in the pool, while its
+ * magnitude-3 sibling scored 10.6x — an inversion that says the measure, not
+ * the audio, was misbehaving.
+ *
+ * This measures the misalignment directly and honestly: how far, in ms, the
+ * two signals slip apart over the clip. For a spectrally-degraded but
+ * time-aligned pair it reads ~0; for a time-warped pair it reads the warp.
+ *
+ * METHOD: cross-correlate short-time ENERGY ENVELOPES rather than raw samples.
+ * Sample-domain search over +/-50 ms would be ~10^9 operations per pair; the
+ * envelope carries the rhythmic information that alignment depends on and
+ * makes the search cheap. Resolution is the envelope hop (1 ms by default),
+ * which is far finer than the drift being measured.
+ */
+export function temporalDrift(a, b, opts = {}) {
+  const { sampleRate = DEFAULT_SPECTRAL_OPTS.sampleRate, envelopeMs = 1, blockMs = 500, maxLagMs = 60, minScore = 0.9 } = opts;
+  const step = Math.max(1, Math.round((envelopeMs / 1000) * sampleRate));
+
+  const envelope = (x) => {
+    const n = Math.floor(x.length / step);
+    const e = new Float64Array(n);
+    for (let i = 0; i < n; i++) {
+      let s = 0;
+      for (let k = 0; k < step; k++) s += x[i * step + k] * x[i * step + k];
+      e[i] = Math.sqrt(s / step);
+    }
+    return e;
+  };
+
+  const ea = envelope(a);
+  const eb = envelope(b);
+  const block = Math.round(blockMs / envelopeMs);
+  const maxLag = Math.round(maxLagMs / envelopeMs);
+  const lags = [];
+  const scores = [];
+
+  for (let start = maxLag; start + block + maxLag <= Math.min(ea.length, eb.length); start += block) {
+    let bestLag = 0;
+    let bestScore = -Infinity;
+    for (let lag = -maxLag; lag <= maxLag; lag++) {
+      let dot = 0, na = 0, nb = 0;
+      for (let i = 0; i < block; i++) {
+        const va = ea[start + i];
+        const vb = eb[start + i + lag];
+        dot += va * vb;
+        na += va * va;
+        nb += vb * vb;
+      }
+      // Normalized correlation: amplitude differences must not decide the lag.
+      const score = dot / (Math.sqrt(na * nb) + 1e-12);
+      if (score > bestScore) {
+        bestScore = score;
+        bestLag = lag;
+      }
+    }
+    lags.push(bestLag * envelopeMs);
+    scores.push(bestScore);
+  }
+
+  if (lags.length === 0) throw new Error("temporalDrift: signals too short for a single block");
+
+  // CONFIDENCE GATE (S5b red-team). A block whose best correlation is weak has
+  // not located an alignment — it has picked the least-bad of several equally
+  // poor options, and its "lag" is noise. Including such blocks let a single
+  // bad one fake 17 ms of drift on d1, and pure incoherence fake 84 ms on d4,
+  // while the genuinely time-warped pairs showed smooth trajectories. Only
+  // confident blocks contribute to the reported drift.
+  const keep = lags.filter((_, i) => scores[i] >= minScore);
+  const confidentFraction = keep.length / lags.length;
+
+  // Robust spread over confident blocks. The interquartile range is reported
+  // alongside peak-to-peak because peak-to-peak is a maximum of a noisy
+  // quantity, and maxima of noise grow with however many blocks you measured.
+  const sorted = [...keep].sort((x, y) => x - y);
+  const q = (f) => (sorted.length === 0 ? 0 : sorted[Math.min(sorted.length - 1, Math.floor(f * sorted.length))]);
+  const consecutive = keep.slice(1).map((l, i) => Math.abs(l - keep[i]));
+  const meanStep = consecutive.length ? consecutive.reduce((a, b) => a + b, 0) / consecutive.length : 0;
+
+  return {
+    lagsMs: lags,
+    scores,
+    confidentFraction,
+    /** Largest absolute slip among CONFIDENT blocks. */
+    maxAbsLagMs: keep.length ? Math.max(...keep.map(Math.abs)) : 0,
+    rmsLagMs: keep.length ? Math.sqrt(keep.reduce((s, l) => s + l * l, 0) / keep.length) : 0,
+    /** Peak-to-peak wander over confident blocks. Sensitive to outliers. */
+    lagRangeMs: keep.length ? Math.max(...keep) - Math.min(...keep) : 0,
+    /** Interquartile range — the outlier-resistant magnitude. Gate on this. */
+    lagIqrMs: q(0.75) - q(0.25),
+    /**
+     * Smoothness: spread divided by mean block-to-block step. A real warp
+     * wanders gradually (steps small relative to spread); incoherent noise
+     * steps as far as it spreads. Reported as a diagnostic, not gated on.
+     */
+    coherence: meanStep > 0 ? (q(0.75) - q(0.25)) / meanStep : 0,
+  };
+}

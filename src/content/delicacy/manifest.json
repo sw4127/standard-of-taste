@@ -60,6 +60,22 @@
           "pass": true
         },
         "validatedAt": "2026-07-20"
+      },
+      "layerA": {
+        "lsdDb": 1.486,
+        "anchorTransparentLsdDb": 0.422,
+        "anchorRatio": 3.52,
+        "driftIqrMs": 1,
+        "driftRangeMs": 17,
+        "driftConfidentFraction": 1,
+        "driftCoherence": 0.88,
+        "gatedOn": "spectral-anchor-ratio",
+        "peakBand": 17,
+        "clippedFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "PASS",
+        "reasons": [],
+        "measuredAt": "2026-08-08"
       }
     },
     {
@@ -117,6 +133,22 @@
           "pass": true
         },
         "validatedAt": "2026-07-20"
+      },
+      "layerA": {
+        "lsdDb": 2.241,
+        "anchorTransparentLsdDb": 0.474,
+        "anchorRatio": 4.73,
+        "driftIqrMs": 0,
+        "driftRangeMs": 0,
+        "driftConfidentFraction": 1,
+        "driftCoherence": 0,
+        "gatedOn": "spectral-anchor-ratio",
+        "peakBand": 23,
+        "clippedFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "PASS",
+        "reasons": [],
+        "measuredAt": "2026-08-08"
       }
     },
     {
@@ -186,6 +218,22 @@
           "pass": true
         },
         "validatedAt": "2026-07-20"
+      },
+      "layerA": {
+        "lsdDb": 6.046,
+        "anchorTransparentLsdDb": 0.274,
+        "anchorRatio": 22.07,
+        "driftIqrMs": 15,
+        "driftRangeMs": 48,
+        "driftConfidentFraction": 0.49,
+        "driftCoherence": 1.23,
+        "gatedOn": "temporal-drift",
+        "peakBand": 23,
+        "clippedFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "PASS",
+        "reasons": [],
+        "measuredAt": "2026-08-08"
       }
     },
     {
@@ -244,6 +292,22 @@
           "pass": true
         },
         "validatedAt": "2026-07-20"
+      },
+      "layerA": {
+        "lsdDb": 3.108,
+        "anchorTransparentLsdDb": 0.754,
+        "anchorRatio": 4.12,
+        "driftIqrMs": 9,
+        "driftRangeMs": 38,
+        "driftConfidentFraction": 0.36,
+        "driftCoherence": 1.1,
+        "gatedOn": "spectral-anchor-ratio",
+        "peakBand": 13,
+        "clippedFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "PASS",
+        "reasons": [],
+        "measuredAt": "2026-08-08"
       }
     },
     {
@@ -301,6 +365,22 @@
           "pass": true
         },
         "validatedAt": "2026-07-20"
+      },
+      "layerA": {
+        "lsdDb": 4.465,
+        "anchorTransparentLsdDb": 0.442,
+        "anchorRatio": 10.1,
+        "driftIqrMs": 0,
+        "driftRangeMs": 0,
+        "driftConfidentFraction": 1,
+        "driftCoherence": 0,
+        "gatedOn": "spectral-anchor-ratio",
+        "peakBand": 21,
+        "clippedFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "PASS",
+        "reasons": [],
+        "measuredAt": "2026-08-08"
       }
     },
     {
@@ -370,7 +450,103 @@
           "pass": true
         },
         "validatedAt": "2026-07-20"
+      },
+      "layerA": {
+        "lsdDb": 6.018,
+        "anchorTransparentLsdDb": 0.57,
+        "anchorRatio": 10.56,
+        "driftIqrMs": 34,
+        "driftRangeMs": 67,
+        "driftConfidentFraction": 0.46,
+        "driftCoherence": 3.11,
+        "gatedOn": "temporal-drift",
+        "peakBand": 1,
+        "clippedFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "PASS",
+        "reasons": [],
+        "measuredAt": "2026-08-08"
       }
     }
-  ]
+  ],
+  "layerA": {
+    "analysisRateHz": 44100,
+    "anchors": [
+      {
+        "sourceId": "pb1",
+        "window": {
+          "startSec": 75,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.4216126425418471,
+        "measuredAt": "2026-08-08",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb7",
+        "window": {
+          "startSec": 32,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.47415708593709627,
+        "measuredAt": "2026-08-08",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb8",
+        "window": {
+          "startSec": 45,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.2739654313950121,
+        "measuredAt": "2026-08-08",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb6",
+        "window": {
+          "startSec": 146,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.7543913586877299,
+        "measuredAt": "2026-08-08",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb3",
+        "window": {
+          "startSec": 189.5,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.44220634981391477,
+        "measuredAt": "2026-08-08",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "b3",
+        "window": {
+          "startSec": 82.5,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.5701155350951169,
+        "measuredAt": "2026-08-08",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      }
+    ],
+    "thresholds": {
+      "MIN_ANCHOR_RATIO": 3,
+      "MIN_TEMPORAL_DRIFT_MS": 5,
+      "MIN_CONFIDENT_BLOCK_FRACTION": 0.25,
+      "MAX_CLIPPED_FRACTION": 0.0005,
+      "MAX_SILENCE_SEC": 1.5
+    },
+    "measuredAt": "2026-08-08",
+    "note": "Magnitudes, NOT audibility. anchorRatio compares each pair against a 320 kbps round-trip of its OWN source window — a manipulation that is measurable and inaudible. LSD is material-dependent, so ratios are comparable across pairs but raw dB are not."
+  }
 }
