@@ -82,11 +82,20 @@ function segmented(opFor, L) {
   return parts.join(";");
 }
 
-/** Apply one degradation family to a WAV; returns the params actually used. */
-function degradeWav(family, magnitude, seed, inWav, outWav, clipSec) {
+/**
+ * Apply one degradation family at an EXPLICIT parameter value; returns the
+ * params actually used.
+ *
+ * Parameterized by value rather than by the 1|2|3 magnitude label so the
+ * strength ladder (S6) can render rungs the label set does not contain.
+ * Renumbering the labels instead would have silently changed what existing
+ * manifest entries mean — d1 records "magnitude 1", and that has to keep
+ * meaning 12 cents.
+ */
+export function degradeWavParam(family, param, seed, inWav, outWav, clipSec) {
   const rand = mulberry32(seed);
   if (family === "lossy-artifact") {
-    const bitrate = FAMILIES[family][magnitude];
+    const bitrate = param;
     const tmp = `${outWav}.roundtrip.mp3`;
     ff(["-i", inWav, "-codec:a", "libmp3lame", "-b:a", bitrate, tmp]);
     ff(["-i", tmp, outWav]);
@@ -94,7 +103,7 @@ function degradeWav(family, magnitude, seed, inWav, outWav, clipSec) {
   }
   const L = clipSec / SEGS;
   if (family === "pitch-drift") {
-    const peakCents = FAMILIES[family][magnitude];
+    const peakCents = param;
     const dir = rand() < 0.5 ? -1 : 1; // drifts flat or sharp, seeded
     const graph = segmented((k) => {
       const f = 2 ** ((dir * peakCents * (k + 0.5)) / SEGS / 1200);
@@ -106,7 +115,7 @@ function degradeWav(family, magnitude, seed, inWav, outWav, clipSec) {
     return { peakCents, direction: dir > 0 ? "sharp" : "flat" };
   }
   if (family === "timing-smear") {
-    const dev = FAMILIES[family][magnitude];
+    const dev = param;
     const raw = Array.from({ length: SEGS }, () => dev * (rand() * 2 - 1));
     const mean = raw.reduce((a, b) => a + b, 0) / SEGS;
     const e = raw.map((v) => v - mean); // mean-corrected: total duration is preserved
@@ -116,6 +125,11 @@ function degradeWav(family, magnitude, seed, inWav, outWav, clipSec) {
     return { maxDevPct: dev * 100, segmentDevPct: e.map((v) => +(v * 100).toFixed(2)) };
   }
   throw new Error(`unknown family "${family}" (know: ${Object.keys(FAMILIES).join(", ")})`);
+}
+
+/** Magnitude-label wrapper — the pool's existing entry point, unchanged. */
+function degradeWav(family, magnitude, seed, inWav, outWav, clipSec) {
+  return degradeWavParam(family, FAMILIES[family][magnitude], seed, inWav, outWav, clipSec);
 }
 
 /** Two-pass R128 loudnorm (same rationale as render's renderOne) → mp3+m4a. */
