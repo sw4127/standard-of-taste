@@ -15,9 +15,14 @@
  * family-by-rung effect can never be confounded with one piece of music.
  *
  * LADDER RUNG 1 DOES NOT SHIP. S6 verified the ladder was monotone, but monotone
- * is not sufficient: all four rung-1 items measured 1.5-2.9x the transparency
- * anchor, under the 3x fair-trial floor. An item barely distinguishable from a
- * manipulation nobody can hear is not a trial, whatever its rung number says. Windows were chosen MECHANICALLY
+ * is not sufficient: every rung-1 item measured under the 3x fair-trial floor.
+ * An item barely distinguishable from a manipulation nobody can hear is not a
+ * trial, whatever its rung number says.
+ *
+ * PITCH-DRIFT'S LADDER WAS WIDENED to 25/50/100 cents (PM ruling RT-27a) after
+ * Layer A measured its old shipping rungs as marginal wherever they were
+ * placed. 100 cents is a semitone accumulated ACROSS a 20s clip — a drift, not
+ * a wrong note. Windows were chosen MECHANICALLY
  * (fixed offsets, skipping anything overlapping the same source's bias
  * excerpt) — the PM is out of the clip-judging loop by design, and a curated
  * window list would smuggle taste back in.
@@ -42,14 +47,14 @@ import type { DegradationFamily, DelicacyItemSpec } from "@/engine/delicacy";
 export const DELICACY_INSTRUMENT_ID = "delicacy-v1";
 
 /**
- * 0 = not live. 17 of 18 pairs pass Layer A; d10 (pitch-drift rung 2) measures
- * 2.6x the transparency anchor against a 3x floor.
+ * 0 = not live, and the remaining gate is now a HUMAN one, not a measured one.
  *
- * The diagnosis is a parameter, not a source: pitch-drift rung 2 (12 cents)
- * measures 1.31-1.50 dB and lands at 2.6-3.3x wherever it is placed, while
- * rung 3 reaches 3.2-4.1x and rung 4 reaches 4.7-5.0x. Its lower rungs are
- * marginal everywhere. Widening pitch-drift's parameter ladder is a product
- * decision (it changes what ships) and is with the PM — see RT-27.
+ * ALL 18 PAIRS PASS LAYER A (ratios 3.1x-94x against each pair's own
+ * transparency anchor). What still stands between this pool and the door is
+ * gate (3): the PM voice pass on copy.ts. Flipping the version while a
+ * documented gate is unmet would be exactly the "shipping around the gate"
+ * this pipeline exists to prevent, so the flag stays 0 until that gate clears.
+ * It is a one-line change when it does.
  */
 export const DELICACY_POOL_VERSION = 0;
 
@@ -241,9 +246,9 @@ export const DELICACY_TRIALS: DelicacyTrialClip[] = [
     "lossy-artifact",
     3,
     "b",
-    "Jason Shaw",
-    "CC-BY 4.0",
-    "“Folk Bed” — Jason Shaw · https://audionautix.com/free-music/acoustic · CC-BY 4.0 · excerpt (trimmed + loudness-normalized; one side deliberately degraded)",
+    "F. Chopin — Musopen Complete Chopin project (performer per item page — record exact name for TASL)",
+    "CC0 (machine-readable licenseurl on item, verified 2026-07-12)",
+    "“Mazurka in A minor, Op. 59 No. 1” — F. Chopin — Musopen Complete Chopin project (performer per item page — record exact name for TASL) · https://archive.org/details/musopen-chopin-complete-works-flac · CC0 (machine-readable licenseurl on item, verified 2026-07-12) · excerpt (trimmed + loudness-normalized; one side deliberately degraded)",
   ),
   pair(
     "d16",
@@ -268,8 +273,8 @@ export const DELICACY_TRIALS: DelicacyTrialClip[] = [
     "lossy-artifact",
     4,
     "a",
-    "J.S. Bach — Kimiko Ishizaka",
-    "CC0",
-    "“WTC Book 1 — Prelude No. 4 in C-sharp minor, BWV 849 (backup)” — J.S. Bach — Kimiko Ishizaka · https://archive.org/details/bach-well-tempered-clavier-book-1 · CC0 · excerpt (trimmed + loudness-normalized; one side deliberately degraded)",
+    "Jason Shaw",
+    "CC-BY 4.0",
+    "“Folk Bed” — Jason Shaw · https://audionautix.com/free-music/acoustic · CC-BY 4.0 · excerpt (trimmed + loudness-normalized; one side deliberately degraded)",
   ),
 ];

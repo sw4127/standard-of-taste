@@ -10,7 +10,7 @@
       "clipSec": 20,
       "family": "pitch-drift",
       "rung": 2,
-      "param": 12,
+      "param": 25,
       "seed": 8007
     },
     {
@@ -43,7 +43,7 @@
       "clipSec": 20,
       "family": "pitch-drift",
       "rung": 3,
-      "param": 25,
+      "param": 50,
       "seed": 8014
     },
     {
@@ -76,7 +76,7 @@
       "clipSec": 20,
       "family": "pitch-drift",
       "rung": 4,
-      "param": 50,
+      "param": 100,
       "seed": 8021
     },
     {
@@ -109,7 +109,7 @@
       "clipSec": 20,
       "family": "pitch-drift",
       "rung": 2,
-      "param": 12,
+      "param": 25,
       "seed": 8070
     },
     {
@@ -142,7 +142,7 @@
       "clipSec": 20,
       "family": "pitch-drift",
       "rung": 4,
-      "param": 50,
+      "param": 100,
       "seed": 8084
     },
     {
@@ -158,9 +158,9 @@
     },
     {
       "id": "d15",
-      "sourceId": "pb8",
-      "artist": "Jason Shaw",
-      "startSec": 70,
+      "sourceId": "pb5",
+      "artist": "F. Chopin",
+      "startSec": 20,
       "clipSec": 20,
       "family": "lossy-artifact",
       "rung": 3,
@@ -175,7 +175,7 @@
       "clipSec": 20,
       "family": "pitch-drift",
       "rung": 3,
-      "param": 25,
+      "param": 50,
       "seed": 8077
     },
     {
@@ -191,8 +191,8 @@
     },
     {
       "id": "d18",
-      "sourceId": "b1",
-      "artist": "J.S. Bach",
+      "sourceId": "pb8",
+      "artist": "Jason Shaw",
       "startSec": 70,
       "clipSec": 20,
       "family": "lossy-artifact",

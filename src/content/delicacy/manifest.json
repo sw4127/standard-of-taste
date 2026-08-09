@@ -15,11 +15,11 @@
       "magnitude": 2,
       "seed": 8007,
       "params": {
-        "peakCents": 12,
+        "peakCents": 25,
         "direction": "sharp"
       },
       "originalSide": "a",
-      "param": 12,
+      "param": 25,
       "files": {
         "a": "d1-a.mp3",
         "b": "d1-b.mp3",
@@ -28,7 +28,7 @@
       },
       "sha256": {
         "a": "a71fdb41595780365aef8b33c744d489f6c31c1aff7ba2c5ef9fd70b5ad4eb79",
-        "b": "60b7a2837cd3d2ef777c04abdb962ee1a901088d1f2656d26a6da1e27de5bb8e"
+        "b": "9138a89440f47353a9a6e1960431130a4bbedfc23e4d07fde09c47b32002a4a2"
       },
       "validation": {
         "duration_match__mp3_": {
@@ -48,11 +48,11 @@
           "pass": true
         },
         "true_peak__all_4_": {
-          "detail": "mp3 -1.5/-1.5  m4a -1.4/-1.6 dBTP (≤ −1.0)",
+          "detail": "mp3 -1.5/-1.5  m4a -1.4/-1.4 dBTP (≤ −1.0)",
           "pass": true
         },
         "distinct_files": {
-          "detail": "rel-RMS diff 1.151 (≥0.020 floor; NOT a perceptual claim)",
+          "detail": "rel-RMS diff 1.348 (≥0.020 floor; NOT a perceptual claim)",
           "pass": true
         },
         "deterministic_re-render": {
@@ -66,15 +66,15 @@
         "validatedAt": "2026-08-09"
       },
       "layerA": {
-        "lsdDb": 1.36,
+        "lsdDb": 1.633,
         "anchorTransparentLsdDb": 0.413,
-        "anchorRatio": 3.3,
-        "driftIqrMs": 1,
-        "driftRangeMs": 26,
-        "driftConfidentFraction": 1,
-        "driftCoherence": 0.69,
+        "anchorRatio": 3.96,
+        "driftIqrMs": 0,
+        "driftRangeMs": 17,
+        "driftConfidentFraction": 0.99,
+        "driftCoherence": 0,
         "gatedOn": "spectral-anchor-ratio",
-        "peakBand": 23,
+        "peakBand": 3,
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
@@ -94,11 +94,11 @@
       "magnitude": 2,
       "seed": 8070,
       "params": {
-        "peakCents": 12,
+        "peakCents": 25,
         "direction": "flat"
       },
       "originalSide": "a",
-      "param": 12,
+      "param": 25,
       "files": {
         "a": "d10-a.mp3",
         "b": "d10-b.mp3",
@@ -107,7 +107,7 @@
       },
       "sha256": {
         "a": "545d56d9025c11deafc62e15c9effda156476be75006123a84a65c062cbddff6",
-        "b": "6c5a91f20ee076f7e3269aff21f0953849b967a9611c199dc47238922d63d5a6"
+        "b": "ae05297be50b04f4a665ed93380382dfa8394808e448d3dbb88af75c5d05cbc5"
       },
       "validation": {
         "duration_match__mp3_": {
@@ -127,11 +127,11 @@
           "pass": true
         },
         "true_peak__all_4_": {
-          "detail": "mp3 -1.6/-1.5  m4a -1.4/-1.7 dBTP (≤ −1.0)",
+          "detail": "mp3 -1.6/-1.8  m4a -1.4/-1.9 dBTP (≤ −1.0)",
           "pass": true
         },
         "distinct_files": {
-          "detail": "rel-RMS diff 0.706 (≥0.020 floor; NOT a perceptual claim)",
+          "detail": "rel-RMS diff 0.974 (≥0.020 floor; NOT a perceptual claim)",
           "pass": true
         },
         "deterministic_re-render": {
@@ -145,22 +145,20 @@
         "validatedAt": "2026-08-09"
       },
       "layerA": {
-        "lsdDb": 1.314,
+        "lsdDb": 1.551,
         "anchorTransparentLsdDb": 0.497,
-        "anchorRatio": 2.65,
+        "anchorRatio": 3.12,
         "driftIqrMs": 1,
-        "driftRangeMs": 3,
-        "driftConfidentFraction": 0.99,
-        "driftCoherence": 2.43,
+        "driftRangeMs": 5,
+        "driftConfidentFraction": 0.96,
+        "driftCoherence": 1.36,
         "gatedOn": "spectral-anchor-ratio",
         "peakBand": 0,
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
-        "verdict": "FLAG",
-        "reasons": [
-          "magnitude 2.6x anchor (need ≥3x)"
-        ],
+        "verdict": "PASS",
+        "reasons": [],
         "measuredAt": "2026-08-09"
       }
     },
@@ -343,11 +341,11 @@
       "magnitude": 4,
       "seed": 8084,
       "params": {
-        "peakCents": 50,
+        "peakCents": 100,
         "direction": "sharp"
       },
       "originalSide": "a",
-      "param": 50,
+      "param": 100,
       "files": {
         "a": "d13-a.mp3",
         "b": "d13-b.mp3",
@@ -356,7 +354,7 @@
       },
       "sha256": {
         "a": "e2eecc6ccda80ace9766fd2a7faafac0ac013088b28007609737c4967e6d8bba",
-        "b": "512ae9d5edc50284720e4695da02ba63743cc049213a145c2ca7151c7c7759ae"
+        "b": "e961f7eb737785fdd61fc3d7a6502df4cac86485ba8db2bb746a48c94940fb77"
       },
       "validation": {
         "duration_match__mp3_": {
@@ -376,11 +374,11 @@
           "pass": true
         },
         "true_peak__all_4_": {
-          "detail": "mp3 -1.4/-1.4  m4a -1.4/-1.5 dBTP (≤ −1.0)",
+          "detail": "mp3 -1.4/-1.4  m4a -1.4/-1.2 dBTP (≤ −1.0)",
           "pass": true
         },
         "distinct_files": {
-          "detail": "rel-RMS diff 1.405 (≥0.020 floor; NOT a perceptual claim)",
+          "detail": "rel-RMS diff 1.423 (≥0.020 floor; NOT a perceptual claim)",
           "pass": true
         },
         "deterministic_re-render": {
@@ -394,15 +392,15 @@
         "validatedAt": "2026-08-09"
       },
       "layerA": {
-        "lsdDb": 2.511,
+        "lsdDb": 3.542,
         "anchorTransparentLsdDb": 0.498,
-        "anchorRatio": 5.04,
-        "driftIqrMs": 2,
-        "driftRangeMs": 74,
-        "driftConfidentFraction": 0.84,
-        "driftCoherence": 0.51,
+        "anchorRatio": 7.11,
+        "driftIqrMs": 3,
+        "driftRangeMs": 42,
+        "driftConfidentFraction": 0.66,
+        "driftCoherence": 0.75,
         "gatedOn": "spectral-anchor-ratio",
-        "peakBand": 3,
+        "peakBand": 0,
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0.05,
@@ -503,9 +501,9 @@
     },
     {
       "id": "d15",
-      "sourceId": "pb8",
+      "sourceId": "pb5",
       "window": {
-        "startSec": 70,
+        "startSec": 20,
         "clipSec": 20
       },
       "family": "lossy-artifact",
@@ -523,8 +521,8 @@
         "bM4a": "d15-b.m4a"
       },
       "sha256": {
-        "a": "adb8e58e68c21a80acd14899e1e26fc0e6d850bade359c5c753396d845a86276",
-        "b": "0e9937516e6049d62a7adc074bb7c03a811c3ea89aad00766b513e4005c17ddb"
+        "a": "b170caa9edbed0db02ac797327b9bc183ee2451d284cd2c11324a194c11c475b",
+        "b": "b8402fe82c82deb20ac8fe065e3071766d72c95057f9632d37d5846632eb80ee"
       },
       "validation": {
         "duration_match__mp3_": {
@@ -540,15 +538,15 @@
           "pass": true
         },
         "loudness_match__m4a_": {
-          "detail": "a -16.1  b -16.1 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "detail": "a -16.0  b -16.1 LUFS  Δ 0.0 (≤0.5) [m4a]",
           "pass": true
         },
         "true_peak__all_4_": {
-          "detail": "mp3 -6.0/-6.2  m4a -5.3/-5.5 dBTP (≤ −1.0)",
+          "detail": "mp3 -3.0/-2.8  m4a -2.9/-2.8 dBTP (≤ −1.0)",
           "pass": true
         },
         "distinct_files": {
-          "detail": "rel-RMS diff 0.121 (≥0.020 floor; NOT a perceptual claim)",
+          "detail": "rel-RMS diff 0.060 (≥0.020 floor; NOT a perceptual claim)",
           "pass": true
         },
         "deterministic_re-render": {
@@ -556,24 +554,24 @@
           "pass": true
         },
         "no_clipping__pre-loudnorm_": {
-          "detail": "orig 0.0008%  degraded 0.0015% (≤0.0500%)",
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
           "pass": true
         },
         "validatedAt": "2026-08-09"
       },
       "layerA": {
-        "lsdDb": 10.974,
-        "anchorTransparentLsdDb": 0.272,
-        "anchorRatio": 40.31,
+        "lsdDb": 5.41,
+        "anchorTransparentLsdDb": 1.534,
+        "anchorRatio": 3.53,
         "driftIqrMs": 0,
         "driftRangeMs": 0,
         "driftConfidentFraction": 1,
         "driftCoherence": 0,
         "gatedOn": "spectral-anchor-ratio",
-        "peakBand": 23,
+        "peakBand": 21,
         "clippedFraction": 0,
         "flatTopFraction": 0,
-        "longestSilenceSec": 0,
+        "longestSilenceSec": 0.4,
         "verdict": "PASS",
         "reasons": [],
         "measuredAt": "2026-08-09"
@@ -590,11 +588,11 @@
       "magnitude": 3,
       "seed": 8077,
       "params": {
-        "peakCents": 25,
+        "peakCents": 50,
         "direction": "sharp"
       },
       "originalSide": "b",
-      "param": 25,
+      "param": 50,
       "files": {
         "a": "d16-a.mp3",
         "b": "d16-b.mp3",
@@ -602,7 +600,7 @@
         "bM4a": "d16-b.m4a"
       },
       "sha256": {
-        "a": "ced2d68e307eec0faaddf29c85b3eeee1f0c15c8225dace2690ffb229eda575c",
+        "a": "552325cad2e9520328d52a71e579fedafcf97e43f150c2669b3af5d3c234cab7",
         "b": "5795ce4d914eb70f3a5851061d4c2d9e8ca14986bdfa5198beace81d69b56bd8"
       },
       "validation": {
@@ -623,11 +621,11 @@
           "pass": true
         },
         "true_peak__all_4_": {
-          "detail": "mp3 -2.4/-2.4  m4a -2.3/-2.4 dBTP (≤ −1.0)",
+          "detail": "mp3 -2.5/-2.4  m4a -2.5/-2.4 dBTP (≤ −1.0)",
           "pass": true
         },
         "distinct_files": {
-          "detail": "rel-RMS diff 1.346 (≥0.020 floor; NOT a perceptual claim)",
+          "detail": "rel-RMS diff 1.420 (≥0.020 floor; NOT a perceptual claim)",
           "pass": true
         },
         "deterministic_re-render": {
@@ -641,13 +639,13 @@
         "validatedAt": "2026-08-09"
       },
       "layerA": {
-        "lsdDb": 2.064,
+        "lsdDb": 2.757,
         "anchorTransparentLsdDb": 0.643,
-        "anchorRatio": 3.21,
+        "anchorRatio": 4.29,
         "driftIqrMs": 2,
         "driftRangeMs": 25,
-        "driftConfidentFraction": 1,
-        "driftCoherence": 1.04,
+        "driftConfidentFraction": 0.97,
+        "driftCoherence": 0.77,
         "gatedOn": "spectral-anchor-ratio",
         "peakBand": 3,
         "clippedFraction": 0,
@@ -750,7 +748,7 @@
     },
     {
       "id": "d18",
-      "sourceId": "b1",
+      "sourceId": "pb8",
       "window": {
         "startSec": 70,
         "clipSec": 20
@@ -770,8 +768,8 @@
         "bM4a": "d18-b.m4a"
       },
       "sha256": {
-        "a": "88a7971f9544c242e23a41a8050fd8780233345425ae884900f3f6ea647dc0a5",
-        "b": "2a796e59f7f00a4114e7f6ef582f7b50f236ce10f24e068fd0d2363e101fb538"
+        "a": "0e9937516e6049d62a7adc074bb7c03a811c3ea89aad00766b513e4005c17ddb",
+        "b": "46162db21094544ff260e1457ea9a82abe199a9ada003ab990e1b648395ae5f5"
       },
       "validation": {
         "duration_match__mp3_": {
@@ -783,19 +781,19 @@
           "pass": true
         },
         "loudness_match__mp3_": {
-          "detail": "a -16.1  b -16.1 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [mp3]",
           "pass": true
         },
         "loudness_match__m4a_": {
-          "detail": "a -16.1  b -16.1 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "detail": "a -16.1  b -16.0 LUFS  Δ 0.0 (≤0.5) [m4a]",
           "pass": true
         },
         "true_peak__all_4_": {
-          "detail": "mp3 -1.5/-1.5  m4a -1.4/-1.4 dBTP (≤ −1.0)",
+          "detail": "mp3 -6.2/-6.4  m4a -5.5/-6.0 dBTP (≤ −1.0)",
           "pass": true
         },
         "distinct_files": {
-          "detail": "rel-RMS diff 0.079 (≥0.020 floor; NOT a perceptual claim)",
+          "detail": "rel-RMS diff 0.202 (≥0.020 floor; NOT a perceptual claim)",
           "pass": true
         },
         "deterministic_re-render": {
@@ -803,21 +801,21 @@
           "pass": true
         },
         "no_clipping__pre-loudnorm_": {
-          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "detail": "orig 0.0008%  degraded 0.0033% (≤0.0500%)",
           "pass": true
         },
         "validatedAt": "2026-08-09"
       },
       "layerA": {
-        "lsdDb": 11.817,
-        "anchorTransparentLsdDb": 0.586,
-        "anchorRatio": 20.17,
+        "lsdDb": 25.587,
+        "anchorTransparentLsdDb": 0.272,
+        "anchorRatio": 93.99,
         "driftIqrMs": 0,
         "driftRangeMs": 0,
         "driftConfidentFraction": 1,
         "driftCoherence": 0,
         "gatedOn": "spectral-anchor-ratio",
-        "peakBand": 18,
+        "peakBand": 20,
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
@@ -1005,11 +1003,11 @@
       "magnitude": 3,
       "seed": 8014,
       "params": {
-        "peakCents": 25,
+        "peakCents": 50,
         "direction": "flat"
       },
       "originalSide": "b",
-      "param": 25,
+      "param": 50,
       "files": {
         "a": "d4-a.mp3",
         "b": "d4-b.mp3",
@@ -1017,7 +1015,7 @@
         "bM4a": "d4-b.m4a"
       },
       "sha256": {
-        "a": "76306f7aaeaaa407db8555f7551dfe2bd01c7259eb2c0df7510df89c3be86229",
+        "a": "f05624bcd3d54c5e6d089822dccd14fa86741ec4cb875f40ad36d3a095ffbe37",
         "b": "07d6139f042c2cd1a36e8a30adeba772a8e56996e8304fd4f034f66c22868803"
       },
       "validation": {
@@ -1030,7 +1028,7 @@
           "pass": true
         },
         "loudness_match__mp3_": {
-          "detail": "a -15.9  b -15.8 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "detail": "a -15.8  b -15.8 LUFS  Δ 0.0 (≤0.5) [mp3]",
           "pass": true
         },
         "loudness_match__m4a_": {
@@ -1042,7 +1040,7 @@
           "pass": true
         },
         "distinct_files": {
-          "detail": "rel-RMS diff 1.338 (≥0.020 floor; NOT a perceptual claim)",
+          "detail": "rel-RMS diff 1.381 (≥0.020 floor; NOT a perceptual claim)",
           "pass": true
         },
         "deterministic_re-render": {
@@ -1056,15 +1054,15 @@
         "validatedAt": "2026-08-09"
       },
       "layerA": {
-        "lsdDb": 2.198,
+        "lsdDb": 2.87,
         "anchorTransparentLsdDb": 0.54,
-        "anchorRatio": 4.07,
+        "anchorRatio": 5.32,
         "driftIqrMs": 2,
-        "driftRangeMs": 22,
-        "driftConfidentFraction": 1,
-        "driftCoherence": 1.02,
+        "driftRangeMs": 31,
+        "driftConfidentFraction": 0.91,
+        "driftCoherence": 0.6,
         "gatedOn": "spectral-anchor-ratio",
-        "peakBand": 18,
+        "peakBand": 0,
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
@@ -1252,11 +1250,11 @@
       "magnitude": 4,
       "seed": 8021,
       "params": {
-        "peakCents": 50,
+        "peakCents": 100,
         "direction": "flat"
       },
       "originalSide": "b",
-      "param": 50,
+      "param": 100,
       "files": {
         "a": "d7-a.mp3",
         "b": "d7-b.mp3",
@@ -1264,7 +1262,7 @@
         "bM4a": "d7-b.m4a"
       },
       "sha256": {
-        "a": "da3d8c9b62ded157eb4ece396f3396c10932f5c589ea633348ad531ff14bde57",
+        "a": "a33e701a7c6230e7ec02c15c2832239026172c19beccbd898f2b026d86ab55ea",
         "b": "fdd6328e774c29c68d9fbe03c2512202f195a6adfed7484e236b1b2f8b4621a2"
       },
       "validation": {
@@ -1285,11 +1283,11 @@
           "pass": true
         },
         "true_peak__all_4_": {
-          "detail": "mp3 -5.7/-6.1  m4a -5.8/-6.1 dBTP (≤ −1.0)",
+          "detail": "mp3 -5.6/-6.1  m4a -5.5/-6.1 dBTP (≤ −1.0)",
           "pass": true
         },
         "distinct_files": {
-          "detail": "rel-RMS diff 1.363 (≥0.020 floor; NOT a perceptual claim)",
+          "detail": "rel-RMS diff 1.398 (≥0.020 floor; NOT a perceptual claim)",
           "pass": true
         },
         "deterministic_re-render": {
@@ -1303,15 +1301,15 @@
         "validatedAt": "2026-08-09"
       },
       "layerA": {
-        "lsdDb": 2.619,
+        "lsdDb": 3.006,
         "anchorTransparentLsdDb": 0.558,
-        "anchorRatio": 4.69,
-        "driftIqrMs": 3,
-        "driftRangeMs": 6,
-        "driftConfidentFraction": 0.35,
-        "driftCoherence": 2.55,
+        "anchorRatio": 5.38,
+        "driftIqrMs": 2,
+        "driftRangeMs": 11,
+        "driftConfidentFraction": 0.19,
+        "driftCoherence": 1.29,
         "gatedOn": "spectral-anchor-ratio",
-        "peakBand": 19,
+        "peakBand": 11,
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
@@ -1559,13 +1557,13 @@
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
-        "sourceId": "pb8",
+        "sourceId": "pb5",
         "window": {
-          "startSec": 70,
+          "startSec": 20,
           "clipSec": 20
         },
         "pipelineNoiseLsdDb": 0,
-        "transparentLsdDb": 0.2722317576572498,
+        "transparentLsdDb": 1.5339267615235532,
         "measuredAt": "2026-08-09",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
@@ -1592,13 +1590,13 @@
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
-        "sourceId": "b1",
+        "sourceId": "pb8",
         "window": {
           "startSec": 70,
           "clipSec": 20
         },
         "pipelineNoiseLsdDb": 0,
-        "transparentLsdDb": 0.5859496723067251,
+        "transparentLsdDb": 0.2722317576572498,
         "measuredAt": "2026-08-09",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
