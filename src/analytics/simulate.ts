@@ -391,7 +391,7 @@ export function simulateCohort(
  * estimates from real responses is the entire point of the pivot's §1
  * Layer B. Nothing user-facing may quote these as item difficulties.
  */
-export const ASSIGNED_DIFFICULTY_BY_MAGNITUDE: Record<1 | 2 | 3, number> = { 1: 1.0, 2: 0.0, 3: -1.0 };
+export const ASSIGNED_DIFFICULTY_BY_MAGNITUDE: Record<1 | 2 | 3 | 4, number> = { 1: 1.5, 2: 1.0, 3: 0.0, 4: -1.0 };
 /** Naming the flaw is assumed harder than spotting that something is wrong. */
 export const ASSIGNED_FLAW_PENALTY = 0.7;
 /** Assigned discrimination — flat across items, so recovery has nothing to lean on. */

@@ -35,8 +35,15 @@ export const DEGRADATION_FAMILIES = ["pitch-drift", "timing-smear", "lossy-artif
 export type DegradationFamily = (typeof DEGRADATION_FAMILIES)[number];
 
 export type PairSide = "a" | "b";
-/** Degradation intensity: 1 subtle … 3 obvious (see honesty note above). */
-export type DelicacyMagnitude = 1 | 2 | 3;
+/**
+ * Ladder rung: 1 gentlest … 4 strongest.
+ *
+ * Four, not three, since the S6 strength ladder (2026-08-07) verified a fourth
+ * calibrated rung per family and pool expansion shipped it. The value is a
+ * LABEL for the rung — the actual degradation parameter lives in the manifest,
+ * so a rung can never silently disagree with what was rendered.
+ */
+export type DelicacyMagnitude = 1 | 2 | 3 | 4;
 
 /** 2AFC chance rate — copy anchors accuracy against this (N3). */
 export const DELICACY_CHANCE = 0.5;
@@ -246,7 +253,7 @@ export function computeDelicacyResult(
   });
 
   const tally = (): Tally => ({ n: 0, correct: 0 });
-  const byMagnitude: Record<DelicacyMagnitude, Tally> = { 1: tally(), 2: tally(), 3: tally() };
+  const byMagnitude: Record<DelicacyMagnitude, Tally> = { 1: tally(), 2: tally(), 3: tally(), 4: tally() };
   const byFamily = Object.fromEntries(DEGRADATION_FAMILIES.map((f) => [f, tally()])) as Record<
     DegradationFamily,
     Tally

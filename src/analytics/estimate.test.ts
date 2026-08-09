@@ -166,8 +166,13 @@ describe("estimate — reliability", () => {
       `[est] live pool (${items.length} trials): α = ${alpha.toFixed(3)} — BELOW the conventional 0.70 floor. ` +
         `Spearman-Brown: ~${needed} trials needed for α ≥ 0.70. [SIMULATED, assigned item params]`,
     );
+    // The pool expanded from 6 trials to 24 (RT-24a) and this number moved with
+    // it: at six trials alpha was 0.25 and Spearman-Brown demanded ~42 trials;
+    // at 24 it demands ~51 in total, i.e. roughly twice again. 24 does NOT
+    // reach the conventional floor and nothing may claim it does — but the
+    // requirement is now a stretch rather than an impossibility.
     expect(alpha).toBeLessThan(0.7);
-    expect(needed).toBeGreaterThan(items.length * 3);
+    expect(needed).toBeGreaterThan(items.length);
   });
 });
 

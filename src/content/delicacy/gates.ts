@@ -5,13 +5,21 @@
  * fail with named errors. Mirrors the bias gatekeeping intent
  * (src/content/bias/bias.test.ts) with the delicacy-specific shape.
  *
- * Enforced here (pool shape):
- *  - exactly 6 trials, unique ids, audio under /audio/delicacy/
- *  - each degradation family exactly 2×, each magnitude exactly 2×
- *  - no two ADJACENT trials share a family (answer-pattern monotony) or a
- *    leading source artist (sound-world monotony)
- *  - original sides balanced (|a − b| ≤ 2; the authored pool hits 3/3)
- *  - six distinct source recordings (cross-trial familiarity control)
+ * Enforced here (pool shape) — the 24-trial CROSSED FACTORIAL (RT-24a):
+ *  - exactly 24 trials, unique ids, audio under /audio/delicacy/
+ *  - 3 degradation families × 8, 4 ladder rungs × 6
+ *  - every family×rung cell exactly 2×, and its two replicates on DIFFERENT
+ *    lead artists — otherwise a family-by-rung effect is confounded with one
+ *    piece of music, which is the confound that made the S5b cross-source
+ *    comparison worthless
+ *  - no two ADJACENT trials share a family (answer-pattern monotony)
+ *  - original sides roughly balanced (|a − b| ≤ 4 over 24 trials)
+ *  - at least 6 distinct source recordings, and no single ARTIST carrying more
+ *    than a third of the pool (cross-trial familiarity control). A third, not a
+ *    quarter: the licensed catalogue is 11 recordings across 6 artists, three
+ *    of them Bach and three Chopin, so a quarter-cap is arithmetically
+ *    impossible at 24 trials. The bound is what the catalogue supports, and it
+ *    is stated rather than quietly loosened until the pool fits.
  * Enforced against the manifest (provenance):
  *  - every trial has a manifest pair whose family/magnitude/originalSide
  *    MATCH (items.ts can never drift from what was actually rendered)
@@ -79,7 +87,8 @@ export function checkDelicacyPool(
   const errors: string[] = [];
   const err = (msg: string) => errors.push(msg);
 
-  if (trials.length !== 6) err(`pool must be exactly 6 trials, got ${trials.length}`);
+  const EXPECTED = 24;
+  if (trials.length !== EXPECTED) err(`pool must be exactly ${EXPECTED} trials, got ${trials.length}`);
   if (new Set(trials.map((t) => t.id)).size !== trials.length) err("duplicate trial ids");
 
   const famCount = new Map<string, number>();
@@ -91,20 +100,44 @@ export function checkDelicacyPool(
       err(`${t.id}: audio must live under /audio/delicacy/`);
     if (!t.license || !t.attribution) err(`${t.id}: license/attribution missing (CC credit is a legal requirement)`);
   }
-  for (const [f, n] of famCount) if (n !== 2) err(`family "${f}" appears ${n}× (contract: exactly 2)`);
-  for (const [m, n] of magCount) if (n !== 2) err(`magnitude ${m} appears ${n}× (contract: exactly 2)`);
+  const perFamily = EXPECTED / 3;
+  const perRung = EXPECTED / 4;
+  for (const [f, n] of famCount) if (n !== perFamily) err(`family "${f}" appears ${n}× (contract: exactly ${perFamily})`);
+  for (const [m, n] of magCount) if (n !== perRung) err(`rung ${m} appears ${n}× (contract: exactly ${perRung})`);
+
+  // The factorial itself: each cell twice, on different artists.
+  const cells = new Map<string, DelicacyTrialClip[]>();
+  for (const t of trials) {
+    const k = `${t.family}/${t.magnitude}`;
+    cells.set(k, [...(cells.get(k) ?? []), t]);
+  }
+  for (const [k, ts] of cells) {
+    if (ts.length !== 2) err(`cell ${k} appears ${ts.length}× (contract: exactly 2)`);
+    else if (leadArtist(ts[0].sourceCredit) === leadArtist(ts[1].sourceCredit))
+      err(`cell ${k} is replicated on the SAME artist (${leadArtist(ts[0].sourceCredit)}) — the replicate cannot control for material`);
+  }
 
   for (let i = 1; i < trials.length; i++) {
     if (trials[i].family === trials[i - 1].family)
       err(`trials ${i}/${i + 1} share family "${trials[i].family}" adjacently`);
-    if (leadArtist(trials[i].sourceCredit) === leadArtist(trials[i - 1].sourceCredit))
-      err(`trials ${i}/${i + 1} share source artist "${leadArtist(trials[i].sourceCredit)}" adjacently`);
   }
 
   const a = trials.filter((t) => t.originalSide === "a").length;
-  if (Math.abs(a - (trials.length - a)) > 2) err(`original sides unbalanced: ${a}a/${trials.length - a}b`);
-  if (new Set(trials.map((t) => t.sourceCredit)).size !== trials.length)
-    err("source recordings are not all distinct");
+  if (Math.abs(a - (trials.length - a)) > 4) err(`original sides unbalanced: ${a}a/${trials.length - a}b`);
+
+  // At 24 trials from a licensed catalogue of 11 recordings, "all distinct" is
+  // impossible; what matters is that no one sound-world dominates.
+  const credits = new Map<string, number>();
+  const artists = new Map<string, number>();
+  for (const t of trials) {
+    credits.set(t.sourceCredit, (credits.get(t.sourceCredit) ?? 0) + 1);
+    const a2 = leadArtist(t.sourceCredit);
+    artists.set(a2, (artists.get(a2) ?? 0) + 1);
+  }
+  if (credits.size < 6) err(`only ${credits.size} distinct source recordings (contract: ≥ 6)`);
+  const artistCap = Math.ceil(trials.length / 3);
+  for (const [c, n] of artists)
+    if (n > artistCap) err(`artist "${c}" carries ${n}/${trials.length} trials (contract: ≤ ${artistCap})`);
 
   for (const t of trials) {
     const p = manifest.pairs.find((x) => x.id === t.id);

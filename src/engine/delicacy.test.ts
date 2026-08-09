@@ -57,7 +57,8 @@ describe("computeDelicacyResult — worked examples (hand-computed)", () => {
     expect(r.flawEligible).toBe(6);
     expect(r.flawCorrect).toBe(6);
     expect(r.flawAccuracy).toBe(1);
-    expect(r.byMagnitude).toEqual({ 1: { n: 2, correct: 2 }, 2: { n: 2, correct: 2 }, 3: { n: 2, correct: 2 } });
+    // Rung 4 exists since the S6 ladder; a pool using only rungs 1-3 tallies it at zero.
+    expect(r.byMagnitude).toEqual({ 1: { n: 2, correct: 2 }, 2: { n: 2, correct: 2 }, 3: { n: 2, correct: 2 }, 4: { n: 0, correct: 0 } });
     expect(r.byFamily).toEqual({
       "pitch-drift": { n: 2, correct: 2 },
       "timing-smear": { n: 2, correct: 2 },
@@ -117,7 +118,7 @@ describe("computeDelicacyResult — worked examples (hand-computed)", () => {
     expect(r.flawEligible).toBe(4);
     expect(r.flawCorrect).toBe(2);
     expect(r.flawAccuracy).toBe(0.5);
-    expect(r.byMagnitude).toEqual({ 1: { n: 2, correct: 2 }, 2: { n: 2, correct: 2 }, 3: { n: 2, correct: 0 } });
+    expect(r.byMagnitude).toEqual({ 1: { n: 2, correct: 2 }, 2: { n: 2, correct: 2 }, 3: { n: 2, correct: 0 }, 4: { n: 0, correct: 0 } });
     expect(r.byFamily).toEqual({
       "pitch-drift": { n: 2, correct: 2 },
       "timing-smear": { n: 2, correct: 1 },
