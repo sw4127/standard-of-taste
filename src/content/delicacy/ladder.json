@@ -7,7 +7,7 @@
   },
   "analysisRateHz": 44100,
   "transparentAnchorLsdDb": 0.422,
-  "measuredAt": "2026-08-08",
+  "measuredAt": "2026-08-09",
   "note": "Four calibrated rungs per family, all rendered from ONE source window so rung-to-rung comparison is not confounded by material. Rungs 2-4 are the values already shipping; rung 1 is a new gentler step. A rung's measured magnitude is NOT its difficulty — which rung falls in the 0.55-0.85 acceptance band is a Layer B question requiring real responses.",
   "families": {
     "pitch-drift": {
@@ -15,27 +15,12 @@
       "primaryMeasure": "lsdDb",
       "monotoneSpectral": true,
       "monotoneTemporalIqr": false,
-      "monotoneTemporalRange": false,
+      "monotoneTemporalRange": true,
       "verified": true,
       "temporalTrackerSaturates": false,
       "rungs": [
         {
           "rung": 1,
-          "param": 6,
-          "params": {
-            "peakCents": 6,
-            "direction": "flat"
-          },
-          "lsdDb": 1.356,
-          "anchorRatio": 3.22,
-          "driftIqrMs": 0,
-          "driftRangeMs": 27,
-          "driftConfidentFraction": 1,
-          "peakBand": 23,
-          "preNormClippedFraction": 0
-        },
-        {
-          "rung": 2,
           "param": 12,
           "params": {
             "peakCents": 12,
@@ -50,7 +35,7 @@
           "preNormClippedFraction": 0
         },
         {
-          "rung": 3,
+          "rung": 2,
           "param": 25,
           "params": {
             "peakCents": 25,
@@ -65,7 +50,7 @@
           "preNormClippedFraction": 0
         },
         {
-          "rung": 4,
+          "rung": 3,
           "param": 50,
           "params": {
             "peakCents": 50,
@@ -77,6 +62,21 @@
           "driftRangeMs": 37,
           "driftConfidentFraction": 0.87,
           "peakBand": 17,
+          "preNormClippedFraction": 0
+        },
+        {
+          "rung": 4,
+          "param": 100,
+          "params": {
+            "peakCents": 100,
+            "direction": "flat"
+          },
+          "lsdDb": 3.578,
+          "anchorRatio": 8.49,
+          "driftIqrMs": 5,
+          "driftRangeMs": 49,
+          "driftConfidentFraction": 0.7,
+          "peakBand": 2,
           "preNormClippedFraction": 0
         }
       ]

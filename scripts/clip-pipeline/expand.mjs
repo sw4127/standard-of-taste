@@ -33,11 +33,13 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { LADDER_RUNGS } from "./ladder.mjs";
 import { renderPair } from "./degrade.mjs";
+import { renderAnchors, MIN_ANCHOR_RATIO, TEMPORAL_FAMILIES } from "./validate.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..", "..");
 const BIAS_MANIFEST = join(ROOT, "src", "content", "bias", "manifest.json");
 const PLAN = join(HERE, "expansion-plan.json");
+const ANCHOR_CACHE = join(HERE, "anchor-cache.json");
 
 /**
  * 18 trials: 3 families x 3 rungs x 2 replicates (PM ruling RT-25a, 2026-08-07).
@@ -55,31 +57,47 @@ export const TRIALS_TARGET = 18;
 export const SHIPPING_RUNGS = [2, 3, 4];
 
 /**
- * Sources excluded from a family because their transparency anchor is too high
- * for that family's measured magnitudes to clear the ratio floor.
+ * Predictive screening (PM ruling RT-28a, 2026-08-07) — REPLACES the hand-kept
+ * source-exclusion list this file used to carry.
  *
- * MEASURED, not guessed (2026-08-07): mean anchors run pb8 0.27 … pb3 0.73,
- * then pb5 1.30 and pb4 1.31 — the two dense orchestral/late-Chopin sources sit
- * at roughly 2.4x the pool median. Pitch-drift's own magnitudes span 1.2-3.9 dB,
- * so on those two sources it cannot reach 3x: d7 (rung 4, the STRONGEST rung)
- * measured the highest raw LSD of any pitch item and still failed at 2.8x.
+ * Three render cycles were spent reacting to Layer A failures: render 18 pairs,
+ * discover a cell cannot clear the ratio floor on its source, exclude that
+ * source, render again. The information needed to avoid that was available
+ * before any pair was rendered — a family-rung's magnitude comes from the
+ * measured ladder, and a source window's transparency anchor can be rendered
+ * on its own in seconds. Screening turns a ten-minute render loop into a
+ * two-second plan check.
  *
- * The exclusion covers BOTH ratio-gated families, not just pitch-drift. The
- * first 18-trial attempt excluded only pitch-drift and lossy rung 2 then failed
- * on pb5 at 2.0x — the same effect, a different family. timing-smear is gated
- * on measured drift rather than on a ratio, so anchors do not touch it and
- * those sources still carry timing items.
- *
- * THE COST, stated plainly: constraining two families to sparser material means
- * family effects are partly confounded with source density. That is a real
- * methodological price. It is paid because the alternative is shipping items
- * that are not fair trials, and because the confound is documented here rather
- * than discovered later in the data.
+ * PREDICTION IS A SCREEN, NOT A VERDICT. Ladder magnitudes were measured on ONE
+ * source, and LSD varies with material, so the prediction carries a safety
+ * margin and `validate` remains the authority on what actually passes. A cell
+ * the screen rejects is one we are confident would fail; a cell it accepts
+ * still has to prove it.
  */
-export const FAMILY_SOURCE_EXCLUSIONS = {
-  "pitch-drift": ["pb4", "pb5"],
-  "lossy-artifact": ["pb4", "pb5"],
-};
+const PREDICTION_MARGIN = 1.2;
+
+/** Ladder magnitude per family-rung, measured — read from ladder.json. */
+function ladderMagnitudes() {
+  const report = JSON.parse(readFileSync(join(ROOT, "src", "content", "delicacy", "ladder.json"), "utf8"));
+  const out = new Map();
+  for (const [family, spec] of Object.entries(report.families)) {
+    for (const r of spec.rungs) out.set(`${family}/${r.rung}`, r.lsdDb);
+  }
+  return out;
+}
+
+/**
+ * Would this family-rung clear the ratio floor on this source window?
+ * Temporal families are gated on drift, not on a ratio, so anchors never
+ * constrain them and the screen passes everything.
+ */
+function predictPasses(family, rung, anchorLsd, magnitudes) {
+  if (TEMPORAL_FAMILIES.has(family)) return true;
+  const lsd = magnitudes.get(`${family}/${rung}`);
+  if (lsd === undefined || !anchorLsd) return true; // no basis to reject
+  return lsd / anchorLsd >= MIN_ANCHOR_RATIO * PREDICTION_MARGIN;
+}
+
 const CLIP_SEC = 20;
 /** Windows start here and step by this much — no overlap, no edge effects. */
 const FIRST_START = 20;
@@ -93,7 +111,7 @@ const leadArtist = (item) => (item.composerOrArtist || "").trim();
 /**
  * Build the render plan. Pure and deterministic: same manifest, same plan.
  */
-export function buildPlan(durations) {
+export function buildPlan(durations, anchors = new Map(), magnitudes = new Map()) {
   const bias = JSON.parse(readFileSync(BIAS_MANIFEST, "utf8"));
   const byId = new Map(bias.items.map((i) => [i.id, i]));
 
@@ -134,7 +152,7 @@ export function buildPlan(durations) {
         const id = SOURCE_ORDER[(cursor + attempt) % SOURCE_ORDER.length];
         const avail = windows.get(id) ?? [];
         if (used.get(id) >= avail.length) continue;
-        if ((FAMILY_SOURCE_EXCLUSIONS[cell.family] ?? []).includes(id)) continue;
+        if (!predictPasses(cell.family, cell.rung, anchors.get(`${id}@${(windows.get(id) ?? [])[used.get(id)]}`), magnitudes)) continue;
         if (rep === 1) {
           const first = plan.find((p) => p.family === cell.family && p.rung === cell.rung);
           if (first && leadArtist(byId.get(first.sourceId)) === leadArtist(byId.get(id))) continue;
@@ -221,7 +239,36 @@ export async function expand(args) {
     );
   }
 
-  const plan = orderForPresentation(buildPlan(durations)).map((t, i) => ({ ...t, id: `d${i + 1}` }));
+  // ---- anchor cache: transparency anchor per candidate source window.
+  // Rendered ONCE and cached; it is the input the screen needs and it costs
+  // seconds per window against minutes per rendered pair.
+  const { existsSync: exists } = await import("node:fs");
+  const cache = exists(ANCHOR_CACHE) ? JSON.parse(readFileSync(ANCHOR_CACHE, "utf8")) : {};
+  const magnitudes = ladderMagnitudes();
+
+  if (args.includes("--anchors")) {
+    const candidates = [];
+    for (const id of SOURCE_ORDER) {
+      const dur = durations[id];
+      if (!dur) continue;
+      for (let t = FIRST_START, n = 0; t + CLIP_SEC <= dur - 10 && n < 4; t += WINDOW_STEP, n++) {
+        candidates.push([id, t]);
+      }
+    }
+    console.log(`Measuring transparency anchors for ${candidates.length} candidate windows…`);
+    for (const [id, t] of candidates) {
+      const key = `${id}@${t}`;
+      if (cache[key] !== undefined) continue;
+      const a = renderAnchors(id, t, CLIP_SEC, `cache-${id}-${t}`);
+      cache[key] = +a.transparentLsdDb.toFixed(4);
+      console.log(`  ${key.padEnd(12)} ${cache[key].toFixed(3)} dB`);
+    }
+    writeFileSync(ANCHOR_CACHE, JSON.stringify(cache, null, 2) + "\n");
+    console.log(`  cached to scripts/clip-pipeline/anchor-cache.json`);
+  }
+
+  const anchors = new Map(Object.entries(cache));
+  const plan = orderForPresentation(buildPlan(durations, anchors, magnitudes)).map((t, i) => ({ ...t, id: `d${i + 1}` }));
   writeFileSync(PLAN, JSON.stringify({ trialsTarget: TRIALS_TARGET, clipSec: CLIP_SEC, plan }, null, 2) + "\n");
 
   console.log(`Expansion plan — ${plan.length} trials (3 families x ${SHIPPING_RUNGS.length} rungs x 2 replicates)`);
@@ -246,8 +293,8 @@ export async function expand(args) {
   for (const [f, n] of count("family")) if (n !== perFamily) errs.push(`family ${f} appears ${n}x (want ${perFamily})`);
   for (const [r, n] of count("rung")) if (n !== perRung) errs.push(`rung ${r} appears ${n}x (want ${perRung})`);
   for (const t of plan) {
-    if ((FAMILY_SOURCE_EXCLUSIONS[t.family] ?? []).includes(t.sourceId))
-      errs.push(`${t.id}: ${t.family} on excluded source ${t.sourceId}`);
+    if (!predictPasses(t.family, t.rung, anchors.get(`${t.sourceId}@${t.startSec}`), magnitudes))
+      errs.push(`${t.id}: ${t.family} rung ${t.rung} predicted to FAIL on ${t.sourceId}@${t.startSec}s`);
   }
   const cellKeys = new Map();
   for (const t of plan) {

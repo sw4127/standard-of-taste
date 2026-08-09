@@ -55,7 +55,13 @@ const ff = (args) => execFileSync(FFMPEG, ["-v", "error", "-y", ...args]);
  * to guess what "25" means.
  */
 export const LADDER_RUNGS = {
-  "pitch-drift": { unit: "cents of peak detune", values: [6, 12, 25, 50] },
+  // WIDENED 2026-08-07 (PM ruling RT-27a). Layer A measured the old shipping
+  // rungs as marginal: 12 cents landed at 2.6-3.3x the transparency anchor
+  // against a 3x fair-trial floor, wherever it was placed. Each shipping step
+  // is doubled. 100 cents is a semitone of drift accumulated ACROSS a 20s
+  // clip — still a drift, not a wrong note, which is why the ladder stops
+  // there rather than at the 200 cents originally proposed.
+  "pitch-drift": { unit: "cents of peak detune", values: [12, 25, 50, 100] },
   "timing-smear": { unit: "max per-segment tempo deviation", values: [0.0075, 0.015, 0.03, 0.05] },
   "lossy-artifact": { unit: "mp3 round-trip bitrate", values: ["128k", "96k", "64k", "32k"] },
 };

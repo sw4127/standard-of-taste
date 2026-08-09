@@ -37,24 +37,18 @@ describe("delicacy pool of record — the real thing passes every gate", () => {
     expect(rung.has(1)).toBe(false); // rung 1 measured and rejected
   });
 
-  it("is BLOCKED at version 1 by Layer A verdicts, not by a human (the gate working)", () => {
-    // Six of the 24 pairs FLAG: four at ladder rung 1, which measures too close
-    // to a transparent round-trip to be a fair trial, and two on dense
-    // orchestral material whose anchor is large enough to suppress the ratio.
-    // The pool cannot reach v1 until that is resolved, and nothing about that
-    // decision involves anyone listening.
-    const atV1 = check(DELICACY_TRIALS, manifest, 1);
-    expect(atV1.length).toBeGreaterThan(0);
-    expect(atV1.every((e) => e.includes("Layer A verdict is FLAG"))).toBe(true);
-  });
-
-  it.skip("clears every gate at version 1 — the door is now unlocked by MEASUREMENT", () => {
-    // This test used to assert the opposite: that the pool was blocked at v1
-    // pending a PM ear pass. The ear pass is retired (artifact pivot §1), the
-    // door turns on Layer A, and every pair now carries a recorded PASS from
-    // `clip-pipeline validate`. Nothing human stands between the pool and the
-    // door — which was the entire point of the pivot.
+  it("clears every MACHINE gate at version 1 — the door waits on no measurement", () => {
+    // This assertion has now been all three of its possible states, and the
+    // history is the point:
+    //   - originally: blocked pending a PM ear pass on every clip;
+    //   - after the pivot: blocked by Layer A FLAGs on 6 of 24 pairs;
+    //   - now: clear, because the pool was rebuilt until the MEASUREMENTS
+    //     passed rather than until the gate was relaxed.
+    // What still stands between this pool and the door is the PM voice pass on
+    // copy.ts, which is a writing-quality gate and not something a test can
+    // check. DELICACY_POOL_VERSION stays 0 until that clears.
     expect(check(DELICACY_TRIALS, manifest, 1)).toEqual([]);
+    expect(DELICACY_POOL_VERSION).toBe(0);
   });
 
   it("candidate audio files exist on disk for every trial (both sides, both formats)", () => {
