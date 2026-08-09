@@ -28,6 +28,7 @@ const stats = (over: Partial<ItemStats> = {}): ItemStats => ({
   n: 500,
   pValue: 0.7,
   discrimination: 0.4,
+  discriminationCorrected: 0.4,
   ...over,
 });
 
@@ -54,12 +55,12 @@ describe("Layer B auto-flag — verdicts", () => {
   it("retires a non-discriminating item even when its difficulty is perfect", () => {
     // The ordering that matters: an item bang in the middle of the band which
     // separates nobody is dead weight, and difficulty must not rescue it.
-    const g = gradeItem(stats({ pValue: 0.7, discrimination: ACCEPT_DISCRIMINATION_MIN - 0.01 }));
+    const g = gradeItem(stats({ pValue: 0.7, discrimination: ACCEPT_DISCRIMINATION_MIN - 0.01, discriminationCorrected: ACCEPT_DISCRIMINATION_MIN - 0.01 }));
     expect(g.verdict).toBe("RETIRE");
   });
 
   it("retires an item with undefined discrimination (everyone answered alike)", () => {
-    const g = gradeItem(stats({ discrimination: null }));
+    const g = gradeItem(stats({ discrimination: null, discriminationCorrected: null }));
     expect(g.verdict).toBe("RETIRE");
     expect(g.reasons.join()).toMatch(/undefined/);
   });
@@ -67,7 +68,7 @@ describe("Layer B auto-flag — verdicts", () => {
   it("band edges are inclusive — an item ON the boundary is accepted", () => {
     expect(gradeItem(stats({ pValue: ACCEPT_P_MIN })).verdict).toBe("ACCEPT");
     expect(gradeItem(stats({ pValue: ACCEPT_P_MAX })).verdict).toBe("ACCEPT");
-    expect(gradeItem(stats({ discrimination: ACCEPT_DISCRIMINATION_MIN })).verdict).toBe("ACCEPT");
+    expect(gradeItem(stats({ discrimination: ACCEPT_DISCRIMINATION_MIN, discriminationCorrected: ACCEPT_DISCRIMINATION_MIN })).verdict).toBe("ACCEPT");
   });
 });
 
@@ -77,7 +78,7 @@ describe("Layer B auto-flag — it stays SILENT without evidence (N3)", () => {
     // that reported ACCEPT there would be manufacturing a verdict out of
     // nothing — precisely the fabrication the pivot replaced the ear pass to
     // avoid.
-    const g = gradeItem(stats({ n: 0, pValue: 0, discrimination: null }));
+    const g = gradeItem(stats({ n: 0, pValue: 0, discrimination: null, discriminationCorrected: null }));
     expect(g.verdict).toBe("PENDING");
     expect(g.pValue).toBeNull();
     expect(g.pStandardError).toBeNull();
@@ -92,7 +93,7 @@ describe("Layer B auto-flag — it stays SILENT without evidence (N3)", () => {
   it("PENDING outranks every other fault — an unfielded item is not RETIRED", () => {
     // A bad-looking statistic on 5 responses is noise, and retiring an item on
     // it would destroy a good item permanently.
-    const g = gradeItem(stats({ n: 5, pValue: 0.99, discrimination: 0.01 }));
+    const g = gradeItem(stats({ n: 5, pValue: 0.99, discrimination: 0.01, discriminationCorrected: 0.01 }));
     expect(g.verdict).toBe("PENDING");
   });
 
@@ -145,7 +146,7 @@ describe("Layer B auto-flag — recovers verdicts from KNOWN item parameters", (
     expect(by(2).verdict).toBe("RETIRE");
   });
 
-  it("still accepts healthy items — but WARNS that the floor is condemning most of them", () => {
+  it("the attenuation correction stops the floor condemning healthy items (RT-21a)", () => {
     const healthy = report.grades.slice(3);
     const accepted = healthy.filter((g) => g.verdict === "ACCEPT").length;
     console.log(
@@ -155,13 +156,37 @@ describe("Layer B auto-flag — recovers verdicts from KNOWN item parameters", (
           .map(([k, v]) => `${k}=${v}`)
           .join(" "),
     );
-    console.log(`[grade] WARNING: ${report.warning}`);
+    // Before the correction this same bank graded ACCEPT=9 RETIRE=24 and the
+    // report carried a warning that the §1 floor of 0.20 was unreachable. The
+    // raw point-biserial was being dragged down by the unreliability of the
+    // rest-score it is measured against, not by the items.
+    const raw = report.grades.filter((g) => g.discrimination !== null);
+    const lifted = raw.filter((g) => g.discriminationCorrected! > g.discrimination!).length;
+    console.log(
+      `[grade] attenuation correction lifted ${lifted}/${raw.length} items; ` +
+        `ACCEPT ${report.summary.ACCEPT}, RETIRE ${report.summary.RETIRE} (was 9 / 24 uncorrected)`,
+    );
     expect(accepted).toBeGreaterThan(0);
-    // The §1 floor of 0.20 retires most of a HEALTHY bank at this test length.
-    // That is a defect of the threshold, not of the items, so the gate is left
-    // faithful to the spec and made to say so — silently lowering a documented
-    // acceptance band to make the numbers look better is not my call.
-    expect(report.warning).toContain("unreachable for a test of this length");
+    expect(lifted).toBe(raw.length); // the correction can only raise a positive r
+    expect(report.summary.ACCEPT).toBeGreaterThan(report.summary.RETIRE);
+    // …and with the correction in place, the "threshold is unreachable"
+    // warning must no longer fire on a healthy bank.
+    expect(report.warning).toBeNull();
+  });
+
+  it("still WARNS when the retire rate is implausible for other reasons", () => {
+    const dire = gradeItems(
+      {
+        dataSource: "SIMULATED",
+        nPersons: 500,
+        items: Array.from({ length: 10 }, (_, i) =>
+          stats({ id: `d${i}`, discrimination: 0.05, discriminationCorrected: 0.05 }),
+        ),
+      },
+      0.8,
+    );
+    expect(dire.summary.RETIRE).toBe(10);
+    expect(dire.warning).toContain("unreachable for a test of this length");
   });
 
   it("stays silent when the retire rate is plausible", () => {

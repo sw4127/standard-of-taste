@@ -127,6 +127,24 @@ export interface ItemStats {
    * Null when either the item or the rest-score is constant.
    */
   discrimination: number | null;
+  /**
+   * Discrimination CORRECTED FOR ATTENUATION (PM ruling RT-21a, 2026-08-07):
+   * r / √(reliability of the rest-score).
+   *
+   * The raw point-biserial correlates an item against the rest of the test, so
+   * the test is the criterion — and an unreliable criterion drags every
+   * correlation toward zero regardless of item quality. Measured before this
+   * correction: 0/6 items cleared the §1 floor of 0.20 at six trials, 11/40 at
+   * forty, because a 2AFC guessing floor makes half the correct answers on
+   * hard items coin flips. Dividing out the criterion's own unreliability is
+   * the standard classical-test-theory remedy and makes the figure comparable
+   * across test lengths.
+   *
+   * Null when reliability is unknown or non-positive. NOT a licence to treat a
+   * short test as a long one: the correction widens the standard error too,
+   * and the reported value should always be read next to `n` and the test length.
+   */
+  discriminationCorrected: number | null;
 }
 
 export interface ItemStatsReport {
@@ -140,12 +158,31 @@ export function estimateItems(matrix: ResponseMatrix): ItemStatsReport {
   const nPersons = correct.length;
   if (nPersons === 0) throw new Error("estimate: empty matrix");
   const scores = correct.map((row) => row.filter(Boolean).length);
+  const k = itemIds.length;
+
+  // Reliability of the REST-score (k−1 items), not of the whole test: that is
+  // the criterion each item is actually correlated against. Spearman-Brown
+  // steps the full-test alpha down by one item.
+  const alpha = estimateReliability(matrix).alpha;
+  const ratio = k > 1 ? (k - 1) / k : 0;
+  const restReliability =
+    alpha === null || alpha <= 0 || k < 3 ? null : (ratio * alpha) / (1 + (ratio - 1) * alpha);
 
   const items = itemIds.map((id, i) => {
     const x = correct.map((row) => (row[i] ? 1 : 0));
     // Rest-score: total minus this item, the "corrected" in corrected r_pbis.
     const rest = scores.map((total, p) => total - x[p]);
-    return { id, n: nPersons, pValue: mean(x), discrimination: correlation(x, rest) };
+    const r = correlation(x, rest);
+    return {
+      id,
+      n: nPersons,
+      pValue: mean(x),
+      discrimination: r,
+      discriminationCorrected:
+        r === null || restReliability === null || restReliability <= 0
+          ? null
+          : r / Math.sqrt(restReliability),
+    };
   });
   return { dataSource: matrix.dataSource, nPersons, items };
 }
@@ -302,6 +339,7 @@ export interface ItemGrade {
   n: number;
   pValue: number | null;
   discrimination: number | null;
+  discriminationCorrected: number | null;
   /** Binomial SE of p̂ in proportion units — null at n = 0. */
   pStandardError: number | null;
 }
@@ -357,6 +395,7 @@ export function gradeItem(stats: ItemStats, reliability: number | null = 1): Ite
     n: stats.n,
     pValue: stats.n > 0 ? stats.pValue : null,
     discrimination: stats.discrimination,
+    discriminationCorrected: stats.discriminationCorrected ?? null,
     pStandardError:
       stats.n > 0 ? Math.sqrt((stats.pValue * (1 - stats.pValue)) / stats.n) : null,
   };
@@ -410,7 +449,11 @@ export function gradeItem(stats: ItemStats, reliability: number | null = 1): Ite
       ],
     };
   }
-  if (stats.discrimination === null) {
+  // The gate judges the ATTENUATION-CORRECTED figure (RT-21a) — the raw
+  // point-biserial is contaminated by the criterion's own unreliability, and
+  // judging items on it retired good ones for a defect of the test around them.
+  const judged = stats.discriminationCorrected ?? stats.discrimination;
+  if (judged === null) {
     return {
       ...base,
       verdict: "RETIRE",
@@ -418,12 +461,15 @@ export function gradeItem(stats: ItemStats, reliability: number | null = 1): Ite
       reasons: ["discrimination is undefined (no variance in responses)"],
     };
   }
-  if (stats.discrimination < ACCEPT_DISCRIMINATION_MIN) {
+  if (judged < ACCEPT_DISCRIMINATION_MIN) {
     return {
       ...base,
       verdict: "RETIRE",
       action: "retire — the item does not separate strong respondents from weak ones",
-      reasons: [`discrimination ${stats.discrimination.toFixed(2)} < ${ACCEPT_DISCRIMINATION_MIN}`],
+      reasons: [
+        `discrimination ${judged.toFixed(2)} < ${ACCEPT_DISCRIMINATION_MIN}` +
+          (stats.discriminationCorrected !== null ? " (corrected for attenuation)" : ""),
+      ],
     };
   }
 
