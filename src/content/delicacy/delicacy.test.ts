@@ -24,16 +24,17 @@ describe("delicacy pool of record — the real thing passes every gate", () => {
     expect(check()).toEqual([]);
   });
 
-  it("is the 24-trial crossed factorial: 3 families x 4 rungs x 2 replicates", () => {
-    expect(DELICACY_TRIALS).toHaveLength(24);
+  it("is the 18-trial crossed factorial: 3 families x 3 shipping rungs x 2", () => {
+    expect(DELICACY_TRIALS).toHaveLength(18);
     const fam = new Map<string, number>();
     const rung = new Map<number, number>();
     for (const t of DELICACY_TRIALS) {
       fam.set(t.family, (fam.get(t.family) ?? 0) + 1);
       rung.set(t.magnitude, (rung.get(t.magnitude) ?? 0) + 1);
     }
-    expect([...fam.values()]).toEqual([8, 8, 8]);
-    expect([...rung.values()].sort()).toEqual([6, 6, 6, 6]);
+    expect([...fam.values()]).toEqual([6, 6, 6]);
+    expect([...rung.values()].sort()).toEqual([6, 6, 6]);
+    expect(rung.has(1)).toBe(false); // rung 1 measured and rejected
   });
 
   it("is BLOCKED at version 1 by Layer A verdicts, not by a human (the gate working)", () => {
@@ -134,7 +135,7 @@ describe("delicacy gatekeeping — deliberately broken fixtures fail with named 
 
   it("a lopsided side balance is fatal", () => {
     const lopsided = clone(DELICACY_TRIALS).map((t: DelicacyTrialClip) => ({ ...t, originalSide: "a" as const }));
-    expect(check(lopsided).join("\n")).toMatch(/original sides unbalanced: 24a\/0b/);
+    expect(check(lopsided).join("\n")).toMatch(/original sides unbalanced: 18a\/0b/);
   });
 
   it("version 1 without a Layer A measurement is fatal — the door stays shut", () => {

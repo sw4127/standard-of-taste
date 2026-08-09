@@ -39,7 +39,47 @@ const ROOT = join(HERE, "..", "..");
 const BIAS_MANIFEST = join(ROOT, "src", "content", "bias", "manifest.json");
 const PLAN = join(HERE, "expansion-plan.json");
 
-export const TRIALS_TARGET = 24;
+/**
+ * 18 trials: 3 families x 3 rungs x 2 replicates (PM ruling RT-25a, 2026-08-07).
+ *
+ * Rung 1 was dropped after Layer A measured it. It was added in S6 as a gentler
+ * step and the ladder verified it was MONOTONE — but monotone is not the same as
+ * SUFFICIENT, and all four rung-1 items measured 1.5-2.9x the transparency
+ * anchor, under the 3x fair-trial floor. An item barely distinguishable from a
+ * manipulation nobody can hear is not a trial, whatever its rung number says.
+ * The rung still exists in the ladder as a measured, rejected data point; it
+ * simply does not ship.
+ */
+export const TRIALS_TARGET = 18;
+/** Ladder rungs that ship. Rung 1 is measured and rejected — see above. */
+export const SHIPPING_RUNGS = [2, 3, 4];
+
+/**
+ * Sources excluded from a family because their transparency anchor is too high
+ * for that family's measured magnitudes to clear the ratio floor.
+ *
+ * MEASURED, not guessed (2026-08-07): mean anchors run pb8 0.27 … pb3 0.73,
+ * then pb5 1.30 and pb4 1.31 — the two dense orchestral/late-Chopin sources sit
+ * at roughly 2.4x the pool median. Pitch-drift's own magnitudes span 1.2-3.9 dB,
+ * so on those two sources it cannot reach 3x: d7 (rung 4, the STRONGEST rung)
+ * measured the highest raw LSD of any pitch item and still failed at 2.8x.
+ *
+ * The exclusion covers BOTH ratio-gated families, not just pitch-drift. The
+ * first 18-trial attempt excluded only pitch-drift and lossy rung 2 then failed
+ * on pb5 at 2.0x — the same effect, a different family. timing-smear is gated
+ * on measured drift rather than on a ratio, so anchors do not touch it and
+ * those sources still carry timing items.
+ *
+ * THE COST, stated plainly: constraining two families to sparser material means
+ * family effects are partly confounded with source density. That is a real
+ * methodological price. It is paid because the alternative is shipping items
+ * that are not fair trials, and because the confound is documented here rather
+ * than discovered later in the data.
+ */
+export const FAMILY_SOURCE_EXCLUSIONS = {
+  "pitch-drift": ["pb4", "pb5"],
+  "lossy-artifact": ["pb4", "pb5"],
+};
 const CLIP_SEC = 20;
 /** Windows start here and step by this much — no overlap, no edge effects. */
 const FIRST_START = 20;
@@ -76,7 +116,7 @@ export function buildPlan(durations) {
   // The 12 cells, each needing 2 replicates on different source recordings.
   const cells = [];
   for (const [family, spec] of Object.entries(LADDER_RUNGS)) {
-    for (let rung = 1; rung <= spec.values.length; rung++) {
+    for (const rung of SHIPPING_RUNGS) {
       cells.push({ family, rung, param: spec.values[rung - 1] });
     }
   }
@@ -94,6 +134,7 @@ export function buildPlan(durations) {
         const id = SOURCE_ORDER[(cursor + attempt) % SOURCE_ORDER.length];
         const avail = windows.get(id) ?? [];
         if (used.get(id) >= avail.length) continue;
+        if ((FAMILY_SOURCE_EXCLUSIONS[cell.family] ?? []).includes(id)) continue;
         if (rep === 1) {
           const first = plan.find((p) => p.family === cell.family && p.rung === cell.rung);
           if (first && leadArtist(byId.get(first.sourceId)) === leadArtist(byId.get(id))) continue;
@@ -133,18 +174,31 @@ export function buildPlan(durations) {
 export function orderForPresentation(plan) {
   const remaining = [...plan];
   const out = [];
+
+  // MOST-CONSTRAINED-FIRST, not plain greedy. A naive scan takes the first
+  // legal trial each time, which quietly hoards one family for the end and
+  // then has no legal move left: the first attempt at 18 trials finished with
+  // two lossy-artifact trials adjacent because nothing else remained. Drawing
+  // from the family with the MOST items outstanding keeps every family
+  // draining at the same rate, so the tail never becomes single-family.
+  const countsLeft = () => {
+    const m = new Map();
+    for (const t of remaining) m.set(t.family, (m.get(t.family) ?? 0) + 1);
+    return m;
+  };
+
   while (remaining.length > 0) {
     const prev = out[out.length - 1];
-    let pick = remaining.findIndex(
-      (t) => !prev || (t.family !== prev.family && t.artist !== prev.artist),
-    );
-    // If nothing satisfies both, relax to family only — a repeated artist is a
-    // milder problem than a repeated answer pattern, and reporting the
-    // relaxation beats silently shipping an unbalanced order.
-    if (pick === -1) pick = remaining.findIndex((t) => !prev || t.family !== prev.family);
-    if (pick === -1) pick = 0;
-    out.push(remaining[pick]);
-    remaining.splice(pick, 1);
+    const left = countsLeft();
+    const rank = (t) => left.get(t.family) * 10 + (prev && t.artist !== prev.artist ? 1 : 0);
+
+    const legal = remaining.filter((t) => !prev || t.family !== prev.family);
+    // Prefer a different artist too, but never at the cost of the family rule:
+    // a repeated sound-world is milder than a predictable answer pattern.
+    const pool = legal.length > 0 ? legal : remaining;
+    const best = pool.reduce((a, b) => (rank(b) > rank(a) ? b : a));
+    out.push(best);
+    remaining.splice(remaining.indexOf(best), 1);
   }
   return out;
 }
@@ -170,7 +224,7 @@ export async function expand(args) {
   const plan = orderForPresentation(buildPlan(durations)).map((t, i) => ({ ...t, id: `d${i + 1}` }));
   writeFileSync(PLAN, JSON.stringify({ trialsTarget: TRIALS_TARGET, clipSec: CLIP_SEC, plan }, null, 2) + "\n");
 
-  console.log(`Expansion plan — ${plan.length} trials (3 families x 4 rungs x 2 replicates)`);
+  console.log(`Expansion plan — ${plan.length} trials (3 families x ${SHIPPING_RUNGS.length} rungs x 2 replicates)`);
   console.log("  id    source  artist                start  family          rung  param");
   for (const t of plan) {
     console.log(
@@ -187,8 +241,14 @@ export async function expand(args) {
     return m;
   };
   if (plan.length !== TRIALS_TARGET) errs.push(`expected ${TRIALS_TARGET} trials, got ${plan.length}`);
-  for (const [f, n] of count("family")) if (n !== 8) errs.push(`family ${f} appears ${n}x (want 8)`);
-  for (const [r, n] of count("rung")) if (n !== 6) errs.push(`rung ${r} appears ${n}x (want 6)`);
+  const perFamily = TRIALS_TARGET / 3;
+  const perRung = TRIALS_TARGET / SHIPPING_RUNGS.length;
+  for (const [f, n] of count("family")) if (n !== perFamily) errs.push(`family ${f} appears ${n}x (want ${perFamily})`);
+  for (const [r, n] of count("rung")) if (n !== perRung) errs.push(`rung ${r} appears ${n}x (want ${perRung})`);
+  for (const t of plan) {
+    if ((FAMILY_SOURCE_EXCLUSIONS[t.family] ?? []).includes(t.sourceId))
+      errs.push(`${t.id}: ${t.family} on excluded source ${t.sourceId}`);
+  }
   const cellKeys = new Map();
   for (const t of plan) {
     const k = `${t.family}/${t.rung}`;
@@ -245,8 +305,29 @@ Rendering ${plan.length} pairs — same path as \`clip-pipeline degrade\``);
     });
     if (!ok) failed++;
   }
+  // Anything the previous plan left behind must go: a stale manifest entry or
+  // an orphaned audio file is an answer key pointing at audio nobody planned.
+  const { existsSync, rmSync } = await import("node:fs");
+  const DELICACY_MANIFEST = join(ROOT, "src", "content", "delicacy", "manifest.json");
+  const planned = new Set(plan.map((t) => t.id));
+  const man = JSON.parse(readFileSync(DELICACY_MANIFEST, "utf8"));
+  const orphans = man.pairs.filter((p) => !planned.has(p.id));
+  if (orphans.length > 0) {
+    man.pairs = man.pairs.filter((p) => planned.has(p.id));
+    writeFileSync(DELICACY_MANIFEST, JSON.stringify(man, null, 2) + "\n");
+    for (const o of orphans) {
+      for (const side of ["a", "b"]) {
+        for (const ext of ["mp3", "m4a"]) {
+          const f = join(ROOT, "public", "audio", "delicacy", `${o.id}-${side}.${ext}`);
+          if (existsSync(f)) rmSync(f, { force: true });
+        }
+      }
+    }
+    console.log(`  pruned ${orphans.length} orphaned pair(s) from the previous plan: ${orphans.map((o) => o.id).join(", ")}`);
+  }
+
   console.log(`
-  rendered ${plan.length - failed}/${plan.length} pairs`);
+rendered ${plan.length - failed}/${plan.length} pairs`);
   if (failed > 0) {
     console.error(`expand: ${failed} pair(s) failed render validation`);
     process.exitCode = 1;

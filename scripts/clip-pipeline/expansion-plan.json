@@ -1,5 +1,5 @@
 {
-  "trialsTarget": 24,
+  "trialsTarget": 18,
   "clipSec": 20,
   "plan": [
     {
@@ -9,141 +9,141 @@
       "startSec": 20,
       "clipSec": 20,
       "family": "pitch-drift",
-      "rung": 1,
-      "param": 6,
+      "rung": 2,
+      "param": 12,
       "seed": 8007
     },
     {
       "id": "d2",
-      "sourceId": "pb7",
-      "artist": "Komiku",
-      "startSec": 45,
-      "clipSec": 20,
-      "family": "timing-smear",
-      "rung": 1,
-      "param": 0.0075,
-      "seed": 8035
-    },
-    {
-      "id": "d3",
-      "sourceId": "pb3",
-      "artist": "F. Chopin",
-      "startSec": 20,
-      "clipSec": 20,
-      "family": "pitch-drift",
-      "rung": 2,
-      "param": 12,
-      "seed": 8014
-    },
-    {
-      "id": "d4",
-      "sourceId": "pb2",
-      "artist": "J.S. Bach",
+      "sourceId": "pb4",
+      "artist": "L. van Beethoven",
       "startSec": 20,
       "clipSec": 20,
       "family": "timing-smear",
       "rung": 2,
       "param": 0.015,
-      "seed": 8042
-    },
-    {
-      "id": "d5",
-      "sourceId": "pb6",
-      "artist": "Chris Zabriskie",
-      "startSec": 45,
-      "clipSec": 20,
-      "family": "pitch-drift",
-      "rung": 3,
-      "param": 25,
-      "seed": 8021
-    },
-    {
-      "id": "d6",
-      "sourceId": "pb5",
-      "artist": "F. Chopin",
-      "startSec": 20,
-      "clipSec": 20,
-      "family": "timing-smear",
-      "rung": 3,
-      "param": 0.03,
-      "seed": 8049
-    },
-    {
-      "id": "d7",
-      "sourceId": "pb4",
-      "artist": "L. van Beethoven",
-      "startSec": 20,
-      "clipSec": 20,
-      "family": "pitch-drift",
-      "rung": 4,
-      "param": 50,
       "seed": 8028
     },
     {
-      "id": "d8",
+      "id": "d3",
       "sourceId": "pb8",
       "artist": "Jason Shaw",
       "startSec": 45,
       "clipSec": 20,
-      "family": "timing-smear",
-      "rung": 4,
-      "param": 0.05,
-      "seed": 8056
+      "family": "lossy-artifact",
+      "rung": 2,
+      "param": "96k",
+      "seed": 8049
     },
     {
-      "id": "d9",
+      "id": "d4",
+      "sourceId": "pb3",
+      "artist": "F. Chopin",
+      "startSec": 20,
+      "clipSec": 20,
+      "family": "pitch-drift",
+      "rung": 3,
+      "param": 25,
+      "seed": 8014
+    },
+    {
+      "id": "d5",
+      "sourceId": "pb7",
+      "artist": "Komiku",
+      "startSec": 45,
+      "clipSec": 20,
+      "family": "timing-smear",
+      "rung": 3,
+      "param": 0.03,
+      "seed": 8035
+    },
+    {
+      "id": "d6",
       "sourceId": "b1",
       "artist": "J.S. Bach",
       "startSec": 45,
       "clipSec": 20,
       "family": "lossy-artifact",
-      "rung": 1,
-      "param": "128k",
-      "seed": 8063
-    },
-    {
-      "id": "d10",
-      "sourceId": "pb3",
-      "artist": "F. Chopin",
-      "startSec": 45,
-      "clipSec": 20,
-      "family": "pitch-drift",
-      "rung": 1,
-      "param": 6,
-      "seed": 8091
-    },
-    {
-      "id": "d11",
-      "sourceId": "b3",
-      "artist": "Komiku",
-      "startSec": 45,
-      "clipSec": 20,
-      "family": "lossy-artifact",
       "rung": 3,
       "param": "64k",
-      "seed": 8077
+      "seed": 8056
     },
     {
-      "id": "d12",
+      "id": "d7",
       "sourceId": "pb6",
       "artist": "Chris Zabriskie",
-      "startSec": 70,
+      "startSec": 45,
       "clipSec": 20,
       "family": "pitch-drift",
-      "rung": 2,
-      "param": 12,
-      "seed": 8098
+      "rung": 4,
+      "param": 50,
+      "seed": 8021
     },
     {
-      "id": "d13",
+      "id": "d8",
+      "sourceId": "pb2",
+      "artist": "J.S. Bach",
+      "startSec": 20,
+      "clipSec": 20,
+      "family": "timing-smear",
+      "rung": 4,
+      "param": 0.05,
+      "seed": 8042
+    },
+    {
+      "id": "d9",
       "sourceId": "b2",
       "artist": "F. Chopin",
       "startSec": 20,
       "clipSec": 20,
       "family": "lossy-artifact",
+      "rung": 4,
+      "param": "32k",
+      "seed": 8063
+    },
+    {
+      "id": "d10",
+      "sourceId": "b3",
+      "artist": "Komiku",
+      "startSec": 45,
+      "clipSec": 20,
+      "family": "pitch-drift",
+      "rung": 2,
+      "param": 12,
+      "seed": 8070
+    },
+    {
+      "id": "d11",
+      "sourceId": "pb6",
+      "artist": "Chris Zabriskie",
+      "startSec": 70,
+      "clipSec": 20,
+      "family": "timing-smear",
+      "rung": 2,
+      "param": 0.015,
+      "seed": 8091
+    },
+    {
+      "id": "d12",
+      "sourceId": "pb2",
+      "artist": "J.S. Bach",
+      "startSec": 45,
+      "clipSec": 20,
+      "family": "lossy-artifact",
       "rung": 2,
       "param": "96k",
-      "seed": 8070
+      "seed": 8112
+    },
+    {
+      "id": "d13",
+      "sourceId": "pb3",
+      "artist": "F. Chopin",
+      "startSec": 45,
+      "clipSec": 20,
+      "family": "pitch-drift",
+      "rung": 4,
+      "param": 50,
+      "seed": 8084
     },
     {
       "id": "d14",
@@ -151,120 +151,54 @@
       "artist": "L. van Beethoven",
       "startSec": 45,
       "clipSec": 20,
-      "family": "pitch-drift",
-      "rung": 3,
-      "param": 25,
-      "seed": 8105
-    },
-    {
-      "id": "d15",
-      "sourceId": "pb1",
-      "artist": "J.S. Bach",
-      "startSec": 45,
-      "clipSec": 20,
-      "family": "lossy-artifact",
-      "rung": 4,
-      "param": "32k",
-      "seed": 8084
-    },
-    {
-      "id": "d16",
-      "sourceId": "pb7",
-      "artist": "Komiku",
-      "startSec": 70,
-      "clipSec": 20,
-      "family": "pitch-drift",
-      "rung": 4,
-      "param": 50,
-      "seed": 8112
-    },
-    {
-      "id": "d17",
-      "sourceId": "pb2",
-      "artist": "J.S. Bach",
-      "startSec": 45,
-      "clipSec": 20,
-      "family": "timing-smear",
-      "rung": 1,
-      "param": 0.0075,
-      "seed": 8119
-    },
-    {
-      "id": "d18",
-      "sourceId": "b2",
-      "artist": "F. Chopin",
-      "startSec": 45,
-      "clipSec": 20,
-      "family": "lossy-artifact",
-      "rung": 1,
-      "param": "128k",
-      "seed": 8147
-    },
-    {
-      "id": "d19",
-      "sourceId": "pb8",
-      "artist": "Jason Shaw",
-      "startSec": 70,
-      "clipSec": 20,
       "family": "timing-smear",
       "rung": 3,
       "param": 0.03,
-      "seed": 8133
+      "seed": 8098
     },
     {
-      "id": "d20",
-      "sourceId": "b3",
-      "artist": "Komiku",
-      "startSec": 70,
-      "clipSec": 20,
-      "family": "lossy-artifact",
-      "rung": 2,
-      "param": "96k",
-      "seed": 8154
-    },
-    {
-      "id": "d21",
-      "sourceId": "pb5",
-      "artist": "F. Chopin",
-      "startSec": 45,
-      "clipSec": 20,
-      "family": "timing-smear",
-      "rung": 2,
-      "param": 0.015,
-      "seed": 8126
-    },
-    {
-      "id": "d22",
-      "sourceId": "pb1",
-      "artist": "J.S. Bach",
+      "id": "d15",
+      "sourceId": "pb8",
+      "artist": "Jason Shaw",
       "startSec": 70,
       "clipSec": 20,
       "family": "lossy-artifact",
       "rung": 3,
       "param": "64k",
-      "seed": 8161
+      "seed": 8119
     },
     {
-      "id": "d23",
-      "sourceId": "b1",
+      "id": "d16",
+      "sourceId": "pb1",
       "artist": "J.S. Bach",
+      "startSec": 45,
+      "clipSec": 20,
+      "family": "pitch-drift",
+      "rung": 3,
+      "param": 25,
+      "seed": 8077
+    },
+    {
+      "id": "d17",
+      "sourceId": "pb7",
+      "artist": "Komiku",
       "startSec": 70,
       "clipSec": 20,
       "family": "timing-smear",
       "rung": 4,
       "param": 0.05,
-      "seed": 8140
+      "seed": 8105
     },
     {
-      "id": "d24",
-      "sourceId": "pb3",
-      "artist": "F. Chopin",
+      "id": "d18",
+      "sourceId": "b1",
+      "artist": "J.S. Bach",
       "startSec": 70,
       "clipSec": 20,
       "family": "lossy-artifact",
       "rung": 4,
       "param": "32k",
-      "seed": 8168
+      "seed": 8126
     }
   ]
 }

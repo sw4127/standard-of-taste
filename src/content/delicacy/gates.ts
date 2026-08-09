@@ -6,8 +6,9 @@
  * (src/content/bias/bias.test.ts) with the delicacy-specific shape.
  *
  * Enforced here (pool shape) — the 24-trial CROSSED FACTORIAL (RT-24a):
- *  - exactly 24 trials, unique ids, audio under /audio/delicacy/
- *  - 3 degradation families × 8, 4 ladder rungs × 6
+ *  - exactly 18 trials, unique ids, audio under /audio/delicacy/
+ *  - 3 degradation families × 6, 3 shipping ladder rungs × 6 (rung 1 is
+ *    measured and rejected — see items.ts)
  *  - every family×rung cell exactly 2×, and its two replicates on DIFFERENT
  *    lead artists — otherwise a family-by-rung effect is confounded with one
  *    piece of music, which is the confound that made the S5b cross-source
@@ -87,7 +88,7 @@ export function checkDelicacyPool(
   const errors: string[] = [];
   const err = (msg: string) => errors.push(msg);
 
-  const EXPECTED = 24;
+  const EXPECTED = 18;
   if (trials.length !== EXPECTED) err(`pool must be exactly ${EXPECTED} trials, got ${trials.length}`);
   if (new Set(trials.map((t) => t.id)).size !== trials.length) err("duplicate trial ids");
 
@@ -101,7 +102,7 @@ export function checkDelicacyPool(
     if (!t.license || !t.attribution) err(`${t.id}: license/attribution missing (CC credit is a legal requirement)`);
   }
   const perFamily = EXPECTED / 3;
-  const perRung = EXPECTED / 4;
+  const perRung = EXPECTED / 3; // three SHIPPING rungs (rung 1 is measured and rejected)
   for (const [f, n] of famCount) if (n !== perFamily) err(`family "${f}" appears ${n}× (contract: exactly ${perFamily})`);
   for (const [m, n] of magCount) if (n !== perRung) err(`rung ${m} appears ${n}× (contract: exactly ${perRung})`);
 
