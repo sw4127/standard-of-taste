@@ -58,7 +58,18 @@ export const CALIBRATION_PHASE_LINE =
   "Free while the gym calibrates — the trials join the paid training arc once norms exist.";
 
 /** One-word magnitude descriptors for the receipts (authored intensity, N3: not IRT difficulty). */
-export const MAGNITUDE_WORDS: Record<1 | 2 | 3, string> = { 1: "subtle", 2: "moderate", 3: "blatant" };
+/**
+ * Ladder-rung words. Four rungs since the S6 strength ladder + pool expansion
+ * (2026-08-07): rung 1 is the gentlest step, added below the three that were
+ * shipping. These describe the MANIPULATION's measured strength, never its
+ * difficulty — how often people actually miss a rung is a Layer B question.
+ */
+export const MAGNITUDE_WORDS: Record<1 | 2 | 3 | 4, string> = {
+  1: "faintest",
+  2: "subtle",
+  3: "moderate",
+  4: "blatant",
+};
 
 export function delicacyResultSummary(r: DelicacyResult): string {
   return `${r.nCorrect} of ${r.nTrials} originals — a coin flip calls ${Math.round(r.nTrials / 2)}`;

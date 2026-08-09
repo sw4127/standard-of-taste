@@ -8,17 +8,18 @@
       "id": "d1",
       "sourceId": "pb1",
       "window": {
-        "startSec": 75,
+        "startSec": 20,
         "clipSec": 20
       },
       "family": "pitch-drift",
       "magnitude": 1,
-      "seed": 102,
+      "seed": 8007,
       "params": {
-        "peakCents": 12,
+        "peakCents": 6,
         "direction": "sharp"
       },
       "originalSide": "a",
+      "param": 6,
       "files": {
         "a": "d1-a.mp3",
         "b": "d1-b.mp3",
@@ -26,10 +27,565 @@
         "bM4a": "d1-b.m4a"
       },
       "sha256": {
-        "a": "59d1fe6e78eadbdb22182140d4bb4f8f7c24aaac8ceff151a754fbe42f641b00",
-        "b": "a2e4263e24fe422ff6687de18bb696e9c7ddc4a9be6a4239edb33208625f0257"
+        "a": "a71fdb41595780365aef8b33c744d489f6c31c1aff7ba2c5ef9fd70b5ad4eb79",
+        "b": "653829f0c000d0c4a4cb019b55d1b66449e854934479816d2d66fdd2c9b8db4b"
       },
-      "earPass": null,
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -1.5/-1.5  m4a -1.4/-1.4 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 0.786 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
+      },
+      "layerA": {
+        "lsdDb": 1.199,
+        "anchorTransparentLsdDb": 0.413,
+        "anchorRatio": 2.91,
+        "driftIqrMs": 0,
+        "driftRangeMs": 13,
+        "driftConfidentFraction": 1,
+        "driftCoherence": 0,
+        "gatedOn": "spectral-anchor-ratio",
+        "peakBand": 16,
+        "clippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "FLAG",
+        "reasons": [
+          "magnitude 2.9x anchor (need ≥3x)"
+        ],
+        "measuredAt": "2026-08-09"
+      }
+    },
+    {
+      "id": "d10",
+      "sourceId": "pb3",
+      "window": {
+        "startSec": 45,
+        "clipSec": 20
+      },
+      "family": "pitch-drift",
+      "magnitude": 1,
+      "seed": 8091,
+      "params": {
+        "peakCents": 6,
+        "direction": "sharp"
+      },
+      "originalSide": "a",
+      "param": 6,
+      "files": {
+        "a": "d10-a.mp3",
+        "b": "d10-b.mp3",
+        "aM4a": "d10-a.m4a",
+        "bM4a": "d10-b.m4a"
+      },
+      "sha256": {
+        "a": "e2eecc6ccda80ace9766fd2a7faafac0ac013088b28007609737c4967e6d8bba",
+        "b": "db86d0f441fc6115f6b9de4649f6f9266f5cf395d229cea859586bcc5e6dc6d7"
+      },
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.3  b -16.3 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.3  b -16.3 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -1.4/-1.4  m4a -1.4/-1.4 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 0.881 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
+      },
+      "layerA": {
+        "lsdDb": 1.414,
+        "anchorTransparentLsdDb": 0.498,
+        "anchorRatio": 2.84,
+        "driftIqrMs": 0,
+        "driftRangeMs": 43,
+        "driftConfidentFraction": 1,
+        "driftCoherence": 0,
+        "gatedOn": "spectral-anchor-ratio",
+        "peakBand": 22,
+        "clippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0.05,
+        "verdict": "FLAG",
+        "reasons": [
+          "magnitude 2.8x anchor (need ≥3x)"
+        ],
+        "measuredAt": "2026-08-09"
+      }
+    },
+    {
+      "id": "d11",
+      "sourceId": "b3",
+      "window": {
+        "startSec": 45,
+        "clipSec": 20
+      },
+      "family": "lossy-artifact",
+      "magnitude": 3,
+      "seed": 8077,
+      "params": {
+        "bitrate": "64k"
+      },
+      "originalSide": "b",
+      "param": "64k",
+      "files": {
+        "a": "d11-a.mp3",
+        "b": "d11-b.mp3",
+        "aM4a": "d11-a.m4a",
+        "bM4a": "d11-b.m4a"
+      },
+      "sha256": {
+        "a": "4328ff36bef1e837a8ebcb48ac0895a886dda7f28378e16bda81a84b448456b4",
+        "b": "545d56d9025c11deafc62e15c9effda156476be75006123a84a65c062cbddff6"
+      },
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.2  b -16.2 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.2  b -16.2 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -1.5/-1.6  m4a -1.4/-1.4 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 0.090 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
+      },
+      "layerA": {
+        "lsdDb": 12.689,
+        "anchorTransparentLsdDb": 0.497,
+        "anchorRatio": 25.55,
+        "driftIqrMs": 0,
+        "driftRangeMs": 0,
+        "driftConfidentFraction": 1,
+        "driftCoherence": 0,
+        "gatedOn": "spectral-anchor-ratio",
+        "peakBand": 23,
+        "clippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "PASS",
+        "reasons": [],
+        "measuredAt": "2026-08-09"
+      }
+    },
+    {
+      "id": "d12",
+      "sourceId": "pb6",
+      "window": {
+        "startSec": 70,
+        "clipSec": 20
+      },
+      "family": "pitch-drift",
+      "magnitude": 2,
+      "seed": 8098,
+      "params": {
+        "peakCents": 12,
+        "direction": "sharp"
+      },
+      "originalSide": "a",
+      "param": 12,
+      "files": {
+        "a": "d12-a.mp3",
+        "b": "d12-b.mp3",
+        "aM4a": "d12-a.m4a",
+        "bM4a": "d12-b.m4a"
+      },
+      "sha256": {
+        "a": "07cddeff50168f058606d41ef826721a1fa31366ee95e289b655f34b56ba2c02",
+        "b": "d481ea73e52fb8536e650008f0d6517e3856f1bbfdf33fd611fc2c6af06dd825"
+      },
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -6.2/-6.0  m4a -6.2/-6.0 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 1.213 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
+      },
+      "layerA": {
+        "lsdDb": 2.541,
+        "anchorTransparentLsdDb": 0.548,
+        "anchorRatio": 4.64,
+        "driftIqrMs": 4,
+        "driftRangeMs": 42,
+        "driftConfidentFraction": 0.98,
+        "driftCoherence": 1.13,
+        "gatedOn": "spectral-anchor-ratio",
+        "peakBand": 19,
+        "clippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "PASS",
+        "reasons": [],
+        "measuredAt": "2026-08-09"
+      }
+    },
+    {
+      "id": "d13",
+      "sourceId": "b2",
+      "window": {
+        "startSec": 20,
+        "clipSec": 20
+      },
+      "family": "lossy-artifact",
+      "magnitude": 2,
+      "seed": 8070,
+      "params": {
+        "bitrate": "96k"
+      },
+      "originalSide": "a",
+      "param": "96k",
+      "files": {
+        "a": "d13-a.mp3",
+        "b": "d13-b.mp3",
+        "aM4a": "d13-a.m4a",
+        "bM4a": "d13-b.m4a"
+      },
+      "sha256": {
+        "a": "f7e1d017dee16b1814c71e4fa5004dd8b385ed0988f1c4f195e182ec3be40763",
+        "b": "2f2e46e90867f374a260da7885328961477e70a214073849f333fe836ce60fad"
+      },
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.1  b -16.1 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.1  b -16.1 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -1.4/-1.4  m4a -1.5/-1.4 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 0.036 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
+      },
+      "layerA": {
+        "lsdDb": 1.506,
+        "anchorTransparentLsdDb": 0.483,
+        "anchorRatio": 3.12,
+        "driftIqrMs": 0,
+        "driftRangeMs": 0,
+        "driftConfidentFraction": 1,
+        "driftCoherence": 0,
+        "gatedOn": "spectral-anchor-ratio",
+        "peakBand": 22,
+        "clippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "PASS",
+        "reasons": [],
+        "measuredAt": "2026-08-09"
+      }
+    },
+    {
+      "id": "d14",
+      "sourceId": "pb4",
+      "window": {
+        "startSec": 45,
+        "clipSec": 20
+      },
+      "family": "pitch-drift",
+      "magnitude": 3,
+      "seed": 8105,
+      "params": {
+        "peakCents": 25,
+        "direction": "sharp"
+      },
+      "originalSide": "a",
+      "param": 25,
+      "files": {
+        "a": "d14-a.mp3",
+        "b": "d14-b.mp3",
+        "aM4a": "d14-a.m4a",
+        "bM4a": "d14-b.m4a"
+      },
+      "sha256": {
+        "a": "2b23f633e4b124b184af5452a8fcaf4e52272b535259b60b78cad32261c2524e",
+        "b": "a17145c57ad9c3971f312cdbdd5b1a238d0d042779104e5f27a25c1b768d2774"
+      },
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.1  b -16.0 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -3.0/-2.7  m4a -3.0/-2.8 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 1.422 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
+      },
+      "layerA": {
+        "lsdDb": 2.741,
+        "anchorTransparentLsdDb": 1.183,
+        "anchorRatio": 2.32,
+        "driftIqrMs": 11,
+        "driftRangeMs": 50,
+        "driftConfidentFraction": 0.98,
+        "driftCoherence": 2.89,
+        "gatedOn": "spectral-anchor-ratio",
+        "peakBand": 23,
+        "clippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "FLAG",
+        "reasons": [
+          "magnitude 2.3x anchor (need ≥3x)"
+        ],
+        "measuredAt": "2026-08-09"
+      }
+    },
+    {
+      "id": "d15",
+      "sourceId": "pb1",
+      "window": {
+        "startSec": 45,
+        "clipSec": 20
+      },
+      "family": "lossy-artifact",
+      "magnitude": 4,
+      "seed": 8084,
+      "params": {
+        "bitrate": "32k"
+      },
+      "originalSide": "a",
+      "param": "32k",
+      "files": {
+        "a": "d15-a.mp3",
+        "b": "d15-b.mp3",
+        "aM4a": "d15-a.m4a",
+        "bM4a": "d15-b.m4a"
+      },
+      "sha256": {
+        "a": "5795ce4d914eb70f3a5851061d4c2d9e8ca14986bdfa5198beace81d69b56bd8",
+        "b": "8e7d4b407a347cd928fce992090ef6db6230bd053979efe1458395c8078b60d6"
+      },
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.3  b -16.3 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.3  b -16.3 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -2.4/-2.6  m4a -2.4/-2.6 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 0.079 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
+      },
+      "layerA": {
+        "lsdDb": 12.723,
+        "anchorTransparentLsdDb": 0.643,
+        "anchorRatio": 19.8,
+        "driftIqrMs": 0,
+        "driftRangeMs": 0,
+        "driftConfidentFraction": 1,
+        "driftCoherence": 0,
+        "gatedOn": "spectral-anchor-ratio",
+        "peakBand": 17,
+        "clippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "PASS",
+        "reasons": [],
+        "measuredAt": "2026-08-09"
+      }
+    },
+    {
+      "id": "d16",
+      "sourceId": "pb7",
+      "window": {
+        "startSec": 70,
+        "clipSec": 20
+      },
+      "family": "pitch-drift",
+      "magnitude": 4,
+      "seed": 8112,
+      "params": {
+        "peakCents": 50,
+        "direction": "sharp"
+      },
+      "originalSide": "b",
+      "param": 50,
+      "files": {
+        "a": "d16-a.mp3",
+        "b": "d16-b.mp3",
+        "aM4a": "d16-a.m4a",
+        "bM4a": "d16-b.m4a"
+      },
+      "sha256": {
+        "a": "e9f21a08846cdecc6a8de532a7715ebec8a8c775e7bd39eebdcc7b5ed1f3f67b",
+        "b": "c432a3a686077adae87b46425f73f902e237f45c47891ca053904d570a0007f8"
+      },
       "validation": {
         "duration_match__mp3_": {
           "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
@@ -48,62 +604,78 @@
           "pass": true
         },
         "true_peak__all_4_": {
-          "detail": "mp3 -2.3/-2.2  m4a -2.2/-2.2 dBTP (≤ −1.0)",
+          "detail": "mp3 -1.2/-1.4  m4a -1.1/-1.4 dBTP (≤ −1.0)",
           "pass": true
         },
         "distinct_files": {
-          "detail": "rel-RMS diff 1.165 (≥0.020 floor; NOT a perceptual claim)",
+          "detail": "rel-RMS diff 1.306 (≥0.020 floor; NOT a perceptual claim)",
           "pass": true
         },
         "deterministic_re-render": {
           "detail": "sha256 identical",
           "pass": true
         },
-        "validatedAt": "2026-07-20"
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
       },
       "layerA": {
-        "lsdDb": 1.486,
-        "anchorTransparentLsdDb": 0.422,
-        "anchorRatio": 3.52,
+        "lsdDb": 1.835,
+        "anchorTransparentLsdDb": 0.457,
+        "anchorRatio": 4.02,
         "driftIqrMs": 1,
-        "driftRangeMs": 21,
-        "driftConfidentFraction": 1,
-        "driftCoherence": 0.68,
+        "driftRangeMs": 15,
+        "driftConfidentFraction": 0.98,
+        "driftCoherence": 0.9,
         "gatedOn": "spectral-anchor-ratio",
-        "peakBand": 17,
+        "peakBand": 16,
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-08"
+        "measuredAt": "2026-08-09"
       }
     },
     {
-      "id": "d2",
-      "sourceId": "pb7",
+      "id": "d17",
+      "sourceId": "pb2",
       "window": {
-        "startSec": 32,
+        "startSec": 45,
         "clipSec": 20
       },
-      "family": "lossy-artifact",
+      "family": "timing-smear",
       "magnitude": 1,
-      "seed": 103,
+      "seed": 8119,
       "params": {
-        "bitrate": "96k"
+        "maxDevPct": 0.75,
+        "segmentDevPct": [
+          -0.31,
+          -0.36,
+          0.71,
+          0.26,
+          -0.19,
+          0.31,
+          -0.66,
+          0.07,
+          -0.19,
+          0.35
+        ]
       },
       "originalSide": "b",
+      "param": 0.0075,
       "files": {
-        "a": "d2-a.mp3",
-        "b": "d2-b.mp3",
-        "aM4a": "d2-a.m4a",
-        "bM4a": "d2-b.m4a"
+        "a": "d17-a.mp3",
+        "b": "d17-b.mp3",
+        "aM4a": "d17-a.m4a",
+        "bM4a": "d17-b.m4a"
       },
       "sha256": {
-        "a": "6f1d56bd8f1de653da497c7cf8740176735ae42042daee62dca63b6d5b9207cb",
-        "b": "80f8249dd6a0ca79a17ef8f7542307359039a71a2a31cabe4a6691a299f4c7a2"
+        "a": "dd6a2fa358d6cc4bb507979d2ab9e64eb9307a0c3be2dd80f52cbc6da6e0714a",
+        "b": "07e9f15afb6aedf15a9799d2bbd2da502691a572f6b8a7e383380474bc7c1861"
       },
-      "earPass": null,
       "validation": {
         "duration_match__mp3_": {
           "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
@@ -122,74 +694,158 @@
           "pass": true
         },
         "true_peak__all_4_": {
-          "detail": "mp3 -3.0/-2.9  m4a -2.9/-2.1 dBTP (≤ −1.0)",
+          "detail": "mp3 -2.9/-2.9  m4a -2.9/-2.9 dBTP (≤ −1.0)",
           "pass": true
         },
         "distinct_files": {
-          "detail": "rel-RMS diff 0.037 (≥0.020 floor; NOT a perceptual claim)",
+          "detail": "rel-RMS diff 1.387 (≥0.020 floor; NOT a perceptual claim)",
           "pass": true
         },
         "deterministic_re-render": {
           "detail": "sha256 identical",
           "pass": true
         },
-        "validatedAt": "2026-07-20"
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
       },
       "layerA": {
-        "lsdDb": 2.241,
-        "anchorTransparentLsdDb": 0.474,
-        "anchorRatio": 4.73,
-        "driftIqrMs": 0,
-        "driftRangeMs": 0,
-        "driftConfidentFraction": 1,
-        "driftCoherence": 0,
-        "gatedOn": "spectral-anchor-ratio",
-        "peakBand": 23,
+        "lsdDb": 2.433,
+        "anchorTransparentLsdDb": 0.586,
+        "anchorRatio": 4.15,
+        "driftIqrMs": 9,
+        "driftRangeMs": 42,
+        "driftConfidentFraction": 0.99,
+        "driftCoherence": 3.48,
+        "gatedOn": "temporal-drift",
+        "peakBand": 2,
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-08"
+        "measuredAt": "2026-08-09"
       }
     },
     {
-      "id": "d3",
-      "sourceId": "pb8",
+      "id": "d18",
+      "sourceId": "b2",
       "window": {
         "startSec": 45,
         "clipSec": 20
       },
+      "family": "lossy-artifact",
+      "magnitude": 1,
+      "seed": 8147,
+      "params": {
+        "bitrate": "128k"
+      },
+      "originalSide": "b",
+      "param": "128k",
+      "files": {
+        "a": "d18-a.mp3",
+        "b": "d18-b.mp3",
+        "aM4a": "d18-a.m4a",
+        "bM4a": "d18-b.m4a"
+      },
+      "sha256": {
+        "a": "2c9326f04825249b4d29c71b5a97ba5d449934367eb4a08d7e81385ae6a709f6",
+        "b": "2f73d4e910cab4523a36fc1f1d9ca6e69ddbba1571758b6f79d6e249d8035761"
+      },
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -15.9  b -15.9 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -15.9  b -15.9 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -1.5/-1.5  m4a -1.4/-1.4 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 0.024 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
+      },
+      "layerA": {
+        "lsdDb": 0.903,
+        "anchorTransparentLsdDb": 0.445,
+        "anchorRatio": 2.03,
+        "driftIqrMs": 0,
+        "driftRangeMs": 0,
+        "driftConfidentFraction": 1,
+        "driftCoherence": 0,
+        "gatedOn": "spectral-anchor-ratio",
+        "peakBand": 22,
+        "clippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "FLAG",
+        "reasons": [
+          "magnitude 2.0x anchor (need ≥3x)"
+        ],
+        "measuredAt": "2026-08-09"
+      }
+    },
+    {
+      "id": "d19",
+      "sourceId": "pb8",
+      "window": {
+        "startSec": 70,
+        "clipSec": 20
+      },
       "family": "timing-smear",
-      "magnitude": 2,
-      "seed": 107,
+      "magnitude": 3,
+      "seed": 8133,
       "params": {
         "maxDevPct": 3,
         "segmentDevPct": [
-          2.49,
-          -1.07,
-          0.97,
-          -0.19,
-          2.63,
+          2.45,
+          0.67,
+          -1.97,
+          1.13,
+          2.98,
+          -1.99,
           -1.2,
-          -2.24,
-          2.14,
-          -2.33,
-          -1.2
+          -1.6,
+          -0.1,
+          -0.37
         ]
       },
-      "originalSide": "a",
+      "originalSide": "b",
+      "param": 0.03,
       "files": {
-        "a": "d3-a.mp3",
-        "b": "d3-b.mp3",
-        "aM4a": "d3-a.m4a",
-        "bM4a": "d3-b.m4a"
+        "a": "d19-a.mp3",
+        "b": "d19-b.mp3",
+        "aM4a": "d19-a.m4a",
+        "bM4a": "d19-b.m4a"
       },
       "sha256": {
-        "a": "afc7391c124b5bd79a7fe49244dcd38876f40bd97d17b1fd819090c9b70d9bf3",
-        "b": "d51482a0b766ba4c17063a2d1e44b61c5f5ea58fd779797d04f66b0b5d3f2d55"
+        "a": "c0a6f0a42ed6f57d12f99c3a20b10694125312592bb2667f404b06f673a29312",
+        "b": "0e9937516e6049d62a7adc074bb7c03a811c3ea89aad00766b513e4005c17ddb"
       },
-      "earPass": null,
       "validation": {
         "duration_match__mp3_": {
           "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
@@ -208,27 +864,31 @@
           "pass": true
         },
         "true_peak__all_4_": {
-          "detail": "mp3 -6.7/-6.2  m4a -5.0/-5.8 dBTP (≤ −1.0)",
+          "detail": "mp3 -5.8/-6.2  m4a -5.3/-5.5 dBTP (≤ −1.0)",
           "pass": true
         },
         "distinct_files": {
-          "detail": "rel-RMS diff 1.398 (≥0.020 floor; NOT a perceptual claim)",
+          "detail": "rel-RMS diff 1.419 (≥0.020 floor; NOT a perceptual claim)",
           "pass": true
         },
         "deterministic_re-render": {
           "detail": "sha256 identical",
           "pass": true
         },
-        "validatedAt": "2026-07-20"
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0008%  degraded 0.0039% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
       },
       "layerA": {
-        "lsdDb": 6.046,
-        "anchorTransparentLsdDb": 0.274,
-        "anchorRatio": 22.07,
-        "driftIqrMs": 17,
-        "driftRangeMs": 68,
-        "driftConfidentFraction": 0.75,
-        "driftCoherence": 2.75,
+        "lsdDb": 5.847,
+        "anchorTransparentLsdDb": 0.272,
+        "anchorRatio": 21.48,
+        "driftIqrMs": 41,
+        "driftRangeMs": 59,
+        "driftConfidentFraction": 0.78,
+        "driftCoherence": 9.06,
         "gatedOn": "temporal-drift",
         "peakBand": 23,
         "clippedFraction": 0,
@@ -236,35 +896,124 @@
         "longestSilenceSec": 0,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-08"
+        "measuredAt": "2026-08-09"
       }
     },
     {
-      "id": "d4",
-      "sourceId": "pb6",
+      "id": "d2",
+      "sourceId": "pb7",
       "window": {
-        "startSec": 146,
+        "startSec": 45,
         "clipSec": 20
       },
-      "family": "pitch-drift",
-      "magnitude": 3,
-      "seed": 108,
+      "family": "timing-smear",
+      "magnitude": 1,
+      "seed": 8035,
       "params": {
-        "peakCents": 50,
-        "direction": "flat"
+        "maxDevPct": 0.75,
+        "segmentDevPct": [
+          0.09,
+          -0.09,
+          -0.42,
+          -0.62,
+          0.71,
+          0.35,
+          -0.1,
+          -0.28,
+          -0.43,
+          0.78
+        ]
       },
-      "originalSide": "b",
+      "originalSide": "a",
+      "param": 0.0075,
       "files": {
-        "a": "d4-a.mp3",
-        "b": "d4-b.mp3",
-        "aM4a": "d4-a.m4a",
-        "bM4a": "d4-b.m4a"
+        "a": "d2-a.mp3",
+        "b": "d2-b.mp3",
+        "aM4a": "d2-a.m4a",
+        "bM4a": "d2-b.m4a"
       },
       "sha256": {
-        "a": "aa577d5511770a778b8011b083bc6ce7f7909f54222d015322fdf994b675c7e2",
-        "b": "d314262e38df6b70e2b5d8a2b311a582d7b8947a0dedeca9a7b305e827b864d0"
+        "a": "c58a954c69a32021df4bb6b8553acb9a26c5bf7a83aecb6e9d61b29071f1ef74",
+        "b": "33ab13a287a2863bfe306381d640d731803616371997f969719fc19ed92c6c1c"
       },
-      "earPass": null,
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.4  b -16.4 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.4  b -16.4 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -1.5/-1.5  m4a -1.4/-1.5 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 1.421 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
+      },
+      "layerA": {
+        "lsdDb": 2.863,
+        "anchorTransparentLsdDb": 0.447,
+        "anchorRatio": 6.41,
+        "driftIqrMs": 11,
+        "driftRangeMs": 23,
+        "driftConfidentFraction": 1,
+        "driftCoherence": 10.37,
+        "gatedOn": "temporal-drift",
+        "peakBand": 1,
+        "clippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "PASS",
+        "reasons": [],
+        "measuredAt": "2026-08-09"
+      }
+    },
+    {
+      "id": "d20",
+      "sourceId": "b3",
+      "window": {
+        "startSec": 70,
+        "clipSec": 20
+      },
+      "family": "lossy-artifact",
+      "magnitude": 2,
+      "seed": 8154,
+      "params": {
+        "bitrate": "96k"
+      },
+      "originalSide": "a",
+      "param": "96k",
+      "files": {
+        "a": "d20-a.mp3",
+        "b": "d20-b.mp3",
+        "aM4a": "d20-a.m4a",
+        "bM4a": "d20-b.m4a"
+      },
+      "sha256": {
+        "a": "bb39d8ff4892c40f6faef336a948defd7eec6840da2040505b8e39cf618adce2",
+        "b": "591e341bf63ebef4d631d0e4b9761b59b60789f4b66d1494c16d94d3cf9f6bd2"
+      },
       "validation": {
         "duration_match__mp3_": {
           "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
@@ -283,62 +1032,78 @@
           "pass": true
         },
         "true_peak__all_4_": {
-          "detail": "mp3 -5.7/-6.0  m4a -5.7/-6.0 dBTP (≤ −1.0)",
+          "detail": "mp3 -3.2/-3.2  m4a -3.3/-3.1 dBTP (≤ −1.0)",
           "pass": true
         },
         "distinct_files": {
-          "detail": "rel-RMS diff 1.447 (≥0.020 floor; NOT a perceptual claim)",
+          "detail": "rel-RMS diff 0.064 (≥0.020 floor; NOT a perceptual claim)",
           "pass": true
         },
         "deterministic_re-render": {
           "detail": "sha256 identical",
           "pass": true
         },
-        "validatedAt": "2026-07-20"
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
       },
       "layerA": {
-        "lsdDb": 3.108,
-        "anchorTransparentLsdDb": 0.754,
-        "anchorRatio": 4.12,
-        "driftIqrMs": 7,
-        "driftRangeMs": 48,
-        "driftConfidentFraction": 0.49,
-        "driftCoherence": 2.37,
+        "lsdDb": 3.974,
+        "anchorTransparentLsdDb": 0.454,
+        "anchorRatio": 8.75,
+        "driftIqrMs": 0,
+        "driftRangeMs": 0,
+        "driftConfidentFraction": 1,
+        "driftCoherence": 0,
         "gatedOn": "spectral-anchor-ratio",
-        "peakBand": 13,
+        "peakBand": 23,
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-08"
+        "measuredAt": "2026-08-09"
       }
     },
     {
-      "id": "d5",
-      "sourceId": "pb3",
+      "id": "d21",
+      "sourceId": "pb5",
       "window": {
-        "startSec": 189.5,
+        "startSec": 45,
         "clipSec": 20
       },
-      "family": "lossy-artifact",
+      "family": "timing-smear",
       "magnitude": 2,
-      "seed": 110,
+      "seed": 8126,
       "params": {
-        "bitrate": "64k"
+        "maxDevPct": 1.5,
+        "segmentDevPct": [
+          0.12,
+          -0.67,
+          -1.91,
+          -0.1,
+          0.89,
+          -0.24,
+          0.44,
+          0.95,
+          -0.1,
+          0.63
+        ]
       },
-      "originalSide": "b",
+      "originalSide": "a",
+      "param": 0.015,
       "files": {
-        "a": "d5-a.mp3",
-        "b": "d5-b.mp3",
-        "aM4a": "d5-a.m4a",
-        "bM4a": "d5-b.m4a"
+        "a": "d21-a.mp3",
+        "b": "d21-b.mp3",
+        "aM4a": "d21-a.m4a",
+        "bM4a": "d21-b.m4a"
       },
       "sha256": {
-        "a": "5823962f37b38192af87827d6716c19591469fd889bd18d739ee50fc391e50bf",
-        "b": "aa3021cc0d02af0809553305f079afff448365014fd51ba76519e62c3368ff1a"
+        "a": "494bd57d21be1e5d248d6f75caec9ab75b897db9c5f22f14c0cc6f6fe7a43957",
+        "b": "c349972eecc3c9a6eccc77484a12440b53bec4e8bb936dff81334a1b4dd974ff"
       },
-      "earPass": null,
       "validation": {
         "duration_match__mp3_": {
           "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
@@ -349,31 +1114,113 @@
           "pass": true
         },
         "loudness_match__mp3_": {
-          "detail": "a -15.1  b -15.1 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "detail": "a -16.5  b -16.5 LUFS  Δ 0.0 (≤0.5) [mp3]",
           "pass": true
         },
         "loudness_match__m4a_": {
-          "detail": "a -15.1  b -15.1 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "detail": "a -16.5  b -16.5 LUFS  Δ 0.0 (≤0.5) [m4a]",
           "pass": true
         },
         "true_peak__all_4_": {
-          "detail": "mp3 -1.4/-1.4  m4a -1.4/-1.4 dBTP (≤ −1.0)",
+          "detail": "mp3 -1.5/-1.5  m4a -1.4/-1.5 dBTP (≤ −1.0)",
           "pass": true
         },
         "distinct_files": {
-          "detail": "rel-RMS diff 0.055 (≥0.020 floor; NOT a perceptual claim)",
+          "detail": "rel-RMS diff 1.402 (≥0.020 floor; NOT a perceptual claim)",
           "pass": true
         },
         "deterministic_re-render": {
           "detail": "sha256 identical",
           "pass": true
         },
-        "validatedAt": "2026-07-20"
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
       },
       "layerA": {
-        "lsdDb": 4.465,
-        "anchorTransparentLsdDb": 0.442,
-        "anchorRatio": 10.1,
+        "lsdDb": 4.38,
+        "anchorTransparentLsdDb": 1.06,
+        "anchorRatio": 4.13,
+        "driftIqrMs": 28,
+        "driftRangeMs": 54,
+        "driftConfidentFraction": 1,
+        "driftCoherence": 18.87,
+        "gatedOn": "temporal-drift",
+        "peakBand": 0,
+        "clippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "PASS",
+        "reasons": [],
+        "measuredAt": "2026-08-09"
+      }
+    },
+    {
+      "id": "d22",
+      "sourceId": "pb1",
+      "window": {
+        "startSec": 70,
+        "clipSec": 20
+      },
+      "family": "lossy-artifact",
+      "magnitude": 3,
+      "seed": 8161,
+      "params": {
+        "bitrate": "64k"
+      },
+      "originalSide": "b",
+      "param": "64k",
+      "files": {
+        "a": "d22-a.mp3",
+        "b": "d22-b.mp3",
+        "aM4a": "d22-a.m4a",
+        "bM4a": "d22-b.m4a"
+      },
+      "sha256": {
+        "a": "b704176a097199572be3942f2208aada4e8db19df94089d0fbb2f3fcd0377fc3",
+        "b": "75399fe38af0342a6068e9905c0196c32e3ff0246344e3f819ce425b6558a47d"
+      },
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -2.4/-2.6  m4a -2.5/-2.6 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 0.041 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
+      },
+      "layerA": {
+        "lsdDb": 6.941,
+        "anchorTransparentLsdDb": 0.444,
+        "anchorRatio": 15.65,
         "driftIqrMs": 0,
         "driftRangeMs": 0,
         "driftConfidentFraction": 1,
@@ -385,46 +1232,46 @@
         "longestSilenceSec": 0,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-08"
+        "measuredAt": "2026-08-09"
       }
     },
     {
-      "id": "d6",
-      "sourceId": "b3",
+      "id": "d23",
+      "sourceId": "b1",
       "window": {
-        "startSec": 82.5,
+        "startSec": 70,
         "clipSec": 20
       },
       "family": "timing-smear",
-      "magnitude": 3,
-      "seed": 114,
+      "magnitude": 4,
+      "seed": 8140,
       "params": {
         "maxDevPct": 5,
         "segmentDevPct": [
-          -1.64,
-          -1.07,
-          1.76,
-          2.16,
-          -1.26,
-          -1.04,
-          2.05,
-          3.53,
-          0.24,
-          -4.72
+          -1.47,
+          -2.52,
+          -2.99,
+          0.06,
+          -0.15,
+          2.12,
+          3.37,
+          4.44,
+          -1.42,
+          -1.43
         ]
       },
       "originalSide": "a",
+      "param": 0.05,
       "files": {
-        "a": "d6-a.mp3",
-        "b": "d6-b.mp3",
-        "aM4a": "d6-a.m4a",
-        "bM4a": "d6-b.m4a"
+        "a": "d23-a.mp3",
+        "b": "d23-b.mp3",
+        "aM4a": "d23-a.m4a",
+        "bM4a": "d23-b.m4a"
       },
       "sha256": {
-        "a": "93b887c3b8b8d7726831a915aa1322b7a0d043f69a355d9905b2c1a0a2b15011",
-        "b": "e3a089f64051e672082be994058e2a58ef4c55f523a69048a8e31cb4c742ea07"
+        "a": "88a7971f9544c242e23a41a8050fd8780233345425ae884900f3f6ea647dc0a5",
+        "b": "a5637e557f2236e2bfa3b03dc90fbf83285f7ae446cbe3485bf8eeb82232cbb8"
       },
-      "earPass": null,
       "validation": {
         "duration_match__mp3_": {
           "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
@@ -435,43 +1282,714 @@
           "pass": true
         },
         "loudness_match__mp3_": {
-          "detail": "a -16.4  b -16.3 LUFS  Δ 0.1 (≤0.5) [mp3]",
+          "detail": "a -16.1  b -16.1 LUFS  Δ 0.0 (≤0.5) [mp3]",
           "pass": true
         },
         "loudness_match__m4a_": {
-          "detail": "a -16.5  b -16.4 LUFS  Δ 0.1 (≤0.5) [m4a]",
+          "detail": "a -16.1  b -16.1 LUFS  Δ 0.0 (≤0.5) [m4a]",
           "pass": true
         },
         "true_peak__all_4_": {
-          "detail": "mp3 -1.4/-1.3  m4a -1.5/-1.3 dBTP (≤ −1.0)",
+          "detail": "mp3 -1.5/-1.5  m4a -1.4/-1.5 dBTP (≤ −1.0)",
           "pass": true
         },
         "distinct_files": {
-          "detail": "rel-RMS diff 1.440 (≥0.020 floor; NOT a perceptual claim)",
+          "detail": "rel-RMS diff 1.398 (≥0.020 floor; NOT a perceptual claim)",
           "pass": true
         },
         "deterministic_re-render": {
           "detail": "sha256 identical",
           "pass": true
         },
-        "validatedAt": "2026-07-20"
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
       },
       "layerA": {
-        "lsdDb": 6.018,
-        "anchorTransparentLsdDb": 0.57,
-        "anchorRatio": 10.56,
-        "driftIqrMs": 38,
-        "driftRangeMs": 111,
-        "driftConfidentFraction": 0.86,
-        "driftCoherence": 6.72,
+        "lsdDb": 6.836,
+        "anchorTransparentLsdDb": 0.586,
+        "anchorRatio": 11.67,
+        "driftIqrMs": 77,
+        "driftRangeMs": 118,
+        "driftConfidentFraction": 0.75,
+        "driftCoherence": 5.57,
         "gatedOn": "temporal-drift",
-        "peakBand": 1,
+        "peakBand": 22,
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-08"
+        "measuredAt": "2026-08-09"
+      }
+    },
+    {
+      "id": "d24",
+      "sourceId": "pb3",
+      "window": {
+        "startSec": 70,
+        "clipSec": 20
+      },
+      "family": "lossy-artifact",
+      "magnitude": 4,
+      "seed": 8168,
+      "params": {
+        "bitrate": "32k"
+      },
+      "originalSide": "a",
+      "param": "32k",
+      "files": {
+        "a": "d24-a.mp3",
+        "b": "d24-b.mp3",
+        "aM4a": "d24-a.m4a",
+        "bM4a": "d24-b.m4a"
+      },
+      "sha256": {
+        "a": "2be4e437a4cb3ff548be72f6cae9f2091b3481717a2a8f6eb364f5bc467db3bd",
+        "b": "b81e3d9c0a91d0a50559f2036b26b26d2e18baf24e75c1507698449edb7a1bce"
+      },
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -15.6  b -15.6 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -15.6  b -15.7 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -1.4/-1.5  m4a -1.5/-1.5 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 0.086 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
+      },
+      "layerA": {
+        "lsdDb": 11.374,
+        "anchorTransparentLsdDb": 1.152,
+        "anchorRatio": 9.87,
+        "driftIqrMs": 0,
+        "driftRangeMs": 0,
+        "driftConfidentFraction": 1,
+        "driftCoherence": 0,
+        "gatedOn": "spectral-anchor-ratio",
+        "peakBand": 17,
+        "clippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "PASS",
+        "reasons": [],
+        "measuredAt": "2026-08-09"
+      }
+    },
+    {
+      "id": "d3",
+      "sourceId": "pb3",
+      "window": {
+        "startSec": 20,
+        "clipSec": 20
+      },
+      "family": "pitch-drift",
+      "magnitude": 2,
+      "seed": 8014,
+      "params": {
+        "peakCents": 12,
+        "direction": "flat"
+      },
+      "originalSide": "b",
+      "param": 12,
+      "files": {
+        "a": "d3-a.mp3",
+        "b": "d3-b.mp3",
+        "aM4a": "d3-a.m4a",
+        "bM4a": "d3-b.m4a"
+      },
+      "sha256": {
+        "a": "d7e8f27b58d9b249aef13210024d343e2580d1a1718ed4df8acf604278acff62",
+        "b": "07d6139f042c2cd1a36e8a30adeba772a8e56996e8304fd4f034f66c22868803"
+      },
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -15.9  b -15.8 LUFS  Δ 0.1 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -15.9  b -15.9 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -1.4/-1.4  m4a -1.5/-1.4 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 1.191 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
+      },
+      "layerA": {
+        "lsdDb": 1.908,
+        "anchorTransparentLsdDb": 0.54,
+        "anchorRatio": 3.53,
+        "driftIqrMs": 1,
+        "driftRangeMs": 15,
+        "driftConfidentFraction": 1,
+        "driftCoherence": 0.84,
+        "gatedOn": "spectral-anchor-ratio",
+        "peakBand": 22,
+        "clippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "PASS",
+        "reasons": [],
+        "measuredAt": "2026-08-09"
+      }
+    },
+    {
+      "id": "d4",
+      "sourceId": "pb2",
+      "window": {
+        "startSec": 20,
+        "clipSec": 20
+      },
+      "family": "timing-smear",
+      "magnitude": 2,
+      "seed": 8042,
+      "params": {
+        "maxDevPct": 1.5,
+        "segmentDevPct": [
+          -0.99,
+          0.46,
+          0.91,
+          0.61,
+          -1.28,
+          0.91,
+          0.38,
+          -0.73,
+          0.75,
+          -1.03
+        ]
+      },
+      "originalSide": "a",
+      "param": 0.015,
+      "files": {
+        "a": "d4-a.mp3",
+        "b": "d4-b.mp3",
+        "aM4a": "d4-a.m4a",
+        "bM4a": "d4-b.m4a"
+      },
+      "sha256": {
+        "a": "e72e73fadf94b877811f10a08bd3690af8a734b08b572d4609b6073dd2402bcd",
+        "b": "7a5e1f4e371b40784a913ee527ac5c421ce6fc76f1e8fd344584199dc3f7927d"
+      },
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -15.7  b -15.7 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -15.7  b -15.7 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -1.6/-1.5  m4a -1.6/-1.5 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 1.344 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
+      },
+      "layerA": {
+        "lsdDb": 3.388,
+        "anchorTransparentLsdDb": 0.861,
+        "anchorRatio": 3.94,
+        "driftIqrMs": 21,
+        "driftRangeMs": 65,
+        "driftConfidentFraction": 0.92,
+        "driftCoherence": 5.08,
+        "gatedOn": "temporal-drift",
+        "peakBand": 0,
+        "clippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "PASS",
+        "reasons": [],
+        "measuredAt": "2026-08-09"
+      }
+    },
+    {
+      "id": "d5",
+      "sourceId": "pb6",
+      "window": {
+        "startSec": 45,
+        "clipSec": 20
+      },
+      "family": "pitch-drift",
+      "magnitude": 3,
+      "seed": 8021,
+      "params": {
+        "peakCents": 25,
+        "direction": "flat"
+      },
+      "originalSide": "b",
+      "param": 25,
+      "files": {
+        "a": "d5-a.mp3",
+        "b": "d5-b.mp3",
+        "aM4a": "d5-a.m4a",
+        "bM4a": "d5-b.m4a"
+      },
+      "sha256": {
+        "a": "e53bb6e676e922b5b533689b396eb01c1f0d25c19caef198fa42009bbaff1219",
+        "b": "fdd6328e774c29c68d9fbe03c2512202f195a6adfed7484e236b1b2f8b4621a2"
+      },
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -5.9/-6.1  m4a -5.8/-6.1 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 1.285 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
+      },
+      "layerA": {
+        "lsdDb": 2.309,
+        "anchorTransparentLsdDb": 0.558,
+        "anchorRatio": 4.13,
+        "driftIqrMs": 2,
+        "driftRangeMs": 23,
+        "driftConfidentFraction": 0.81,
+        "driftCoherence": 1.01,
+        "gatedOn": "spectral-anchor-ratio",
+        "peakBand": 19,
+        "clippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "PASS",
+        "reasons": [],
+        "measuredAt": "2026-08-09"
+      }
+    },
+    {
+      "id": "d6",
+      "sourceId": "pb5",
+      "window": {
+        "startSec": 20,
+        "clipSec": 20
+      },
+      "family": "timing-smear",
+      "magnitude": 3,
+      "seed": 8049,
+      "params": {
+        "maxDevPct": 3,
+        "segmentDevPct": [
+          -0.02,
+          -1.56,
+          0.2,
+          1.14,
+          1.5,
+          0.02,
+          -0.06,
+          -1.66,
+          1.77,
+          -1.33
+        ]
+      },
+      "originalSide": "b",
+      "param": 0.03,
+      "files": {
+        "a": "d6-a.mp3",
+        "b": "d6-b.mp3",
+        "aM4a": "d6-a.m4a",
+        "bM4a": "d6-b.m4a"
+      },
+      "sha256": {
+        "a": "72984ac597e81c513317f5dd20637b308e6197675cd8bfd22cf9868a3bcf7c80",
+        "b": "b8402fe82c82deb20ac8fe065e3071766d72c95057f9632d37d5846632eb80ee"
+      },
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.0  b -16.1 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -2.7/-2.8  m4a -2.6/-2.8 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 1.445 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
+      },
+      "layerA": {
+        "lsdDb": 4.424,
+        "anchorTransparentLsdDb": 1.534,
+        "anchorRatio": 2.88,
+        "driftIqrMs": 26,
+        "driftRangeMs": 80,
+        "driftConfidentFraction": 1,
+        "driftCoherence": 8.57,
+        "gatedOn": "temporal-drift",
+        "peakBand": 0,
+        "clippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0.4,
+        "verdict": "PASS",
+        "reasons": [],
+        "measuredAt": "2026-08-09"
+      }
+    },
+    {
+      "id": "d7",
+      "sourceId": "pb4",
+      "window": {
+        "startSec": 20,
+        "clipSec": 20
+      },
+      "family": "pitch-drift",
+      "magnitude": 4,
+      "seed": 8028,
+      "params": {
+        "peakCents": 50,
+        "direction": "flat"
+      },
+      "originalSide": "b",
+      "param": 50,
+      "files": {
+        "a": "d7-a.mp3",
+        "b": "d7-b.mp3",
+        "aM4a": "d7-a.m4a",
+        "bM4a": "d7-b.m4a"
+      },
+      "sha256": {
+        "a": "8625a4b88af4b7e44e9a6fa80a6a69b056b759527218d4f6bcecb36058c8261a",
+        "b": "ea7c67bddbed05a664c49706076187d51e7017c5d826f079ad903b00206a6aa7"
+      },
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -14.8  b -15.0 LUFS  Δ 0.2 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -14.9  b -15.1 LUFS  Δ 0.2 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -1.5/-1.5  m4a -1.5/-1.8 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 1.304 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
+      },
+      "layerA": {
+        "lsdDb": 3.954,
+        "anchorTransparentLsdDb": 1.434,
+        "anchorRatio": 2.76,
+        "driftIqrMs": 3,
+        "driftRangeMs": 43,
+        "driftConfidentFraction": 0.98,
+        "driftCoherence": 0.77,
+        "gatedOn": "spectral-anchor-ratio",
+        "peakBand": 23,
+        "clippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "FLAG",
+        "reasons": [
+          "magnitude 2.8x anchor (need ≥3x)"
+        ],
+        "measuredAt": "2026-08-09"
+      }
+    },
+    {
+      "id": "d8",
+      "sourceId": "pb8",
+      "window": {
+        "startSec": 45,
+        "clipSec": 20
+      },
+      "family": "timing-smear",
+      "magnitude": 4,
+      "seed": 8056,
+      "params": {
+        "maxDevPct": 5,
+        "segmentDevPct": [
+          -1.29,
+          1.62,
+          0.96,
+          0.49,
+          0.79,
+          3.06,
+          -5.77,
+          1.34,
+          -4.29,
+          3.1
+        ]
+      },
+      "originalSide": "a",
+      "param": 0.05,
+      "files": {
+        "a": "d8-a.mp3",
+        "b": "d8-b.mp3",
+        "aM4a": "d8-a.m4a",
+        "bM4a": "d8-b.m4a"
+      },
+      "sha256": {
+        "a": "afc7391c124b5bd79a7fe49244dcd38876f40bd97d17b1fd819090c9b70d9bf3",
+        "b": "9b08d758d5e51cfce021044d7dfbecde6ddcb85e22ba37f7e7127adeb6fbf8dd"
+      },
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 19.999 s  Δ 0.001 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.1  b -16.1 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -6.7/-6.2  m4a -5.0/-5.2 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 1.396 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0048%  degraded 0.0088% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
+      },
+      "layerA": {
+        "lsdDb": 5.296,
+        "anchorTransparentLsdDb": 0.274,
+        "anchorRatio": 19.33,
+        "driftIqrMs": 42,
+        "driftRangeMs": 119,
+        "driftConfidentFraction": 0.79,
+        "driftCoherence": 6.68,
+        "gatedOn": "temporal-drift",
+        "peakBand": 23,
+        "clippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "PASS",
+        "reasons": [],
+        "measuredAt": "2026-08-09"
+      }
+    },
+    {
+      "id": "d9",
+      "sourceId": "b1",
+      "window": {
+        "startSec": 45,
+        "clipSec": 20
+      },
+      "family": "lossy-artifact",
+      "magnitude": 1,
+      "seed": 8063,
+      "params": {
+        "bitrate": "128k"
+      },
+      "originalSide": "b",
+      "param": "128k",
+      "files": {
+        "a": "d9-a.mp3",
+        "b": "d9-b.mp3",
+        "aM4a": "d9-a.m4a",
+        "bM4a": "d9-b.m4a"
+      },
+      "sha256": {
+        "a": "f861f8c553140a74cb79c707f8a29b57dc3731442321242d96f71ecef1cf836d",
+        "b": "2b215af111af71b97aa87a3aed5ee58e48decb5ee845efdb5c4270fc4669680a"
+      },
+      "validation": {
+        "duration_match__mp3_": {
+          "detail": "a 20.036  b 20.036 s  Δ 0.000 (≤0.05) [mp3]",
+          "pass": true
+        },
+        "duration_match__m4a_": {
+          "detail": "a 20.000  b 20.000 s  Δ 0.000 (≤0.05) [m4a]",
+          "pass": true
+        },
+        "loudness_match__mp3_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "pass": true
+        },
+        "loudness_match__m4a_": {
+          "detail": "a -16.0  b -16.0 LUFS  Δ 0.0 (≤0.5) [m4a]",
+          "pass": true
+        },
+        "true_peak__all_4_": {
+          "detail": "mp3 -1.6/-1.7  m4a -1.8/-1.7 dBTP (≤ −1.0)",
+          "pass": true
+        },
+        "distinct_files": {
+          "detail": "rel-RMS diff 0.020 (≥0.020 floor; NOT a perceptual claim)",
+          "pass": true
+        },
+        "deterministic_re-render": {
+          "detail": "sha256 identical",
+          "pass": true
+        },
+        "no_clipping__pre-loudnorm_": {
+          "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
+          "pass": true
+        },
+        "validatedAt": "2026-08-09"
+      },
+      "layerA": {
+        "lsdDb": 0.917,
+        "anchorTransparentLsdDb": 0.594,
+        "anchorRatio": 1.54,
+        "driftIqrMs": 0,
+        "driftRangeMs": 0,
+        "driftConfidentFraction": 1,
+        "driftCoherence": 0,
+        "gatedOn": "spectral-anchor-ratio",
+        "peakBand": 22,
+        "clippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "verdict": "FLAG",
+        "reasons": [
+          "magnitude 1.5x anchor (need ≥3x)"
+        ],
+        "measuredAt": "2026-08-09"
       }
     }
   ],
@@ -481,23 +1999,243 @@
       {
         "sourceId": "pb1",
         "window": {
-          "startSec": 75,
+          "startSec": 20,
           "clipSec": 20
         },
         "pipelineNoiseLsdDb": 0,
-        "transparentLsdDb": 0.4216126425418471,
-        "measuredAt": "2026-08-08",
+        "transparentLsdDb": 0.41267773845405387,
+        "measuredAt": "2026-08-09",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb3",
+        "window": {
+          "startSec": 45,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.49777878021070715,
+        "measuredAt": "2026-08-09",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "b3",
+        "window": {
+          "startSec": 45,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.4965529181372258,
+        "measuredAt": "2026-08-09",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb6",
+        "window": {
+          "startSec": 70,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.5478482560909268,
+        "measuredAt": "2026-08-09",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "b2",
+        "window": {
+          "startSec": 20,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.4825543086007529,
+        "measuredAt": "2026-08-09",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb4",
+        "window": {
+          "startSec": 45,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 1.1825438133976984,
+        "measuredAt": "2026-08-09",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb1",
+        "window": {
+          "startSec": 45,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.6426406329560879,
+        "measuredAt": "2026-08-09",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
         "sourceId": "pb7",
         "window": {
-          "startSec": 32,
+          "startSec": 70,
           "clipSec": 20
         },
         "pipelineNoiseLsdDb": 0,
-        "transparentLsdDb": 0.47415708593709627,
-        "measuredAt": "2026-08-08",
+        "transparentLsdDb": 0.45671659513406915,
+        "measuredAt": "2026-08-09",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb2",
+        "window": {
+          "startSec": 45,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.5861945282784379,
+        "measuredAt": "2026-08-09",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "b2",
+        "window": {
+          "startSec": 45,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.44503485727682507,
+        "measuredAt": "2026-08-09",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb8",
+        "window": {
+          "startSec": 70,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.2722317576572498,
+        "measuredAt": "2026-08-09",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb7",
+        "window": {
+          "startSec": 45,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.4466561817341373,
+        "measuredAt": "2026-08-09",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "b3",
+        "window": {
+          "startSec": 70,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.4542513313148007,
+        "measuredAt": "2026-08-09",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb5",
+        "window": {
+          "startSec": 45,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 1.0597745102321527,
+        "measuredAt": "2026-08-09",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb1",
+        "window": {
+          "startSec": 70,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.4435769132698832,
+        "measuredAt": "2026-08-09",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "b1",
+        "window": {
+          "startSec": 70,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.5859496723067251,
+        "measuredAt": "2026-08-09",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb3",
+        "window": {
+          "startSec": 70,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 1.1519307177675056,
+        "measuredAt": "2026-08-09",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb3",
+        "window": {
+          "startSec": 20,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.5397567950724064,
+        "measuredAt": "2026-08-09",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb2",
+        "window": {
+          "startSec": 20,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.8609572348264539,
+        "measuredAt": "2026-08-09",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb6",
+        "window": {
+          "startSec": 45,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.5584869302922288,
+        "measuredAt": "2026-08-09",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb5",
+        "window": {
+          "startSec": 20,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 1.5339267615235532,
+        "measuredAt": "2026-08-09",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb4",
+        "window": {
+          "startSec": 20,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 1.4343985725620076,
+        "measuredAt": "2026-08-09",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
@@ -508,40 +2246,18 @@
         },
         "pipelineNoiseLsdDb": 0,
         "transparentLsdDb": 0.2739654313950121,
-        "measuredAt": "2026-08-08",
+        "measuredAt": "2026-08-09",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
-        "sourceId": "pb6",
+        "sourceId": "b1",
         "window": {
-          "startSec": 146,
+          "startSec": 45,
           "clipSec": 20
         },
         "pipelineNoiseLsdDb": 0,
-        "transparentLsdDb": 0.7543913586877299,
-        "measuredAt": "2026-08-08",
-        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
-      },
-      {
-        "sourceId": "pb3",
-        "window": {
-          "startSec": 189.5,
-          "clipSec": 20
-        },
-        "pipelineNoiseLsdDb": 0,
-        "transparentLsdDb": 0.44220634981391477,
-        "measuredAt": "2026-08-08",
-        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
-      },
-      {
-        "sourceId": "b3",
-        "window": {
-          "startSec": 82.5,
-          "clipSec": 20
-        },
-        "pipelineNoiseLsdDb": 0,
-        "transparentLsdDb": 0.5701155350951169,
-        "measuredAt": "2026-08-08",
+        "transparentLsdDb": 0.5938458073375024,
+        "measuredAt": "2026-08-09",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       }
     ],
@@ -553,7 +2269,7 @@
       "MAX_FLAT_TOP_FRACTION": 0.001,
       "MAX_SILENCE_SEC": 1.5
     },
-    "measuredAt": "2026-08-08",
+    "measuredAt": "2026-08-09",
     "note": "Magnitudes, NOT audibility. anchorRatio compares each pair against a 320 kbps round-trip of its OWN source window — a manipulation that is measurable and inaudible. LSD is material-dependent, so ratios are comparable across pairs but raw dB are not."
   }
 }

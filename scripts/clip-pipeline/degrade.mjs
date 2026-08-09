@@ -192,6 +192,7 @@ function loadDelicacyManifest() {
   return JSON.parse(readFileSync(DELICACY_MANIFEST, "utf8"));
 }
 
+/** CLI wrapper: resolve the 1|2|3 magnitude label to a parameter, then render. */
 export async function degrade(args) {
   const opt = (name, dflt) => {
     const i = args.indexOf(`--${name}`);
@@ -203,7 +204,22 @@ export async function degrade(args) {
   if (!id || !sourceId || !family || !Number.isInteger(magnitude) || !Number.isInteger(seed) || !Number.isFinite(startSec))
     throw new Error("need --id --source --start --family --magnitude --seed");
   if (!FAMILIES[family]?.[magnitude]) throw new Error(`no ${family} magnitude ${magnitude}`);
+  return renderPair({ id, sourceId, startSec, clipSec, family, magnitude, param: FAMILIES[family][magnitude], seed });
+}
 
+/**
+ * Render and validate ONE degraded pair from an explicit parameter value.
+ *
+ * Extracted from `degrade` so pool expansion renders through the IDENTICAL
+ * path — same cut, same degradation, same two-pass loudnorm, same validation
+ * checks. A second render path would mean the expanded pool was made by code
+ * nobody had verified.
+ *
+ * `magnitude` here is the LADDER RUNG (1..4), recorded for the manifest; the
+ * actual degradation is driven by `param`, so the rung is a label rather than a
+ * lookup key and cannot silently disagree with what was rendered.
+ */
+export async function renderPair({ id, sourceId, startSec, clipSec, family, magnitude, param, seed, quiet = false }) {
   const bias = JSON.parse(readFileSync(BIAS_MANIFEST, "utf8"));
   const src = bias.items.find((i) => i.id === sourceId);
   if (!src?.source?.cachedFile) throw new Error(`source ${sourceId} not in bias manifest / not downloaded`);
@@ -214,7 +230,7 @@ export async function degrade(args) {
   const degWav = join(TMP, `${id}-deg.wav`);
   // One cut feeds both sides — the pair is guaranteed the same source window.
   ff(["-ss", String(startSec), "-t", String(clipSec), "-i", cached, "-vn", "-ac", "2", "-ar", "44100", origWav]);
-  const params = degradeWav(family, magnitude, seed, origWav, degWav, clipSec);
+  const params = degradeWavParam(family, param, seed, origWav, degWav, clipSec);
   // Trim the degraded side to EXACTLY the original's length: filter-flush and
   // codec-round-trip residues leave it a few ms long, and a length straddling
   // an AAC frame boundary shows up as a ±100ms m4a duration mismatch (seen on
@@ -237,7 +253,7 @@ export async function degrade(args) {
   const diff = pcmDiff(decodeMono(join(OUT, `${id}-a.mp3`)), decodeMono(join(OUT, `${id}-b.mp3`)));
   // Determinism: rebuild the degraded side from scratch into TMP, compare hashes.
   const degWav2 = join(TMP, `${id}-deg2.wav`);
-  degradeWav(family, magnitude, seed, origWav, degWav2, clipSec);
+  degradeWavParam(family, param, seed, origWav, degWav2, clipSec);
   const degCut2 = join(TMP, `${id}-deg2-cut.wav`);
   ff(["-i", degWav2, "-t", String(clipSec), degCut2]);
   normRender(degCut2, `${id}-redo`, TMP);
@@ -272,10 +288,16 @@ export async function degrade(args) {
     ["no clipping (pre-loudnorm)", `orig ${(clipOrig.clippedFraction * 100).toFixed(4)}%  degraded ${(clipDeg.clippedFraction * 100).toFixed(4)}% (≤0.0500%)`, worstClip <= 0.0005],
   ];
 
-  console.log(`degrade ${id}  (source ${sourceId} @${startSec}s, ${family} m${magnitude}, seed ${seed})`);
-  console.log(`  original → side "${originalSide}" · params ${JSON.stringify(params)}`);
-  for (const [name, detail, ok] of checks) console.log(`  ${ok ? "PASS" : "FAIL"}  ${name.padEnd(24)} ${detail}`);
-  console.log(`  NOTE  audibility of the degradation is UNVERIFIED by these checks — the PM ear pass (S6) gates shipping`);
+  const allPassPreview = checks.every((c) => c[2]);
+  if (!quiet) {
+    console.log(`degrade ${id}  (source ${sourceId} @${startSec}s, ${family} rung ${magnitude}, param ${param}, seed ${seed})`);
+    console.log(`  original → side "${originalSide}" · params ${JSON.stringify(params)}`);
+    for (const [name, detail, ok] of checks) console.log(`  ${ok ? "PASS" : "FAIL"}  ${name.padEnd(26)} ${detail}`);
+    console.log(`  NOTE  these checks do not establish AUDIBILITY. Layer A magnitude against the`);
+    console.log(`        transparency anchor is measured separately by \`clip-pipeline validate\`.`);
+  } else {
+    console.log(`  ${allPassPreview ? "ok  " : "FAIL"} ${id.padEnd(5)} ${sourceId.padEnd(5)} @${String(startSec).padStart(3)}s  ${family.padEnd(15)} rung ${magnitude}  side ${originalSide}`);
+  }
 
   const allPass = checks.every((c) => c[2]);
   if (!allPass) {
@@ -287,9 +309,11 @@ export async function degrade(args) {
   manifest.pairs.push({
     // (sorted by id on save — re-rendering a pair must not reorder the manifest)
     id, sourceId, window: { startSec, clipSec }, family, magnitude, seed, params, originalSide,
+    param,
     files: allPass ? { a: `${id}-a.mp3`, b: `${id}-b.mp3`, aM4a: `${id}-a.m4a`, bM4a: `${id}-b.m4a` } : null,
     sha256: allPass ? { a: hashA, b: hashB } : null,
-    earPass: null, // audibility is a PM ear judgment (S6 gate), never inferred from the checks above
+    // The ear pass is RETIRED (artifact pivot §1). Audibility is not asserted
+    // by anyone; Layer A measures magnitude against a transparency anchor.
     validation: { ...Object.fromEntries(checks.map(([n, d, ok]) => [n.replace(/[ ()]/g, "_"), { detail: d, pass: ok }])), validatedAt: new Date().toISOString().slice(0, 10) },
   });
   manifest.pairs.sort((x, y) => x.id.localeCompare(y.id));
@@ -298,7 +322,8 @@ export async function degrade(args) {
   console.log(`  manifest: src/content/delicacy/manifest.json updated (${manifest.pairs.length} pair${manifest.pairs.length === 1 ? "" : "s"})`);
 
   if (!allPass) {
-    console.error("degrade: VALIDATION FAILED — audio deleted from public/, failure recorded in manifest");
-    process.exit(1);
+    console.error(`degrade ${id}: VALIDATION FAILED — audio deleted from public/, failure recorded in manifest`);
+    process.exitCode = 1;
   }
+  return allPass;
 }
