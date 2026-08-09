@@ -291,3 +291,17 @@ export function fitIrt(matrix: ResponseMatrix, options: IrtOptions = {}): IrtFit
 
   return { dataSource: matrix.dataSource, items, theta, iterations, hitIterationCap, logLikelihood, warning };
 }
+
+/**
+ * IRT discrimination per item id, for feeding the Layer B gate (RT-23a).
+ *
+ * Bound-pinned items are EXCLUDED rather than returned with their clamp value.
+ * A parameter sitting on its bound is not an estimate — the gate falls back to
+ * the point-biserial for those items, which is the honest ordering: a
+ * contaminated measurement beats a fabricated one.
+ */
+export function irtDiscriminationById(fit: IrtFit): Map<string, number> {
+  const out = new Map<string, number>();
+  for (const item of fit.items) if (!item.atBound) out.set(item.id, item.a);
+  return out;
+}

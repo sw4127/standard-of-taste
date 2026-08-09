@@ -48,6 +48,22 @@ export interface ResponseMatrix {
 export const ACCEPT_P_MIN = 0.55;
 export const ACCEPT_P_MAX = 0.85;
 export const ACCEPT_DISCRIMINATION_MIN = 0.2;
+/**
+ * Discrimination floor for IRT's `a` — a DIFFERENT metric needing a DIFFERENT
+ * number (PM ruling RT-23a, 2026-08-07).
+ *
+ * `a` is a logistic slope, not a correlation. The §1 floor of 0.20 is a
+ * point-biserial threshold; an item with a = 0.20 is nearly flat — its
+ * probability of a correct answer barely moves across the whole ability range —
+ * whereas r_pbis = 0.20 is merely marginal. Carrying one number across both
+ * scales would be a unit error wearing a gate's clothing.
+ *
+ * 0.5 sits at the boundary of what the literature calls low-versus-moderate
+ * discrimination for a logistic slope. PROVISIONAL like every other threshold
+ * here: it is a convention, not something this project has measured, and real
+ * response data outranks it.
+ */
+export const ACCEPT_IRT_A_MIN = 0.5;
 
 // ------------------------------------------------------------ small helpers
 
@@ -340,6 +356,8 @@ export interface ItemGrade {
   pValue: number | null;
   discrimination: number | null;
   discriminationCorrected: number | null;
+  /** Which figure and floor the verdict actually used (RT-23a). */
+  discriminationBasis: DiscriminationBasis;
   /** Binomial SE of p̂ in proportion units — null at n = 0. */
   pStandardError: number | null;
 }
@@ -387,15 +405,48 @@ export const MIN_RELIABILITY_TO_JUDGE_DISCRIMINATION = 0.5;
  * would otherwise be "accepted" while telling us nothing about anybody, and
  * discrimination is the property that makes an item worth keeping at all.
  */
-export function gradeItem(stats: ItemStats, reliability: number | null = 1): ItemGrade {
+/**
+ * Where an item's discrimination figure came from, and which floor applies.
+ * Carried on every grade so a reader is never left guessing which metric a
+ * verdict rests on.
+ */
+export interface DiscriminationBasis {
+  value: number | null;
+  metric: "irt-a" | "corrected-rpbis";
+  threshold: number;
+}
+
+export function gradeItem(
+  stats: ItemStats,
+  reliability: number | null = 1,
+  /** IRT `a` for this item, when a trustworthy fit produced one (RT-23a). */
+  irtA: number | null = null,
+): ItemGrade {
+  // IRT estimates discrimination directly; the point-biserial is a
+  // difficulty-contaminated proxy that tracked true `a` at r = 0.76 against
+  // IRT's 0.86 on identical data. Prefer the direct measurement, fall back to
+  // the proxy when no trustworthy fit exists — which is exactly the short-pool
+  // case, where 2PL parameters are not identified at all.
+  const basis: DiscriminationBasis =
+    irtA !== null
+      ? { value: irtA, metric: "irt-a", threshold: ACCEPT_IRT_A_MIN }
+      : {
+          value: stats.discriminationCorrected ?? stats.discrimination,
+          metric: "corrected-rpbis",
+          threshold: ACCEPT_DISCRIMINATION_MIN,
+        };
   const canJudgeDiscrimination =
-    reliability !== null && reliability >= MIN_RELIABILITY_TO_JUDGE_DISCRIMINATION;
+    // An IRT fit supplies its own criterion, so the rest-score's reliability
+    // is irrelevant to it — that guard exists only for the point-biserial.
+    basis.metric === "irt-a" ||
+    (reliability !== null && reliability >= MIN_RELIABILITY_TO_JUDGE_DISCRIMINATION);
   const base = {
     id: stats.id,
     n: stats.n,
     pValue: stats.n > 0 ? stats.pValue : null,
     discrimination: stats.discrimination,
     discriminationCorrected: stats.discriminationCorrected ?? null,
+    discriminationBasis: basis,
     pStandardError:
       stats.n > 0 ? Math.sqrt((stats.pValue * (1 - stats.pValue)) / stats.n) : null,
   };
@@ -452,7 +503,7 @@ export function gradeItem(stats: ItemStats, reliability: number | null = 1): Ite
   // The gate judges the ATTENUATION-CORRECTED figure (RT-21a) — the raw
   // point-biserial is contaminated by the criterion's own unreliability, and
   // judging items on it retired good ones for a defect of the test around them.
-  const judged = stats.discriminationCorrected ?? stats.discrimination;
+  const judged = basis.value;
   if (judged === null) {
     return {
       ...base,
@@ -461,15 +512,12 @@ export function gradeItem(stats: ItemStats, reliability: number | null = 1): Ite
       reasons: ["discrimination is undefined (no variance in responses)"],
     };
   }
-  if (judged < ACCEPT_DISCRIMINATION_MIN) {
+  if (judged < basis.threshold) {
     return {
       ...base,
       verdict: "RETIRE",
       action: "retire — the item does not separate strong respondents from weak ones",
-      reasons: [
-        `discrimination ${judged.toFixed(2)} < ${ACCEPT_DISCRIMINATION_MIN}` +
-          (stats.discriminationCorrected !== null ? " (corrected for attenuation)" : ""),
-      ],
+      reasons: [`discrimination ${judged.toFixed(2)} < ${basis.threshold} (${basis.metric})`],
     };
   }
 
@@ -497,8 +545,17 @@ export interface ItemGradeReport {
   warning: string | null;
 }
 
-export function gradeItems(report: ItemStatsReport, reliability: number | null = 1): ItemGradeReport {
-  const grades = report.items.map((i) => gradeItem(i, reliability));
+export function gradeItems(
+  report: ItemStatsReport,
+  reliability: number | null = 1,
+  /**
+   * IRT `a` per item id. Bound-pinned items MUST be excluded by the caller —
+   * a clamp is the optimiser saying the parameter is not located, and grading
+   * on it would be worse than using the proxy.
+   */
+  irtA: Map<string, number> | null = null,
+): ItemGradeReport {
+  const grades = report.items.map((i) => gradeItem(i, reliability, irtA?.get(i.id) ?? null));
   const summary: Record<ItemVerdict, number> = {
     ACCEPT: 0,
     TOO_EASY: 0,

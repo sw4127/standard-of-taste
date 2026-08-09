@@ -12,6 +12,7 @@ import {
   ACCEPT_DISCRIMINATION_MIN,
   ACCEPT_P_MAX,
   ACCEPT_P_MIN,
+  ACCEPT_IRT_A_MIN,
   MIN_N_TO_GRADE,
   MIN_RELIABILITY_TO_JUDGE_DISCRIMINATION,
   estimateReliability,
@@ -203,5 +204,58 @@ describe("Layer B auto-flag — recovers verdicts from KNOWN item parameters", (
     expect(report.summary.ACCEPT + report.summary.TOO_EASY + report.summary.TOO_HARD + report.summary.RETIRE + report.summary.PENDING).toBe(
       report.grades.length,
     );
+  });
+});
+
+describe("Layer B auto-flag — IRT feeds the gate when it can (RT-23a)", () => {
+  const irt = (a: number) => new Map([["i1", a]]);
+
+  it("prefers IRT `a` over the point-biserial when a fit is available", () => {
+    const report = gradeItems(
+      { dataSource: "SIMULATED", nPersons: 500, items: [stats()] },
+      0.8,
+      irt(1.2),
+    );
+    expect(report.grades[0].discriminationBasis.metric).toBe("irt-a");
+    expect(report.grades[0].discriminationBasis.value).toBe(1.2);
+    expect(report.grades[0].verdict).toBe("ACCEPT");
+  });
+
+  it("judges IRT `a` against its OWN floor, not the point-biserial's", () => {
+    // The unit error this guards: a = 0.3 is a nearly flat item and must be
+    // retired, even though r_pbis = 0.3 would comfortably pass.
+    const flat = gradeItems({ dataSource: "SIMULATED", nPersons: 500, items: [stats()] }, 0.8, irt(0.3));
+    expect(flat.grades[0].verdict).toBe("RETIRE");
+    expect(flat.grades[0].reasons.join()).toMatch(/irt-a/);
+    expect(flat.grades[0].discriminationBasis.threshold).toBe(ACCEPT_IRT_A_MIN);
+
+    // …while the same 0.3 as a corrected point-biserial is fine.
+    const proxy = gradeItems(
+      { dataSource: "SIMULATED", nPersons: 500, items: [stats({ discriminationCorrected: 0.3 })] },
+      0.8,
+    );
+    expect(proxy.grades[0].verdict).toBe("ACCEPT");
+    expect(proxy.grades[0].discriminationBasis.threshold).toBe(ACCEPT_DISCRIMINATION_MIN);
+  });
+
+  it("falls back to the proxy for items the fit could not locate", () => {
+    // irtDiscriminationById omits bound-pinned items, so the map simply has no
+    // entry — the gate must fall back rather than treat the absence as a fault.
+    const report = gradeItems(
+      { dataSource: "SIMULATED", nPersons: 500, items: [stats()] },
+      0.8,
+      new Map(),
+    );
+    expect(report.grades[0].discriminationBasis.metric).toBe("corrected-rpbis");
+    expect(report.grades[0].verdict).toBe("ACCEPT");
+  });
+
+  it("an IRT fit supplies its own criterion — the reliability guard does not apply", () => {
+    // With a proxy, low reliability withholds the verdict. With IRT it must
+    // not: the fit does not depend on the rest-score being reliable.
+    const proxy = gradeItems({ dataSource: "SIMULATED", nPersons: 500, items: [stats()] }, 0.2);
+    expect(proxy.grades[0].verdict).toBe("PENDING");
+    const withIrt = gradeItems({ dataSource: "SIMULATED", nPersons: 500, items: [stats()] }, 0.2, irt(1.2));
+    expect(withIrt.grades[0].verdict).toBe("ACCEPT");
   });
 });

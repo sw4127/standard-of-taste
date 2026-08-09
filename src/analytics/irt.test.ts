@@ -9,7 +9,7 @@
 
 import { describe, expect, it } from "vitest";
 import { correlation, delicacyMatrix, estimateItems, rmse } from "./estimate";
-import { fitIrt, irtProbability, IRT_GUESS } from "./irt";
+import { fitIrt, irtDiscriminationById, irtProbability, IRT_GUESS } from "./irt";
 import { simulateDelicacy, simulatePersons, syntheticDelicacyItems } from "./simulate";
 
 const fitFor = (nItems: number, nPersons: number, seed: number) => {
@@ -143,5 +143,21 @@ describe("irt — PARAMETER RECOVERY (the reason it exists)", () => {
     });
     console.log(`[irt] b RMSE at n = 200/800/3000: ${err.map((e) => e.toFixed(3)).join(" → ")} logits`);
     expect(err[2]).toBeLessThan(err[0]);
+  });
+});
+
+describe("irt — feeding the gate (RT-23a)", () => {
+  it("omits bound-pinned items from the discrimination map", () => {
+    const { fit } = fitFor(6, 100, 5);
+    const map = irtDiscriminationById(fit);
+    const pinned = fit.items.filter((i) => i.atBound);
+    expect(pinned.length).toBeGreaterThan(0);
+    for (const p of pinned) expect(map.has(p.id)).toBe(false);
+    for (const ok of fit.items.filter((i) => !i.atBound)) expect(map.get(ok.id)).toBe(ok.a);
+  });
+
+  it("a healthy fit contributes every item", () => {
+    const { fit } = fitFor(40, 1500, 700);
+    expect(irtDiscriminationById(fit).size).toBe(fit.items.length);
   });
 });
