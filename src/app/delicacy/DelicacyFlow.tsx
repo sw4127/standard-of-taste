@@ -351,7 +351,7 @@ export default function DelicacyFlow() {
   /* --------------------------------------------------------------- reveal */
   if (phase === "done" && result) {
     const cal = computeCalibration(result.receipts.map((r) => ({ confidence: r.confidence, correct: r.correct })));
-    const v = delicacyVerdict(result.nCorrect);
+    const v = delicacyVerdict(result.nCorrect, result.nTrials);
     const p = encodeURIComponent(encodeDelicacyResponses(DELICACY_TRIALS, responses));
     const resultPath = `/delicacy/result?pv=${DELICACY_POOL_VERSION}&p=${p}`;
     const origin = typeof window === "undefined" ? "" : window.location.origin;

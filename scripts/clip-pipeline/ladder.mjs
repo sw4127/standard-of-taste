@@ -28,7 +28,7 @@
  * 0.55–0.85 difficulty band is a Layer B question and needs responses.
  */
 
-import { mkdirSync, readFileSync, writeFileSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -209,16 +209,44 @@ export async function ladder(args) {
     };
   }
 
+  // ACCUMULATE across sources (PM ruling RT-30b/c, 2026-08-08). One source
+  // gives a point estimate, and the planner's screen was wrong by up to 318%
+  // using one. LSD depends on the material, so a family-rung's magnitude is a
+  // RANGE, and the screen must plan against the conservative end of it rather
+  // than against a number that happened to come from pb1.
+  const runKey = `${sourceId}@${startSec}`;
+  const prior = existsSync(REPORT) ? JSON.parse(readFileSync(REPORT, "utf8")) : { runs: {} };
+  const runs = { ...(prior.runs ?? {}), [runKey]: { source: { id: sourceId, startSec, clipSec, seed }, transparentAnchorLsdDb: +anchorLsd.toFixed(3), families } };
+
+  // Per family-rung: the min/max/mean LSD observed across every run so far.
+  const magnitudeRange = {};
+  for (const run of Object.values(runs)) {
+    for (const [family, spec] of Object.entries(run.families)) {
+      for (const r of spec.rungs) {
+        const k = `${family}/${r.rung}`;
+        (magnitudeRange[k] ??= { lsdDb: [] }).lsdDb.push(r.lsdDb);
+      }
+    }
+  }
+  for (const [k, v] of Object.entries(magnitudeRange)) {
+    magnitudeRange[k] = {
+      nSources: v.lsdDb.length,
+      minLsdDb: +Math.min(...v.lsdDb).toFixed(3),
+      maxLsdDb: +Math.max(...v.lsdDb).toFixed(3),
+      meanLsdDb: +(v.lsdDb.reduce((a, b) => a + b, 0) / v.lsdDb.length).toFixed(3),
+    };
+  }
+
   const report = {
-    source: { id: sourceId, startSec, clipSec, seed },
-    analysisRateHz: SR,
-    transparentAnchorLsdDb: +anchorLsd.toFixed(3),
     measuredAt: new Date().toISOString().slice(0, 10),
+    analysisRateHz: SR,
     note:
-      "Four calibrated rungs per family, all rendered from ONE source window so rung-to-rung comparison is not confounded by material. " +
-      "Rungs 2-4 are the values already shipping; rung 1 is a new gentler step. A rung's measured magnitude is NOT its difficulty — " +
-      "which rung falls in the 0.55-0.85 acceptance band is a Layer B question requiring real responses.",
-    families,
+      "Four calibrated rungs per family, each run on ONE source window so rung-to-rung comparison is not confounded by material. " +
+      "Runs ACCUMULATE across sources: magnitudeRange gives the min/max/mean LSD per family-rung, and the planner's screen uses the MIN " +
+      "because a point estimate from a single source was wrong by up to 318%. A rung's measured magnitude is NOT its difficulty — " +
+      "which rung falls in the acceptance band is a Layer B question requiring real responses.",
+    magnitudeRange,
+    runs,
   };
   writeFileSync(REPORT, JSON.stringify(report, null, 2) + "\n");
   rmSync(TMP, { recursive: true, force: true });

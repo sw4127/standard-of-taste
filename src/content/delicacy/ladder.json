@@ -1,267 +1,873 @@
 {
-  "source": {
-    "id": "pb1",
-    "startSec": 75,
-    "clipSec": 20,
-    "seed": 500
-  },
+  "measuredAt": "2026-08-12",
   "analysisRateHz": 44100,
-  "transparentAnchorLsdDb": 0.422,
-  "measuredAt": "2026-08-09",
-  "note": "Four calibrated rungs per family, all rendered from ONE source window so rung-to-rung comparison is not confounded by material. Rungs 2-4 are the values already shipping; rung 1 is a new gentler step. A rung's measured magnitude is NOT its difficulty — which rung falls in the 0.55-0.85 acceptance band is a Layer B question requiring real responses.",
-  "families": {
-    "pitch-drift": {
-      "unit": "cents of peak detune",
-      "primaryMeasure": "lsdDb",
-      "monotoneSpectral": true,
-      "monotoneTemporalIqr": false,
-      "monotoneTemporalRange": true,
-      "verified": true,
-      "temporalTrackerSaturates": false,
-      "rungs": [
-        {
-          "rung": 1,
-          "param": 12,
-          "params": {
-            "peakCents": 12,
-            "direction": "flat"
-          },
-          "lsdDb": 1.476,
-          "anchorRatio": 3.5,
-          "driftIqrMs": 1,
-          "driftRangeMs": 21,
-          "driftConfidentFraction": 1,
-          "peakBand": 23,
-          "preNormClippedFraction": 0
-        },
-        {
-          "rung": 2,
-          "param": 25,
-          "params": {
-            "peakCents": 25,
-            "direction": "flat"
-          },
-          "lsdDb": 1.867,
-          "anchorRatio": 4.43,
-          "driftIqrMs": 2,
-          "driftRangeMs": 31,
-          "driftConfidentFraction": 0.97,
-          "peakBand": 2,
-          "preNormClippedFraction": 0
-        },
-        {
-          "rung": 3,
-          "param": 50,
-          "params": {
-            "peakCents": 50,
-            "direction": "flat"
-          },
-          "lsdDb": 2.607,
-          "anchorRatio": 6.18,
-          "driftIqrMs": 2,
-          "driftRangeMs": 37,
-          "driftConfidentFraction": 0.87,
-          "peakBand": 17,
-          "preNormClippedFraction": 0
-        },
-        {
-          "rung": 4,
-          "param": 100,
-          "params": {
-            "peakCents": 100,
-            "direction": "flat"
-          },
-          "lsdDb": 3.578,
-          "anchorRatio": 8.49,
-          "driftIqrMs": 5,
-          "driftRangeMs": 49,
-          "driftConfidentFraction": 0.7,
-          "peakBand": 2,
-          "preNormClippedFraction": 0
-        }
-      ]
+  "note": "Four calibrated rungs per family, each run on ONE source window so rung-to-rung comparison is not confounded by material. Runs ACCUMULATE across sources: magnitudeRange gives the min/max/mean LSD per family-rung, and the planner's screen uses the MIN because a point estimate from a single source was wrong by up to 318%. A rung's measured magnitude is NOT its difficulty — which rung falls in the acceptance band is a Layer B question requiring real responses.",
+  "magnitudeRange": {
+    "pitch-drift/1": {
+      "nSources": 3,
+      "minLsdDb": 1.18,
+      "maxLsdDb": 1.584,
+      "meanLsdDb": 1.413
     },
-    "timing-smear": {
-      "unit": "max per-segment tempo deviation",
-      "primaryMeasure": "driftIqrMs",
-      "monotoneSpectral": true,
-      "monotoneTemporalIqr": true,
-      "monotoneTemporalRange": false,
-      "verified": true,
-      "temporalTrackerSaturates": false,
-      "rungs": [
-        {
-          "rung": 1,
-          "param": 0.0075,
-          "params": {
-            "maxDevPct": 0.75,
-            "segmentDevPct": [
-              -0.23,
-              0.47,
-              -0.09,
-              0.68,
-              0.79,
-              -0.49,
-              -0.53,
-              -0.21,
-              0.1,
-              -0.49
-            ]
-          },
-          "lsdDb": 3.107,
-          "anchorRatio": 7.37,
-          "driftIqrMs": 14,
-          "driftRangeMs": 56,
-          "driftConfidentFraction": 0.97,
-          "peakBand": 0,
-          "preNormClippedFraction": 0
-        },
-        {
-          "rung": 2,
-          "param": 0.015,
-          "params": {
-            "maxDevPct": 1.5,
-            "segmentDevPct": [
-              -0.45,
-              0.93,
-              -0.17,
-              1.36,
-              1.58,
-              -0.99,
-              -1.05,
-              -0.42,
-              0.21,
-              -0.99
-            ]
-          },
-          "lsdDb": 3.88,
-          "anchorRatio": 9.2,
-          "driftIqrMs": 27,
-          "driftRangeMs": 99,
-          "driftConfidentFraction": 0.96,
-          "peakBand": 2,
-          "preNormClippedFraction": 0
-        },
-        {
-          "rung": 3,
-          "param": 0.03,
-          "params": {
-            "maxDevPct": 3,
-            "segmentDevPct": [
-              -0.91,
-              1.86,
-              -0.35,
-              2.72,
-              3.16,
-              -1.97,
-              -2.11,
-              -0.85,
-              0.41,
-              -1.97
-            ]
-          },
-          "lsdDb": 4.766,
-          "anchorRatio": 11.31,
-          "driftIqrMs": 29,
-          "driftRangeMs": 110,
-          "driftConfidentFraction": 0.79,
-          "peakBand": 2,
-          "preNormClippedFraction": 0
-        },
-        {
-          "rung": 4,
-          "param": 0.05,
-          "params": {
-            "maxDevPct": 5,
-            "segmentDevPct": [
-              -1.51,
-              3.1,
-              -0.58,
-              4.54,
-              5.27,
-              -3.28,
-              -3.51,
-              -1.41,
-              0.69,
-              -3.29
-            ]
-          },
-          "lsdDb": 5.546,
-          "anchorRatio": 13.15,
-          "driftIqrMs": 40,
-          "driftRangeMs": 91,
-          "driftConfidentFraction": 0.71,
-          "peakBand": 2,
-          "preNormClippedFraction": 0
-        }
-      ]
+    "pitch-drift/2": {
+      "nSources": 3,
+      "minLsdDb": 1.398,
+      "maxLsdDb": 1.867,
+      "meanLsdDb": 1.711
     },
-    "lossy-artifact": {
-      "unit": "mp3 round-trip bitrate",
-      "primaryMeasure": "lsdDb",
-      "monotoneSpectral": true,
-      "monotoneTemporalIqr": false,
-      "monotoneTemporalRange": false,
-      "verified": true,
-      "temporalTrackerSaturates": false,
-      "rungs": [
-        {
-          "rung": 1,
-          "param": "128k",
-          "params": {
-            "bitrate": "128k"
-          },
-          "lsdDb": 1.796,
-          "anchorRatio": 4.26,
-          "driftIqrMs": 0,
-          "driftRangeMs": 0,
-          "driftConfidentFraction": 1,
-          "peakBand": 23,
-          "preNormClippedFraction": 0
+    "pitch-drift/3": {
+      "nSources": 3,
+      "minLsdDb": 1.833,
+      "maxLsdDb": 2.607,
+      "meanLsdDb": 2.273
+    },
+    "pitch-drift/4": {
+      "nSources": 3,
+      "minLsdDb": 2.613,
+      "maxLsdDb": 3.578,
+      "meanLsdDb": 3.095
+    },
+    "timing-smear/1": {
+      "nSources": 3,
+      "minLsdDb": 3.107,
+      "maxLsdDb": 4.189,
+      "meanLsdDb": 3.526
+    },
+    "timing-smear/2": {
+      "nSources": 3,
+      "minLsdDb": 3.88,
+      "maxLsdDb": 5.532,
+      "meanLsdDb": 4.519
+    },
+    "timing-smear/3": {
+      "nSources": 3,
+      "minLsdDb": 4.766,
+      "maxLsdDb": 7.11,
+      "meanLsdDb": 5.671
+    },
+    "timing-smear/4": {
+      "nSources": 3,
+      "minLsdDb": 5.546,
+      "maxLsdDb": 7.925,
+      "meanLsdDb": 6.479
+    },
+    "lossy-artifact/1": {
+      "nSources": 3,
+      "minLsdDb": 0.855,
+      "maxLsdDb": 1.796,
+      "meanLsdDb": 1.185
+    },
+    "lossy-artifact/2": {
+      "nSources": 3,
+      "minLsdDb": 1.503,
+      "maxLsdDb": 4.434,
+      "meanLsdDb": 3.09
+    },
+    "lossy-artifact/3": {
+      "nSources": 3,
+      "minLsdDb": 4.656,
+      "maxLsdDb": 11.95,
+      "meanLsdDb": 7.818
+    },
+    "lossy-artifact/4": {
+      "nSources": 3,
+      "minLsdDb": 12.395,
+      "maxLsdDb": 24.008,
+      "meanLsdDb": 17.108
+    }
+  },
+  "runs": {
+    "pb1@75": {
+      "source": {
+        "id": "pb1",
+        "startSec": 75,
+        "clipSec": 20,
+        "seed": 500
+      },
+      "transparentAnchorLsdDb": 0.422,
+      "families": {
+        "pitch-drift": {
+          "unit": "cents of peak detune",
+          "primaryMeasure": "lsdDb",
+          "monotoneSpectral": true,
+          "monotoneTemporalIqr": false,
+          "monotoneTemporalRange": true,
+          "verified": true,
+          "temporalTrackerSaturates": false,
+          "rungs": [
+            {
+              "rung": 1,
+              "param": 12,
+              "params": {
+                "peakCents": 12,
+                "direction": "flat"
+              },
+              "lsdDb": 1.476,
+              "anchorRatio": 3.5,
+              "driftIqrMs": 1,
+              "driftRangeMs": 21,
+              "driftConfidentFraction": 1,
+              "peakBand": 23,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 2,
+              "param": 25,
+              "params": {
+                "peakCents": 25,
+                "direction": "flat"
+              },
+              "lsdDb": 1.867,
+              "anchorRatio": 4.43,
+              "driftIqrMs": 2,
+              "driftRangeMs": 31,
+              "driftConfidentFraction": 0.97,
+              "peakBand": 2,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 3,
+              "param": 50,
+              "params": {
+                "peakCents": 50,
+                "direction": "flat"
+              },
+              "lsdDb": 2.607,
+              "anchorRatio": 6.18,
+              "driftIqrMs": 2,
+              "driftRangeMs": 37,
+              "driftConfidentFraction": 0.87,
+              "peakBand": 17,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 4,
+              "param": 100,
+              "params": {
+                "peakCents": 100,
+                "direction": "flat"
+              },
+              "lsdDb": 3.578,
+              "anchorRatio": 8.49,
+              "driftIqrMs": 5,
+              "driftRangeMs": 49,
+              "driftConfidentFraction": 0.7,
+              "peakBand": 2,
+              "preNormClippedFraction": 0
+            }
+          ]
         },
-        {
-          "rung": 2,
-          "param": "96k",
-          "params": {
-            "bitrate": "96k"
-          },
-          "lsdDb": 4.434,
-          "anchorRatio": 10.52,
-          "driftIqrMs": 0,
-          "driftRangeMs": 0,
-          "driftConfidentFraction": 1,
-          "peakBand": 22,
-          "preNormClippedFraction": 0
+        "timing-smear": {
+          "unit": "max per-segment tempo deviation",
+          "primaryMeasure": "driftIqrMs",
+          "monotoneSpectral": true,
+          "monotoneTemporalIqr": true,
+          "monotoneTemporalRange": false,
+          "verified": true,
+          "temporalTrackerSaturates": false,
+          "rungs": [
+            {
+              "rung": 1,
+              "param": 0.0075,
+              "params": {
+                "maxDevPct": 0.75,
+                "segmentDevPct": [
+                  -0.23,
+                  0.47,
+                  -0.09,
+                  0.68,
+                  0.79,
+                  -0.49,
+                  -0.53,
+                  -0.21,
+                  0.1,
+                  -0.49
+                ]
+              },
+              "lsdDb": 3.107,
+              "anchorRatio": 7.37,
+              "driftIqrMs": 14,
+              "driftRangeMs": 56,
+              "driftConfidentFraction": 0.97,
+              "peakBand": 0,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 2,
+              "param": 0.015,
+              "params": {
+                "maxDevPct": 1.5,
+                "segmentDevPct": [
+                  -0.45,
+                  0.93,
+                  -0.17,
+                  1.36,
+                  1.58,
+                  -0.99,
+                  -1.05,
+                  -0.42,
+                  0.21,
+                  -0.99
+                ]
+              },
+              "lsdDb": 3.88,
+              "anchorRatio": 9.2,
+              "driftIqrMs": 27,
+              "driftRangeMs": 99,
+              "driftConfidentFraction": 0.96,
+              "peakBand": 2,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 3,
+              "param": 0.03,
+              "params": {
+                "maxDevPct": 3,
+                "segmentDevPct": [
+                  -0.91,
+                  1.86,
+                  -0.35,
+                  2.72,
+                  3.16,
+                  -1.97,
+                  -2.11,
+                  -0.85,
+                  0.41,
+                  -1.97
+                ]
+              },
+              "lsdDb": 4.766,
+              "anchorRatio": 11.31,
+              "driftIqrMs": 29,
+              "driftRangeMs": 110,
+              "driftConfidentFraction": 0.79,
+              "peakBand": 2,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 4,
+              "param": 0.05,
+              "params": {
+                "maxDevPct": 5,
+                "segmentDevPct": [
+                  -1.51,
+                  3.1,
+                  -0.58,
+                  4.54,
+                  5.27,
+                  -3.28,
+                  -3.51,
+                  -1.41,
+                  0.69,
+                  -3.29
+                ]
+              },
+              "lsdDb": 5.546,
+              "anchorRatio": 13.15,
+              "driftIqrMs": 40,
+              "driftRangeMs": 91,
+              "driftConfidentFraction": 0.71,
+              "peakBand": 2,
+              "preNormClippedFraction": 0
+            }
+          ]
         },
-        {
-          "rung": 3,
-          "param": "64k",
-          "params": {
-            "bitrate": "64k"
-          },
-          "lsdDb": 6.849,
-          "anchorRatio": 16.24,
-          "driftIqrMs": 0,
-          "driftRangeMs": 0,
-          "driftConfidentFraction": 1,
-          "peakBand": 22,
-          "preNormClippedFraction": 0
-        },
-        {
-          "rung": 4,
-          "param": "32k",
-          "params": {
-            "bitrate": "32k"
-          },
-          "lsdDb": 12.395,
-          "anchorRatio": 29.4,
-          "driftIqrMs": 0,
-          "driftRangeMs": 0,
-          "driftConfidentFraction": 1,
-          "peakBand": 17,
-          "preNormClippedFraction": 0
+        "lossy-artifact": {
+          "unit": "mp3 round-trip bitrate",
+          "primaryMeasure": "lsdDb",
+          "monotoneSpectral": true,
+          "monotoneTemporalIqr": false,
+          "monotoneTemporalRange": false,
+          "verified": true,
+          "temporalTrackerSaturates": false,
+          "rungs": [
+            {
+              "rung": 1,
+              "param": "128k",
+              "params": {
+                "bitrate": "128k"
+              },
+              "lsdDb": 1.796,
+              "anchorRatio": 4.26,
+              "driftIqrMs": 0,
+              "driftRangeMs": 0,
+              "driftConfidentFraction": 1,
+              "peakBand": 23,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 2,
+              "param": "96k",
+              "params": {
+                "bitrate": "96k"
+              },
+              "lsdDb": 4.434,
+              "anchorRatio": 10.52,
+              "driftIqrMs": 0,
+              "driftRangeMs": 0,
+              "driftConfidentFraction": 1,
+              "peakBand": 22,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 3,
+              "param": "64k",
+              "params": {
+                "bitrate": "64k"
+              },
+              "lsdDb": 6.849,
+              "anchorRatio": 16.24,
+              "driftIqrMs": 0,
+              "driftRangeMs": 0,
+              "driftConfidentFraction": 1,
+              "peakBand": 22,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 4,
+              "param": "32k",
+              "params": {
+                "bitrate": "32k"
+              },
+              "lsdDb": 12.395,
+              "anchorRatio": 29.4,
+              "driftIqrMs": 0,
+              "driftRangeMs": 0,
+              "driftConfidentFraction": 1,
+              "peakBand": 17,
+              "preNormClippedFraction": 0
+            }
+          ]
         }
-      ]
+      }
+    },
+    "pb7@45": {
+      "source": {
+        "id": "pb7",
+        "startSec": 45,
+        "clipSec": 20,
+        "seed": 500
+      },
+      "transparentAnchorLsdDb": 0.447,
+      "families": {
+        "pitch-drift": {
+          "unit": "cents of peak detune",
+          "primaryMeasure": "lsdDb",
+          "monotoneSpectral": true,
+          "monotoneTemporalIqr": false,
+          "monotoneTemporalRange": false,
+          "verified": true,
+          "temporalTrackerSaturates": false,
+          "rungs": [
+            {
+              "rung": 1,
+              "param": 12,
+              "params": {
+                "peakCents": 12,
+                "direction": "flat"
+              },
+              "lsdDb": 1.18,
+              "anchorRatio": 2.64,
+              "driftIqrMs": 1,
+              "driftRangeMs": 22,
+              "driftConfidentFraction": 1,
+              "peakBand": 14,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 2,
+              "param": 25,
+              "params": {
+                "peakCents": 25,
+                "direction": "flat"
+              },
+              "lsdDb": 1.398,
+              "anchorRatio": 3.13,
+              "driftIqrMs": 0,
+              "driftRangeMs": 9,
+              "driftConfidentFraction": 0.98,
+              "peakBand": 1,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 3,
+              "param": 50,
+              "params": {
+                "peakCents": 50,
+                "direction": "flat"
+              },
+              "lsdDb": 1.833,
+              "anchorRatio": 4.1,
+              "driftIqrMs": 1,
+              "driftRangeMs": 15,
+              "driftConfidentFraction": 0.89,
+              "peakBand": 1,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 4,
+              "param": 100,
+              "params": {
+                "peakCents": 100,
+                "direction": "flat"
+              },
+              "lsdDb": 2.613,
+              "anchorRatio": 5.85,
+              "driftIqrMs": 2,
+              "driftRangeMs": 11,
+              "driftConfidentFraction": 0.42,
+              "peakBand": 1,
+              "preNormClippedFraction": 0
+            }
+          ]
+        },
+        "timing-smear": {
+          "unit": "max per-segment tempo deviation",
+          "primaryMeasure": "driftIqrMs",
+          "monotoneSpectral": true,
+          "monotoneTemporalIqr": true,
+          "monotoneTemporalRange": true,
+          "verified": true,
+          "temporalTrackerSaturates": true,
+          "rungs": [
+            {
+              "rung": 1,
+              "param": 0.0075,
+              "params": {
+                "maxDevPct": 0.75,
+                "segmentDevPct": [
+                  -0.23,
+                  0.47,
+                  -0.09,
+                  0.68,
+                  0.79,
+                  -0.49,
+                  -0.53,
+                  -0.21,
+                  0.1,
+                  -0.49
+                ]
+              },
+              "lsdDb": 4.189,
+              "anchorRatio": 9.38,
+              "driftIqrMs": 13,
+              "driftRangeMs": 37,
+              "driftConfidentFraction": 1,
+              "peakBand": 1,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 2,
+              "param": 0.015,
+              "params": {
+                "maxDevPct": 1.5,
+                "segmentDevPct": [
+                  -0.45,
+                  0.93,
+                  -0.17,
+                  1.36,
+                  1.58,
+                  -0.99,
+                  -1.05,
+                  -0.42,
+                  0.21,
+                  -0.99
+                ]
+              },
+              "lsdDb": 5.532,
+              "anchorRatio": 12.39,
+              "driftIqrMs": 22,
+              "driftRangeMs": 69,
+              "driftConfidentFraction": 0.9,
+              "peakBand": 1,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 3,
+              "param": 0.03,
+              "params": {
+                "maxDevPct": 3,
+                "segmentDevPct": [
+                  -0.91,
+                  1.86,
+                  -0.35,
+                  2.72,
+                  3.16,
+                  -1.97,
+                  -2.11,
+                  -0.85,
+                  0.41,
+                  -1.97
+                ]
+              },
+              "lsdDb": 7.11,
+              "anchorRatio": 15.92,
+              "driftIqrMs": 28,
+              "driftRangeMs": 77,
+              "driftConfidentFraction": 0.66,
+              "peakBand": 0,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 4,
+              "param": 0.05,
+              "params": {
+                "maxDevPct": 5,
+                "segmentDevPct": [
+                  -1.51,
+                  3.1,
+                  -0.58,
+                  4.54,
+                  5.27,
+                  -3.28,
+                  -3.51,
+                  -1.41,
+                  0.69,
+                  -3.29
+                ]
+              },
+              "lsdDb": 7.925,
+              "anchorRatio": 17.74,
+              "driftIqrMs": 53,
+              "driftRangeMs": 91,
+              "driftConfidentFraction": 0.46,
+              "peakBand": 0,
+              "preNormClippedFraction": 0
+            }
+          ]
+        },
+        "lossy-artifact": {
+          "unit": "mp3 round-trip bitrate",
+          "primaryMeasure": "lsdDb",
+          "monotoneSpectral": true,
+          "monotoneTemporalIqr": false,
+          "monotoneTemporalRange": false,
+          "verified": true,
+          "temporalTrackerSaturates": false,
+          "rungs": [
+            {
+              "rung": 1,
+              "param": "128k",
+              "params": {
+                "bitrate": "128k"
+              },
+              "lsdDb": 0.855,
+              "anchorRatio": 1.91,
+              "driftIqrMs": 0,
+              "driftRangeMs": 0,
+              "driftConfidentFraction": 1,
+              "peakBand": 1,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 2,
+              "param": "96k",
+              "params": {
+                "bitrate": "96k"
+              },
+              "lsdDb": 3.332,
+              "anchorRatio": 7.46,
+              "driftIqrMs": 0,
+              "driftRangeMs": 0,
+              "driftConfidentFraction": 1,
+              "peakBand": 23,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 3,
+              "param": "64k",
+              "params": {
+                "bitrate": "64k"
+              },
+              "lsdDb": 11.95,
+              "anchorRatio": 26.75,
+              "driftIqrMs": 0,
+              "driftRangeMs": 0,
+              "driftConfidentFraction": 1,
+              "peakBand": 23,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 4,
+              "param": "32k",
+              "params": {
+                "bitrate": "32k"
+              },
+              "lsdDb": 24.008,
+              "anchorRatio": 53.75,
+              "driftIqrMs": 0,
+              "driftRangeMs": 0,
+              "driftConfidentFraction": 1,
+              "peakBand": 20,
+              "preNormClippedFraction": 0
+            }
+          ]
+        }
+      }
+    },
+    "b2@45": {
+      "source": {
+        "id": "b2",
+        "startSec": 45,
+        "clipSec": 20,
+        "seed": 500
+      },
+      "transparentAnchorLsdDb": 0.445,
+      "families": {
+        "pitch-drift": {
+          "unit": "cents of peak detune",
+          "primaryMeasure": "lsdDb",
+          "monotoneSpectral": true,
+          "monotoneTemporalIqr": false,
+          "monotoneTemporalRange": false,
+          "verified": true,
+          "temporalTrackerSaturates": false,
+          "rungs": [
+            {
+              "rung": 1,
+              "param": 12,
+              "params": {
+                "peakCents": 12,
+                "direction": "flat"
+              },
+              "lsdDb": 1.584,
+              "anchorRatio": 3.56,
+              "driftIqrMs": 1,
+              "driftRangeMs": 23,
+              "driftConfidentFraction": 0.99,
+              "peakBand": 22,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 2,
+              "param": 25,
+              "params": {
+                "peakCents": 25,
+                "direction": "flat"
+              },
+              "lsdDb": 1.867,
+              "anchorRatio": 4.19,
+              "driftIqrMs": 1,
+              "driftRangeMs": 38,
+              "driftConfidentFraction": 0.95,
+              "peakBand": 0,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 3,
+              "param": 50,
+              "params": {
+                "peakCents": 50,
+                "direction": "flat"
+              },
+              "lsdDb": 2.378,
+              "anchorRatio": 5.34,
+              "driftIqrMs": 1,
+              "driftRangeMs": 26,
+              "driftConfidentFraction": 0.86,
+              "peakBand": 0,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 4,
+              "param": 100,
+              "params": {
+                "peakCents": 100,
+                "direction": "flat"
+              },
+              "lsdDb": 3.095,
+              "anchorRatio": 6.96,
+              "driftIqrMs": 2,
+              "driftRangeMs": 20,
+              "driftConfidentFraction": 0.73,
+              "peakBand": 0,
+              "preNormClippedFraction": 0
+            }
+          ]
+        },
+        "timing-smear": {
+          "unit": "max per-segment tempo deviation",
+          "primaryMeasure": "driftIqrMs",
+          "monotoneSpectral": true,
+          "monotoneTemporalIqr": true,
+          "monotoneTemporalRange": false,
+          "verified": true,
+          "temporalTrackerSaturates": false,
+          "rungs": [
+            {
+              "rung": 1,
+              "param": 0.0075,
+              "params": {
+                "maxDevPct": 0.75,
+                "segmentDevPct": [
+                  -0.23,
+                  0.47,
+                  -0.09,
+                  0.68,
+                  0.79,
+                  -0.49,
+                  -0.53,
+                  -0.21,
+                  0.1,
+                  -0.49
+                ]
+              },
+              "lsdDb": 3.281,
+              "anchorRatio": 7.37,
+              "driftIqrMs": 13,
+              "driftRangeMs": 45,
+              "driftConfidentFraction": 0.99,
+              "peakBand": 0,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 2,
+              "param": 0.015,
+              "params": {
+                "maxDevPct": 1.5,
+                "segmentDevPct": [
+                  -0.45,
+                  0.93,
+                  -0.17,
+                  1.36,
+                  1.58,
+                  -0.99,
+                  -1.05,
+                  -0.42,
+                  0.21,
+                  -0.99
+                ]
+              },
+              "lsdDb": 4.146,
+              "anchorRatio": 9.32,
+              "driftIqrMs": 27,
+              "driftRangeMs": 71,
+              "driftConfidentFraction": 0.99,
+              "peakBand": 0,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 3,
+              "param": 0.03,
+              "params": {
+                "maxDevPct": 3,
+                "segmentDevPct": [
+                  -0.91,
+                  1.86,
+                  -0.35,
+                  2.72,
+                  3.16,
+                  -1.97,
+                  -2.11,
+                  -0.85,
+                  0.41,
+                  -1.97
+                ]
+              },
+              "lsdDb": 5.136,
+              "anchorRatio": 11.54,
+              "driftIqrMs": 29,
+              "driftRangeMs": 112,
+              "driftConfidentFraction": 0.89,
+              "peakBand": 1,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 4,
+              "param": 0.05,
+              "params": {
+                "maxDevPct": 5,
+                "segmentDevPct": [
+                  -1.51,
+                  3.1,
+                  -0.58,
+                  4.54,
+                  5.27,
+                  -3.28,
+                  -3.51,
+                  -1.41,
+                  0.69,
+                  -3.29
+                ]
+              },
+              "lsdDb": 5.967,
+              "anchorRatio": 13.41,
+              "driftIqrMs": 47,
+              "driftRangeMs": 87,
+              "driftConfidentFraction": 0.74,
+              "peakBand": 1,
+              "preNormClippedFraction": 0
+            }
+          ]
+        },
+        "lossy-artifact": {
+          "unit": "mp3 round-trip bitrate",
+          "primaryMeasure": "lsdDb",
+          "monotoneSpectral": true,
+          "monotoneTemporalIqr": false,
+          "monotoneTemporalRange": false,
+          "verified": true,
+          "temporalTrackerSaturates": false,
+          "rungs": [
+            {
+              "rung": 1,
+              "param": "128k",
+              "params": {
+                "bitrate": "128k"
+              },
+              "lsdDb": 0.903,
+              "anchorRatio": 2.03,
+              "driftIqrMs": 0,
+              "driftRangeMs": 0,
+              "driftConfidentFraction": 1,
+              "peakBand": 22,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 2,
+              "param": "96k",
+              "params": {
+                "bitrate": "96k"
+              },
+              "lsdDb": 1.503,
+              "anchorRatio": 3.38,
+              "driftIqrMs": 0,
+              "driftRangeMs": 0,
+              "driftConfidentFraction": 1,
+              "peakBand": 22,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 3,
+              "param": "64k",
+              "params": {
+                "bitrate": "64k"
+              },
+              "lsdDb": 4.656,
+              "anchorRatio": 10.46,
+              "driftIqrMs": 0,
+              "driftRangeMs": 0,
+              "driftConfidentFraction": 1,
+              "peakBand": 21,
+              "preNormClippedFraction": 0
+            },
+            {
+              "rung": 4,
+              "param": "32k",
+              "params": {
+                "bitrate": "32k"
+              },
+              "lsdDb": 14.921,
+              "anchorRatio": 33.53,
+              "driftIqrMs": 0,
+              "driftRangeMs": 0,
+              "driftConfidentFraction": 1,
+              "peakBand": 18,
+              "preNormClippedFraction": 0
+            }
+          ]
+        }
+      }
     }
   }
 }

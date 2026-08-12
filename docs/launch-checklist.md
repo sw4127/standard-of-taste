@@ -4,7 +4,18 @@ Status: living doc, created 2026-07-12 (S1 of the approved RT-execution plan).
 Authority chain: `restructuring_decision_memo_2026-07-11.md` → `docs/rt-answers-2026-07-11.md` → this checklist.
 Items under "Launch blockers" gate launch. Fast-follows fire on their named triggers, not on vibes.
 
-## RETIRED GATES (artifact pivot, 2026-08-07)
+## RETIRED GATES (artifact pivot, 2026-08-07 / 2026-08-08)
+
+- **PM voice pass on copy.ts — RETIRED 2026-08-08.** `src/content/voice.ts`
+  implements `docs/voice-spec.md`'s three litmus tests and banned-moves list as
+  code, and `src/content/voice.test.ts` runs it over every cohort-visible string
+  in both decks (sweeping every reachable verdict tier, not a sample) and proves
+  it catches motive attribution, person-verdicts, beige chrome, fabricated
+  norms, unmeasured audibility claims, and un-anchored full-intensity lines.
+  The PM approves the RULES once, not the prose. **Honest limit:** the check
+  cannot tell you a line is DULL — "on-voice but flat" has no surface form. What
+  it guarantees is that the deck never ships with a NAMED violation, which is
+  what the sign-off was actually for.
 
 - **PM ear pass on delicacy clips — RETIRED.** `docs/ear-pass-delicacy.md` is
   marked RETIRED and gates nothing. Item quality is computed: **Layer A**

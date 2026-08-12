@@ -75,7 +75,7 @@ export default async function DelicacyResultPage({ searchParams }: { searchParam
   const data = resultFrom(await searchParams);
   if (!data) redirect("/delicacy");
   const { result, p } = data;
-  const v = delicacyVerdict(result.nCorrect);
+  const v = delicacyVerdict(result.nCorrect, result.nTrials);
   const permalink = `${baseUrl()}/delicacy/result?pv=${DELICACY_POOL_VERSION}&p=${encodeURIComponent(p)}`;
 
   return (
