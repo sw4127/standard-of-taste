@@ -18,6 +18,7 @@ import { describe, expect, it } from "vitest";
 import {
   gradePair,
   MAX_CLIPPED_FRACTION,
+  MAX_QUIET_FRACTION,
   MAX_SILENCE_SEC,
   MIN_ANCHOR_RATIO,
   MIN_CONFIDENT_BLOCK_FRACTION,
@@ -44,6 +45,7 @@ const healthy = {
   clippedFraction: 0,
   flatTopFraction: 0,
   longestSilenceSec: 0,
+  quietFraction: 0,
 };
 
 /** A healthy temporal measurement. */
@@ -92,6 +94,16 @@ describe("Layer A gate — it REJECTS what it should (RT-17a)", () => {
     const r = gradePair({ ...healthy, clippedFraction: 0, flatTopFraction: 0.49 }, anchors);
     expect(r.verdict).toBe("FLAG");
     expect(r.reasons.join()).toMatch(/flat-topped crests/);
+  });
+
+  it("flags a clip that is mostly silence in short gaps (PM user-test finding)", () => {
+    // The hole: dead air was capped as a longest CONTIGUOUS run, so d2 — 35%
+    // near-silent across many short rests, longest run 0.00s — passed, and a
+    // listener reported it as barely containing music.
+    const r = gradePair({ ...healthy, longestSilenceSec: 0, quietFraction: 0.35 }, anchors);
+    expect(r.verdict).toBe("FLAG");
+    expect(r.reasons.join()).toMatch(/near-silent/);
+    expect(gradePair({ ...healthy, quietFraction: MAX_QUIET_FRACTION }, anchors).verdict).toBe("PASS");
   });
 
   it("flags dead air — an unanswerable trial", () => {
