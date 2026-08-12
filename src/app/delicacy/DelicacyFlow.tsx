@@ -37,10 +37,13 @@ import {
   DELICACY_INSTRUMENT_ID,
   DELICACY_POOL_VERSION,
   DELICACY_TRIALS,
+  MEASURED_TRIALS,
+  PRACTICE_TRIALS,
   FLAW_LABELS,
   type DelicacyTrialClip,
 } from "@/content/delicacy/items";
 import ClipPlayer from "@/app/bias/ClipPlayer";
+import AbCompare from "./AbCompare";
 import ShareButton from "@/app/result/ShareButton";
 import DownloadButton from "@/app/result/DownloadButton";
 import {
@@ -61,7 +64,7 @@ const BASE = "#07090B"; // cold near-black
 
 const BEAT_MS = 420;
 
-type Phase = "frame" | "trial" | "done";
+type Phase = "frame" | "practice" | "trial" | "done";
 type TrialStep = "listen" | "flaw" | "confidence";
 
 const CONFIDENCE_TAPS: Array<{ value: DelicacyConfidence; label: string; hint: string }> = [
@@ -99,12 +102,17 @@ export default function DelicacyFlow() {
   const [confPick, setConfPick] = useState<DelicacyConfidence | null>(null); // beat-lock visual
   const [responses, setResponses] = useState<DelicacyResponses>({});
   const [result, setResult] = useState<DelicacyResult | null>(null);
+  // Per-trial count of same-moment A/B switches — how hard this listener
+  // actually worked at the comparison (D6, and a usability signal).
+  const switches = useRef<Record<string, number>>({});
+  const [practiceIdx, setPracticeIdx] = useState(0);
+  const [practicePick, setPracticePick] = useState<PairSide | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   // D6: per-trial heard milliseconds per side, captured continuously.
   const listenMs = useRef<{ a: Record<string, number>; b: Record<string, number> }>({ a: {}, b: {} });
 
-  const trial: DelicacyTrialClip | undefined = DELICACY_TRIALS[idx];
-  const total = DELICACY_TRIALS.length;
+  const trial: DelicacyTrialClip | undefined = MEASURED_TRIALS[idx];
+  const total = MEASURED_TRIALS.length;
   const bothArmed = armedA && armedB;
 
   useEffect(() => {
@@ -154,16 +162,16 @@ export default function DelicacyFlow() {
         return;
       }
       // All trials answered → compute (deterministic, in code) and bank (D6).
-      const r = computeDelicacyResult(DELICACY_INSTRUMENT_ID, DELICACY_TRIALS, nextResponses);
+      const r = computeDelicacyResult(DELICACY_INSTRUMENT_ID, MEASURED_TRIALS, nextResponses);
       const cal = computeCalibration(r.receipts.map((rec) => ({ confidence: rec.confidence, correct: rec.correct })));
       setResult(r);
       track("delicacy_result", {
         pool: DELICACY_INSTRUMENT_ID,
         poolVersion: DELICACY_POOL_VERSION,
         hash: r.hash,
-        picks: encodeDelicacyResponses(DELICACY_TRIALS, nextResponses),
-        listen_a: DELICACY_TRIALS.map((t) => listenMs.current.a[t.id] ?? 0).join(","),
-        listen_b: DELICACY_TRIALS.map((t) => listenMs.current.b[t.id] ?? 0).join(","),
+        picks: encodeDelicacyResponses(MEASURED_TRIALS, nextResponses),
+        listen_a: MEASURED_TRIALS.map((t) => listenMs.current.a[t.id] ?? 0).join(","),
+        listen_b: MEASURED_TRIALS.map((t) => listenMs.current.b[t.id] ?? 0).join(","),
         nCorrect: r.nCorrect,
         accuracy: r.accuracy,
         flawEligible: r.flawEligible,
@@ -201,15 +209,15 @@ export default function DelicacyFlow() {
           </p>
           <p className="mt-3 text-base leading-relaxed text-muted">
             Hume&apos;s point: delicacy of taste is real, physical, and checkable.{" "}
-            <span className="text-foreground">Now you taste.</span> {DELICACY_TRIALS.length} pairs of
-            clips — in each, one is the original and one has been quietly damaged. Find the key in
-            the wine.
+            <span className="text-foreground">Now you taste.</span> {PRACTICE_TRIALS.length} practice
+            pairs with the answers shown, then {MEASURED_TRIALS.length} scored ones. In each, one clip
+            is the original and one has been quietly damaged. Find the key in the wine.
           </p>
           <button
             type="button"
             onClick={() => {
               track("delicacy_start", {});
-              setPhase("trial");
+              setPhase("practice");
             }}
             className="mt-8 self-start rounded-full px-7 py-3.5 text-base font-bold text-black transition active:scale-[0.98]"
             style={{ background: ICE, boxShadow: `0 10px 30px ${ICE_GLOW}` }}
@@ -225,6 +233,109 @@ export default function DelicacyFlow() {
   }
 
   /* ---------------------------------------------------------------- trial */
+  // ---------------------------------------------------------------- practice
+  // Three trials at the strongest rung, one per family, ANSWERED WITH FEEDBACK.
+  // The point is not measurement — these items are excluded from the score —
+  // it is that a newcomer hears what each flaw sounds like on its most obvious
+  // example before being asked to find a subtle one. A listener who is told
+  // nothing for eighteen trials cannot tell "I am bad at this" from "this is
+  // broken", which is exactly what user testing reported.
+  if (phase === "practice") {
+    const p = PRACTICE_TRIALS[practiceIdx];
+    if (!p) return null;
+    const answered = practicePick !== null;
+    const right = practicePick === p.originalSide;
+    return (
+      <main className={shell}>
+        <FluidField colors={FLUID} baseColor={BASE} intensity={0.6} scrim={false} vignette />
+        <div className="relative z-10 flex flex-1 flex-col">
+          <div className="flex items-center justify-between text-xs font-medium text-muted">
+            <span className="tracking-[0.3em]">PRACTICE — NOT SCORED</span>
+            <span>
+              {practiceIdx + 1} / {PRACTICE_TRIALS.length}
+            </span>
+          </div>
+
+          <p className="mt-6 text-sm text-muted">
+            These three are the <span className="text-foreground">loudest</span> examples of each
+            kind of damage, and the answers are shown. Learn what to listen for.
+          </p>
+          <p className="mt-2 font-display text-lg font-semibold" style={{ color: ICE }}>
+            {FLAW_LABELS[p.family].label} — {FLAW_LABELS[p.family].hint}
+          </p>
+
+          <ClipPlayer
+            key={`${p.id}-pa`}
+            src={p.srcA}
+            index={practiceIdx}
+            label={`Practice ${practiceIdx + 1} — A`}
+            caption="tap to listen"
+            minListenMs={MIN_LISTEN_MS_PER_CLIP}
+            onArmed={() => {}}
+            onProgress={() => {}}
+          />
+          <ClipPlayer
+            key={`${p.id}-pb`}
+            src={p.srcB}
+            index={practiceIdx}
+            label={`Practice ${practiceIdx + 1} — B`}
+            caption="tap to listen"
+            minListenMs={MIN_LISTEN_MS_PER_CLIP}
+            onArmed={() => {}}
+            onProgress={() => {}}
+          />
+          <AbCompare key={`${p.id}-pcmp`} srcA={p.srcA} srcB={p.srcB} />
+
+          {!answered ? (
+            <div className="mt-7">
+              <p className="text-sm font-semibold">Which one is the original?</p>
+              <div className="mt-3 flex gap-3">
+                {(["a", "b"] as const).map((sideKey) => (
+                  <button
+                    key={sideKey}
+                    type="button"
+                    onClick={() => setPracticePick(sideKey)}
+                    aria-label={`${sideKey.toUpperCase()} is the original`}
+                    className="flex-1 rounded-2xl border border-white/15 py-4 text-base font-bold transition hover:border-white/40 active:scale-[0.98]"
+                  >
+                    {sideKey.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="mt-7 rounded-2xl border p-5" style={{ borderColor: right ? "hsl(150 60% 50% / 0.45)" : "hsl(0 60% 60% / 0.4)", background: "rgba(255,255,255,0.03)" }}>
+              <p className="font-display text-xl font-semibold">
+                {right ? "That's it." : "Not this time."}
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-neutral-300">
+                <span className="text-foreground">{p.originalSide.toUpperCase()}</span> was the
+                original. The damage in {p.originalSide === "a" ? "B" : "A"} was{" "}
+                <span style={{ color: ICE }}>{FLAW_LABELS[p.family].label.toLowerCase()}</span> —{" "}
+                {FLAW_LABELS[p.family].hint}. Go back and switch between them until you can hear it;
+                that is the whole skill.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setPracticePick(null);
+                  if (practiceIdx + 1 < PRACTICE_TRIALS.length) setPracticeIdx(practiceIdx + 1);
+                  else setPhase("trial");
+                }}
+                className="mt-4 rounded-full px-6 py-3 text-sm font-bold text-black transition active:scale-[0.98]"
+                style={{ background: ICE }}
+              >
+                {practiceIdx + 1 < PRACTICE_TRIALS.length
+                  ? "Next practice pair"
+                  : `Start the ${MEASURED_TRIALS.length} scored trials`}
+              </button>
+            </div>
+          )}
+        </div>
+      </main>
+    );
+  }
+
   if (phase === "trial") {
     if (!trial) return null;
     const caption = (armed: boolean) =>
@@ -276,6 +387,23 @@ export default function DelicacyFlow() {
               listenMs.current.b[trial.id] = ms;
             }}
           />
+
+          {/* The comparison tool, unlocked by the same gate as the pick.
+              Exposure is controlled during the required listen; comparison is
+              unlimited afterwards (PM ruling RT-34b). Before this existed a
+              listener could never hear the same INSTANT of both clips, which
+              is the only way a difference this small is found — and pitch
+              drift peaks at clip end, the moment the old pattern reached last. */}
+          {bothArmed && (
+            <AbCompare
+              key={`${trial.id}-cmp`}
+              srcA={trial.srcA}
+              srcB={trial.srcB}
+              onSwitch={(n) => {
+                switches.current[trial.id] = n;
+              }}
+            />
+          )}
 
           {/* Q1 — the pick. Unlock is a visible state change. */}
           <div

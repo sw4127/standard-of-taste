@@ -285,3 +285,44 @@ export const DELICACY_TRIALS: DelicacyTrialClip[] = [
     "“Folk Bed” — Jason Shaw · https://audionautix.com/free-music/acoustic · CC-BY 4.0 · excerpt (trimmed + loudness-normalized; one side deliberately degraded)",
   ),
 ];
+
+/**
+ * PRACTICE / MEASURED SPLIT (PM ruling RT-35a, after user testing, 2026-08-08).
+ *
+ * A listener reported hearing nothing across four runs and, crucially, having no
+ * way to tell whether that meant "I am bad at this" or "this is broken". An
+ * assessment with no feedback cannot distinguish those for the person taking it,
+ * and the PM's steer is that the product has to visibly help someone get better
+ * at hearing this — not merely score them.
+ *
+ * So the session opens with three PRACTICE trials, answered with immediate
+ * feedback, before any measured trial. They are the strongest rung, one per
+ * degradation family, so a newcomer hears each flaw's signature on its most
+ * obvious example before being asked to find a subtle one.
+ *
+ * TWO RULES THAT MAKE THIS HONEST:
+ *  1. Practice items are EXCLUDED from the measured set. Answering an item with
+ *     the answer revealed and then scoring it would be contamination, and the
+ *     score would be worthless in exactly the direction that flatters us.
+ *  2. Feedback exists ONLY in practice. Learning across the measured block
+ *     would make later items easier than earlier ones and break the assumption
+ *     every item statistic rests on.
+ *
+ * Selection is by RUNG, not by anyone's opinion of which clips are clearest —
+ * the pipeline picks, as everywhere else.
+ */
+const STRONGEST_RUNG = 4;
+
+export const PRACTICE_TRIALS: DelicacyTrialClip[] = (() => {
+  const seen = new Set<DegradationFamily>();
+  return DELICACY_TRIALS.filter((t) => {
+    if (t.magnitude !== STRONGEST_RUNG || seen.has(t.family)) return false;
+    seen.add(t.family);
+    return true;
+  });
+})();
+
+/** The scored session. Never includes a practice item. */
+export const MEASURED_TRIALS: DelicacyTrialClip[] = DELICACY_TRIALS.filter(
+  (t) => !PRACTICE_TRIALS.some((p) => p.id === t.id),
+);
