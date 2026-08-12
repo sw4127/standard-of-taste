@@ -60,7 +60,7 @@ export async function generateMetadata({ searchParams }: { searchParams: SearchP
   const data = resultFrom(await searchParams);
   if (!data) return { title: "The Delicacy Trials" };
   const title = `${data.result.nCorrect}/${data.result.nTrials} originals caught — The Delicacy Trials`;
-  const description = "Six pairs of clips; one of each is quietly damaged. A coin flip calls 3. Find the key in the wine.";
+  const description = `${DELICACY_TRIALS.length} pairs of clips; one of each is quietly damaged. A coin flip calls ${DELICACY_TRIALS.length / 2}. Find the key in the wine.`;
   const og = `${baseUrl()}${cardUrl("og", data.p)}`;
   return {
     title,
