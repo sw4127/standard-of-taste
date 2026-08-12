@@ -4,7 +4,9 @@
  * Delicacy Trials flow (memo D2 Instrument 2 · D3 "built second" · D5
  * narration — Sancho's kinsmen and the key in the wine).
  *
- * Beats: Hume frame → 6 trials → completion (the full result screen is S5b).
+ * Beats: Hume frame → every trial in the pool → completion. Trial counts and
+ * the session estimate are DERIVED from DELICACY_TRIALS, never written down:
+ * the pool went 6 → 24 → 18 in a day and every hardcoded "six" became a lie.
  * Each trial: hear BOTH sides (each arms at min-listen) → pick the original →
  * name the flaw (all three families offered every trial — FLAW_CHANCE depends
  * on it) → confidence tap, phrased about the SIDE PICK only (the S3 pinned
@@ -67,6 +69,24 @@ const CONFIDENCE_TAPS: Array<{ value: DelicacyConfidence; label: string; hint: s
   { value: 70, label: "70%", hint: "fairly sure" },
   { value: 50, label: "50%", hint: "honestly guessing" },
 ];
+
+/**
+ * Minimum listening per clip. Delicacy degradations are time-extended (a pitch
+ * ramp peaks at clip END), so a shorter gate could unlock a pick the listener
+ * has had no real chance to hear.
+ */
+const MIN_LISTEN_MS_PER_CLIP = 8000;
+
+/**
+ * Honest session estimate, DERIVED. Two clips per trial at the min-listen gate
+ * is the floor nobody can go below; real sessions run longer because of taps
+ * and replays, so the floor is multiplied rather than quoted raw. Written down
+ * as a number once (it said "~4 minutes" against an 18-trial pool, which was
+ * a floor of 4.8 minutes of forced listening alone).
+ */
+const SESSION_MINUTES = Math.ceil(
+  (DELICACY_TRIALS.length * 2 * (MIN_LISTEN_MS_PER_CLIP / 1000) * 1.9) / 60,
+);
 
 export default function DelicacyFlow() {
   const [phase, setPhase] = useState<Phase>("frame");
@@ -181,8 +201,9 @@ export default function DelicacyFlow() {
           </p>
           <p className="mt-3 text-base leading-relaxed text-muted">
             Hume&apos;s point: delicacy of taste is real, physical, and checkable.{" "}
-            <span className="text-foreground">Now you taste.</span> Six pairs of clips — in each,
-            one is the original and one has been quietly damaged. Find the key in the wine.
+            <span className="text-foreground">Now you taste.</span> {DELICACY_TRIALS.length} pairs of
+            clips — in each, one is the original and one has been quietly damaged. Find the key in
+            the wine.
           </p>
           <button
             type="button"
@@ -195,7 +216,9 @@ export default function DelicacyFlow() {
           >
             Start the trials
           </button>
-          <p className="mt-4 text-xs text-muted">~4 minutes. No sign-up. Headphones strongly advised.</p>
+          <p className="mt-4 text-xs text-muted">
+            ~{SESSION_MINUTES} minutes. No sign-up. Headphones strongly advised.
+          </p>
         </div>
       </main>
     );
@@ -235,7 +258,7 @@ export default function DelicacyFlow() {
             index={idx}
             label={`Pair ${idx + 1} — A`}
             caption={caption(armedA)}
-            minListenMs={8000}
+            minListenMs={MIN_LISTEN_MS_PER_CLIP}
             onArmed={() => setArmedA(true)}
             onProgress={(ms) => {
               listenMs.current.a[trial.id] = ms;
@@ -247,7 +270,7 @@ export default function DelicacyFlow() {
             index={idx}
             label={`Pair ${idx + 1} — B`}
             caption={caption(armedB)}
-            minListenMs={8000}
+            minListenMs={MIN_LISTEN_MS_PER_CLIP}
             onArmed={() => setArmedB(true)}
             onProgress={(ms) => {
               listenMs.current.b[trial.id] = ms;
@@ -401,7 +424,7 @@ export default function DelicacyFlow() {
               </div>
             ) : (
               <p className="mt-2 text-xs text-muted">
-                Per-level breakdowns need 3+ answers at a level — six trials rarely get there. The whole-session
+                Per-level breakdowns need 3+ answers at a level. The whole-session
                 read above is the honest number.
               </p>
             )}

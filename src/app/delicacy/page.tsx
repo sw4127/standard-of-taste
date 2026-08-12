@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import DelicacyFlow from "./DelicacyFlow";
-import { DELICACY_LIVE } from "@/content/delicacy/items";
+import { DELICACY_TRIALS, DELICACY_LIVE } from "@/content/delicacy/items";
 
 /**
  * The Delicacy Trials (memo D2 Instrument 2, D3 second instrument).
@@ -13,7 +13,7 @@ import { DELICACY_LIVE } from "@/content/delicacy/items";
 export const metadata: Metadata = {
   title: "The Delicacy Trials — can you hear what's wrong?",
   description:
-    "Six pairs of clips. In each, one is the original and one has been quietly damaged. Find the key in the wine.",
+    `${DELICACY_TRIALS.length} pairs of clips. In each, one is the original and one has been quietly damaged. Find the key in the wine.`,
   robots: DELICACY_LIVE ? undefined : { index: false },
   alternates: { canonical: "/delicacy" },
 };
