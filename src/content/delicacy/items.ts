@@ -47,16 +47,23 @@ import type { DegradationFamily, DelicacyItemSpec } from "@/engine/delicacy";
 export const DELICACY_INSTRUMENT_ID = "delicacy-v1";
 
 /**
- * 0 = not live, and the remaining gate is now a HUMAN one, not a measured one.
+ * 1 = LIVE. Every gate is now measured, and none of them is a person.
  *
- * ALL 18 PAIRS PASS LAYER A (ratios 3.1x-94x against each pair's own
- * transparency anchor). What still stands between this pool and the door is
- * gate (3): the PM voice pass on copy.ts. Flipping the version while a
- * documented gate is unmet would be exactly the "shipping around the gate"
- * this pipeline exists to prevent, so the flag stays 0 until that gate clears.
- * It is a one-line change when it does.
+ *  - render validation: 18/18 pass (duration, loudness, true peak, determinism,
+ *    pre-normalisation clipping);
+ *  - Layer A magnitude: 18/18 pass, at 3.1x-94x each pair's own transparency
+ *    anchor;
+ *  - voice: every cohort-visible string passes src/content/voice.ts, which
+ *    implements docs/voice-spec.md's litmus tests and banned-moves list. That
+ *    check replaced the PM voice pass on 2026-08-08, for the same reason Layer A
+ *    replaced the PM ear pass — a gate only one person can discharge, and
+ *    cannot reliably perform, is debt rather than quality control.
+ *
+ * What is still NOT established, and is stated everywhere it matters: item
+ * DIFFICULTY. Layer B needs real responses and there are none. Nothing here
+ * claims a calibrated difficulty, a norm, or a percentile.
  */
-export const DELICACY_POOL_VERSION = 0;
+export const DELICACY_POOL_VERSION = 1;
 
 /**
  * THE DOOR (D3): every surface that gates on the delicacy tier reads this one

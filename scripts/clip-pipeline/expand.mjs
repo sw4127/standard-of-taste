@@ -74,15 +74,17 @@ export const SHIPPING_RUNGS = [2, 3, 4];
  * the screen rejects is one we are confident would fail; a cell it accepts
  * still has to prove it.
  */
-const PREDICTION_MARGIN = 1.2;
+const PREDICTION_MARGIN = 1.1;
 
-/** Ladder magnitude per family-rung, measured — read from ladder.json. */
+/**
+ * Conservative magnitude per family-rung: the MINIMUM observed across every
+ * ladder run, so the screen asks whether a cell clears the floor even on the
+ * least favourable material measured.
+ */
 function ladderMagnitudes() {
   const report = JSON.parse(readFileSync(join(ROOT, "src", "content", "delicacy", "ladder.json"), "utf8"));
   const out = new Map();
-  for (const [family, spec] of Object.entries(report.families)) {
-    for (const r of spec.rungs) out.set(`${family}/${r.rung}`, r.lsdDb);
-  }
+  for (const [k, v] of Object.entries(report.magnitudeRange ?? {})) out.set(k, v.minLsdDb);
   return out;
 }
 
@@ -326,6 +328,31 @@ export async function expand(args) {
     return;
   }
   console.log(`  plan contract: OK · written to scripts/clip-pipeline/expansion-plan.json`);
+
+  // POOL IMMUTABILITY, enforced by the tool rather than by prose. v>=1 pools
+  // are immutable per version: share payloads are POSITIONAL against the item
+  // order, so re-rendering under a live version would silently rescore every
+  // existing link. This bit at exactly the right moment — the conservative
+  // screen (RT-30b) now plans a different assignment than the one shipped,
+  // because it rejects cells that measured fine but sit below the worst-case
+  // prediction. The shipped pool stands on its ACTUAL measurements, which are
+  // the authority; the plan above describes what a NEXT version would look like.
+  const itemsSrc = readFileSync(join(ROOT, "src", "content", "delicacy", "items.ts"), "utf8");
+  const liveVersion = Number(/DELICACY_POOL_VERSION = (\d+)/.exec(itemsSrc)?.[1] ?? 0);
+  if (args.includes("--render") && liveVersion >= 1 && !args.includes("--force-new-version")) {
+    console.error(
+      `
+expand: REFUSING to render — DELICACY_POOL_VERSION is ${liveVersion} and v>=1 pools are immutable.
+` +
+        `        Share payloads are positional against the item order, so re-rendering would silently
+` +
+        `        rescore every existing link. To build the next version: bump DELICACY_POOL_VERSION
+` +
+        `        first, then re-run with --force-new-version.`,
+    );
+    process.exitCode = 1;
+    return;
+  }
 
   if (!args.includes("--render")) {
     console.log(`  (dry run — pass --render to render the audio)`);

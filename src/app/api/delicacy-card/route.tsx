@@ -62,7 +62,7 @@ export async function GET(request: Request) {
     });
   }
   const result = computeDelicacyResult(DELICACY_INSTRUMENT_ID, DELICACY_TRIALS, responses);
-  const verdict = delicacyVerdict(result.nCorrect);
+  const verdict = delicacyVerdict(result.nCorrect, result.nTrials);
   const flawLine =
     result.flawAccuracy !== null
       ? `named the flaw ${result.flawCorrect} of ${result.flawEligible} times`
