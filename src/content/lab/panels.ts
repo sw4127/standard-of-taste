@@ -66,8 +66,8 @@ export const LAB_PANELS: LabPanel[] = [
       "Item difficulty and discrimination tables, characteristic curves, reliability, and the auto-flags that follow from them.",
     dataSource: "SIMULATED",
     metricIds: ["item_p_value", "item_discrimination", "alpha", "split_half"],
-    status: "pending",
-    plannedIn: "S9",
+    status: "live",
+    href: "/lab/instrument-health",
   },
   {
     id: "calibration-bias",
