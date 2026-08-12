@@ -3,7 +3,7 @@ import Link from "next/link";
 import FluidField from "@/components/FluidField";
 import Track from "@/components/Track";
 import { worldCup } from "@/content/world-cup";
-import { DELICACY_LIVE } from "@/content/delicacy/items";
+import { DELICACY_LIVE, DELICACY_TRIALS } from "@/content/delicacy/items";
 
 /**
  * The taste-gym landing (RT-3c, memo §9.7 RESOLVED 2026-07-11): /bias is the
@@ -27,6 +27,8 @@ export const metadata: Metadata = {
 };
 
 const GOLD = "hsl(42 80% 62%)";
+/** The delicacy instrument's own accent — each machine owns exactly one. */
+const ICE = "hsl(190 75% 62%)";
 const GOLD_GLOW = "hsl(42 80% 60% / 0.45)";
 const FLUID = ["hsl(42 55% 48%)", "hsl(28 50% 44%)", "hsl(52 45% 46%)", "hsl(20 40% 40%)"];
 
@@ -65,49 +67,49 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
           Your taste has a number.
         </h1>
         <p className="mt-5 text-base leading-relaxed text-muted">
-          Not a personality. Not a vibe. A measured number — how far a famous name can push your
-          ratings before your ears object. Hume called it prejudice in 1757.{" "}
-          <span className="text-foreground">We measure yours in five minutes.</span>
+          Not a personality. Not a vibe. Two machines, each measuring one thing Hume said a real
+          judge needs — whether a famous name can move your ratings, and whether your ears can
+          catch damage when nobody tells you where it is.{" "}
+          <span className="text-foreground">You can be wrong, and that is the point.</span>
         </p>
 
-        <Link
-          href="/bias"
-          className="mt-8 inline-block rounded-full px-8 py-4 text-lg font-bold text-black transition hover:opacity-95 active:scale-[0.98]"
-          style={{ background: GOLD, boxShadow: `0 10px 30px ${GOLD_GLOW}` }}
-        >
-          Take the Prestige Test
-        </Link>
-        <p className="mt-4 text-xs text-muted">Free · ~5 minutes · no sign-up · headphones help</p>
-
-        {/* The gym floor — every machine visible, locked ones included (D3). */}
-        <div className="mt-10 flex flex-col gap-3">
-          <div className="rounded-2xl border p-4" style={{ borderColor: "hsl(42 60% 55% / 0.35)", background: "rgba(255,255,255,0.03)" }}>
-            <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: GOLD }}>
-              MACHINE 01 · OPEN
-            </p>
-            <p className="mt-1 font-display text-lg font-semibold">The Prestige Test</p>
-            <p className="mt-0.5 text-sm text-muted">Freedom from prejudice — can a label move your score?</p>
-          </div>
+        {/* THE GYM FLOOR — two machines, genuinely parallel (PM user-test
+            2026-08-08). This used to be a big gold "Take the Prestige Test"
+            button followed by a "floor" where machine 01 was a NON-CLICKABLE
+            div and machine 02 was a link. They looked like siblings and
+            behaved differently: one was a label, the other a door, and the
+            gold CTA above had already pre-picked the winner. Both are now the
+            same component, the same size, the same weight — each carrying only
+            its own instrument's accent, and each its own door. */}
+        <div className="mt-9 grid gap-3 sm:grid-cols-2">
+          <MachineCard
+            href="/bias"
+            n="01"
+            accent={GOLD}
+            title="The Prestige Test"
+            criterion="Freedom from prejudice"
+            blurb="Rate ten clips blind, then rate them again with the famous names attached. Your number is the gap."
+            meta="~5 min · 10 clips"
+          />
           {DELICACY_LIVE ? (
-            <Link
+            <MachineCard
               href="/delicacy"
-              className="rounded-2xl border p-4 transition hover:bg-white/[0.05]"
-              style={{ borderColor: "hsl(190 60% 55% / 0.35)", background: "rgba(255,255,255,0.03)" }}
-            >
-              <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: "hsl(190 75% 62%)" }}>
-                MACHINE 02 · OPEN — CALIBRATION PHASE
-              </p>
-              <p className="mt-1 font-display text-lg font-semibold">Delicacy Trials</p>
-              <p className="mt-0.5 text-sm text-muted">One of each pair is quietly damaged. Can your ears actually tell?</p>
-            </Link>
+              n="02"
+              accent={ICE}
+              title="The Delicacy Trials"
+              criterion="Delicacy of taste"
+              blurb="One clip of each pair has been quietly damaged. Find which — and name what is wrong with it."
+              meta={`~10 min · ${DELICACY_TRIALS.length} pairs`}
+            />
           ) : (
-            <div className="rounded-2xl border border-dashed border-white/20 p-4">
+            <div className="rounded-2xl border border-dashed border-white/20 p-5">
               <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">MACHINE 02 · LOCKED</p>
-              <p className="mt-1 font-display text-lg font-semibold">Delicacy Trials</p>
-              <p className="mt-0.5 text-sm text-muted">One clip hides a wrong note. Can your ears actually tell?</p>
+              <p className="mt-1.5 font-display text-xl font-semibold text-neutral-400">The Delicacy Trials</p>
+              <p className="mt-1 text-sm text-muted">Opens when its item pool clears validation.</p>
             </div>
           )}
         </div>
+        <p className="mt-4 text-xs text-muted">Free · no sign-up · headphones help · start with either</p>
 
         {/* Secondary doors — quiet rows, no bare underline/arrow links
             (PM 2026-07-17): the lead-in word carries the accent, hover lifts
@@ -135,5 +137,49 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
         </p>
       </div>
     </main>
+  );
+}
+
+/**
+ * One machine on the gym floor. Both instruments render through this, which is
+ * the whole point: making them the same component is what stops one of them
+ * quietly becoming the default.
+ */
+function MachineCard({
+  href,
+  n,
+  accent,
+  title,
+  criterion,
+  blurb,
+  meta,
+}: {
+  href: string;
+  n: string;
+  accent: string;
+  title: string;
+  criterion: string;
+  blurb: string;
+  meta: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group flex flex-col rounded-2xl border p-5 transition hover:bg-white/[0.06] active:scale-[0.99]"
+      style={{ borderColor: `${accent.slice(0, -1)} / 0.35)`, background: "rgba(255,255,255,0.03)" }}
+    >
+      <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: accent }}>
+        MACHINE {n} · OPEN
+      </p>
+      <p className="mt-1.5 font-display text-xl font-semibold">{title}</p>
+      <p className="mt-0.5 text-xs font-semibold tracking-wide text-muted">{criterion}</p>
+      <p className="mt-2 flex-1 text-sm leading-relaxed text-neutral-300">{blurb}</p>
+      <p className="mt-4 flex items-center justify-between text-xs">
+        <span className="text-muted">{meta}</span>
+        <span className="font-bold transition-transform group-hover:translate-x-0.5" style={{ color: accent }}>
+          Start &rarr;
+        </span>
+      </p>
+    </Link>
   );
 }

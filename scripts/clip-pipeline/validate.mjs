@@ -46,7 +46,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { decodeMono, normRender } from "./degrade.mjs";
-import { clippingStats, logSpectralDistance, longestSilenceSec, temporalDrift, DEFAULT_SPECTRAL_OPTS } from "./spectral.mjs";
+import { clippingStats, logSpectralDistance, longestSilenceSec, quietFraction, temporalDrift, DEFAULT_SPECTRAL_OPTS } from "./spectral.mjs";
 
 const require = createRequire(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -129,6 +129,20 @@ export const MAX_CLIPPED_FRACTION = 0.0005;
 export const MAX_FLAT_TOP_FRACTION = 0.001;
 /** Dead air makes a trial unanswerable. One-window margin per spectral.mjs. */
 export const MAX_SILENCE_SEC = 1.5;
+/**
+ * Maximum share of the clip that may be near-silent IN TOTAL.
+ *
+ * Distinct from MAX_SILENCE_SEC, which caps the longest CONTIGUOUS run. A clip
+ * can be a third silence in many short gaps and sail through that check — d2
+ * did exactly this at 35% quiet with a longest run of 0.00s, and a listener
+ * reported it as barely containing music. A trial needs enough sounding
+ * material to judge, and a timing trial needs it most: a tempo warble is
+ * inaudible during a rest.
+ *
+ * Threshold from the shipped pool: every item except d2 sits at or below 11%.
+ * 20% separates them with margin rather than being fitted to d2.
+ */
+export const MAX_QUIET_FRACTION = 0.2;
 
 /** Cut a source window to wav exactly as `degrade` does, so paths are comparable. */
 function cutSource(cached, startSec, clipSec, outWav) {
@@ -215,6 +229,7 @@ export function measurePair(pair) {
     clippedFraction: Math.max(clipA.clippedFraction, clipB.clippedFraction),
     flatTopFraction: Math.max(clipA.flatTopFraction, clipB.flatTopFraction),
     longestSilenceSec: Math.max(longestSilenceSec(a, SR), longestSilenceSec(b, SR)),
+    quietFraction: Math.max(quietFraction(a, SR), quietFraction(b, SR)),
   };
 }
 
@@ -241,6 +256,8 @@ export function gradePair(m, anchors) {
   if (m.flatTopFraction > MAX_FLAT_TOP_FRACTION)
     reasons.push(`flat-topped crests ${(m.flatTopFraction * 100).toFixed(2)}% (clipping that survived loudness normalisation)`);
   if (m.longestSilenceSec > MAX_SILENCE_SEC) reasons.push(`dead air ${m.longestSilenceSec.toFixed(2)}s`);
+  if (m.quietFraction > MAX_QUIET_FRACTION)
+    reasons.push(`${(m.quietFraction * 100).toFixed(0)}% of the clip is near-silent (max ${MAX_QUIET_FRACTION * 100}%) — too little sounding material to judge`);
   return {
     ...m,
     anchorRatio: ratio,
@@ -308,7 +325,7 @@ export async function validate(args) {
   manifest.layerA = {
     analysisRateHz: SR,
     anchors,
-    thresholds: { MIN_ANCHOR_RATIO, MIN_TEMPORAL_DRIFT_MS, MIN_CONFIDENT_BLOCK_FRACTION, MAX_CLIPPED_FRACTION, MAX_FLAT_TOP_FRACTION, MAX_SILENCE_SEC },
+    thresholds: { MIN_ANCHOR_RATIO, MIN_TEMPORAL_DRIFT_MS, MIN_CONFIDENT_BLOCK_FRACTION, MAX_CLIPPED_FRACTION, MAX_FLAT_TOP_FRACTION, MAX_SILENCE_SEC, MAX_QUIET_FRACTION },
     measuredAt: new Date().toISOString().slice(0, 10),
     note:
       "Magnitudes, NOT audibility. anchorRatio compares each pair against a 320 kbps round-trip of its OWN source window — " +
@@ -330,6 +347,7 @@ export async function validate(args) {
       clippedFraction: +r.clippedFraction.toFixed(6),
       flatTopFraction: +r.flatTopFraction.toFixed(6),
       longestSilenceSec: +r.longestSilenceSec.toFixed(2),
+      quietFraction: +r.quietFraction.toFixed(3),
       verdict: r.verdict,
       reasons: r.reasons,
       measuredAt: r.anchor.measuredAt,

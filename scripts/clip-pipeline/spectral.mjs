@@ -283,6 +283,39 @@ export function clippingStats(samples, threshold = 0.999, { flatRun = 4, relTol 
  * threshold built on it must carry a one-window margin rather than treating
  * the figure as exact.
  */
+/**
+ * TOTAL near-silent time, as a fraction of the clip — measured RELATIVE to the
+ * clip's own peak, not against an absolute floor.
+ *
+ * WHY THIS EXISTS SEPARATELY FROM longestSilenceSec (found by PM user-testing,
+ * 2026-08-08): "no dead air" was implemented as "no long silence", and those are
+ * not the same requirement. Trial d2 — a Beethoven adagio full of rests — is 35%
+ * near-silent spread across many short gaps, so its LONGEST run is 0.00s and the
+ * dead-air gate passed it. A listener reported it as barely containing music.
+ * For a TIMING trial that is disqualifying: you cannot hear a tempo warble
+ * during a rest.
+ *
+ * Relative to peak rather than absolute dBFS because every clip is loudness-
+ * normalised, so what matters is how much of THIS clip is quiet compared with
+ * itself.
+ */
+export function quietFraction(samples, sampleRate, relFloor = 0.06, windowMs = 50) {
+  const win = Math.max(1, Math.round((windowMs / 1000) * sampleRate));
+  const n = Math.floor(samples.length / win);
+  if (n === 0) return 0;
+  const rms = [];
+  let peak = 0;
+  for (let i = 0; i < n; i++) {
+    let sumSq = 0;
+    for (let k = 0; k < win; k++) sumSq += samples[i * win + k] ** 2;
+    const r = Math.sqrt(sumSq / win);
+    rms.push(r);
+    if (r > peak) peak = r;
+  }
+  if (peak === 0) return 1;
+  return rms.filter((r) => r < peak * relFloor).length / n;
+}
+
 export function longestSilenceSec(samples, sampleRate, floorDb = -60, windowMs = 50) {
   const win = Math.max(1, Math.round((windowMs / 1000) * sampleRate));
   const floor = Math.pow(10, floorDb / 10);
