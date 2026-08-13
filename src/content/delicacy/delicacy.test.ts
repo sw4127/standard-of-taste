@@ -7,8 +7,15 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { DELICACY_LIVE, DELICACY_POOL_VERSION, DELICACY_TRIALS, type DelicacyTrialClip } from "./items";
-import { checkDelicacyPool } from "./gates";
+import {
+  DELICACY_LIVE,
+  DELICACY_POOL_VERSION,
+  DELICACY_TRIALS,
+  MEASURED_TRIALS,
+  PRACTICE_TRIALS,
+  type DelicacyTrialClip,
+} from "./items";
+import { checkDelicacyPool, checkPracticeSplit } from "./gates";
 
 const manifest = JSON.parse(readFileSync(join(__dirname, "manifest.json"), "utf8"));
 const biasManifest = JSON.parse(readFileSync(join(__dirname, "..", "bias", "manifest.json"), "utf8"));
@@ -156,5 +163,105 @@ describe("delicacy gatekeeping — deliberately broken fixtures fail with named 
       p.earPass = { by: "PM", date: "2026-07-19", verdict: "PASS" };
     }
     expect(check(DELICACY_TRIALS, m, 1).join("\n")).toMatch(/requires a recorded Layer A measurement/);
+  });
+});
+
+describe("practice / measured split (RT-37b) — the real split passes, and its shape is pinned", () => {
+  const split = (
+    practice: DelicacyTrialClip[] = PRACTICE_TRIALS,
+    measured: DelicacyTrialClip[] = MEASURED_TRIALS,
+    pool: DelicacyTrialClip[] = DELICACY_TRIALS,
+  ) => checkPracticeSplit(pool, practice, measured);
+
+  it("passes every structural invariant as shipped", () => {
+    expect(split()).toEqual([]);
+  });
+
+  it("is a partition: 3 practice + 15 measured = the 18-trial pool, disjoint", () => {
+    expect(PRACTICE_TRIALS).toHaveLength(3);
+    expect(MEASURED_TRIALS).toHaveLength(15);
+    const p = PRACTICE_TRIALS.map((t) => t.id);
+    const m = MEASURED_TRIALS.map((t) => t.id);
+    expect(p.filter((id) => m.includes(id))).toEqual([]);
+    expect([...p, ...m].sort()).toEqual(DELICACY_TRIALS.map((t) => t.id).sort());
+  });
+
+  it("teaches one flaw family each, all on the strongest shipping rung", () => {
+    expect(PRACTICE_TRIALS.map((t) => t.id)).toEqual(["d7", "d8", "d9"]);
+    expect(PRACTICE_TRIALS.map((t) => t.family)).toEqual(["pitch-drift", "timing-smear", "lossy-artifact"]);
+    expect(PRACTICE_TRIALS.map((t) => t.magnitude)).toEqual([4, 4, 4]);
+  });
+
+  it("PINS THE DECLARED ASYMMETRY: measured is family-balanced 5/5/5 but rung-skewed 6/6/3", () => {
+    // The scored block is deliberately HARDER than the pool's factorial, because
+    // practice takes three items off the top rung. Families stay balanced, which
+    // is what any per-family reporting depends on. If either number moves, this
+    // test fails and the gates.ts docblock has to be rewritten with it — that is
+    // the point. No surface may call the scored block "the crossed factorial".
+    const count = <K extends string | number>(keys: K[], of: (t: DelicacyTrialClip) => K) =>
+      keys.map((k) => MEASURED_TRIALS.filter((t) => of(t) === k).length);
+    expect(count(["pitch-drift", "timing-smear", "lossy-artifact"] as const, (t) => t.family)).toEqual([5, 5, 5]);
+    expect(count([2, 3, 4], (t) => t.magnitude)).toEqual([6, 6, 3]);
+  });
+});
+
+describe("practice / measured split — deliberately broken splits fail with named errors", () => {
+  const split = (practice: DelicacyTrialClip[], measured: DelicacyTrialClip[], pool = DELICACY_TRIALS) =>
+    checkPracticeSplit(pool, practice, measured).join("\n");
+  const byId = (id: string) => DELICACY_TRIALS.find((t) => t.id === id)!;
+
+  it("CONTAMINATION: an item in both sets is fatal", () => {
+    expect(split(PRACTICE_TRIALS, [...MEASURED_TRIALS, byId("d7")])).toMatch(
+      /practice and measured overlap on d7 — an item answered with the answer shown must never be scored/,
+    );
+  });
+
+  it("ORPHAN: a pool trial presented nowhere is fatal", () => {
+    expect(split(PRACTICE_TRIALS, MEASURED_TRIALS.filter((t) => t.id !== "d12"))).toMatch(
+      /pool trials presented nowhere: d12/,
+    );
+  });
+
+  it("a trial that is not in the pool is fatal", () => {
+    const alien = { ...byId("d1"), id: "d99" };
+    expect(split(PRACTICE_TRIALS, [...MEASURED_TRIALS, alien])).toMatch(
+      /split contains trials that are not in the pool: d99/,
+    );
+  });
+
+  it("practice missing a flaw family is fatal", () => {
+    // Two pitch-drift practice items, no lossy-artifact: a newcomer never hears
+    // the compression signature before being scored on it.
+    const skewed = [byId("d7"), byId("d8"), { ...byId("d9"), family: "pitch-drift" as const }];
+    const errs = split(skewed, MEASURED_TRIALS);
+    expect(errs).toMatch(/practice has 2 "pitch-drift" trials \(contract: exactly 1\)/);
+    expect(errs).toMatch(/practice has 0 "lossy-artifact" trials/);
+  });
+
+  it("practice drawn off a middle rung is fatal", () => {
+    const weak = [{ ...byId("d7"), magnitude: 2 as const }, byId("d8"), byId("d9")];
+    expect(split(weak, MEASURED_TRIALS)).toMatch(
+      /practice trial d7 is rung 2, not the pool's strongest rung 4/,
+    );
+  });
+
+  it("a family-unbalanced measured set is fatal", () => {
+    expect(split(PRACTICE_TRIALS, MEASURED_TRIALS.filter((t) => t.id !== "d1"))).toMatch(
+      /measured set is family-unbalanced \(pitch-drift=4, timing-smear=5, lossy-artifact=5\)/,
+    );
+  });
+
+  it("depleting a rung OTHER than the strongest is fatal", () => {
+    // A 3-item practice block taken off rung 2 keeps the families balanced and
+    // the partition intact — every other gate passes. Only this one catches it.
+    const rung2 = DELICACY_TRIALS.filter((t) => t.magnitude === 2).slice(0, 3);
+    const rest = DELICACY_TRIALS.filter((t) => !rung2.some((p) => p.id === t.id));
+    expect(split(rung2, rest)).toMatch(/rung 2 lost 3 trial\(s\) to practice — only the strongest rung \(4\) may be depleted/);
+  });
+
+  it("losing an entire intensity level from the scored block is fatal", () => {
+    const noRung4 = MEASURED_TRIALS.filter((t) => t.magnitude !== 4);
+    const practicePlus = [...PRACTICE_TRIALS, ...MEASURED_TRIALS.filter((t) => t.magnitude === 4)];
+    expect(split(practicePlus, noRung4)).toMatch(/no measured trial at rung 4/);
   });
 });

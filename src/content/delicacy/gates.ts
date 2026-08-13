@@ -52,6 +52,7 @@
  * labelled uncalibrated).
  */
 
+import { DEGRADATION_FAMILIES } from "@/engine/delicacy";
 import type { DelicacyTrialClip } from "./items";
 
 interface ManifestPair {
@@ -168,6 +169,104 @@ export function checkDelicacyPool(
         err(`${t.id}: Layer A verdict is ${p.layerA.verdict}${p.layerA.reasons?.length ? ` (${p.layerA.reasons.join("; ")})` : ""}`);
       }
     }
+  }
+
+  return errors;
+}
+
+/**
+ * PRACTICE / MEASURED SPLIT gate (RT-37b) — the split had no contract at all,
+ * which is the most dangerous kind of untested code here: every failure mode is
+ * silent and every one of them flatters us.
+ *
+ * The three that would never have raised an error at runtime:
+ *  - an item in BOTH sets → it is answered with the answer revealed, then
+ *    scored. The score goes up. Nothing looks wrong.
+ *  - an item in NEITHER set → a rendered, validated, licensed pair is presented
+ *    nowhere, and the pool gate still passes because the pool is intact.
+ *  - practice drawn off a middle rung → the teaching examples stop being the
+ *    obvious ones and the scored block's difficulty range moves.
+ *
+ * THE DECLARED ASYMMETRY. Practice takes three items off the STRONGEST rung, so
+ * the scored block is deliberately *harder* than the pool's crossed factorial:
+ * 18 trials at rung 2/3/4 = 6/6/6 becomes 15 at 6/6/3. Families stay balanced
+ * (5/5/5), which is what any per-family reporting depends on; rungs do not, and
+ * that is a choice rather than an accident. It is stated here, pinned by test,
+ * and it is why no surface may describe the scored block as the factorial.
+ *
+ * Structural invariants live in this function so they survive a pool version
+ * bump or a ladder expansion; today's realised counts are pinned in
+ * delicacy.test.ts, so changing them is loud rather than silent.
+ */
+export function checkPracticeSplit(
+  pool: DelicacyTrialClip[],
+  practice: DelicacyTrialClip[],
+  measured: DelicacyTrialClip[],
+): string[] {
+  const errors: string[] = [];
+  const err = (msg: string) => errors.push(msg);
+  const ids = (ts: DelicacyTrialClip[]) => ts.map((t) => t.id);
+
+  // 1. Disjoint. The contamination check: scoring a revealed item is worthless
+  //    in exactly the direction that flatters us (items.ts rule 1).
+  const measuredIds = new Set(ids(measured));
+  const overlap = ids(practice).filter((id) => measuredIds.has(id));
+  if (overlap.length)
+    err(
+      `practice and measured overlap on ${overlap.join(", ")} — an item answered with the answer shown must never be scored`,
+    );
+
+  // 2. Partition. Nothing presented twice, nothing rendered and then orphaned.
+  const poolIds = ids(pool);
+  const splitIds = [...ids(practice), ...ids(measured)];
+  const dupes = [...new Set(splitIds.filter((id, i) => splitIds.indexOf(id) !== i))];
+  if (dupes.length) err(`split presents ${dupes.join(", ")} more than once`);
+  const orphans = poolIds.filter((id) => !splitIds.includes(id));
+  if (orphans.length) err(`pool trials presented nowhere: ${orphans.join(", ")}`);
+  const alien = [...new Set(splitIds.filter((id) => !poolIds.includes(id)))];
+  if (alien.length) err(`split contains trials that are not in the pool: ${alien.join(", ")}`);
+
+  // 3. Practice covers every flaw family exactly once — the whole point of the
+  //    block is hearing each signature before being asked to find a subtle one.
+  if (practice.length !== DEGRADATION_FAMILIES.length)
+    err(`practice must be exactly ${DEGRADATION_FAMILIES.length} trials (one per family), got ${practice.length}`);
+  for (const f of DEGRADATION_FAMILIES) {
+    const n = practice.filter((t) => t.family === f).length;
+    if (n !== 1) err(`practice has ${n} "${f}" trials (contract: exactly 1)`);
+  }
+
+  // 4. Practice teaches on the pool's strongest rung — COMPUTED, so a ladder
+  //    change moves the contract with it instead of stranding a hardcoded 4.
+  const rungs = [...new Set(pool.map((t) => t.magnitude))].sort((a, b) => a - b);
+  const strongest = rungs[rungs.length - 1];
+  for (const t of practice)
+    if (t.magnitude !== strongest)
+      err(
+        `practice trial ${t.id} is rung ${t.magnitude}, not the pool's strongest rung ${strongest} — teaching examples must be the most obvious ones`,
+      );
+
+  // 5. Measured stays family-balanced. Per-family scores at unequal n are not
+  //    comparable, and per-family reporting is the direction the product is going.
+  const perFamily = DEGRADATION_FAMILIES.map((f) => ({
+    f,
+    n: measured.filter((t) => t.family === f).length,
+  }));
+  if (new Set(perFamily.map((x) => x.n)).size !== 1)
+    err(
+      `measured set is family-unbalanced (${perFamily.map((x) => `${x.f}=${x.n}`).join(", ")}) — per-family scores are not comparable at unequal n`,
+    );
+
+  // 6/7. Every rung survives into the scored block, and ONLY the strongest rung
+  //      may be depleted by practice — otherwise the scored difficulty range
+  //      shifts without anyone deciding to shift it.
+  for (const r of rungs) {
+    const inPool = pool.filter((t) => t.magnitude === r).length;
+    const inMeasured = measured.filter((t) => t.magnitude === r).length;
+    if (inMeasured === 0) err(`no measured trial at rung ${r} — the scored block lost an entire intensity level`);
+    else if (r !== strongest && inMeasured !== inPool)
+      err(
+        `rung ${r} lost ${inPool - inMeasured} trial(s) to practice — only the strongest rung (${strongest}) may be depleted`,
+      );
   }
 
   return errors;

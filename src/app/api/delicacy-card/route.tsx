@@ -13,7 +13,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { computeDelicacyResult, decodeDelicacyResponses } from "@/engine/delicacy";
-import { DELICACY_INSTRUMENT_ID, DELICACY_LIVE, DELICACY_POOL_VERSION, DELICACY_TRIALS } from "@/content/delicacy/items";
+import { DELICACY_INSTRUMENT_ID, DELICACY_LIVE, DELICACY_POOL_VERSION, MEASURED_TRIALS } from "@/content/delicacy/items";
 import { delicacyVerdict } from "@/content/delicacy/copy";
 import { baseUrl } from "@/lib/site";
 
@@ -54,14 +54,14 @@ export async function GET(request: Request) {
       headers: { "content-type": "application/json" },
     });
   }
-  const responses = decodeDelicacyResponses(DELICACY_TRIALS, searchParams.get("p") ?? undefined);
+  const responses = decodeDelicacyResponses(MEASURED_TRIALS, searchParams.get("p") ?? undefined);
   if (!responses) {
     return new Response(JSON.stringify({ error: "invalid picks" }), {
       status: 400,
       headers: { "content-type": "application/json" },
     });
   }
-  const result = computeDelicacyResult(DELICACY_INSTRUMENT_ID, DELICACY_TRIALS, responses);
+  const result = computeDelicacyResult(DELICACY_INSTRUMENT_ID, MEASURED_TRIALS, responses);
   const verdict = delicacyVerdict(result.nCorrect, result.nTrials);
   const flawLine =
     result.flawAccuracy !== null

@@ -16,13 +16,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
-  DELICACY_CHANCE,
   computeDelicacyResult,
   decodeDelicacyResponses,
   type DelicacyResult,
 } from "@/engine/delicacy";
-import { DELICACY_INSTRUMENT_ID, DELICACY_LIVE, DELICACY_POOL_VERSION, DELICACY_TRIALS } from "@/content/delicacy/items";
-import { delicacyVerdict, shareText } from "@/content/delicacy/copy";
+import { DELICACY_INSTRUMENT_ID, DELICACY_LIVE, DELICACY_POOL_VERSION, MEASURED_TRIALS } from "@/content/delicacy/items";
+import { chanceCall, delicacyVerdict, shareText } from "@/content/delicacy/copy";
 import { baseUrl } from "@/lib/site";
 import FluidField from "@/components/FluidField";
 import Track from "@/components/Track";
@@ -47,9 +46,9 @@ function resultFrom(sp: Record<string, string | string[] | undefined>): { result
   if (!SHARE_OPEN) return null;
   if (sp.pv !== String(DELICACY_POOL_VERSION)) return null;
   const p = typeof sp.p === "string" ? sp.p : undefined;
-  const responses = decodeDelicacyResponses(DELICACY_TRIALS, p);
+  const responses = decodeDelicacyResponses(MEASURED_TRIALS, p);
   if (!responses || !p) return null;
-  return { result: computeDelicacyResult(DELICACY_INSTRUMENT_ID, DELICACY_TRIALS, responses), p };
+  return { result: computeDelicacyResult(DELICACY_INSTRUMENT_ID, MEASURED_TRIALS, responses), p };
 }
 
 function cardUrl(format: "story" | "square" | "og", p: string): string {
@@ -60,7 +59,9 @@ export async function generateMetadata({ searchParams }: { searchParams: SearchP
   const data = resultFrom(await searchParams);
   if (!data) return { title: "The Delicacy Trials" };
   const title = `${data.result.nCorrect}/${data.result.nTrials} originals caught — The Delicacy Trials`;
-  const description = `${DELICACY_TRIALS.length} pairs of clips; one of each is quietly damaged. A coin flip calls ${DELICACY_TRIALS.length / 2}. Find the key in the wine.`;
+  // The score is out of the SCORED set, so the description counts that set —
+  // quoting the 18-pair pool next to an out-of-15 score would overstate it (N3).
+  const description = `${MEASURED_TRIALS.length} scored pairs of clips; one of each is quietly damaged. A coin flip gets half. Find the key in the wine.`;
   const og = `${baseUrl()}${cardUrl("og", data.p)}`;
   return {
     title,
@@ -93,7 +94,7 @@ export default async function DelicacyResultPage({ searchParams }: { searchParam
           </span>
         </p>
         <p className="mt-3 text-sm text-muted">
-          originals identified — a coin flip calls {Math.round(result.nTrials * DELICACY_CHANCE)}
+          originals identified — a coin flip calls {chanceCall(result.nTrials)}
         </p>
         <h1 className="mt-6 font-display text-3xl font-semibold">{v.title}</h1>
         <p className="mt-2 max-w-sm text-base leading-relaxed text-muted">{v.sub}</p>
