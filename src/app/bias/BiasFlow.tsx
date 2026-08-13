@@ -32,6 +32,16 @@ import DownloadButton from "@/app/result/DownloadButton";
 import ClipPlayer, { isPlaceholderSrc } from "./ClipPlayer";
 
 /* One accent in play (design bar): prestige gold. */
+/**
+ * BRAND CHROME IS NEUTRAL, NOT GOLD (PM user-testing, 2026-08-08).
+ *
+ * "THE TASTE GYM" used to render in the same gold as the Prestige Test's own
+ * accent, so the brand read as that instrument and the Delicacy Trials looked
+ * like a guest in someone else's house. Gold now belongs to Prestige, ice to
+ * Delicacy, and the gym itself is neutral — which is the only arrangement in
+ * which two instruments can actually be peers.
+ */
+const BRAND = "rgba(244,245,248,0.72)";
 const GOLD = "hsl(42 80% 62%)";
 const GOLD_DIM = "hsl(42 45% 50%)";
 const GOLD_TINT = "hsl(42 70% 55% / 0.14)";
@@ -118,7 +128,7 @@ export default function BiasFlow() {
 
   const shell = "relative mx-auto flex min-h-dvh w-full max-w-lg flex-col overflow-hidden px-6 py-10";
   const kicker = (
-    <p className="text-xs font-bold tracking-[0.4em]" style={{ color: GOLD }}>
+    <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
       THE TASTE GYM
     </p>
   );

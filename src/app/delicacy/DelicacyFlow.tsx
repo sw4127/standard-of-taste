@@ -56,6 +56,16 @@ import {
 
 /* One accent in play (design bar): delicacy ice — the cold, fine-grained room
  * of the gym, deliberately opposite the prestige gold. Same formula, new hue. */
+/**
+ * BRAND CHROME IS NEUTRAL, NOT GOLD (PM user-testing, 2026-08-08).
+ *
+ * "THE TASTE GYM" used to render in the same gold as the Prestige Test's own
+ * accent, so the brand read as that instrument and the Delicacy Trials looked
+ * like a guest in someone else's house. Gold now belongs to Prestige, ice to
+ * Delicacy, and the gym itself is neutral — which is the only arrangement in
+ * which two instruments can actually be peers.
+ */
+const BRAND = "rgba(244,245,248,0.72)";
 const ICE = "hsl(190 75% 62%)";
 const ICE_TINT = "hsl(190 70% 55% / 0.14)";
 const ICE_GLOW = "hsl(190 80% 60% / 0.4)";
@@ -187,7 +197,7 @@ export default function DelicacyFlow() {
 
   const shell = "relative mx-auto flex min-h-dvh w-full max-w-lg flex-col overflow-hidden px-6 py-10";
   const kicker = (
-    <p className="text-xs font-bold tracking-[0.4em]" style={{ color: ICE }}>
+    <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
       THE TASTE GYM
     </p>
   );
