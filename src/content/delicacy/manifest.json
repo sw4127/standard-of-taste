@@ -78,9 +78,10 @@
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
+        "quietFraction": 0.003,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-09"
+        "measuredAt": "2026-08-13"
       }
     },
     {
@@ -157,9 +158,10 @@
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
+        "quietFraction": 0,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-09"
+        "measuredAt": "2026-08-13"
       }
     },
     {
@@ -247,9 +249,10 @@
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
+        "quietFraction": 0,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-09"
+        "measuredAt": "2026-08-13"
       }
     },
     {
@@ -325,9 +328,10 @@
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
+        "quietFraction": 0,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-09"
+        "measuredAt": "2026-08-13"
       }
     },
     {
@@ -404,9 +408,10 @@
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0.05,
+        "quietFraction": 0.025,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-09"
+        "measuredAt": "2026-08-13"
       }
     },
     {
@@ -494,9 +499,10 @@
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
+        "quietFraction": 0.02,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-09"
+        "measuredAt": "2026-08-13"
       }
     },
     {
@@ -572,9 +578,10 @@
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0.4,
+        "quietFraction": 0.075,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-09"
+        "measuredAt": "2026-08-13"
       }
     },
     {
@@ -651,9 +658,10 @@
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
+        "quietFraction": 0.11,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-09"
+        "measuredAt": "2026-08-13"
       }
     },
     {
@@ -741,9 +749,10 @@
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
+        "quietFraction": 0.033,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-09"
+        "measuredAt": "2026-08-13"
       }
     },
     {
@@ -819,16 +828,17 @@
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
+        "quietFraction": 0,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-09"
+        "measuredAt": "2026-08-13"
       }
     },
     {
       "id": "d2",
-      "sourceId": "pb4",
+      "sourceId": "pb3",
       "window": {
-        "startSec": 20,
+        "startSec": 70,
         "clipSec": 20
       },
       "family": "timing-smear",
@@ -858,8 +868,8 @@
         "bM4a": "d2-b.m4a"
       },
       "sha256": {
-        "a": "2b14b135e7a915d67fb348182577516d30c99797071b30d82ac53c438d6d79f9",
-        "b": "ea7c67bddbed05a664c49706076187d51e7017c5d826f079ad903b00206a6aa7"
+        "a": "bdf26ff4cc5358f5d0d146ec0a28536f0efb787d5f2a77c9ebe7d781adf5ddaa",
+        "b": "2be4e437a4cb3ff548be72f6cae9f2091b3481717a2a8f6eb364f5bc467db3bd"
       },
       "validation": {
         "duration_match__mp3_": {
@@ -871,19 +881,19 @@
           "pass": true
         },
         "loudness_match__mp3_": {
-          "detail": "a -15.0  b -15.0 LUFS  Δ 0.0 (≤0.5) [mp3]",
+          "detail": "a -15.6  b -15.6 LUFS  Δ 0.0 (≤0.5) [mp3]",
           "pass": true
         },
         "loudness_match__m4a_": {
-          "detail": "a -14.9  b -15.1 LUFS  Δ 0.1 (≤0.5) [m4a]",
+          "detail": "a -15.6  b -15.6 LUFS  Δ 0.1 (≤0.5) [m4a]",
           "pass": true
         },
         "true_peak__all_4_": {
-          "detail": "mp3 -1.4/-1.5  m4a -1.6/-1.8 dBTP (≤ −1.0)",
+          "detail": "mp3 -1.5/-1.4  m4a -1.5/-1.5 dBTP (≤ −1.0)",
           "pass": true
         },
         "distinct_files": {
-          "detail": "rel-RMS diff 1.303 (≥0.020 floor; NOT a perceptual claim)",
+          "detail": "rel-RMS diff 1.385 (≥0.020 floor; NOT a perceptual claim)",
           "pass": true
         },
         "deterministic_re-render": {
@@ -894,24 +904,25 @@
           "detail": "orig 0.0000%  degraded 0.0000% (≤0.0500%)",
           "pass": true
         },
-        "validatedAt": "2026-08-09"
+        "validatedAt": "2026-08-13"
       },
       "layerA": {
-        "lsdDb": 4.141,
-        "anchorTransparentLsdDb": 1.434,
-        "anchorRatio": 2.89,
-        "driftIqrMs": 16,
-        "driftRangeMs": 53,
-        "driftConfidentFraction": 0.98,
-        "driftCoherence": 5.2,
+        "lsdDb": 3.768,
+        "anchorTransparentLsdDb": 1.152,
+        "anchorRatio": 3.27,
+        "driftIqrMs": 25,
+        "driftRangeMs": 52,
+        "driftConfidentFraction": 0.99,
+        "driftCoherence": 12.06,
         "gatedOn": "temporal-drift",
-        "peakBand": 23,
+        "peakBand": 22,
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
+        "quietFraction": 0.045,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-09"
+        "measuredAt": "2026-08-13"
       }
     },
     {
@@ -987,9 +998,10 @@
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
+        "quietFraction": 0,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-09"
+        "measuredAt": "2026-08-13"
       }
     },
     {
@@ -1066,9 +1078,10 @@
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
+        "quietFraction": 0.007,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-09"
+        "measuredAt": "2026-08-13"
       }
     },
     {
@@ -1156,9 +1169,10 @@
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
+        "quietFraction": 0.077,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-09"
+        "measuredAt": "2026-08-13"
       }
     },
     {
@@ -1234,9 +1248,10 @@
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
+        "quietFraction": 0,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-09"
+        "measuredAt": "2026-08-13"
       }
     },
     {
@@ -1313,9 +1328,10 @@
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
+        "quietFraction": 0,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-09"
+        "measuredAt": "2026-08-13"
       }
     },
     {
@@ -1403,9 +1419,10 @@
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
+        "quietFraction": 0,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-09"
+        "measuredAt": "2026-08-13"
       }
     },
     {
@@ -1481,9 +1498,10 @@
         "clippedFraction": 0,
         "flatTopFraction": 0,
         "longestSilenceSec": 0,
+        "quietFraction": 0.02,
         "verdict": "PASS",
         "reasons": [],
-        "measuredAt": "2026-08-09"
+        "measuredAt": "2026-08-13"
       }
     }
   ],
@@ -1498,7 +1516,7 @@
         },
         "pipelineNoiseLsdDb": 0,
         "transparentLsdDb": 0.41267773845405387,
-        "measuredAt": "2026-08-09",
+        "measuredAt": "2026-08-13",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
@@ -1509,7 +1527,7 @@
         },
         "pipelineNoiseLsdDb": 0,
         "transparentLsdDb": 0.4965529181372258,
-        "measuredAt": "2026-08-09",
+        "measuredAt": "2026-08-13",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
@@ -1520,7 +1538,7 @@
         },
         "pipelineNoiseLsdDb": 0,
         "transparentLsdDb": 0.5478482560909268,
-        "measuredAt": "2026-08-09",
+        "measuredAt": "2026-08-13",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
@@ -1531,7 +1549,7 @@
         },
         "pipelineNoiseLsdDb": 0,
         "transparentLsdDb": 0.5861945282784379,
-        "measuredAt": "2026-08-09",
+        "measuredAt": "2026-08-13",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
@@ -1542,7 +1560,7 @@
         },
         "pipelineNoiseLsdDb": 0,
         "transparentLsdDb": 0.49777878021070715,
-        "measuredAt": "2026-08-09",
+        "measuredAt": "2026-08-13",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
@@ -1553,7 +1571,7 @@
         },
         "pipelineNoiseLsdDb": 0,
         "transparentLsdDb": 1.1825438133976984,
-        "measuredAt": "2026-08-09",
+        "measuredAt": "2026-08-13",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
@@ -1564,7 +1582,7 @@
         },
         "pipelineNoiseLsdDb": 0,
         "transparentLsdDb": 1.5339267615235532,
-        "measuredAt": "2026-08-09",
+        "measuredAt": "2026-08-13",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
@@ -1575,7 +1593,7 @@
         },
         "pipelineNoiseLsdDb": 0,
         "transparentLsdDb": 0.6426406329560879,
-        "measuredAt": "2026-08-09",
+        "measuredAt": "2026-08-13",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
@@ -1586,7 +1604,7 @@
         },
         "pipelineNoiseLsdDb": 0,
         "transparentLsdDb": 0.45671659513406915,
-        "measuredAt": "2026-08-09",
+        "measuredAt": "2026-08-13",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
@@ -1597,18 +1615,18 @@
         },
         "pipelineNoiseLsdDb": 0,
         "transparentLsdDb": 0.2722317576572498,
-        "measuredAt": "2026-08-09",
+        "measuredAt": "2026-08-13",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
-        "sourceId": "pb4",
+        "sourceId": "pb3",
         "window": {
-          "startSec": 20,
+          "startSec": 70,
           "clipSec": 20
         },
         "pipelineNoiseLsdDb": 0,
-        "transparentLsdDb": 1.4343985725620076,
-        "measuredAt": "2026-08-09",
+        "transparentLsdDb": 1.1519307177675056,
+        "measuredAt": "2026-08-13",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
@@ -1619,7 +1637,7 @@
         },
         "pipelineNoiseLsdDb": 0,
         "transparentLsdDb": 0.2739654313950121,
-        "measuredAt": "2026-08-09",
+        "measuredAt": "2026-08-13",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
@@ -1630,7 +1648,7 @@
         },
         "pipelineNoiseLsdDb": 0,
         "transparentLsdDb": 0.5397567950724064,
-        "measuredAt": "2026-08-09",
+        "measuredAt": "2026-08-13",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
@@ -1641,7 +1659,7 @@
         },
         "pipelineNoiseLsdDb": 0,
         "transparentLsdDb": 0.4466561817341373,
-        "measuredAt": "2026-08-09",
+        "measuredAt": "2026-08-13",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
@@ -1652,7 +1670,7 @@
         },
         "pipelineNoiseLsdDb": 0,
         "transparentLsdDb": 0.5938458073375024,
-        "measuredAt": "2026-08-09",
+        "measuredAt": "2026-08-13",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
@@ -1663,7 +1681,7 @@
         },
         "pipelineNoiseLsdDb": 0,
         "transparentLsdDb": 0.5584869302922288,
-        "measuredAt": "2026-08-09",
+        "measuredAt": "2026-08-13",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
@@ -1674,7 +1692,7 @@
         },
         "pipelineNoiseLsdDb": 0,
         "transparentLsdDb": 0.8609572348264539,
-        "measuredAt": "2026-08-09",
+        "measuredAt": "2026-08-13",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       },
       {
@@ -1685,7 +1703,7 @@
         },
         "pipelineNoiseLsdDb": 0,
         "transparentLsdDb": 0.4825543086007529,
-        "measuredAt": "2026-08-09",
+        "measuredAt": "2026-08-13",
         "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
       }
     ],
@@ -1695,9 +1713,10 @@
       "MIN_CONFIDENT_BLOCK_FRACTION": 0.25,
       "MAX_CLIPPED_FRACTION": 0.0005,
       "MAX_FLAT_TOP_FRACTION": 0.001,
-      "MAX_SILENCE_SEC": 1.5
+      "MAX_SILENCE_SEC": 1.5,
+      "MAX_QUIET_FRACTION": 0.2
     },
-    "measuredAt": "2026-08-09",
+    "measuredAt": "2026-08-13",
     "note": "Magnitudes, NOT audibility. anchorRatio compares each pair against a 320 kbps round-trip of its OWN source window — a manipulation that is measurable and inaudible. LSD is material-dependent, so ratios are comparable across pairs but raw dB are not."
   }
 }

@@ -63,7 +63,43 @@ export const DELICACY_INSTRUMENT_ID = "delicacy-v1";
  * DIFFICULTY. Layer B needs real responses and there are none. Nothing here
  * claims a calibrated difficulty, a norm, or a percentile.
  */
-export const DELICACY_POOL_VERSION = 1;
+export const DELICACY_POOL_VERSION = 2;
+
+/**
+ * v2 (2026-08-13) — d2 re-sourced. ONE item changed; everything else is
+ * byte-identical to v1.
+ *
+ * WHY. The PM heard almost nothing on d2 during user testing, and Layer A later
+ * measured why: 35.2% of the clip was near-silent, against a 20% ceiling. (The
+ * original dead-air check missed it because it measured the LONGEST CONTIGUOUS
+ * run of silence; a clip that is quiet in many short gaps passes that test and
+ * still gives a listener almost nothing to compare. `quietFraction` was added
+ * after the PM's report and, on the next validate, flagged the exact clip they
+ * had flagged by ear — which is the pivot working as designed.)
+ *
+ * The source itself was the problem, not the window: Beethoven's "La
+ * Malinconia" adagio is structurally full of rests, so another window on the
+ * same recording is a coin flip on the same failure (PM ruling RT-51a).
+ *
+ * THE REPLACEMENT WAS CHOSEN BY RULE, NOT BY EAR — no one listened to anything:
+ *   1. exclude the flagged artist, and exclude d11's artist (this cell's two
+ *      replicates must sit on different artists);
+ *   2. minimise the candidate artist's existing timing-smear load, because the
+ *      crossed factorial exists so a family-by-rung effect is not confounded
+ *      with one piece of music;
+ *   3. tie-break on lowest overall pool load, then bias-manifest order;
+ *   4. take the first window offset in [20,45,70,95,120] that clears the
+ *      source's own bias excerpt by 20s, is unused, and fits the recording.
+ * Jason Shaw won on load and was eliminated by ARITHMETIC — pb8 runs 110.1s and
+ * every legal offset overflows it. Chopin/pb3 @ 70s is what the rule returned.
+ *
+ * The seed stays 8028: it belongs to the pair SLOT, so the degradation strength
+ * (timing-smear rung 2, param 0.015) and `originalSide: "b"` are unchanged, and
+ * the pool's side balance does not move. Only sourceId and startSec differ.
+ *
+ * v1 share links die on the version gate — free, because n = 0 and nothing has
+ * ever been deployed.
+ */
 
 /**
  * THE DOOR (D3): every surface that gates on the delicacy tier reads this one
@@ -136,9 +172,9 @@ export const DELICACY_TRIALS: DelicacyTrialClip[] = [
     "timing-smear",
     2,
     "b",
-    "L. van Beethoven — Musopen Kickstarter ensemble (per item page)",
-    "Public Domain (Musopen Kickstarter PD release; PD-mark licenseurl on item)",
-    "“String Quartet Op. 18 No. 6 — IV. La Malinconia (Adagio)” — L. van Beethoven — Musopen Kickstarter ensemble (per item page) · https://archive.org/details/MusopenCollectionAsFlac · Public Domain (Musopen Kickstarter PD release; PD-mark licenseurl on item) · excerpt (trimmed + loudness-normalized; one side deliberately degraded)",
+    "F. Chopin — Musopen Complete Chopin project (performer per item page — record exact name from snapshot for TASL)",
+    "PD or CC0 (verify on piece page; CC-BY-SA -> engineer flag)",
+    "“Nocturne Op. 15 No. 3 in G minor” — F. Chopin — Musopen Complete Chopin project (performer per item page — record exact name from snapshot for TASL) · https://archive.org/details/musopen-chopin-complete-works-flac · PD or CC0 (verify on piece page; CC-BY-SA -> engineer flag) · excerpt (trimmed + loudness-normalized; one side deliberately degraded)",
   ),
   pair(
     "d3",
