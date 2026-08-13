@@ -50,6 +50,25 @@ Follow all 7 steps; the PM reviews the git diff after every task, and nothing is
 
 Red-team asks surface per `docs/redteam-protocol.md` (the `== DECISIONS NEEDED ==` block); asks outside the block are deemed not asked.
 
+### Session close — hand over an activation prompt (owner-approved append 2026-08-13)
+**Engineering owns the handover, not the PM.** When the session is nearing its end — context running low, the
+approved slice queue finished, or the PM says to wrap up — do BOTH of these before the last reply ends:
+
+1. **Write/refresh `docs/handoff-<YYYY-MM-DD>.md`** — current state, what shipped, measured findings that must not
+   be lost, open work in priority order, and every unanswered `== DECISIONS NEEDED ==` item carried forward.
+2. **Emit the next session's ACTIVATION PROMPT in the chat, in a copy-paste code block.** The PM pastes it verbatim
+   into a fresh session; it must stand alone. It must contain: the files to read and in what order; the standing
+   context the next session will be held to (PM is not an engineer · no human gates · no "leave it as-is" defaults ·
+   effective over complex · cite D#/N# · N3 with n = 0 · read RENDERED output · end every reply with the decisions
+   block); a one-paragraph "where we are"; the next task, named and scoped; and any decision still awaiting a ruling.
+
+Why this is engineering's job: the PM has had to commission these prompts from another tool, which means the
+handover is written by something that cannot see the repo. The session that did the work is the only one that knows
+what it left broken. A handover the PM has to source elsewhere is the same failure as a gate only the PM can
+discharge — see the human-gates-are-debt rule.
+
+Do not wait to be asked. A session that ends without an activation prompt is not finished.
+
 ## Safety & cost guardrails (important — I'm watching the budget)
 - **Never spend real money, deploy to production, incur paid third-party API usage, or run paid build minutes without my explicit approval.**
 - **Secrets live in `.env` and are git-ignored. Never hardcode or commit API keys.** I will paste keys myself when needed.
