@@ -44,18 +44,22 @@ describe("delicacy pool of record — the real thing passes every gate", () => {
     expect(rung.has(1)).toBe(false); // rung 1 measured and rejected
   });
 
-  it("is LIVE at version 1, and every gate that opened it was measured", () => {
+  it("is LIVE at version 2, and every gate that opened it was measured", () => {
     // This assertion has now been through all four of its states, and the
     // history is the point:
     //   1. blocked pending a PM ear pass on every clip;
     //   2. blocked by Layer A FLAGs on 6 of 24 pairs;
     //   3. Layer A clear, blocked pending a PM voice pass on copy.ts;
     //   4. open — because the voice pass became code too (src/content/voice.ts).
+    //   5. open at v2 — d2 re-sourced after `quietFraction` FLAGged it at 35.2%.
+    //      The gate found, unprompted, the one clip the PM had found by ear, and
+    //      the pool went red until it was replaced. That round trip is the whole
+    //      argument for the pivot, and it is why this assertion is worth keeping.
     // At no point was a threshold lowered to get here. The pool was rebuilt
     // until the measurements passed, and the two human gates were replaced by
     // checks that can be run by anyone, repeatedly, without an opinion.
-    expect(check(DELICACY_TRIALS, manifest, 1)).toEqual([]);
-    expect(DELICACY_POOL_VERSION).toBe(1);
+    expect(check(DELICACY_TRIALS, manifest, DELICACY_POOL_VERSION)).toEqual([]);
+    expect(DELICACY_POOL_VERSION).toBe(2);
     expect(DELICACY_LIVE).toBe(true);
   });
 
