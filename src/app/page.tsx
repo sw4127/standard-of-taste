@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import FluidField from "@/components/FluidField";
+import GymFloor, { type Machine } from "./GymFloor";
 import Track from "@/components/Track";
 import { worldCup } from "@/content/world-cup";
-import { DELICACY_LIVE, DELICACY_TRIALS } from "@/content/delicacy/items";
+import { DELICACY_LIVE } from "@/content/delicacy/items";
 
 /**
  * The taste-gym landing (RT-3c, memo §9.7 RESOLVED 2026-07-11): /bias is the
@@ -39,7 +40,45 @@ const BRAND = "rgba(244,245,248,0.72)";
 const GOLD = "hsl(42 80% 62%)";
 /** The delicacy instrument's own accent — each machine owns exactly one. */
 const ICE = "hsl(190 75% 62%)";
-const GOLD_GLOW = "hsl(42 80% 60% / 0.45)";
+
+/**
+ * The two machines as DATA. Each owns its accent, its ambient field and the
+ * page surface the room takes when it is selected — so "the theme follows your
+ * choice" is a property of this list rather than something a component
+ * remembers to do.
+ */
+const MACHINES: Machine[] = [
+  {
+    id: "bias",
+    href: "/bias",
+    n: "01",
+    accent: GOLD,
+    field: ["hsl(42 55% 48%)", "hsl(28 50% 44%)", "hsl(52 45% 46%)", "hsl(20 40% 40%)"],
+    surface: "#0B0A08",
+    title: "The Prestige Test",
+    criterion: "Freedom from prejudice",
+    blurb:
+      "Rate ten clips blind, then again with the famous names attached — asked a different way, in a different order. Your number is the gap.",
+    meta: "~5 min · 10 clips",
+  },
+  ...(DELICACY_LIVE
+    ? [
+        {
+          id: "delicacy",
+          href: "/delicacy",
+          n: "02",
+          accent: ICE,
+          field: ["hsl(190 55% 45%)", "hsl(205 50% 42%)", "hsl(175 45% 42%)", "hsl(215 40% 38%)"],
+          surface: "#070C0E",
+          title: "The Delicacy Trials",
+          criterion: "Delicacy of taste",
+          blurb:
+            "One clip of each pair has been quietly damaged. Practise first with the answers shown, then find it — and name what is wrong.",
+          meta: "~10 min · 3 practice + 15 scored",
+        } satisfies Machine,
+      ]
+    : []),
+];
 const FLUID = ["hsl(42 55% 48%)", "hsl(28 50% 44%)", "hsl(52 45% 46%)", "hsl(20 40% 40%)"];
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -83,43 +122,18 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
           <span className="text-foreground">You can be wrong, and that is the point.</span>
         </p>
 
-        {/* THE GYM FLOOR — two machines, genuinely parallel (PM user-test
-            2026-08-08). This used to be a big gold "Take the Prestige Test"
-            button followed by a "floor" where machine 01 was a NON-CLICKABLE
-            div and machine 02 was a link. They looked like siblings and
-            behaved differently: one was a label, the other a door, and the
-            gold CTA above had already pre-picked the winner. Both are now the
-            same component, the same size, the same weight — each carrying only
-            its own instrument's accent, and each its own door. */}
-        <div className="mt-9 grid gap-3 sm:grid-cols-2">
-          <MachineCard
-            href="/bias"
-            n="01"
-            accent={GOLD}
-            title="The Prestige Test"
-            criterion="Freedom from prejudice"
-            blurb="Rate ten clips blind, then rate them again with the famous names attached. Your number is the gap."
-            meta="~5 min · 10 clips"
-          />
-          {DELICACY_LIVE ? (
-            <MachineCard
-              href="/delicacy"
-              n="02"
-              accent={ICE}
-              title="The Delicacy Trials"
-              criterion="Delicacy of taste"
-              blurb="One clip of each pair has been quietly damaged. Find which — and name what is wrong with it."
-              meta={`~10 min · ${DELICACY_TRIALS.length} pairs`}
-            />
-          ) : (
-            <div className="rounded-2xl border border-dashed border-white/20 p-5">
-              <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">MACHINE 02 · LOCKED</p>
-              <p className="mt-1.5 font-display text-xl font-semibold text-neutral-400">The Delicacy Trials</p>
-              <p className="mt-1 text-sm text-muted">Opens when its item pool clears validation.</p>
-            </div>
-          )}
-        </div>
-        <p className="mt-4 text-xs text-muted">Free · no sign-up · headphones help · start with either</p>
+        <GymFloor
+          machines={MACHINES}
+          locked={
+            DELICACY_LIVE ? null : (
+              <div className="rounded-2xl border border-dashed border-white/20 p-5">
+                <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">MACHINE 02 · LOCKED</p>
+                <p className="mt-1.5 font-display text-xl font-semibold text-neutral-400">The Delicacy Trials</p>
+                <p className="mt-1 text-sm text-muted">Opens when its item pool clears validation.</p>
+              </div>
+            )
+          }
+        />
 
         {/* Secondary doors — quiet rows, no bare underline/arrow links
             (PM 2026-07-17): the lead-in word carries the accent, hover lifts
@@ -155,41 +169,3 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
  * the whole point: making them the same component is what stops one of them
  * quietly becoming the default.
  */
-function MachineCard({
-  href,
-  n,
-  accent,
-  title,
-  criterion,
-  blurb,
-  meta,
-}: {
-  href: string;
-  n: string;
-  accent: string;
-  title: string;
-  criterion: string;
-  blurb: string;
-  meta: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className="group flex flex-col rounded-2xl border p-5 transition hover:bg-white/[0.06] active:scale-[0.99]"
-      style={{ borderColor: `${accent.slice(0, -1)} / 0.35)`, background: "rgba(255,255,255,0.03)" }}
-    >
-      <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: accent }}>
-        MACHINE {n} · OPEN
-      </p>
-      <p className="mt-1.5 font-display text-xl font-semibold">{title}</p>
-      <p className="mt-0.5 text-xs font-semibold tracking-wide text-muted">{criterion}</p>
-      <p className="mt-2 flex-1 text-sm leading-relaxed text-neutral-300">{blurb}</p>
-      <p className="mt-4 flex items-center justify-between text-xs">
-        <span className="text-muted">{meta}</span>
-        <span className="font-bold transition-transform group-hover:translate-x-0.5" style={{ color: accent }}>
-          Start &rarr;
-        </span>
-      </p>
-    </Link>
-  );
-}
