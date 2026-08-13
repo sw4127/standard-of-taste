@@ -15,6 +15,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import FluidField from "@/components/FluidField";
 import { track } from "@/lib/analytics";
 import {
@@ -117,6 +118,53 @@ const PASS_QUESTION = {
  * are keyed by clip id, so the engine, the canonical hash and the share codec
  * are all unaffected by what order a respondent happened to see.
  */
+/**
+ * SESSION PERSISTENCE (RT-40a enabler, 2026-08-08).
+ *
+ * The blind pass lives in React state, so navigating away — or a stray refresh
+ * — used to destroy a completed pass silently. That was already a latent bug;
+ * it becomes a blocker the moment the bridge offers somewhere to go. Ratings
+ * are keyed by clip id and the pool version rides along, so a restore against a
+ * changed pool is refused rather than silently rescored.
+ *
+ * sessionStorage, not localStorage: this is one sitting, not a saved profile.
+ * It clears with the tab, which is the right lifetime for an unfinished test.
+ */
+const SESSION_KEY = "bias-session-v1";
+
+type Saved = {
+  poolVersion: number;
+  blind: BiasRatings;
+  listen: { blind: Record<string, number>; labeled: Record<string, number> };
+};
+
+function saveSession(blind: BiasRatings, listen: Saved["listen"]) {
+  try {
+    sessionStorage.setItem(
+      SESSION_KEY,
+      JSON.stringify({ poolVersion: BIAS_POOL_VERSION, blind, listen } satisfies Saved),
+    );
+  } catch {
+    // Private browsing or a full quota — the flow still works, it just cannot
+    // survive a departure. Never break the test to save the test.
+  }
+}
+
+function loadSession(): Saved | null {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Saved;
+    // A pool change makes stored ratings uninterpretable — positional payloads
+    // and item ids both move. Refuse rather than restore something wrong.
+    if (parsed.poolVersion !== BIAS_POOL_VERSION) return null;
+    if (!parsed.blind || Object.keys(parsed.blind).length !== BIAS_CLIPS.length) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
 const LABELED_ORDER = BIAS_CLIPS.map(
   (_, i, arr) => arr[(i + Math.floor(arr.length / 2)) % arr.length],
 );
@@ -143,6 +191,26 @@ export default function BiasFlow() {
   const total = BIAS_CLIPS.length;
   const question = PASS_QUESTION[pass];
 
+  // Restore a blind pass abandoned by navigation or a refresh.
+  //
+  // Deferred rather than set synchronously in the effect: setting state during
+  // the effect body cascades an extra render pass, and the restore cannot be a
+  // lazy state initializer either — this component server-renders, and reading
+  // sessionStorage during render would hydrate to a different phase than the
+  // server produced. A microtask lands after paint, so the frame screen shows
+  // for an instant and is replaced, which reads as the session being found.
+  useEffect(() => {
+    const saved = loadSession();
+    if (!saved) return;
+    queueMicrotask(() => {
+      setBlind(saved.blind);
+      listenMs.current = saved.listen;
+      setIdx(0);
+      setPhase("bridge");
+      track("bias_session_restored", {});
+    });
+  }, []);
+
   useEffect(() => {
     track("bias_frame_view", {});
     return () => {
@@ -166,6 +234,7 @@ export default function BiasFlow() {
       }
       if (pass === "blind") {
         track("bias_blind_complete", {});
+        saveSession(nextRatings, listenMs.current);
         setIdx(0);
         setPhase("bridge");
         return;
@@ -174,6 +243,11 @@ export default function BiasFlow() {
       const r = computeBiasResult(BIAS_INSTRUMENT_ID, BIAS_CLIPS, blind, nextRatings);
       setResult(r);
       track("bias_labeled_complete", { pct: r.pct, verdict: r.verdict });
+      try {
+        sessionStorage.removeItem(SESSION_KEY);
+      } catch {
+        /* nothing to clean up if storage was never available */
+      }
       // D6 interim dataset (PM-approved): the anonymized response vector goes
       // to the analytics sink until the §8.1 store exists. No PII — ratings,
       // hash, pool version only.
@@ -240,6 +314,24 @@ export default function BiasFlow() {
   }
 
   /* --------------------------------------------------------------- bridge */
+  /**
+   * THE BRIDGE, offered as a treat (PM ruling RT-40a + brief, 2026-08-08).
+   *
+   * Two jobs at once. Rotating the labeled pass bought unpredictability but NOT
+   * elapsed time — with two sequential passes a clip's two ratings are always n
+   * trials apart, and the only levers for real time are more clips or something
+   * between the passes. This is that something.
+   *
+   * The PM's brief is the design, and it is a constraint rather than a mood
+   * note: "make it feel like a treat and lift their mood, like a candle at
+   * dinner or a snack on a flight." So it is OFFERED, never required; it is
+   * skippable in one tap with no penalty framing; and the copy does not mention
+   * that it is doing the instrument a favour. A diversion a respondent resents
+   * is worse than no diversion — it adds time and costs goodwill.
+   *
+   * The blind pass is saved to sessionStorage before anyone can leave, so the
+   * detour cannot cost a completed pass.
+   */
   if (phase === "bridge") {
     return (
       <main className={`${shell} justify-center`}>
@@ -248,9 +340,32 @@ export default function BiasFlow() {
           {kicker}
           <h1 className="mt-6 font-display text-4xl font-semibold leading-tight">Round two.</h1>
           <p className="mt-4 text-base leading-relaxed text-muted">
-            Same ten clips — this time the names and the reputations come attached.
-            A couple stay blank on purpose. Rate what you hear.
+            Same ten clips — this time the names and the reputations come attached, and the question
+            changes. A couple stay blank on purpose. Rate what you hear.
           </p>
+
+          <div
+            className="mt-7 rounded-2xl border p-5"
+            style={{ borderColor: "hsl(42 60% 55% / 0.3)", background: "rgba(255,255,255,0.03)" }}
+          >
+            <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: GOLD }}>
+              WHILE YOU&rsquo;RE HERE
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-neutral-300">
+              There&rsquo;s a shorter, sillier one next door — five taps on what you actually listen
+              to, and it tells you which kind of listener you are. No scoring, no ears required.
+              Your ten ratings are saved; come back whenever.
+            </p>
+            <Link
+              href="/music/quiz"
+              onClick={() => track("bias_bridge_diversion", {})}
+              className="mt-4 inline-block rounded-full border px-5 py-2.5 text-sm font-bold transition hover:bg-white/[0.06]"
+              style={{ borderColor: GOLD, color: GOLD }}
+            >
+              Take the five-tap one &rarr;
+            </Link>
+          </div>
+
           <button
             type="button"
             onClick={() => setPhase("labeled")}
@@ -259,6 +374,7 @@ export default function BiasFlow() {
           >
             Start the labeled pass
           </button>
+          <p className="mt-3 text-xs text-muted">Or carry straight on — nothing is lost either way.</p>
         </div>
       </main>
     );
