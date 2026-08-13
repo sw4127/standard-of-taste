@@ -51,6 +51,76 @@ const BASE = "#0B0A08"; // warm near-black — the gym after hours
 
 const RATE_BEAT_MS = 420;
 
+/**
+ * RECALL DEFENCES (PM ruling RT-38b, after user testing 2026-08-08).
+ *
+ * The report was blunt and correct: "the prestige test now feels like a test of
+ * only short-term memory." It was. Ten clips rated blind, then the SAME ten in
+ * the SAME order asked the SAME question — a careful person simply reproduces
+ * their first answer, and the instrument measures recall rather than the pull
+ * of a famous name. The engine already conceded this direction ("re-rating
+ * anchors people on their first answer, so measured sway UNDERSTATES the true
+ * effect") but understated how bad it is: for a deliberate respondent the
+ * number can collapse toward zero, which is why the test felt pointless.
+ *
+ * Two defences, and they attack DIFFERENT KINDS of recall.
+ *
+ * (1) POSITIONAL recall — "this is the third clip again, I said 7". The labeled
+ *     pass is rotated by half the pool, so a clip never appears in the position
+ *     it held before and the running order carries no information about what
+ *     you already answered.
+ *
+ *     A CORRECTION TO AN EARLIER CLAIM, kept because getting this wrong once is
+ *     instructive: rotating does NOT increase the elapsed distance between a
+ *     clip's two ratings. With two sequential passes that distance is already
+ *     uniformly n — clip i is rated at trial i and again at trial n+i. Rotating
+ *     makes it UNEVEN (5 to 15 trials here) and therefore shorter for half the
+ *     pool. It buys unpredictability, not time. The only levers for real time
+ *     are more clips or an interference task between the passes, and neither is
+ *     in this change.
+ *
+ * (2) NUMERIC recall — reproducing the digit itself. The blind pass asks how
+ *     good the recording is; the labeled pass asks how much you want to hear
+ *     the rest of it. There is no longer a remembered number that answers the
+ *     question in front of you. This is the defence doing most of the work.
+ *
+ * WHY (2) DOES NOT BREAK THE SCORE, and where it strains. Differencing two
+ * passes assumes they measure the same thing on the same scale. Changing the
+ * framing introduces a shift — but a shift applied to EVERY item, which is
+ * exactly what the control items exist to measure: they are rated in both
+ * passes and labeled in neither, so their drift now absorbs the framing change
+ * along with memory and regression, and the engine's RT-2a residual correction
+ * removes what survives the up/down balance.
+ *
+ * THE HONEST COST: this makes the controls more load-bearing than they were,
+ * and there are only two of them. If the framing change alters how people USE
+ * the scale (its spread, not just its centre) rather than merely shifting it,
+ * two controls cannot capture that and the correction will be incomplete. That
+ * is a real limitation of this design and it is the first thing to check when
+ * real responses arrive.
+ */
+const PASS_QUESTION = {
+  blind: {
+    prompt: "How good is this recording?",
+    low: "0 — never again",
+    high: "10 — all-timer",
+  },
+  labeled: {
+    prompt: "Knowing what it is — how much do you want to hear the rest?",
+    low: "0 — not at all",
+    high: "10 — right now",
+  },
+} as const;
+
+/**
+ * Presentation order for the labeled pass: rotated by half the pool. Ratings
+ * are keyed by clip id, so the engine, the canonical hash and the share codec
+ * are all unaffected by what order a respondent happened to see.
+ */
+const LABELED_ORDER = BIAS_CLIPS.map(
+  (_, i, arr) => arr[(i + Math.floor(arr.length / 2)) % arr.length],
+);
+
 type Phase = "frame" | "blind" | "bridge" | "labeled" | "reveal" | "debrief";
 
 export default function BiasFlow() {
@@ -68,9 +138,10 @@ export default function BiasFlow() {
     labeled: {},
   });
 
-  const clip: BiasClip | undefined = BIAS_CLIPS[idx];
-  const total = BIAS_CLIPS.length;
   const pass = phase === "blind" ? "blind" : "labeled";
+  const clip: BiasClip | undefined = (pass === "blind" ? BIAS_CLIPS : LABELED_ORDER)[idx];
+  const total = BIAS_CLIPS.length;
+  const question = PASS_QUESTION[pass];
 
   useEffect(() => {
     track("bias_frame_view", {});
@@ -259,9 +330,19 @@ export default function BiasFlow() {
             }}
           />
 
+          {/* The question is asked OUT LOUD, and it differs between passes so
+              there is no remembered number that answers it (RT-38b). */}
+          <p
+            className={`mt-7 text-sm font-semibold transition-opacity duration-500 ${
+              played ? "opacity-100" : "opacity-40"
+            }`}
+          >
+            {question.prompt}
+          </p>
+
           {/* 0–10 scale — unlock is a visible state change, not a fade-blink */}
           <div
-            className={`mt-8 transition-all duration-500 ease-out ${
+            className={`mt-3 transition-all duration-500 ease-out ${
               played ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-1.5 opacity-35"
             }`}
           >
@@ -284,8 +365,8 @@ export default function BiasFlow() {
               ))}
             </div>
             <div className="mt-2 flex justify-between text-[0.65rem] text-muted">
-              <span>0 — never again</span>
-              <span>10 — all-timer</span>
+              <span>{question.low}</span>
+              <span>{question.high}</span>
             </div>
           </div>
         </div>
