@@ -15,12 +15,20 @@
  * to fatal: the drift PEAKS AT CLIP END, so the most audible moment is the one
  * the listening pattern reaches last and can never compare directly.
  *
- * HOW IT WORKS: both files play at once, in sync, with one muted. Switching
- * swaps which is audible — instantly, at the same instant of the music, with no
- * reload gap and no restart. That is how every serious listening-comparison
- * tool works, and it is the thing the instrument was accidentally preventing.
- * The pair is duration-matched by the render pipeline, so the two are aligned
- * by construction rather than by hope.
+ * HOW IT WORKS: both files play at once, in sync, and a Web Audio gain node
+ * decides which one you hear. Switching swaps which is audible — at the same
+ * instant of the music, with no reload gap and no restart. The pair is
+ * duration-matched by the render pipeline, so the two are aligned by
+ * construction rather than by hope.
+ *
+ * WHY GAIN NODES AND NOT `.muted` (PM user-testing, 2026-08-08): toggling muted
+ * cuts amplitude instantly, and an instantaneous jump to or from zero is a step
+ * discontinuity in the waveform — which is audible as a click. A listener
+ * reported "a small sound of glitch or noise at the moment of switching", which
+ * is precisely that. Each side now rides its own gain node and switches are a
+ * short equal-power ramp, so the waveform stays continuous. The click was our
+ * artifact, and on an instrument that asks people to notice tiny artifacts it
+ * is worse than untidy: it is a false positive planted in every trial.
  *
  * WHY IT APPEARS ONLY AFTER THE REQUIRED LISTEN (PM ruling RT-34b): the
  * min-listen gate is what makes exposure comparable across respondents, and
@@ -44,6 +52,8 @@ export default function AbCompare({
 }) {
   const aRef = useRef<HTMLAudioElement | null>(null);
   const bRef = useRef<HTMLAudioElement | null>(null);
+  const ctxRef = useRef<AudioContext | null>(null);
+  const gainRef = useRef<{ a: GainNode; b: GainNode } | null>(null);
   const [playing, setPlaying] = useState(false);
   const [side, setSide] = useState<"a" | "b">("a");
   const [switches, setSwitches] = useState(0);
@@ -57,7 +67,9 @@ export default function AbCompare({
     const b = new Audio(srcB);
     a.preload = "auto";
     b.preload = "auto";
-    b.muted = true;
+    // Same-origin files, but the graph needs this to be explicit.
+    a.crossOrigin = "anonymous";
+    b.crossOrigin = "anonymous";
     aRef.current = a;
     bRef.current = b;
     const onMeta = () => setDuration(a.duration || 0);
@@ -84,6 +96,9 @@ export default function AbCompare({
       b.pause();
       aRef.current = null;
       bRef.current = null;
+      void ctxRef.current?.close().catch(() => {});
+      ctxRef.current = null;
+      gainRef.current = null;
     };
   }, [srcA, srcB]);
 
@@ -110,10 +125,37 @@ export default function AbCompare({
     return () => cancelAnimationFrame(raf);
   }, [playing, side]);
 
+  /** Build the audio graph lazily — an AudioContext may only start on a gesture. */
+  const ensureGraph = () => {
+    const a = aRef.current;
+    const b = bRef.current;
+    if (!a || !b) return null;
+    if (!ctxRef.current) {
+      const Ctor = window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (!Ctor) return null; // no Web Audio: fall back to muted toggling
+      const ctx = new Ctor();
+      const ga = ctx.createGain();
+      const gb = ctx.createGain();
+      ga.gain.value = 1;
+      gb.gain.value = 0;
+      ctx.createMediaElementSource(a).connect(ga).connect(ctx.destination);
+      ctx.createMediaElementSource(b).connect(gb).connect(ctx.destination);
+      ctxRef.current = ctx;
+      gainRef.current = { a: ga, b: gb };
+    }
+    return gainRef.current;
+  };
+
   const start = async () => {
     const a = aRef.current;
     const b = bRef.current;
     if (!a || !b) return;
+    const g = ensureGraph();
+    if (!g) {
+      // No Web Audio available — the switch will click, but it will work.
+      b.muted = true;
+    }
+    await ctxRef.current?.resume().catch(() => {});
     b.currentTime = a.currentTime;
     // play() REJECTS under a browser's autoplay policy, and the first version
     // used allSettled and then set playing = true regardless — so the control
@@ -154,10 +196,26 @@ export default function AbCompare({
     const drift = Math.abs(incoming.currentTime - outgoing.currentTime);
     if (drift > 0.15) incoming.currentTime = outgoing.currentTime;
 
-    // Mute the outgoing side only AFTER the incoming one is audible, so a
-    // switch can never land on a moment of silence from both.
-    incoming.muted = false;
-    outgoing.muted = true;
+    // EQUAL-POWER RAMP, not a mute toggle. Cutting amplitude to zero
+    // instantaneously is a step discontinuity, and a step is a click. The ramp
+    // is short enough to feel instant (12 ms) and long enough to be continuous.
+    const g = gainRef.current;
+    const ctx = ctxRef.current;
+    if (g && ctx) {
+      const now = ctx.currentTime;
+      const RAMP = 0.012;
+      const gi = next === "a" ? g.a : g.b;
+      const go = next === "a" ? g.b : g.a;
+      // cancelAndHold is not universal; re-setting from the current value has
+      // the same effect and never throws.
+      gi.gain.setValueAtTime(gi.gain.value, now);
+      go.gain.setValueAtTime(go.gain.value, now);
+      gi.gain.linearRampToValueAtTime(1, now + RAMP);
+      go.gain.linearRampToValueAtTime(0, now + RAMP);
+    } else {
+      incoming.muted = false;
+      outgoing.muted = true;
+    }
     setSide(next);
     setSwitches((n) => {
       const v = n + 1;
