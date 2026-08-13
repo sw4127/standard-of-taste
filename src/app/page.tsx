@@ -26,6 +26,16 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * BRAND CHROME IS NEUTRAL, NOT GOLD (PM user-testing, 2026-08-08).
+ *
+ * "THE TASTE GYM" used to render in the same gold as the Prestige Test's own
+ * accent, so the brand read as that instrument and the Delicacy Trials looked
+ * like a guest in someone else's house. Gold now belongs to Prestige, ice to
+ * Delicacy, and the gym itself is neutral — which is the only arrangement in
+ * which two instruments can actually be peers.
+ */
+const BRAND = "rgba(244,245,248,0.72)";
 const GOLD = "hsl(42 80% 62%)";
 /** The delicacy instrument's own accent — each machine owns exactly one. */
 const ICE = "hsl(190 75% 62%)";
@@ -48,7 +58,7 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
       <FluidField colors={FLUID} baseColor="#0B0A08" intensity={0.6} scrim={false} vignette />
       <Track event="landing_view" props={{ variant: "gym" }} />
       <div className="relative z-10">
-        <p className="text-xs font-bold tracking-[0.4em]" style={{ color: GOLD }}>
+        <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
           THE TASTE GYM
         </p>
 

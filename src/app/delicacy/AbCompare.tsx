@@ -50,6 +50,7 @@ export default function AbCompare({
   const [failed, setFailed] = useState(false);
   const [pos, setPos] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const a = new Audio(srcA);
@@ -66,8 +67,19 @@ export default function AbCompare({
     // which silently freezes the progress bar at 0% for the whole clip. Read
     // it directly as well; this is a race the listener alone cannot win.
     if (a.readyState >= HTMLMediaElement.HAVE_METADATA) onMeta();
+
+    // BOTH sides must be loadable before the control offers itself. Half a
+    // comparison is worse than none: the listener would switch to a side that
+    // never loaded, hear nothing, and conclude their ears are at fault.
+    const READY = HTMLMediaElement.HAVE_FUTURE_DATA;
+    const check = () => setReady(a.readyState >= READY && b.readyState >= READY);
+    a.addEventListener("canplay", check);
+    b.addEventListener("canplay", check);
+    check();
     return () => {
       a.removeEventListener("loadedmetadata", onMeta);
+      a.removeEventListener("canplay", check);
+      b.removeEventListener("canplay", check);
       a.pause();
       b.pause();
       aRef.current = null;
@@ -75,24 +87,28 @@ export default function AbCompare({
     };
   }, [srcA, srcB]);
 
-  // Position readout, and a light resync: two independently-decoded streams can
-  // drift a few milliseconds over twenty seconds, which would quietly turn a
-  // same-moment comparison into a near-moment one.
+  /**
+   * Position readout only. NOTHING SEEKS IN HERE — and that is the whole point.
+   *
+   * The first version resynced B to A's clock on every frame it drifted more
+   * than 20 ms. Seeking a media element at 60 Hz keeps it permanently
+   * re-seeking and it never produces sound, and because only B was ever the
+   * one being seeked, the symptom was exactly what user testing reported: "A is
+   * successfully played every time, B was not". The two streams start together
+   * and are resynced once per switch, which is the only moment alignment
+   * actually has to be right.
+   */
   useEffect(() => {
     if (!playing) return;
     let raf = 0;
     const tick = () => {
-      const a = aRef.current;
-      const b = bRef.current;
-      if (a && b) {
-        setPos(a.currentTime);
-        if (Math.abs(a.currentTime - b.currentTime) > 0.02) b.currentTime = a.currentTime;
-      }
+      const el = side === "a" ? aRef.current : bRef.current;
+      if (el) setPos(el.currentTime);
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [playing]);
+  }, [playing, side]);
 
   const start = async () => {
     const a = aRef.current;
@@ -128,11 +144,20 @@ export default function AbCompare({
     const b = bRef.current;
     if (!a || !b) return;
     const next = side === "a" ? "b" : "a";
-    // Resync before unmuting so the switch lands on the same instant.
-    if (next === "b") b.currentTime = a.currentTime;
-    else a.currentTime = b.currentTime;
-    a.muted = next === "b";
-    b.muted = next === "a";
+    const incoming = next === "a" ? a : b;
+    const outgoing = next === "a" ? b : a;
+
+    // Resync ONLY when the two have genuinely drifted. A seek costs the
+    // element a moment of silence while it re-buffers, so seeking on every
+    // switch would reintroduce the exact fault this control exists to fix.
+    // Both streams started together, so drift is normally single-digit ms.
+    const drift = Math.abs(incoming.currentTime - outgoing.currentTime);
+    if (drift > 0.15) incoming.currentTime = outgoing.currentTime;
+
+    // Mute the outgoing side only AFTER the incoming one is audible, so a
+    // switch can never land on a moment of silence from both.
+    incoming.muted = false;
+    outgoing.muted = true;
     setSide(next);
     setSwitches((n) => {
       const v = n + 1;
@@ -150,7 +175,9 @@ export default function AbCompare({
           COMPARE — SAME MOMENT
         </p>
         <p className="text-[11px] text-muted">
-          {failed
+          {!ready
+            ? "loading both clips"
+            : failed
             ? "playback blocked"
             : switches === 0
               ? "switch as often as you like"
@@ -166,11 +193,12 @@ export default function AbCompare({
         <button
           type="button"
           onClick={() => (playing ? stop() : void start())}
+          disabled={!ready}
           aria-label={playing ? "Stop comparing" : "Start comparing"}
-          className="shrink-0 rounded-full px-4 py-2 text-sm font-bold text-black transition active:scale-[0.97]"
+          className="shrink-0 rounded-full px-4 py-2 text-sm font-bold text-black transition active:scale-[0.97] disabled:opacity-40"
           style={{ background: ICE }}
         >
-          {playing ? "Stop" : "Compare"}
+          {playing ? "Stop" : ready ? "Compare" : "Loading"}
         </button>
 
         <div className="flex flex-1 overflow-hidden rounded-full border border-white/15">
