@@ -513,7 +513,9 @@ export default function DelicacyFlow() {
   if (phase === "done" && result) {
     const cal = computeCalibration(result.receipts.map((r) => ({ confidence: r.confidence, correct: r.correct })));
     const v = delicacyVerdict(result.nCorrect, result.nTrials);
-    const p = encodeURIComponent(encodeDelicacyResponses(DELICACY_TRIALS, responses));
+    // MEASURED_TRIALS, not the pool: practice trials are never answered into
+    // `responses`, and the share payload is positional against the SCORED set.
+    const p = encodeURIComponent(encodeDelicacyResponses(MEASURED_TRIALS, responses));
     const resultPath = `/delicacy/result?pv=${DELICACY_POOL_VERSION}&p=${p}`;
     const origin = typeof window === "undefined" ? "" : window.location.origin;
     const credits = [...new Set(DELICACY_TRIALS.map((t) => `${t.sourceCredit} — ${t.license} · ${t.attribution}`))];

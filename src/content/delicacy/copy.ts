@@ -29,10 +29,22 @@ export interface DelicacyVerdictCopy {
  * available. A 2AFC task floors at half the trials, so raw counts mean nothing
  * without the pool size: 6 correct is a triumph out of 6 and a failure out of 18.
  */
+/**
+ * The chance expectation, as text. ONE definition, because the scored set went
+ * odd (15 trials) and the surfaces disagreed in the browser: the result heading
+ * rounded to "8" while the verdict beneath it said "7.5" — same quantity, two
+ * numbers, one screen. Rounding is also the dishonest choice: the expected
+ * score of a coin over 15 trials IS 7.5, and an instrument that rounds its own
+ * null hypothesis has no business reporting anyone else's precision (N3).
+ */
+export function chanceCall(nTrials: number): string {
+  return String(nTrials / 2);
+}
+
 export function delicacyVerdict(nCorrect: number, nTrials: number): DelicacyVerdictCopy {
-  const chance = nTrials / 2;
-  const headroom = nTrials - chance;
-  const above = (nCorrect - chance) / headroom; // 1 = perfect, 0 = chance, <0 = worse
+  const chance = chanceCall(nTrials);
+  const headroom = nTrials / 2;
+  const above = (nCorrect - nTrials / 2) / headroom; // 1 = perfect, 0 = chance, <0 = worse
 
   if (nCorrect === nTrials)
     return { title: "The key in the wine.", sub: `All ${nTrials} flaws found. Sancho's kinsmen would pour you a glass.` };
@@ -69,7 +81,7 @@ export function calibrationLine(cal: CalibrationResult): string {
 
 /** The one-line share text next to the permalink. */
 export function shareText(nCorrect: number, nTrials: number): string {
-  return `I called ${nCorrect} of ${nTrials} originals in the Delicacy Trials — a coin flip calls ${nTrials / 2}. Think your ears are better?`;
+  return `I called ${nCorrect} of ${nTrials} originals in the Delicacy Trials — a coin flip calls ${chanceCall(nTrials)}. Think your ears are better?`;
 }
 
 /** Card + result-page strapline for the free calibration phase (D4 ruling 1a). */
@@ -91,5 +103,5 @@ export const MAGNITUDE_WORDS: Record<1 | 2 | 3 | 4, string> = {
 };
 
 export function delicacyResultSummary(r: DelicacyResult): string {
-  return `${r.nCorrect} of ${r.nTrials} originals — a coin flip calls ${Math.round(r.nTrials / 2)}`;
+  return `${r.nCorrect} of ${r.nTrials} originals — a coin flip calls ${chanceCall(r.nTrials)}`;
 }
