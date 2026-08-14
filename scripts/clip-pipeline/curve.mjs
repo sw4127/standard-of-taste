@@ -97,7 +97,11 @@ export async function curve(args = []) {
   for (const param of values) {
     const tag = `${family}-${String(param).replace(/[^\w]/g, "_")}`;
     const degWav = join(TMP, `${tag}.wav`);
-    degradeWavParam(family, param, seed, origWav, degWav, clipSec);
+    // --timing-mode driftMs sweeps the NEW parameterisation, where the value is
+    // a target drift in ms rather than a bound on a random draw.
+    degradeWavParam(family, param, seed, origWav, degWav, clipSec, {
+      timingMode: opt("timing-mode", "maxDevPct"),
+    });
     const cut = join(TMP, `${tag}-cut.wav`);
     ff(["-i", degWav, "-t", String(clipSec), cut]);
     const preClip = clippingStats(decodeMono(cut, SR)).clippedFraction;

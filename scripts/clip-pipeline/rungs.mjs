@@ -103,20 +103,64 @@ export const STAIRCASE_LEVELS = {
    * a wrong note (see LADDER_RUNGS above). The ruler is happy to 200 and the
    * ladder deliberately is not.
    */
-  "pitch-drift": [3.1, 4.4, 6.3, 8.8, 12.5, 17.7, 25, 35.4, 50, 70.7, 100],
-  // lossy-artifact and timing-smear are NOT here yet, and their absence is
-  // deliberate rather than pending tidy-up. Each needs a problem solved first
-  // that pitch did not have:
-  //   lossy   — the anchor ratio divides by a per-source number that spans 5.6x
-  //             across the pool, so two clips with near-identical damage report
-  //             3.5x and 8.9x. Spacing a ladder on that scale would encode the
-  //             denominator's noise into the rungs. It also SATURATES below
-  //             32k (32k and 24k measure 12.39 and 12.40 dB), so the room is
-  //             upward, between 320k and 128k.
-  //   timing  — the parameter is a BOUND on a seeded random draw, not a
-  //             determinant like the pitch ramp, so two clips at the same level
-  //             can differ materially. A staircase whose step size varies at
-  //             random is stepping in noise.
+  "pitch-drift": {
+    unit: "cents of peak detune",
+    ratio: Math.SQRT2,
+    values: [3.1, 4.4, 6.3, 8.8, 12.5, 17.7, 25, 35.4, 50, 70.7, 100],
+  },
+
+  /**
+   * 12.5 -> 100 ms of drift IQR, 10 levels, ratio 2^(1/3) (E2/S4b).
+   *
+   * THE PARAMETER MEANS SOMETHING DIFFERENT HERE than it does in LADDER_RUNGS,
+   * and that is the point of the slice. There the value is `maxDevPct`, a BOUND
+   * on ten random draws — so the realized drift is whatever the walk happens to
+   * do. Measured across 40 seeds, the same parameter produces a 5.3x spread at
+   * every setting, and the ranges OVERLAP COMPLETELY:
+   *
+   *     maxDevPct 0.0075  ->   4.9 ..  26.1 ms
+   *     maxDevPct 0.015   ->   9.8 ..  52.1 ms
+   *     maxDevPct 0.03    ->  19.6 .. 104.2 ms
+   *     maxDevPct 0.05    ->  32.7 .. 173.7 ms
+   *
+   * A "rung 2" clip can drift further than a "rung 4" one. That is survivable
+   * for a fixed assessment and disqualifying for a staircase, whose entire
+   * output is a threshold expressed in step sizes. These levels are rendered in
+   * `driftMs` mode instead, where the seeded draw sets the SHAPE of the wander
+   * and is then rescaled so the stated drift comes out exact (spread 1.0000x).
+   *
+   * RENDERED AND MEASURED, source pb1 @75s, seed 500:
+   *
+   *     level    12.5 15.7 19.8   25 31.5 39.7   50   63 79.4  100
+   *     measured   13   17   21   25   33   40   51   67   76   97   ms
+   *
+   * Strictly increasing, no ties, every level within 8% of its target.
+   *
+   * THE BOTTOM IS QUANTISATION, NOT TASTE. `temporalDrift` resolves 1 ms (its
+   * envelope hop), so below ~12 ms the error is a large share of the value:
+   * targets of 4.4 / 6.3 / 8.8 ms measured 6 / 8 / 8 — a tie and an inversion.
+   *
+   * THE TOP IS THE CORRELATOR. 100 ms measures 97 at 91% confidence; 141
+   * measures 127 at 80%; 200 measures 102 at 72% — inverted. Even at the
+   * widened 250 ms search window the measure gives out past ~140 ms.
+   *
+   * RATIO 2^(1/3) RATHER THAN sqrt(2) because the reliable span is 8x here
+   * against pitch's 32x, and sqrt(2) would fit only 7 levels into it. Finer
+   * steps inside a range we can measure beat wider steps that leave it.
+   */
+  "timing-smear": {
+    unit: "ms of drift IQR",
+    ratio: Math.cbrt(2),
+    renderMode: "driftMs",
+    values: [12.5, 15.7, 19.8, 25, 31.5, 39.7, 50, 63, 79.4, 100],
+  },
+
+  // lossy-artifact is NOT here, and its absence is a decision rather than
+  // pending tidy-up. Its anchor ratio divides by a per-source number that spans
+  // 5.6x across the pool, so two clips with near-identical damage report 3.5x
+  // and 8.9x; spacing a ladder on that scale would encode the denominator's
+  // noise into the rungs. It also SATURATES below 32k (32k and 24k measure
+  // 12.39 and 12.40 dB), so the room is upward, between 320k and 128k.
 };
 
 /**
