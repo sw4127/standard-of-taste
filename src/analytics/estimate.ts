@@ -320,8 +320,12 @@ export const ESTIMATE_METRICS: MetricSpec[] = [
     unit: "proportion",
     owner: "psychometrics",
     target: "≥ 0.70 (conventional floor)",
+    // STALE ONCE ALREADY (RT-57a cold read, 2026-08-14): this said "the live
+    // 6-trial pool measures α ≈ 0.25" long after the pool reached 18, so the
+    // public honesty page was wrong about both the pool size and the number.
+    // Pinned by a test against the live pool so it cannot rot silently again.
     caveat:
-      "The live 6-trial delicacy pool measures α ≈ 0.25 under simulation — far below the floor. Six two-alternative trials cannot support a reliable individual score.",
+      "The live 18-trial delicacy pool measures α ≈ 0.49 under simulation — below the 0.70 floor. Spearman-Brown puts that floor near 44 trials; two-alternative trials throw away information that no scoring cleverness recovers.",
   },
   {
     id: "split_half",
