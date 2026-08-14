@@ -46,16 +46,34 @@ export default function FluidField({ colors, baseColor, intensity = 0.5, animate
   const [b, setB] = useState(target);
   const [front, setFront] = useState<"a" | "b">("a");
   const last = useRef(target);
+  // The flip is scheduled on the next animation frame rather than run
+  // synchronously in the effect body (RT-15). Two reasons, and the lint rule is
+  // the smaller one: a frame callback is the documented shape for driving an
+  // external system (here, the browser's CSS transition engine), and it
+  // GUARANTEES the idle layer has been painted at opacity 0 before it becomes
+  // the front layer at `op`. Without a painted from-state a CSS opacity
+  // transition has nothing to interpolate and the new colours pop in — which is
+  // the exact "flash-bang" this two-layer cross-fade was built to fix (649cace).
+  //
+  // `last.current` is advanced INSIDE the callback, never before scheduling it.
+  // requestAnimationFrame does not fire in a hidden or throttled tab, so the
+  // effect can be cleaned up before the callback ever runs — and marking the
+  // target as applied up front would strand the field on stale colours forever,
+  // because the next render would early-return on a target it never actually
+  // painted. Same class of bug as the ClipPlayer ring freeze in throttled tabs.
   useEffect(() => {
     if (target === last.current) return;
-    last.current = target;
-    if (front === "a") {
-      setB(target);
-      setFront("b");
-    } else {
-      setA(target);
-      setFront("a");
-    }
+    const id = requestAnimationFrame(() => {
+      last.current = target;
+      if (front === "a") {
+        setB(target);
+        setFront("b");
+      } else {
+        setA(target);
+        setFront("a");
+      }
+    });
+    return () => cancelAnimationFrame(id);
   }, [target, front]);
 
   const layer = (bg: string, show: boolean): React.CSSProperties => ({

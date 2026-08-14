@@ -75,9 +75,22 @@ export default function MusicQuizPage() {
   // §10.A: the premise test begins on the unscored belief step — except for
   // bridged users (§29): they already converted once; Q0 is a cold-entry test.
   const [phase, setPhase] = useState<"belief" | "taps" | "crystallizer">(bridged ? "taps" : "belief");
-  const [arm, setArm] = useState<OnboardingArm | null>(null);
+  // Read once at mount via a lazy initializer, not assigned in an effect
+  // (RT-15) — the same SSR-guarded idiom `seeds` and `fromVibe` already use
+  // above. An effect would have set state after the first paint, which is both
+  // an extra render and a flash of the wrong copy arm.
+  const [arm] = useState<OnboardingArm | null>(() =>
+    typeof window === "undefined" ? null : getOnboardingArm(),
+  );
   const persuasive = arm !== "control"; // default to persuasive copy pre-hydration
-  const [soundOn, setSoundOn] = useState(false);
+  const [soundOn, setSoundOn] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return sessionStorage.getItem("vc_sound") === "1";
+    } catch {
+      return false;
+    }
+  });
   // §slice-5 — football→music bridge: the carried football archetype (?from=),
   // read once at mount. Display-only — it NEVER enters the score or the verdict.
   const [fromVibe] = useState<string | null>(() =>
@@ -90,8 +103,16 @@ export default function MusicQuizPage() {
   const audioCtx = useRef<AudioContext | null>(null);
 
   /** Soft synth note (sine + quick decay). Never throws; silent when off. */
-  function note(freq: number, delay = 0, dur = 0.22) {
-    if (!soundOnRef.current) return;
+  /**
+   * `force` replaced a latest-value ref (RT-15). The ref existed only so
+   * toggleSound could play its confirm note in the same gesture that enabled
+   * sound, before `soundOn` had committed — but a ref written during render is
+   * unsafe under concurrent rendering, and writing it in an effect made the
+   * imperative override illegal. Passing the intent as an argument says the same
+   * thing without a mutable cell that two code paths fight over.
+   */
+  function note(freq: number, delay = 0, dur = 0.22, force = false) {
+    if (!force && !soundOn) return;
     try {
       const ctx = (audioCtx.current ??= new AudioContext());
       const t = ctx.currentTime + delay;
@@ -110,9 +131,6 @@ export default function MusicQuizPage() {
       /* audio is garnish — never break the quiz */
     }
   }
-  const soundOnRef = useRef(soundOn);
-  soundOnRef.current = soundOn;
-
   function toggleSound() {
     const next = !soundOn;
     setSoundOn(next);
@@ -120,8 +138,8 @@ export default function MusicQuizPage() {
       sessionStorage.setItem("vc_sound", next ? "1" : "0");
     } catch {}
     if (next) {
-      soundOnRef.current = true; // play the confirm note inside this gesture
-      note(SCALE[Math.min(step, SCALE.length - 1)]);
+      // force: `soundOn` is still false in this closure until the state commits.
+      note(SCALE[Math.min(step, SCALE.length - 1)], 0, 0.22, true);
     }
   }
 
@@ -139,16 +157,12 @@ export default function MusicQuizPage() {
     // §10.A: assign the arm and record arrival at the premise. quiz_start fires
     // only once the belief Q0 is answered, so it carries prior_belief and the
     // premise_view→quiz_start gap measures skeptic drop-off at the premise.
-    setArm(getOnboardingArm());
     getVoiceArm(); // §26 — lock the voice arm early so every event carries it
     // §29: bridged users skip the premise (Q0) entirely — fire quiz_start
     // directly so the funnel stays measurable; cold entrants keep premise_view
     // → quiz_start (the §10.A skeptic-gap instrument).
     if (bridged) track("quiz_start", { variant: "music", bridged: true });
     else track("premise_view", { variant: "music" });
-    try {
-      if (sessionStorage.getItem("vc_sound") === "1") setSoundOn(true);
-    } catch {}
     return () => {
       if (timer.current) clearTimeout(timer.current);
     };
@@ -303,9 +317,14 @@ export default function MusicQuizPage() {
     advance(); // resets selected/secondary/blendMode + steps forward
   }
 
-  // Keep the timer callback pointing at the latest advance() closure.
+  // Keep the timer callback pointing at the latest advance() closure. Written in
+  // an effect rather than during render (RT-15) — same concurrency reason as
+  // soundOnRef. The timer only ever reads it from a setTimeout callback, which
+  // runs after commit, so the effect always lands first.
   const advanceRef = useRef(advance);
-  advanceRef.current = advance;
+  useEffect(() => {
+    advanceRef.current = advance;
+  });
 
   // §10.A — the unscored prior-belief Q0 (premise step). Arm decides the framing
   // around it (persuasive recognition vs. neutral utility); the question is

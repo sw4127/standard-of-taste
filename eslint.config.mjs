@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Agent worktrees are full copies of this repo. Linting them reported every
+    // error TWICE (22 problems for 11 real ones), which is how the count in the
+    // handoff stopped matching reality.
+    ".claude/worktrees/**",
   ]),
 ]);
 
