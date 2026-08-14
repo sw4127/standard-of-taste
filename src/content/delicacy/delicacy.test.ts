@@ -158,6 +158,32 @@ describe("delicacy gatekeeping — deliberately broken fixtures fail with named 
     expect(errs).toMatch(/1\.2x anchor/);
   });
 
+  it("one artist carrying 3 of a 6-trial family is fatal (RT-53a)", () => {
+    // The confound the crossed factorial exists to prevent, and the one the
+    // pool-wide artist cap does NOT catch: this fixture keeps every artist well
+    // under 6 trials overall while handing one of them half a family.
+    const komiku = DELICACY_TRIALS.find((t) => t.sourceCredit.startsWith("Komiku"))!;
+    const skewed = DELICACY_TRIALS.map((t) =>
+      t.family === "timing-smear" && t.id !== "d11" && t.id !== "d8"
+        ? { ...t, sourceCredit: komiku.sourceCredit }
+        : t,
+    );
+    const errs = check(skewed).join("\n");
+    expect(errs).toMatch(/carries \d+\/6 of family "timing-smear" \(contract: ≤ 2\)/);
+    expect(errs).toMatch(/confounded with one artist/);
+  });
+
+  it("the v2 pool's worst family/artist cell is exactly 2 — the bound was not fitted to it", () => {
+    // If this ever reads 1, the cap could be tightened; if it reads 3, the gate
+    // above was loosened to fit. Either way the number should be visible.
+    const cells = new Map<string, number>();
+    for (const t of DELICACY_TRIALS) {
+      const k = `${t.sourceCredit.split(" — ")[0].trim()}/${t.family}`;
+      cells.set(k, (cells.get(k) ?? 0) + 1);
+    }
+    expect(Math.max(...cells.values())).toBe(2);
+  });
+
   it("a recorded PM ear pass no longer grants passage on its own", () => {
     // Guards against the retired gate being quietly reinstated: an ear pass
     // with no Layer A measurement must NOT open the door.
