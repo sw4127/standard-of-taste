@@ -73,6 +73,9 @@ Red-team asks surface per `docs/redteam-protocol.md` (the `== DECISIONS NEEDED =
 ### Session close — hand over an activation prompt (owner-approved append 2026-08-13)
 **Engineering owns the handover, not the PM.** When the session is nearing its end — context running low, the
 approved slice queue finished, or the PM says to wrap up — do BOTH of these before the last reply ends:
+*[TRIGGER AMENDED 2026-08-14, owner-approved — see "Closing is a judgment about QUALITY" below. "Context running
+low" was read as "context partly used" and fired a full close at 25% consumed. The amendment governs; this
+sentence is kept verbatim per the keep-intact rule.]*
 
 1. **Write/refresh `docs/handoff-<YYYY-MM-DD>.md`** — current state, what shipped, measured findings that must not
    be lost, open work in priority order, and every unanswered `== DECISIONS NEEDED ==` item carried forward.
@@ -88,6 +91,45 @@ what it left broken. A handover the PM has to source elsewhere is the same failu
 discharge — see the human-gates-are-debt rule.
 
 Do not wait to be asked. A session that ends without an activation prompt is not finished.
+
+#### Closing is a judgment about QUALITY, not about context percentage (owner-approved amendment 2026-08-14)
+
+**What went wrong.** A session closed itself — full handoff document, full activation prompt — with **75% of the
+context window still free**, citing "context running low". Nothing was running low. That close cost the PM a fresh
+session that must re-read five documents and re-derive everything the closing session already knew, to resume work
+the closing session could have simply continued.
+
+**The rule is now: do not close while you are still the best agent for the next task.** A handover is not a
+courtesy or a checkpoint — it is a *transfer of an advantage you currently hold*. You have the measurements in
+context, you know what you just broke, you know which premises you verified and which you inherited. The next
+session has none of that and pays real cost to rebuild a worse version of it. Close only when you have a **named,
+specific reason** to believe the next session does the job BETTER.
+
+**Valid reasons to close — name the one that applies, in the closing reply:**
+1. **Context genuinely near exhaustion.** Not "partly used". The test is whether the NEXT slice plus its proof and
+   red-team plausibly fits. If it fits, keep going.
+2. **Goal drift.** Replies have wandered from the approved objective, or you are re-litigating decisions already
+   ruled. A fresh session re-anchored on the memo beats a drifting one.
+3. **Laziness setting in.** Proof quality is dropping — "should work" creeping in, red-teams thinning, findings
+   deferred rather than fixed, confessions getting shorter while the work gets riskier.
+4. **Self-preference.** You are grading your own work generously, picking the easy slice over the next one, or
+   avoiding the measurement that might invalidate something you built. This is the hardest to notice and the most
+   important: sunk work makes a reviewer soft (the N2 mechanism applied to yourself). If you catch yourself
+   defending rather than testing, that is the signal.
+5. **The next task genuinely needs a different frame** — a different part of the system, a different mode of work —
+   and carrying this session's context in is a liability rather than an asset.
+6. **The PM says to wrap up.** Always sufficient, no justification needed.
+
+**Not valid reasons:** a round number of slices shipped · a commit pushed · a milestone that feels tidy · "this
+seems like a good stopping point" · context merely consumed · wanting to hand off risk you should be carrying.
+
+**Proportionality.** A close triggered by 2–5 above may not need a fresh full-state document. Refresh the existing
+handoff and write the activation prompt; do not regenerate a state dump that has barely moved. The full document is
+for a genuine end of session, not for every stop.
+
+**Say why, out loud.** Every close names its trigger from the list. "Closing on (4): I have red-teamed my own
+staircase three times and found nothing, which is not credible" is a useful sentence. "Wrapping up here" is not,
+and the PM should push back on it.
 
 ## Safety & cost guardrails (important — I'm watching the budget)
 - **Never spend real money, deploy to production, incur paid third-party API usage, or run paid build minutes without my explicit approval.**
