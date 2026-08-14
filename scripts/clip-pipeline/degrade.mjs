@@ -103,7 +103,96 @@ function segmented(opFor, L) {
  * manifest entries mean — d1 records "magnitude 1", and that has to keep
  * meaning 12 cents.
  */
-export function degradeWavParam(family, param, seed, inWav, outWav, clipSec) {
+/**
+ * The timing-smear deviation model, as a pure function (E2/S4b, 2026-08-14).
+ *
+ * THE DEFECT THIS EXISTS TO FIX. `timing-smear`'s parameter was `maxDevPct` —
+ * a BOUND on ten uniform random draws, not a determinant of anything. The
+ * realized warp is the random walk of those draws, so two clips rendered at the
+ * same "rung" can differ materially in how far they actually drift, and they
+ * do: the shipped pool has rung 3 measuring 21 ms on one recording and 38 ms on
+ * another, and rung 3 sitting BELOW rung 2 (21 ms against 28 ms).
+ *
+ * For a fixed assessment that is untidy. For a STAIRCASE it is disqualifying —
+ * a step whose size varies at random still produces a confident-looking
+ * threshold, and the number would be wrong in a way nothing downstream could
+ * see. This is the failure mode that hides, which is why it was fixed before
+ * the lossy ladder whose problem is visible in every number it prints.
+ *
+ * THE FIX: keep the seeded draw for SHAPE, then rescale it so a stated physical
+ * quantity comes out exact. The level then determines the magnitude and the
+ * seed determines the character, which is the division of labour we want.
+ *
+ * WHY MILLISECONDS OF DRIFT IS THE RIGHT UNIT. It is what the measurement
+ * reports, what a threshold has to be stated in, and the direct analogue of
+ * cents for pitch: "you hear the timing wander at 30 ms and miss it at 18" is a
+ * sentence; "at 3% max per-segment tempo deviation" is not, and is not even
+ * true of any particular clip.
+ *
+ * THE TRAJECTORY. Segment k is stretched by (1 + e_k), so the accumulated
+ * offset against the reference after segment k is segLen * sum(e_0..e_k). The
+ * deviations are mean-corrected, so the offset returns to zero at the end and
+ * total duration is preserved. The reported magnitude is the IQR of that
+ * trajectory sampled uniformly in time, which is what `temporalDrift` measures
+ * over its blocks.
+ *
+ * @param mode "maxDevPct" — the legacy meaning, kept because the shipped pool
+ *   was rendered under it and re-rendering would change audio that live share
+ *   URLs already score against. "driftMs" — the parameter IS the target IQR.
+ */
+export function timingDeviations({ mode, param, seed, clipSec, segs = SEGS }) {
+  const rand = mulberry32(seed);
+  const segLen = clipSec / segs;
+  const raw = Array.from({ length: segs }, () => rand() * 2 - 1);
+  const mean = raw.reduce((a, b) => a + b, 0) / segs;
+  // Mean-corrected: sum(e) = 0, so total duration is exact and the drift
+  // trajectory both starts and ends at zero.
+  const shape = raw.map((v) => v - mean);
+
+  /** IQR of the offset trajectory, in ms, for a given deviation vector. */
+  const driftIqrMsOf = (e) => {
+    // Sample the piecewise-linear trajectory densely and uniformly in TIME —
+    // uniformly in SEGMENT would weight each segment equally regardless of how
+    // long the offset sits there, which is not what a block-wise correlator
+    // sees. 64 samples per segment is far finer than the 1 ms envelope hop.
+    const perSeg = 64;
+    const pts = [];
+    let acc = 0;
+    for (let k = 0; k < e.length; k++) {
+      const from = acc;
+      acc += e[k] * segLen;
+      for (let i = 1; i <= perSeg; i++) pts.push((from + ((acc - from) * i) / perSeg) * 1000);
+    }
+    pts.sort((a, b) => a - b);
+    const q = (f) => pts[Math.min(pts.length - 1, Math.floor(f * (pts.length - 1)))];
+    return q(0.75) - q(0.25);
+  };
+
+  let e;
+  if (mode === "driftMs") {
+    const unit = driftIqrMsOf(shape);
+    if (!(unit > 0)) throw new Error(`timingDeviations: degenerate draw at seed ${seed}`);
+    const scale = param / unit;
+    e = shape.map((v) => v * scale);
+  } else if (mode === "maxDevPct") {
+    e = shape.map((v) => v * param);
+  } else {
+    throw new Error(`timingDeviations: unknown mode "${mode}" (know: maxDevPct, driftMs)`);
+  }
+
+  const maxAbs = Math.max(...e.map(Math.abs));
+  // rubberband=tempo=1/(1+e) needs 1+e comfortably positive, and anything past
+  // a quarter is a different manipulation from "the tempo wanders".
+  if (maxAbs > 0.25) {
+    throw new Error(
+      `timingDeviations: ${mode}=${param} needs ${(maxAbs * 100).toFixed(1)}% per-segment tempo deviation at seed ${seed} — beyond the 25% ceiling`,
+    );
+  }
+
+  return { e, driftIqrMs: driftIqrMsOf(e), maxDevPct: maxAbs * 100 };
+}
+
+export function degradeWavParam(family, param, seed, inWav, outWav, clipSec, opts = {}) {
   const rand = mulberry32(seed);
   if (family === "lossy-artifact") {
     const bitrate = param;
@@ -126,14 +215,29 @@ export function degradeWavParam(family, param, seed, inWav, outWav, clipSec) {
     return { peakCents, direction: dir > 0 ? "sharp" : "flat" };
   }
   if (family === "timing-smear") {
-    const dev = param;
-    const raw = Array.from({ length: SEGS }, () => dev * (rand() * 2 - 1));
-    const mean = raw.reduce((a, b) => a + b, 0) / SEGS;
-    const e = raw.map((v) => v - mean); // mean-corrected: total duration is preserved
+    // Default stays the legacy meaning: the shipped pool was rendered under it,
+    // and live share URLs score against that exact audio.
+    const mode = opts.timingMode ?? "maxDevPct";
+    const { e, driftIqrMs, maxDevPct } = timingDeviations({ mode, param, seed, clipSec });
     // tempo=1/(1+e_k) stretches segment k by (1+e_k); Σe=0 ⇒ total is exact.
     const graph = segmented((k) => `,rubberband=tempo=${(1 / (1 + e[k])).toFixed(6)}`, L);
     ff(["-i", inWav, "-filter_complex", graph, "-map", "[out]", outWav]);
-    return { maxDevPct: dev * 100, segmentDevPct: e.map((v) => +(v * 100).toFixed(2)) };
+    return {
+      // `maxDevPct` KEEPS ITS LEGACY MEANING — the bound that was asked for,
+      // times 100 — because that is what the shipped manifest already records
+      // and what sweep.mjs reads as this family's parameter. The realized
+      // maximum is a different, smaller number (mean-correction shrinks it, and
+      // ten draws rarely touch their own bound), so quietly swapping one for the
+      // other would have rewritten history in the manifest.
+      maxDevPct: mode === "maxDevPct" ? param * 100 : +maxDevPct.toFixed(4),
+      realizedMaxDevPct: +maxDevPct.toFixed(4),
+      segmentDevPct: e.map((v) => +(v * 100).toFixed(2)),
+      // Recorded for BOTH modes: the predicted drift is checkable against what
+      // temporalDrift measures, which is how this fix gets verified at all.
+      timingMode: mode,
+      targetDriftIqrMs: +driftIqrMs.toFixed(2),
+      ...(mode === "driftMs" ? { driftMs: param } : {}),
+    };
   }
   throw new Error(`unknown family "${family}" (know: ${LADDER_FAMILIES.join(", ")})`);
 }
