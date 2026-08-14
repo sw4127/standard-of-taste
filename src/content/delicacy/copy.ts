@@ -84,11 +84,43 @@ export function shareText(nCorrect: number, nTrials: number): string {
   return `I called ${nCorrect} of ${nTrials} originals in the Delicacy Trials — a coin flip calls ${chanceCall(nTrials)}. Think your ears are better?`;
 }
 
-/** Card + result-page strapline for the free calibration phase (D4 ruling 1a). */
+/**
+ * Result-page strapline (RT-44a, 2026-08-14). REPLACES a line that told users
+ * "the trials join the paid training arc once norms exist" — false since the
+ * no-payment ruling (CLAUDE.md, "D4 amendment"), and user-visible, which makes
+ * it an N3 violation rather than a stale comment.
+ *
+ * Two things it must not do. It must not imply the Gym EXISTS — it does not
+ * yet, so the arc is future tense. And it must not present the 7-day cooldown
+ * as a withholding tactic; the cooldown is a validity gate, and saying why
+ * costs one clause and is the D5 move (depth unlocked, never buried).
+ *
+ * Rendered mid-paragraph on the result screen, between "Provisional read —
+ * you're early." and "Difficulty labels are authored, not yet norm-calibrated."
+ */
 export const CALIBRATION_PHASE_LINE =
-  "Free while the gym calibrates — the trials join the paid training arc once norms exist.";
+  "Nothing here costs money, and no paid tier is coming. The training arc will gate on a seven-day gap between retests, because a retake the same day measures your memory, not your ears.";
 
-/** One-word magnitude descriptors for the receipts (authored intensity, N3: not IRT difficulty). */
+/**
+ * THE WHOLE FOOTNOTE, assembled here rather than in JSX (RT-44a, 2026-08-14).
+ *
+ * WHY THIS MOVED. `CALIBRATION_PHASE_LINE` was voice-checked; the two literals
+ * sitting either side of it in DelicacyFlow.tsx were not, because they lived in
+ * JSX and the gate only ever sees the copy deck. So a third of the paragraph a
+ * user actually reads was outside the gate that exists to check what users read.
+ *
+ * That is the same failure mode as the "a coin flip calls 8" / "the coin calls
+ * 7.5" contradiction: each fragment was individually fine, and the defect only
+ * existed in the ASSEMBLY. A gate that can only see fragments cannot see it.
+ * Assembling here makes the paragraph one string, so voice.ts reads exactly what
+ * the screen shows.
+ */
+export const PROVISIONAL_FOOTNOTE = [
+  "Provisional read — you're early.",
+  CALIBRATION_PHASE_LINE,
+  "Difficulty labels are authored, not yet norm-calibrated.",
+].join(" ");
+
 /**
  * Ladder-rung words. Four rungs since the S6 strength ladder + pool expansion
  * (2026-08-07): rung 1 is the gentlest step, added below the three that were

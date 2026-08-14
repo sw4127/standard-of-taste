@@ -12,6 +12,7 @@ import { VERDICT_COPY, shareText as biasShareText } from "./bias/copy";
 import {
   CALIBRATION_PHASE_LINE,
   MAGNITUDE_WORDS,
+  PROVISIONAL_FOOTNOTE,
   delicacyResultSummary,
   delicacyVerdict,
   shareText as delicacyShareText,
@@ -43,6 +44,9 @@ function shippingStrings(): VoiceString[] {
     intensity: "pointed",
   });
   out.push({ surface: "delicacy/calibration-phase", text: CALIBRATION_PHASE_LINE, intensity: "calm" });
+  // The ASSEMBLED paragraph, not just its middle clause — the fragments either
+  // side of it used to live in JSX, outside this gate entirely.
+  out.push({ surface: "delicacy/provisional-footnote", text: PROVISIONAL_FOOTNOTE, intensity: "calm" });
   for (const [k, v] of Object.entries(FLAW_LABELS)) {
     out.push({ surface: `delicacy/flaw/${k}/label`, text: v.label, intensity: "calm" });
     out.push({ surface: `delicacy/flaw/${k}/hint`, text: v.hint, intensity: "calm" });
@@ -53,11 +57,67 @@ function shippingStrings(): VoiceString[] {
   return out;
 }
 
+/**
+ * Does this string PROMISE that something costs money? (RT-44a, D4 amendment.)
+ *
+ * One definition, shared by the forward and reverse tests, so the check that
+ * guards the copy and the check that proves the guard works can never drift
+ * apart — which is the same class of bug as the two rung tables that disagreed.
+ *
+ * Negated forms are stripped first: denying a paid tier is exactly what the
+ * copy is supposed to do, and a blunt substring match cannot tell "no paid
+ * tier" from "join the paid tier".
+ */
+function promisesPayment(text: string): boolean {
+  const claim = text.replace(/\bno (paid|premium)\b/gi, "").replace(/\bnot paid\b/gi, "");
+  // Up to two words may sit between "paid" and the noun — the retired line said
+  // "the paid TRAINING arc", and an adjacency-only pattern sailed past it.
+  return /\bpaid\s+(?:\w+\s+){0,2}(?:tier|arc|plan|version|training|feature)\b|\bpremium\b|\bupgrade\b|\bsubscri|\bunlock for\b|\$\d/i.test(
+    claim,
+  );
+}
+
 describe("voice gate — the shipping decks", () => {
   it("every cohort-visible string passes the spec", () => {
     const violations = checkVoice(shippingStrings());
     if (violations.length > 0) console.log(formatVoiceReport(violations));
     expect(violations).toEqual([]);
+  });
+
+  /**
+   * RT-44a. The no-payment ruling (CLAUDE.md, "D4 amendment") is a product
+   * decision, and the only way a user ever learns it was violated is by reading
+   * a screen that promises a tier that does not exist. Pin it in the deck.
+   *
+   * Asserted on the ASSEMBLED footnote, because that is the unit a user reads.
+   */
+  it("no user-facing delicacy copy promises a paid tier (D4 amendment)", () => {
+    const surfaces = shippingStrings().filter((s) => s.surface.startsWith("delicacy/"));
+    expect(surfaces.length).toBeGreaterThan(0);
+    for (const s of surfaces) {
+      expect(promisesPayment(s.text), `${s.surface} promises payment`).toBe(false);
+    }
+    // ...and the footnote must still SAY so, rather than going quiet about it.
+    expect(PROVISIONAL_FOOTNOTE).toMatch(/no paid tier/i);
+  });
+
+  /**
+   * Proven in both directions: the RETIRED line must trip the check.
+   *
+   * This test failed on its first run and the failure was the point. The
+   * original pattern required "paid" adjacent to tier/arc/plan — and the line
+   * it was written to prevent said "the paid TRAINING arc". A gate that cannot
+   * catch the specimen that motivated it is decoration.
+   */
+  it("would have caught the line it replaced", () => {
+    expect(
+      promisesPayment("Free while the gym calibrates — the trials join the paid training arc once norms exist."),
+    ).toBe(true);
+  });
+
+  it("does not fire on a DENIAL of a paid tier", () => {
+    expect(promisesPayment("Free, with no paid tier now or later.")).toBe(false);
+    expect(promisesPayment("There is no premium version.")).toBe(false);
   });
 
   it("covers every reachable verdict tier, not a sample", () => {

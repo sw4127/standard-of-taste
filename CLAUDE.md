@@ -3,7 +3,7 @@
 ## Pivot of record (2026-07-11) — READ FIRST
 **`restructuring_decision_memo_2026-07-11.md` is the authoritative product strategy.** Approved by the PM/owner in session zero (2026-07-11). It SUPERSEDES the sections now parked under "Legacy (superseded — kept for history)" at the bottom of this file, plus the spec sections stamped `SUPERSEDED` in `vibe_check_mvp_spec.md`. The $3.99 viral-funnel model is concluded dead (memo §0, C1) — do not propose reviving, preserving, or incrementally fixing it.
 
-**What we're building now (memo D1–D6):** a **taste gym** — the product *evaluates and cultivates* taste against Hume's five criteria; it never predicts personality, mood, or psychological states (D1). Measurement = performance tasks where the user can be wrong, not self-report (D2). **v1 flagship = the Prestige-Bias Test**; the delicacy battery ships second but is *visible-and-locked* in v1 (D3). Free = the assessment + headline scores; paid = the training arc / progression (D4; pricing open, memo §9.1). Hume narrates each instrument — depth is unlocked, never buried (D5). Analytics = a psychometrics pipeline (IRT, signal detection, calibration/Brier); the proprietary asset is our self-generated response dataset (D6). Project identity: resume-competitive product artifact; revenue = proof of viability, not income (memo C4).
+**What we're building now (memo D1–D6):** a **taste gym** — the product *evaluates and cultivates* taste against Hume's five criteria; it never predicts personality, mood, or psychological states (D1). Measurement = performance tasks where the user can be wrong, not self-report (D2). **v1 flagship = the Prestige-Bias Test**; the delicacy battery ships second but is *visible-and-locked* in v1 (D3). Free = the assessment + headline scores; paid = the training arc / progression (D4; pricing open, memo §9.1). **[D4 AMENDED 2026-08-14 — there is no paid tier. The arc is free and validity-gated. See "D4 amendment" below; this clause is kept verbatim per the keep-intact rule.]** Hume narrates each instrument — depth is unlocked, never buried (D5). Analytics = a psychometrics pipeline (IRT, signal detection, calibration/Brier); the proprietary asset is our self-generated response dataset (D6). Project identity: resume-competitive product artifact; revenue = proof of viability, not income (memo C4).
 
 **Standing rules (every session):**
 - Every proposal must cite the memo decision (D1–D6) or guardrail (N1–N3) it serves; if none applies, say so instead of proposing it.
@@ -15,7 +15,27 @@
 1. **"No database / stateless" is sunset** (§8.1): progression requires accounts + persistent results. Propose the *lightest* persistent store at implementation time; flag any recurring cost before adopting it — cost guardrails still apply.
 2. **"No music playback" is amended** (§8.2): playback of **public-domain / Creative-Commons audio with our own manipulations ONLY** is now permitted (delicacy trials). The ban on licensed/copyrighted audio and licensed metadata stays.
 
-**Payments note:** the Merchant-of-Record constraint (mainland-China tax resident; no Stripe — see "Payments update" below) still stands for whatever paid tier ships; the **$3.99 price point is superseded** and progression-tier pricing is an open question (memo §9.1).
+**Payments note:** the Merchant-of-Record constraint (mainland-China tax resident; no Stripe — see "Payments update" below) still stands for whatever paid tier ships; the **$3.99 price point is superseded** and progression-tier pricing is an open question (memo §9.1). *[2026-08-14: moot in practice — see the D4 amendment. Kept because the constraint would apply again if the no-payment ruling were ever revisited.]*
+
+### D4 amendment — the arc is FREE and validity-gated (owner-approved 2026-08-14, PM rulings RT-41 / RT-44a / RT-59a)
+Appended, not overwritten. Amends **D4 only**; D1, D2, D3, D5, D6 and N1–N3 are untouched.
+
+**Was (memo D4):** free = the assessment + headline scores; **paid** = the training arc / progression, pricing open (memo §9.1).
+
+**Is now:** **there is no paid tier, and no pricing question.** The product is one product on three surfaces, with one **non-monetary** gate:
+- **Floor** — the assessment. Free, no account. Reports the headline result and a coarse per-family read.
+- **Gym** — the training arc. Free, requires an account, gated by a **7-day per-family retest cooldown**. The gate exists because a retest taken too soon measures memory rather than hearing; it is a **validity** gate, not a revenue gate.
+- **Lab** (`/lab`) — the analytics surface: credibility and the resume artifact.
+
+**Deliverable of record:** a **per-flaw sensitivity threshold in physical units** (cents of detune, % tempo deviation, kbps), plus where the ear fails and a loop that moves it. **Not** a score.
+
+**Anti-clone clause, on the record:** we ship thresholds and item parameters. **Never a leaderboard, XP, streaks, or points.** Any proposal containing one of those is refused by this clause, not debated.
+
+**Surface split (RT-59a, ruled 2026-08-14):** the adaptive staircase lives in the **Gym**, one family per session, and produces the precise threshold. The **Floor keeps the short fixed set** (~5 min, no account). A free surface that demands 40 minutes before it says anything is a friction wall, and the cooldown gate only means something if there is something worth returning to.
+
+**Consequences for §9.1 and the Payments update below:** progression-tier pricing is **closed, not open** — the answer is "no tier." The MoR constraint is retained for history and would only matter if this ruling were reversed.
+
+**Why (N2/N3):** revenue was never the point (memo C4 — revenue = proof of viability, not income), and a paywall on the training loop would have made the honest deliverable — *does your ear actually move* — the thing behind the wall. Any user-facing copy still promising a paid tier is a false claim and must be fixed on sight (this ruling's first casualty was `CALIBRATION_PHASE_LINE`).
 
 ## Roles
 - **The user is the Product Manager.** They drive product and design decisions; they are newer to engineering, so explain tradeoffs in plain language and teach as you go.
