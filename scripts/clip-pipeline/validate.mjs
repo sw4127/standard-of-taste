@@ -46,7 +46,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { decodeMono, normRender } from "./degrade.mjs";
-import { clippingStats, logSpectralDistance, longestSilenceSec, quietFraction, temporalDrift, DEFAULT_SPECTRAL_OPTS } from "./spectral.mjs";
+import { clippingStats, logSpectralDistance, longestSilenceSec, pitchShiftCents, quietFraction, temporalDrift, DEFAULT_SPECTRAL_OPTS } from "./spectral.mjs";
 
 const require = createRequire(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -83,6 +83,48 @@ export const MIN_ANCHOR_RATIO = 3.0;
  * explicitly marked as not comparable with the spectral families.
  */
 export const TEMPORAL_FAMILIES = new Set(["timing-smear"]);
+/**
+ * Families gated in CENTS (E2/S1, 2026-08-14). Same argument as TEMPORAL_FAMILIES
+ * one step further: a family should be gated on the measure that describes it,
+ * and for pitch drift that measure is now available in the manipulation's own
+ * physical unit.
+ *
+ * The anchor ratio it replaces was not WRONG, it was blunt and unitless. Across
+ * the shipping ladder the parameter quadruples (25 -> 100 cents) while the ratio
+ * moves 3-4x to 5-7x. That is enough to order three rungs and not enough to
+ * order twelve, which is what the staircase needs — and it cannot express the
+ * sentence we owe the user ("you hear drift at 40 cents and miss it at 25")
+ * without a conversion nobody has any basis to invent (N3).
+ */
+export const PITCH_FAMILIES = new Set(["pitch-drift"]);
+/**
+ * Floor for a pitch manipulation, in cents of measured peak detune (p95).
+ *
+ * A FLOOR, NOT A DIFFICULTY THRESHOLD — the same standing caveat as
+ * MIN_TEMPORAL_DRIFT_MS. It asserts only that the detune is measurably present
+ * at several times the ruler's own resolution. `pitch.test.ts` recovers 13
+ * known levels within 2 cents and separates levels 3 cents apart, so 10 cents
+ * is roughly five times the worst-case error. How much drift a listener can
+ * hear is NOT known here and is not guessed (N3); Layer B answers that with
+ * response data.
+ *
+ * NOTE FOR THE LADDER WORK, deliberately not acted on here: ladder rung 1 (12
+ * cents) renders to a p95 near 11.4 and would CLEAR this floor, while it fails
+ * the 3x anchor ratio that got it excluded from the pool. The two rulers
+ * disagree about the bottom of the ladder. That matters a great deal for a
+ * staircase converging downward toward a listener's threshold, and it is S4's
+ * question, not this slice's.
+ */
+export const MIN_PITCH_CENTS = 10;
+/**
+ * Same role as MIN_CONFIDENT_BLOCK_FRACTION, for the cents ruler: a detune
+ * figure computed from frames that never matched is not a measurement. Set
+ * higher than the temporal equivalent (0.25) because the pitch ruler does not
+ * have the same excuse — a pitch shift is duration-exact, so its frames SHOULD
+ * match, and every shipped pair measures 100%. A pair that does not is telling
+ * us something is wrong with the render, not that the task is hard.
+ */
+export const MIN_CONFIDENT_PITCH_FRACTION = 0.8;
 /**
  * Floor for a temporal manipulation, in ms of peak-to-peak wander. This is a
  * FLOOR, not a difficulty threshold: it only asserts the warp is measurably
@@ -210,11 +252,25 @@ export function measurePair(pair) {
   const drift = temporalDrift(a, b);
   const clipA = clippingStats(a);
   const clipB = clippingStats(b);
+  // Only for the family it gates: the cents ruler cross-correlates a
+  // ~1400-bin profile at 161 lags per frame, which is real work and buys
+  // nothing on families whose manipulation is not a pitch shift.
+  const pitch = PITCH_FAMILIES.has(pair.family) ? pitchShiftCents(a, b) : null;
   return {
     id: pair.id,
     family: pair.family,
     magnitude: pair.magnitude,
     lsdDb: lsd.lsdDb,
+    /**
+     * Peak detune, in cents. p95 of |cents| rather than max: the renderer ramps
+     * to a peak, so the headline is the extreme — but a maximum over many
+     * frames is a maximum of noise and grows with however many you measured.
+     * Sign-agnostic, so this does not need to know which side is the original.
+     */
+    pitchP95Cents: pitch ? +pitch.p95AbsCents.toFixed(2) : null,
+    pitchMedianCents: pitch ? +pitch.medianCents.toFixed(2) : null,
+    pitchRangeCents: pitch ? +pitch.rangeCents.toFixed(2) : null,
+    pitchConfidentFraction: pitch ? +pitch.confidentFraction.toFixed(3) : null,
     // IQR, not peak-to-peak: peak-to-peak is a maximum of a noisy quantity and
     // one bad block fakes it (measured — d1 read 17 ms of "drift" from a single
     // outlier, and its IQR is 1 ms).
@@ -238,6 +294,7 @@ export function gradePair(m, anchors) {
   if (m.error) return { ...m, verdict: "ERROR", reasons: [m.error] };
   const ratio = m.lsdDb / anchors.transparentLsdDb;
   const temporal = TEMPORAL_FAMILIES.has(m.family);
+  const pitched = PITCH_FAMILIES.has(m.family);
   const reasons = [];
 
   // Each family is gated on the measure that actually describes it. Applying
@@ -248,6 +305,16 @@ export function gradePair(m, anchors) {
       reasons.push(`drift unmeasurable — only ${(m.driftConfidentFraction * 100).toFixed(0)}% of blocks aligned confidently`);
     } else if (!(m.driftIqrMs >= MIN_TEMPORAL_DRIFT_MS)) {
       reasons.push(`temporal drift IQR ${m.driftIqrMs} ms (need ≥${MIN_TEMPORAL_DRIFT_MS} ms)`);
+    }
+  } else if (pitched) {
+    // Same shape as the temporal branch: establish the measurement is real
+    // before reading a magnitude off it.
+    if (!(m.pitchConfidentFraction >= MIN_CONFIDENT_PITCH_FRACTION)) {
+      reasons.push(
+        `detune unmeasurable — only ${((m.pitchConfidentFraction ?? 0) * 100).toFixed(0)}% of frames matched confidently`,
+      );
+    } else if (!(m.pitchP95Cents >= MIN_PITCH_CENTS)) {
+      reasons.push(`peak detune ${(m.pitchP95Cents ?? NaN).toFixed?.(1) ?? m.pitchP95Cents} cents (need ≥${MIN_PITCH_CENTS})`);
     }
   } else if (!(ratio >= MIN_ANCHOR_RATIO)) {
     reasons.push(`magnitude ${ratio.toFixed(1)}x anchor (need ≥${MIN_ANCHOR_RATIO}x)`);
@@ -261,7 +328,7 @@ export function gradePair(m, anchors) {
   return {
     ...m,
     anchorRatio: ratio,
-    gatedOn: temporal ? "temporal-drift" : "spectral-anchor-ratio",
+    gatedOn: temporal ? "temporal-drift" : pitched ? "detune-cents" : "spectral-anchor-ratio",
     verdict: reasons.length === 0 ? "PASS" : "FLAG",
     reasons,
   };
@@ -300,17 +367,26 @@ export async function validate(args) {
         `transparent 320k round-trip ${Math.min(...anchors.map((a) => a.transparentLsdDb)).toFixed(3)}–` +
         `${Math.max(...anchors.map((a) => a.transparentLsdDb)).toFixed(3)} dB`,
     );
-    console.log("  id   family          mag   LSD dB  ×anchor  driftIQR  conf%  gated on               verdict");
+    // "conf%" is the confidence OF THE GATING MEASURE, which differs per row.
+    console.log("  id   family          mag   LSD dB  ×anchor  driftIQR  conf%  detune¢  gated on               verdict");
     for (const r of rows) {
       if (r.error) {
         console.log(`  ${r.id.padEnd(5)}${"—".padEnd(46)}ERROR  ${r.error}`);
         continue;
       }
       const temporal = r.gatedOn === "temporal-drift";
+      const pitched = r.gatedOn === "detune-cents";
+      // The confidence of the measure THIS ROW IS GATED ON. Printing the
+      // temporal figure on every row put "conf 19%" beside "PASS" on d7 — two
+      // numbers on one screen that appear to contradict each other, where the
+      // 19% belongs to a measure that has no say in that row's verdict. Same
+      // defect class as "a coin flip calls 8" above "the coin calls 7.5".
+      const conf = pitched ? r.pitchConfidentFraction : r.driftConfidentFraction;
       console.log(
         `  ${r.id.padEnd(5)}${String(r.family).padEnd(16)}${String(r.magnitude).padEnd(6)}` +
           `${r.lsdDb.toFixed(2).padStart(6)}  ${(temporal ? "n/a" : r.anchorRatio.toFixed(1)).padStart(7)}  ` +
-          `${(r.driftIqrMs + " ms").padStart(8)}  ${(r.driftConfidentFraction * 100).toFixed(0).padStart(4)}%  ` +
+          `${(r.driftIqrMs + " ms").padStart(8)}  ${(conf * 100).toFixed(0).padStart(4)}%  ` +
+          `${(pitched ? r.pitchP95Cents.toFixed(1) : "n/a").padStart(7)}  ` +
           `${r.gatedOn.padEnd(23)}${r.verdict}` +
           (r.reasons.length ? `  (${r.reasons.join("; ")})` : ""),
       );
@@ -325,7 +401,7 @@ export async function validate(args) {
   manifest.layerA = {
     analysisRateHz: SR,
     anchors,
-    thresholds: { MIN_ANCHOR_RATIO, MIN_TEMPORAL_DRIFT_MS, MIN_CONFIDENT_BLOCK_FRACTION, MAX_CLIPPED_FRACTION, MAX_FLAT_TOP_FRACTION, MAX_SILENCE_SEC, MAX_QUIET_FRACTION },
+    thresholds: { MIN_ANCHOR_RATIO, MIN_TEMPORAL_DRIFT_MS, MIN_CONFIDENT_BLOCK_FRACTION, MIN_PITCH_CENTS, MIN_CONFIDENT_PITCH_FRACTION, MAX_CLIPPED_FRACTION, MAX_FLAT_TOP_FRACTION, MAX_SILENCE_SEC, MAX_QUIET_FRACTION },
     measuredAt: new Date().toISOString().slice(0, 10),
     note:
       "Magnitudes, NOT audibility. anchorRatio compares each pair against a 320 kbps round-trip of its OWN source window — " +
@@ -342,6 +418,12 @@ export async function validate(args) {
       driftRangeMs: r.driftRangeMs,
       driftConfidentFraction: +r.driftConfidentFraction.toFixed(2),
       driftCoherence: +r.driftCoherence.toFixed(2),
+      // Recorded only where it was measured. A null here means "this family is
+      // not gated in cents", never "the detune was zero".
+      pitchP95Cents: r.pitchP95Cents,
+      pitchMedianCents: r.pitchMedianCents,
+      pitchRangeCents: r.pitchRangeCents,
+      pitchConfidentFraction: r.pitchConfidentFraction,
       gatedOn: r.gatedOn,
       peakBand: r.peakBand,
       clippedFraction: +r.clippedFraction.toFixed(6),

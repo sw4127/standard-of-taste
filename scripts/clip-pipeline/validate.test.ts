@@ -24,6 +24,9 @@ import {
   MIN_CONFIDENT_BLOCK_FRACTION,
   MAX_FLAT_TOP_FRACTION,
   MIN_TEMPORAL_DRIFT_MS,
+  MIN_PITCH_CENTS,
+  MIN_CONFIDENT_PITCH_FRACTION,
+  PITCH_FAMILIES,
   TEMPORAL_FAMILIES,
 } from "./validate.mjs";
 
@@ -51,6 +54,23 @@ const healthy = {
 /** A healthy temporal measurement. */
 const healthyTemporal = { ...healthy, id: "t1", family: "timing-smear", driftIqrMs: 20, driftConfidentFraction: 0.5 };
 
+/**
+ * A healthy PITCH measurement (E2/S1). Note the deliberately hostile numbers:
+ * an anchor ratio of 8x that would sail through the spectral gate, and a
+ * temporal confidence of 0.19 — the real figure from d7, which is what made
+ * the old reading look like blindness. Neither may decide this row's verdict.
+ */
+const healthyPitch = {
+  ...healthy,
+  id: "p1",
+  family: "pitch-drift",
+  pitchP95Cents: 47.6,
+  pitchMedianCents: -26.3,
+  pitchRangeCents: 47.1,
+  pitchConfidentFraction: 1,
+  driftConfidentFraction: 0.19,
+};
+
 describe("Layer A gate — it passes what it should", () => {
   it("accepts a healthy spectral pair", () => {
     const r = gradePair(healthy, anchors);
@@ -69,6 +89,69 @@ describe("Layer A gate — it passes what it should", () => {
     expect(TEMPORAL_FAMILIES.has("timing-smear")).toBe(true);
     expect(TEMPORAL_FAMILIES.has("lossy-artifact")).toBe(false);
     expect(TEMPORAL_FAMILIES.has("pitch-drift")).toBe(false);
+  });
+
+  it("accepts a healthy pitch pair, gated on cents not on dB (E2/S1)", () => {
+    const r = gradePair(healthyPitch, anchors);
+    expect(r.verdict).toBe("PASS");
+    expect(r.gatedOn).toBe("detune-cents");
+  });
+
+  it("every family is gated on exactly one measure", () => {
+    expect(PITCH_FAMILIES.has("pitch-drift")).toBe(true);
+    // A family in both sets would take the temporal branch silently, and the
+    // gatedOn label would tell you the truth about a verdict it did not decide.
+    for (const f of PITCH_FAMILIES) expect(TEMPORAL_FAMILIES.has(f)).toBe(false);
+  });
+});
+
+/**
+ * E2/S1 — the pitch gate, proven in both directions.
+ *
+ * The point of moving pitch off the anchor ratio was that the ratio is blunt,
+ * so the tests that matter are the ones where the two rulers DISAGREE. A pair
+ * with a healthy 8x anchor ratio and a detune of 2 cents must be rejected; if
+ * it is not, the wiring is decorative and the old gate is still running.
+ */
+describe("Layer A gate — the pitch gate (E2/S1)", () => {
+  it("rejects a detune too small to be a fair trial, DESPITE a healthy anchor ratio", () => {
+    const r = gradePair({ ...healthyPitch, pitchP95Cents: 2 }, anchors);
+    expect(r.verdict).toBe("FLAG");
+    expect(r.anchorRatio).toBeGreaterThanOrEqual(MIN_ANCHOR_RATIO); // the old gate would have passed it
+    expect(r.reasons.join(" ")).toMatch(/peak detune/);
+  });
+
+  it("rejects a detune that could not be measured at all", () => {
+    const r = gradePair({ ...healthyPitch, pitchConfidentFraction: 0.3 }, anchors);
+    expect(r.verdict).toBe("FLAG");
+    expect(r.reasons.join(" ")).toMatch(/unmeasurable/);
+  });
+
+  it("does NOT reject on the temporal confidence a pitch shift naturally lowers", () => {
+    // d7 measures 19% temporal confidence and 100% pitch confidence. Rejecting
+    // on the former is the misdiagnosis this whole change exists to correct.
+    const r = gradePair({ ...healthyPitch, driftConfidentFraction: 0.19, driftIqrMs: 2 }, anchors);
+    expect(r.verdict).toBe("PASS");
+  });
+
+  it("the cents boundary is inclusive on the passing side", () => {
+    expect(gradePair({ ...healthyPitch, pitchP95Cents: MIN_PITCH_CENTS }, anchors).verdict).toBe("PASS");
+    expect(gradePair({ ...healthyPitch, pitchP95Cents: MIN_PITCH_CENTS - 0.1 }, anchors).verdict).toBe("FLAG");
+  });
+
+  it("the pitch-confidence boundary is inclusive on the passing side", () => {
+    expect(
+      gradePair({ ...healthyPitch, pitchConfidentFraction: MIN_CONFIDENT_PITCH_FRACTION }, anchors).verdict,
+    ).toBe("PASS");
+    expect(
+      gradePair({ ...healthyPitch, pitchConfidentFraction: MIN_CONFIDENT_PITCH_FRACTION - 0.01 }, anchors).verdict,
+    ).toBe("FLAG");
+  });
+
+  it("a missing or NaN detune cannot slip through as a pass", () => {
+    expect(gradePair({ ...healthyPitch, pitchP95Cents: NaN }, anchors).verdict).toBe("FLAG");
+    expect(gradePair({ ...healthyPitch, pitchP95Cents: null }, anchors).verdict).toBe("FLAG");
+    expect(gradePair({ ...healthyPitch, pitchConfidentFraction: null }, anchors).verdict).toBe("FLAG");
   });
 });
 

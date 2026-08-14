@@ -43,7 +43,15 @@ const CACHE = join(HERE, ".cache");
 const TMP = join(CACHE, "degrade-tmp");
 const OUT = join(ROOT, "public", "audio", "delicacy");
 export const LUFS = -16; // matches the bias pool target
-const SEGS = 10;
+/**
+ * EXPORTED (E2/S1) because the segment count defines the RAMP MODEL, and the
+ * ramp model is what any pitch measurement has to be checked against: segment k
+ * carries param*(k+0.5)/SEGS, so a rendered clip spans 5%..95% of its rung's
+ * parameter rather than sitting at it. A checker that hardcodes 0.95 is a
+ * second copy of this constant, and second copies of constants are how the two
+ * rung tables came to disagree (rungs.mjs).
+ */
+export const SEGS = 10;
 const XF = 0.03; // crossfade seconds at each join
 
 /**

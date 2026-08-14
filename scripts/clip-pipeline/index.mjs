@@ -260,11 +260,13 @@ try {
   else if (stage === "validate") await (await import("./validate.mjs")).validate(args);
   else if (stage === "expand") await (await import("./expand.mjs")).expand(args);
   else if (stage === "ladder") await (await import("./ladder.mjs")).ladder(args);
+  else if (stage === "sweep") await (await import("./sweep.mjs")).sweep(args);
   else {
-    console.log("usage: node scripts/clip-pipeline/index.mjs <download|snapshot|analyze|render|degrade|validate|ladder|expand> [--local <file>] [--start N] [--len N] [--out id]");
+    console.log("usage: node scripts/clip-pipeline/index.mjs <download|snapshot|analyze|render|degrade|validate|ladder|sweep|expand> [--local <file>] [--start N] [--len N] [--out id]");
     console.log("       degrade: --id <pairId> --source <biasItemId> --start <sec> --family <pitch-drift|timing-smear|lossy-artifact> --magnitude <ladder rung 1-4; 2-4 ship> --seed <int> [--len <sec>]");
     console.log("       validate: Layer A spectral measurement of every shipped pair vs the transparency anchors [--json]");
     console.log("       ladder:   render 4 calibrated rungs per family from ONE source and prove the parameter drives the measure");
+    console.log("       sweep:    measure the SHIPPED pool in each family's own physical unit (cents / ms / dB) [--family <name>] [--json]");
     process.exit(2);
   }
 } catch (e) {
