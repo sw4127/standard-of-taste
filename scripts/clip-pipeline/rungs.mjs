@@ -155,13 +155,134 @@ export const STAIRCASE_LEVELS = {
     values: [12.5, 15.7, 19.8, 25, 31.5, 39.7, 50, 63, 79.4, 100],
   },
 
-  // lossy-artifact is NOT here, and its absence is a decision rather than
-  // pending tidy-up. Its anchor ratio divides by a per-source number that spans
-  // 5.6x across the pool, so two clips with near-identical damage report 3.5x
-  // and 8.9x; spacing a ladder on that scale would encode the denominator's
-  // noise into the rungs. It also SATURATES below 32k (32k and 24k measure
-  // 12.39 and 12.40 dB), so the room is upward, between 320k and 128k.
+  /**
+   * 0.9 -> 9.5 dB of log-spectral distance, 10 levels, ratio ~1.3 (E2/S4c).
+   *
+   * THE LEVELS ARE IN dB, NOT kbps, AND THAT IS THE WHOLE POINT. Pitch and
+   * timing have manipulation-intrinsic units: 25 cents is 25 cents whatever the
+   * music, 30 ms of drift is 30 ms. Lossy does not. A bitrate is a SETTING, and
+   * how much damage it does depends entirely on the material — so a "threshold
+   * in kbps" would not be a property of the listener, which is the only thing
+   * the instrument is trying to report.
+   *
+   * MEASURED ACROSS FIVE SOURCES (pb1 Bach piano, pb3 Chopin piano, pb4
+   * Beethoven quartet, pb6 Zabriskie ambient, pb8 Shaw acoustic), same bitrates
+   * from each. Spread = max/min across sources; lower is more material-independent:
+   *
+   *     bitrate    LSD dB spread    x anchor spread
+   *     320k             3.26            1.00   (ratio is 1.0 here by construction)
+   *     192k             3.08            1.44
+   *     128k             3.05            3.87
+   *     96k              4.68            7.01
+   *     64k              6.47           13.52
+   *     32k              2.59            6.80
+   *
+   * The anchor ratio was introduced to make LSD comparable across recordings.
+   * It does the opposite everywhere below 192k — roughly 2x WORSE than the raw
+   * dB it normalises. The reason is that anchor and damage are not
+   * proportional: pb8 has the pool's LOWEST transparency anchor (0.266 dB) and
+   * its HIGHEST 32k damage (25.6 dB), so dividing compounds the variance
+   * instead of cancelling it. That is where d18's famous 94x came from.
+   *
+   * WHAT THE ANCHOR IS STILL GOOD FOR: a per-source transparency FLOOR. "This
+   * manipulation is bigger than one known to be inaudible on this same
+   * material" is a sound statement. It is a validity check, not a scale, and
+   * conflating the two is the defect.
+   *
+   * SO THE LADDER IS DEFINED IN THE MEASURE, AND THE BITRATE IS SOLVED PER
+   * SOURCE (see solveLossyBitrate). Same move as timing's driftMs: the level
+   * states the magnitude, and the render parameter is derived to hit it.
+   *
+   * RANGE, AND IT IS NARROW — narrower than either other family, for three
+   * measured reasons that stack:
+   *
+   *   CEILING, saturation. The family stops responding below 32 kbps: 32k and
+   *   24k measure 12.39 and 12.40 dB on pb1. And the usable ceiling is the
+   *   LOWEST maximum across sources, since a level no source can reach is not a
+   *   level — pb6 tops out at 9.9 dB even at 32k.
+   *
+   *   FLOOR, measurement noise. Above ~128 kbps the differences are small
+   *   enough that the curve is NOT MONOTONE. Measured, and it is the reason the
+   *   floor is 2.0 and not the 0.9 this ladder was first drafted with:
+   *
+   *       pb6   320k 0.6 -> 192k 0.9 -> 128k 1.0 -> 96k 0.9   (falls)
+   *       pb3   320k 0.9 -> 192k 1.4 -> 128k 1.0              (falls)
+   *
+   *   Two of five sources reverse below 1.7 dB. A staircase level down there
+   *   would not reliably differ from the level above it.
+   *
+   *   WIDTH, material. Even inside the usable band, the same bitrate spans
+   *   2.6-6.5x in dB across these five recordings, which is why the level is
+   *   stated in dB and the bitrate solved per source rather than fixed.
+   *
+   * The result is 8 levels over 4.75x, against pitch's 11 over 32x. That is an
+   * honest description of the family, not a placeholder to be widened later:
+   * lossy has less room between "inaudible" and "saturated" than a pitch or
+   * tempo manipulation does, and pretending otherwise would put levels where
+   * the measure cannot tell them apart.
+   */
+  "lossy-artifact": {
+    unit: "dB log-spectral distance",
+    ratio: 1.249,
+    renderMode: "solvedBitrate",
+    values: [2.0, 2.5, 3.1, 3.9, 4.9, 6.1, 7.6, 9.5],
+  },
 };
+
+/**
+ * The bitrate that hits a target LSD on ONE source (E2/S4c).
+ *
+ * IT IS NOT SAFE TO ASSUME THE CURVE IS MONOTONE. The first version of this
+ * said so in its own comment and simply sorted by dB — which, on a curve that
+ * reverses, silently pairs one dB value with two different bitrates and returns
+ * whichever the sort happened to put first. Measured: pb6 runs 0.6 / 0.9 / 1.0 /
+ * 0.9 dB across 320k / 192k / 128k / 96k, and pb3 reverses too. Above ~128 kbps
+ * the differences are inside the measurement noise.
+ *
+ * So the solver takes the LONGEST MONOTONE RUN, walking down from the lowest
+ * bitrate (where the signal is unambiguous) and stopping at the first reversal.
+ * Anything above that point is not a region we can invert, and a target landing
+ * there returns null rather than a confident-looking wrong bitrate.
+ *
+ * Interpolation is in log(bitrate) against dB — that is the axis on which the
+ * measured curve is closest to straight, and interpolating on the wrong one
+ * would bias every solved value in the same direction.
+ *
+ * Returns null when the target is outside the invertible region. Callers must
+ * SKIP that level for that source rather than clamp to the nearest: clamping
+ * would render two different levels as the same audio and report them as
+ * different magnitudes.
+ *
+ * @param curve [{ bitrateKbps, lsdDb }] measured for this source, any order.
+ */
+export function solveLossyBitrate(targetLsdDb, curve) {
+  if (curve.length < 2) throw new Error("solveLossyBitrate: need at least two measured points");
+  // Ascending bitrate = descending damage. Keep the run that stays monotone.
+  const byBitrate = [...curve].sort((a, b) => a.bitrateKbps - b.bitrateKbps);
+  const run = [byBitrate[0]];
+  for (let i = 1; i < byBitrate.length; i++) {
+    if (byBitrate[i].lsdDb >= run[run.length - 1].lsdDb) break; // reversal
+    run.push(byBitrate[i]);
+  }
+  if (run.length < 2) return null;
+
+  const pts = [...run].sort((a, b) => a.lsdDb - b.lsdDb);
+  const lo = pts[0];
+  const hi = pts[pts.length - 1];
+  if (targetLsdDb < lo.lsdDb || targetLsdDb > hi.lsdDb) return null;
+
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1];
+    const b = pts[i];
+    if (targetLsdDb <= b.lsdDb) {
+      if (b.lsdDb === a.lsdDb) return b.bitrateKbps; // saturated segment
+      const t = (targetLsdDb - a.lsdDb) / (b.lsdDb - a.lsdDb);
+      const logBr = Math.log(a.bitrateKbps) + t * (Math.log(b.bitrateKbps) - Math.log(a.bitrateKbps));
+      return Math.round(Math.exp(logBr));
+    }
+  }
+  return null;
+}
 
 /**
  * Lowest detune whose rendered magnitude the cents ruler can still stand
