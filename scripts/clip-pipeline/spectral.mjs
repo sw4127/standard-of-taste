@@ -495,3 +495,180 @@ export function temporalDrift(a, b, opts = {}) {
     coherence: meanStep > 0 ? (q(0.75) - q(0.25)) / meanStep : 0,
   };
 }
+
+/**
+ * Detune between two signals, in CENTS (E1, 2026-08-14).
+ *
+ * WHY THIS EXISTS. Layer A measures the pitch-drift family with log-spectral
+ * distance and reports "x anchor" — a generic, unitless spectral distance. Two
+ * problems, both fatal for the threshold instrument.
+ *
+ * FIRST, IT COMPRESSES. Across the shipping ladder the parameter quadruples
+ * (25 -> 100 cents) while the measure moves from ~3-4x its anchor to ~5-7x.
+ * Enough to prove monotonicity across three rungs; nowhere near enough to
+ * separate twelve, which is what an adaptive staircase needs.
+ *
+ * SECOND, IT IS NOT THE UNIT WE OWE THE USER. The deliverable of record is a
+ * per-flaw sensitivity threshold in PHYSICAL units (CLAUDE.md, D4 amendment):
+ * "you hear drift at 40 cents and miss it at 25". A ruler graduated in
+ * anchor-ratios cannot express that sentence, so a conversion would have to be
+ * invented somewhere — and invented numbers are exactly what N3 forbids.
+ *
+ * ON THE "CONFIDENCE COLLAPSE" THIS SLICE WAS CALLED IN TO FIX. `temporalDrift`
+ * reports 19-66% confident blocks on the top pitch-drift rung against 91-99%
+ * lower down, which was recorded as "the drift measure goes blind above ~100
+ * cents". That diagnosis was wrong, and the correction matters more than the
+ * original note. Pitch drift is rendered with `rubberband=pitch`, which is
+ * duration-EXACT — there is no misalignment to go blind to, and the reported
+ * drift stays at 2-3 ms exactly as it should. What falls is the ENVELOPE
+ * correlation, because a semitone of rubberband shift smears transients and
+ * changes the envelope's shape. That number is a validity signal for the
+ * timing family and a side effect of the manipulation for this one. Measuring
+ * pitch in the pitch domain sidesteps the question instead of papering it over.
+ *
+ * METHOD. A shift of c cents is a TRANSLATION of the spectrum along a
+ * log-frequency axis — that is what "cents" means. So: resample each frame's
+ * magnitude spectrum onto a grid of constant cents-per-bin, cross-correlate the
+ * two, and read the peak's position. Parabolic interpolation about the peak
+ * gives resolution finer than the grid, because the estimate pools every
+ * partial in the frame rather than tracking one.
+ *
+ * SIGN: positive means `b` is SHARPER than `a`.
+ *
+ * LIMITS, stated (N3). This measures a global spectral translation. Two files
+ * that differ by anything other than a shift — a different take, a different
+ * mix — are out of scope; it is for measuring OUR manipulations against OUR
+ * originals. Frames with no confident peak are excluded and counted, never
+ * silently averaged in.
+ */
+export function pitchShiftCents(a, b, opts = {}) {
+  const {
+    sampleRate = DEFAULT_SPECTRAL_OPTS.sampleRate,
+    /** 8192 @ 44.1 kHz = ~186 ms, ~5.4 Hz/bin — fine enough to resolve partials. */
+    frameSize = 8192,
+    hop = 4096,
+    /** Above the pool's fundamentals, below the mp3 lowpass knees. */
+    fMin = 120,
+    fMax = 6000,
+    /** Grid resolution; sub-bin precision comes from the parabolic fit. */
+    centsPerBin = 5,
+    /** Widest shift searched. A semitone is 100 — this leaves headroom. */
+    maxCents = 400,
+    /** Frames whose correlation peak is weaker than this do not count. */
+    minScore = 0.5,
+    silenceFloorDb = DEFAULT_SPECTRAL_OPTS.silenceFloorDb,
+  } = opts;
+
+  const nBins = Math.floor((1200 * Math.log2(fMax / fMin)) / centsPerBin);
+  const maxLag = Math.round(maxCents / centsPerBin);
+  const win = hann(frameSize);
+  const half = frameSize / 2;
+
+  /** One frame's magnitude spectrum, resampled onto the constant-cents grid. */
+  const logFreqProfile = (samples, start) => {
+    const re = new Float64Array(frameSize);
+    const im = new Float64Array(frameSize);
+    let sumSq = 0;
+    for (let i = 0; i < frameSize; i++) {
+      const s = samples[start + i];
+      sumSq += s * s;
+      re[i] = s * win[i];
+    }
+    if (20 * Math.log10(Math.sqrt(sumSq / frameSize) + 1e-12) < silenceFloorDb) return null;
+    fft(re, im);
+
+    const prof = new Float64Array(nBins);
+    for (let k = 0; k < nBins; k++) {
+      const hz = fMin * Math.pow(2, (k * centsPerBin) / 1200);
+      const bin = (hz / sampleRate) * frameSize;
+      const i0 = Math.floor(bin);
+      if (i0 < 1 || i0 + 1 >= half) continue;
+      const frac = bin - i0;
+      const m0 = Math.hypot(re[i0], im[i0]);
+      const m1 = Math.hypot(re[i0 + 1], im[i0 + 1]);
+      // Log magnitude: quiet partials keep contributing instead of letting the
+      // loudest one decide the whole correlation.
+      prof[k] = Math.log10(m0 * (1 - frac) + m1 * frac + 1e-9);
+    }
+    // Mean-subtract so the correlation reads SHAPE, not overall level.
+    let mean = 0;
+    for (let k = 0; k < nBins; k++) mean += prof[k];
+    mean /= nBins;
+    for (let k = 0; k < nBins; k++) prof[k] -= mean;
+    return prof;
+  };
+
+  const cents = [];
+  const scores = [];
+  let silentFrames = 0;
+
+  for (let start = 0; start + frameSize <= Math.min(a.length, b.length); start += hop) {
+    const pa = logFreqProfile(a, start);
+    const pb = logFreqProfile(b, start);
+    if (!pa || !pb) {
+      silentFrames++;
+      continue;
+    }
+
+    let bestLag = 0;
+    let bestScore = -Infinity;
+    const corr = new Float64Array(2 * maxLag + 1);
+    for (let lag = -maxLag; lag <= maxLag; lag++) {
+      const lo = Math.max(0, -lag);
+      const hi = Math.min(nBins, nBins - lag);
+      let dot = 0, na = 0, nb = 0;
+      for (let k = lo; k < hi; k++) {
+        const va = pa[k];
+        const vb = pb[k + lag];
+        dot += va * vb;
+        na += va * va;
+        nb += vb * vb;
+      }
+      const score = dot / (Math.sqrt(na * nb) + 1e-12);
+      corr[lag + maxLag] = score;
+      if (score > bestScore) {
+        bestScore = score;
+        bestLag = lag;
+      }
+    }
+    scores.push(bestScore);
+    if (bestScore < minScore) continue;
+
+    const i = bestLag + maxLag;
+    let sub = 0;
+    if (i > 0 && i < corr.length - 1) {
+      const y0 = corr[i - 1], y1 = corr[i], y2 = corr[i + 1];
+      const denom = y0 - 2 * y1 + y2;
+      if (denom !== 0) sub = Math.max(-1, Math.min(1, (0.5 * (y0 - y2)) / denom));
+    }
+    cents.push((bestLag + sub) * centsPerBin);
+  }
+
+  const confidentFraction = scores.length ? cents.length / scores.length : 0;
+  const sorted = [...cents].sort((x, y) => x - y);
+  const pct = (f) =>
+    sorted.length === 0 ? 0 : sorted[Math.min(sorted.length - 1, Math.floor(f * (sorted.length - 1)))];
+  const absSorted = cents.map(Math.abs).sort((x, y) => x - y);
+
+  return {
+    /** Per-frame estimates in presentation order — the drift trajectory. */
+    centsPerFrame: cents,
+    scores,
+    silentFrames,
+    confidentFraction,
+    /** Typical detune across the clip. */
+    medianCents: pct(0.5),
+    /**
+     * The DEPTH of the drift. The renderer ramps segment-wise to a peak, so a
+     * clip's headline magnitude is its extreme, not its middle. p95 rather than
+     * max, because a maximum over many frames is a maximum of noise and grows
+     * with however many frames you happened to measure.
+     */
+    p95AbsCents: absSorted.length
+      ? absSorted[Math.min(absSorted.length - 1, Math.floor(0.95 * (absSorted.length - 1)))]
+      : 0,
+    maxAbsCents: absSorted.length ? absSorted[absSorted.length - 1] : 0,
+    /** Span from flattest to sharpest — how far the pitch actually travels. */
+    rangeCents: cents.length ? Math.max(...cents) - Math.min(...cents) : 0,
+  };
+}
