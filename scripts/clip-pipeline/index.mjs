@@ -262,7 +262,7 @@ try {
   else if (stage === "ladder") await (await import("./ladder.mjs")).ladder(args);
   else {
     console.log("usage: node scripts/clip-pipeline/index.mjs <download|snapshot|analyze|render|degrade|validate|ladder|expand> [--local <file>] [--start N] [--len N] [--out id]");
-    console.log("       degrade: --id <pairId> --source <biasItemId> --start <sec> --family <pitch-drift|timing-smear|lossy-artifact> --magnitude <1|2|3> --seed <int> [--len <sec>]");
+    console.log("       degrade: --id <pairId> --source <biasItemId> --start <sec> --family <pitch-drift|timing-smear|lossy-artifact> --magnitude <ladder rung 1-4; 2-4 ship> --seed <int> [--len <sec>]");
     console.log("       validate: Layer A spectral measurement of every shipped pair vs the transparency anchors [--json]");
     console.log("       ladder:   render 4 calibrated rungs per family from ONE source and prove the parameter drives the measure");
     process.exit(2);
