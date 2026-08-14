@@ -58,6 +58,81 @@ export const LADDER_RUNGS = {
 /** Rungs that ship in the pool. Rung 1 is measured and rejected (items.ts). */
 export const SHIPPING_RUNGS = [2, 3, 4];
 
+/**
+ * THE STAIRCASE LADDER — dense levels for the adaptive threshold instrument
+ * (E2/S4, 2026-08-14). Separate from LADDER_RUNGS above, on purpose.
+ *
+ * WHY NOT JUST WIDEN LADDER_RUNGS. Because rung NUMBERS are load-bearing: the
+ * shipped pool records `magnitude: 3` and the manifest records the parameter
+ * beside it, so inserting levels renumbers every existing item and makes d4's
+ * recorded magnitude refer to a different manipulation. That is precisely the
+ * failure this file was created to end, and doing it deliberately would not be
+ * an improvement on doing it by accident.
+ *
+ * So the staircase is keyed by PHYSICAL VALUE, not by index. A staircase does
+ * not need "rung N" — it needs an ordered list of parameters to step through,
+ * and a trial is identified by the parameter it was rendered at. LADDER_RUNGS
+ * keeps its meaning and the shipping pool is untouched.
+ *
+ * SPACING: a constant ratio of sqrt(2), i.e. every second level doubles.
+ * Constant-ratio spacing is what a staircase wants — a step should mean the
+ * same thing wherever it lands — and sqrt(2) has the property that the ladder
+ * PASSES THROUGH the values already shipping (12.5 ~ the old rung 1's 12, then
+ * 25, 50, 100), so the existing renders remain interpretable on the new scale
+ * rather than becoming orphans.
+ */
+export const STAIRCASE_LEVELS = {
+  /**
+   * 3.1 -> 100 cents, 11 levels, ratio sqrt(2). MEASURED, source pb1 @75s
+   * (`clip-pipeline curve --family pitch-drift`): the cents ruler recovers the
+   * rendered peak across this entire span, against a ramp prediction of
+   * 0.95 x param —
+   *
+   *     param     3    4    6    8   11   15   21   29   40   55   76  105  145  200
+   *     measured 2.7  3.9  5.2  7.8 10.3 14.6 20.0 28.0 38.6 52.2 72.2 100.1 138.2 190.1
+   *     predicted 2.9  3.8  5.7  7.6 10.5 14.3 20.0 27.6 38.0 52.3 72.2  99.8 137.8 190.0
+   *
+   * THE BOTTOM IS SET BY MEASURABILITY, NOT BY TASTE. At 2 cents the ruler
+   * reads 1.4 against a predicted 1.9 — a 26% under-read, where every level
+   * from 3 upward lands within a few percent. So 3.1 is the lowest level whose
+   * rendered magnitude we can still stand behind, and nothing below it ships
+   * whatever a staircase might want to ask.
+   *
+   * THE TOP IS SET BY MEANING, and the constraint is inherited rather than new:
+   * 100 cents is a semitone accumulated ACROSS a 20s clip — still a drift, not
+   * a wrong note (see LADDER_RUNGS above). The ruler is happy to 200 and the
+   * ladder deliberately is not.
+   */
+  "pitch-drift": [3.1, 4.4, 6.3, 8.8, 12.5, 17.7, 25, 35.4, 50, 70.7, 100],
+  // lossy-artifact and timing-smear are NOT here yet, and their absence is
+  // deliberate rather than pending tidy-up. Each needs a problem solved first
+  // that pitch did not have:
+  //   lossy   — the anchor ratio divides by a per-source number that spans 5.6x
+  //             across the pool, so two clips with near-identical damage report
+  //             3.5x and 8.9x. Spacing a ladder on that scale would encode the
+  //             denominator's noise into the rungs. It also SATURATES below
+  //             32k (32k and 24k measure 12.39 and 12.40 dB), so the room is
+  //             upward, between 320k and 128k.
+  //   timing  — the parameter is a BOUND on a seeded random draw, not a
+  //             determinant like the pitch ramp, so two clips at the same level
+  //             can differ materially. A staircase whose step size varies at
+  //             random is stepping in noise.
+};
+
+/**
+ * Lowest detune whose rendered magnitude the cents ruler can still stand
+ * behind, in cents. Measured (above), not chosen.
+ *
+ * DISTINCT FROM validate.mjs's MIN_PITCH_CENTS, and the difference matters.
+ * That one is a FAIR-TRIAL floor for the fixed assessment — "is this big enough
+ * to be worth asking anybody" — and sits at 10. This one is a MEASURABILITY
+ * floor: "can we say what we rendered". A staircase converging downward toward
+ * a listener's threshold must be allowed below the fair-trial floor, because
+ * finding where someone stops hearing is the entire point; it must never go
+ * below this one, because there we would be reporting a number we cannot back.
+ */
+export const MIN_MEASURABLE_PITCH_CENTS = 3;
+
 /** The degradation families the pipeline knows how to render. */
 export const LADDER_FAMILIES = Object.keys(LADDER_RUNGS);
 
