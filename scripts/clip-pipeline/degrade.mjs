@@ -27,7 +27,7 @@ import { createHash } from "node:crypto";
 import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync } from "node:fs";
 import { clippingStats } from "./spectral.mjs";
-import { LADDER_FAMILIES, paramForRung } from "./rungs.mjs";
+import { LADDER_FAMILIES, LADDER_RUNGS, paramForRung } from "./rungs.mjs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
@@ -222,8 +222,25 @@ export async function degrade(args) {
  * `magnitude` here is the LADDER RUNG (1..4), recorded for the manifest; the
  * actual degradation is driven by `param`, so the rung is a label rather than a
  * lookup key and cannot silently disagree with what was rendered.
+ *
+ * RT-54a: that freedom is the remaining way to write a mislabelled pair — hand
+ * it rung 2 and rung 4's parameter and it renders exactly that. It WARNS rather
+ * than throwing, deliberately: calibrating a new rung means rendering candidate
+ * values that are not on the ladder yet, and a hard gate here would block the
+ * ladder work itself. What SHIPS is already enforced elsewhere — rungs.test.ts
+ * rejects any pair in the manifest whose recorded params disagree with its rung.
+ * So: loud at render time, fatal at ship time.
  */
 export async function renderPair({ id, sourceId, startSec, clipSec, family, magnitude, param, seed, quiet = false }) {
+  const onLadder = LADDER_RUNGS[family]?.values ?? [];
+  if (onLadder.length && String(onLadder[magnitude - 1]) !== String(param)) {
+    console.warn(
+      `\n  !! OFF-LADDER RENDER: ${id} is labelled ${family} rung ${magnitude}, whose ladder value is ` +
+        `${onLadder[magnitude - 1]} — but param is ${param}.\n` +
+        `     If you are calibrating a new rung, fine. If this is a pool pair, the label is a LIE and\n` +
+        `     the pool gate will reject it (rungs.test.ts). Ladder: ${JSON.stringify(onLadder)}\n`,
+    );
+  }
   const bias = JSON.parse(readFileSync(BIAS_MANIFEST, "utf8"));
   const src = bias.items.find((i) => i.id === sourceId);
   if (!src?.source?.cachedFile) throw new Error(`source ${sourceId} not in bias manifest / not downloaded`);

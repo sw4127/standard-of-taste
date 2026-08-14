@@ -141,6 +141,33 @@ export function checkDelicacyPool(
   for (const [c, n] of artists)
     if (n > artistCap) err(`artist "${c}" carries ${n}/${trials.length} trials (contract: ≤ ${artistCap})`);
 
+  // PER-FAMILY artist concentration (RT-53a). The pool-wide cap above is not
+  // enough: an artist can sit comfortably under it while carrying half of ONE
+  // degradation family, which is the confound the crossed factorial exists to
+  // prevent — a family-by-rung effect indistinguishable from "that one
+  // recording". This was live and uncaught until pool v2: Komiku and Beethoven
+  // held 2 timing-smear trials each out of 6, and the rule that replaced d2 was
+  // reasoning in a commit message rather than a check. It is a check now.
+  //
+  // THE BOUND IS 2, and it was NOT fitted to the data: the v2 pool's worst cell
+  // is already 2 (Komiku/timing-smear, Bach/pitch, Bach/lossy, Chopin/pitch,
+  // Chopin/lossy, Shaw/lossy). A third of a 6-trial family is 2, which is the
+  // same one-third principle as the pool-wide cap, applied per family.
+  const perFamilyArtist = new Map<string, number>();
+  for (const t of trials) {
+    const k = `${leadArtist(t.sourceCredit)}///${t.family}`;
+    perFamilyArtist.set(k, (perFamilyArtist.get(k) ?? 0) + 1);
+  }
+  const familyArtistCap = Math.max(2, Math.ceil(perFamily / 3));
+  for (const [k, n] of perFamilyArtist) {
+    if (n > familyArtistCap) {
+      const [artist, family] = k.split("///");
+      err(
+        `artist "${artist}" carries ${n}/${perFamily} of family "${family}" (contract: ≤ ${familyArtistCap}) — a family effect would be confounded with one artist's recordings`,
+      );
+    }
+  }
+
   for (const t of trials) {
     const p = manifest.pairs.find((x) => x.id === t.id);
     if (!p) {
