@@ -133,7 +133,18 @@ describe("staircase ladders — coverage is deliberate", () => {
    * problem recorded in rungs.mjs. This exists so adding one is a deliberate
    * act with a reason attached, not a silent fill-in.
    */
-  it("only families whose ruler and parameterisation are settled have one", () => {
-    expect(Object.keys(STAIRCASE_LEVELS).sort()).toEqual(["pitch-drift", "timing-smear"]);
+  it("all three families have one, each on its own settled scale", () => {
+    expect(Object.keys(STAIRCASE_LEVELS).sort()).toEqual(["lossy-artifact", "pitch-drift", "timing-smear"]);
+  });
+
+  /**
+   * Each family's levels are in a DIFFERENT unit — cents, milliseconds,
+   * decibels — because each manipulation has a different natural quantity and
+   * forcing one scale on all three is what produced the unitless anchor ratio
+   * this session spent three slices unpicking.
+   */
+  it("no two families share a unit", () => {
+    const units = ladders.map(([, l]) => l.unit);
+    expect(new Set(units).size).toBe(units.length);
   });
 });
