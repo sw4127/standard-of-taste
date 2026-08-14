@@ -43,6 +43,20 @@ async function getHook(profile: PremiumProfile, deterministic: string): Promise<
  * the page with the user's REAL profile; without it (direct visits / Slice-0
  * testing) it falls back to the sample.
  */
+/**
+ * The paywall's curiosity gap. HOISTED to module scope (RT-15): defining it
+ * inside PreviewPage made React see a brand-new component type on every render,
+ * which remounts the subtree and throws away its DOM — and it is exactly the
+ * subtree the paywall is built to show off. `aria-hidden` because blurred text
+ * is decoration; a screen reader announcing the copy would give away the thing
+ * the blur is selling.
+ */
+const Blur = ({ children }: { children: React.ReactNode }) => (
+  <div aria-hidden className="select-none" style={{ filter: "blur(6px)", opacity: 0.7 }}>
+    {children}
+  </div>
+);
+
 export default async function PreviewPage({ searchParams }: { searchParams: SearchParams }) {
   const sp = await searchParams;
   const token = typeof sp.t === "string" ? sp.t : undefined;
@@ -59,12 +73,6 @@ export default async function PreviewPage({ searchParams }: { searchParams: Sear
     process.env.NODE_ENV !== "production"
       ? `/premium/report?dev=1${token ? `&t=${token}` : ""}`
       : undefined;
-
-  const Blur = ({ children }: { children: React.ReactNode }) => (
-    <div aria-hidden className="select-none" style={{ filter: "blur(6px)", opacity: 0.7 }}>
-      {children}
-    </div>
-  );
 
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-6 py-10">

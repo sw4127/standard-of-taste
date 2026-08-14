@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { track } from "@/lib/analytics";
 
 /**
@@ -37,9 +38,9 @@ export default function ErrorPage({
       >
         Try again
       </button>
-      <a href="/" className="mt-4 text-sm text-muted underline">
+      <Link href="/" className="mt-4 text-sm text-muted underline">
         Back to the start
-      </a>
+      </Link>
     </main>
   );
 }

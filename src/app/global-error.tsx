@@ -53,6 +53,14 @@ export default function GlobalError({
         >
           Try again
         </button>
+        {/*
+          A RAW ANCHOR IS CORRECT HERE, and this is the one place in the app that
+          is true. global-error replaces the root layout, so it renders when the
+          React tree above it has already failed — next/link would route through
+          the very client router whose collapse produced this screen. A full
+          document navigation is the only exit that cannot fail the same way.
+        */}
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <a href="/" style={{ marginTop: 14, fontSize: 13, color: "#8b91a3" }}>
           Back to the start
         </a>
