@@ -112,7 +112,12 @@ export async function curve(args = []) {
     const lsdBelow10k = logSpectralDistance(ref, deg, { fMax: 10000 }).lsdDb;
     const knee = lowpassKneeHz(lsd.perBandDb);
     const pitch = family === "pitch-drift" ? pitchShiftCents(ref, deg) : null;
-    const drift = family === "timing-smear" ? temporalDrift(ref, deg) : null;
+    // --maxlag widens the correlator's search window. Exposed because the
+    // default (60 ms) is a CEILING on what can be reported, and a ladder whose
+    // top rungs drift further than the search window would be measured as
+    // "less drift", monotonically wrongly.
+    const maxLagMs = Number(opt("maxlag", "0")) || undefined;
+    const drift = family === "timing-smear" ? temporalDrift(ref, deg, maxLagMs ? { maxLagMs } : {}) : null;
 
     rows.push({
       param,
@@ -143,20 +148,36 @@ export async function curve(args = []) {
       (anchorKnee == null ? " · no lowpass knee (as expected at 320k)" : ` · knee ${Math.round(anchorKnee)} Hz`),
   );
   const shipping = new Set(LADDER_RUNGS[family].values.map(String));
-  console.log("  param      LSD dB  ×anchor   <10kHz  ×anch     knee Hz   step×   shipping");
+
+  /**
+   * The table leads with the measure this family is GATED on, and `step×` is
+   * computed from that same measure. The first version always printed the LSD
+   * columns, so a timing-smear sweep showed a tidy curve of the number that
+   * does NOT decide its verdicts while hiding the drift figures that do — the
+   * same defect as validate printing temporal confidence on pitch rows.
+   */
+  const GATING = {
+    "lossy-artifact": { head: "  LSD dB  ×anchor   <10kHz  ×anch     knee Hz", key: (r) => r.lsdDb,
+      cells: (r) => `${r.lsdDb.toFixed(2).padStart(8)}  ${r.anchorRatio.toFixed(1).padStart(7)}  ${r.lsdBelow10kDb.toFixed(2).padStart(7)}  ${r.ratioBelow10k.toFixed(1).padStart(5)}  ${(r.kneeHz == null ? "—" : String(r.kneeHz)).padStart(10)}` },
+    "pitch-drift": { head: "  detune¢   LSD dB  ×anchor", key: (r) => r.pitchP95Cents,
+      cells: (r) => `${(r.pitchP95Cents ?? 0).toFixed(1).padStart(9)}  ${r.lsdDb.toFixed(2).padStart(7)}  ${r.anchorRatio.toFixed(1).padStart(7)}` },
+    "timing-smear": { head: " driftIQR    conf%   LSD dB  ×anchor", key: (r) => r.driftIqrMs,
+      cells: (r) => `${(r.driftIqrMs + " ms").padStart(9)}  ${((r.driftConfidentFraction ?? 0) * 100).toFixed(0).padStart(6)}%  ${r.lsdDb.toFixed(2).padStart(7)}  ${r.anchorRatio.toFixed(1).padStart(7)}` },
+  }[family];
+
+  console.log(`  param    ${GATING.head}   step×   shipping`);
   let prev = null;
   for (const r of rows) {
-    const step = prev == null ? null : r.lsdDb / prev;
-    prev = r.lsdDb;
+    const v = GATING.key(r);
+    const step = prev == null || !prev ? null : v / prev;
+    prev = v;
     console.log(
-      `  ${String(r.param).padEnd(9)}${r.lsdDb.toFixed(2).padStart(7)}  ${r.anchorRatio.toFixed(1).padStart(7)}  ` +
-        `${r.lsdBelow10kDb.toFixed(2).padStart(7)}  ${r.ratioBelow10k.toFixed(1).padStart(5)}  ` +
-        `${(r.kneeHz == null ? "—" : String(r.kneeHz)).padStart(10)}  ` +
+      `  ${String(r.param).padEnd(9)}${GATING.cells(r)}  ` +
         `${(step == null ? "—" : step.toFixed(2) + "x").padStart(6)}   ${shipping.has(String(r.param)) ? "SHIPS" : ""}`,
     );
   }
   console.log(
-    `\n  NOTE  MAGNITUDES, not audibility (N3). "step×" is each row's full-band LSD over the\n` +
-      `        previous row's — an evenly-spaced ladder wants that roughly constant.`,
+    `\n  NOTE  MAGNITUDES, not audibility (N3). "step×" is each row over the previous row on the\n` +
+      `        GATING measure — an evenly-spaced ladder wants that roughly constant.`,
   );
 }

@@ -368,7 +368,49 @@ export function temporalDrift(a, b, opts = {}) {
     // 100% -> 56% across the timing ladder and measured drift UNDER-reported
     // the warp. A 200 ms block carries ~10 ms of internal stretch instead.
     blockMs = 200,
-    maxLagMs = 60,
+    /**
+     * WIDENED 60 -> 250 ms (E2/S3, 2026-08-14). This is a CEILING on what can
+     * be reported, and the ladder had already grown past it.
+     *
+     * MEASURED, with the true answer known. The renderer draws segment
+     * deviations from a seeded PRNG and mean-corrects them, so at a FIXED SEED
+     * the drift trajectory is exactly proportional to the parameter — which
+     * makes any departure from linearity attributable to the measure rather
+     * than the audio. Sweeping one window at seed 500, expected drift is about
+     * 2000 x param ms:
+     *
+     *     param   expected   @60ms    @250-300ms
+     *     0.01          20      19            19
+     *     0.02          40      30            37
+     *     0.03          60      29  <-- DOWN  61
+     *     0.05         100      40            90
+     *     0.1          200      85           103
+     *
+     * At 60 ms the series INVERTED twice (0.02 -> 0.03 fell from 30 to 29 ms)
+     * and the top shipping rung was under-reported by roughly 60%. Confidence
+     * looked like it was collapsing with strength — 100% down to 49% — and most
+     * of that was this too: at 250 ms the same rungs read 97%, 94%, 76%.
+     *
+     * This does NOT flip any pool verdict — 18/18 still PASS. Confidence rose
+     * on every timing pair, and drift rose on five of six:
+     *
+     *     d2  25->28   d14 19->21   d5  34->38   d17 37->42   d8  46->67
+     *     d11 21->14   <-- FELL
+     *
+     * d11 falling is not a regression and the exception is worth keeping in
+     * view: a narrow window makes blocks lock onto whatever spurious peak lies
+     * inside it, and scattered lags inflate the IQR. Its confidence rose
+     * (96% -> 97%) while its drift fell, which is what "the old number was
+     * partly noise" looks like. A wider search does not only find more drift;
+     * it also stops inventing some.
+     *
+     * The remaining decline at 0.1 (76%) is real. Time-warped audio genuinely
+     * correlates less well, which is the honest difference between this family
+     * and pitch drift — there the apparent blindness was an artifact of using
+     * an envelope correlator on a duration-exact manipulation; here the
+     * misalignment IS the manipulation.
+     */
+    maxLagMs = 250,
     minScore = 0.9,
     /**
      * Half-width of the local search around the previous confident lag. Drift
