@@ -9,6 +9,7 @@
 
 import { describe, expect, it } from "vitest";
 import {
+  ESTIMATE_METRICS,
   correlation,
   delicacyMatrix,
   estimateBiasCohort,
@@ -173,6 +174,40 @@ describe("estimate — reliability", () => {
     // requirement is now a stretch rather than an impossibility.
     expect(alpha).toBeLessThan(0.7);
     expect(needed).toBeGreaterThan(items.length);
+  });
+
+  /**
+   * THE PUBLIC CAVEAT MUST DESCRIBE THE POOL IT IS ABOUT (RT-57a, 2026-08-14).
+   *
+   * The α caveat in the metric dictionary said "the live 6-trial delicacy pool
+   * measures α ≈ 0.25" for as long as the pool has been 18 — so /lab, the page
+   * whose entire pitch is that the machine is visible, was wrong about both the
+   * size of the instrument and its reliability. It went unnoticed because the
+   * number was PROSE. Every other figure on that page is computed; this one was
+   * typed, and typed numbers rot silently.
+   *
+   * So it is now checked against the same measurement the paragraph describes.
+   * The tolerance is loose because the simulation is stochastic; the point is
+   * that the published figure tracks the real one, not that it is exact.
+   */
+  it("the published α caveat matches the pool it describes (N3)", () => {
+    const items = assignDelicacyParams(DELICACY_TRIALS);
+    const persons = simulatePersons(31, 2000);
+    const alpha = estimateReliability(
+      delicacyMatrix("SIMULATED", items, simulateDelicacy(31, items, persons).responses),
+    ).alpha!;
+
+    const caveat = ESTIMATE_METRICS.find((m) => m.id === "alpha")!.caveat!;
+
+    const claimedTrials = Number(/(\d+)-trial/.exec(caveat)?.[1]);
+    expect(claimedTrials, "caveat states a trial count").toBe(items.length);
+
+    const claimedAlpha = Number(/α ≈ ([\d.]+)/.exec(caveat)?.[1]);
+    expect(claimedAlpha, "caveat states an α").toBeGreaterThan(0);
+    expect(
+      Math.abs(claimedAlpha - alpha),
+      `caveat claims α ≈ ${claimedAlpha}, pool measures ${alpha.toFixed(3)}`,
+    ).toBeLessThan(0.05);
   });
 });
 
