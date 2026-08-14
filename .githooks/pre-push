@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+# PRE-PUSH: the test suite runs before anything leaves this machine (RT-45a).
+#
+# WHY THIS EXISTS. There is no CI — `.github/workflows` does not exist — so
+# until now the 1203 contracts ran only when a human remembered to type
+# `npm test`. On 2026-08-14, 43 commits went to a PUBLIC remote in one push.
+# The suite happened to be green. Nothing checked that it was.
+#
+# This is the cheapest possible gate: the full suite is ~4.7s, it needs no
+# network, no service, and no account, and it costs nothing per run. A gate
+# that cheap has no excuse for being manual.
+#
+# WHAT IT DOES NOT DO, so nobody assumes otherwise: it does not run tsc, it
+# does not run eslint, and it does not build. Those are slower and were not
+# part of the approved slice. It runs the tests. If you want the others in
+# here, that is a deliberate decision to make the push slower, not a freebie.
+#
+# ESCAPE HATCH: `git push --no-verify` skips this, which is git's own flag and
+# is deliberately left working. A gate you cannot bypass in an emergency gets
+# uninstalled instead of bypassed.
+#
+# INSTALLED VIA core.hooksPath, not by copying into .git/hooks — see
+# scripts/install-hooks.mjs. Copying means the committed file and the running
+# file can silently diverge, which is the exact failure that produced two
+# disagreeing rung tables.
+
+if [ ! -d node_modules ]; then
+  echo "pre-push: node_modules is missing — run 'npm install' first." >&2
+  exit 1
+fi
+
+echo "pre-push: running the test suite before pushing..."
+
+# --no-install: never let a hook silently reach the network for a package.
+if npx --no-install vitest run; then
+  echo "pre-push: suite green — pushing."
+  exit 0
+fi
+
+cat >&2 <<'MSG'
+
+pre-push: BLOCKED — the test suite failed, so nothing was pushed.
+
+Fix the failures and push again. If you genuinely need to push a red tree
+(and on a public repo you almost certainly do not), the override is:
+
+    git push --no-verify
+
+MSG
+exit 1
