@@ -497,6 +497,64 @@ export function temporalDrift(a, b, opts = {}) {
 }
 
 /**
+ * The frequency of each log-spaced band edge, in Hz (E2/S2).
+ *
+ * `bandEdges` above returns FFT bin indices, which is what the spectrogram
+ * needs and useless for saying where a band sits. Exported so a per-band result
+ * can be reported in hertz instead of as "band 20", which means nothing to a
+ * reader and cannot appear in a threshold.
+ */
+export function bandEdgeHz(opts = {}) {
+  const { nBands, fMin, fMax } = { ...DEFAULT_SPECTRAL_OPTS, ...opts };
+  return Array.from({ length: nBands + 1 }, (_, i) => fMin * Math.pow(fMax / fMin, i / nBands));
+}
+
+/**
+ * Where a codec's lowpass brickwall sits, in Hz (E2/S2).
+ *
+ * WHY THIS IS THE LOSSY FAMILY'S PHYSICAL UNIT. Low-bitrate MP3 does most of
+ * its characteristic damage by simply DISCARDING the top of the spectrum —
+ * roughly 11 kHz at 64 kbps, lower still at 32. "The top 6 kHz is gone" is a
+ * fact about the audio that a listener could in principle be tested against;
+ * "25.6 dB of log-spectral distance" is not.
+ *
+ * METHOD: walk down from the top band and find the lowest band from which every
+ * band above it has lost more than `lostDb`. Requiring the loss to hold all the
+ * way up is what makes this a BRICKWALL detector rather than a "find the
+ * noisiest band" detector — a single damaged band in the middle is not a knee.
+ *
+ * WHY THE TOP BAND IS EXCLUDED BY DEFAULT — measured, not assumed (E2/S2). The
+ * first version walked from the literal top band and produced a knee that went
+ * BACKWARDS: 9894 Hz at 96 kbps, 7780 at 64, then null at 48 and 32, as though
+ * the most damaged files had no lowpass at all. The cause is that the top band
+ * (12.6–16 kHz) measures 11.7–13.7 dB at EVERY bitrate, including the ones that
+ * discard everything above 5 kHz. Our own reference is an mp3 render with
+ * little energy up there, so both signals sit near their floor and the
+ * difference saturates — the band cannot report a loss because there was almost
+ * nothing to lose. Starting one band down makes the reading monotone
+ * (9894 / 7780 / 4811 / below 2339 across 96k / 64k / 48k / 32k).
+ *
+ * WHAT IT STILL CANNOT DO (N3): distinguish "the top was cut" from "everything
+ * was wrecked". At 32 kbps the damage is not confined to the top — bands down
+ * at 2.3 kHz measure 25–30 dB — so the returned figure is the bottom of a
+ * contiguous damaged run, not necessarily a codec lowpass. Read it as "above
+ * here, the signal is gone", nothing more.
+ *
+ * Returns null when no such run exists, which is the honest answer for a
+ * manipulation that is not a lowpass at all.
+ */
+export function lowpassKneeHz(perBandDb, opts = {}) {
+  const { lostDb = 12, ignoreTopBands = 1 } = opts;
+  const edges = bandEdgeHz(opts);
+  let knee = null;
+  for (let i = perBandDb.length - 1 - ignoreTopBands; i >= 0; i--) {
+    if (perBandDb[i] > lostDb) knee = edges[i];
+    else break;
+  }
+  return knee;
+}
+
+/**
  * Detune between two signals, in CENTS (E1, 2026-08-14).
  *
  * WHY THIS EXISTS. Layer A measures the pitch-drift family with log-spectral
