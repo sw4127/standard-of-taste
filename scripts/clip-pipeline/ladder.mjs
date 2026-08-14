@@ -36,6 +36,8 @@ import { createRequire } from "node:module";
 import { decodeMono, degradeWavParam, normRender } from "./degrade.mjs";
 import { clippingStats, logSpectralDistance, temporalDrift, DEFAULT_SPECTRAL_OPTS } from "./spectral.mjs";
 import { TEMPORAL_FAMILIES } from "./validate.mjs";
+// The rung table lives in rungs.mjs — one source of truth (RT-52a).
+import { LADDER_RUNGS } from "./rungs.mjs";
 
 const require = createRequire(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -49,22 +51,6 @@ const SR = DEFAULT_SPECTRAL_OPTS.sampleRate;
 
 const ff = (args) => execFileSync(FFMPEG, ["-v", "error", "-y", ...args]);
 
-/**
- * Four rungs per family. Rungs 2–4 are the values already shipping; rung 1 is
- * new and gentler. Units differ per family and are stated so a reader never has
- * to guess what "25" means.
- */
-export const LADDER_RUNGS = {
-  // WIDENED 2026-08-07 (PM ruling RT-27a). Layer A measured the old shipping
-  // rungs as marginal: 12 cents landed at 2.6-3.3x the transparency anchor
-  // against a 3x fair-trial floor, wherever it was placed. Each shipping step
-  // is doubled. 100 cents is a semitone of drift accumulated ACROSS a 20s
-  // clip — still a drift, not a wrong note, which is why the ladder stops
-  // there rather than at the 200 cents originally proposed.
-  "pitch-drift": { unit: "cents of peak detune", values: [12, 25, 50, 100] },
-  "timing-smear": { unit: "max per-segment tempo deviation", values: [0.0075, 0.015, 0.03, 0.05] },
-  "lossy-artifact": { unit: "mp3 round-trip bitrate", values: ["128k", "96k", "64k", "32k"] },
-};
 
 export async function ladder(args) {
   const opt = (name, dflt) => {

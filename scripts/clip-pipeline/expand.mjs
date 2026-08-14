@@ -31,7 +31,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { LADDER_RUNGS } from "./ladder.mjs";
+import { LADDER_RUNGS, SHIPPING_RUNGS } from "./rungs.mjs";
 import { renderPair } from "./degrade.mjs";
 import { renderAnchors, MIN_ANCHOR_RATIO, TEMPORAL_FAMILIES } from "./validate.mjs";
 
@@ -54,7 +54,8 @@ const ANCHOR_CACHE = join(HERE, "anchor-cache.json");
  */
 export const TRIALS_TARGET = 18;
 /** Ladder rungs that ship. Rung 1 is measured and rejected — see above. */
-export const SHIPPING_RUNGS = [2, 3, 4];
+// SHIPPING_RUNGS now comes from rungs.mjs (RT-52a); re-exported so callers keep working.
+export { SHIPPING_RUNGS };
 
 /**
  * Predictive screening (PM ruling RT-28a, 2026-08-07) — REPLACES the hand-kept

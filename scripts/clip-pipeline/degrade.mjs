@@ -27,6 +27,7 @@ import { createHash } from "node:crypto";
 import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync } from "node:fs";
 import { clippingStats } from "./spectral.mjs";
+import { LADDER_FAMILIES, paramForRung } from "./rungs.mjs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
@@ -45,11 +46,13 @@ export const LUFS = -16; // matches the bias pool target
 const SEGS = 10;
 const XF = 0.03; // crossfade seconds at each join
 
-export const FAMILIES = {
-  "pitch-drift": { 1: 12, 2: 25, 3: 50 }, // peak detune reached by clip end, cents
-  "timing-smear": { 1: 0.015, 2: 0.03, 3: 0.05 }, // max per-segment tempo deviation
-  "lossy-artifact": { 1: "96k", 2: "64k", 3: "32k" }, // round-trip mp3 bitrate
-};
+/**
+ * REMOVED 2026-08-13 (PM ruling RT-52a): a local `FAMILIES` rung table used to
+ * live here and had gone stale against the widened ladder — its "magnitude 2"
+ * was the ladder's rung 3. Rung labels are now resolved ONLY by
+ * rungs.mjs::paramForRung, which the planner uses too. See rungs.mjs for the
+ * full failure and why the table moved to its own module.
+ */
 
 /* Deterministic PRNG — same seed, same degradation, forever (D6: stored
  * responses stay interpretable against the exact audio that produced them). */
@@ -124,12 +127,7 @@ export function degradeWavParam(family, param, seed, inWav, outWav, clipSec) {
     ff(["-i", inWav, "-filter_complex", graph, "-map", "[out]", outWav]);
     return { maxDevPct: dev * 100, segmentDevPct: e.map((v) => +(v * 100).toFixed(2)) };
   }
-  throw new Error(`unknown family "${family}" (know: ${Object.keys(FAMILIES).join(", ")})`);
-}
-
-/** Magnitude-label wrapper — the pool's existing entry point, unchanged. */
-function degradeWav(family, magnitude, seed, inWav, outWav, clipSec) {
-  return degradeWavParam(family, FAMILIES[family][magnitude], seed, inWav, outWav, clipSec);
+  throw new Error(`unknown family "${family}" (know: ${LADDER_FAMILIES.join(", ")})`);
 }
 
 /** Two-pass R128 loudnorm (same rationale as render's renderOne) → mp3+m4a. */
@@ -192,7 +190,13 @@ function loadDelicacyManifest() {
   return JSON.parse(readFileSync(DELICACY_MANIFEST, "utf8"));
 }
 
-/** CLI wrapper: resolve the 1|2|3 magnitude label to a parameter, then render. */
+/**
+ * CLI wrapper: resolve the rung label to a parameter, then render.
+ *
+ * The resolution goes through rungs.mjs — the SAME call the planner makes — so
+ * `degrade --magnitude 2` and the planner's rung 2 cannot drift apart again
+ * (rungs.test.ts pins that). Before RT-52a they had, by a full rung.
+ */
 export async function degrade(args) {
   const opt = (name, dflt) => {
     const i = args.indexOf(`--${name}`);
@@ -203,8 +207,8 @@ export async function degrade(args) {
   const startSec = Number(opt("start")), clipSec = Number(opt("len", "20"));
   if (!id || !sourceId || !family || !Number.isInteger(magnitude) || !Number.isInteger(seed) || !Number.isFinite(startSec))
     throw new Error("need --id --source --start --family --magnitude --seed");
-  if (!FAMILIES[family]?.[magnitude]) throw new Error(`no ${family} magnitude ${magnitude}`);
-  return renderPair({ id, sourceId, startSec, clipSec, family, magnitude, param: FAMILIES[family][magnitude], seed });
+  const param = paramForRung(family, magnitude); // throws on an unknown family or rung
+  return renderPair({ id, sourceId, startSec, clipSec, family, magnitude, param, seed });
 }
 
 /**
