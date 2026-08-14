@@ -47,8 +47,8 @@ import AbCompare from "./AbCompare";
 import ShareButton from "@/app/result/ShareButton";
 import DownloadButton from "@/app/result/DownloadButton";
 import {
-  CALIBRATION_PHASE_LINE,
   MAGNITUDE_WORDS,
+  PROVISIONAL_FOOTNOTE,
   calibrationLine,
   delicacyVerdict,
   shareText,
@@ -621,10 +621,9 @@ export default function DelicacyFlow() {
             </div>
           </div>
 
-          <p className="mt-6 text-xs leading-relaxed text-muted">
-            Provisional read — you&apos;re early. {CALIBRATION_PHASE_LINE} Difficulty labels are authored, not yet
-            norm-calibrated.
-          </p>
+          {/* One string, assembled in the copy deck so the voice gate sees the
+              whole paragraph rather than the middle third (copy.ts). */}
+          <p className="mt-6 text-xs leading-relaxed text-muted">{PROVISIONAL_FOOTNOTE}</p>
 
           {/* Attribution — CC credit is a legal requirement, PD listed anyway. */}
           <div className="mt-6 text-[0.65rem] leading-relaxed text-muted">
