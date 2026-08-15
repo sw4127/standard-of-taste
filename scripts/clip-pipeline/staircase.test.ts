@@ -14,7 +14,8 @@
  * stay interpretable instead of becoming orphans between levels.
  */
 import { describe, expect, it } from "vitest";
-import { LADDER_RUNGS, MIN_MEASURABLE_PITCH_CENTS, STAIRCASE_LEVELS } from "./rungs.mjs";
+import { LADDER_RUNGS, MIN_MEASURABLE_PITCH_CENTS, STAIRCASE_LEVELS, staircaseRender } from "./rungs.mjs";
+import { timingDeviations } from "./degrade.mjs";
 
 type Ladder = { unit: string; ratio: number; renderMode?: string; values: number[] };
 const ladders = Object.entries(STAIRCASE_LEVELS) as [string, Ladder][];
@@ -125,6 +126,77 @@ describe("staircase ladder — timing-smear specifics", () => {
     expect(Math.max(...legacy)).toBeLessThan(1);
     expect(Math.min(...timing.values)).toBeGreaterThan(1);
   });
+});
+
+/**
+ * E4/S0 — RENDERING A STAIRCASE LEVEL WITHOUT A CALLER REMEMBERING A FLAG.
+ *
+ * `degradeWavParam` must keep defaulting timing to the legacy `maxDevPct`
+ * meaning (the shipped pool was rendered under it, and live share URLs score
+ * against that audio), while every staircase render must use `driftMs`. Leaving
+ * that to each call site is how the two-tables defect in rungs.mjs's header
+ * happened; `ladder.mjs` calls degradeWavParam POSITIONALLY and could not pass
+ * the flag even if it wanted to.
+ */
+describe("E4/S0 — staircaseRender resolves the mode from the ladder table", () => {
+  /**
+   * THE HANDOFF'S PREMISE, CHECKED RATHER THAN INHERITED. It recorded that a
+   * staircase timing render without the flag "silently gets the 5.3x-spread
+   * behaviour". Measured here: it does not. The units are disjoint by
+   * construction — 12.5 means 12.5 MILLISECONDS on this ladder and 1250% of
+   * tempo under the legacy reading — so every level trips the 25% per-segment
+   * ceiling and throws. The failure is loud.
+   *
+   * That does not make the resolver pointless; it makes it a second lock rather
+   * than the only one. A correctness property should not rest on an exception
+   * thrown three layers down in a filter-graph builder.
+   */
+  it("legacy mode CANNOT silently render a staircase level — it throws, for all ten", () => {
+    for (const level of timingLevels()) {
+      expect(
+        () => timingDeviations({ mode: "maxDevPct", param: level, seed: 500, clipSec: 20 }),
+        `${level} ms read as maxDevPct should trip the ceiling`,
+      ).toThrow(/ceiling/);
+    }
+  });
+
+  it("hands timing the driftMs mode, and the level then IS the magnitude", () => {
+    for (const level of timingLevels()) {
+      const { param, opts } = staircaseRender("timing-smear", level);
+      expect(opts).toEqual({ timingMode: "driftMs" });
+      // The payoff: rendered through the resolved mode, the realized drift
+      // equals the level exactly, at every seed.
+      for (const seed of [1, 500, 9001]) {
+        const { driftIqrMs } = timingDeviations({ mode: opts.timingMode, param, seed, clipSec: 20 });
+        expect(driftIqrMs).toBeCloseTo(level, 6);
+      }
+    }
+  });
+
+  it("hands pitch its level unchanged — that family has no mode to get wrong", () => {
+    for (const level of STAIRCASE_LEVELS["pitch-drift"].values as number[]) {
+      expect(staircaseRender("pitch-drift", level)).toEqual({ param: level, opts: {} });
+    }
+  });
+
+  it("refuses a level that is not on the ladder, rather than rendering it", () => {
+    expect(() => staircaseRender("timing-smear", 20)).toThrow(/not a timing-smear level/);
+    expect(() => staircaseRender("pitch-drift", 12)).toThrow(/not a pitch-drift level/); // 12.5 is the level
+    expect(() => staircaseRender("nonsense", 25)).toThrow(/unknown family/);
+  });
+
+  /**
+   * Lossy levels are in dB and there IS no fixed render parameter for them —
+   * the bitrate that reaches a given dB depends on the material. Returning any
+   * number here would be inventing one.
+   */
+  it("refuses lossy outright and says what to call instead", () => {
+    expect(() => staircaseRender("lossy-artifact", 4.9)).toThrow(/solveLossyBitrate/);
+  });
+
+  function timingLevels() {
+    return STAIRCASE_LEVELS["timing-smear"].values as number[];
+  }
 });
 
 describe("staircase ladders — coverage is deliberate", () => {

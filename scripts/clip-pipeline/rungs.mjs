@@ -230,6 +230,56 @@ export const STAIRCASE_LEVELS = {
 };
 
 /**
+ * HOW TO RENDER ONE STAIRCASE LEVEL (E4/S0, 2026-08-15).
+ *
+ * THE PROBLEM. `degradeWavParam` defaults `timingMode` to `maxDevPct`, and it
+ * has to: the shipped pool was rendered under that meaning and live share URLs
+ * score against that exact audio. But the staircase ladder is in MILLISECONDS
+ * and must render in `driftMs`, where the level determines the magnitude
+ * instead of merely bounding a random draw (E2/S4b — the legacy mode spreads
+ * 5.3x across seeds, with rung ranges overlapping completely).
+ *
+ * So every staircase render depends on a caller remembering to pass a flag, and
+ * `ladder.mjs` calls `degradeWavParam` POSITIONALLY and structurally cannot.
+ *
+ * MEASURED, and it corrects the handoff's premise: this failure is LOUD, not
+ * silent. A staircase level rendered in legacy mode asks for a per-segment tempo
+ * deviation of hundreds of percent and trips the 25% ceiling (staircase.test.ts
+ * proves it for all ten levels). The units are disjoint by construction and that
+ * is what saves it.
+ *
+ * It is still wrong to leave a correctness property resting on an exception
+ * thrown three call-layers down. The mode is a fact about the FAMILY, it is
+ * already recorded in the table above, and the fix is the same one this module
+ * exists for: read it from the one table rather than restate it at each call
+ * site. A level that is not on the ladder is rejected here rather than rendered
+ * into a file whose name claims otherwise.
+ *
+ * @returns { param, opts } to spread into `degradeWavParam`.
+ */
+export function staircaseRender(family, level) {
+  const spec = STAIRCASE_LEVELS[family];
+  if (!spec) {
+    throw new Error(`staircaseRender: unknown family "${family}" (know: ${Object.keys(STAIRCASE_LEVELS).join(", ")})`);
+  }
+  if (!spec.values.some((v) => v === level)) {
+    throw new Error(
+      `staircaseRender: ${level} is not a ${family} level (${spec.unit}) — have ${spec.values.join(", ")}`,
+    );
+  }
+  if (family === "lossy-artifact") {
+    // A dB target is not a render parameter. The bitrate that reaches it
+    // depends on the material, so it has to be solved against THAT source's
+    // measured curve, and a level no source can reach must be skipped rather
+    // than clamped (see solveLossyBitrate).
+    throw new Error(
+      `staircaseRender: lossy-artifact levels are in ${spec.unit} and must be solved per source — call solveLossyBitrate(${level}, curve) and render the bitrate it returns`,
+    );
+  }
+  return { param: level, opts: spec.renderMode ? { timingMode: spec.renderMode } : {} };
+}
+
+/**
  * The bitrate that hits a target LSD on ONE source (E2/S4c).
  *
  * IT IS NOT SAFE TO ASSUME THE CURVE IS MONOTONE. The first version of this
