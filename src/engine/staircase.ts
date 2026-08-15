@@ -174,6 +174,21 @@ export type ThresholdOutcome =
   | { kind: "inconclusive"; reversalsUsed: number; trials: number };
 
 /**
+ * SUPERSEDED FOR PRODUCT SURFACES by `fitThreshold` in ./threshold-fit.ts
+ * (R4, 2026-08-15). Retained because it is the baseline every recovery
+ * comparison is scored against, and because it is a genuinely hard baseline —
+ * it was NOT beaten on precision. Do not wire this into a surface.
+ *
+ * THE REASON IT LOST, in one line: this interval covers the truth 49-72% of the
+ * time while printing 95% (measured, staircase-criterion.test.ts). A 95%
+ * interval that covers 60% is a false statement beside every result (N3).
+ * `fitThreshold` covers 94-100%, and 94-98% even when the psychometric model is
+ * wrong. It also escapes the ladder-end truncation this estimator cannot: a
+ * reversal average can never report a level the ladder does not contain, which
+ * R2 measured at +0.499 steps of bias for a floor-adjacent listener.
+ *
+ * ---
+ *
  * The threshold, or an honest statement that there isn't one.
  *
  * Averaged in LOG space because the ladder is geometric: the midpoint of 25 and
