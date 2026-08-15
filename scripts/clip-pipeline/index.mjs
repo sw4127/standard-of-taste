@@ -213,13 +213,14 @@ function renderOne(input, startSec, lenSec, outBase, lufs) {
   if (!jsonMatch) throw new Error(`loudnorm measure failed for ${outBase}`);
   const mm = JSON.parse(jsonMatch[0]);
   const ln = `loudnorm=I=${lufs}:TP=-1.5:LRA=11:measured_I=${mm.input_i}:measured_TP=${mm.input_tp}:measured_LRA=${mm.input_lra}:measured_thresh=${mm.input_thresh}:offset=${mm.target_offset}:linear=true`;
-  // -vn: sources often embed cover art as a video stream, which the m4a/ipod
-  // container rejects — we render audio only.
+  // -vn: sources often embed cover art as a video stream, which containers
+  // reject — we render audio only.
+  // MP3 ONLY since RT-67: the m4a beside every mp3 was referenced by no code
+  // path (see normRender in degrade.mjs for the full reasoning).
   const common = [...cut, "-af", ln, "-ar", "44100", "-v", "error", "-y"];
   execFileSync(FFMPEG, [...common, "-codec:a", "libmp3lame", "-q:a", "3", join(AUDIO_OUT, `${outBase}.mp3`)]);
-  execFileSync(FFMPEG, [...common, "-codec:a", "aac", "-b:a", "160k", join(AUDIO_OUT, `${outBase}.m4a`)]);
   const probe = execFileSync(FFPROBE, ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", join(AUDIO_OUT, `${outBase}.mp3`)]).toString().trim();
-  return { mp3: `${outBase}.mp3`, m4a: `${outBase}.m4a`, durationSec: Number(probe) };
+  return { mp3: `${outBase}.mp3`, durationSec: Number(probe) };
 }
 
 function render(args) {
@@ -232,7 +233,7 @@ function render(args) {
     const outIdx = args.indexOf("--out");
     const out = outIdx >= 0 ? args[outIdx + 1] : "local-test";
     const r = renderOne(file, start, len, out, loadManifest().lufsTarget);
-    console.log(`render --local: wrote public/audio/bias/${r.mp3} + ${r.m4a} (${r.durationSec.toFixed(2)}s @ ${loadManifest().lufsTarget} LUFS)`);
+    console.log(`render --local: wrote public/audio/bias/${r.mp3} (${r.durationSec.toFixed(2)}s @ ${loadManifest().lufsTarget} LUFS)`);
     return;
   }
   const m = loadManifest();
@@ -243,7 +244,7 @@ function render(args) {
     }
     const r = renderOne(join(CACHE, item.source.cachedFile), item.window.approved.startSec, m.clipSeconds, item.id, m.lufsTarget);
     item.render = { ...r, renderedAt: new Date().toISOString().slice(0, 10), attribution: tasl(item) };
-    console.log(`- ${item.id}: ${r.mp3} + ${r.m4a} · attribution: ${item.render.attribution}`);
+    console.log(`- ${item.id}: ${r.mp3} · attribution: ${item.render.attribution}`);
   }
   saveManifest(m);
   console.log("render: done — wire items.ts from manifest.render + bump BIAS_POOL_VERSION");
