@@ -93,7 +93,14 @@ const MDC80_FACTOR = (1.96 + 0.8416) * Math.SQRT2;
 describe("R4 — the fit against the reversal average [SIMULATED]", () => {
   const SESSIONS = 1000;
 
-  it("wins the interval and the ladder end, and does NOT win precision — scored honestly", () => {
+  /**
+   * EXPLICIT BUDGETS on the heavy recovery tests. These run tens of thousands of
+   * simulated sessions and take ~7s on an idle machine; under vitest's default
+   * 5s they passed alone and FAILED when an ffmpeg render was competing for the
+   * CPU. A test whose verdict depends on what else the machine is doing is a
+   * test nobody can trust the next time it goes red.
+   */
+  it("wins the interval and the ladder end, and does NOT win precision — scored honestly", { timeout: 120_000 }, () => {
     console.log(`\n[R4] === REVERSAL AVERAGE vs CURVE FIT [SIMULATED] — ${SESSIONS} sessions per cell ===`);
     console.log(`[R4] bias/RMSE in ladder steps, vs the lapse-free 70.7% level (what we print).`);
     console.log(
@@ -191,7 +198,7 @@ describe("R4 — the fit against the reversal average [SIMULATED]", () => {
     }
   });
 
-  it("produces an interval that actually covers, which is the N3 blocker", () => {
+  it("produces an interval that actually covers, which is the N3 blocker", { timeout: 120_000 }, () => {
     console.log(`\n[R4] === CI95 COVERAGE, the fit [SIMULATED] ===`);
     const worst: number[] = [];
     for (const [label, levels, o] of CONDITIONS) {
@@ -237,7 +244,7 @@ describe("R4 — the fit on a listener it has the wrong model for [SIMULATED]", 
     return Math.exp((lo + hi) / 2);
   };
 
-  it("degrades gracefully rather than collapsing", () => {
+  it("degrades gracefully rather than collapsing", { timeout: 120_000 }, () => {
     console.log(`\n[R4] === MISSPECIFIED LISTENER (Weibull generator, logistic fit) [SIMULATED] ===`);
     console.log(`[R4] ${"scale/shape/λ".padEnd(18)} ${"bias old→fit".padStart(16)} ${"RMSE old→fit".padStart(15)} ${"coverage".padStart(10)}`);
     for (const [scale, shape, lapse] of [
