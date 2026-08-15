@@ -4,7 +4,7 @@
  * the real pool passes, and deliberately broken fixtures fail with named
  * errors (checkDelicacyPool is pure exactly so this file can do that).
  */
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
@@ -63,17 +63,36 @@ describe("delicacy pool of record — the real thing passes every gate", () => {
     expect(DELICACY_LIVE).toBe(true);
   });
 
-  it("candidate audio files exist on disk for every trial (both sides, both formats)", () => {
+  /**
+   * MP3 ONLY since RT-67. This used to assert that an .m4a existed beside every
+   * .mp3 — 18.3 MB of files no code path ever requested, kept alive by the very
+   * test that checked for them. `items.ts` builds every src as `.mp3` and
+   * nothing selects a format or falls back, so the m4a was never served to
+   * anyone. Asserting the existence of a file the app cannot reach is not
+   * coverage; it is the reason the dead weight survived two audits.
+   */
+  it("candidate audio files exist on disk for every trial (both sides)", () => {
     for (const t of DELICACY_TRIALS) {
       for (const side of ["a", "b"]) {
-        for (const ext of ["mp3", "m4a"]) {
-          expect(
-            existsSync(join(process.cwd(), "public", "audio", "delicacy", `${t.id}-${side}.${ext}`)),
-            `${t.id}-${side}.${ext} missing`,
-          ).toBe(true);
-        }
+        expect(
+          existsSync(join(process.cwd(), "public", "audio", "delicacy", `${t.id}-${side}.mp3`)),
+          `${t.id}-${side}.mp3 missing`,
+        ).toBe(true);
       }
     }
+  });
+
+  /**
+   * The other half of the ruling: no .m4a may come BACK. Deleting the files
+   * without a guard leaves the next `degrade` run free to re-create them, and
+   * the weight returns silently a slice later.
+   */
+  it("no .m4a is shipped — the pipeline emits one delivery format", () => {
+    const dir = join(process.cwd(), "public", "audio");
+    const stray = ["delicacy", "bias"].flatMap((sub) =>
+      existsSync(join(dir, sub)) ? readdirSync(join(dir, sub)).filter((f) => f.endsWith(".m4a")).map((f) => `${sub}/${f}`) : [],
+    );
+    expect(stray, "m4a files are back; check normRender and renderOne").toEqual([]);
   });
 
   it("original sides are roughly balanced across the pool", () => {

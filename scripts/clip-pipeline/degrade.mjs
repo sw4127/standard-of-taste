@@ -242,7 +242,18 @@ export function degradeWavParam(family, param, seed, inWav, outWav, clipSec, opt
   throw new Error(`unknown family "${family}" (know: ${LADDER_FAMILIES.join(", ")})`);
 }
 
-/** Two-pass R128 loudnorm (same rationale as render's renderOne) → mp3+m4a. */
+/**
+ * Two-pass R128 loudnorm (same rationale as render's renderOne) → mp3.
+ *
+ * MP3 ONLY since 2026-08-15 (PM ruling RT-67). This emitted an m4a beside every
+ * mp3 for browser-compat reasons that were never wired up: `items.ts` builds
+ * every src as `.mp3`, and nothing in the app selects a format or falls back.
+ * 18.3 MB of tracked, deployed .m4a was referenced by zero code paths, and the
+ * only thing that mentioned it was a test asserting the unused files existed.
+ * E4 would have doubled that. If a real fallback is ever wanted, add the format
+ * SELECTION first and the second encode after — in that order, so the files and
+ * the code that needs them arrive together.
+ */
 export function normRender(inWav, outBase, outDir) {
   mkdirSync(outDir, { recursive: true });
   const probe = spawnSync(FFMPEG, ["-i", inWav, "-af", `loudnorm=I=${LUFS}:TP=-1.5:LRA=11:print_format=json`, "-f", "null", "-"], { encoding: "utf8" });
@@ -253,7 +264,6 @@ export function normRender(inWav, outBase, outDir) {
   // bitexact: no encoder version strings / timestamps, so re-renders hash equal.
   const common = ["-i", inWav, "-af", ln, "-ar", "44100", "-fflags", "+bitexact", "-flags:a", "+bitexact"];
   ff([...common, "-codec:a", "libmp3lame", "-q:a", "3", join(outDir, `${outBase}.mp3`)]);
-  ff([...common, "-codec:a", "aac", "-b:a", "160k", join(outDir, `${outBase}.m4a`)]);
 }
 
 export function measureFinal(file) {
@@ -377,12 +387,11 @@ export async function renderPair({ id, sourceId, startSec, clipSec, family, magn
   normRender(degCut, `${id}-${degradedSide}`, OUT);
 
   // ------------------------------------------------- validation (all measured)
-  // Both delivery formats are validated: ClipPlayer may serve either, and an
-  // unchecked m4a would mean Safari users hear audio no check ever touched.
+  // ONE delivery format to validate since RT-67. The comment here used to say
+  // both were checked because "ClipPlayer may serve either" — it never could,
+  // and the second format was dead weight rather than a Safari hedge.
   const A = measureFinal(join(OUT, `${id}-a.mp3`));
   const B = measureFinal(join(OUT, `${id}-b.mp3`));
-  const A4 = measureFinal(join(OUT, `${id}-a.m4a`));
-  const B4 = measureFinal(join(OUT, `${id}-b.m4a`));
   const diff = pcmDiff(decodeMono(join(OUT, `${id}-a.mp3`)), decodeMono(join(OUT, `${id}-b.mp3`)));
   // Determinism: rebuild the degraded side from scratch into TMP, compare hashes.
   const degWav2 = join(TMP, `${id}-deg2.wav`);
@@ -393,8 +402,7 @@ export async function renderPair({ id, sourceId, startSec, clipSec, family, magn
   const hashA = sha256File(join(OUT, `${id}-a.mp3`));
   const hashB = sha256File(join(OUT, `${id}-b.mp3`));
   const deterministic =
-    sha256File(join(TMP, `${id}-redo.mp3`)) === sha256File(join(OUT, `${id}-${degradedSide}.mp3`)) &&
-    sha256File(join(TMP, `${id}-redo.m4a`)) === sha256File(join(OUT, `${id}-${degradedSide}.m4a`));
+    sha256File(join(TMP, `${id}-redo.mp3`)) === sha256File(join(OUT, `${id}-${degradedSide}.mp3`));
 
   // CLIPPING IS CHECKED HERE, BEFORE LOUDNESS NORMALISATION (RT-17a).
   // Measured 2026-08-08: a deliberately clipped render (+30 dB on a source
@@ -412,10 +420,8 @@ export async function renderPair({ id, sourceId, startSec, clipSec, family, magn
     [`a ${x.toFixed(dp)}  b ${y.toFixed(dp)} ${u}  Δ ${Math.abs(x - y).toFixed(dp)} (≤${tol}) [${fmt}]`, Math.abs(x - y) <= tol];
   const checks = [
     ["duration match (mp3)", ...pair(A.durationSec, B.durationSec, "mp3", "s", 0.05, 3)],
-    ["duration match (m4a)", ...pair(A4.durationSec, B4.durationSec, "m4a", "s", 0.05, 3)],
     ["loudness match (mp3)", ...pair(A.lufs, B.lufs, "mp3", "LUFS", 0.5, 1)],
-    ["loudness match (m4a)", ...pair(A4.lufs, B4.lufs, "m4a", "LUFS", 0.5, 1)],
-    ["true peak (all 4)", `mp3 ${A.truePeak.toFixed(1)}/${B.truePeak.toFixed(1)}  m4a ${A4.truePeak.toFixed(1)}/${B4.truePeak.toFixed(1)} dBTP (≤ −1.0)`, [A, B, A4, B4].every((x) => x.truePeak <= -1)],
+    ["true peak (both sides)", `mp3 ${A.truePeak.toFixed(1)}/${B.truePeak.toFixed(1)} dBTP (≤ −1.0)`, [A, B].every((x) => x.truePeak <= -1)],
     ["distinct files", `rel-RMS diff ${diff.toFixed(3)} (≥0.020 floor; NOT a perceptual claim)`, diff >= 0.02],
     ["deterministic re-render", deterministic ? "sha256 identical" : "sha256 DIVERGED", deterministic],
     ["no clipping (pre-loudnorm)", `orig ${(clipOrig.clippedFraction * 100).toFixed(4)}%  degraded ${(clipDeg.clippedFraction * 100).toFixed(4)}% (≤0.0500%)`, worstClip <= 0.0005],
