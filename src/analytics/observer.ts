@@ -30,12 +30,17 @@ import {
   type StaircaseConfig,
   type StaircaseState,
 } from "@/engine/staircase";
+import { GUESS_2AFC, P_CONVERGE_2DOWN1UP, psychometric } from "@/engine/threshold-fit";
+
 /**
  * Chance performance on a two-alternative task. Not a free parameter: someone
  * who hears nothing still gets half right, and any simulation that forgets this
  * makes every estimator look better than it is.
+ *
+ * Re-exported from the engine rather than redefined, so the simulated listener
+ * and the estimator cannot drift apart.
  */
-export const GUESS = 0.5;
+export const GUESS = GUESS_2AFC;
 
 /**
  * Where 2-down/1-up converges: the level at which P(correct)^2 = 0.5, because
@@ -45,7 +50,7 @@ export const GUESS = 0.5;
  * formula. Immaterial in size (~0.001 ladder steps) and precisely the "typed
  * numbers rot" pattern this repo keeps paying for.
  */
-export const P_CONVERGE = Math.SQRT1_2;
+export const P_CONVERGE = P_CONVERGE_2DOWN1UP;
 
 /**
  * A simulated listener.
@@ -74,8 +79,15 @@ export interface Observer {
 /** Shorthand; `lapse` defaults to the textbook listener who never slips. */
 export const observer = (alpha: number, beta: number, lapse = 0): Observer => ({ alpha, beta, lapse });
 
-export const pCorrect = (x: number, o: Observer) =>
-  GUESS + (1 - GUESS - o.lapse) / (1 + Math.exp(-(Math.log(x) - Math.log(o.alpha)) / o.beta));
+/**
+ * DELEGATES to the engine's `psychometric` rather than restating it. That makes
+ * every recovery result in this repo WELL-SPECIFIED — the estimator is fitting
+ * exactly the shape that generated the data — which flatters the estimator and
+ * must be said out loud. The honest answer is a misspecification test
+ * (threshold-fit.test.ts), not a second copy of the model that is wrong in a
+ * different way and drifts from the first.
+ */
+export const pCorrect = (x: number, o: Observer) => psychometric(x, o.alpha, o.beta, o.lapse);
 
 /**
  * The level where this observer is correct `target` of the time — SOLVED
