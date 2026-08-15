@@ -263,6 +263,7 @@ try {
   else if (stage === "sweep") await (await import("./sweep.mjs")).sweep(args);
   else if (stage === "curve") await (await import("./curve.mjs")).curve(args);
   else if (stage === "solve-check") await (await import("./solvecheck.mjs")).solveCheck(args);
+  else if (stage === "render-plan") await (await import("./renderplan.mjs")).renderPlanCli(args);
   else {
     console.log("usage: node scripts/clip-pipeline/index.mjs <download|snapshot|analyze|render|degrade|validate|ladder|sweep|expand> [--local <file>] [--start N] [--len N] [--out id]");
     console.log("       degrade: --id <pairId> --source <biasItemId> --start <sec> --family <pitch-drift|timing-smear|lossy-artifact> --magnitude <ladder rung 1-4; 2-4 ship> --seed <int> [--len <sec>]");
