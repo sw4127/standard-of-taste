@@ -59,7 +59,7 @@ import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { decodeMono, degradeWavParam, normRender } from "./degrade.mjs";
 import { logSpectralDistance, DEFAULT_SPECTRAL_OPTS } from "./spectral.mjs";
-import { STAIRCASE_LEVELS, solveLossyBitrate } from "./rungs.mjs";
+import { STAIRCASE_LEVELS, lossyLadderForSource } from "./rungs.mjs";
 
 const require = createRequire(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -89,7 +89,6 @@ export async function solveCheck(args = []) {
   const startSec = Number(opt("start", "75"));
   const clipSec = Number(opt("len", "20"));
   const spec = STAIRCASE_LEVELS["lossy-artifact"];
-  const stepLog = Math.log(spec.ratio);
 
   const bias = JSON.parse(readFileSync(BIAS_MANIFEST, "utf8"));
   const report = [];
@@ -122,24 +121,30 @@ export async function solveCheck(args = []) {
       lsdDb: measure(b, `curve-${b}`),
     }));
 
-    const rows = [];
-    for (const level of spec.values) {
-      const solved = solveLossyBitrate(level, curve);
-      if (solved == null) {
-        rows.push({ level, solved: null, achieved: null, errDb: null, errSteps: null });
-        continue;
-      }
-      const achieved = measure(`${solved}k`, `solved-${level}`);
-      rows.push({
-        level,
-        solved,
-        achieved: +achieved.toFixed(3),
-        errDb: +(achieved - level).toFixed(3),
-        // The number that decides whether the ladder is renderable.
-        errSteps: +(Math.log(achieved / level) / stepLog).toFixed(3),
-      });
-    }
-    report.push({ sourceId, curve, rows });
+    /**
+     * The ladder this source can actually carry, built from the bitrates the
+     * encoder has, each labelled with the damage measured there.
+     */
+    const ladder = lossyLadderForSource(curve);
+
+    /**
+     * THE CHECK THAT IS LEFT once levels are labelled by measurement: does
+     * rendering at a ladder bitrate REPRODUCE the damage the ladder recorded?
+     * "The level is whatever we measured" is only honest if measuring again
+     * gives the same answer — otherwise the label is a snapshot of one lucky
+     * encode rather than a property of the clip. This re-renders from scratch
+     * through the same path and compares.
+     */
+    const rows = ladder.map((p) => {
+      const again = measure(`${p.bitrateKbps}k`, `verify-${p.bitrateKbps}`);
+      return {
+        bitrateKbps: p.bitrateKbps,
+        recordedDb: +p.lsdDb.toFixed(3),
+        reRenderedDb: +again.toFixed(3),
+        driftDb: +(again - p.lsdDb).toFixed(4),
+      };
+    });
+    report.push({ sourceId, curve, ladder, rows });
     rmSync(TMP, { recursive: true, force: true });
   }
 
@@ -148,33 +153,33 @@ export async function solveCheck(args = []) {
     return report;
   }
 
-  console.log(`Lossy solver check — solve, RENDER, measure. @${startSec}s, ${clipSec}s window.`);
-  console.log(`Ladder: ${spec.values.join(", ")} ${spec.unit} (ratio ${spec.ratio}).`);
-  const allSteps = [];
-  for (const { sourceId, rows } of report) {
-    console.log(`\n  ${sourceId}`);
-    console.log(`    target dB   solved     achieved dB     miss dB    miss in LADDER STEPS`);
+  console.log(`Per-source lossy ladder — build, RE-RENDER, confirm. @${startSec}s, ${clipSec}s window.`);
+  console.log(`Nominal range (planning only, never rendered): ${spec.values.join(", ")} ${spec.unit}.`);
+  const drifts = [];
+  for (const { sourceId, ladder, rows } of report) {
+    const span = ladder.length ? ladder[ladder.length - 1].lsdDb / ladder[0].lsdDb : 0;
+    console.log(`\n  ${sourceId} — ${ladder.length} levels, span x${span.toFixed(1)}`);
+    if (!ladder.length) {
+      console.log(`    no usable ladder from this source's curve`);
+      continue;
+    }
+    console.log(`    bitrate   ladder says dB   re-rendered dB   drift dB`);
     for (const r of rows) {
-      if (r.solved == null) {
-        console.log(`    ${r.level.toFixed(1).padStart(9)}   ${"—".padStart(6)}   ${"not invertible for this source (skipped, not clamped)".padStart(12)}`);
-        continue;
-      }
-      allSteps.push(Math.abs(r.errSteps));
+      drifts.push(Math.abs(r.driftDb));
       console.log(
-        `    ${r.level.toFixed(1).padStart(9)}   ${`${r.solved}k`.padStart(6)}   ${r.achieved.toFixed(3).padStart(11)}   ` +
-          `${(r.errDb >= 0 ? "+" : "") + r.errDb.toFixed(3)}`.padStart(9) +
-          `   ${((r.errSteps >= 0 ? "+" : "") + r.errSteps.toFixed(3)).padStart(20)}`,
+        `    ${`${r.bitrateKbps}k`.padStart(7)}   ${r.recordedDb.toFixed(3).padStart(14)}   ` +
+          `${r.reRenderedDb.toFixed(3).padStart(14)}   ${((r.driftDb >= 0 ? "+" : "") + r.driftDb.toFixed(4)).padStart(8)}`,
       );
     }
   }
-  const worst = Math.max(...allSteps);
-  const mean = allSteps.reduce((a, b) => a + b, 0) / allSteps.length;
-  console.log(`\n  ${allSteps.length} levels solved and rendered across ${report.length} sources.`);
-  console.log(`  |miss| mean ${mean.toFixed(3)} steps · WORST ${worst.toFixed(3)} steps`);
+  const worst = Math.max(...drifts);
+  console.log(`\n  ${drifts.length} levels re-rendered across ${report.length} sources.`);
+  console.log(`  |drift| worst ${worst.toFixed(4)} dB — the label is reproducible if this is ~0.`);
   console.log(
-    `\n  NOTE  A miss of 0.5 steps means a clip rendered for one level is halfway to its\n` +
-      `        neighbour. The staircase's whole output is stated in steps, so this is the\n` +
-      `        unit the verdict has to be in (N3).`,
+    `\n  NOTE  Levels are now labelled with the damage MEASURED at a bitrate the encoder\n` +
+      `        actually has (PM ruling RT-65), so there is no "miss" left to report. What\n` +
+      `        remains checkable is whether the label reproduces — a level that means\n` +
+      `        something different on a second encode is not a level (N3).`,
   );
   return report;
 }

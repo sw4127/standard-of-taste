@@ -190,7 +190,7 @@ export const STAIRCASE_LEVELS = {
    * conflating the two is the defect.
    *
    * SO THE LADDER IS DEFINED IN THE MEASURE, AND THE BITRATE IS SOLVED PER
-   * SOURCE (see solveLossyBitrate). Same move as timing's driftMs: the level
+   * SOURCE (see lossyLadderForSource). Same move as timing's driftMs: the level
    * states the magnitude, and the render parameter is derived to hit it.
    *
    * RANGE, AND IT IS NARROW — narrower than either other family, for three
@@ -224,10 +224,96 @@ export const STAIRCASE_LEVELS = {
   "lossy-artifact": {
     unit: "dB log-spectral distance",
     ratio: 1.249,
-    renderMode: "solvedBitrate",
+    renderMode: "perSourceLegalBitrate",
+    /**
+     * NOMINAL ONLY — these are NOT the levels that get rendered (PM ruling
+     * RT-65, 2026-08-15). They describe the range the family is expected to
+     * cover, which is what source planning and the Lab's documentation need.
+     * The levels a session actually steps through come from
+     * `lossyLadderForSource`, and each one is the damage MEASURED on that
+     * source at a bitrate the encoder can actually produce.
+     *
+     * WHY, in one line: E4/S1 rendered these targets and found the solver
+     * returning bitrates MP3 does not have, so three "levels" came out as the
+     * same audio file under three different magnitudes.
+     */
+    perSource: true,
     values: [2.0, 2.5, 3.1, 3.9, 4.9, 6.1, 7.6, 9.5],
   },
 };
+
+/**
+ * The only bitrates an MP3 CBR encoder can produce at 44.1 kHz (MPEG-1 Layer
+ * III). Asking for anything else does not fail — LAME silently snaps to one of
+ * these, which is how E4/S1 found levels 3.9, 4.9 and 6.1 rendering the same
+ * file. MEASURED by direct probe, not read off a spec: 118k and 110k both
+ * encode at 112k; 80k, 78k, 75k and 74k all encode at 80k.
+ */
+export const LEGAL_MP3_BITRATES_KBPS = [32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320];
+
+/**
+ * Adjacent levels must differ by at least this ratio in dB, or they are not two
+ * levels. Above ~128 kbps the measured differences fall inside the measurement's
+ * own noise — pb6 runs 96k=0.95 and 112k=0.89, a 6% gap — and a staircase that
+ * steps between two indistinguishable magnitudes reports a threshold with a
+ * precision it does not have (N3).
+ */
+export const MIN_LOSSY_LEVEL_RATIO = 1.15;
+
+/**
+ * THE LOSSY LADDER FOR ONE SOURCE (E4/S1b, PM ruling RT-65).
+ *
+ * Pitch and timing have manipulation-intrinsic units: 25 cents is 25 cents
+ * whatever the music. Lossy does not, so its ladder has to be built from what
+ * the encoder can do TO THIS MATERIAL, and each level is labelled with the
+ * damage that was measured rather than the damage that was requested.
+ *
+ * The consequence, stated plainly: levels are NOT uniform across sources, and a
+ * lossy session must therefore draw from ONE source — the same "one source, one
+ * window" discipline `curve` and `ladder` already document. Nothing downstream
+ * objects: `fitThreshold` takes any ascending list of magnitudes and never
+ * required even spacing; only the human-facing "in ladder steps" phrasing
+ * assumes geometry, and for this family the honest phrasing is dB.
+ *
+ * THE RUN STARTS AT PEAK DAMAGE, NOT AT THE LOWEST BITRATE, and that is the fix
+ * for the second E4/S1 defect. The old code walked up from the bottom and broke
+ * on the first non-decreasing point — but the bottom is exactly where the family
+ * SATURATES, so a tie there is expected rather than exceptional. pb6 measured
+ * 24k=9.88 and 32k=9.88, tied at the very first step, and was reported as
+ * unable to render any level at all. Starting from the peak (taking the HIGHEST
+ * bitrate among tied maxima, since the lower ones are the same audio for more
+ * bits) recovers a monotone run of eight points spanning 0.89-9.88 dB.
+ *
+ * @param curve [{ bitrateKbps, lsdDb }] measured for this source, any order.
+ * @returns ascending by damage: [{ bitrateKbps, lsdDb }]. Possibly empty.
+ */
+export function lossyLadderForSource(curve, { minRatio = MIN_LOSSY_LEVEL_RATIO } = {}) {
+  const legal = curve
+    .filter((p) => LEGAL_MP3_BITRATES_KBPS.includes(p.bitrateKbps))
+    .sort((a, b) => a.bitrateKbps - b.bitrateKbps);
+  if (legal.length < 2) return [];
+
+  // Peak damage; on a tie prefer the HIGHEST bitrate, which is the right edge of
+  // the saturation plateau and the last point that still carries information.
+  let peak = 0;
+  for (let i = 1; i < legal.length; i++) if (legal[i].lsdDb >= legal[peak].lsdDb) peak = i;
+
+  // Walk up in bitrate from the peak, keeping strictly falling damage.
+  const run = [legal[peak]];
+  for (let i = peak + 1; i < legal.length; i++) {
+    if (legal[i].lsdDb >= run[run.length - 1].lsdDb) break; // reversal: noise floor
+    run.push(legal[i]);
+  }
+  if (run.length < 2) return [];
+
+  // Ascending by damage, then thinned so neighbours are actually distinguishable.
+  const ascending = [...run].sort((a, b) => a.lsdDb - b.lsdDb);
+  const ladder = [ascending[0]];
+  for (const p of ascending.slice(1)) {
+    if (p.lsdDb >= ladder[ladder.length - 1].lsdDb * minRatio) ladder.push(p);
+  }
+  return ladder.length >= 2 ? ladder : [];
+}
 
 /**
  * HOW TO RENDER ONE STAIRCASE LEVEL (E4/S0, 2026-08-15).
@@ -271,99 +357,38 @@ export function staircaseRender(family, level) {
     // A dB target is not a render parameter. The bitrate that reaches it
     // depends on the material, so it has to be solved against THAT source's
     // measured curve, and a level no source can reach must be skipped rather
-    // than clamped (see solveLossyBitrate).
+    // than clamped (see lossyLadderForSource).
     throw new Error(
-      `staircaseRender: lossy-artifact levels are in ${spec.unit} and must be solved per source — call solveLossyBitrate(${level}, curve) and render the bitrate it returns`,
+      `staircaseRender: lossy-artifact levels are in ${spec.unit} and are per-source — call lossyLadderForSource(curve) and render the bitrates it returns, labelling each clip with the dB measured there`,
     );
   }
   return { param: level, opts: spec.renderMode ? { timingMode: spec.renderMode } : {} };
 }
 
 /**
- * !! DO NOT RENDER THE LOSSY LADDER WITH THIS YET — MEASURED BROKEN (E4/S1) !!
+ * `solveLossyBitrate` WAS HERE AND IS DELETED (E4/S1b, PM ruling RT-65).
  *
- * `solve-check` solved every staircase level against three sources' measured
- * curves, RENDERED at each solved bitrate, and measured what came out. Mean miss
- * 0.742 LADDER STEPS, worst 2.957, against a ladder whose whole ratio is 1.249.
- * Two independent defects, both proven:
+ * It answered "what bitrate hits this target dB" by interpolating a source's
+ * measured curve. `solve-check` ran it end to end for the first time — solve,
+ * RENDER, measure — and it missed by a mean of 0.742 LADDER STEPS on a ladder
+ * whose entire ratio is 1.249, worst 2.957. Two proven causes:
  *
- * 1. THE SOLVER RETURNS BITRATES THE ENCODER CANNOT PRODUCE. It interpolates to
- *    an arbitrary integer kbps, but MP3 CBR at 44.1 kHz only supports
- *    32/40/48/56/64/80/96/112/128/160/192/224/256/320, and LAME silently snaps.
- *    Measured directly: 118k and 110k both encode at 112k; 102k and 90k both at
- *    96k; 80k, 78k, 75k and 74k ALL at 80k. On pb8 that made levels 3.9, 4.9 and
- *    6.1 render the SAME AUDIO and report three different magnitudes — the exact
- *    class of defect this module was created to end, arrived by a new route.
+ *   1. It returned bitrates MP3 does not have. Interpolation gives an arbitrary
+ *      integer kbps; CBR at 44.1 kHz has fourteen legal values and LAME snaps
+ *      silently. On pb8, levels 3.9, 4.9 and 6.1 rendered THE SAME AUDIO under
+ *      three different magnitudes.
+ *   2. Its monotone run walked up from the LOWEST bitrate and broke on the first
+ *      tie — but the bottom is where the family saturates, so ties there are
+ *      expected. pb6 tied at the first step and was reported as unable to render
+ *      anything, while actually holding a clean eight-point run.
  *
- * 2. A TIE AT SATURATION DESTROYS THE WHOLE CURVE. The run-builder walks up from
- *    the lowest bitrate and breaks on the first non-decreasing point. But the
- *    bottom of the curve is precisely where the family SATURATES, so a tie there
- *    is expected, not exceptional. pb6 measures 24k=9.88 and 32k=9.88 — one tie
- *    at the very first step, so the run is length 1 and every level returns null.
- *    pb6 was reported as "cannot render any level". It can: skipping that single
- *    tie leaves 32k=9.88 -> 112k=0.89, a monotone run of EIGHT points spanning
- *    0.89-9.88 dB, which covers the entire 2.0-9.5 ladder. The comment above
- *    claims the lowest bitrate is "where the signal is unambiguous"; that premise
- *    is backwards.
- *
- * PITCH AND TIMING ARE UNAFFECTED — they hit their targets exactly and their
- * renders are not blocked by this.
- *
- * ---
- *
- * The bitrate that hits a target LSD on ONE source (E2/S4c).
- *
- * IT IS NOT SAFE TO ASSUME THE CURVE IS MONOTONE. The first version of this
- * said so in its own comment and simply sorted by dB — which, on a curve that
- * reverses, silently pairs one dB value with two different bitrates and returns
- * whichever the sort happened to put first. Measured: pb6 runs 0.6 / 0.9 / 1.0 /
- * 0.9 dB across 320k / 192k / 128k / 96k, and pb3 reverses too. Above ~128 kbps
- * the differences are inside the measurement noise.
- *
- * So the solver takes the LONGEST MONOTONE RUN, walking down from the lowest
- * bitrate (where the signal is unambiguous) and stopping at the first reversal.
- * Anything above that point is not a region we can invert, and a target landing
- * there returns null rather than a confident-looking wrong bitrate.
- *
- * Interpolation is in log(bitrate) against dB — that is the axis on which the
- * measured curve is closest to straight, and interpolating on the wrong one
- * would bias every solved value in the same direction.
- *
- * Returns null when the target is outside the invertible region. Callers must
- * SKIP that level for that source rather than clamp to the nearest: clamping
- * would render two different levels as the same audio and report them as
- * different magnitudes.
- *
- * @param curve [{ bitrateKbps, lsdDb }] measured for this source, any order.
+ * DELETED RATHER THAN FIXED because the question it answers is no longer asked:
+ * the ladder is now built FROM the legal bitrates and each level is labelled
+ * with the damage measured there (`lossyLadderForSource`). Leaving a superseded
+ * function beside its twenty green fixture tests is the false confidence that
+ * hid this for two sessions — those tests proved the interpolation arithmetic
+ * and could not see either defect.
  */
-export function solveLossyBitrate(targetLsdDb, curve) {
-  if (curve.length < 2) throw new Error("solveLossyBitrate: need at least two measured points");
-  // Ascending bitrate = descending damage. Keep the run that stays monotone.
-  const byBitrate = [...curve].sort((a, b) => a.bitrateKbps - b.bitrateKbps);
-  const run = [byBitrate[0]];
-  for (let i = 1; i < byBitrate.length; i++) {
-    if (byBitrate[i].lsdDb >= run[run.length - 1].lsdDb) break; // reversal
-    run.push(byBitrate[i]);
-  }
-  if (run.length < 2) return null;
-
-  const pts = [...run].sort((a, b) => a.lsdDb - b.lsdDb);
-  const lo = pts[0];
-  const hi = pts[pts.length - 1];
-  if (targetLsdDb < lo.lsdDb || targetLsdDb > hi.lsdDb) return null;
-
-  for (let i = 1; i < pts.length; i++) {
-    const a = pts[i - 1];
-    const b = pts[i];
-    if (targetLsdDb <= b.lsdDb) {
-      if (b.lsdDb === a.lsdDb) return b.bitrateKbps; // saturated segment
-      const t = (targetLsdDb - a.lsdDb) / (b.lsdDb - a.lsdDb);
-      const logBr = Math.log(a.bitrateKbps) + t * (Math.log(b.bitrateKbps) - Math.log(a.bitrateKbps));
-      return Math.round(Math.exp(logBr));
-    }
-  }
-  return null;
-}
 
 /**
  * Lowest detune whose rendered magnitude the cents ruler can still stand

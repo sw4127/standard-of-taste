@@ -191,7 +191,8 @@ describe("E4/S0 — staircaseRender resolves the mode from the ladder table", ()
    * number here would be inventing one.
    */
   it("refuses lossy outright and says what to call instead", () => {
-    expect(() => staircaseRender("lossy-artifact", 4.9)).toThrow(/solveLossyBitrate/);
+    // Its levels are per-source and measured, not requested (PM ruling RT-65).
+    expect(() => staircaseRender("lossy-artifact", 4.9)).toThrow(/lossyLadderForSource/);
   });
 
   function timingLevels() {
