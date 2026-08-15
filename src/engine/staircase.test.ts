@@ -13,6 +13,15 @@
  */
 import { describe, expect, it } from "vitest";
 import {
+  GUESS,
+  P_CONVERGE,
+  claimTarget,
+  observer as obs,
+  procedureTarget,
+  runStaircaseSession,
+  type Observer,
+} from "@/analytics/observer";
+import {
   DEFAULT_STAIRCASE,
   estimateThreshold,
   recordResponse,
@@ -31,51 +40,14 @@ const cfg = (levels: number[], startIndex = levels.length - 3): StaircaseConfig 
   startIndex,
 });
 
-/** Deterministic PRNG so a failing recovery run can be reproduced exactly. */
-function rng(seed: number) {
-  return () => {
-    seed |= 0;
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
 /**
- * A simulated listener. `alpha` is their 75%-correct point; `beta` is the slope
- * in log units (smaller = sharper transition from guessing to hearing).
- *
- * Floored at 0.5 because the task is two-alternative forced choice: someone who
- * hears nothing still gets half right, and any simulation that forgets this
- * makes every estimator look better than it is.
+ * THE SIMULATED LISTENER now lives in `@/analytics/observer` — R1's lapse model
+ * plus the numerically-solved targets. It moved out of this file when R2 needed
+ * the same observer, because the alternative was a second copy of the model,
+ * which is the defect `rungs.mjs` was written to end.
  */
-const pCorrect = (x: number, alpha: number, beta: number) =>
-  0.5 + 0.5 / (1 + Math.exp(-(Math.log(x) - Math.log(alpha)) / beta));
-
-/**
- * The level a 2-down/1-up rule actually converges on is where P(correct) =
- * 0.707, NOT the 75% point. Solving the curve above for 0.707 gives this, and
- * comparing recovery against alpha instead would build in a fixed bias and then
- * report it as accuracy.
- */
-const trueTarget = (alpha: number, beta: number) => alpha * Math.exp(Math.log(0.414 / 0.586) * beta);
-
-function runSession(
-  levels: number[],
-  alpha: number,
-  beta: number,
-  seed: number,
-  overrides: Partial<StaircaseConfig> = {},
-) {
-  const config = { ...cfg(levels), ...overrides };
-  const rand = rng(seed);
-  let state = startStaircase(config);
-  while (!state.finished) {
-    const x = levels[state.currentIndex];
-    state = recordResponse(state, rand() < pCorrect(x, alpha, beta), config);
-  }
-  return { outcome: estimateThreshold(state, config), state };
+function runSession(levels: number[], o: Observer, seed: number, overrides: Partial<StaircaseConfig> = {}) {
+  return runStaircaseSession(o, seed, { ...cfg(levels), ...overrides });
 }
 
 describe("staircase — the rule behaves as specified", () => {
@@ -117,14 +89,14 @@ describe("staircase — the rule behaves as specified", () => {
   });
 
   it("stops at the reversal budget", () => {
-    const { state } = runSession(PITCH, 20, 0.4, 99);
+    const { state } = runSession(PITCH, obs(20, 0.4), 99);
     expect(state.reversalIndices.length).toBeGreaterThanOrEqual(config.stopAfterReversals);
     expect(state.trials.length).toBeLessThanOrEqual(config.maxTrials);
   });
 
   it("never presents a level outside the ladder", () => {
     for (let seed = 0; seed < 50; seed++) {
-      const { state } = runSession(PITCH, 3, 0.3, seed); // a listener far past the floor
+      const { state } = runSession(PITCH, obs(3, 0.3), seed); // a listener far past the floor
       for (const t of state.trials) {
         expect(t.index).toBeGreaterThanOrEqual(0);
         expect(t.index).toBeLessThan(PITCH.length);
@@ -190,34 +162,61 @@ describe("staircase — it refuses to invent a threshold it did not measure (N3)
 describe("staircase — RECOVERY of known thresholds [SIMULATED]", () => {
   const SESSIONS = 200;
 
-  const recover = (levels: number[], alpha: number, beta: number, overrides: Partial<StaircaseConfig> = {}) => {
-    const errorsInSteps: number[] = [];
-    const trialCounts: number[] = [];
+  const mean = (v: number[]) => v.reduce((a, b) => a + b, 0) / v.length;
+  const rms = (v: number[]) => Math.sqrt(v.reduce((a, b) => a + b * b, 0) / v.length);
+  /** Standard error of a mean. Every bias below is an estimate from 200 runs. */
+  const sem = (v: number[]) => {
+    const m = mean(v);
+    return Math.sqrt(v.reduce((a, b) => a + (b - m) ** 2, 0) / (v.length - 1) / v.length);
+  };
+
+  const recover = (levels: number[], o: Observer, overrides: Partial<StaircaseConfig> = {}) => {
+    /**
+     * Kept PER SEED, not just aggregated. Two recovery runs over the same seed
+     * list see the same random draws, so their difference can be tested as a
+     * paired sample — which is the only way to tell a real shift from the
+     * sampling noise of 200 sessions. Aggregates alone cannot support the
+     * comparison, and eyeballing two means and declaring a direction is how a
+     * 0.01-step wobble gets reported as an effect.
+     */
+    const samples: Array<{ seed: number; proc: number; claim: number; trials: number }> = [];
     let inconclusive = 0;
     const ratio = levels[1] / levels[0];
+    const procT = procedureTarget(o);
+    const claimT = claimTarget(o);
     for (let seed = 1; seed <= SESSIONS; seed++) {
-      const { outcome } = runSession(levels, alpha, beta, seed * 7919, overrides);
+      const { outcome } = runSession(levels, o, seed * 7919, overrides);
       if (outcome.kind !== "threshold") {
         inconclusive++;
         continue;
       }
       // Error expressed in ladder steps: log ratio of estimate to truth,
       // divided by the log of one step.
-      errorsInSteps.push(Math.log(outcome.threshold / trueTarget(alpha, beta)) / Math.log(ratio));
-      trialCounts.push(outcome.trials);
+      samples.push({
+        seed,
+        proc: Math.log(outcome.threshold / procT) / Math.log(ratio),
+        claim: Math.log(outcome.threshold / claimT) / Math.log(ratio),
+        trials: outcome.trials,
+      });
     }
-    const n = errorsInSteps.length;
-    const bias = errorsInSteps.reduce((a, b) => a + b, 0) / n;
-    const rmse = Math.sqrt(errorsInSteps.reduce((a, b) => a + b * b, 0) / n);
-    trialCounts.sort((a, b) => a - b);
+    const procErrors = samples.map((s) => s.proc);
+    const claimErrors = samples.map((s) => s.claim);
+    const trialCounts = samples.map((s) => s.trials).sort((a, b) => a - b);
     return {
-      bias,
-      rmse,
-      n,
+      samples,
+      /** Bias/RMSE vs the rule's own target — "does the procedure work". */
+      bias: mean(procErrors),
+      biasSe: sem(procErrors),
+      rmse: rms(procErrors),
+      /** Bias/RMSE vs the ear itself — "is the printed number right about them". */
+      claimBias: mean(claimErrors),
+      claimBiasSe: sem(claimErrors),
+      claimRmse: rms(claimErrors),
+      n: samples.length,
       inconclusive,
-      medianTrials: trialCounts[Math.floor(n / 2)],
+      medianTrials: trialCounts[Math.floor(samples.length / 2)],
       /** What the step-error means in the family's own unit: a multiplying factor. */
-      physicalFactor: Math.pow(ratio, rmse),
+      physicalFactor: Math.pow(ratio, rms(procErrors)),
     };
   };
 
@@ -229,7 +228,7 @@ describe("staircase — RECOVERY of known thresholds [SIMULATED]", () => {
     ["timing, average listener", TIMING, 31.5, 0.35],
     ["timing, sensitive listener", TIMING, 19.8, 0.35],
   ])("recovers %s", (label, levels, alpha, beta) => {
-    const r = recover(levels as number[], alpha as number, beta as number);
+    const r = recover(levels as number[], obs(alpha as number, beta as number));
     console.log(
       `[staircase] ${String(label).padEnd(30)} bias ${r.bias >= 0 ? "+" : ""}${r.bias.toFixed(2)} steps · ` +
         `RMSE ${r.rmse.toFixed(2)} steps (x${r.physicalFactor.toFixed(2)}) · median ${r.medianTrials} trials · ` +
@@ -261,8 +260,8 @@ describe("staircase — RECOVERY of known thresholds [SIMULATED]", () => {
    * procedure would be theatre with a number attached.
    */
   it("more reversals buy precision — the estimator converges", () => {
-    const few = recover(PITCH, 25, 0.35, { stopAfterReversals: 6, useLastReversals: 4, maxTrials: 90 });
-    const many = recover(PITCH, 25, 0.35, { stopAfterReversals: 20, useLastReversals: 16, maxTrials: 140 });
+    const few = recover(PITCH, obs(25, 0.35), { stopAfterReversals: 6, useLastReversals: 4, maxTrials: 90 });
+    const many = recover(PITCH, obs(25, 0.35), { stopAfterReversals: 20, useLastReversals: 16, maxTrials: 140 });
     console.log(
       `[staircase] 6 reversals: RMSE ${few.rmse.toFixed(2)} steps, ${few.medianTrials} trials · ` +
         `20 reversals: RMSE ${many.rmse.toFixed(2)} steps, ${many.medianTrials} trials [SIMULATED]`,
@@ -274,7 +273,7 @@ describe("staircase — RECOVERY of known thresholds [SIMULATED]", () => {
   it("a listener past the bottom of the ladder is reported as a BOUND, not a number", () => {
     let below = 0;
     for (let seed = 1; seed <= 100; seed++) {
-      const { outcome } = runSession(PITCH, 1.2, 0.3, seed * 7919);
+      const { outcome } = runSession(PITCH, obs(1.2, 0.3), seed * 7919);
       if (outcome.kind === "below") below++;
     }
     // The point is that these are NOT silently reported as a threshold of 3.1.
@@ -282,8 +281,144 @@ describe("staircase — RECOVERY of known thresholds [SIMULATED]", () => {
   });
 
   it("pins the session length the instrument actually needs", () => {
-    const r = recover(PITCH, 25, 0.35);
+    const r = recover(PITCH, obs(25, 0.35));
     console.log(`[staircase] median session: ${r.medianTrials} trials per family [SIMULATED]`);
     expect(r.medianTrials).toBeLessThanOrEqual(DEFAULT_STAIRCASE.maxTrials);
+  });
+
+  /**
+   * R1 — THE LISTENER WHO SLIPS (2026-08-15).
+   *
+   * Everything above this point was measured against an observer who never
+   * makes a careless mistake. That observer does not exist, and the omission is
+   * not neutral: a staircase can only be driven UPWARD by errors, so a listener
+   * who errs at levels they can plainly hear supplies upward pressure at every
+   * point in the run, including the easy end where the response carries no
+   * information about their threshold at all.
+   *
+   * `lapse` here is the asymptotic error rate. 2% is an alert listener's
+   * mis-click rate; 6% is what thirty-eight trials of a self-paced web session
+   * can plausibly produce near the end. Both are inside the range the
+   * psychophysics literature fits routinely.
+   *
+   * This slice MEASURES the cost. It does not correct it — the correction is
+   * R4's, and choosing one before the size and direction of the effect are
+   * known would be picking a fix and then finding a reason.
+   */
+  describe("under a listener who slips [SIMULATED]", () => {
+    const LAPSES = [0, 0.02, 0.06];
+    const CONDITIONS: Array<[string, number[], number, number]> = [
+      ["pitch, sensitive", PITCH, 12, 0.35],
+      ["pitch, average", PITCH, 25, 0.35],
+      ["pitch, insensitive", PITCH, 50, 0.35],
+      ["pitch, shallow slope", PITCH, 25, 0.7],
+      ["timing, average", TIMING, 31.5, 0.35],
+      ["timing, sensitive", TIMING, 19.8, 0.35],
+    ];
+    const sgn = (v: number) => `${v >= 0 ? "+" : ""}${v.toFixed(2)}`;
+
+    it("the numeric target reproduces the hand-solved closed form at lapse 0", () => {
+      /**
+       * The one place the algebra is allowed to appear. If these disagree, one
+       * of the two is wrong and the test says so BEFORE a recovery number is
+       * quoted anywhere — rather than after, in a handoff, as a mystery bias.
+       */
+      const closedForm = (alpha: number, beta: number) =>
+        alpha * Math.exp(Math.log((P_CONVERGE - GUESS) / (1 - P_CONVERGE)) * beta);
+      for (const [, , alpha, beta] of CONDITIONS) {
+        expect(procedureTarget(obs(alpha, beta))).toBeCloseTo(closedForm(alpha, beta), 9);
+      }
+    });
+
+    it("refuses to name a threshold for an observer who can never reach 70.7%", () => {
+      // lapse 0.30 caps the curve at 0.70 — below what 2-down/1-up chases. The
+      // simulation must say so rather than return a number from a bad bracket.
+      expect(() => procedureTarget(obs(25, 0.35, 0.3))).toThrow(/never reaches/);
+    });
+
+    /**
+     * The shift between two lapse settings, tested as a PAIRED sample.
+     *
+     * Both runs walk the same seed list, so seed 37 sees the same random draws
+     * in both — the difference on that seed isolates the lapse, and the noise
+     * that dominates either run separately cancels. `t` is the shift in units
+     * of its own standard error; |t| < 2 means the numbers moved but nothing
+     * has been shown.
+     */
+    const pairedShift = (a: ReturnType<typeof recover>, b: ReturnType<typeof recover>, key: "proc" | "claim") => {
+      const lookup = new Map(a.samples.map((s) => [s.seed, s[key]]));
+      const diffs = b.samples.filter((s) => lookup.has(s.seed)).map((s) => s[key] - lookup.get(s.seed)!);
+      const se = sem(diffs);
+      return { shift: mean(diffs), se, t: mean(diffs) / se, pairs: diffs.length };
+    };
+
+    it("measures what a lapse rate costs recovery", () => {
+      console.log(`\n[staircase] === R1 LAPSE SWEEP [SIMULATED] — ${SESSIONS} sessions per cell ===`);
+      console.log(`[staircase] bias/RMSE in LADDER STEPS, +/- one standard error.`);
+      console.log(`[staircase]   proc  = vs the level the RULE chases (this observer's own 70.7% point)`);
+      console.log(`[staircase]   claim = vs the same ear with lapses removed (what we would PRINT)`);
+      console.log(
+        `[staircase] ${"condition".padEnd(21)} ${"λ".padStart(3)}  ${"proc bias".padStart(12)} ` +
+          `${"RMSE".padStart(5)}  ${"claim bias".padStart(12)} ${"RMSE".padStart(5)}  trials  inc`,
+      );
+
+      const byCondition = new Map<string, Array<ReturnType<typeof recover>>>();
+      for (const [label, levels, alpha, beta] of CONDITIONS) {
+        const cells = LAPSES.map((lapse) => recover(levels, obs(alpha, beta, lapse)));
+        byCondition.set(label, cells);
+        cells.forEach((r, i) => {
+          console.log(
+            `[staircase] ${label.padEnd(21)} ${`${(LAPSES[i] * 100).toFixed(0)}%`.padStart(3)}  ` +
+              `${`${sgn(r.bias)}±${r.biasSe.toFixed(2)}`.padStart(12)} ${r.rmse.toFixed(2).padStart(5)}  ` +
+              `${`${sgn(r.claimBias)}±${r.claimBiasSe.toFixed(2)}`.padStart(12)} ${r.claimRmse.toFixed(2).padStart(5)}  ` +
+              `${String(r.medianTrials).padStart(6)}  ${String(r.inconclusive).padStart(3)}`,
+          );
+        });
+      }
+
+      /**
+       * PRE-REGISTERED, written before the numbers were seen: lapses push the
+       * estimate UP the ladder (toward reporting people as LESS sensitive),
+       * because an error at a level the listener can plainly hear is an upward
+       * step their actual sensitivity did not earn.
+       *
+       * Scored on the PAIRED shift, not on which of two means is larger. The
+       * first draft of this test scored it by comparing the two aggregates and
+       * would have reported 6/6 — including a condition that moved 0.01 steps,
+       * which is a seventh of its own standard error.
+       */
+      console.log(`[staircase] --- paired shift, λ=0% → λ=6% (same seeds; |t|>2 is a real move) ---`);
+      let realMoves = 0;
+      for (const [label, cells] of byCondition) {
+        const p = pairedShift(cells[0], cells[cells.length - 1], "proc");
+        const c = pairedShift(cells[0], cells[cells.length - 1], "claim");
+        if (p.t > 2) realMoves++;
+        console.log(
+          `[staircase] ${label.padEnd(21)} proc ${sgn(p.shift)} steps (t=${p.t.toFixed(1)})  ` +
+            `claim ${sgn(c.shift)} steps (t=${c.t.toFixed(1)})  n=${p.pairs} pairs`,
+        );
+      }
+      console.log(
+        `[staircase] prediction (lapses bias UPWARD) is SUPPORTED at |t|>2 in ` +
+          `${realMoves}/${CONDITIONS.length} conditions.`,
+      );
+
+      // Asserted on the canonical condition only — well clear of both ladder
+      // ends, so ladder-end censoring cannot be what produces the result.
+      const avg = byCondition.get("pitch, average")!;
+      const canonical = pairedShift(avg[0], avg[avg.length - 1], "proc");
+      expect(canonical.t, "lapses push the estimate up the ladder, beyond sampling noise").toBeGreaterThan(2);
+
+      for (const [label, cells] of byCondition) {
+        // Bookkeeping guard: with no lapses the two truths ARE the same number,
+        // so any divergence here means the two error series got crossed.
+        expect(cells[0].claimRmse, `${label}: claim==proc at lapse 0`).toBeCloseTo(cells[0].rmse, 12);
+        // A procedure that stops producing thresholds under a realistic lapse
+        // rate is unusable, whatever its bias looks like on the runs it keeps.
+        for (const r of cells) {
+          expect(r.inconclusive, `${label}: still reports a threshold`).toBeLessThan(SESSIONS * 0.1);
+        }
+      }
+    });
   });
 });
