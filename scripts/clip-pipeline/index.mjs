@@ -262,6 +262,7 @@ try {
   else if (stage === "ladder") await (await import("./ladder.mjs")).ladder(args);
   else if (stage === "sweep") await (await import("./sweep.mjs")).sweep(args);
   else if (stage === "curve") await (await import("./curve.mjs")).curve(args);
+  else if (stage === "solve-check") await (await import("./solvecheck.mjs")).solveCheck(args);
   else {
     console.log("usage: node scripts/clip-pipeline/index.mjs <download|snapshot|analyze|render|degrade|validate|ladder|sweep|expand> [--local <file>] [--start N] [--len N] [--out id]");
     console.log("       degrade: --id <pairId> --source <biasItemId> --start <sec> --family <pitch-drift|timing-smear|lossy-artifact> --magnitude <ladder rung 1-4; 2-4 ship> --seed <int> [--len <sec>]");
@@ -270,6 +271,9 @@ try {
     console.log("       sweep:    measure the SHIPPED pool in each family's own physical unit (cents / ms / dB) [--family <name>] [--json]");
     console.log("       curve:    dense parameter sweep for ONE family from ONE window — the shape the ladder is spaced against");
     console.log("                 --family <name> [--values a,b,c] [--source pb1] [--start 75] [--len 20] [--json]");
+    console.log("       solve-check: solve every lossy staircase level against a source's measured curve, RENDER at the");
+    console.log("                 solved bitrate, and report how far the achieved dB missed — in ladder steps (E4/S1)");
+    console.log("                 [--sources pb1,pb6,pb8] [--start 75] [--len 20] [--json]");
     process.exit(2);
   }
 } catch (e) {

@@ -280,6 +280,37 @@ export function staircaseRender(family, level) {
 }
 
 /**
+ * !! DO NOT RENDER THE LOSSY LADDER WITH THIS YET — MEASURED BROKEN (E4/S1) !!
+ *
+ * `solve-check` solved every staircase level against three sources' measured
+ * curves, RENDERED at each solved bitrate, and measured what came out. Mean miss
+ * 0.742 LADDER STEPS, worst 2.957, against a ladder whose whole ratio is 1.249.
+ * Two independent defects, both proven:
+ *
+ * 1. THE SOLVER RETURNS BITRATES THE ENCODER CANNOT PRODUCE. It interpolates to
+ *    an arbitrary integer kbps, but MP3 CBR at 44.1 kHz only supports
+ *    32/40/48/56/64/80/96/112/128/160/192/224/256/320, and LAME silently snaps.
+ *    Measured directly: 118k and 110k both encode at 112k; 102k and 90k both at
+ *    96k; 80k, 78k, 75k and 74k ALL at 80k. On pb8 that made levels 3.9, 4.9 and
+ *    6.1 render the SAME AUDIO and report three different magnitudes — the exact
+ *    class of defect this module was created to end, arrived by a new route.
+ *
+ * 2. A TIE AT SATURATION DESTROYS THE WHOLE CURVE. The run-builder walks up from
+ *    the lowest bitrate and breaks on the first non-decreasing point. But the
+ *    bottom of the curve is precisely where the family SATURATES, so a tie there
+ *    is expected, not exceptional. pb6 measures 24k=9.88 and 32k=9.88 — one tie
+ *    at the very first step, so the run is length 1 and every level returns null.
+ *    pb6 was reported as "cannot render any level". It can: skipping that single
+ *    tie leaves 32k=9.88 -> 112k=0.89, a monotone run of EIGHT points spanning
+ *    0.89-9.88 dB, which covers the entire 2.0-9.5 ladder. The comment above
+ *    claims the lowest bitrate is "where the signal is unambiguous"; that premise
+ *    is backwards.
+ *
+ * PITCH AND TIMING ARE UNAFFECTED — they hit their targets exactly and their
+ * renders are not blocked by this.
+ *
+ * ---
+ *
  * The bitrate that hits a target LSD on ONE source (E2/S4c).
  *
  * IT IS NOT SAFE TO ASSUME THE CURVE IS MONOTONE. The first version of this
