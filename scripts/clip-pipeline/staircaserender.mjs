@@ -767,6 +767,47 @@ export async function staircaseRenderCli(args = []) {
     }
   }
 
+  // THE GATES ARE EVALUATED BEFORE THE MANIFEST IS BUILT, because the manifest
+  // now RECORDS their outcome — which windows a family may draw from (RT-75a)
+  // and how far the same level varies across them (RT-76a). Computing them
+  // afterwards left the manifest describing a pool nothing had judged yet.
+  const failed = ladders.filter((l) => !l.monotone);
+  const mislabelled = mergedClips.filter((c) => c.measured && Math.abs(c.measured.errPct) > MAX_LEVEL_ERR_PCT);
+  const badTrajectory = mergedClips.filter(
+    (c) =>
+      c.measured?.trajectoryR !== undefined &&
+      (!(c.measured.trajectoryR >= MIN_TRAJECTORY_R) ||
+        !(Math.abs(c.measured.trajectorySlope - 1) * 100 <= MAX_TRAJECTORY_SLOPE_ERR_PCT)),
+  );
+  const agreement = crossWindowAgreement(mergedClips);
+  const disagreeing = agreement.filter((r) => r.ratio > MAX_CROSS_WINDOW_RATIO);
+
+  // Per family: the windows every one of whose clips passed that family's check.
+  const failedIds = new Set(badTrajectory.map((c) => c.id));
+  const instanceWindows = {};
+  const excludedWindows = [];
+  for (const family of STAIRCASE_RENDER_FAMILIES) {
+    const windowsSeen = [...new Set(mergedClips.filter((c) => c.family === family).map((c) => `${c.sourceId}@${c.startSec}`))].sort();
+    instanceWindows[family] = [];
+    for (const w of windowsSeen) {
+      const [sourceId, startSec] = [w.split("@")[0], Number(w.split("@")[1])];
+      const rows = mergedClips.filter((c) => c.family === family && c.sourceId === sourceId && c.startSec === startSec);
+      const bad = rows.filter((c) => failedIds.has(c.id));
+      if (bad.length) {
+        excludedWindows.push({
+          family,
+          sourceId,
+          startSec,
+          failingClips: bad.length,
+          worstTrajectoryR: Math.min(...bad.map((c) => c.measured.trajectoryR)),
+          reason: "drift trajectory not verifiable by the correlator on this material (RT-75a)",
+        });
+      } else {
+        instanceWindows[family].push({ sourceId, startSec });
+      }
+    }
+  }
+
   const manifest = {
     instrument: "delicacy-staircase",
     poolVersion: 1,
@@ -781,6 +822,30 @@ export async function staircaseRenderCli(args = []) {
       "requested — the threshold this instrument reports is in those units (D4 amendment). `preNormClippedFraction` is " +
       "recorded here because clipping is only visible before loudness normalisation (RT-17a). Measured magnitude is NOT " +
       "difficulty: which level a listener stops hearing is what the staircase is for (N3).",
+    /**
+     * WHICH WINDOWS A FAMILY MAY DRAW FROM (PM ruling RT-75a, 2026-08-18).
+     *
+     * NOT simply "every window rendered". A window is eligible for a family
+     * only if every one of its clips in that family passed the family's check.
+     * Measured on the 9-window run: pb1@120s and pb6@75s produce timing clips
+     * whose drift the correlator cannot verify (r 0.373 and -0.072), so timing
+     * draws from seven windows while pitch keeps all nine.
+     *
+     * The audio in those two windows is probably correct — `timing-fidelity`
+     * measured the render exact to 0.000% — but probably-correct is not
+     * verified, and the difference is exactly what N3 forbids shipping in
+     * silence. `excludedWindows` records why, rather than the list quietly
+     * being shorter.
+     */
+    instanceWindows,
+    excludedWindows,
+    /**
+     * How much the SAME level varies across the windows serving it, per level
+     * (PM ruling RT-76a). Emitted for the Lab: pitch's bottom level 3.1 spans
+     * 2.70-3.07 (1.137x) where every level from 12.5 up sits at or below 1.06x,
+     * and that limit is stated rather than hidden by dropping the level.
+     */
+    crossWindowSpread: agreement.map((r) => ({ family: r.family, level: r.level, n: r.n, min: r.min, max: r.max, ratio: r.ratio })),
     references: mergedRefs,
     clips: mergedClips,
   };
@@ -789,16 +854,6 @@ export async function staircaseRenderCli(args = []) {
 
   const bytes = [...mergedRefs, ...mergedClips].reduce((n, e) => n + (e.bytes ?? 0), 0);
   const elapsedSec = (Date.now() - startedAt) / 1000;
-  const failed = ladders.filter((l) => !l.monotone);
-  const mislabelled = mergedClips.filter((c) => c.measured && Math.abs(c.measured.errPct) > MAX_LEVEL_ERR_PCT);
-  const badTrajectory = mergedClips.filter(
-    (c) =>
-      c.measured?.trajectoryR !== undefined &&
-      (!(c.measured.trajectoryR >= MIN_TRAJECTORY_R) ||
-        !(Math.abs(c.measured.trajectorySlope - 1) * 100 <= MAX_TRAJECTORY_SLOPE_ERR_PCT)),
-  );
-  const agreement = crossWindowAgreement(mergedClips);
-  const disagreeing = agreement.filter((r) => r.ratio > MAX_CROSS_WINDOW_RATIO);
 
   if (json) {
     console.log(

@@ -79,6 +79,25 @@ export const STAIRCASE_WINDOWS = {
  * @param curves { [sourceId]: [{bitrateKbps, lsdDb}] } — may omit a source, in
  *   which case its lossy ladder is reported as unknown rather than assumed.
  */
+/**
+ * MEASURED by `solve-check`, 20 s @75 s — log-spectral distance in dB at each
+ * legal MP3 bitrate. Only these three sources have dense curves.
+ *
+ * EXPORTED (E4/S3/S4) because the lossy window-deficit costing needs the same
+ * ladders the planner uses, and a second copy of a measured table is how the
+ * two rung tables came to disagree (rungs.mjs).
+ */
+export const MEASURED_LOSSY_CURVES = Object.fromEntries(
+  Object.entries({
+    pb1: [[320, 0.422], [256, 0.496], [192, 0.669], [160, 0.822], [128, 1.796], [112, 2.969], [96, 4.434],
+          [80, 5.654], [64, 6.849], [48, 8.265], [40, 9.69], [32, 12.395]],
+    pb6: [[320, 0.56], [256, 0.63], [192, 0.87], [160, 0.8], [128, 0.99], [112, 0.89], [96, 0.95],
+          [80, 1.04], [64, 1.73], [56, 2.66], [48, 4.22], [40, 6.7], [32, 9.88]],
+    pb8: [[320, 0.266], [256, 0.334], [192, 0.45], [128, 0.588], [96, 1.036], [80, 3.998], [64, 11.167],
+          [56, 12.963], [48, 18.81], [32, 25.574]],
+  }).map(([k, v]) => [k, v.map(([bitrateKbps, lsdDb]) => ({ bitrateKbps, lsdDb }))]),
+);
+
 export function levelsPerSource(sourceId, curves = {}) {
   const lossyCurve = curves[sourceId];
   return {
@@ -184,18 +203,8 @@ export async function renderPlanCli(args = []) {
   const windowsArg = opt("windows", null);
   const windows = windowsArg ? windowsArg.split(",").map(Number) : STAIRCASE_WINDOWS;
 
-  /** MEASURED by `solve-check`, 20 s @75 s. Only these three have dense curves. */
-  const CURVES = {
-    pb1: [[320, 0.422], [256, 0.496], [192, 0.669], [160, 0.822], [128, 1.796], [112, 2.969], [96, 4.434],
-          [80, 5.654], [64, 6.849], [48, 8.265], [40, 9.69], [32, 12.395]],
-    pb6: [[320, 0.56], [256, 0.63], [192, 0.87], [160, 0.8], [128, 0.99], [112, 0.89], [96, 0.95],
-          [80, 1.04], [64, 1.73], [56, 2.66], [48, 4.22], [40, 6.7], [32, 9.88]],
-    pb8: [[320, 0.266], [256, 0.334], [192, 0.45], [128, 0.588], [96, 1.036], [80, 3.998], [64, 11.167],
-          [56, 12.963], [48, 18.81], [32, 25.574]],
-  };
-  const curves = Object.fromEntries(
-    Object.entries(CURVES).map(([k, v]) => [k, v.map(([bitrateKbps, lsdDb]) => ({ bitrateKbps, lsdDb }))]),
-  );
+  const CURVES = MEASURED_LOSSY_CURVES;
+  const curves = CURVES;
 
   const plan = renderPlan({ sources, windows, curves });
   const cost = planCost(plan);
