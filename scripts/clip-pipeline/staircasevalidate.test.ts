@@ -1,0 +1,338 @@
+/**
+ * E4/S5/S1 — prove the staircase Layer A gate can REJECT, and reject for the
+ * right reason.
+ *
+ * Same argument as `validate.test.ts`: a gate never observed to reject is not
+ * yet known to be a gate. These drive `gradeStaircaseClip` directly with
+ * measurement-shaped rows, one per failure mode, plus the boundary either side
+ * of every threshold — so a threshold cannot be moved, or an operator flipped,
+ * without a test going red.
+ *
+ * WHY NOT END-TO-END AUDIO: the source cache is git-ignored (it holds the
+ * downloaded recordings) and `public/audio/staircase` is too (RT-71b). A test
+ * that skipped when they are absent would report green in CI while proving
+ * nothing. The decision logic is pinned here; the measurement-to-decision
+ * wiring is demonstrated by the real 198-row run pasted into the S2 reply.
+ */
+
+import { describe, expect, it } from "vitest";
+import {
+  gradeStaircaseClip,
+  MAX_CLIPPED_FRACTION,
+  MAX_FLAT_TOP_FRACTION,
+  MAX_QUIET_FRACTION,
+  MAX_SILENCE_SEC,
+  MIN_CONFIDENT_BLOCK_FRACTION,
+  MIN_CONFIDENT_PITCH_FRACTION,
+  MIN_MEASURABLE_DRIFT_MS,
+  MIN_MEASURABLE_PITCH_CENTS,
+  STAIRCASE_MAGNITUDE_GATES,
+} from "./staircasevalidate.mjs";
+import { MIN_PITCH_CENTS } from "./validate.mjs";
+import { STAIRCASE_LEVELS } from "./rungs.mjs";
+
+/** Drop one key from a row, without binding an unused variable for it. */
+function without<T extends object>(row: T, key: string): T {
+  const copy = { ...row } as Record<string, unknown>;
+  delete copy[key];
+  return copy as T;
+}
+
+/** The gate table indexed by an arbitrary family name — the point of several
+ *  tests below is that a family is ABSENT from it. */
+const gateFor = (family: string) => (STAIRCASE_MAGNITUDE_GATES as Record<string, unknown>)[family];
+
+/** A healthy PITCH clip — each test perturbs exactly one field. */
+const pitch = {
+  id: "pb1-w75-pitch-25",
+  kind: "degraded" as const,
+  sourceId: "pb1",
+  startSec: 75,
+  family: "pitch-drift",
+  level: 25,
+  sha256Match: true,
+  preNormClippedFraction: 0,
+  measuredValue: 23.8,
+  confidentFraction: 1,
+  flatTopFraction: 0,
+  longestSilenceSec: 0.4,
+  quietFraction: 0.05,
+};
+
+/** A healthy TIMING clip. Note the deliberately hostile confidence: 0.30 would
+ *  fail pitch's 0.80 and is entirely normal for a correlator on warped audio. */
+const timing = {
+  ...pitch,
+  id: "pb6-w30-timing-25",
+  sourceId: "pb6",
+  startSec: 30,
+  family: "timing-smear",
+  measuredValue: 25,
+  confidentFraction: 0.3,
+  // Timing's magnitude label is the MODEL (RT-74a), so it carries separate
+  // evidence that the drift actually rendered — staircase-render's trajectory
+  // verdict. Pitch needs no equivalent: its cents figure IS a measurement of
+  // the file.
+  trajectoryVerified: true,
+};
+
+/** A healthy window REFERENCE — no family, no magnitude, fitness only. */
+const reference = {
+  id: "pb1-w75-ref",
+  kind: "reference" as const,
+  sourceId: "pb1",
+  startSec: 75,
+  sha256Match: true,
+  preNormClippedFraction: 0,
+  flatTopFraction: 0,
+  longestSilenceSec: 0.4,
+  quietFraction: 0.05,
+};
+
+describe("the healthy rows pass", () => {
+  it.each([
+    ["pitch", pitch, "cents-floor + fitness"],
+    ["timing", timing, "ms-floor + fitness"],
+    ["reference", reference, "fitness-only"],
+  ])("%s", (_name, row, gatedOn) => {
+    const r = gradeStaircaseClip(row);
+    expect(r.reasons).toEqual([]);
+    expect(r.verdict).toBe("PASS");
+    expect(r.gatedOn).toBe(gatedOn);
+  });
+});
+
+describe("integrity is established before anything is read", () => {
+  it("a missing file is an ERROR, not a FLAG", () => {
+    const r = gradeStaircaseClip({ ...pitch, fileMissing: true });
+    expect(r.verdict).toBe("ERROR");
+    expect(r.reasons[0]).toMatch(/audio missing/);
+  });
+
+  it("a hash mismatch is an ERROR — the clip may be fine, but nothing we know describes it", () => {
+    const r = gradeStaircaseClip({ ...pitch, sha256Match: false });
+    expect(r.verdict).toBe("ERROR");
+    expect(r.reasons[0]).toMatch(/does not match the manifest/);
+  });
+
+  it("an UNCHECKED hash is an ERROR too — absence of a check is not a pass", () => {
+    const r = gradeStaircaseClip(without(pitch, "sha256Match"));
+    expect(r.verdict).toBe("ERROR");
+    expect(r.reasons[0]).toMatch(/not checked/);
+  });
+
+  it("a hash mismatch suppresses every other verdict — one row, one reason", () => {
+    // Deliberately also breaks dead air and quiet fraction. If integrity were
+    // checked last, this would report three problems and bury the real one.
+    const r = gradeStaircaseClip({ ...pitch, sha256Match: false, longestSilenceSec: 9, quietFraction: 0.9 });
+    expect(r.reasons).toHaveLength(1);
+    expect(r.reasons[0]).toMatch(/sha256/);
+  });
+});
+
+describe("the pitch floor is the MEASURABILITY floor, not the fair-trial floor", () => {
+  it("a staircase clip below the fixed assessment's 10-cent floor still passes", () => {
+    // THE POINT OF THE WHOLE INSTRUMENT. The lowest shipping level is 3.1
+    // cents; `validate.mjs` would reject it at MIN_PITCH_CENTS = 10. A
+    // staircase converging downward toward a listener's threshold must be
+    // allowed below the fair-trial floor (rungs.mjs).
+    const r = gradeStaircaseClip({ ...pitch, level: 3.1, measuredValue: 3.02 });
+    expect(r.verdict).toBe("PASS");
+  });
+
+  it("and the two floors are genuinely different numbers, so this test is not vacuous", () => {
+    expect(MIN_MEASURABLE_PITCH_CENTS).toBe(3);
+    expect(MIN_PITCH_CENTS).toBe(10);
+    expect(MIN_MEASURABLE_PITCH_CENTS).toBeLessThan(MIN_PITCH_CENTS);
+  });
+
+  it("gates on MIN_MEASURABLE_PITCH_CENTS, not on MIN_PITCH_CENTS", () => {
+    expect(STAIRCASE_MAGNITUDE_GATES["pitch-drift"].floor).toBe(MIN_MEASURABLE_PITCH_CENTS);
+    expect(STAIRCASE_MAGNITUDE_GATES["pitch-drift"].floor).not.toBe(MIN_PITCH_CENTS);
+  });
+
+  it("below the ruler's own floor it FLAGS — we cannot say what was rendered", () => {
+    const r = gradeStaircaseClip({ ...pitch, measuredValue: MIN_MEASURABLE_PITCH_CENTS - 0.01 });
+    expect(r.verdict).toBe("FLAG");
+    expect(r.reasons[0]).toMatch(/below the ruler's own floor/);
+  });
+
+  it("exactly AT the floor passes — the gate is >=, not >", () => {
+    expect(gradeStaircaseClip({ ...pitch, measuredValue: MIN_MEASURABLE_PITCH_CENTS }).verdict).toBe("PASS");
+  });
+});
+
+describe("the timing floor is the ruler's ordering limit", () => {
+  it("below it, FLAG", () => {
+    const r = gradeStaircaseClip({ ...timing, measuredValue: MIN_MEASURABLE_DRIFT_MS - 0.1 });
+    expect(r.verdict).toBe("FLAG");
+    expect(r.reasons[0]).toMatch(/below the ruler's own floor/);
+  });
+
+  it("exactly at it, PASS", () => {
+    expect(gradeStaircaseClip({ ...timing, measuredValue: MIN_MEASURABLE_DRIFT_MS }).verdict).toBe("PASS");
+  });
+
+  it("sits just BELOW the shipping ladder's bottom rung — a guard, not a live gate", () => {
+    // If this ever inverts, either the ladder was extended below the ruler or
+    // the floor was raised into the ladder. Both need a decision, not a green
+    // suite.
+    const bottom = Math.min(...(STAIRCASE_LEVELS["timing-smear"].values as number[]));
+    expect(MIN_MEASURABLE_DRIFT_MS).toBeLessThan(bottom);
+    const pitchBottom = Math.min(...(STAIRCASE_LEVELS["pitch-drift"].values as number[]));
+    expect(MIN_MEASURABLE_PITCH_CENTS).toBeLessThan(pitchBottom);
+  });
+});
+
+describe("timing carries separate evidence that its magnitude is a fact about the AUDIO", () => {
+  // The defect this closes: per RT-74a a timing clip's `measured.value` equals
+  // its `level` by construction, so the magnitude floor restates the ladder
+  // table and a clip whose warp never rendered would clear it.
+  it("a clip whose drift trajectory did not verify FLAGS, even though its labelled magnitude is fine", () => {
+    const r = gradeStaircaseClip({ ...timing, measuredValue: 25, trajectoryVerified: false });
+    expect(r.verdict).toBe("FLAG");
+    expect(r.reasons[0]).toMatch(/did not verify/);
+  });
+
+  it("a MISSING trajectory verdict is an ERROR, not a pass", () => {
+    const r = gradeStaircaseClip(without(timing, "trajectoryVerified"));
+    expect(r.verdict).toBe("ERROR");
+    expect(r.reasons[0]).toMatch(/never established/);
+  });
+
+  it("pitch needs no such evidence — its cents figure IS a measurement of the file", () => {
+    expect(gateFor("pitch-drift")).not.toHaveProperty("evidenceField");
+    expect(gradeStaircaseClip(without(pitch, "trajectoryVerified")).verdict).toBe("PASS");
+  });
+
+  it("the magnitude floor alone would have passed a clip whose warp never rendered", () => {
+    // Pins the reason this field exists. Same row, same label, opposite verdict.
+    expect(gradeStaircaseClip({ ...timing, trajectoryVerified: true }).verdict).toBe("PASS");
+    expect(gradeStaircaseClip({ ...timing, trajectoryVerified: false }).verdict).toBe("FLAG");
+  });
+});
+
+describe("confidence is established before magnitude is believed", () => {
+  it("an unmeasurable pitch clip FLAGS on confidence, not on its (large) magnitude", () => {
+    const r = gradeStaircaseClip({ ...pitch, confidentFraction: MIN_CONFIDENT_PITCH_FRACTION - 0.01, measuredValue: 99 });
+    expect(r.verdict).toBe("FLAG");
+    expect(r.reasons).toHaveLength(1);
+    expect(r.reasons[0]).toMatch(/unmeasurable/);
+    expect(r.reasons[0]).toMatch(/frames matched/);
+  });
+
+  it("timing's confidence floor is far more permissive than pitch's, and deliberately so", () => {
+    expect(MIN_CONFIDENT_BLOCK_FRACTION).toBeLessThan(MIN_CONFIDENT_PITCH_FRACTION);
+    // The very same confidence that passes timing would fail pitch.
+    expect(gradeStaircaseClip({ ...timing, confidentFraction: 0.3 }).verdict).toBe("PASS");
+    expect(gradeStaircaseClip({ ...pitch, confidentFraction: 0.3 }).verdict).toBe("FLAG");
+  });
+
+  it("a correlator that never locked FLAGS", () => {
+    const r = gradeStaircaseClip({ ...timing, confidentFraction: MIN_CONFIDENT_BLOCK_FRACTION - 0.01 });
+    expect(r.verdict).toBe("FLAG");
+    expect(r.reasons[0]).toMatch(/blocks aligned/);
+  });
+
+  it("exactly at each confidence floor, PASS", () => {
+    expect(gradeStaircaseClip({ ...pitch, confidentFraction: MIN_CONFIDENT_PITCH_FRACTION }).verdict).toBe("PASS");
+    expect(gradeStaircaseClip({ ...timing, confidentFraction: MIN_CONFIDENT_BLOCK_FRACTION }).verdict).toBe("PASS");
+  });
+});
+
+describe("clipping is read, and its absence is not a zero", () => {
+  it("an unmeasured figure is an ERROR", () => {
+    const r = gradeStaircaseClip(without(pitch, "preNormClippedFraction"));
+    expect(r.verdict).toBe("ERROR");
+    expect(r.reasons[0]).toMatch(/never measured/);
+  });
+
+  it("an explicit null is an ERROR too", () => {
+    expect(gradeStaircaseClip({ ...pitch, preNormClippedFraction: null }).verdict).toBe("ERROR");
+  });
+
+  it("a reference with no recorded clipping figure is an ERROR — the renderer only records it for degraded clips", () => {
+    expect(gradeStaircaseClip(without(reference, "preNormClippedFraction")).verdict).toBe("ERROR");
+  });
+
+  it("over the threshold, FLAG", () => {
+    const r = gradeStaircaseClip({ ...pitch, preNormClippedFraction: MAX_CLIPPED_FRACTION * 2 });
+    expect(r.verdict).toBe("FLAG");
+    expect(r.reasons[0]).toMatch(/clipping/);
+  });
+
+  it("exactly at the threshold, PASS", () => {
+    expect(gradeStaircaseClip({ ...pitch, preNormClippedFraction: MAX_CLIPPED_FRACTION }).verdict).toBe("PASS");
+  });
+});
+
+describe("the fitness gates — measured fresh, and never measured before this slice", () => {
+  it.each([
+    ["dead air", { longestSilenceSec: MAX_SILENCE_SEC + 0.01 }, /dead air/],
+    ["quiet fraction", { quietFraction: MAX_QUIET_FRACTION + 0.001 }, /near-silent/],
+    ["flat-topped crests", { flatTopFraction: MAX_FLAT_TOP_FRACTION + 0.0001 }, /flat-topped/],
+  ])("%s FLAGS just over the line", (_name, patch, re) => {
+    const r = gradeStaircaseClip({ ...pitch, ...patch });
+    expect(r.verdict).toBe("FLAG");
+    expect(r.reasons).toHaveLength(1);
+    expect(r.reasons[0]).toMatch(re);
+  });
+
+  it.each([
+    ["dead air", { longestSilenceSec: MAX_SILENCE_SEC }],
+    ["quiet fraction", { quietFraction: MAX_QUIET_FRACTION }],
+    ["flat-topped crests", { flatTopFraction: MAX_FLAT_TOP_FRACTION }],
+  ])("%s passes exactly at the line", (_name, patch) => {
+    expect(gradeStaircaseClip({ ...pitch, ...patch }).verdict).toBe("PASS");
+  });
+
+  it("the fitness gates apply to REFERENCES, which nothing had ever checked", () => {
+    // A reference is the A side of all 21 trials in its window; if it fades to
+    // silence, every one of them is unanswerable while each degraded clip is
+    // individually flawless.
+    const r = gradeStaircaseClip({ ...reference, longestSilenceSec: 4.2 });
+    expect(r.verdict).toBe("FLAG");
+    expect(r.reasons[0]).toMatch(/dead air/);
+  });
+
+  it("a row can FLAG for several independent reasons at once", () => {
+    const r = gradeStaircaseClip({ ...pitch, longestSilenceSec: 9, quietFraction: 0.9, measuredValue: 0.1 });
+    expect(r.reasons).toHaveLength(3);
+  });
+});
+
+describe("a family with no gate cannot pass", () => {
+  it("lossy has no staircase gate yet, and a lossy clip ERRORs rather than passing", () => {
+    // E4/S4 renders these. Until its gate is pre-registered against real
+    // observations, the missing table entry must be loud.
+    expect(gateFor("lossy-artifact")).toBeUndefined();
+    const r = gradeStaircaseClip({ ...pitch, family: "lossy-artifact", id: "pb1-w75-lossy-4.4" });
+    expect(r.verdict).toBe("ERROR");
+    expect(r.reasons[0]).toMatch(/no Layer A magnitude gate defined/);
+  });
+
+  it("an unknown family ERRORs", () => {
+    expect(gradeStaircaseClip({ ...pitch, family: "reverb-smear" }).verdict).toBe("ERROR");
+  });
+
+  it("but a REFERENCE has no family and is graded on fitness alone", () => {
+    const r = gradeStaircaseClip(without(without({ ...pitch, kind: "reference" as const }, "family"), "level"));
+    expect(r.verdict).toBe("PASS");
+    expect(r.gatedOn).toBe("fitness-only");
+  });
+});
+
+describe("the thresholds are imported, not restated", () => {
+  it("every family the staircase renders has a gate", () => {
+    // STAIRCASE_RENDER_FAMILIES is what `staircase-render` will produce; each
+    // must be judgeable here or its clips ERROR on arrival.
+    for (const family of ["pitch-drift", "timing-smear"]) {
+      expect(gateFor(family)).toBeDefined();
+    }
+  });
+
+  it("the confidence floors are the SAME objects validate.mjs uses", () => {
+    expect(STAIRCASE_MAGNITUDE_GATES["pitch-drift"].minConfidentFraction).toBe(MIN_CONFIDENT_PITCH_FRACTION);
+    expect(STAIRCASE_MAGNITUDE_GATES["timing-smear"].minConfidentFraction).toBe(MIN_CONFIDENT_BLOCK_FRACTION);
+  });
+});
