@@ -23,6 +23,7 @@ import {
   clipId,
   crossWindowAgreement,
   ladderMonotone,
+  nextCalibrationParam,
   refId,
   windowSeed,
 } from "./staircaserender.mjs";
@@ -255,6 +256,46 @@ describe("crossWindowAgreement", () => {
       clip("pb6", 30, "timing-smear", 50, 53),
     ]);
     expect(rows).toHaveLength(1);
+  });
+});
+
+describe("calibration step rule", () => {
+  it("steps proportionally toward the level", () => {
+    // Measured high => ask for less, in the same ratio.
+    expect(nextCalibrationParam(100, 130, 100)).toBeCloseTo(76.923, 3);
+    expect(nextCalibrationParam(50, 44, 50)).toBeCloseTo(56.818, 3);
+    // Already there => do not move.
+    expect(nextCalibrationParam(25, 25, 25)).toBe(25);
+  });
+
+  /** A drift of zero carries no direction to step in; solving from it would
+   *  divide by zero and silently produce Infinity as a render parameter. */
+  it("refuses to solve from a zero or missing measurement", () => {
+    expect(() => nextCalibrationParam(50, 0, 50)).toThrow(/cannot solve/);
+    expect(() => nextCalibrationParam(50, NaN, 50)).toThrow(/cannot solve/);
+  });
+
+  /**
+   * MEASURED, and the reason calibration ships opt-in rather than on (E4/S3/S2).
+   * The step rule assumes measured drift rises with requested drift. On pb1@75
+   * it does not: a dense sweep of the parameter falls three times as the
+   * request rises, so the search has no root to converge on and oscillated
+   * 15 -> 14 -> 11 -> 14 -> 11 -> 14 ms over six renders. Pinned here so the
+   * assumption is visible at the step rule rather than only in a comment.
+   */
+  it("documents the assumption it rests on: measured drift rises with requested drift", () => {
+    const sweep = [
+      { requested: 64, measured: 77 },
+      { requested: 68, measured: 64 },
+      { requested: 72, measured: 91 },
+      { requested: 76, measured: 90 },
+      { requested: 80, measured: 95 },
+      { requested: 84, measured: 83 },
+      { requested: 88, measured: 102 },
+      { requested: 92, measured: 126 },
+    ];
+    const falls = sweep.filter((s, i) => i > 0 && s.measured <= sweep[i - 1].measured).length;
+    expect(falls, "if this ever reaches 0, re-run the sweep — the ruler may have been fixed").toBe(3);
   });
 });
 

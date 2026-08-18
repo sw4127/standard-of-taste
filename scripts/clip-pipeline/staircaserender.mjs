@@ -3,7 +3,7 @@
  *
  *   node scripts/clip-pipeline/index.mjs staircase-render
  *     [--sources pb1,pb6,pb8] [--only pb1@75,pb6@30] [--families pitch-drift,timing-smear]
- *     [--len 20] [--force] [--json]
+ *     [--len 20] [--force] [--recalibrate] [--json]
  *
  * The staircase steps through levels whose audio did not exist. This produces
  * it, MEASURES each file as it is written, and refuses to report success on a
@@ -241,8 +241,98 @@ export function measureClip(family, level, ref, deg) {
   throw new Error(`measureClip: no measure defined for family "${family}"`);
 }
 
+/**
+ * CALIBRATION — solving the render parameter so the MEASURED magnitude is the
+ * level (E4/S3/S2, PM ruling RT-72a).
+ *
+ * WHY TIMING NEEDS THIS AND PITCH DOES NOT. A cent is a cent: the pitch ruler
+ * recovers its ladder to within 6.6% on pb1@75 and 5.8% on pb6@30, and the two
+ * windows agree with each other to 1.04x. Timing does not behave that way.
+ * `driftMs` mode guarantees the MODELLED trajectory IQR exactly, but what
+ * `temporalDrift` recovers from the rendered audio carries a per-window offset
+ * — measured, pb1@75 runs +12.5% and pb6@30 runs −12.8%, so the same "level 50"
+ * is 54 ms on one and 44 ms on the other (1.23x apart).
+ *
+ * A SINGLE PER-WINDOW MULTIPLIER IS NOT ENOUGH, and this was checked before
+ * being built rather than assumed. Dividing each window's ladder by its own
+ * mean ratio leaves:
+ *
+ *     pb6@30   -8% +2% -1% +1% +2% -2% +1%  0% +4% +1%   (would pass)
+ *     pb1@75   +7% +2% -6% -15% +2% +10% -4% -7% -4% +16%   (would NOT)
+ *
+ * pb1@75 has real level-to-level scatter, not just an offset. So the parameter
+ * is solved PER LEVEL, per window.
+ *
+ * IT IS OFF BY DEFAULT, AND THE REASON IS MEASURED (E4/S3/S2, 2026-08-18).
+ * Built, run, and then found not to converge — because measured drift is NOT a
+ * smooth function of the requested drift. A dense sweep of the render parameter
+ * with the model held exact:
+ *
+ *     pb1@75   requested   64    68    72    76    80    84    88    92
+ *              measured    77    64    91    90    95    83   102   126
+ *              ratio     1.20  0.94  1.26  1.18  1.19  0.99  1.16  1.37
+ *
+ *     pb6@30   requested   64    68    72    76    80    84    88    92
+ *              measured    56    59    68    71    71    74    80    80
+ *              ratio     0.88  0.87  0.94  0.93  0.89  0.88  0.91  0.87
+ *
+ * pb6@30 is a clean ~0.88 scale with small scatter — calibration would work
+ * there. pb1@75 swings 0.94 to 1.37 and FALLS three times as the parameter
+ * rises. A root-find on that has no root to find: the search oscillated
+ * 15 -> 14 -> 11 -> 14 -> 11 -> 14 ms across six renders at level 12.5.
+ *
+ * AND THE DEVIATION CANNOT BE THE RENDER. `timingDeviations` computes the
+ * per-segment stretches from (seed, param, clipSec) ALONE — it never looks at
+ * the audio — and rubberband applies the same stretch factors whatever the
+ * material. The drift trajectory is fixed by those factors. So a deviation
+ * that differs between two recordings can only have entered through the
+ * MEASUREMENT, which is the one material-dependent component in the chain.
+ *
+ * WHICH MAKES CALIBRATING THE WRONG FIX, not merely an ineffective one: it
+ * would deliberately render clips away from the magnitude the model guarantees,
+ * in order to satisfy a ruler that is itself the thing in error (N3). The code
+ * stays, opt-in, because it is the right answer IF the render turns out to be
+ * unfaithful — which nothing has yet tested independently. That test is the
+ * next slice, and it decides whether this is promoted or deleted.
+ *
+ * THE SEARCH is proportional: `param x (level / measured)`. Deterministic
+ * throughout, so a solved parameter is stable and gets stored — a re-render
+ * costs one render, not the search.
+ */
+
+/**
+ * How close a solved level has to land, in percent.
+ *
+ * WHY 5 AND NOT THE GATE'S 15. The gate is the maximum tolerable error on ONE
+ * clip; this has to leave room for two clips at the same level to disagree with
+ * each other. Two windows both landing within 5% can differ by at most
+ * 1.05/0.95 = 1.105x, which clears MAX_CROSS_WINDOW_RATIO. Solving only to the
+ * gate's 15% would let two instances sit 1.35x apart while every clip
+ * individually "passed".
+ *
+ * REACHABLE: `temporalDrift` resolves 1 ms, so at the bottom level (12.5 ms)
+ * the achievable grid is 12 or 13 — 4% away at worst.
+ */
+export const TIMING_CALIBRATION_TOL_PCT = 5;
+
+/** Give up after this many renders per level, and keep the closest attempt. */
+export const MAX_CALIBRATION_ITERATIONS = 6;
+
+/**
+ * The next parameter to try. Pure, so the step rule is testable without ffmpeg.
+ *
+ * Proportional rather than secant: at a fixed seed the modelled trajectory is
+ * exactly proportional to the parameter, so the response is close to linear
+ * through the origin and a ratio step is both correct and self-damping. A
+ * secant step would chase the 1 ms quantisation.
+ */
+export function nextCalibrationParam(param, measured, level) {
+  if (!(measured > 0)) throw new Error(`nextCalibrationParam: measured drift was ${measured} — cannot solve from it`);
+  return param * (level / measured);
+}
+
 /** Render + measure every clip for ONE (source, window). */
-function renderWindow({ sourceId, startSec, seed, cached, clipSec, families, force, prior, log }) {
+function renderWindow({ sourceId, startSec, seed, cached, clipSec, families, force, calibrate, recalibrate, prior, priorCalibration, log }) {
   mkdirSync(TMP, { recursive: true });
   mkdirSync(STAIRCASE_OUT, { recursive: true });
 
@@ -250,8 +340,13 @@ function renderWindow({ sourceId, startSec, seed, cached, clipSec, families, for
   const refFile = join(STAIRCASE_OUT, fileFor(rid));
   const origWav = join(TMP, `${rid}-orig.wav`);
 
-  const reusable = (id) => {
+  // A clip is reused only when the manifest entry and the file on disk still
+  // agree. `--recalibrate` additionally invalidates every CALIBRATED clip: the
+  // solved parameter is about to change, so the audio on disk was rendered from
+  // a parameter this run no longer believes in.
+  const reusable = (id, family) => {
     if (force) return null;
+    if (calibrate && recalibrate && family === "timing-smear") return null;
     const p = prior.get(id);
     const f = join(STAIRCASE_OUT, fileFor(id));
     if (!p || !existsSync(f)) return null;
@@ -295,7 +390,7 @@ function renderWindow({ sourceId, startSec, seed, cached, clipSec, families, for
     for (const level of STAIRCASE_LEVELS[family].values) {
       const id = clipId(sourceId, startSec, family, level);
       const outFile = join(STAIRCASE_OUT, fileFor(id));
-      const reused = reusable(id);
+      const reused = reusable(id, family);
       if (reused) {
         clips.push(reused);
         log(`  cached    ${id}`);
@@ -304,8 +399,68 @@ function renderWindow({ sourceId, startSec, seed, cached, clipSec, families, for
 
       ensureCut();
       // THE ONE CALL. `staircaseRender` supplies the render mode from the
-      // ladder table; nothing here restates it.
-      const { param, opts } = staircaseRender(family, level);
+      // ladder table and rejects a level that is not on the ladder; nothing
+      // here restates either.
+      const { param: nominal, opts } = staircaseRender(family, level);
+
+      // Render once at a given parameter into TMP and measure it. Used by the
+      // calibration search; the winning parameter is rendered again into the
+      // output directory below, so a search attempt can never become a shipped
+      // clip by accident.
+      const tryParam = (p, tag) => {
+        const w = join(TMP, `${id}-${tag}.wav`);
+        const cut = join(TMP, `${id}-${tag}-cut.wav`);
+        degradeWavParam(family, p, seed, origWav, w, clipSec, opts);
+        ff(["-i", w, "-t", String(clipSec), cut]);
+        normRender(cut, `probe-${id}`, TMP);
+        const m = measureClip(family, level, ref, decodeMono(join(TMP, `probe-${id}.mp3`), SR));
+        rmSync(w, { force: true });
+        rmSync(cut, { force: true });
+        return m;
+      };
+
+      // PITCH IS NOT CALIBRATED. Its ruler already recovers the ladder within
+      // 6.6% and its windows agree to 1.04x — a search would spend renders
+      // chasing the measurement's own noise.
+      let param = nominal;
+      let calibration = null;
+      if (family === "timing-smear" && calibrate) {
+        const stored = priorCalibration.get(`${sourceId}@${startSec}/${family}/${level}`);
+        if (stored && !recalibrate) {
+          param = stored.param;
+          calibration = { ...stored, reused: true };
+        } else {
+          let p = nominal;
+          let best = null;
+          const history = [];
+          for (let iter = 1; iter <= MAX_CALIBRATION_ITERATIONS; iter++) {
+            let m;
+            try {
+              m = tryParam(p, `cal${iter}`);
+            } catch (e) {
+              // The 25% per-segment ceiling. A parameter the renderer refuses
+              // is a dead end, not a crash — keep the closest legal attempt.
+              history.push({ param: +p.toFixed(4), error: e.message });
+              break;
+            }
+            history.push({ param: +p.toFixed(4), measured: m.value, errPct: m.errPct });
+            if (!best || Math.abs(m.errPct) < Math.abs(best.errPct)) best = { param: p, ...m };
+            if (Math.abs(m.errPct) <= TIMING_CALIBRATION_TOL_PCT) break;
+            p = nextCalibrationParam(p, m.value, level);
+          }
+          if (!best) throw new Error(`staircase-render: could not render ${id} at any parameter — ${JSON.stringify(history)}`);
+          param = best.param;
+          calibration = {
+            nominal,
+            param: +param.toFixed(4),
+            iterations: history.length,
+            achievedErrPct: best.errPct,
+            withinTolerance: Math.abs(best.errPct) <= TIMING_CALIBRATION_TOL_PCT,
+            history,
+          };
+        }
+      }
+
       const degWav = join(TMP, `${id}-deg.wav`);
       const params = degradeWavParam(family, param, seed, origWav, degWav, clipSec, opts);
 
@@ -329,6 +484,11 @@ function renderWindow({ sourceId, startSec, seed, cached, clipSec, families, for
         family,
         level,
         seed,
+        // The parameter actually rendered. Equal to the level for pitch;
+        // SOLVED for timing, so `level` states the magnitude and this states
+        // how it was reached (same split as lossyLadderForSource).
+        renderParam: +param.toFixed(4),
+        ...(calibration ? { calibration } : {}),
         params,
         refId: rid,
         file: fileFor(id),
@@ -341,7 +501,12 @@ function renderWindow({ sourceId, startSec, seed, cached, clipSec, families, for
       rmSync(degCut, { force: true });
       log(
         `  rendered  ${id.padEnd(24)} ${String(measured.value).padStart(7)} ${measured.unit.startsWith("cents") ? "cents" : "ms"}` +
-          ` (want ${measured.predicted}, ${measured.errPct >= 0 ? "+" : ""}${measured.errPct}%)`,
+          ` (want ${measured.predicted}, ${measured.errPct >= 0 ? "+" : ""}${measured.errPct}%)` +
+          (calibration
+            ? calibration.reused
+              ? `  [solved ${calibration.param}, stored]`
+              : `  [solved ${nominal} → ${calibration.param} in ${calibration.iterations}]`
+            : ""),
       );
     }
   }
@@ -446,6 +611,14 @@ export function ladderMonotone(rows) {
 export async function staircaseRenderCli(args = []) {
   const json = args.includes("--json");
   const force = args.includes("--force");
+  // Solved timing parameters are stored and reused: the search costs several
+  // renders per level and the answer is deterministic, so re-rendering a window
+  // should not re-derive it. `--recalibrate` throws the stored answers away,
+  // which is what a change to the ladder, the seed rule or the measure requires.
+  const recalibrate = args.includes("--recalibrate");
+  // OFF BY DEFAULT — see the calibration block below for the measurement that
+  // put it there. `--calibrate` opts in.
+  const calibrate = args.includes("--calibrate");
   const opt = (name, dflt) => {
     const i = args.indexOf(`--${name}`);
     return i >= 0 ? args[i + 1] : dflt;
@@ -496,12 +669,22 @@ export async function staircaseRenderCli(args = []) {
     ? JSON.parse(readFileSync(STAIRCASE_MANIFEST, "utf8"))
     : { references: [], clips: [] };
   const prior = new Map([...(priorManifest.references ?? []), ...(priorManifest.clips ?? [])].map((e) => [e.id, e]));
+  // Solved parameters, keyed by window/family/level. Read back off the clips
+  // themselves rather than kept in a parallel table — one place for a fact.
+  const priorCalibration = new Map(
+    (priorManifest.clips ?? [])
+      .filter((c) => c.calibration && c.renderParam !== undefined)
+      .map((c) => [
+        `${c.sourceId}@${c.startSec}/${c.family}/${c.level}`,
+        { nominal: c.calibration.nominal, param: c.renderParam, iterations: c.calibration.iterations, achievedErrPct: c.calibration.achievedErrPct, withinTolerance: c.calibration.withinTolerance, history: c.calibration.history },
+      ]),
+  );
 
   const references = [];
   const clips = [];
   for (const t of targets) {
     log(`${t.sourceId}@${t.startSec}s:`);
-    const r = renderWindow({ ...t, clipSec, families, force, prior, log });
+    const r = renderWindow({ ...t, clipSec, families, force, calibrate, recalibrate, prior, priorCalibration, log });
     references.push(r.reference);
     clips.push(...r.clips);
     log("");
