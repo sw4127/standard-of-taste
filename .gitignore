@@ -56,3 +56,9 @@ public/audio/preview-shortlist/
 public/audio/bias/dev-test-8s.wav
 # S1 delicacy proof pairs: deterministic re-renders (degrade stage), not the pool of record
 public/audio/delicacy/proof-*
+# E4 staircase pool — NOT committed yet (PM ruling RT-71b, 2026-08-18). 69 MB for pitch
+# + timing, ~99 MB with lossy, against a .git that is 99 MB today, and every re-render
+# adds another copy that never leaves history. The renders are deterministic from the
+# cached sources and the manifest carries every hash and measurement, so nothing is lost
+# by waiting. E5 wires these into the Gym and forces the decision.
+public/audio/staircase/

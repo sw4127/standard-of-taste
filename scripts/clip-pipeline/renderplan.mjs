@@ -52,6 +52,27 @@ export const MEASURED_CLIP_BYTES = { mean: 365_396, max: 490_264 };
 export const FORMATS_PER_CLIP = 1;
 
 /**
+ * THE WINDOW PLAN OF RECORD (PM rulings RT-66a, RT-70a).
+ *
+ * pb1 and pb6 keep the approved 30/75/120 s. **pb8 does not have a 120 s
+ * window** — the recording is 110.06 s long, so the approved plan asked for
+ * audio that does not exist, and E4/S3 would have crashed 190 clips into a
+ * 198-clip render. It gets 15/45/75 instead: three non-overlapping 20 s
+ * windows inside the file, and it keeps 75 s, which is where its lossy curve
+ * was measured.
+ *
+ * ONE TABLE, imported by the planner and the renderer both — the same
+ * discipline rungs.mjs exists to enforce. `staircase-render` additionally
+ * ffprobes every source and refuses to start if any window runs past the end,
+ * so the class of defect that produced this ruling cannot recur silently.
+ */
+export const STAIRCASE_WINDOWS = {
+  pb1: [30, 75, 120],
+  pb6: [30, 75, 120],
+  pb8: [15, 45, 75],
+};
+
+/**
  * Levels per family for one source. Pitch and timing are source-independent
  * (a cent is a cent); lossy is not, so it needs that source's measured curve.
  *
@@ -68,20 +89,52 @@ export function levelsPerSource(sourceId, curves = {}) {
 }
 
 /**
+ * WINDOWS CAN DIFFER PER SOURCE, and they have to (E4/S3, PM ruling RT-70a).
+ *
+ * The plan was costed in megabytes and never checked against how long the
+ * recordings actually are. pb8 is 110.06 s; the approved 120 s window would
+ * have started 20 s of audio at a point 10 s past the end of the file. Two of
+ * three sources are long enough and one is not, so one window list for all
+ * sources cannot express the plan.
+ *
+ * @param windows either an array (the same windows for every source) or an
+ *   object keyed by sourceId. A source missing from the object is an error
+ *   rather than a source with no windows — silently rendering nothing for it is
+ *   how a plan comes to disagree with what is on disk.
+ */
+export function windowsForSource(sourceId, windows) {
+  if (Array.isArray(windows)) return windows;
+  const w = windows?.[sourceId];
+  if (!w?.length) {
+    throw new Error(
+      `renderPlan: no windows for source "${sourceId}" (have: ${Object.keys(windows ?? {}).join(", ") || "none"})`,
+    );
+  }
+  return w;
+}
+
+/**
  * The full crossed design, as a list of files to produce.
  *
- * @returns { entries, refs, degraded, clips, unknownLossy }
+ * Returns `entries` (one row per file), plus the counts `refs`, `degraded` and
+ * `clips`, and `unknownLossy` — the sources whose lossy ladder could not be
+ * computed because no measured curve was supplied.
+ *
+ * (Written as prose, not as `@returns {a, b, c}`: braces there are read as a
+ * TYPE by the checker, which inferred `any[]` and made every caller's field
+ * access an error.)
  */
 export function renderPlan({ sources, windows, curves = {} }) {
   if (!sources?.length) throw new Error("renderPlan: need at least one source");
-  if (!windows?.length) throw new Error("renderPlan: need at least one window");
+  const anyWindows = Array.isArray(windows) ? windows.length : Object.keys(windows ?? {}).length;
+  if (!anyWindows) throw new Error("renderPlan: need at least one window");
   const entries = [];
   const unknownLossy = [];
 
   for (const sourceId of sources) {
     const perFamily = levelsPerSource(sourceId, curves);
     if (perFamily["lossy-artifact"] === null) unknownLossy.push(sourceId);
-    for (const startSec of windows) {
+    for (const startSec of windowsForSource(sourceId, windows)) {
       // One clean reference per window, shared by all three families. Rendering
       // one per family would triple the reference count for identical audio.
       entries.push({ sourceId, startSec, family: null, level: null, kind: "reference" });
@@ -126,7 +179,10 @@ export async function renderPlanCli(args = []) {
     return i >= 0 ? args[i + 1] : dflt;
   };
   const sources = opt("sources", "pb1,pb6,pb8").split(",").map((s) => s.trim());
-  const windows = opt("windows", "30,75,120").split(",").map(Number);
+  // Default to the per-source plan of record; `--windows 30,75,120` still
+  // overrides it uniformly, which is what the cost table below wants.
+  const windowsArg = opt("windows", null);
+  const windows = windowsArg ? windowsArg.split(",").map(Number) : STAIRCASE_WINDOWS;
 
   /** MEASURED by `solve-check`, 20 s @75 s. Only these three have dense curves. */
   const CURVES = {
@@ -149,12 +205,13 @@ export async function renderPlanCli(args = []) {
     return { plan, cost };
   }
 
-  console.log(`E4 render plan — ${sources.length} sources x ${windows.length} windows`);
-  console.log(`  sources: ${sources.join(", ")}   windows: ${windows.map((w) => `${w}s`).join(", ")}`);
+  const totalWindows = sources.reduce((n, s) => n + windowsForSource(s, windows).length, 0);
+  console.log(`E4 render plan — ${sources.length} sources, ${totalWindows} windows`);
   for (const sourceId of sources) {
     const per = levelsPerSource(sourceId, curves);
+    const w = windowsForSource(sourceId, windows);
     console.log(
-      `  ${sourceId.padEnd(5)} pitch ${String(per["pitch-drift"]).padStart(2)} · timing ${String(per["timing-smear"]).padStart(2)} · ` +
+      `  ${sourceId.padEnd(5)} windows ${w.map((x) => `${x}s`).join("/").padEnd(14)} pitch ${String(per["pitch-drift"]).padStart(2)} · timing ${String(per["timing-smear"]).padStart(2)} · ` +
         `lossy ${per["lossy-artifact"] === null ? "?? (no measured curve)" : String(per["lossy-artifact"]).padStart(2)}`,
     );
   }

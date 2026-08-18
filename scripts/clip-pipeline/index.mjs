@@ -265,6 +265,7 @@ try {
   else if (stage === "curve") await (await import("./curve.mjs")).curve(args);
   else if (stage === "solve-check") await (await import("./solvecheck.mjs")).solveCheck(args);
   else if (stage === "render-plan") await (await import("./renderplan.mjs")).renderPlanCli(args);
+  else if (stage === "staircase-render") await (await import("./staircaserender.mjs")).staircaseRenderCli(args);
   else {
     console.log("usage: node scripts/clip-pipeline/index.mjs <download|snapshot|analyze|render|degrade|validate|ladder|sweep|expand> [--local <file>] [--start N] [--len N] [--out id]");
     console.log("       degrade: --id <pairId> --source <biasItemId> --start <sec> --family <pitch-drift|timing-smear|lossy-artifact> --magnitude <ladder rung 1-4; 2-4 ship> --seed <int> [--len <sec>]");
@@ -276,6 +277,10 @@ try {
     console.log("       solve-check: solve every lossy staircase level against a source's measured curve, RENDER at the");
     console.log("                 solved bitrate, and report how far the achieved dB missed — in ladder steps (E4/S1)");
     console.log("                 [--sources pb1,pb6,pb8] [--start 75] [--len 20] [--json]");
+    console.log("       staircase-render: render + measure every staircase LEVEL of the pitch and timing ladders");
+    console.log("                 for the per-source window plan, and fail if a measured ladder is not strictly");
+    console.log("                 increasing (E4/S3). Lossy is per-source and is not rendered here.");
+    console.log("                 [--sources a,b] [--only pb1@75,pb6@30] [--families ...] [--len 20] [--force] [--json]");
     process.exit(2);
   }
 } catch (e) {
