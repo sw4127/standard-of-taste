@@ -48,7 +48,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync, statSync } 
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
-import { decodeMono, degradeWavParam, normRender, timingDeviations, SEGS, LUFS } from "./degrade.mjs";
+import { decodeMono, degradeWavParam, normRender, predictedTrajectoryMs, timingDeviations, SEGS, LUFS } from "./degrade.mjs";
 import { STAIRCASE_LEVELS, staircaseRender } from "./rungs.mjs";
 import { STAIRCASE_WINDOWS, windowsForSource } from "./renderplan.mjs";
 import {
@@ -56,6 +56,9 @@ import {
   logSpectralDistance,
   pitchShiftCents,
   temporalDrift,
+  blockCentreSec,
+  fitLine,
+  TRAJECTORY_OPTS,
   DEFAULT_SPECTRAL_OPTS,
 } from "./spectral.mjs";
 
@@ -205,7 +208,7 @@ export function preflight({ sources, windows, clipSec, families }) {
  * only for the spectral families — on a temporal manipulation it mostly
  * measures the two files falling out of step (validate.mjs, TEMPORAL_FAMILIES).
  */
-export function measureClip(family, level, ref, deg) {
+export function measureClip(family, level, ref, deg, { params, clipSec } = {}) {
   const lsd = logSpectralDistance(ref, deg);
   const base = { lsdDb: +lsd.lsdDb.toFixed(3), framesCompared: lsd.framesCompared };
 
@@ -224,15 +227,38 @@ export function measureClip(family, level, ref, deg) {
     };
   }
   if (family === "timing-smear") {
-    const d = temporalDrift(ref, deg);
-    // The level IS the target IQR in driftMs mode — no ramp, so predicted is
-    // the level itself rather than a fraction of it.
+    // THE LABEL IS THE MODEL, NOT THE CORRELATOR (PM ruling RT-74a, measured
+    // E4/S3/S3). `timingDeviations` rescales the seeded walk so the trajectory
+    // IQR equals the level exactly, from (seed, param, clipSec) alone — it
+    // never sees the audio — and `timing-fidelity` measured rubberband
+    // realising every requested stretch to 0.000% on two recordings, by
+    // ffprobe duration with no estimator in the path. So the rendered drift IS
+    // the model, identically on every window, and `temporalDrift`'s 0.87x-1.37x
+    // material-dependent disagreement is the ruler's error, not the audio's.
+    //
+    // THAT MAKES THE ERROR GATE VACUOUS HERE, and it must not be left looking
+    // like a passed test: `value` equals `level` by construction. The
+    // substantive check moves to the TRAJECTORY — does the correlator track the
+    // predicted wander (r), and at the right size (slope)? Those cannot be
+    // satisfied by construction, and a clip whose drift did not render would
+    // fail both.
+    const d = temporalDrift(ref, deg, TRAJECTORY_OPTS);
+    const times = d.lagsMs.map((_, b) => blockCentreSec(b));
+    const predicted = predictedTrajectoryMs(params.segmentDevPct, clipSec, times);
+    const keep = d.lagsMs.map((l, i) => ({ l, p: predicted[i] })).filter((_, i) => d.scores[i] >= 0.9);
+    const fit = fitLine(keep.map((r) => r.p), keep.map((r) => r.l));
     return {
       ...base,
       unit: STAIRCASE_LEVELS[family].unit,
-      value: d.lagIqrMs,
+      value: params.targetDriftIqrMs,
+      valueSource: "model — exact by construction; see timing-fidelity for why the correlator is not the label",
       predicted: level,
-      errPct: +(((d.lagIqrMs - level) / level) * 100).toFixed(1),
+      errPct: +(((params.targetDriftIqrMs - level) / level) * 100).toFixed(1),
+      trajectoryR: +fit.r.toFixed(3),
+      trajectorySlope: +fit.slope.toFixed(3),
+      trajectoryBlocks: fit.n,
+      /** What the correlator said, kept for the record — NOT the label. */
+      correlatorIqrMs: d.lagIqrMs,
       confidentFraction: +d.confidentFraction.toFixed(3),
       driftRangeMs: d.lagRangeMs,
       coherence: +d.coherence.toFixed(3),
@@ -410,10 +436,10 @@ function renderWindow({ sourceId, startSec, seed, cached, clipSec, families, for
       const tryParam = (p, tag) => {
         const w = join(TMP, `${id}-${tag}.wav`);
         const cut = join(TMP, `${id}-${tag}-cut.wav`);
-        degradeWavParam(family, p, seed, origWav, w, clipSec, opts);
+        const ps = degradeWavParam(family, p, seed, origWav, w, clipSec, opts);
         ff(["-i", w, "-t", String(clipSec), cut]);
         normRender(cut, `probe-${id}`, TMP);
-        const m = measureClip(family, level, ref, decodeMono(join(TMP, `probe-${id}.mp3`), SR));
+        const m = measureClip(family, level, ref, decodeMono(join(TMP, `probe-${id}.mp3`), SR), { params: ps, clipSec });
         rmSync(w, { force: true });
         rmSync(cut, { force: true });
         return m;
@@ -473,7 +499,7 @@ function renderWindow({ sourceId, startSec, seed, cached, clipSec, families, for
       const preClip = clippingStats(decodeMono(degCut, 44100)).clippedFraction;
 
       normRender(degCut, `st-${id}`, STAIRCASE_OUT);
-      const measured = measureClip(family, level, ref, decodeMono(outFile, SR));
+      const measured = measureClip(family, level, ref, decodeMono(outFile, SR), { params, clipSec });
 
       clips.push({
         id,
@@ -555,6 +581,36 @@ export const MAX_LEVEL_ERR_PCT = 15;
  * than that, or they straddle a step and the ladder overlaps itself.
  */
 export const MAX_CROSS_WINDOW_RATIO = 1.15;
+
+/**
+ * THE GATE THAT REPLACES THE ERROR GATE FOR TIMING (PM ruling RT-74a, measured
+ * E4/S3/S3).
+ *
+ * Once a timing clip is labelled from the model, `errPct` is 0 by construction
+ * and the +/-15% gate tests nothing. Leaving it as the check would be worse than
+ * having no check: a column of zeroes looks like something passed.
+ *
+ * So the substantive question moves to the trajectory. The model prescribes an
+ * exact offset curve; `temporalDrift`'s per-block lag series is a noisy
+ * observation of it. Two things can be asked of that observation, and NEITHER
+ * can be satisfied by construction:
+ *
+ *   r      does the correlator track the predicted WANDER at all — is this the
+ *          drift we asked for, or some other drift?
+ *   slope  does it track it at the right SIZE — is the magnitude right on
+ *          average, even though any single block is noisy?
+ *
+ * A clip whose timing manipulation silently failed to render would score r near
+ * zero and a slope near zero, whatever its label claimed.
+ *
+ * BOTH FLOORS ARE PROVISIONAL AND MEASURED-WITH-MARGIN, not derived (N3).
+ * Observed over 20 clips on two recordings: r 0.688-0.98 (window means 0.917
+ * and 0.839), slope 0.88-1.17 (window means 0.986 and 0.990). The floors sit
+ * below the observed range with room, so they reject "did not render" rather
+ * than "this recording is harder to correlate".
+ */
+export const MIN_TRAJECTORY_R = 0.6;
+export const MAX_TRAJECTORY_SLOPE_ERR_PCT = 25;
 
 /**
  * Do the windows serving each level agree on what that level measures?
@@ -735,6 +791,12 @@ export async function staircaseRenderCli(args = []) {
   const elapsedSec = (Date.now() - startedAt) / 1000;
   const failed = ladders.filter((l) => !l.monotone);
   const mislabelled = mergedClips.filter((c) => c.measured && Math.abs(c.measured.errPct) > MAX_LEVEL_ERR_PCT);
+  const badTrajectory = mergedClips.filter(
+    (c) =>
+      c.measured?.trajectoryR !== undefined &&
+      (!(c.measured.trajectoryR >= MIN_TRAJECTORY_R) ||
+        !(Math.abs(c.measured.trajectorySlope - 1) * 100 <= MAX_TRAJECTORY_SLOPE_ERR_PCT)),
+  );
   const agreement = crossWindowAgreement(mergedClips);
   const disagreeing = agreement.filter((r) => r.ratio > MAX_CROSS_WINDOW_RATIO);
 
@@ -750,20 +812,40 @@ export async function staircaseRenderCli(args = []) {
     for (const l of ladders) {
       const unit = l.rows[0]?.measured.unit ?? "";
       console.log(`  ${l.sourceId}@${l.startSec}s ${l.family} — ${unit}`);
-      console.log("    level    measured   predicted   err%   conf%   LSD dB   clip%");
+      // TIMING PRINTS DIFFERENT COLUMNS, because it is checked differently. Its
+      // label comes from the model, so an err% column would read "+0%" down the
+      // page and look like a test that passed. What is actually being asked of a
+      // timing clip is whether the correlator tracks the predicted trajectory.
+      const traj = l.rows[0]?.measured.trajectoryR !== undefined;
+      console.log(
+        traj
+          ? "    level    labelled   correlator   traj r   slope   conf%   LSD dB   clip%"
+          : "    level    measured   predicted   err%   conf%   LSD dB   clip%",
+      );
       for (const r of l.rows) {
         const m = r.measured;
+        const tail =
+          `${(m.confidentFraction * 100).toFixed(0)}%`.padStart(8) +
+          `${m.lsdDb.toFixed(2)}`.padStart(9) +
+          `${(r.preNormClippedFraction * 100).toFixed(4)}`.padStart(9);
         console.log(
-          `    ${String(r.level).padEnd(9)}${String(m.value).padStart(8)}${String(m.predicted).padStart(12)}` +
-            `${(m.errPct >= 0 ? "+" : "") + m.errPct}%`.padStart(8) +
-            `${(m.confidentFraction * 100).toFixed(0)}%`.padStart(8) +
-            `${m.lsdDb.toFixed(2)}`.padStart(9) +
-            `${(r.preNormClippedFraction * 100).toFixed(4)}`.padStart(9),
+          traj
+            ? `    ${String(r.level).padEnd(9)}${String(m.value).padStart(8)}${String(m.correlatorIqrMs).padStart(13)}` +
+              `${m.trajectoryR.toFixed(3)}`.padStart(9) +
+              `${m.trajectorySlope.toFixed(2)}`.padStart(8) +
+              tail
+            : `    ${String(r.level).padEnd(9)}${String(m.value).padStart(8)}${String(m.predicted).padStart(12)}` +
+              `${(m.errPct >= 0 ? "+" : "") + m.errPct}%`.padStart(8) +
+              tail,
         );
       }
       console.log(
         `    strictly increasing: ${l.monotone ? "YES" : `NO — ${l.breaks.map((b) => `${b.prev}→${b.value}`).join(", ")}`}` +
-          `   worst |err| ${Math.max(...l.rows.map((r) => Math.abs(r.measured.errPct))).toFixed(1)}%\n`,
+          (traj
+            ? `   worst traj r ${Math.min(...l.rows.map((r) => r.measured.trajectoryR)).toFixed(3)}` +
+              `   slope ${Math.min(...l.rows.map((r) => r.measured.trajectorySlope)).toFixed(2)}-${Math.max(...l.rows.map((r) => r.measured.trajectorySlope)).toFixed(2)}\n` +
+              `    label is the MODEL, exact by construction (RT-74a) — the check is the trajectory\n`
+            : `   worst |err| ${Math.max(...l.rows.map((r) => Math.abs(r.measured.errPct))).toFixed(1)}%\n`),
       );
     }
     // DO THE WINDOWS AGREE ON WHAT A LEVEL IS? The per-window ladders above can
@@ -819,6 +901,14 @@ export async function staircaseRenderCli(args = []) {
           .map((c) => `${c.id} (${c.measured.errPct > 0 ? "+" : ""}${c.measured.errPct}%)`)
           .join(", ") +
         (mislabelled.length > 6 ? `, +${mislabelled.length - 6} more` : ""),
+    );
+    process.exitCode = 1;
+  }
+  if (badTrajectory.length) {
+    console.error(
+      `staircase-render: ${badTrajectory.length} clip(s) do not track their predicted drift trajectory ` +
+        `(need r >= ${MIN_TRAJECTORY_R}, slope within ${MAX_TRAJECTORY_SLOPE_ERR_PCT}% of 1) — ` +
+        badTrajectory.slice(0, 6).map((c) => `${c.id} r=${c.measured.trajectoryR} slope=${c.measured.trajectorySlope}`).join(", "),
     );
     process.exitCode = 1;
   }

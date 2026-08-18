@@ -192,6 +192,40 @@ export function timingDeviations({ mode, param, seed, clipSec, segs = SEGS }) {
   return { e, driftIqrMs: driftIqrMsOf(e), maxDevPct: maxAbs * 100 };
 }
 
+/**
+ * THE OFFSET TRAJECTORY THE MODEL PREDICTS, in ms, at given reference times.
+ *
+ * Segment k is stretched by (1 + e_k), so after playing the reference content
+ * of segments 0..k the degraded file sits `segLen * sum(e_0..e_k)` further
+ * along than the reference. Within a segment the offset ramps linearly.
+ *
+ * Pure, so it is testable without audio — the whole argument of this module
+ * rests on this being the right prediction, so it should not only exist inside
+ * a script that needs a source cache to run.
+ *
+ * @param segmentDevPct the per-segment deviations AS PERCENT, exactly as
+ *   `degradeWavParam` records them in the manifest.
+ */
+export function predictedTrajectoryMs(segmentDevPct, clipSec, timesSec) {
+  const segs = segmentDevPct.length;
+  const segLen = clipSec / segs;
+  const e = segmentDevPct.map((p) => p / 100);
+  // Cumulative offset in seconds at the END of each segment.
+  const cum = [];
+  let acc = 0;
+  for (const v of e) {
+    acc += v * segLen;
+    cum.push(acc);
+  }
+  return timesSec.map((t) => {
+    if (t <= 0) return 0;
+    const k = Math.min(segs - 1, Math.floor(t / segLen));
+    const before = k === 0 ? 0 : cum[k - 1];
+    const f = Math.min(1, (t - k * segLen) / segLen);
+    return (before + f * e[k] * segLen) * 1000;
+  });
+}
+
 export function degradeWavParam(family, param, seed, inWav, outWav, clipSec, opts = {}) {
   const rand = mulberry32(seed);
   if (family === "lossy-artifact") {

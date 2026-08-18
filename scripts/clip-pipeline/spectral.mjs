@@ -772,3 +772,37 @@ export function pitchShiftCents(a, b, opts = {}) {
     rangeCents: cents.length ? Math.max(...cents) - Math.min(...cents) : 0,
   };
 }
+
+/** Pearson correlation and least-squares slope of y on x. */
+export function fitLine(x, y) {
+  const n = x.length;
+  if (n < 3) return { n, r: NaN, slope: NaN };
+  const mx = x.reduce((a, b) => a + b, 0) / n;
+  const my = y.reduce((a, b) => a + b, 0) / n;
+  let sxy = 0;
+  let sxx = 0;
+  let syy = 0;
+  for (let i = 0; i < n; i++) {
+    const dx = x[i] - mx;
+    const dy = y[i] - my;
+    sxy += dx * dy;
+    sxx += dx * dx;
+    syy += dy * dy;
+  }
+  if (!(sxx > 0) || !(syy > 0)) return { n, r: NaN, slope: NaN };
+  return { n, r: sxy / Math.sqrt(sxx * syy), slope: sxy / sxx };
+}
+
+/**
+ * Block geometry for reading temporalDrift's per-block LAG SERIES (not just its
+ * IQR). Exported because a caller that wants the series must compute each
+ * block's centre time from the same numbers the scan used — the loop starts at
+ * `maxLagMs` into the envelope and advances one block at a time — and a second
+ * copy of these values would misalign the trajectory silently.
+ */
+export const TRAJECTORY_OPTS = { blockMs: 200, maxLagMs: 250 };
+
+/** Centre time, in seconds, of block `b` under TRAJECTORY_OPTS. */
+export function blockCentreSec(b, opts = TRAJECTORY_OPTS) {
+  return (opts.maxLagMs + b * opts.blockMs + opts.blockMs / 2) / 1000;
+}

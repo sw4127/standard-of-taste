@@ -266,6 +266,7 @@ try {
   else if (stage === "solve-check") await (await import("./solvecheck.mjs")).solveCheck(args);
   else if (stage === "render-plan") await (await import("./renderplan.mjs")).renderPlanCli(args);
   else if (stage === "staircase-render") await (await import("./staircaserender.mjs")).staircaseRenderCli(args);
+  else if (stage === "timing-fidelity") await (await import("./timingfidelity.mjs")).timingFidelity(args);
   else {
     console.log("usage: node scripts/clip-pipeline/index.mjs <download|snapshot|analyze|render|degrade|validate|ladder|sweep|expand> [--local <file>] [--start N] [--len N] [--out id]");
     console.log("       degrade: --id <pairId> --source <biasItemId> --start <sec> --family <pitch-drift|timing-smear|lossy-artifact> --magnitude <ladder rung 1-4; 2-4 ship> --seed <int> [--len <sec>]");
