@@ -291,7 +291,17 @@
       "seed": 28895,
       "file": "st-pb1-w120-ref.mp3",
       "bytes": 422587,
-      "sha256": "64b15d8cd0d8f465e4483dfa057e4f46e3e6577dd482d6901145fe4fb0ea492d"
+      "sha256": "64b15d8cd0d8f465e4483dfa057e4f46e3e6577dd482d6901145fe4fb0ea492d",
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.115,
+        "gatedOn": "fitness-only",
+        "measuredAt": "2026-08-18"
+      }
     },
     {
       "id": "pb1-w30-ref",
@@ -302,7 +312,17 @@
       "seed": 15645,
       "file": "st-pb1-w30-ref.mp3",
       "bytes": 423336,
-      "sha256": "abc00a1810602607035009e10401400502513e5212899a805e10443ed36ecc5a"
+      "sha256": "abc00a1810602607035009e10401400502513e5212899a805e10443ed36ecc5a",
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "gatedOn": "fitness-only",
+        "measuredAt": "2026-08-18"
+      }
     },
     {
       "id": "pb1-w75-ref",
@@ -313,7 +333,17 @@
       "seed": 62034,
       "file": "st-pb1-w75-ref.mp3",
       "bytes": 422190,
-      "sha256": "59d1fe6e78eadbdb22182140d4bb4f8f7c24aaac8ceff151a754fbe42f641b00"
+      "sha256": "59d1fe6e78eadbdb22182140d4bb4f8f7c24aaac8ceff151a754fbe42f641b00",
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "gatedOn": "fitness-only",
+        "measuredAt": "2026-08-18"
+      }
     },
     {
       "id": "pb6-w120-ref",
@@ -324,7 +354,17 @@
       "seed": 730,
       "file": "st-pb6-w120-ref.mp3",
       "bytes": 288967,
-      "sha256": "08fbf30862dc63811da889698e31b1298ab7932d91c94670b195bccb2c1129b4"
+      "sha256": "08fbf30862dc63811da889698e31b1298ab7932d91c94670b195bccb2c1129b4",
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "gatedOn": "fitness-only",
+        "measuredAt": "2026-08-18"
+      }
     },
     {
       "id": "pb6-w30-ref",
@@ -335,7 +375,17 @@
       "seed": 74970,
       "file": "st-pb6-w30-ref.mp3",
       "bytes": 283797,
-      "sha256": "e7e5ee590dbed0a3ddae6d6220f57fbf33076b1ec30c88934578b811c2dbbd20"
+      "sha256": "e7e5ee590dbed0a3ddae6d6220f57fbf33076b1ec30c88934578b811c2dbbd20",
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "gatedOn": "fitness-only",
+        "measuredAt": "2026-08-18"
+      }
     },
     {
       "id": "pb6-w75-ref",
@@ -346,7 +396,17 @@
       "seed": 98429,
       "file": "st-pb6-w75-ref.mp3",
       "bytes": 308998,
-      "sha256": "83a6b192659f94bfbe4921624205d7c4c5318a95e538750012514ab7f5aa0232"
+      "sha256": "83a6b192659f94bfbe4921624205d7c4c5318a95e538750012514ab7f5aa0232",
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "gatedOn": "fitness-only",
+        "measuredAt": "2026-08-18"
+      }
     },
     {
       "id": "pb8-w15-ref",
@@ -357,7 +417,17 @@
       "seed": 78773,
       "file": "st-pb8-w15-ref.mp3",
       "bytes": 498914,
-      "sha256": "177183fa0e927a4ee8073f69e3a840b91d14afd3647d9b6fcec0ef379f49a068"
+      "sha256": "177183fa0e927a4ee8073f69e3a840b91d14afd3647d9b6fcec0ef379f49a068",
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.00004195011337868481,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "gatedOn": "fitness-only",
+        "measuredAt": "2026-08-18"
+      }
     },
     {
       "id": "pb8-w45-ref",
@@ -368,7 +438,17 @@
       "seed": 33684,
       "file": "st-pb8-w45-ref.mp3",
       "bytes": 490047,
-      "sha256": "afc7391c124b5bd79a7fe49244dcd38876f40bd97d17b1fd819090c9b70d9bf3"
+      "sha256": "afc7391c124b5bd79a7fe49244dcd38876f40bd97d17b1fd819090c9b70d9bf3",
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.00004761904761904762,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "gatedOn": "fitness-only",
+        "measuredAt": "2026-08-18"
+      }
     },
     {
       "id": "pb8-w75-ref",
@@ -379,7 +459,17 @@
       "seed": 82559,
       "file": "st-pb8-w75-ref.mp3",
       "bytes": 495486,
-      "sha256": "00ca3d2971c58b00c03f44aa611203df880fb2a1fd9c6bbb1413154baa909d03"
+      "sha256": "00ca3d2971c58b00c03f44aa611203df880fb2a1fd9c6bbb1413154baa909d03",
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000004535147392290249,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "gatedOn": "fitness-only",
+        "measuredAt": "2026-08-18"
+      }
     }
   ],
   "clips": [
@@ -412,6 +502,17 @@
         "confidentFraction": 1,
         "medianCents": -52.89,
         "rangeCents": 92.24
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.115,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -443,6 +544,17 @@
         "confidentFraction": 1,
         "medianCents": -5.76,
         "rangeCents": 12.94
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.115,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -474,6 +586,17 @@
         "confidentFraction": 1,
         "medianCents": -8.65,
         "rangeCents": 18.2
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.115,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -505,6 +628,17 @@
         "confidentFraction": 1,
         "medianCents": -12.62,
         "rangeCents": 24.56
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.115,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -536,6 +670,17 @@
         "confidentFraction": 1,
         "medianCents": -0.95,
         "rangeCents": 4.37
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.115,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -567,6 +712,17 @@
         "confidentFraction": 1,
         "medianCents": -18.15,
         "rangeCents": 34.26
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.115,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -598,6 +754,17 @@
         "confidentFraction": 1,
         "medianCents": -1.82,
         "rangeCents": 5.36
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.115,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -629,6 +796,17 @@
         "confidentFraction": 1,
         "medianCents": -25.55,
         "rangeCents": 47.42
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.115,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -660,6 +838,17 @@
         "confidentFraction": 1,
         "medianCents": -3.2,
         "rangeCents": 6.45
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.115,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -691,6 +880,17 @@
         "confidentFraction": 1,
         "medianCents": -36.59,
         "rangeCents": 65.83
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.115,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -722,6 +922,17 @@
         "confidentFraction": 1,
         "medianCents": -4.25,
         "rangeCents": 9.24
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.115,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -773,6 +984,19 @@
         "confidentFraction": 0.92,
         "driftRangeMs": 254,
         "coherence": 8.537
+      },
+      "layerA": {
+        "verdict": "FLAG",
+        "reasons": [
+          "drift trajectory (staircase-render's r/slope gate) did not verify — the labelled magnitude is the model's, and the audio does not corroborate it"
+        ],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0.05,
+        "quietFraction": 0.113,
+        "trajectoryVerified": false,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -824,6 +1048,19 @@
         "confidentFraction": 1,
         "driftRangeMs": 39,
         "coherence": 5.399
+      },
+      "layerA": {
+        "verdict": "FLAG",
+        "reasons": [
+          "drift trajectory (staircase-render's r/slope gate) did not verify — the labelled magnitude is the model's, and the audio does not corroborate it"
+        ],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.113,
+        "trajectoryVerified": false,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -875,6 +1112,19 @@
         "confidentFraction": 0.966,
         "driftRangeMs": 93,
         "coherence": 3.415
+      },
+      "layerA": {
+        "verdict": "FLAG",
+        "reasons": [
+          "drift trajectory (staircase-render's r/slope gate) did not verify — the labelled magnitude is the model's, and the audio does not corroborate it"
+        ],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.113,
+        "trajectoryVerified": false,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -926,6 +1176,19 @@
         "confidentFraction": 0.977,
         "driftRangeMs": 51,
         "coherence": 6.111
+      },
+      "layerA": {
+        "verdict": "FLAG",
+        "reasons": [
+          "drift trajectory (staircase-render's r/slope gate) did not verify — the labelled magnitude is the model's, and the audio does not corroborate it"
+        ],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.115,
+        "trajectoryVerified": false,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -977,6 +1240,19 @@
         "confidentFraction": 0.966,
         "driftRangeMs": 59,
         "coherence": 7.28
+      },
+      "layerA": {
+        "verdict": "FLAG",
+        "reasons": [
+          "drift trajectory (staircase-render's r/slope gate) did not verify — the labelled magnitude is the model's, and the audio does not corroborate it"
+        ],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.115,
+        "trajectoryVerified": false,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1028,6 +1304,19 @@
         "confidentFraction": 0.966,
         "driftRangeMs": 71,
         "coherence": 6.311
+      },
+      "layerA": {
+        "verdict": "FLAG",
+        "reasons": [
+          "drift trajectory (staircase-render's r/slope gate) did not verify — the labelled magnitude is the model's, and the audio does not corroborate it"
+        ],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0.05,
+        "quietFraction": 0.113,
+        "trajectoryVerified": false,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1079,6 +1368,19 @@
         "confidentFraction": 0.966,
         "driftRangeMs": 89,
         "coherence": 7.205
+      },
+      "layerA": {
+        "verdict": "FLAG",
+        "reasons": [
+          "drift trajectory (staircase-render's r/slope gate) did not verify — the labelled magnitude is the model's, and the audio does not corroborate it"
+        ],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.115,
+        "trajectoryVerified": false,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1130,6 +1432,19 @@
         "confidentFraction": 0.92,
         "driftRangeMs": 182,
         "coherence": 3.654
+      },
+      "layerA": {
+        "verdict": "FLAG",
+        "reasons": [
+          "drift trajectory (staircase-render's r/slope gate) did not verify — the labelled magnitude is the model's, and the audio does not corroborate it"
+        ],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0.05,
+        "quietFraction": 0.113,
+        "trajectoryVerified": false,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1181,6 +1496,19 @@
         "confidentFraction": 0.898,
         "driftRangeMs": 142,
         "coherence": 6.008
+      },
+      "layerA": {
+        "verdict": "FLAG",
+        "reasons": [
+          "drift trajectory (staircase-render's r/slope gate) did not verify — the labelled magnitude is the model's, and the audio does not corroborate it"
+        ],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0.05,
+        "quietFraction": 0.115,
+        "trajectoryVerified": false,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1232,6 +1560,19 @@
         "confidentFraction": 0.943,
         "driftRangeMs": 179,
         "coherence": 7.548
+      },
+      "layerA": {
+        "verdict": "FLAG",
+        "reasons": [
+          "drift trajectory (staircase-render's r/slope gate) did not verify — the labelled magnitude is the model's, and the audio does not corroborate it"
+        ],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0.05,
+        "quietFraction": 0.115,
+        "trajectoryVerified": false,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1263,6 +1604,17 @@
         "confidentFraction": 1,
         "medianCents": 45.56,
         "rangeCents": 90.96
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1294,6 +1646,17 @@
         "confidentFraction": 1,
         "medianCents": 5.57,
         "rangeCents": 12.37
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1325,6 +1688,17 @@
         "confidentFraction": 1,
         "medianCents": 8.85,
         "rangeCents": 17.98
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1356,6 +1730,17 @@
         "confidentFraction": 1,
         "medianCents": 11.52,
         "rangeCents": 25.34
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1387,6 +1772,17 @@
         "confidentFraction": 1,
         "medianCents": 0.9,
         "rangeCents": 4.79
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1418,6 +1814,17 @@
         "confidentFraction": 1,
         "medianCents": 16.24,
         "rangeCents": 34.62
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1449,6 +1856,17 @@
         "confidentFraction": 1,
         "medianCents": 1.62,
         "rangeCents": 6.17
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1480,6 +1898,17 @@
         "confidentFraction": 1,
         "medianCents": 23.08,
         "rangeCents": 47.35
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1511,6 +1940,17 @@
         "confidentFraction": 1,
         "medianCents": 2.91,
         "rangeCents": 7.27
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1542,6 +1982,17 @@
         "confidentFraction": 1,
         "medianCents": 32.75,
         "rangeCents": 64.94
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1573,6 +2024,17 @@
         "confidentFraction": 1,
         "medianCents": 4.27,
         "rangeCents": 9.9
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1624,6 +2086,17 @@
         "confidentFraction": 0.959,
         "driftRangeMs": 169,
         "coherence": 15.333
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.003,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1675,6 +2148,17 @@
         "confidentFraction": 1,
         "driftRangeMs": 32,
         "coherence": 8.052
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1726,6 +2210,17 @@
         "confidentFraction": 1,
         "driftRangeMs": 26,
         "coherence": 9.66
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1777,6 +2272,17 @@
         "confidentFraction": 1,
         "driftRangeMs": 44,
         "coherence": 9.859
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1828,6 +2334,17 @@
         "confidentFraction": 1,
         "driftRangeMs": 49,
         "coherence": 11.111
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1879,6 +2396,17 @@
         "confidentFraction": 1,
         "driftRangeMs": 62,
         "coherence": 10.827
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.005,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1930,6 +2458,17 @@
         "confidentFraction": 0.99,
         "driftRangeMs": 80,
         "coherence": 16.229
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.003,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -1981,6 +2520,17 @@
         "confidentFraction": 0.99,
         "driftRangeMs": 82,
         "coherence": 15.884
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.003,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2032,6 +2582,17 @@
         "confidentFraction": 0.979,
         "driftRangeMs": 103,
         "coherence": 14.02
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2083,6 +2644,17 @@
         "confidentFraction": 0.969,
         "driftRangeMs": 131,
         "coherence": 16.219
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2114,6 +2686,17 @@
         "confidentFraction": 1,
         "medianCents": -54.35,
         "rangeCents": 91.62
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2145,6 +2728,17 @@
         "confidentFraction": 1,
         "medianCents": -5.81,
         "rangeCents": 13.1
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2176,6 +2770,17 @@
         "confidentFraction": 1,
         "medianCents": -8.75,
         "rangeCents": 18.31
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2207,6 +2812,17 @@
         "confidentFraction": 1,
         "medianCents": -11.81,
         "rangeCents": 25.65
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2238,6 +2854,17 @@
         "confidentFraction": 1,
         "medianCents": -1,
         "rangeCents": 4.9
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2269,6 +2896,17 @@
         "confidentFraction": 1,
         "medianCents": -17.16,
         "rangeCents": 34.58
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2300,6 +2938,17 @@
         "confidentFraction": 1,
         "medianCents": -1.75,
         "rangeCents": 6.67
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2331,6 +2980,17 @@
         "confidentFraction": 1,
         "medianCents": -26.14,
         "rangeCents": 48.08
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2362,6 +3022,17 @@
         "confidentFraction": 1,
         "medianCents": -2.98,
         "rangeCents": 8.09
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2393,6 +3064,17 @@
         "confidentFraction": 1,
         "medianCents": -37.93,
         "rangeCents": 65.65
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2424,6 +3106,17 @@
         "confidentFraction": 1,
         "medianCents": -4.37,
         "rangeCents": 10.82
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2475,6 +3168,17 @@
         "confidentFraction": 0.794,
         "driftRangeMs": 279,
         "coherence": 6.8
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2526,6 +3230,17 @@
         "confidentFraction": 0.99,
         "driftRangeMs": 46,
         "coherence": 4.75
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2577,6 +3292,17 @@
         "confidentFraction": 0.979,
         "driftRangeMs": 87,
         "coherence": 3.585
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.003,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2628,6 +3354,17 @@
         "confidentFraction": 1,
         "driftRangeMs": 68,
         "coherence": 5.376
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.003,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2679,6 +3416,17 @@
         "confidentFraction": 0.969,
         "driftRangeMs": 73,
         "coherence": 6.115
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2730,6 +3478,17 @@
         "confidentFraction": 0.959,
         "driftRangeMs": 104,
         "coherence": 6.145
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.003,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2781,6 +3540,17 @@
         "confidentFraction": 0.897,
         "driftRangeMs": 205,
         "coherence": 4.667
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.005,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2832,6 +3602,17 @@
         "confidentFraction": 0.907,
         "driftRangeMs": 145,
         "coherence": 6.909
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2883,6 +3664,17 @@
         "confidentFraction": 0.876,
         "driftRangeMs": 185,
         "coherence": 6.538
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0.005,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2934,6 +3726,17 @@
         "confidentFraction": 0.825,
         "driftRangeMs": 238,
         "coherence": 6.422
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2965,6 +3768,17 @@
         "confidentFraction": 1,
         "medianCents": -53.37,
         "rangeCents": 92.66
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -2996,6 +3810,17 @@
         "confidentFraction": 1,
         "medianCents": -5.87,
         "rangeCents": 14.7
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3027,6 +3852,17 @@
         "confidentFraction": 1,
         "medianCents": -8.63,
         "rangeCents": 19.29
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3058,6 +3894,17 @@
         "confidentFraction": 1,
         "medianCents": -12.09,
         "rangeCents": 26.56
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3089,6 +3936,17 @@
         "confidentFraction": 1,
         "medianCents": -1.05,
         "rangeCents": 7.58
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3120,6 +3978,17 @@
         "confidentFraction": 1,
         "medianCents": -17.46,
         "rangeCents": 35.4
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3151,6 +4020,17 @@
         "confidentFraction": 1,
         "medianCents": -1.58,
         "rangeCents": 9.23
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3182,6 +4062,17 @@
         "confidentFraction": 1,
         "medianCents": -24.94,
         "rangeCents": 48.96
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3213,6 +4104,17 @@
         "confidentFraction": 1,
         "medianCents": -2.69,
         "rangeCents": 10.01
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3244,6 +4146,17 @@
         "confidentFraction": 1,
         "medianCents": -33.44,
         "rangeCents": 66.59
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3275,6 +4188,17 @@
         "confidentFraction": 1,
         "medianCents": -3.98,
         "rangeCents": 11.32
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3326,6 +4250,17 @@
         "confidentFraction": 0.753,
         "driftRangeMs": 288,
         "coherence": 9.558
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3377,6 +4312,17 @@
         "confidentFraction": 0.918,
         "driftRangeMs": 36,
         "coherence": 12.701
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3428,6 +4374,17 @@
         "confidentFraction": 0.876,
         "driftRangeMs": 71,
         "coherence": 7.636
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3479,6 +4436,17 @@
         "confidentFraction": 0.907,
         "driftRangeMs": 57,
         "coherence": 13.471
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3530,6 +4498,17 @@
         "confidentFraction": 0.887,
         "driftRangeMs": 88,
         "coherence": 9.344
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3581,6 +4560,17 @@
         "confidentFraction": 0.856,
         "driftRangeMs": 91,
         "coherence": 9.139
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3632,6 +4622,17 @@
         "confidentFraction": 0.856,
         "driftRangeMs": 114,
         "coherence": 12.408
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3683,6 +4684,17 @@
         "confidentFraction": 0.845,
         "driftRangeMs": 144,
         "coherence": 11.571
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3734,6 +4746,17 @@
         "confidentFraction": 0.804,
         "driftRangeMs": 175,
         "coherence": 9.912
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3785,6 +4808,17 @@
         "confidentFraction": 0.763,
         "driftRangeMs": 222,
         "coherence": 9.159
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3816,6 +4850,17 @@
         "confidentFraction": 1,
         "medianCents": 45.82,
         "rangeCents": 93.21
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3847,6 +4892,17 @@
         "confidentFraction": 1,
         "medianCents": 5.79,
         "rangeCents": 15.51
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3878,6 +4934,17 @@
         "confidentFraction": 1,
         "medianCents": 8.62,
         "rangeCents": 18.27
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3909,6 +4976,17 @@
         "confidentFraction": 1,
         "medianCents": 11.63,
         "rangeCents": 24.67
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3940,6 +5018,17 @@
         "confidentFraction": 1,
         "medianCents": 1.07,
         "rangeCents": 7.04
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -3971,6 +5060,17 @@
         "confidentFraction": 1,
         "medianCents": 17.31,
         "rangeCents": 34.33
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4002,6 +5102,17 @@
         "confidentFraction": 1,
         "medianCents": 1.63,
         "rangeCents": 8.43
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4033,6 +5144,17 @@
         "confidentFraction": 1,
         "medianCents": 24.15,
         "rangeCents": 49.06
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4064,6 +5186,17 @@
         "confidentFraction": 1,
         "medianCents": 2.67,
         "rangeCents": 9.83
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4095,6 +5228,17 @@
         "confidentFraction": 1,
         "medianCents": 32.94,
         "rangeCents": 66.27
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4126,6 +5270,17 @@
         "confidentFraction": 1,
         "medianCents": 4.05,
         "rangeCents": 12.36
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4177,6 +5332,17 @@
         "confidentFraction": 0.742,
         "driftRangeMs": 211,
         "coherence": 5.883
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4228,6 +5394,17 @@
         "confidentFraction": 0.918,
         "driftRangeMs": 66,
         "coherence": 5.057
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4279,6 +5456,17 @@
         "confidentFraction": 0.928,
         "driftRangeMs": 33,
         "coherence": 7.552
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4330,6 +5518,17 @@
         "confidentFraction": 0.918,
         "driftRangeMs": 42,
         "coherence": 6.991
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4381,6 +5580,17 @@
         "confidentFraction": 0.866,
         "driftRangeMs": 121,
         "coherence": 4.198
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4432,6 +5642,17 @@
         "confidentFraction": 0.866,
         "driftRangeMs": 87,
         "coherence": 6.197
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4483,6 +5704,17 @@
         "confidentFraction": 0.825,
         "driftRangeMs": 90,
         "coherence": 6.189
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4534,6 +5766,17 @@
         "confidentFraction": 0.825,
         "driftRangeMs": 210,
         "coherence": 4.389
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4585,6 +5828,17 @@
         "confidentFraction": 0.773,
         "driftRangeMs": 133,
         "coherence": 6.057
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4636,6 +5890,17 @@
         "confidentFraction": 0.742,
         "driftRangeMs": 179,
         "coherence": 5.816
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4667,6 +5932,17 @@
         "confidentFraction": 1,
         "medianCents": 45.89,
         "rangeCents": 91.91
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4698,6 +5974,17 @@
         "confidentFraction": 1,
         "medianCents": 5.54,
         "rangeCents": 13.83
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4729,6 +6016,17 @@
         "confidentFraction": 1,
         "medianCents": 8.76,
         "rangeCents": 17.98
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4760,6 +6058,17 @@
         "confidentFraction": 1,
         "medianCents": 11.74,
         "rangeCents": 24.33
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4791,6 +6100,17 @@
         "confidentFraction": 1,
         "medianCents": 0.94,
         "rangeCents": 4.88
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4822,6 +6142,17 @@
         "confidentFraction": 1,
         "medianCents": 16.33,
         "rangeCents": 35.21
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4853,6 +6184,17 @@
         "confidentFraction": 1,
         "medianCents": 1.59,
         "rangeCents": 5.92
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4884,6 +6226,17 @@
         "confidentFraction": 1,
         "medianCents": 23.52,
         "rangeCents": 47.63
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4915,6 +6268,17 @@
         "confidentFraction": 1,
         "medianCents": 3.05,
         "rangeCents": 7.38
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4946,6 +6310,17 @@
         "confidentFraction": 1,
         "medianCents": 33.02,
         "rangeCents": 66.2
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -4977,6 +6352,17 @@
         "confidentFraction": 1,
         "medianCents": 4.16,
         "rangeCents": 9.91
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5028,6 +6414,17 @@
         "confidentFraction": 0.866,
         "driftRangeMs": 314,
         "coherence": 6.217
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5079,6 +6476,19 @@
         "confidentFraction": 0.938,
         "driftRangeMs": 64,
         "coherence": 5.422
+      },
+      "layerA": {
+        "verdict": "FLAG",
+        "reasons": [
+          "drift trajectory (staircase-render's r/slope gate) did not verify — the labelled magnitude is the model's, and the audio does not corroborate it"
+        ],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": false,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5130,6 +6540,19 @@
         "confidentFraction": 0.948,
         "driftRangeMs": 38,
         "coherence": 7.339
+      },
+      "layerA": {
+        "verdict": "FLAG",
+        "reasons": [
+          "drift trajectory (staircase-render's r/slope gate) did not verify — the labelled magnitude is the model's, and the audio does not corroborate it"
+        ],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": false,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5181,6 +6604,17 @@
         "confidentFraction": 0.938,
         "driftRangeMs": 69,
         "coherence": 7.742
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5232,6 +6666,19 @@
         "confidentFraction": 0.918,
         "driftRangeMs": 78,
         "coherence": 6.238
+      },
+      "layerA": {
+        "verdict": "FLAG",
+        "reasons": [
+          "drift trajectory (staircase-render's r/slope gate) did not verify — the labelled magnitude is the model's, and the audio does not corroborate it"
+        ],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": false,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5283,6 +6730,19 @@
         "confidentFraction": 0.938,
         "driftRangeMs": 82,
         "coherence": 12.615
+      },
+      "layerA": {
+        "verdict": "FLAG",
+        "reasons": [
+          "drift trajectory (staircase-render's r/slope gate) did not verify — the labelled magnitude is the model's, and the audio does not corroborate it"
+        ],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": false,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5334,6 +6794,19 @@
         "confidentFraction": 0.928,
         "driftRangeMs": 117,
         "coherence": 8.511
+      },
+      "layerA": {
+        "verdict": "FLAG",
+        "reasons": [
+          "drift trajectory (staircase-render's r/slope gate) did not verify — the labelled magnitude is the model's, and the audio does not corroborate it"
+        ],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": false,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5385,6 +6858,19 @@
         "confidentFraction": 0.918,
         "driftRangeMs": 133,
         "coherence": 12.435
+      },
+      "layerA": {
+        "verdict": "FLAG",
+        "reasons": [
+          "drift trajectory (staircase-render's r/slope gate) did not verify — the labelled magnitude is the model's, and the audio does not corroborate it"
+        ],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": false,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5436,6 +6922,17 @@
         "confidentFraction": 0.887,
         "driftRangeMs": 175,
         "coherence": 9.957
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5487,6 +6984,17 @@
         "confidentFraction": 0.887,
         "driftRangeMs": 253,
         "coherence": 8.766
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5518,6 +7026,17 @@
         "confidentFraction": 1,
         "medianCents": 45.37,
         "rangeCents": 93.76
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000076,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5549,6 +7068,17 @@
         "confidentFraction": 1,
         "medianCents": 5.46,
         "rangeCents": 12.05
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000077,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5580,6 +7110,17 @@
         "confidentFraction": 1,
         "medianCents": 8.54,
         "rangeCents": 17.1
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000083,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5611,6 +7152,17 @@
         "confidentFraction": 1,
         "medianCents": 11.15,
         "rangeCents": 24.89
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000075,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5642,6 +7194,17 @@
         "confidentFraction": 1,
         "medianCents": 0.76,
         "rangeCents": 3.93
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000042,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5673,6 +7236,17 @@
         "confidentFraction": 1,
         "medianCents": 15.89,
         "rangeCents": 34.56
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000092,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5704,6 +7278,17 @@
         "confidentFraction": 1,
         "medianCents": 1.46,
         "rangeCents": 5.15
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000065,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5735,6 +7320,17 @@
         "confidentFraction": 1,
         "medianCents": 23.29,
         "rangeCents": 48.31
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000076,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5766,6 +7362,17 @@
         "confidentFraction": 1,
         "medianCents": 2.68,
         "rangeCents": 6.65
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000049,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5797,6 +7404,17 @@
         "confidentFraction": 1,
         "medianCents": 32.14,
         "rangeCents": 67.38
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000098,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5828,6 +7446,17 @@
         "confidentFraction": 1,
         "medianCents": 4.05,
         "rangeCents": 9.02
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000065,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5879,6 +7508,17 @@
         "confidentFraction": 0.649,
         "driftRangeMs": 448,
         "coherence": 3.479
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000054,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5930,6 +7570,17 @@
         "confidentFraction": 0.979,
         "driftRangeMs": 40,
         "coherence": 9.935
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000068,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -5981,6 +7632,17 @@
         "confidentFraction": 0.938,
         "driftRangeMs": 51,
         "coherence": 8.465
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000068,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6032,6 +7694,17 @@
         "confidentFraction": 0.918,
         "driftRangeMs": 72,
         "coherence": 6.222
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000085,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6083,6 +7756,17 @@
         "confidentFraction": 0.866,
         "driftRangeMs": 84,
         "coherence": 6.737
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000076,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6134,6 +7818,17 @@
         "confidentFraction": 0.845,
         "driftRangeMs": 157,
         "coherence": 5.295
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000079,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6185,6 +7880,17 @@
         "confidentFraction": 0.763,
         "driftRangeMs": 130,
         "coherence": 4.358
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000079,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6236,6 +7942,17 @@
         "confidentFraction": 0.866,
         "driftRangeMs": 168,
         "coherence": 7.777
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000079,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6287,6 +8004,17 @@
         "confidentFraction": 0.773,
         "driftRangeMs": 206,
         "coherence": 6.216
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.00008,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6338,6 +8066,17 @@
         "confidentFraction": 0.711,
         "driftRangeMs": 260,
         "coherence": 5.69
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000077,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6369,6 +8108,17 @@
         "confidentFraction": 1,
         "medianCents": -54.51,
         "rangeCents": 93.41
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.00005,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6400,6 +8150,17 @@
         "confidentFraction": 1,
         "medianCents": -5.87,
         "rangeCents": 12.22
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.00008,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6431,6 +8192,17 @@
         "confidentFraction": 1,
         "medianCents": -8.88,
         "rangeCents": 16.94
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.00008,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6462,6 +8234,17 @@
         "confidentFraction": 1,
         "medianCents": -12.39,
         "rangeCents": 24.3
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000076,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6493,6 +8276,17 @@
         "confidentFraction": 1,
         "medianCents": -0.94,
         "rangeCents": 3.76
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000076,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6524,6 +8318,17 @@
         "confidentFraction": 1,
         "medianCents": -17.95,
         "rangeCents": 33.89
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.00006,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6555,6 +8360,17 @@
         "confidentFraction": 1,
         "medianCents": -1.57,
         "rangeCents": 4.79
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000085,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6586,6 +8402,17 @@
         "confidentFraction": 1,
         "medianCents": -26.17,
         "rangeCents": 47.95
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000057,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6617,6 +8444,17 @@
         "confidentFraction": 1,
         "medianCents": -3.03,
         "rangeCents": 6.09
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000087,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6648,6 +8486,17 @@
         "confidentFraction": 1,
         "medianCents": -38.55,
         "rangeCents": 66.95
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000067,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6679,6 +8528,17 @@
         "confidentFraction": 1,
         "medianCents": -4.29,
         "rangeCents": 9.08
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000085,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6730,6 +8590,17 @@
         "confidentFraction": 0.67,
         "driftRangeMs": 377,
         "coherence": 5.166
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.00005,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6781,6 +8652,17 @@
         "confidentFraction": 0.938,
         "driftRangeMs": 39,
         "coherence": 6.995
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000101,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6832,6 +8714,17 @@
         "confidentFraction": 0.907,
         "driftRangeMs": 55,
         "coherence": 7.102
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000071,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6883,6 +8776,17 @@
         "confidentFraction": 0.948,
         "driftRangeMs": 63,
         "coherence": 9.055
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000075,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6934,6 +8838,17 @@
         "confidentFraction": 0.856,
         "driftRangeMs": 91,
         "coherence": 4.197
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000079,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -6985,6 +8900,17 @@
         "confidentFraction": 0.918,
         "driftRangeMs": 85,
         "coherence": 8.986
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000094,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7036,6 +8962,17 @@
         "confidentFraction": 0.845,
         "driftRangeMs": 138,
         "coherence": 6.052
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000092,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7087,6 +9024,17 @@
         "confidentFraction": 0.814,
         "driftRangeMs": 161,
         "coherence": 7.191
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.00009,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7138,6 +9086,17 @@
         "confidentFraction": 0.845,
         "driftRangeMs": 334,
         "coherence": 5.22
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000086,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7189,6 +9148,17 @@
         "confidentFraction": 0.794,
         "driftRangeMs": 214,
         "coherence": 8.584
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000056,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7220,6 +9190,17 @@
         "confidentFraction": 1,
         "medianCents": 45.57,
         "rangeCents": 92.27
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000015,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7251,6 +9232,17 @@
         "confidentFraction": 1,
         "medianCents": 5.76,
         "rangeCents": 12.14
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000008,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7282,6 +9274,17 @@
         "confidentFraction": 1,
         "medianCents": 8.4,
         "rangeCents": 17.28
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000029,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7313,6 +9316,17 @@
         "confidentFraction": 1,
         "medianCents": 11.36,
         "rangeCents": 24.26
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000012,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7344,6 +9358,17 @@
         "confidentFraction": 1,
         "medianCents": 0.87,
         "rangeCents": 4.45
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000017,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7375,6 +9400,17 @@
         "confidentFraction": 1,
         "medianCents": 15.98,
         "rangeCents": 33.49
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000016,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7406,6 +9442,17 @@
         "confidentFraction": 1,
         "medianCents": 1.52,
         "rangeCents": 5.22
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000003,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7437,6 +9484,17 @@
         "confidentFraction": 1,
         "medianCents": 23.89,
         "rangeCents": 47.63
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000028,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7468,6 +9526,17 @@
         "confidentFraction": 1,
         "medianCents": 2.81,
         "rangeCents": 6.64
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000015,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7499,6 +9568,17 @@
         "confidentFraction": 1,
         "medianCents": 33.2,
         "rangeCents": 65.57
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000034,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7530,6 +9610,17 @@
         "confidentFraction": 1,
         "medianCents": 4.26,
         "rangeCents": 9.31
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000012,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "levelErrVerified": true,
+        "gatedOn": "cents-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7581,6 +9672,17 @@
         "confidentFraction": 0.67,
         "driftRangeMs": 437,
         "coherence": 2.909
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000014,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7632,6 +9734,17 @@
         "confidentFraction": 0.856,
         "driftRangeMs": 75,
         "coherence": 2.873
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000032,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7683,6 +9796,17 @@
         "confidentFraction": 0.887,
         "driftRangeMs": 78,
         "coherence": 4.488
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000022,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7734,6 +9858,17 @@
         "confidentFraction": 0.866,
         "driftRangeMs": 90,
         "coherence": 5.643
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000022,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7785,6 +9920,17 @@
         "confidentFraction": 0.897,
         "driftRangeMs": 100,
         "coherence": 4.765
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000025,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7836,6 +9982,17 @@
         "confidentFraction": 0.814,
         "driftRangeMs": 126,
         "coherence": 4.557
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000022,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7887,6 +10044,17 @@
         "confidentFraction": 0.784,
         "driftRangeMs": 159,
         "coherence": 4.113
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000034,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7938,6 +10106,17 @@
         "confidentFraction": 0.825,
         "driftRangeMs": 331,
         "coherence": 4.193
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000026,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -7989,6 +10168,17 @@
         "confidentFraction": 0.773,
         "driftRangeMs": 342,
         "coherence": 4.414
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000023,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     },
     {
@@ -8040,7 +10230,156 @@
         "confidentFraction": 0.763,
         "driftRangeMs": 415,
         "coherence": 3.149
+      },
+      "layerA": {
+        "verdict": "PASS",
+        "reasons": [],
+        "preNormClippedFraction": 0.000016,
+        "flatTopFraction": 0,
+        "longestSilenceSec": 0,
+        "quietFraction": 0,
+        "trajectoryVerified": true,
+        "gatedOn": "ms-floor + fitness",
+        "measuredAt": "2026-08-18"
       }
     }
-  ]
+  ],
+  "layerA": {
+    "analysisRateHz": 44100,
+    "measuredAt": "2026-08-18",
+    "thresholds": {
+      "MIN_MEASURABLE_PITCH_CENTS": 3,
+      "MIN_MEASURABLE_DRIFT_MS": 12,
+      "MIN_CONFIDENT_PITCH_FRACTION": 0.8,
+      "MIN_CONFIDENT_BLOCK_FRACTION": 0.25,
+      "MAX_CLIPPED_FRACTION": 0.0005,
+      "MAX_FLAT_TOP_FRACTION": 0.001,
+      "MAX_SILENCE_SEC": 1.5,
+      "MAX_QUIET_FRACTION": 0.2
+    },
+    "anchors": [
+      {
+        "sourceId": "pb1",
+        "window": {
+          "startSec": 120,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.40582312591595454,
+        "measuredAt": "2026-08-18",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb1",
+        "window": {
+          "startSec": 30,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.4262428653835246,
+        "measuredAt": "2026-08-18",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb1",
+        "window": {
+          "startSec": 75,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.4216126425418471,
+        "measuredAt": "2026-08-18",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb6",
+        "window": {
+          "startSec": 120,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.7723886117302068,
+        "measuredAt": "2026-08-18",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb6",
+        "window": {
+          "startSec": 30,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.8489934991435096,
+        "measuredAt": "2026-08-18",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb6",
+        "window": {
+          "startSec": 75,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.5571683539625412,
+        "measuredAt": "2026-08-18",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb8",
+        "window": {
+          "startSec": 15,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.4769339405302249,
+        "measuredAt": "2026-08-18",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb8",
+        "window": {
+          "startSec": 45,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.2739654313950121,
+        "measuredAt": "2026-08-18",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      },
+      {
+        "sourceId": "pb8",
+        "window": {
+          "startSec": 75,
+          "clipSec": 20
+        },
+        "pipelineNoiseLsdDb": 0,
+        "transparentLsdDb": 0.26644125876717606,
+        "measuredAt": "2026-08-18",
+        "note": "pipeline-noise = same trim/encode path, no manipulation. transparent = 320 kbps MP3 round-trip. Neither is an audibility threshold; they are the floor and the calibration point a pair's magnitude is compared against."
+      }
+    ],
+    "excludedWindows": [
+      {
+        "family": "timing-smear",
+        "sourceId": "pb1",
+        "startSec": 120,
+        "failingClips": 10,
+        "reason": "drift trajectory (staircase-render's r/slope gate) did not verify — the labelled magnitude is the model's, and the audio does not corroborate it"
+      },
+      {
+        "family": "timing-smear",
+        "sourceId": "pb6",
+        "startSec": 75,
+        "failingClips": 6,
+        "reason": "drift trajectory (staircase-render's r/slope gate) did not verify — the labelled magnitude is the model's, and the audio does not corroborate it"
+      }
+    ],
+    "counts": {
+      "total": 198,
+      "pass": 182,
+      "flag": 16,
+      "error": 0
+    },
+    "note": "FITNESS to put in front of a listener — dead air, near-silence, clipping, and the floor below which the family's own ruler cannot say what was rendered. NOT audibility and NOT difficulty (N3). Magnitude is READ from each clip's render-time measurement, which is safe because every file was hashed against the manifest first; fitness is measured fresh from the shipped file. The pitch floor here is MIN_MEASURABLE_PITCH_CENTS (3), deliberately below the fixed assessment's fair-trial MIN_PITCH_CENTS (10): a staircase converging toward a listener's threshold must be allowed below it. Reference clipping is measured from the source window (RT-81a); the renderer records it for degraded clips only."
+  }
 }
