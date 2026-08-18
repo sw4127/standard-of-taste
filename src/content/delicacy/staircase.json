@@ -23,6 +23,264 @@
     ]
   },
   "note": "Adaptive-staircase clip pool. Each degraded clip is measured against its window's reference IN THE FAMILY'S OWN PHYSICAL UNIT (cents of peak detune / ms of drift IQR) and labelled with what was measured, not with what was requested — the threshold this instrument reports is in those units (D4 amendment). `preNormClippedFraction` is recorded here because clipping is only visible before loudness normalisation (RT-17a). Measured magnitude is NOT difficulty: which level a listener stops hearing is what the staircase is for (N3).",
+  "instanceWindows": {
+    "pitch-drift": [
+      {
+        "sourceId": "pb1",
+        "startSec": 120
+      },
+      {
+        "sourceId": "pb1",
+        "startSec": 30
+      },
+      {
+        "sourceId": "pb1",
+        "startSec": 75
+      },
+      {
+        "sourceId": "pb6",
+        "startSec": 120
+      },
+      {
+        "sourceId": "pb6",
+        "startSec": 30
+      },
+      {
+        "sourceId": "pb6",
+        "startSec": 75
+      },
+      {
+        "sourceId": "pb8",
+        "startSec": 15
+      },
+      {
+        "sourceId": "pb8",
+        "startSec": 45
+      },
+      {
+        "sourceId": "pb8",
+        "startSec": 75
+      }
+    ],
+    "timing-smear": [
+      {
+        "sourceId": "pb1",
+        "startSec": 30
+      },
+      {
+        "sourceId": "pb1",
+        "startSec": 75
+      },
+      {
+        "sourceId": "pb6",
+        "startSec": 120
+      },
+      {
+        "sourceId": "pb6",
+        "startSec": 30
+      },
+      {
+        "sourceId": "pb8",
+        "startSec": 15
+      },
+      {
+        "sourceId": "pb8",
+        "startSec": 45
+      },
+      {
+        "sourceId": "pb8",
+        "startSec": 75
+      }
+    ]
+  },
+  "excludedWindows": [
+    {
+      "family": "timing-smear",
+      "sourceId": "pb1",
+      "startSec": 120,
+      "failingClips": 10,
+      "worstTrajectoryR": 0.373,
+      "reason": "drift trajectory not verifiable by the correlator on this material (RT-75a)"
+    },
+    {
+      "family": "timing-smear",
+      "sourceId": "pb6",
+      "startSec": 75,
+      "failingClips": 6,
+      "worstTrajectoryR": -0.072,
+      "reason": "drift trajectory not verifiable by the correlator on this material (RT-75a)"
+    }
+  ],
+  "crossWindowSpread": [
+    {
+      "family": "pitch-drift",
+      "level": 3.1,
+      "n": 9,
+      "min": 2.7,
+      "max": 3.07,
+      "ratio": 1.137
+    },
+    {
+      "family": "pitch-drift",
+      "level": 4.4,
+      "n": 9,
+      "min": 4.18,
+      "max": 4.34,
+      "ratio": 1.038
+    },
+    {
+      "family": "pitch-drift",
+      "level": 6.3,
+      "n": 9,
+      "min": 5.45,
+      "max": 5.8,
+      "ratio": 1.064
+    },
+    {
+      "family": "pitch-drift",
+      "level": 8.8,
+      "n": 9,
+      "min": 8.35,
+      "max": 8.75,
+      "ratio": 1.048
+    },
+    {
+      "family": "pitch-drift",
+      "level": 12.5,
+      "n": 9,
+      "min": 11.29,
+      "max": 11.96,
+      "ratio": 1.059
+    },
+    {
+      "family": "pitch-drift",
+      "level": 17.7,
+      "n": 9,
+      "min": 16.45,
+      "max": 16.93,
+      "ratio": 1.029
+    },
+    {
+      "family": "pitch-drift",
+      "level": 25,
+      "n": 9,
+      "min": 23.88,
+      "max": 24.43,
+      "ratio": 1.023
+    },
+    {
+      "family": "pitch-drift",
+      "level": 35.4,
+      "n": 9,
+      "min": 33.85,
+      "max": 34.25,
+      "ratio": 1.012
+    },
+    {
+      "family": "pitch-drift",
+      "level": 50,
+      "n": 9,
+      "min": 47.41,
+      "max": 48.2,
+      "ratio": 1.017
+    },
+    {
+      "family": "pitch-drift",
+      "level": 70.7,
+      "n": 9,
+      "min": 66.96,
+      "max": 67.56,
+      "ratio": 1.009
+    },
+    {
+      "family": "pitch-drift",
+      "level": 100,
+      "n": 9,
+      "min": 94.95,
+      "max": 95.29,
+      "ratio": 1.004
+    },
+    {
+      "family": "timing-smear",
+      "level": 12.5,
+      "n": 9,
+      "min": 12.5,
+      "max": 12.5,
+      "ratio": 1
+    },
+    {
+      "family": "timing-smear",
+      "level": 15.7,
+      "n": 9,
+      "min": 15.7,
+      "max": 15.7,
+      "ratio": 1
+    },
+    {
+      "family": "timing-smear",
+      "level": 19.8,
+      "n": 9,
+      "min": 19.8,
+      "max": 19.8,
+      "ratio": 1
+    },
+    {
+      "family": "timing-smear",
+      "level": 25,
+      "n": 9,
+      "min": 25,
+      "max": 25,
+      "ratio": 1
+    },
+    {
+      "family": "timing-smear",
+      "level": 31.5,
+      "n": 9,
+      "min": 31.5,
+      "max": 31.5,
+      "ratio": 1
+    },
+    {
+      "family": "timing-smear",
+      "level": 39.7,
+      "n": 9,
+      "min": 39.7,
+      "max": 39.7,
+      "ratio": 1
+    },
+    {
+      "family": "timing-smear",
+      "level": 50,
+      "n": 9,
+      "min": 50,
+      "max": 50,
+      "ratio": 1
+    },
+    {
+      "family": "timing-smear",
+      "level": 63,
+      "n": 9,
+      "min": 63,
+      "max": 63,
+      "ratio": 1
+    },
+    {
+      "family": "timing-smear",
+      "level": 79.4,
+      "n": 9,
+      "min": 79.4,
+      "max": 79.4,
+      "ratio": 1
+    },
+    {
+      "family": "timing-smear",
+      "level": 100,
+      "n": 9,
+      "min": 100,
+      "max": 100,
+      "ratio": 1
+    }
+  ],
   "references": [
     {
       "id": "pb1-w120-ref",
