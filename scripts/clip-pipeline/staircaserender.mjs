@@ -959,11 +959,28 @@ export async function staircaseRenderCli(args = []) {
     );
     process.exitCode = 1;
   }
-  if (badTrajectory.length) {
+  // ONLY *NEW* TRAJECTORY FAILURES FAIL THE RUN (PM ruling RT-78a). The 16 clips
+  // on pb1@120s and pb6@75s are a RECORDED state, not a transient fault: their
+  // windows are excluded from the timing pool and the manifest says so. A stage
+  // that can never return success stops being read, which is precisely how a
+  // real new failure would get missed.
+  const priorExcluded = new Set(
+    (priorManifest.excludedWindows ?? []).map((e) => `${e.family}/${e.sourceId}@${e.startSec}`),
+  );
+  const newFailures = badTrajectory.filter((c) => !priorExcluded.has(`${c.family}/${c.sourceId}@${c.startSec}`));
+  if (badTrajectory.length && !newFailures.length) {
+    console.log(
+      `  NOTE  ${badTrajectory.length} clip(s) across ${excludedWindows.length} window(s) remain unverifiable and are
+` +
+        `        already excluded from the instance pool (RT-75a): ` +
+        excludedWindows.map((e) => `${e.family} ${e.sourceId}@${e.startSec}s`).join(", "),
+    );
+  }
+  if (newFailures.length) {
     console.error(
-      `staircase-render: ${badTrajectory.length} clip(s) do not track their predicted drift trajectory ` +
+      `staircase-render: ${newFailures.length} NEWLY failing clip(s) do not track their predicted drift trajectory ` +
         `(need r >= ${MIN_TRAJECTORY_R}, slope within ${MAX_TRAJECTORY_SLOPE_ERR_PCT}% of 1) — ` +
-        badTrajectory.slice(0, 6).map((c) => `${c.id} r=${c.measured.trajectoryR} slope=${c.measured.trajectorySlope}`).join(", "),
+        newFailures.slice(0, 6).map((c) => `${c.id} r=${c.measured.trajectoryR} slope=${c.measured.trajectorySlope}`).join(", "),
     );
     process.exitCode = 1;
   }
