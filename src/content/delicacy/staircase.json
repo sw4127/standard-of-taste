@@ -387,6 +387,7 @@
       "family": "timing-smear",
       "level": 100,
       "seed": 62034,
+      "renderParam": 100,
       "params": {
         "maxDevPct": 10.8135,
         "realizedMaxDevPct": 10.8135,
@@ -432,6 +433,7 @@
       "family": "timing-smear",
       "level": 12.5,
       "seed": 62034,
+      "renderParam": 12.5,
       "params": {
         "maxDevPct": 1.3517,
         "realizedMaxDevPct": 1.3517,
@@ -477,6 +479,7 @@
       "family": "timing-smear",
       "level": 15.7,
       "seed": 62034,
+      "renderParam": 15.7,
       "params": {
         "maxDevPct": 1.6977,
         "realizedMaxDevPct": 1.6977,
@@ -522,6 +525,7 @@
       "family": "timing-smear",
       "level": 19.8,
       "seed": 62034,
+      "renderParam": 19.8,
       "params": {
         "maxDevPct": 2.1411,
         "realizedMaxDevPct": 2.1411,
@@ -567,6 +571,7 @@
       "family": "timing-smear",
       "level": 25,
       "seed": 62034,
+      "renderParam": 25,
       "params": {
         "maxDevPct": 2.7034,
         "realizedMaxDevPct": 2.7034,
@@ -612,6 +617,7 @@
       "family": "timing-smear",
       "level": 31.5,
       "seed": 62034,
+      "renderParam": 31.5,
       "params": {
         "maxDevPct": 3.4062,
         "realizedMaxDevPct": 3.4062,
@@ -657,6 +663,7 @@
       "family": "timing-smear",
       "level": 39.7,
       "seed": 62034,
+      "renderParam": 39.7,
       "params": {
         "maxDevPct": 4.293,
         "realizedMaxDevPct": 4.293,
@@ -702,6 +709,7 @@
       "family": "timing-smear",
       "level": 50,
       "seed": 62034,
+      "renderParam": 50,
       "params": {
         "maxDevPct": 5.4067,
         "realizedMaxDevPct": 5.4067,
@@ -747,6 +755,7 @@
       "family": "timing-smear",
       "level": 63,
       "seed": 62034,
+      "renderParam": 63,
       "params": {
         "maxDevPct": 6.8125,
         "realizedMaxDevPct": 6.8125,
@@ -792,6 +801,7 @@
       "family": "timing-smear",
       "level": 79.4,
       "seed": 62034,
+      "renderParam": 79.4,
       "params": {
         "maxDevPct": 8.5859,
         "realizedMaxDevPct": 8.5859,
