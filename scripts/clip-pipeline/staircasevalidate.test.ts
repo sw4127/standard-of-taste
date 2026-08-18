@@ -28,6 +28,8 @@ import {
   MIN_MEASURABLE_PITCH_CENTS,
   STAIRCASE_MAGNITUDE_GATES,
 } from "./staircasevalidate.mjs";
+import { eligibleWindows, levelErrVerdict, trajectoryVerdict } from "./staircasevalidate.mjs";
+import { MAX_LEVEL_ERR_PCT, MIN_TRAJECTORY_R, MAX_TRAJECTORY_SLOPE_ERR_PCT } from "./staircaserender.mjs";
 import { MIN_PITCH_CENTS } from "./validate.mjs";
 import { STAIRCASE_LEVELS } from "./rungs.mjs";
 
@@ -54,6 +56,9 @@ const pitch = {
   preNormClippedFraction: 0,
   measuredValue: 23.8,
   confidentFraction: 1,
+  // Pitch's detune IS recovered from the audio, so its evidence is
+  // staircase-render's error gate against the ramp prediction.
+  levelErrVerified: true,
   flatTopFraction: 0,
   longestSilenceSec: 0.4,
   quietFraction: 0.05,
@@ -152,25 +157,25 @@ describe("the pitch floor is the MEASURABILITY floor, not the fair-trial floor",
   });
 
   it("below the ruler's own floor it FLAGS — we cannot say what was rendered", () => {
-    const r = gradeStaircaseClip({ ...pitch, measuredValue: MIN_MEASURABLE_PITCH_CENTS - 0.01 });
+    const r = gradeStaircaseClip({ ...pitch, level: MIN_MEASURABLE_PITCH_CENTS - 0.01 });
     expect(r.verdict).toBe("FLAG");
     expect(r.reasons[0]).toMatch(/below the ruler's own floor/);
   });
 
   it("exactly AT the floor passes — the gate is >=, not >", () => {
-    expect(gradeStaircaseClip({ ...pitch, measuredValue: MIN_MEASURABLE_PITCH_CENTS }).verdict).toBe("PASS");
+    expect(gradeStaircaseClip({ ...pitch, level: MIN_MEASURABLE_PITCH_CENTS }).verdict).toBe("PASS");
   });
 });
 
 describe("the timing floor is the ruler's ordering limit", () => {
   it("below it, FLAG", () => {
-    const r = gradeStaircaseClip({ ...timing, measuredValue: MIN_MEASURABLE_DRIFT_MS - 0.1 });
+    const r = gradeStaircaseClip({ ...timing, level: MIN_MEASURABLE_DRIFT_MS - 0.1 });
     expect(r.verdict).toBe("FLAG");
     expect(r.reasons[0]).toMatch(/below the ruler's own floor/);
   });
 
   it("exactly at it, PASS", () => {
-    expect(gradeStaircaseClip({ ...timing, measuredValue: MIN_MEASURABLE_DRIFT_MS }).verdict).toBe("PASS");
+    expect(gradeStaircaseClip({ ...timing, level: MIN_MEASURABLE_DRIFT_MS }).verdict).toBe("PASS");
   });
 
   it("sits just BELOW the shipping ladder's bottom rung — a guard, not a live gate", () => {
@@ -200,15 +205,45 @@ describe("timing carries separate evidence that its magnitude is a fact about th
     expect(r.reasons[0]).toMatch(/never established/);
   });
 
-  it("pitch needs no such evidence — its cents figure IS a measurement of the file", () => {
-    expect(gateFor("pitch-drift")).not.toHaveProperty("evidenceField");
-    expect(gradeStaircaseClip(without(pitch, "trajectoryVerified")).verdict).toBe("PASS");
+  it("pitch carries its OWN evidence field, sourced from a different gate", () => {
+    // Both families' floors are checked on `level`, a ladder-table property, so
+    // both need audio-level evidence — but from the gate that suits them:
+    // pitch's detune error, timing's drift trajectory.
+    expect(STAIRCASE_MAGNITUDE_GATES["pitch-drift"].evidenceField).toBe("levelErrVerified");
+    expect(STAIRCASE_MAGNITUDE_GATES["timing-smear"].evidenceField).toBe("trajectoryVerified");
+    expect(gradeStaircaseClip({ ...pitch, levelErrVerified: false }).verdict).toBe("FLAG");
+    expect(gradeStaircaseClip(without(pitch, "levelErrVerified")).verdict).toBe("ERROR");
   });
 
   it("the magnitude floor alone would have passed a clip whose warp never rendered", () => {
     // Pins the reason this field exists. Same row, same label, opposite verdict.
     expect(gradeStaircaseClip({ ...timing, trajectoryVerified: true }).verdict).toBe("PASS");
     expect(gradeStaircaseClip({ ...timing, trajectoryVerified: false }).verdict).toBe("FLAG");
+  });
+});
+
+describe("REGRESSION: the floor is in the PARAMETER domain, not the measurement domain", () => {
+  // FOUND BY THE REAL 198-CLIP RUN (E4/S5/S2). The first version compared the
+  // 3-cent floor against each clip's MEASURED p95 and flagged pitch level 3.1
+  // on eight of nine windows. A ramp peaks at 0.95 of its parameter, so level
+  // 3.1 PREDICTS 2.94 cents — under a 3-cent measurement floor by construction.
+  it("level 3.1 measuring 2.70 cents PASSES — that is the ramp, not a defect", () => {
+    const r = gradeStaircaseClip({ ...pitch, level: 3.1, measuredValue: 2.7 });
+    expect(r.verdict).toBe("PASS");
+  });
+
+  it("every shipping pitch level predicts a measurement BELOW its own level", () => {
+    // Pins the arithmetic that made the mismatch invisible: if this ever became
+    // false the two domains would coincide and the bug would look fine.
+    for (const level of STAIRCASE_LEVELS["pitch-drift"].values as number[]) {
+      expect(level * 0.95).toBeLessThan(level);
+    }
+  });
+
+  it("the floor is read off `level`, so a missing level cannot pass", () => {
+    const r = gradeStaircaseClip(without(pitch, "level"));
+    expect(r.verdict).toBe("FLAG");
+    expect(r.reasons[0]).toMatch(/below the ruler's own floor/);
   });
 });
 
@@ -296,7 +331,7 @@ describe("the fitness gates — measured fresh, and never measured before this s
   });
 
   it("a row can FLAG for several independent reasons at once", () => {
-    const r = gradeStaircaseClip({ ...pitch, longestSilenceSec: 9, quietFraction: 0.9, measuredValue: 0.1 });
+    const r = gradeStaircaseClip({ ...pitch, longestSilenceSec: 9, quietFraction: 0.9, level: 0.1 });
     expect(r.reasons).toHaveLength(3);
   });
 });
@@ -334,5 +369,73 @@ describe("the thresholds are imported, not restated", () => {
   it("the confidence floors are the SAME objects validate.mjs uses", () => {
     expect(STAIRCASE_MAGNITUDE_GATES["pitch-drift"].minConfidentFraction).toBe(MIN_CONFIDENT_PITCH_FRACTION);
     expect(STAIRCASE_MAGNITUDE_GATES["timing-smear"].minConfidentFraction).toBe(MIN_CONFIDENT_BLOCK_FRACTION);
+  });
+});
+
+describe("the evidence verdicts read staircase-render's own constants", () => {
+  it("trajectoryVerdict applies r and slope exactly as that stage does", () => {
+    expect(trajectoryVerdict({ trajectoryR: MIN_TRAJECTORY_R, trajectorySlope: 1 })).toBe(true);
+    expect(trajectoryVerdict({ trajectoryR: MIN_TRAJECTORY_R - 0.001, trajectorySlope: 1 })).toBe(false);
+    const edge = 1 + MAX_TRAJECTORY_SLOPE_ERR_PCT / 100;
+    expect(trajectoryVerdict({ trajectoryR: 0.9, trajectorySlope: edge })).toBe(true);
+    expect(trajectoryVerdict({ trajectoryR: 0.9, trajectorySlope: edge + 0.001 })).toBe(false);
+  });
+
+  it("levelErrVerdict applies the error gate symmetrically", () => {
+    expect(levelErrVerdict({ errPct: MAX_LEVEL_ERR_PCT })).toBe(true);
+    expect(levelErrVerdict({ errPct: -MAX_LEVEL_ERR_PCT })).toBe(true);
+    expect(levelErrVerdict({ errPct: MAX_LEVEL_ERR_PCT + 0.1 })).toBe(false);
+    expect(levelErrVerdict({ errPct: -(MAX_LEVEL_ERR_PCT + 0.1) })).toBe(false);
+  });
+
+  it("both return null when the figure is absent — the grader turns that into an ERROR", () => {
+    expect(trajectoryVerdict({})).toBeNull();
+    expect(trajectoryVerdict(undefined)).toBeNull();
+    expect(levelErrVerdict({})).toBeNull();
+  });
+});
+
+describe("eligibleWindows is the INTERSECTION, so E5 cannot use one list alone", () => {
+  const manifest = {
+    instanceWindows: {
+      "pitch-drift": [
+        { sourceId: "pb1", startSec: 30 },
+        { sourceId: "pb1", startSec: 75 },
+        { sourceId: "pb6", startSec: 30 },
+      ],
+      "timing-smear": [{ sourceId: "pb1", startSec: 30 }],
+    },
+    layerA: {
+      excludedWindows: [
+        { family: "pitch-drift", sourceId: "pb1", startSec: 75, reason: "clipping" },
+        { family: "*", sourceId: "pb6", startSec: 30, reason: "the window REFERENCE did not pass" },
+      ],
+    },
+  };
+
+  it("drops a window Layer A excluded for that family", () => {
+    const w = eligibleWindows(manifest, "pitch-drift");
+    expect(w).not.toContainEqual({ sourceId: "pb1", startSec: 75 });
+  });
+
+  it("a REFERENCE failure ('*') drops the window for EVERY family", () => {
+    expect(eligibleWindows(manifest, "pitch-drift")).not.toContainEqual({ sourceId: "pb6", startSec: 30 });
+    expect(eligibleWindows(manifest, "timing-smear")).not.toContainEqual({ sourceId: "pb6", startSec: 30 });
+  });
+
+  it("keeps what both stages allow", () => {
+    expect(eligibleWindows(manifest, "pitch-drift")).toEqual([{ sourceId: "pb1", startSec: 30 }]);
+  });
+
+  it("never returns a window the RENDERER excluded, even if Layer A is silent", () => {
+    // The renderer's list is the starting set, so a window it dropped can never
+    // reappear here — the intersection only ever removes.
+    expect(eligibleWindows(manifest, "timing-smear")).toEqual([{ sourceId: "pb1", startSec: 30 }]);
+  });
+
+  it("a manifest with no Layer A block yet falls back to the renderer's list, not to everything", () => {
+    const noLayerA = { instanceWindows: manifest.instanceWindows };
+    expect(eligibleWindows(noLayerA, "timing-smear")).toEqual([{ sourceId: "pb1", startSec: 30 }]);
+    expect(eligibleWindows({}, "timing-smear")).toEqual([]);
   });
 });

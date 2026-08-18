@@ -55,7 +55,10 @@ const FFMPEG = process.env.FFMPEG_PATH || require("ffmpeg-static");
 const BIAS_MANIFEST = join(ROOT, "src", "content", "bias", "manifest.json");
 const DELICACY_MANIFEST = join(ROOT, "src", "content", "delicacy", "manifest.json");
 const CACHE = join(HERE, ".cache");
-const TMP = join(CACHE, "validate-tmp");
+/** Scratch space for rendered anchors. EXPORTED (E4/S5) so the staircase
+ *  grader, which renders anchors through `renderAnchors` too, can clear the
+ *  same directory rather than leaving a second one behind. */
+export const TMP = join(CACHE, "validate-tmp");
 const OUT = join(ROOT, "public", "audio", "delicacy");
 
 /** Analysis rate — must match what the spectral defaults assume. */
@@ -186,8 +189,16 @@ export const MAX_SILENCE_SEC = 1.5;
  */
 export const MAX_QUIET_FRACTION = 0.2;
 
-/** Cut a source window to wav exactly as `degrade` does, so paths are comparable. */
-function cutSource(cached, startSec, clipSec, outWav) {
+/**
+ * Cut a source window to wav exactly as `degrade` does, so paths are comparable.
+ *
+ * EXPORTED (E4/S5, PM ruling RT-81a): the staircase grader has to measure
+ * pre-loudnorm clipping on the 9 window REFERENCES, which the renderer records
+ * only for degraded clips. That measurement is only meaningful if the window is
+ * cut by the identical command the renderer used — a second copy of these flags
+ * would be measuring a slightly different signal and reporting it as the same.
+ */
+export function cutSource(cached, startSec, clipSec, outWav) {
   ff(["-ss", String(startSec), "-t", String(clipSec), "-i", cached, "-vn", "-ac", "2", "-ar", "44100", outWav]);
 }
 

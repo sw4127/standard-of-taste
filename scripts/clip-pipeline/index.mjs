@@ -267,6 +267,7 @@ try {
   else if (stage === "render-plan") await (await import("./renderplan.mjs")).renderPlanCli(args);
   else if (stage === "staircase-render") await (await import("./staircaserender.mjs")).staircaseRenderCli(args);
   else if (stage === "timing-fidelity") await (await import("./timingfidelity.mjs")).timingFidelity(args);
+  else if (stage === "staircase-validate") await (await import("./staircasevalidate.mjs")).staircaseValidate(args);
   else {
     console.log("usage: node scripts/clip-pipeline/index.mjs <download|snapshot|analyze|render|degrade|validate|ladder|sweep|expand> [--local <file>] [--start N] [--len N] [--out id]");
     console.log("       degrade: --id <pairId> --source <biasItemId> --start <sec> --family <pitch-drift|timing-smear|lossy-artifact> --magnitude <ladder rung 1-4; 2-4 ship> --seed <int> [--len <sec>]");
@@ -282,6 +283,10 @@ try {
     console.log("                 for the per-source window plan, and fail if a measured ladder is not strictly");
     console.log("                 increasing (E4/S3). Lossy is per-source and is not rendered here.");
     console.log("                 [--sources a,b] [--only pb1@75,pb6@30] [--families ...] [--len 20] [--force] [--json]");
+    console.log("       staircase-validate: Layer A over the staircase pool — is each clip FIT to put in front of a");
+    console.log("                 listener (dead air, near-silence, clipping, the ruler's own floor)? Distinct from");
+    console.log("                 staircase-render, which asks whether a clip IS the magnitude it claims (E4/S5).");
+    console.log("                 [--no-anchors] [--json]");
     process.exit(2);
   }
 } catch (e) {

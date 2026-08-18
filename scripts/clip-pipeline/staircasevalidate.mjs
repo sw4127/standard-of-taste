@@ -39,15 +39,46 @@
  * nothing we know about it is known to describe it.
  */
 
+import { createHash } from "node:crypto";
+import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync } from "node:fs";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import {
+  cutSource,
+  renderAnchors,
   MAX_CLIPPED_FRACTION,
   MAX_FLAT_TOP_FRACTION,
   MAX_QUIET_FRACTION,
   MAX_SILENCE_SEC,
   MIN_CONFIDENT_BLOCK_FRACTION,
   MIN_CONFIDENT_PITCH_FRACTION,
+  TMP,
 } from "./validate.mjs";
 import { MIN_MEASURABLE_PITCH_CENTS } from "./rungs.mjs";
+import { decodeMono } from "./degrade.mjs";
+import { clippingStats, longestSilenceSec, quietFraction, DEFAULT_SPECTRAL_OPTS } from "./spectral.mjs";
+import {
+  STAIRCASE_MANIFEST,
+  STAIRCASE_OUT,
+  MIN_TRAJECTORY_R,
+  MAX_LEVEL_ERR_PCT,
+  MAX_TRAJECTORY_SLOPE_ERR_PCT,
+} from "./staircaserender.mjs";
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(HERE, "..", "..");
+const BIAS_MANIFEST = join(ROOT, "src", "content", "bias", "manifest.json");
+const CACHE = join(HERE, ".cache");
+
+/** Analysis rate. The same one `staircase-render` measured at, so the figures
+ *  read from the manifest and the ones measured here describe one signal. */
+const SR = DEFAULT_SPECTRAL_OPTS.sampleRate;
+
+/** The rate the renderer measured pre-loudnorm clipping at (`degCut`, 44100).
+ *  References are measured at the same rate or the two are not comparable. */
+const PRE_NORM_SR = 44100;
+
+const sha256File = (f) => createHash("sha256").update(readFileSync(f)).digest("hex");
 
 export {
   MAX_CLIPPED_FRACTION,
@@ -93,6 +124,25 @@ export const MIN_MEASURABLE_DRIFT_MS = 12;
  * observations. When E4/S4 renders them, the missing entry makes every one of
  * them ERROR rather than silently PASS.
  */
+/**
+ * THE FLOORS ARE IN THE PARAMETER DOMAIN, NOT THE MEASUREMENT DOMAIN.
+ *
+ * FOUND BY RUNNING THIS OVER THE REAL POOL (E4/S5/S2) — the first version
+ * compared `MIN_MEASURABLE_PITCH_CENTS` against each clip's MEASURED p95 and
+ * flagged pitch level 3.1 on eight of nine windows. That was a unit mismatch,
+ * not a finding. `rungs.mjs` measured the floor in the parameter domain — its
+ * table reads `param 3 -> measured 2.7, predicted 2.9`, and its prose says "3.1
+ * is the lowest LEVEL whose rendered magnitude we can still stand behind".
+ * Because a ramp peaks at PITCH_RAMP_PEAK_FRACTION (0.95) of its parameter,
+ * level 3.1 PREDICTS 2.94 cents — already under a 3-cent measurement floor by
+ * construction. Every one of those eight clips sat within 8.4% of its own
+ * prediction; the ruler was behaving and the comparison was wrong.
+ *
+ * So the floor is checked against `level`. Which makes it a property of the
+ * LADDER TABLE rather than of the audio — precisely the vacuity that had to be
+ * fixed for timing — so both families now also carry an EVIDENCE field, read
+ * from whichever of `staircase-render`'s gates actually interrogates the file.
+ */
 export const STAIRCASE_MAGNITUDE_GATES = {
   "pitch-drift": {
     floor: MIN_MEASURABLE_PITCH_CENTS,
@@ -100,6 +150,13 @@ export const STAIRCASE_MAGNITUDE_GATES = {
     minConfidentFraction: MIN_CONFIDENT_PITCH_FRACTION,
     /** A pitch shift is duration-exact, so its frames SHOULD match. */
     confidenceLabel: "frames matched",
+    /**
+     * Pitch's headline figure IS recovered from the rendered audio, so unlike
+     * timing it has a real error term: `staircase-render` gates |errPct| at
+     * MAX_LEVEL_ERR_PCT against the ramp prediction. Read, not re-derived.
+     */
+    evidenceField: "levelErrVerified",
+    evidenceLabel: `measured detune within ${MAX_LEVEL_ERR_PCT}% of the ramp prediction (staircase-render's error gate)`,
   },
   "timing-smear": {
     floor: MIN_MEASURABLE_DRIFT_MS,
@@ -155,7 +212,7 @@ export const STAIRCASE_MAGNITUDE_GATES = {
  *   fileMissing?: boolean, sha256Match?: boolean,
  *   preNormClippedFraction?: number|null,
  *   measuredValue?: number|null, confidentFraction?: number|null,
- *   trajectoryVerified?: boolean|null,
+ *   trajectoryVerified?: boolean|null, levelErrVerified?: boolean|null,
  *   flatTopFraction: number, longestSilenceSec: number, quietFraction: number,
  * }}
  * @returns the row plus `verdict` ("PASS" | "FLAG" | "ERROR"), `gatedOn`, `reasons`.
@@ -207,10 +264,12 @@ export function gradeStaircaseClip(m) {
         `magnitude unmeasurable — only ${((m.confidentFraction ?? 0) * 100).toFixed(0)}% of ${gate.confidenceLabel} ` +
           `(need >=${(gate.minConfidentFraction * 100).toFixed(0)}%)`,
       );
-    } else if (!(m.measuredValue >= gate.floor)) {
+    } else if (!(m.level >= gate.floor)) {
+      // THE LEVEL, NOT THE MEASUREMENT — see the gate table. The floor was
+      // measured in the parameter domain, and a ramp peaks below its parameter.
       reasons.push(
-        `magnitude ${m.measuredValue ?? "unknown"} ${gate.unit} is below the ruler's own floor of ` +
-          `${gate.floor} ${gate.unit} — we cannot stand behind what was rendered`,
+        `level ${m.level ?? "unknown"} ${gate.unit} is below the ruler's own floor of ` +
+          `${gate.floor} ${gate.unit} — we cannot stand behind what was rendered there`,
       );
     }
   }
@@ -260,4 +319,347 @@ export function gradeStaircaseClip(m) {
     verdict: reasons.length === 0 ? "PASS" : "FLAG",
     reasons,
   };
+}
+
+/**
+ * Did `staircase-render`'s trajectory gate verify this timing clip?
+ *
+ * READS the recorded r and slope and applies the SAME constants that stage
+ * gates on, imported from it. Not a second threshold: if `MIN_TRAJECTORY_R`
+ * moves, both stages move together. Returns null when the figures are absent,
+ * which `gradeStaircaseClip` turns into an ERROR rather than a pass.
+ */
+/**
+ * Did `staircase-render`'s ERROR gate verify this pitch clip — is the detune
+ * recovered from the audio within MAX_LEVEL_ERR_PCT of the ramp prediction?
+ *
+ * Same contract as `trajectoryVerdict`: reads that stage's own constant, so the
+ * two cannot drift apart. Null when the figure is absent, which the grader
+ * turns into an ERROR rather than a pass.
+ */
+export function levelErrVerdict(measured) {
+  if (measured?.errPct === undefined || measured?.errPct === null) return null;
+  return Math.abs(measured.errPct) <= MAX_LEVEL_ERR_PCT;
+}
+
+export function trajectoryVerdict(measured) {
+  if (measured?.trajectoryR === undefined || measured?.trajectorySlope === undefined) return null;
+  return (
+    measured.trajectoryR >= MIN_TRAJECTORY_R &&
+    Math.abs(measured.trajectorySlope - 1) * 100 <= MAX_TRAJECTORY_SLOPE_ERR_PCT
+  );
+}
+
+/**
+ * Measure ONE staircase entry into the shape `gradeStaircaseClip` grades.
+ *
+ * WHAT IS MEASURED HERE AND WHAT IS READ, restated because the split is the
+ * design: fitness (flat tops, dead air, quiet fraction) is measured fresh from
+ * the shipped file because nothing ever has; magnitude is READ from the
+ * manifest because the renderer measured this identical file with the identical
+ * ruler at the identical rate. The sha256 check is what makes reading safe.
+ *
+ * @param refClipping {(entry) => number|null} supplies the pre-loudnorm
+ *   clipping figure for a REFERENCE, which the renderer never recorded.
+ */
+export function measureStaircaseClip(entry, { refClipping } = {}) {
+  const file = join(STAIRCASE_OUT, entry.file);
+  const base = {
+    id: entry.id,
+    kind: entry.kind,
+    sourceId: entry.sourceId,
+    startSec: entry.startSec,
+    family: entry.family,
+    level: entry.level,
+  };
+  if (!existsSync(file)) {
+    return { ...base, fileMissing: true, flatTopFraction: 0, longestSilenceSec: 0, quietFraction: 0 };
+  }
+
+  const sha256Match = sha256File(file) === entry.sha256;
+  const samples = decodeMono(file, SR);
+  const clip = clippingStats(samples);
+
+  return {
+    ...base,
+    sha256Match,
+    // Degraded clips carry the renderer's pre-loudnorm figure. References do
+    // not — the renderer records it only for degraded clips — so it is measured
+    // here from the source window, cut by the identical command (RT-81a).
+    preNormClippedFraction: entry.kind === "degraded" ? entry.preNormClippedFraction : refClipping?.(entry),
+    measuredValue: entry.measured?.value,
+    confidentFraction: entry.measured?.confidentFraction,
+    trajectoryVerified: entry.family === "timing-smear" ? trajectoryVerdict(entry.measured) : undefined,
+    levelErrVerified: entry.family === "pitch-drift" ? levelErrVerdict(entry.measured) : undefined,
+    // Reported, never gated, and the reason is measured: `rungs.mjs` found the
+    // anchor ratio roughly 2x WORSE than raw dB as a cross-material scale below
+    // 192 kbps, because anchor and damage are not proportional. It survives as
+    // a per-source transparency FLOOR — "bigger than something known inaudible
+    // on this same material" — which is a validity check, not a scale.
+    lsdDb: entry.measured?.lsdDb ?? null,
+    flatTopFraction: clip.flatTopFraction,
+    longestSilenceSec: longestSilenceSec(samples, SR),
+    quietFraction: quietFraction(samples, SR),
+  };
+}
+
+/**
+ * Which windows a family may still draw instances from, AFTER Layer A.
+ *
+ * THE INTERSECTION, and it exists so E5 cannot forget to take it. The renderer
+ * records `instanceWindows` per family from ITS gates (the trajectory check,
+ * RT-75a); this stage can disqualify a window for reasons the renderer never
+ * looked at — a reference that fades out, a clip that clicks. Two lists with no
+ * rule for combining them is the two-tables defect, so there is one function
+ * and it is the only sanctioned way to ask.
+ *
+ * A reference failure is recorded against family "*", because the reference is
+ * the A side of EVERY trial drawn from its window.
+ */
+export function eligibleWindows(manifest, family) {
+  const fromRender = (manifest.instanceWindows?.[family] ?? []).map((w) => `${w.sourceId}@${w.startSec}`);
+  const blocked = new Set(
+    (manifest.layerA?.excludedWindows ?? [])
+      .filter((e) => e.family === family || e.family === "*")
+      .map((e) => `${e.sourceId}@${e.startSec}`),
+  );
+  return fromRender
+    .filter((w) => !blocked.has(w))
+    .map((w) => ({ sourceId: w.split("@")[0], startSec: Number(w.split("@")[1]) }));
+}
+
+export async function staircaseValidate(args = []) {
+  const json = args.includes("--json");
+  const noAnchors = args.includes("--no-anchors");
+  if (!existsSync(STAIRCASE_MANIFEST)) throw new Error(`staircase-validate: no manifest at ${STAIRCASE_MANIFEST}`);
+  const manifest = JSON.parse(readFileSync(STAIRCASE_MANIFEST, "utf8"));
+  const entries = [...(manifest.references ?? []), ...(manifest.clips ?? [])];
+  if (entries.length === 0) throw new Error("staircase-validate: the manifest describes no clips");
+
+  const log = json ? () => {} : (s) => console.log(s);
+  const startedAt = Date.now();
+
+  // PRE-LOUDNORM CLIPPING FOR THE REFERENCES (PM ruling RT-81a, option a).
+  // Cut each window from its cached source with `validate.mjs`'s own cutSource
+  // — the identical ffmpeg invocation the renderer used — and measure the raw
+  // waveform. Cached per window: nine cuts, not nine per family.
+  const bias = JSON.parse(readFileSync(BIAS_MANIFEST, "utf8"));
+  const refClipCache = new Map();
+  mkdirSync(TMP, { recursive: true });
+  const refClipping = (entry) => {
+    const key = `${entry.sourceId}@${entry.startSec}+${entry.clipSec}`;
+    if (refClipCache.has(key)) return refClipCache.get(key);
+    const src = bias.items.find((i) => i.id === entry.sourceId);
+    const cached = src?.source?.cachedFile ? join(CACHE, src.source.cachedFile) : null;
+    // A MISSING SOURCE IS NOT A ZERO. Return null and let the grader ERROR —
+    // "we could not measure it" must never render as "it measured clean".
+    if (!cached || !existsSync(cached)) {
+      refClipCache.set(key, null);
+      return null;
+    }
+    const wav = join(TMP, `refclip-${entry.id}.wav`);
+    cutSource(cached, entry.startSec, entry.clipSec, wav);
+    const v = clippingStats(decodeMono(wav, PRE_NORM_SR)).clippedFraction;
+    rmSync(wav, { force: true });
+    refClipCache.set(key, v);
+    return v;
+  };
+
+  log(`Layer A over the staircase pool — ${entries.length} clips · analysis ${SR} Hz`);
+  log(
+    `  pitch floor ${MIN_MEASURABLE_PITCH_CENTS} cents (MEASURABILITY, not the assessment's fair-trial 10)` +
+      ` · timing floor ${MIN_MEASURABLE_DRIFT_MS} ms`,
+  );
+
+  const rows = entries.map((e) => gradeStaircaseClip(measureStaircaseClip(e, { refClipping })));
+
+  // ONE TRANSPARENCY ANCHOR PER WINDOW. Not a gate for these families — see
+  // measureStaircaseClip — but the manifest has carried an `lsdDb` per clip
+  // since the render with no denominator anywhere, and LSD is material-
+  // dependent, so the raw dB are not comparable across recordings without it.
+  // E4/S4's lossy family needs exactly this figure as its transparency floor.
+  const anchors = [];
+  if (!noAnchors) {
+    const windows = [...new Set(entries.map((e) => `${e.sourceId}@${e.startSec}+${e.clipSec}`))].sort();
+    log(`  rendering ${windows.length} transparency anchors (320 kbps round-trip per window)...`);
+    for (const w of windows) {
+      const [sourceId, rest] = w.split("@");
+      const [startSec, clipSec] = rest.split("+").map(Number);
+      anchors.push(renderAnchors(sourceId, startSec, clipSec, `sa-${sourceId}-${startSec}`));
+    }
+  }
+  const anchorFor = (r) => anchors.find((a) => a.sourceId === r.sourceId && a.window.startSec === r.startSec);
+
+  if (json) {
+    console.log(JSON.stringify({ anchors, rows }, null, 2));
+  } else {
+    const byWindow = new Map();
+    for (const r of rows) {
+      const k = `${r.sourceId}@${r.startSec}s`;
+      if (!byWindow.has(k)) byWindow.set(k, []);
+      byWindow.get(k).push(r);
+    }
+    const order = (x, y) =>
+      x.kind === y.kind
+        ? String(x.family).localeCompare(String(y.family)) || (x.level ?? 0) - (y.level ?? 0)
+        : x.kind === "reference"
+          ? -1
+          : 1;
+    for (const [w, group] of [...byWindow.entries()].sort()) {
+      const a = anchorFor(group[0]);
+      console.log(
+        `\n  ${w}` +
+          (a
+            ? `   transparency anchor ${a.transparentLsdDb.toFixed(3)} dB · pipeline noise ${a.pipelineNoiseLsdDb.toFixed(3)} dB`
+            : ""),
+      );
+      console.log("    clip                         kind   magnitude          conf%    clip%   dead-air   quiet%   xanchor  verdict");
+      for (const r of group.sort(order)) {
+        const gate = r.family ? STAIRCASE_MAGNITUDE_GATES[r.family] : null;
+        const mag = gate && r.measuredValue !== undefined ? `${r.measuredValue} ${gate.unit}` : "-";
+        const ratio = a && r.lsdDb != null ? (r.lsdDb / a.transparentLsdDb).toFixed(1) + "x" : "-";
+        console.log(
+          `    ${r.id.padEnd(28)} ${(r.kind === "reference" ? "ref" : "deg").padEnd(6)}` +
+            `${mag.padStart(10)}   ${(r.confidentFraction != null ? (r.confidentFraction * 100).toFixed(0) + "%" : "-").padStart(6)}` +
+            `${(r.preNormClippedFraction != null ? (r.preNormClippedFraction * 100).toFixed(4) : "-").padStart(9)}` +
+            `${(r.longestSilenceSec.toFixed(2) + "s").padStart(11)}` +
+            `${((r.quietFraction * 100).toFixed(1) + "%").padStart(9)}` +
+            `${ratio.padStart(9)}   ${r.verdict}` +
+            (r.reasons.length ? `  (${r.reasons.join("; ")})` : ""),
+        );
+      }
+    }
+  }
+
+  const flagged = rows.filter((r) => r.verdict === "FLAG");
+  const errored = rows.filter((r) => r.verdict === "ERROR");
+
+  // Windows this stage disqualifies, for `eligibleWindows` to intersect with
+  // the renderer's list. A window is blocked for a family if any clip of that
+  // family in it failed; a REFERENCE failure blocks the window for EVERY family
+  // ("*"), because the reference is the A side of every trial drawn from it.
+  const layerAExcluded = [];
+  const bad = [...flagged, ...errored];
+  for (const w of [...new Set(bad.map((r) => `${r.sourceId}@${r.startSec}`))].sort()) {
+    const [sourceId, startSec] = [w.split("@")[0], Number(w.split("@")[1])];
+    const here = bad.filter((r) => r.sourceId === sourceId && r.startSec === startSec);
+    for (const family of [...new Set(here.map((r) => (r.kind === "reference" ? "*" : r.family)))]) {
+      const members = here.filter((r) => (r.kind === "reference" ? "*" : r.family) === family);
+      layerAExcluded.push({
+        family,
+        sourceId,
+        startSec,
+        failingClips: members.length,
+        reason:
+          family === "*"
+            ? `the window REFERENCE did not pass Layer A — it is the A side of every trial here: ${members[0].reasons.join("; ")}`
+            : members[0].reasons.join("; "),
+      });
+    }
+  }
+
+  manifest.layerA = {
+    analysisRateHz: SR,
+    measuredAt: new Date().toISOString().slice(0, 10),
+    thresholds: {
+      MIN_MEASURABLE_PITCH_CENTS,
+      MIN_MEASURABLE_DRIFT_MS,
+      MIN_CONFIDENT_PITCH_FRACTION,
+      MIN_CONFIDENT_BLOCK_FRACTION,
+      MAX_CLIPPED_FRACTION,
+      MAX_FLAT_TOP_FRACTION,
+      MAX_SILENCE_SEC,
+      MAX_QUIET_FRACTION,
+    },
+    anchors,
+    excludedWindows: layerAExcluded,
+    counts: {
+      total: rows.length,
+      pass: rows.length - flagged.length - errored.length,
+      flag: flagged.length,
+      error: errored.length,
+    },
+    note:
+      "FITNESS to put in front of a listener — dead air, near-silence, clipping, and the floor below which the family's " +
+      "own ruler cannot say what was rendered. NOT audibility and NOT difficulty (N3). Magnitude is READ from each clip's " +
+      "render-time measurement, which is safe because every file was hashed against the manifest first; fitness is measured " +
+      "fresh from the shipped file. The pitch floor here is MIN_MEASURABLE_PITCH_CENTS (3), deliberately below the fixed " +
+      "assessment's fair-trial MIN_PITCH_CENTS (10): a staircase converging toward a listener's threshold must be allowed " +
+      "below it. Reference clipping is measured from the source window (RT-81a); the renderer records it for degraded clips only.",
+  };
+  const byId = new Map(rows.map((r) => [r.id, r]));
+  for (const e of entries) {
+    const r = byId.get(e.id);
+    if (!r) continue;
+    e.layerA = {
+      verdict: r.verdict,
+      reasons: r.reasons,
+      preNormClippedFraction: r.preNormClippedFraction ?? null,
+      flatTopFraction: +r.flatTopFraction.toFixed(6),
+      longestSilenceSec: +r.longestSilenceSec.toFixed(2),
+      quietFraction: +r.quietFraction.toFixed(3),
+      ...(r.trajectoryVerified !== undefined ? { trajectoryVerified: r.trajectoryVerified } : {}),
+      ...(r.levelErrVerified !== undefined ? { levelErrVerified: r.levelErrVerified } : {}),
+      gatedOn: r.gatedOn,
+      measuredAt: manifest.layerA.measuredAt,
+    };
+  }
+  writeFileSync(STAIRCASE_MANIFEST, JSON.stringify(manifest, null, 2) + "\n");
+  rmSync(TMP, { recursive: true, force: true });
+
+  if (!json) {
+    console.log(
+      `\n  ${rows.length - flagged.length - errored.length}/${rows.length} PASS · ${flagged.length} FLAG · ${errored.length} ERROR` +
+        ` · ${((Date.now() - startedAt) / 1000).toFixed(1)}s`,
+    );
+    console.log(`  manifest updated: src/content/delicacy/staircase.json`);
+    console.log(
+      `  NOTE  fitness, NOT audibility and NOT difficulty. "xanchor" compares a clip's spectral distance\n` +
+        `        against a 320 kbps round-trip of ITS OWN window — measurable and inaudible. It is REPORTED\n` +
+        `        and not gated here: rungs.mjs measured the ratio to be a worse cross-material scale than raw dB.`,
+    );
+  }
+
+  // ONLY *NEW* FAILURES FAIL THE RUN — the same rule PM ruling RT-78a set for
+  // `staircase-render`, applied here for the same reason. The 16 timing clips
+  // on pb1@120s and pb6@75s are a RECORDED state: the renderer already
+  // excluded both windows from the timing pool and the manifest says so. A
+  // stage that can never return success stops being read, which is exactly how
+  // a real new failure gets missed.
+  //
+  // Note this is a genuinely independent confirmation rather than an echo:
+  // Layer A recomputes the verdict from the stored r and slope per clip and
+  // arrives at the same 10 and 6.
+  const priorExcluded = new Set(
+    (manifest.excludedWindows ?? []).map((e) => `${e.family}/${e.sourceId}@${e.startSec}`),
+  );
+  const isKnown = (r) => r.family && priorExcluded.has(`${r.family}/${r.sourceId}@${r.startSec}`);
+  const newFlags = flagged.filter((r) => !isKnown(r));
+  const knownFlags = flagged.filter(isKnown);
+
+  if (knownFlags.length && !json) {
+    console.log(
+      `  NOTE  ${knownFlags.length} clip(s) FLAG in window(s) the renderer had ALREADY excluded (RT-75a): ` +
+        [...new Set(knownFlags.map((r) => `${r.family} ${r.sourceId}@${r.startSec}s`))].join(", ") +
+        `\n        Layer A reached that verdict independently, from the stored trajectory figures.`,
+    );
+  }
+
+  if (errored.length) {
+    console.error(
+      `staircase-validate: ${errored.length} clip(s) could not be judged — ` +
+        errored.slice(0, 6).map((r) => `${r.id} (${r.reasons[0]})`).join("; ") +
+        (errored.length > 6 ? `, +${errored.length - 6} more` : ""),
+    );
+    process.exitCode = 1;
+  }
+  if (newFlags.length) {
+    console.error(
+      `staircase-validate: ${newFlags.length} NEWLY failing clip(s) did not pass Layer A — ` +
+        newFlags.slice(0, 6).map((r) => `${r.id} (${r.reasons.join("; ")})`).join("; ") +
+        (newFlags.length > 6 ? `, +${newFlags.length - 6} more` : ""),
+    );
+    process.exitCode = 1;
+  }
+  return { rows, anchors, layerAExcluded, newFlags, knownFlags };
 }
