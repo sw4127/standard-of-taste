@@ -18,6 +18,8 @@ import { describe, expect, it } from "vitest";
 import {
   MAX_CROSS_WINDOW_RATIO,
   MAX_LEVEL_ERR_PCT,
+  MAX_TRAJECTORY_SLOPE_ERR_PCT,
+  MIN_TRAJECTORY_R,
   PITCH_RAMP_PEAK_FRACTION,
   STAIRCASE_RENDER_FAMILIES,
   clipId,
@@ -30,7 +32,8 @@ import {
 import { MIN_LOSSY_LEVEL_RATIO } from "./rungs.mjs";
 import { STAIRCASE_WINDOWS, renderPlan, windowsForSource } from "./renderplan.mjs";
 import { STAIRCASE_LEVELS, staircaseRender } from "./rungs.mjs";
-import { SEGS, timingDeviations } from "./degrade.mjs";
+import { SEGS, predictedTrajectoryMs, timingDeviations } from "./degrade.mjs";
+import { fitLine } from "./spectral.mjs";
 
 /**
  * MEASURED by ffprobe, 2026-08-18, on the cached sources. Duplicated here as a
@@ -296,6 +299,56 @@ describe("calibration step rule", () => {
     ];
     const falls = sweep.filter((s, i) => i > 0 && s.measured <= sweep[i - 1].measured).length;
     expect(falls, "if this ever reaches 0, re-run the sweep — the ruler may have been fixed").toBe(3);
+  });
+});
+
+describe("timing is labelled from the model, and checked on the trajectory", () => {
+  /**
+   * MEASURED by `clip-pipeline timing-fidelity` (PM ruling RT-74a): rubberband
+   * realises every requested stretch to 0.000% by ffprobe duration, on two
+   * recordings, with no estimator in the path. So the rendered drift IS the
+   * model, identically on every window, and temporalDrift's 0.87x-1.37x
+   * material-dependent disagreement is the ruler's error.
+   */
+  it("keeps the floors below what was actually observed", () => {
+    // r observed 0.688-0.98 over 20 clips; slope observed 0.88-1.17.
+    expect(MIN_TRAJECTORY_R).toBeLessThan(0.688);
+    expect(1 - MAX_TRAJECTORY_SLOPE_ERR_PCT / 100).toBeLessThan(0.88);
+    expect(1 + MAX_TRAJECTORY_SLOPE_ERR_PCT / 100).toBeGreaterThan(1.17);
+  });
+
+  /**
+   * The trajectory prediction is the whole basis for saying the label is right,
+   * so it is checked against arithmetic rather than only exercised by a render.
+   * Deviations of +10%/-10% on a 2-segment, 20 s clip move the offset by
+   * 10 s x 0.1 = 1000 ms at the midpoint and back to 0 at the end.
+   */
+  it("predicts the offset trajectory the segment deviations imply", () => {
+    const traj = predictedTrajectoryMs([10, -10], 20, [0, 5, 10, 15, 20]);
+    expect(traj[0]).toBeCloseTo(0, 6);
+    expect(traj[1]).toBeCloseTo(500, 6);
+    expect(traj[2]).toBeCloseTo(1000, 6);
+    expect(traj[3]).toBeCloseTo(500, 6);
+    expect(traj[4]).toBeCloseTo(0, 6);
+  });
+
+  /** Mean-corrected deviations return the offset to zero: duration is exact. */
+  it("returns to zero at the end of a mean-corrected clip", () => {
+    const traj = predictedTrajectoryMs([5, -3, -7, 5], 20, [20]);
+    expect(traj[0]).toBeCloseTo(0, 6);
+  });
+
+  it("recovers a known slope and perfect correlation", () => {
+    const x = [0, 1, 2, 3, 4];
+    expect(fitLine(x, x.map((v) => 2 * v + 7)).slope).toBeCloseTo(2, 9);
+    expect(fitLine(x, x.map((v) => 2 * v + 7)).r).toBeCloseTo(1, 9);
+    expect(fitLine(x, x.map((v) => -v)).r).toBeCloseTo(-1, 9);
+  });
+
+  /** A flat series has no slope to recover — NaN, not a confident zero. */
+  it("returns NaN rather than a number it cannot support", () => {
+    expect(fitLine([1, 1, 1], [1, 2, 3]).slope).toBeNaN();
+    expect(fitLine([1], [1]).r).toBeNaN();
   });
 });
 
