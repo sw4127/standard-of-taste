@@ -10374,6 +10374,25 @@
         "reason": "drift trajectory (staircase-render's r/slope gate) did not verify — the labelled magnitude is the model's, and the audio does not corroborate it"
       }
     ],
+    "knownLimits": [
+      {
+        "family": "pitch-drift",
+        "level": 3.1,
+        "kind": "cross-window-spread",
+        "ratio": 1.137,
+        "allowanceConsumed": 0.913,
+        "windows": 9,
+        "statement": "The same level measures 2.7-3.07 depending on which window serves it (1.137x), consuming 91% of the 1.15x the instrument allows. A threshold reported at this level carries that much window-to-window variation."
+      },
+      {
+        "family": "pitch-drift",
+        "level": 3.1,
+        "kind": "predicted-below-floor",
+        "predicted": 2.94,
+        "floor": 3,
+        "statement": "This level is rendered as a ramp peaking at 95% of its parameter, so it PREDICTS 2.94 cents of peak detune — below the 3-cent parameter floor the cents ruler was measured against. It is the bottom of what this instrument can report."
+      }
+    ],
     "counts": {
       "total": 198,
       "pass": 182,

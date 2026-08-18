@@ -63,6 +63,8 @@ import {
   MIN_TRAJECTORY_R,
   MAX_LEVEL_ERR_PCT,
   MAX_TRAJECTORY_SLOPE_ERR_PCT,
+  MAX_CROSS_WINDOW_RATIO,
+  PITCH_RAMP_PEAK_FRACTION,
 } from "./staircaserender.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -113,8 +115,9 @@ export {
 export const MIN_MEASURABLE_DRIFT_MS = 12;
 
 /**
- * The magnitude gate per family: which floor the measurement must clear, and
- * how confident the ruler had to be before its number is believed at all.
+ * The magnitude gate per family: which floor the level must clear, how
+ * confident the ruler had to be before its number is believed at all, and which
+ * of `staircase-render`'s gates supplies the audio-level evidence.
  *
  * A TABLE RATHER THAN A CHAIN OF `if`s, so a family with no entry is a visible
  * hole instead of an unhandled branch falling through to PASS. The lossy family
@@ -123,8 +126,7 @@ export const MIN_MEASURABLE_DRIFT_MS = 12;
  * its gate now would mean pre-registering a threshold against zero
  * observations. When E4/S4 renders them, the missing entry makes every one of
  * them ERROR rather than silently PASS.
- */
-/**
+ *
  * THE FLOORS ARE IN THE PARAMETER DOMAIN, NOT THE MEASUREMENT DOMAIN.
  *
  * FOUND BY RUNNING THIS OVER THE REAL POOL (E4/S5/S2) — the first version
@@ -428,6 +430,86 @@ export function eligibleWindows(manifest, family) {
     .map((w) => ({ sourceId: w.split("@")[0], startSec: Number(w.split("@")[1]) }));
 }
 
+/**
+ * How much of a gate's allowance a level may consume before it is declared a
+ * KNOWN LIMIT of the instrument rather than simply a pass.
+ *
+ * A FRACTION OF AN EXISTING GATE, not a new absolute number, so there is
+ * nothing here to tune independently. A level at the gate exactly would be 1.0;
+ * this reports anything past two-thirds of the way there.
+ *
+ * MEASURED SEPARATION at this setting (E4/S5/S3): pitch level 3.1 consumes
+ * 0.137/0.15 = 91% of the cross-window allowance, and the next-worst level in
+ * the family (6.3) consumes 43%. The threshold is not fitted to 3.1 — it sits
+ * in a gap between 43% and 91% wide enough that any value from 0.5 to 0.9 picks
+ * out the same single level.
+ */
+export const LIMIT_ALLOWANCE_FRACTION = 2 / 3;
+
+/**
+ * THE INSTRUMENT'S KNOWN LIMITS, COMPUTED (PM ruling RT-82a, option a).
+ *
+ * RT-76a ruled that pitch level 3.1 stays and that its spread is STATED rather
+ * than hidden by dropping the level; RT-82a extended that to the second limit
+ * this session's run exposed. Nothing in `src/` reads this manifest yet — the
+ * Lab has no staircase panel — so a hand-written note in a doc would be a
+ * disclosure that the surface which eventually renders this data never sees.
+ * Emitting it as DATA, beside the numbers it describes, is what makes it hard
+ * for E5 to ship the panel without it.
+ *
+ * COMPUTED, NOT ASSERTED, so it stays true if the ladder changes. Two limits
+ * are derivable and both are checked here:
+ *
+ *   spread  the same level, measured on every window serving it, varies by
+ *           more than LIMIT_ALLOWANCE_FRACTION of what MAX_CROSS_WINDOW_RATIO
+ *           permits. The staircase's step size then varies between trials.
+ *   floor   the level's PREDICTED measurement (a pitch ramp peaks at
+ *           PITCH_RAMP_PEAK_FRACTION of its parameter) lands below the family's
+ *           own measurability floor, even though the level itself clears it.
+ *
+ * These are LIMITS, not failures (N3). Every level named here passed Layer A.
+ */
+export function computeKnownLimits(manifest) {
+  const limits = [];
+  for (const row of manifest.crossWindowSpread ?? []) {
+    const consumed = (row.ratio - 1) / (MAX_CROSS_WINDOW_RATIO - 1);
+    if (row.n > 1 && consumed >= LIMIT_ALLOWANCE_FRACTION) {
+      limits.push({
+        family: row.family,
+        level: row.level,
+        kind: "cross-window-spread",
+        ratio: row.ratio,
+        allowanceConsumed: +consumed.toFixed(3),
+        windows: row.n,
+        statement:
+          `The same level measures ${row.min}-${row.max} depending on which window serves it (${row.ratio}x), ` +
+          `consuming ${(consumed * 100).toFixed(0)}% of the ${MAX_CROSS_WINDOW_RATIO}x the instrument allows. ` +
+          `A threshold reported at this level carries that much window-to-window variation.`,
+      });
+    }
+  }
+  const pitchGate = STAIRCASE_MAGNITUDE_GATES["pitch-drift"];
+  for (const level of [...new Set((manifest.clips ?? []).filter((c) => c.family === "pitch-drift").map((c) => c.level))].sort(
+    (a, b) => a - b,
+  )) {
+    const predicted = level * PITCH_RAMP_PEAK_FRACTION;
+    if (predicted < pitchGate.floor) {
+      limits.push({
+        family: "pitch-drift",
+        level,
+        kind: "predicted-below-floor",
+        predicted: +predicted.toFixed(2),
+        floor: pitchGate.floor,
+        statement:
+          `This level is rendered as a ramp peaking at ${(PITCH_RAMP_PEAK_FRACTION * 100).toFixed(0)}% of its parameter, ` +
+          `so it PREDICTS ${predicted.toFixed(2)} cents of peak detune — below the ${pitchGate.floor}-cent parameter floor ` +
+          `the cents ruler was measured against. It is the bottom of what this instrument can report.`,
+      });
+    }
+  }
+  return limits.sort((a, b) => a.family.localeCompare(b.family) || a.level - b.level || a.kind.localeCompare(b.kind));
+}
+
 export async function staircaseValidate(args = []) {
   const json = args.includes("--json");
   const noAnchors = args.includes("--no-anchors");
@@ -573,6 +655,10 @@ export async function staircaseValidate(args = []) {
     },
     anchors,
     excludedWindows: layerAExcluded,
+    // The limits of the instrument, computed beside the numbers they describe
+    // (RT-76a, RT-82a). Every level named here PASSED — these are limits to
+    // state, not failures to fix (N3).
+    knownLimits: computeKnownLimits(manifest),
     counts: {
       total: rows.length,
       pass: rows.length - flagged.length - errored.length,
