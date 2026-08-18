@@ -95,8 +95,116 @@ export const MEASURED_LOSSY_CURVES = Object.fromEntries(
           [80, 1.04], [64, 1.73], [56, 2.66], [48, 4.22], [40, 6.7], [32, 9.88]],
     pb8: [[320, 0.266], [256, 0.334], [192, 0.45], [128, 0.588], [96, 1.036], [80, 3.998], [64, 11.167],
           [56, 12.963], [48, 18.81], [32, 25.574]],
+    /**
+     * pb4 — Beethoven String Quartet Op. 18 No. 6 (E4/S4/S1, 2026-08-18).
+     * MEASURED by `curve --family lossy-artifact --source pb4 --start 75`.
+     *
+     * ADDED BECAUSE pb8 CANNOT SERVE LOSSY (PM ruling RT-79a, option d). pb8 is
+     * 110.06 s and holds four usable 20 s windows against the nine the family
+     * needs; pb4 is 492.55 s and holds twenty-two. Lossy is per-source and a
+     * session stays on one source (RT-65), so its source set does not have to
+     * equal pitch and timing's — pb8 keeps its 66 rendered pitch/timing clips
+     * and simply does not appear here.
+     *
+     * BETTER BEHAVED THAN THE SOURCE IT REPLACES: monotone across the whole
+     * sweep with no saturation, where pb8 flattens at the bottom. Its
+     * transparency anchor is 0.867 dB — the pool's HIGHEST, against pb8's
+     * lowest at 0.266 — which is what `rungs.mjs` predicts for dense
+     * orchestral texture, and a third material beside solo piano and ambient.
+     */
+    pb4: [[320, 0.87], [256, 0.9], [192, 1.02], [160, 1.06], [128, 1.24], [112, 1.34], [96, 1.71],
+          [80, 2.86], [64, 6.18], [56, 8.39], [48, 12.16], [40, 14.69], [32, 17.74], [24, 19.67]],
   }).map(([k, v]) => [k, v.map(([bitrateKbps, lsdDb]) => ({ bitrateKbps, lsdDb }))]),
 );
+
+/**
+ * HOW LONG EACH SOURCE ACTUALLY IS, and where its music starts.
+ *
+ * MEASURED, and recorded as data because the recordings themselves are
+ * git-ignored — a test cannot re-probe them, so the numbers a window plan is
+ * derived from have to be checkable without the audio. `durationSec` is
+ * ffprobe; `leadInSec` is the first 0.5 s frame above −35 dBFS, the same rule
+ * `analyze`'s window suggester uses.
+ *
+ * THIS TABLE EXISTS BECAUSE OF RT-70. A window plan was costed in megabytes and
+ * never checked against how long the recordings are, and it asked pb8 for audio
+ * starting 10 s past the end of the file. Durations are now a first-class input
+ * to planning rather than something discovered when ffmpeg fails.
+ */
+export const SOURCE_EXTENTS = {
+  pb1: { durationSec: 254.48, leadInSec: 0.5 },
+  pb6: { durationSec: 219.3, leadInSec: 0 },
+  pb4: { durationSec: 492.55, leadInSec: 0.5 },
+};
+
+/**
+ * The tail fraction treated as possibly-fading, and therefore out of bounds.
+ * Same 0.9 the window suggester in `index.mjs` has always used; named here so
+ * the planner and the suggester cannot drift apart.
+ */
+export const NO_FADE_FRACTION = 0.9;
+
+/**
+ * Windows per source for the lossy family (PM ruling RT-77a as amended by
+ * RT-79a; count confirmed by RT-84a).
+ *
+ * WHY NINE AND NOT THREE. A staircase revisits the levels near a listener's
+ * threshold many times across its ~38 trials. Lossy sessions stay on ONE source
+ * (RT-65), so every one of those trials draws from that source's windows alone
+ * — at three windows a listener meets the same musical moment a dozen times and
+ * begins recognising the CLIP rather than hearing the ARTIFACT. The measurement
+ * would then improve across a session for a reason that has nothing to do with
+ * their ear, and the retest arc would report it as learning.
+ */
+export const LOSSY_WINDOWS_PER_SOURCE = 9;
+
+/**
+ * Evenly-spaced, non-overlapping window starts for one source.
+ *
+ * Spread across the whole usable span rather than packed at the front: the
+ * windows are meant to be different MUSIC, and nine consecutive 20 s slices off
+ * the top of a movement are far more alike than nine spread through it.
+ *
+ * Throws rather than returning a short list. A source that cannot hold the
+ * windows the family needs is a planning decision, not something for the
+ * renderer to discover — which is exactly what pb8 turned out to be.
+ */
+export function lossyWindowsFor(sourceId, { count = LOSSY_WINDOWS_PER_SOURCE, clipSec = 20 } = {}) {
+  const ext = SOURCE_EXTENTS[sourceId];
+  if (!ext) throw new Error(`lossyWindowsFor: no measured extent for "${sourceId}" (have: ${Object.keys(SOURCE_EXTENTS).join(", ")})`);
+  const lo = ext.leadInSec;
+  const hi = ext.durationSec * NO_FADE_FRACTION - clipSec;
+  if (hi <= lo) throw new Error(`lossyWindowsFor: ${sourceId} has no usable ${clipSec}s window at all`);
+  const stride = (hi - lo) / (count - 1);
+  if (stride < clipSec) {
+    throw new Error(
+      `lossyWindowsFor: ${sourceId} cannot hold ${count} non-overlapping ${clipSec}s windows in ` +
+        `${(hi - lo + clipSec).toFixed(1)}s of usable audio (stride would be ${stride.toFixed(1)}s)`,
+    );
+  }
+  return Array.from({ length: count }, (_, i) => Math.round(lo + i * stride));
+}
+
+/**
+ * THE LOSSY WINDOW PLAN OF RECORD — the same discipline as STAIRCASE_WINDOWS.
+ *
+ * WRITTEN OUT RATHER THAN COMPUTED AT RENDER TIME, deliberately. A plan that
+ * re-derives itself would silently change if a duration ever re-probed a
+ * fraction differently, and the clip ids carry `startSec` in their filenames —
+ * so a shifted window renames every file and orphans whatever response data was
+ * recorded against the old name. `renderplan.test.ts` re-derives these from
+ * SOURCE_EXTENTS and fails if they disagree, so the table cannot rot either.
+ *
+ * pb6 IS AT ITS LIMIT and this is worth knowing before anything is changed:
+ * 197.4 s of usable audio against the 180 s nine windows need, a stride of
+ * 22.2 s against a 20 s clip, and no lead-in silence to give back. Any increase
+ * in the count, the clip length, or NO_FADE_FRACTION drops pb6 to eight.
+ */
+export const LOSSY_WINDOWS = {
+  pb1: [1, 27, 53, 79, 105, 131, 157, 183, 209],
+  pb6: [0, 22, 44, 67, 89, 111, 133, 155, 177],
+  pb4: [1, 53, 106, 159, 212, 265, 318, 370, 423],
+};
 
 export function levelsPerSource(sourceId, curves = {}) {
   const lossyCurve = curves[sourceId];
