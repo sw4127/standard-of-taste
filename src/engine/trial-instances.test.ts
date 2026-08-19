@@ -17,13 +17,21 @@ import { describe, expect, it } from "vitest";
 import { observer as obs, rng, runStaircaseSession, type Observer } from "@/analytics/observer";
 import { DEFAULT_STAIRCASE, type StaircaseConfig } from "./staircase";
 import { assignInstances, instancesForFamily, pickInstance, type TrialInstance } from "./trial-instances";
+import { eligibleSources, eligibleWindows, sessionInstances } from "./staircase-pool";
 
 const PITCH = [3.1, 4.4, 6.3, 8.8, 12.5, 17.7, 25, 35.4, 50, 70.7, 100];
 
 /** The approved render plan (RT-66a): 3 sources x 3 windows = 9 instances. */
-const PLANNED: TrialInstance[] = ["pb1", "pb6", "pb8"].flatMap((sourceId) =>
-  [30, 75, 120].map((startSec) => ({ sourceId, startSec })),
-);
+/**
+ * THE REAL POOL, from the manifest (E4/S4/S4).
+ *
+ * This was a hand-written list of "pb1, pb6, pb8 x 30, 75, 120" — nine windows,
+ * one of which (pb8@120s) DOES NOT EXIST: pb8 is 110.06 s long. It also assumed
+ * every family draws from the same nine, which is false in both directions —
+ * timing draws from 7 after RT-75a excluded two windows, and lossy from 24
+ * across a different source set entirely.
+ */
+const PLANNED: TrialInstance[] = eligibleWindows("pitch-drift");
 
 const cfg = (levels: number[]): StaircaseConfig => ({
   ...DEFAULT_STAIRCASE,
@@ -132,11 +140,65 @@ describe("trial instances — lossy is source-locked (RT-65)", () => {
    * twice. The approved render plan does not fix this; more windows on the
    * lossy source would.
    */
-  it("records that lossy gets a THIRD of the variety the other families do", () => {
+  it("records what source-locking now costs — which RT-84a mostly bought back", () => {
+    // THIS TEST USED TO ASSERT lossy got a THIRD of the variety, because lossy
+    // locked to one source's THREE windows against a pooled nine. RT-84a gave
+    // every lossy source NINE windows of its own, so pb6 now matches the pooled
+    // families exactly and only pb4 — which lost three windows to RT-86a — is
+    // worse. The old claim is false and is replaced by the measurement.
     const levels = sessionLevels(obs(25, 0.35), 7919);
     const pooled = worstRepeat(levels, assignInstances(levels, instancesForFamily("pitch-drift", PLANNED), 1));
-    const locked = worstRepeat(levels, assignInstances(levels, instancesForFamily("lossy-artifact", PLANNED, "pb6"), 1));
-    console.log(`[E4/S2c] worst repeat — pooled families ${pooled}, lossy (source-locked) ${locked}`);
-    expect(locked).toBeGreaterThan(pooled);
+    const pb6 = worstRepeat(levels, assignInstances(levels, sessionInstances("lossy-artifact", "pb6"), 1));
+    const pb4 = worstRepeat(levels, assignInstances(levels, sessionInstances("lossy-artifact", "pb4"), 1));
+    console.log(`[E4/S4/S4] worst repeat — pooled ${pooled}, lossy pb6 (9 windows) ${pb6}, lossy pb4 (6 windows) ${pb4}`);
+    // pb6 has as many windows as the pooled families, so it is no worse.
+    expect(pb6).toBeLessThanOrEqual(pooled);
+    // pb4 has six, and pays for it. This is the cost RT-86a accepted in
+    // exchange for keeping pb4's full 192k->32k ladder.
+    expect(pb4).toBeGreaterThanOrEqual(pooled);
+  });
+});
+
+
+describe("the instance pool comes from the manifest, not from a hand-written list", () => {
+  it("each family has its own window count — nine is not shared", () => {
+    expect(eligibleWindows("pitch-drift")).toHaveLength(9);
+    expect(eligibleWindows("timing-smear")).toHaveLength(7);
+    expect(eligibleWindows("lossy-artifact")).toHaveLength(24);
+  });
+
+  it("never offers pb8@120s — a window in a recording 110s long", () => {
+    for (const family of ["pitch-drift", "timing-smear", "lossy-artifact"]) {
+      for (const w of eligibleWindows(family)) {
+        expect(`${w.sourceId}@${w.startSec}`).not.toBe("pb8@120");
+      }
+    }
+  });
+
+  it("never offers a window RT-75a excluded from timing", () => {
+    const keys = eligibleWindows("timing-smear").map((w) => `${w.sourceId}@${w.startSec}`);
+    expect(keys).not.toContain("pb1@120");
+    expect(keys).not.toContain("pb6@75");
+    // ...which pitch, measured separately, still keeps.
+    expect(eligibleWindows("pitch-drift").map((w) => `${w.sourceId}@${w.startSec}`)).toContain("pb1@120");
+  });
+
+  it("lossy runs on a different source set — pb4 in, pb8 out", () => {
+    expect(eligibleSources("lossy-artifact")).toEqual(["pb1", "pb4", "pb6"]);
+    expect(eligibleSources("pitch-drift")).toEqual(["pb1", "pb6", "pb8"]);
+  });
+
+  it("a lossy session must lock to a source, and gets only that source", () => {
+    expect(() => sessionInstances("lossy-artifact")).toThrow(/must name a source/);
+    expect(sessionInstances("lossy-artifact", "pb4")).toHaveLength(6);
+    for (const i of sessionInstances("lossy-artifact", "pb4")) expect(i.sourceId).toBe("pb4");
+  });
+
+  it("a source with no eligible windows throws rather than returning nothing", () => {
+    expect(() => sessionInstances("lossy-artifact", "pb8")).toThrow(/no eligible windows/);
+  });
+
+  it("an unrendered family throws", () => {
+    expect(() => eligibleWindows("reverb-smear")).toThrow(/has not been rendered/);
   });
 });

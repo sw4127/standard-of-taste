@@ -24,7 +24,6 @@ import { describe, expect, it } from "vitest";
 import manifest from "../../src/content/delicacy/staircase.json";
 import {
   computeKnownLimits,
-  eligibleWindows,
   MAX_CLIPPED_FRACTION,
   MAX_FLAT_TOP_FRACTION,
   MAX_QUIET_FRACTION,
@@ -35,6 +34,7 @@ import {
   MIN_MEASURABLE_PITCH_CENTS,
 } from "./staircasevalidate.mjs";
 import { POOLED_FAMILIES, STAIRCASE_RENDER_FAMILIES } from "./staircaserender.mjs";
+import { eligibleWindows } from "../../src/engine/staircase-pool";
 
 type Entry = {
   id: string;
@@ -55,7 +55,7 @@ const m = manifest as unknown as {
   layerA?: {
     thresholds: Record<string, number>;
     counts: { total: number; pass: number; flag: number; error: number };
-    knownLimits: { family: string; sourceId?: string; level: number; kind: string; statement: string }[];
+    knownLimits: { family: string; sourceId?: string; window?: string; ratio?: number; level: number; kind: string; statement: string }[];
     excludedWindows: { family: string; sourceId: string; startSec: number }[];
     anchors: { sourceId: string; transparentLsdDb: number; pipelineNoiseLsdDb: number }[];
   };
@@ -191,10 +191,24 @@ describe("the instrument's known limits are stated, not hidden (RT-76a, RT-82a)"
     for (const l of m.layerA!.knownLimits) expect(l.statement.length).toBeGreaterThan(80);
   });
 
-  it("the disclosure stays specific — one pitch level, one lossy level per source", () => {
-    // A limits list that names half the ladder tells a reader nothing.
-    expect([...new Set(m.layerA!.knownLimits.map((l) => l.level))].sort((a, b) => a - b)).toEqual([3.1, 96, 112]);
-    expect(m.layerA!.knownLimits).toHaveLength(5);
+  it("the disclosure stays specific rather than naming half the ladder", () => {
+    expect(m.layerA!.knownLimits).toHaveLength(9);
+    const kinds = [...new Set(m.layerA!.knownLimits.map((l) => l.kind))].sort();
+    expect(kinds).toEqual([
+      "adjacent-levels-collapse",
+      "cross-window-spread",
+      "damage-varies-by-window",
+      "predicted-below-floor",
+    ]);
+  });
+
+  it("names the four windows where two lossy levels are not separable", () => {
+    // Monotonicity does NOT imply distinguishability: 4 of 174 adjacent steps
+    // rise by less than MIN_LOSSY_LEVEL_RATIO, worst 1.053x. Reported, not
+    // gated, on the RT-85a precedent.
+    const collapses = m.layerA!.knownLimits.filter((l) => l.kind === "adjacent-levels-collapse");
+    expect(collapses).toHaveLength(4);
+    for (const c of collapses) expect(c.ratio).toBeLessThan(1.15);
   });
 
   it("every lossy source states how much its damage varies by window (RT-85a)", () => {
@@ -207,7 +221,7 @@ describe("the instrument's known limits are stated, not hidden (RT-76a, RT-82a)"
 describe("eligibleWindows is what E5 must call", () => {
   it("returns a usable pool for every rendered family", () => {
     for (const family of STAIRCASE_RENDER_FAMILIES) {
-      expect(eligibleWindows(m, family).length).toBeGreaterThan(0);
+      expect(eligibleWindows(family).length).toBeGreaterThan(0);
     }
     expect(POOLED_FAMILIES.length).toBeLessThan(STAIRCASE_RENDER_FAMILIES.length);
   });
@@ -216,9 +230,9 @@ describe("eligibleWindows is what E5 must call", () => {
     // `trial-instances.test.ts` still hardcodes nine. This is the fact that
     // makes that wrong, asserted where it can be seen. Lossy's 24 = pb1 9 +
     // pb6 9 + pb4 6, pb4 having lost three windows to RT-86a.
-    expect(eligibleWindows(m, "pitch-drift")).toHaveLength(9);
-    expect(eligibleWindows(m, "timing-smear")).toHaveLength(7);
-    expect(eligibleWindows(m, "lossy-artifact")).toHaveLength(24);
+    expect(eligibleWindows("pitch-drift")).toHaveLength(9);
+    expect(eligibleWindows("timing-smear")).toHaveLength(7);
+    expect(eligibleWindows("lossy-artifact")).toHaveLength(24);
   });
 
   it("never returns a window either stage excluded", () => {
@@ -227,7 +241,7 @@ describe("eligibleWindows is what E5 must call", () => {
       ...(m.layerA!.excludedWindows ?? []).map((e) => `${e.family}/${e.sourceId}@${e.startSec}`),
     ]);
     for (const family of POOLED_FAMILIES) {
-      for (const w of eligibleWindows(m, family)) {
+      for (const w of eligibleWindows(family)) {
         expect(blocked.has(`${family}/${w.sourceId}@${w.startSec}`)).toBe(false);
       }
     }

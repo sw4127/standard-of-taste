@@ -28,7 +28,7 @@ import {
   MIN_MEASURABLE_PITCH_CENTS,
   STAIRCASE_MAGNITUDE_GATES,
 } from "./staircasevalidate.mjs";
-import { eligibleWindows, levelErrVerdict, lossyStepCollapses, trajectoryVerdict, MIN_LOSSY_LEVEL_RATIO } from "./staircasevalidate.mjs";
+import { levelErrVerdict, lossyStepCollapses, trajectoryVerdict, MIN_LOSSY_LEVEL_RATIO } from "./staircasevalidate.mjs";
 import { MAX_LEVEL_ERR_PCT, MIN_TRAJECTORY_R, MAX_TRAJECTORY_SLOPE_ERR_PCT } from "./staircaserender.mjs";
 import { MIN_PITCH_CENTS } from "./validate.mjs";
 import { STAIRCASE_LEVELS } from "./rungs.mjs";
@@ -390,50 +390,12 @@ describe("the evidence verdicts read staircase-render's own constants", () => {
   });
 });
 
-describe("eligibleWindows is the INTERSECTION, so E5 cannot use one list alone", () => {
-  const manifest = {
-    instanceWindows: {
-      "pitch-drift": [
-        { sourceId: "pb1", startSec: 30 },
-        { sourceId: "pb1", startSec: 75 },
-        { sourceId: "pb6", startSec: 30 },
-      ],
-      "timing-smear": [{ sourceId: "pb1", startSec: 30 }],
-    },
-    layerA: {
-      excludedWindows: [
-        { family: "pitch-drift", sourceId: "pb1", startSec: 75, reason: "clipping" },
-        { family: "*", sourceId: "pb6", startSec: 30, reason: "the window REFERENCE did not pass" },
-      ],
-    },
-  };
-
-  it("drops a window Layer A excluded for that family", () => {
-    const w = eligibleWindows(manifest, "pitch-drift");
-    expect(w).not.toContainEqual({ sourceId: "pb1", startSec: 75 });
-  });
-
-  it("a REFERENCE failure ('*') drops the window for EVERY family", () => {
-    expect(eligibleWindows(manifest, "pitch-drift")).not.toContainEqual({ sourceId: "pb6", startSec: 30 });
-    expect(eligibleWindows(manifest, "timing-smear")).not.toContainEqual({ sourceId: "pb6", startSec: 30 });
-  });
-
-  it("keeps what both stages allow", () => {
-    expect(eligibleWindows(manifest, "pitch-drift")).toEqual([{ sourceId: "pb1", startSec: 30 }]);
-  });
-
-  it("never returns a window the RENDERER excluded, even if Layer A is silent", () => {
-    // The renderer's list is the starting set, so a window it dropped can never
-    // reappear here — the intersection only ever removes.
-    expect(eligibleWindows(manifest, "timing-smear")).toEqual([{ sourceId: "pb1", startSec: 30 }]);
-  });
-
-  it("a manifest with no Layer A block yet falls back to the renderer's list, not to everything", () => {
-    const noLayerA = { instanceWindows: manifest.instanceWindows };
-    expect(eligibleWindows(noLayerA, "timing-smear")).toEqual([{ sourceId: "pb1", startSec: 30 }]);
-    expect(eligibleWindows({}, "timing-smear")).toEqual([]);
-  });
-});
+/**
+ * `eligibleWindows` MOVED to `src/engine/staircase-pool.ts` (E4/S4/S4) and its
+ * tests moved with it — the consumer is the Gym, and the manifest is the
+ * interface. Nothing in `src/` should import a build script, and a second copy
+ * here would be the two-tables defect it exists to prevent.
+ */
 
 /** A healthy LOSSY clip. Level is a BITRATE (RT-85a); the floor is measured. */
 const lossy = {

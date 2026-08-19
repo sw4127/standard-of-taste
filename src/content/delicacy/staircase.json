@@ -19653,6 +19653,15 @@
       {
         "family": "lossy-artifact",
         "sourceId": "pb1",
+        "window": "pb1@53",
+        "level": 40,
+        "kind": "adjacent-levels-collapse",
+        "ratio": 1.132,
+        "statement": "On pb1@53s, 48 kbps and 40 kbps measure 8.736 and 9.893 dB — 1.132x apart, below the 1.15x that makes two levels distinguishable. The ladder is monotone here but these two rungs are not separable on this window's material."
+      },
+      {
+        "family": "lossy-artifact",
+        "sourceId": "pb1",
         "level": 96,
         "kind": "damage-varies-by-window",
         "damageRatio": 1.397,
@@ -19664,6 +19673,15 @@
       {
         "family": "lossy-artifact",
         "sourceId": "pb4",
+        "window": "pb4@318",
+        "level": 80,
+        "kind": "adjacent-levels-collapse",
+        "ratio": 1.131,
+        "statement": "On pb4@318s, 96 kbps and 80 kbps measure 2.86 and 3.234 dB — 1.131x apart, below the 1.15x that makes two levels distinguishable. The ladder is monotone here but these two rungs are not separable on this window's material."
+      },
+      {
+        "family": "lossy-artifact",
+        "sourceId": "pb4",
         "level": 96,
         "kind": "damage-varies-by-window",
         "damageRatio": 1.999,
@@ -19671,6 +19689,24 @@
         "damageMaxDb": 2.86,
         "windows": 6,
         "statement": "A lossy level is a BITRATE, exact on every window — but the DAMAGE it does is not. On pb4, 96 kbps measures 1.431-2.86 dB (1.999x) across the 6 windows serving it, the widest of this source's 9 levels. A threshold reported as \"96 kbps on pb4\" is a fact about this listener AND this material, not about the listener alone."
+      },
+      {
+        "family": "lossy-artifact",
+        "sourceId": "pb4",
+        "window": "pb4@318",
+        "level": 128,
+        "kind": "adjacent-levels-collapse",
+        "ratio": 1.103,
+        "statement": "On pb4@318s, 192 kbps and 128 kbps measure 1.17 and 1.29 dB — 1.103x apart, below the 1.15x that makes two levels distinguishable. The ladder is monotone here but these two rungs are not separable on this window's material."
+      },
+      {
+        "family": "lossy-artifact",
+        "sourceId": "pb6",
+        "window": "pb6@0",
+        "level": 80,
+        "kind": "adjacent-levels-collapse",
+        "ratio": 1.053,
+        "statement": "On pb6@0s, 112 kbps and 80 kbps measure 1.445 and 1.522 dB — 1.053x apart, below the 1.15x that makes two levels distinguishable. The ladder is monotone here but these two rungs are not separable on this window's material."
       },
       {
         "family": "lossy-artifact",

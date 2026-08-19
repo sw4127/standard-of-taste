@@ -513,29 +513,15 @@ export function measureStaircaseClip(entry, { refClipping } = {}) {
 }
 
 /**
- * Which windows a family may still draw instances from, AFTER Layer A.
+ * `eligibleWindows` USED TO LIVE HERE AND HAS MOVED to
+ * `src/engine/staircase-pool.ts` (E4/S4/S4).
  *
- * THE INTERSECTION, and it exists so E5 cannot forget to take it. The renderer
- * records `instanceWindows` per family from ITS gates (the trajectory check,
- * RT-75a); this stage can disqualify a window for reasons the renderer never
- * looked at — a reference that fades out, a clip that clicks. Two lists with no
- * rule for combining them is the two-tables defect, so there is one function
- * and it is the only sanctioned way to ask.
- *
- * A reference failure is recorded against family "*", because the reference is
- * the A side of EVERY trial drawn from its window.
+ * It is the intersection of this stage's exclusions with the renderer's
+ * `instanceWindows`, and its consumer is the Gym — so it belongs with the code
+ * that reads the manifest, not with the code that writes it. Nothing in `src/`
+ * should import a build script, and keeping a second copy here is the
+ * two-tables defect this project keeps paying for.
  */
-export function eligibleWindows(manifest, family) {
-  const fromRender = (manifest.instanceWindows?.[family] ?? []).map((w) => `${w.sourceId}@${w.startSec}`);
-  const blocked = new Set(
-    (manifest.layerA?.excludedWindows ?? [])
-      .filter((e) => e.family === family || e.family === "*")
-      .map((e) => `${e.sourceId}@${e.startSec}`),
-  );
-  return fromRender
-    .filter((w) => !blocked.has(w))
-    .map((w) => ({ sourceId: w.split("@")[0], startSec: Number(w.split("@")[1]) }));
-}
 
 /**
  * How much of a gate's allowance a level may consume before it is declared a
@@ -645,6 +631,41 @@ export function computeKnownLimits(manifest) {
         `${worst.n} windows serving it, the widest of this source's ${rows.length} levels. A threshold reported as ` +
         `"${worst.level} kbps on ${sourceId}" is a fact about this listener AND this material, not about the listener alone.`,
     });
+  }
+  // COLLAPSED STEPS — the check monotonicity does NOT make (E4/S4/S4).
+  //
+  // `MEASURED_LOSSY_FLOOR_KBPS` guarantees every window's ladder is strictly
+  // INCREASING. It does not guarantee the steps are big enough to be two
+  // levels: measured over the shipped pool, 4 of 174 adjacent steps rise by
+  // less than MIN_LOSSY_LEVEL_RATIO, the worst at 1.053x. Those two levels are
+  // not distinguishable on that window, and a staircase stepping between them
+  // reports a precision it does not have (N3).
+  //
+  // REPORTED, NOT GATED, and the precedent is RT-85a: this is the same
+  // material-dependent damage variation the ruling accepted on condition it be
+  // stated. Gating would disqualify 4 of 24 lossy windows for a shortfall of a
+  // few percent, which costs far more repetition protection than it buys.
+  const lossyByWindow = new Map();
+  for (const c of (manifest.clips ?? []).filter((x) => x.family === "lossy-artifact" && x.measured)) {
+    const k = `${c.sourceId}@${c.startSec}`;
+    if (!lossyByWindow.has(k)) lossyByWindow.set(k, []);
+    lossyByWindow.get(k).push({ level: c.level, lsdDb: c.measured.lsdDb });
+  }
+  for (const [window, rows] of [...lossyByWindow.entries()].sort()) {
+    for (const c of lossyStepCollapses(rows)) {
+      limits.push({
+        family: "lossy-artifact",
+        sourceId: window.split("@")[0],
+        window,
+        level: c.to,
+        kind: "adjacent-levels-collapse",
+        ratio: c.ratio,
+        statement:
+          `On ${window}s, ${c.from} kbps and ${c.to} kbps measure ${c.fromDb} and ${c.toDb} dB — ${c.ratio}x apart, ` +
+          `below the ${MIN_LOSSY_LEVEL_RATIO}x that makes two levels distinguishable. The ladder is monotone here but ` +
+          `these two rungs are not separable on this window's material.`,
+      });
+    }
   }
   return limits.sort(
     (a, b) =>
