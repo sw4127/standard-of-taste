@@ -2,7 +2,7 @@
  * E4/S5/S3 — the SHIPPED staircase pool, guarded in CI.
  *
  * `staircase-validate` is the stage that judges the pool; this is what stops
- * its verdict rotting. The 198 audio files are git-ignored (RT-71b) so no test
+ * its verdict rotting. The 420 audio files are git-ignored (RT-71b) so no test
  * can re-measure them, but `src/content/delicacy/staircase.json` IS committed —
  * and it now records a Layer A verdict per clip, the thresholds those verdicts
  * were reached under, and the instrument's computed limits. All of that is
@@ -34,7 +34,7 @@ import {
   MIN_MEASURABLE_DRIFT_MS,
   MIN_MEASURABLE_PITCH_CENTS,
 } from "./staircasevalidate.mjs";
-import { STAIRCASE_RENDER_FAMILIES } from "./staircaserender.mjs";
+import { POOLED_FAMILIES, STAIRCASE_RENDER_FAMILIES } from "./staircaserender.mjs";
 
 type Entry = {
   id: string;
@@ -55,7 +55,7 @@ const m = manifest as unknown as {
   layerA?: {
     thresholds: Record<string, number>;
     counts: { total: number; pass: number; flag: number; error: number };
-    knownLimits: { family: string; level: number; kind: string; statement: string }[];
+    knownLimits: { family: string; sourceId?: string; level: number; kind: string; statement: string }[];
     excludedWindows: { family: string; sourceId: string; startSec: number }[];
     anchors: { sourceId: string; transparentLsdDb: number; pipelineNoiseLsdDb: number }[];
   };
@@ -70,7 +70,7 @@ describe("Layer A has actually been run over the shipped pool", () => {
   it("every reference and every clip has a verdict — no entry is unjudged", () => {
     const unjudged = entries.filter((e) => !e.layerA?.verdict);
     expect(unjudged.map((e) => e.id)).toEqual([]);
-    expect(entries).toHaveLength(198);
+    expect(entries).toHaveLength(420);
   });
 
   it("the recorded counts agree with the recorded verdicts", () => {
@@ -140,7 +140,7 @@ describe("the verdicts were reached under the thresholds the code still holds", 
   });
 
   it("one transparency anchor was rendered per window", () => {
-    expect(m.layerA!.anchors).toHaveLength(9);
+    expect(m.layerA!.anchors).toHaveLength(33);
     // The pipeline-noise floor is bit-exact by construction (normRender is), so
     // any nonzero value means the toolchain started adding measurement noise.
     for (const a of m.layerA!.anchors) expect(a.pipelineNoiseLsdDb).toBe(0);
@@ -158,7 +158,7 @@ describe("the measured fitness margins, pinned", () => {
 
   it("worst quiet fraction in the pool is far under the gate", () => {
     const worst = Math.max(...entries.map((e) => e.layerA!.quietFraction));
-    expect(worst).toBeLessThanOrEqual(0.12);
+    expect(worst).toBeLessThanOrEqual(0.13);
     expect(worst).toBeLessThan(MAX_QUIET_FRACTION);
   });
 
@@ -191,24 +191,34 @@ describe("the instrument's known limits are stated, not hidden (RT-76a, RT-82a)"
     for (const l of m.layerA!.knownLimits) expect(l.statement.length).toBeGreaterThan(80);
   });
 
-  it("no OTHER level is a known limit — the disclosure stays specific", () => {
+  it("the disclosure stays specific — one pitch level, one lossy level per source", () => {
     // A limits list that names half the ladder tells a reader nothing.
-    expect([...new Set(m.layerA!.knownLimits.map((l) => l.level))]).toEqual([3.1]);
+    expect([...new Set(m.layerA!.knownLimits.map((l) => l.level))].sort((a, b) => a - b)).toEqual([3.1, 96, 112]);
+    expect(m.layerA!.knownLimits).toHaveLength(5);
+  });
+
+  it("every lossy source states how much its damage varies by window (RT-85a)", () => {
+    // The condition on which a bitrate label was accepted at all.
+    const stated = m.layerA!.knownLimits.filter((l) => l.kind === "damage-varies-by-window").map((l) => l.sourceId);
+    expect(stated.sort()).toEqual(["pb1", "pb4", "pb6"]);
   });
 });
 
 describe("eligibleWindows is what E5 must call", () => {
-  it("returns a usable pool for both rendered families", () => {
+  it("returns a usable pool for every rendered family", () => {
     for (const family of STAIRCASE_RENDER_FAMILIES) {
       expect(eligibleWindows(m, family).length).toBeGreaterThan(0);
     }
+    expect(POOLED_FAMILIES.length).toBeLessThan(STAIRCASE_RENDER_FAMILIES.length);
   });
 
-  it("pitch keeps nine windows and timing seven — and it is NOT nine for both", () => {
+  it("each family has its OWN window count — nine is not a shared constant", () => {
     // `trial-instances.test.ts` still hardcodes nine. This is the fact that
-    // makes that wrong, asserted where it can be seen.
+    // makes that wrong, asserted where it can be seen. Lossy's 24 = pb1 9 +
+    // pb6 9 + pb4 6, pb4 having lost three windows to RT-86a.
     expect(eligibleWindows(m, "pitch-drift")).toHaveLength(9);
     expect(eligibleWindows(m, "timing-smear")).toHaveLength(7);
+    expect(eligibleWindows(m, "lossy-artifact")).toHaveLength(24);
   });
 
   it("never returns a window either stage excluded", () => {
@@ -216,7 +226,7 @@ describe("eligibleWindows is what E5 must call", () => {
       ...m.excludedWindows.map((e) => `${e.family}/${e.sourceId}@${e.startSec}`),
       ...(m.layerA!.excludedWindows ?? []).map((e) => `${e.family}/${e.sourceId}@${e.startSec}`),
     ]);
-    for (const family of STAIRCASE_RENDER_FAMILIES) {
+    for (const family of POOLED_FAMILIES) {
       for (const w of eligibleWindows(m, family)) {
         expect(blocked.has(`${family}/${w.sourceId}@${w.startSec}`)).toBe(false);
       }

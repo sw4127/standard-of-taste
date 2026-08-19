@@ -614,7 +614,45 @@ export function computeKnownLimits(manifest) {
       });
     }
   }
-  return limits.sort((a, b) => a.family.localeCompare(b.family) || a.level - b.level || a.kind.localeCompare(b.kind));
+  // LOSSY: ONE ENTRY PER SOURCE, naming that source's worst damage spread.
+  //
+  // Required by RT-85a — the ruling accepted a bitrate label precisely BECAUSE
+  // the dB it produces varies by window, on condition that the variation is
+  // stated rather than hidden. One entry per level would name 25 things and
+  // tell a reader nothing; the worst level per source is the honest headline.
+  //
+  // NOT GATED, and that is the point: this variation is a property of the
+  // material, not a defect to fix. It is what a reader must know to interpret
+  // a threshold reported in kbps.
+  const lossySpread = (manifest.crossWindowSpread ?? []).filter(
+    (r) => r.family === "lossy-artifact" && r.damageRatio !== undefined && r.n > 1,
+  );
+  for (const sourceId of [...new Set(lossySpread.map((r) => r.sourceId))].sort()) {
+    const rows = lossySpread.filter((r) => r.sourceId === sourceId);
+    const worst = rows.reduce((a, b) => (b.damageRatio > a.damageRatio ? b : a));
+    limits.push({
+      family: "lossy-artifact",
+      sourceId,
+      level: worst.level,
+      kind: "damage-varies-by-window",
+      damageRatio: worst.damageRatio,
+      damageMinDb: worst.damageMinDb,
+      damageMaxDb: worst.damageMaxDb,
+      windows: worst.n,
+      statement:
+        `A lossy level is a BITRATE, exact on every window — but the DAMAGE it does is not. On ${sourceId}, ` +
+        `${worst.level} kbps measures ${worst.damageMinDb}-${worst.damageMaxDb} dB (${worst.damageRatio}x) across the ` +
+        `${worst.n} windows serving it, the widest of this source's ${rows.length} levels. A threshold reported as ` +
+        `"${worst.level} kbps on ${sourceId}" is a fact about this listener AND this material, not about the listener alone.`,
+    });
+  }
+  return limits.sort(
+    (a, b) =>
+      a.family.localeCompare(b.family) ||
+      String(a.sourceId ?? "").localeCompare(String(b.sourceId ?? "")) ||
+      a.level - b.level ||
+      a.kind.localeCompare(b.kind),
+  );
 }
 
 export async function staircaseValidate(args = []) {
@@ -660,13 +698,12 @@ export async function staircaseValidate(args = []) {
       ` · timing floor ${MIN_MEASURABLE_DRIFT_MS} ms`,
   );
 
-  const rows = entries.map((e) => gradeStaircaseClip(measureStaircaseClip(e, { refClipping })));
-
-  // ONE TRANSPARENCY ANCHOR PER WINDOW. Not a gate for these families — see
-  // measureStaircaseClip — but the manifest has carried an `lsdDb` per clip
-  // since the render with no denominator anywhere, and LSD is material-
-  // dependent, so the raw dB are not comparable across recordings without it.
-  // E4/S4's lossy family needs exactly this figure as its transparency floor.
+  // ONE TRANSPARENCY ANCHOR PER WINDOW, RENDERED BEFORE ANYTHING IS GRADED.
+  //
+  // It used to run after, because no family's gate needed it — the ratio was
+  // reported for context only. Lossy's gate IS the anchor ratio (RT-85a), so
+  // the anchors are now an INPUT to grading rather than a decoration on the
+  // output, and every lossy clip would ERROR without them.
   const anchors = [];
   if (!noAnchors) {
     const windows = [...new Set(entries.map((e) => `${e.sourceId}@${e.startSec}+${e.clipSec}`))].sort();
@@ -678,6 +715,19 @@ export async function staircaseValidate(args = []) {
     }
   }
   const anchorFor = (r) => anchors.find((a) => a.sourceId === r.sourceId && a.window.startSec === r.startSec);
+
+  const rows = entries.map((e) => {
+    const measured = measureStaircaseClip(e, { refClipping });
+    const anchor = anchorFor(measured);
+    return gradeStaircaseClip({
+      ...measured,
+      // Absent when --no-anchors was passed. The grader turns that into an
+      // ERROR for lossy rather than a pass, which is the correct outcome:
+      // without an anchor there is no floor to check.
+      anchorRatio:
+        anchor && measured.lsdDb != null ? +(measured.lsdDb / anchor.transparentLsdDb).toFixed(3) : undefined,
+    });
+  });
 
   if (json) {
     console.log(JSON.stringify({ anchors, rows }, null, 2));
@@ -793,6 +843,7 @@ export async function staircaseValidate(args = []) {
       quietFraction: +r.quietFraction.toFixed(3),
       ...(r.trajectoryVerified !== undefined ? { trajectoryVerified: r.trajectoryVerified } : {}),
       ...(r.levelErrVerified !== undefined ? { levelErrVerified: r.levelErrVerified } : {}),
+      ...(r.anchorRatio !== undefined ? { anchorRatio: r.anchorRatio } : {}),
       gatedOn: r.gatedOn,
       measuredAt: manifest.layerA.measuredAt,
     };
