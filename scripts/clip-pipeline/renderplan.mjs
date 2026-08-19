@@ -200,11 +200,99 @@ export function lossyWindowsFor(sourceId, { count = LOSSY_WINDOWS_PER_SOURCE, cl
  * 22.2 s against a 20 s clip, and no lead-in silence to give back. Any increase
  * in the count, the clip length, or NO_FADE_FRACTION drops pb6 to eight.
  */
-export const LOSSY_WINDOWS = {
+/**
+ * THE GENTLEST BITRATE EACH SOURCE'S LOSSY LADDER MAY INCLUDE.
+ *
+ * MEASURED ACROSS ALL 27 RENDERED WINDOWS (E4/S4/S3, 2026-08-19), not inherited.
+ * `lossyLadderForSource` thins a ladder against the curve measured at ONE window
+ * (@75 s) and its steps were monotone there — but a fixed bitrate does up to
+ * 1.38x different damage on other windows (RT-85a), and at the gentle end that
+ * is enough to INVERT the ladder. Five of twenty-seven windows came back
+ * non-monotone on the first render, every inversion at the top:
+ *
+ *     pb1@105s   192k 1.291 dB -> 160k 1.119 dB   (falls)
+ *     pb1@157s   192k 1.309    -> 160k 1.159      (falls)
+ *     pb4@1s     320k 1.529    -> 192k 1.006      (falls)
+ *     pb4@53s    320k 1.246    -> 192k 0.846      (falls)
+ *     pb4@106s   320k 1.426    -> 192k 0.997      (falls)
+ *
+ * `rungs.mjs` already knew the shape of this — "above ~128 kbps the differences
+ * are small enough that the curve is NOT MONOTONE… two of five sources reverse
+ * below 1.7 dB" — and set its NOMINAL range to start at 2.0 dB. The defect was
+ * that `lossyLadderForSource` never applied that reasoning, and built down to
+ * 0.42 dB.
+ *
+ * A FLAT 2.0 dB FLOOR WOULD HAVE BEEN THE WRONG FIX, and this is why the floor
+ * is per-source and expressed in kbps: it costs far more range than the data
+ * requires (pb1 12->7, pb4 10->6, pb6 7->5). Dropping only the levels that
+ * actually invert keeps pb1 and pb4 at NINE levels each and pb6 untouched.
+ *
+ * WHAT IT COSTS, stated plainly (N3): the instrument can no longer report a
+ * threshold gentler than these bitrates. A listener who only detects damage at
+ * 320 kbps bottoms out, and the result must say "at or below 160 kbps on this
+ * material" rather than inventing a level the ruler cannot order.
+ */
+export const MEASURED_LOSSY_FLOOR_KBPS = { pb1: 160, pb4: 192, pb6: 112 };
+
+/**
+ * The lossy levels one source actually renders — the ladder, floored.
+ *
+ * THE one place both the planner and the renderer ask, so a floor applied in
+ * one and forgotten in the other cannot happen.
+ */
+export function lossyLevelsForSource(sourceId, { curves = MEASURED_LOSSY_CURVES } = {}) {
+  const curve = curves[sourceId];
+  if (!curve) throw new Error(`lossyLevelsForSource: no measured curve for "${sourceId}"`);
+  const floor = MEASURED_LOSSY_FLOOR_KBPS[sourceId];
+  if (floor === undefined) {
+    throw new Error(
+      `lossyLevelsForSource: no measured monotonicity floor for "${sourceId}" — render its windows and compute one ` +
+        `before shipping levels whose damage ordering is unverified`,
+    );
+  }
+  // Lower bitrate = more damage, so the floor is a CEILING on bitrate.
+  return lossyLadderForSource(curve).filter((p) => p.bitrateKbps <= floor);
+}
+
+export const LOSSY_WINDOWS_DERIVED = {
   pb1: [1, 27, 53, 79, 105, 131, 157, 183, 209],
   pb6: [0, 22, 44, 67, 89, 111, 133, 155, 177],
   pb4: [1, 53, 106, 159, 212, 265, 318, 370, 423],
 };
+
+/**
+ * WINDOWS DROPPED AFTER MEASUREMENT (PM ruling RT-86a, option a, 2026-08-19).
+ *
+ * The derivation above places windows before anything is rendered; it knows
+ * durations and lead-in, and nothing else. These three were excluded once the
+ * audio existed and Layer A had measured it: on each of them pb4's gentlest
+ * levels (192k, 128k, and at @53s also 96k) measure LESS damage than that
+ * window's own 320 kbps transparency anchor, and two of the three also invert
+ * the ladder. A level whose damage is below a manipulation known to be
+ * inaudible on that same material is not a trial.
+ *
+ * THEY ARE A COHERENT GROUP, not scattered noise: @1s, @53s and @106s are the
+ * quiet opening of a Beethoven Adagio, where there is little high-frequency
+ * content for a codec to discard, so the anchor and the damage converge.
+ *
+ * THE TRADE, and the PM ruled it explicitly: pb4 keeps its full 192k->32k
+ * ladder on SIX windows rather than a truncated 80k->32k ladder on nine. Both
+ * cost exactly 54 clips. Range won because 96-192 kbps is where most listeners'
+ * thresholds sit, and a truncated ladder would bottom out on exactly those
+ * people. The cost is real and is stated: pb4 serves six windows against pb1's
+ * and pb6's nine, so a pb4 session repeats each musical moment more often.
+ */
+export const LOSSY_EXCLUDED_WINDOWS = {
+  pb4: [1, 53, 106],
+};
+
+/** The windows a source actually renders: derived, minus what measurement removed. */
+export const LOSSY_WINDOWS = Object.fromEntries(
+  Object.entries(LOSSY_WINDOWS_DERIVED).map(([id, w]) => [
+    id,
+    w.filter((start) => !(LOSSY_EXCLUDED_WINDOWS[id] ?? []).includes(start)),
+  ]),
+);
 
 export function levelsPerSource(sourceId, curves = {}) {
   const lossyCurve = curves[sourceId];

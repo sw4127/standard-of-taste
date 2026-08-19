@@ -21,11 +21,14 @@
 import { describe, expect, it } from "vitest";
 import {
   LOSSY_WINDOWS,
+  LOSSY_WINDOWS_DERIVED,
+  LOSSY_EXCLUDED_WINDOWS,
   LOSSY_WINDOWS_PER_SOURCE,
   MEASURED_LOSSY_CURVES,
   NO_FADE_FRACTION,
   SOURCE_EXTENTS,
   STAIRCASE_WINDOWS,
+  lossyLevelsForSource,
   lossyWindowsFor,
 } from "./renderplan.mjs";
 import { lossyLadderForSource, MIN_LOSSY_LEVEL_RATIO } from "./rungs.mjs";
@@ -37,11 +40,28 @@ describe("the lossy window table is the derivation, not a transcription of it", 
   it.each(LOSSY_SOURCES)("%s's recorded windows equal what lossyWindowsFor computes", (id) => {
     // This caught a real slip in the very first draft: pb4's seventh window was
     // written as 317 from a hand-computation that used lead-in 0 instead of 0.5.
-    expect(LOSSY_WINDOWS[id as keyof typeof LOSSY_WINDOWS]).toEqual(lossyWindowsFor(id));
+    // Against the DERIVED table: the shipped one has measurement-driven
+    // exclusions subtracted (RT-86a), which the derivation cannot know about.
+    expect(LOSSY_WINDOWS_DERIVED[id as keyof typeof LOSSY_WINDOWS_DERIVED]).toEqual(lossyWindowsFor(id));
   });
 
-  it.each(LOSSY_SOURCES)("%s gets exactly the agreed number of windows", (id) => {
-    expect(LOSSY_WINDOWS[id as keyof typeof LOSSY_WINDOWS]).toHaveLength(LOSSY_WINDOWS_PER_SOURCE);
+  it.each(LOSSY_SOURCES)("%s is derived at the agreed number of windows", (id) => {
+    expect(LOSSY_WINDOWS_DERIVED[id as keyof typeof LOSSY_WINDOWS_DERIVED]).toHaveLength(LOSSY_WINDOWS_PER_SOURCE);
+  });
+
+  it("only pb4 lost windows to measurement, and exactly the three ruled on", () => {
+    expect(LOSSY_EXCLUDED_WINDOWS).toEqual({ pb4: [1, 53, 106] });
+    expect(LOSSY_WINDOWS.pb4).toEqual([159, 212, 265, 318, 370, 423]);
+    expect(LOSSY_WINDOWS.pb1).toHaveLength(9);
+    expect(LOSSY_WINDOWS.pb6).toHaveLength(9);
+  });
+
+  it("every excluded window was one the derivation had actually placed", () => {
+    for (const [id, dropped] of Object.entries(LOSSY_EXCLUDED_WINDOWS)) {
+      for (const start of dropped) {
+        expect(LOSSY_WINDOWS_DERIVED[id as keyof typeof LOSSY_WINDOWS_DERIVED]).toContain(start);
+      }
+    }
   });
 
   it("every lossy source has a measured extent, and vice versa", () => {
@@ -152,11 +172,28 @@ describe("pb4 replaces pb8 for lossy only (RT-79a d)", () => {
 });
 
 describe("the plan's size, computed rather than guessed", () => {
-  it("288 files across three sources", () => {
+  it("222 files, after the floor and the window exclusions", () => {
+    // 288 was the plan before anything was rendered. Two measurements shrank
+    // it: MEASURED_LOSSY_FLOOR_KBPS dropped each source's gentlest levels, and
+    // RT-86a dropped three of pb4's windows. Computed from the shipped tables
+    // so it cannot drift from what the renderer actually produces.
     const total = LOSSY_SOURCES.reduce((n, id) => {
-      const levels = lossyLadderForSource(MEASURED_LOSSY_CURVES[id]).length;
-      return n + LOSSY_WINDOWS_PER_SOURCE * (1 + levels); // one reference per window
+      const levels = lossyLevelsForSource(id).length;
+      const windows = LOSSY_WINDOWS[id as keyof typeof LOSSY_WINDOWS].length;
+      return n + windows * (1 + levels); // one reference per window
     }, 0);
-    expect(total).toBe(288);
+    expect(total).toBe(222);
+  });
+
+  it("the floor costs range, and the tests say how much", () => {
+    // pb1 12 -> 9, pb4 10 -> 9, pb6 7 -> 7 (untouched).
+    expect(lossyLevelsForSource("pb1")).toHaveLength(9);
+    expect(lossyLevelsForSource("pb4")).toHaveLength(9);
+    expect(lossyLevelsForSource("pb6")).toHaveLength(7);
+    for (const id of LOSSY_SOURCES) {
+      expect(lossyLevelsForSource(id).length).toBeLessThanOrEqual(
+        lossyLadderForSource(MEASURED_LOSSY_CURVES[id]).length,
+      );
+    }
   });
 });

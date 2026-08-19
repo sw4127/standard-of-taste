@@ -25,12 +25,14 @@ import {
   clipId,
   crossWindowAgreement,
   ladderMonotone,
+  levelsFor,
+  POOLED_FAMILIES,
   nextCalibrationParam,
   refId,
   windowSeed,
 } from "./staircaserender.mjs";
 import { MIN_LOSSY_LEVEL_RATIO } from "./rungs.mjs";
-import { STAIRCASE_WINDOWS, renderPlan, windowsForSource } from "./renderplan.mjs";
+import { LOSSY_WINDOWS, STAIRCASE_WINDOWS, renderPlan, windowsForSource } from "./renderplan.mjs";
 import { STAIRCASE_LEVELS, staircaseRender } from "./rungs.mjs";
 import { SEGS, predictedTrajectoryMs, timingDeviations } from "./degrade.mjs";
 import { fitLine } from "./spectral.mjs";
@@ -125,19 +127,47 @@ describe("clip identity", () => {
     expect(refId("pb6", 120)).toBe("pb6-w120-ref");
   });
 
-  it("gives every clip in the full plan a unique id", () => {
+  it("gives every clip in the POOLED plan a unique id", () => {
+    // Pitch and timing only: lossy draws from different windows AND different
+    // sources (RT-79a), so it is not part of this 198.
     const ids = new Set<string>();
     for (const [sourceId, windows] of Object.entries(STAIRCASE_WINDOWS)) {
       for (const startSec of windows) {
         ids.add(refId(sourceId, startSec));
-        for (const family of STAIRCASE_RENDER_FAMILIES) {
-          for (const level of STAIRCASE_LEVELS[family as keyof typeof STAIRCASE_LEVELS].values) {
+        for (const family of POOLED_FAMILIES) {
+          for (const level of levelsFor(family, sourceId)) {
             ids.add(clipId(sourceId, startSec, family, level));
           }
         }
       }
     }
     expect(ids.size).toBe(198);
+  });
+
+  it("gives every clip in the LOSSY plan a unique id, and none collides with the pooled 198", () => {
+    const pooled = new Set<string>();
+    for (const [sourceId, windows] of Object.entries(STAIRCASE_WINDOWS)) {
+      for (const startSec of windows) {
+        pooled.add(refId(sourceId, startSec));
+        for (const family of POOLED_FAMILIES) {
+          for (const level of levelsFor(family, sourceId)) pooled.add(clipId(sourceId, startSec, family, level));
+        }
+      }
+    }
+    const lossy = new Set<string>();
+    for (const [sourceId, windows] of Object.entries(LOSSY_WINDOWS)) {
+      for (const startSec of windows) {
+        lossy.add(refId(sourceId, startSec));
+        for (const level of levelsFor("lossy-artifact", sourceId)) {
+          lossy.add(clipId(sourceId, startSec, "lossy-artifact", level));
+        }
+      }
+    }
+    // pb1 9 windows x (1 ref + 9 levels) = 90, pb6 9 x (1 + 7) = 72,
+    // pb4 6 x (1 + 9) = 60 — pb4 lost three windows to RT-86a and every source
+    // lost its gentlest levels to MEASURED_LOSSY_FLOOR_KBPS.
+    expect(lossy.size).toBe(222);
+    for (const id of lossy) expect(pooled.has(id)).toBe(false);
   });
 });
 
@@ -177,9 +207,23 @@ describe("render mode", () => {
     expect(staircaseRender("pitch-drift", 25).opts).toEqual({});
   });
 
-  it("refuses lossy, which is per-source and belongs to E4/S4", () => {
-    expect(() => staircaseRender("lossy-artifact", 2.0)).toThrow(/per-source/);
-    expect(STAIRCASE_RENDER_FAMILIES).not.toContain("lossy-artifact");
+  it("renders a lossy level as a BITRATE, with the unit suffix (RT-85a)", () => {
+    // `-b:a 128` is 128 BITS per second. The ladder carries integers and this
+    // is the one place they become a render parameter.
+    expect(staircaseRender("lossy-artifact", 128)).toEqual({ param: "128k", opts: {} });
+    expect(staircaseRender("lossy-artifact", 32).param).toBe("32k");
+  });
+
+  it("refuses a bitrate MP3 cannot produce, rather than letting LAME snap it", () => {
+    // How three "levels" once came out as one audio file.
+    expect(() => staircaseRender("lossy-artifact", 118)).toThrow(/not a bitrate MP3 can produce/);
+    // The nominal dB values are NOT levels — they describe the range only.
+    expect(() => staircaseRender("lossy-artifact", 2.0)).toThrow(/not a bitrate MP3 can produce/);
+  });
+
+  it("lossy is a rendered family now, but not a POOLED one", () => {
+    expect(STAIRCASE_RENDER_FAMILIES).toContain("lossy-artifact");
+    expect(POOLED_FAMILIES).not.toContain("lossy-artifact");
   });
 });
 

@@ -44,13 +44,13 @@
 
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, writeFileSync, rmSync, statSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync, rmSync, statSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import { decodeMono, degradeWavParam, normRender, predictedTrajectoryMs, timingDeviations, SEGS, LUFS } from "./degrade.mjs";
-import { STAIRCASE_LEVELS, staircaseRender } from "./rungs.mjs";
-import { STAIRCASE_WINDOWS, windowsForSource } from "./renderplan.mjs";
+import { STAIRCASE_LEVELS, lossyLadderForSource, staircaseRender } from "./rungs.mjs";
+import { LOSSY_WINDOWS, MEASURED_LOSSY_CURVES, STAIRCASE_WINDOWS, lossyLevelsForSource, windowsForSource } from "./renderplan.mjs";
 import {
   clippingStats,
   logSpectralDistance,
@@ -81,9 +81,64 @@ const SR = DEFAULT_SPECTRAL_OPTS.sampleRate;
 const ff = (args) => execFileSync(FFMPEG, ["-v", "error", "-y", ...args]);
 const sha256File = (f) => createHash("sha256").update(readFileSync(f)).digest("hex");
 
-/** Families this stage renders. Lossy is per-source and is E4/S4's problem —
- *  `staircaseRender` throws for it by design rather than guessing a bitrate. */
-export const STAIRCASE_RENDER_FAMILIES = ["pitch-drift", "timing-smear"];
+/** Families this stage renders. Lossy joined in E4/S4/S3; it is per-source in
+ *  both its ladder and its windows, so it renders on its own pass. */
+export const STAIRCASE_RENDER_FAMILIES = ["pitch-drift", "timing-smear", "lossy-artifact"];
+
+/**
+ * Families whose levels and windows are the SAME for every source. Lossy is
+ * not one: its ladder is built from that source's own measured curve (RT-65)
+ * and it draws from its own nine windows (RT-79a/RT-84a), because the sources
+ * that serve it are not the sources that serve pitch and timing.
+ */
+export const POOLED_FAMILIES = ["pitch-drift", "timing-smear"];
+
+/**
+ * The levels this family renders for this source.
+ *
+ * ONE FUNCTION, so "which levels" is asked in exactly one place. Pitch and
+ * timing read the shared ladder; lossy is derived per source, and a source with
+ * no measured curve is an ERROR rather than a source with no levels — silently
+ * rendering nothing for it is how a plan comes to disagree with what is on disk.
+ */
+export function levelsFor(family, sourceId) {
+  if (family !== "lossy-artifact") return STAIRCASE_LEVELS[family].values;
+  const curve = MEASURED_LOSSY_CURVES[sourceId];
+  if (!curve) {
+    throw new Error(
+      `levelsFor: no measured lossy curve for "${sourceId}" — run \`curve --family lossy-artifact --source ${sourceId}\` first`,
+    );
+  }
+  // FLOORED. The raw ladder is monotone at the window its curve was measured
+  // on and inverts on others (MEASURED_LOSSY_FLOOR_KBPS), so the floor is part
+  // of "which levels", not a filter someone downstream remembers to apply.
+  const ladder = lossyLevelsForSource(sourceId);
+  if (ladder.length < 2) throw new Error(`levelsFor: ${sourceId}'s lossy curve yields no usable ladder`);
+  return ladder.map((p) => p.bitrateKbps);
+}
+
+/** The window table this family draws from. */
+export function windowsFor(family) {
+  return family === "lossy-artifact" ? LOSSY_WINDOWS : STAIRCASE_WINDOWS;
+}
+
+/**
+ * DOES DAMAGE RISE WITH THE LABEL, OR FALL WITH IT?
+ *
+ * Pitch and timing label a level with its magnitude, so a ladder ascending in
+ * label ascends in damage. Lossy labels a level with its BITRATE (RT-85a), and
+ * damage rises as the bitrate FALLS. A monotonicity check that assumed "up"
+ * would report every lossy ladder as broken.
+ *
+ * The measure that carries damage differs too: for pitch and timing it is
+ * `measured.value`; for lossy the value is the bitrate and the damage is
+ * `measured.lsdDb`.
+ */
+export const FAMILY_AXIS = {
+  "pitch-drift": { descending: false, damageField: "value" },
+  "timing-smear": { descending: false, damageField: "value" },
+  "lossy-artifact": { descending: true, damageField: "lsdDb" },
+};
 
 /**
  * The peak of the pitch ramp as a fraction of the requested parameter.
@@ -264,6 +319,26 @@ export function measureClip(family, level, ref, deg, { params, clipSec } = {}) {
       coherence: +d.coherence.toFixed(3),
     };
   }
+  if (family === "lossy-artifact") {
+    // THE LABEL IS THE BITRATE, AND IT IS EXACT (PM ruling RT-85a). The encoder
+    // was told 128k and produced 128k, so `value` cannot disagree with `level`
+    // and an err% column here would read "+0%" down the page — the same
+    // vacuity RT-74a exposed for timing.
+    //
+    // THE SUBSTANTIVE NUMBER IS `lsdDb`, the damage this bitrate actually did
+    // ON THIS WINDOW, and it is why the label had to stop being a dB figure: a
+    // fixed 128 kbps measures 1.41-1.94 dB across pb1's nine windows (1.38x).
+    // It is recorded per clip so the spread is stated rather than averaged
+    // away, and Layer A gates it against this window's transparency anchor.
+    return {
+      ...base,
+      unit: STAIRCASE_LEVELS[family].unit,
+      value: level,
+      valueSource: "bitrate — exact by construction (RT-85a); the damage it did is lsdDb, which is material-dependent",
+      predicted: level,
+      errPct: 0,
+    };
+  }
   throw new Error(`measureClip: no measure defined for family "${family}"`);
 }
 
@@ -413,7 +488,7 @@ function renderWindow({ sourceId, startSec, seed, cached, clipSec, families, for
   const clips = [];
 
   for (const family of families) {
-    for (const level of STAIRCASE_LEVELS[family].values) {
+    for (const level of levelsFor(family, sourceId)) {
       const id = clipId(sourceId, startSec, family, level);
       const outFile = join(STAIRCASE_OUT, fileFor(id));
       const reused = reusable(id, family);
@@ -512,8 +587,11 @@ function renderWindow({ sourceId, startSec, seed, cached, clipSec, families, for
         seed,
         // The parameter actually rendered. Equal to the level for pitch;
         // SOLVED for timing, so `level` states the magnitude and this states
-        // how it was reached (same split as lossyLadderForSource).
-        renderParam: +param.toFixed(4),
+        // how it was reached (same split as lossyLadderForSource). For LOSSY it
+        // is a STRING — "128k", because `-b:a 128` means 128 bits per second —
+        // so it is recorded verbatim rather than coerced through a numeric
+        // format that a bitrate does not have.
+        renderParam: typeof param === "number" ? +param.toFixed(4) : param,
         ...(calibration ? { calibration } : {}),
         params,
         refId: rid,
@@ -621,25 +699,52 @@ export function crossWindowAgreement(clips) {
   const byLevel = new Map();
   for (const c of clips) {
     if (c.kind !== "degraded" || !c.measured) continue;
-    const key = `${c.family}/${c.level}`;
+    // KEYED BY SOURCE FOR LOSSY. Pitch and timing levels are source-independent
+    // — a cent is a cent — so pooling their windows across sources is the right
+    // comparison. A lossy level is a BITRATE on specific material, and a session
+    // never mixes sources (RT-65), so pooling 32k-on-pb1 with 32k-on-pb4 reports
+    // a 3.12x spread that no listener could ever encounter.
+    const key = c.family === "lossy-artifact" ? `${c.family}/${c.sourceId}/${c.level}` : `${c.family}/${c.level}`;
     if (!byLevel.has(key)) byLevel.set(key, []);
     byLevel.get(key).push(c);
   }
   const rows = [];
   for (const [key, group] of byLevel) {
     if (group.length < 2) continue;
-    const { family, level } = group[0];
+    const { family, level, sourceId } = group[0];
     const values = group.map((c) => c.measured.value);
     const min = Math.min(...values);
     const max = Math.max(...values);
+    // THE DAMAGE SPREAD, RECORDED SEPARATELY FROM THE LABEL SPREAD.
+    //
+    // For lossy the label is a bitrate and agrees at exactly 1.000x by
+    // construction (RT-85a) — so the ratio above says nothing, in the same way
+    // timing's does. What varies is the DAMAGE that bitrate did, and it varies
+    // a lot: 1.41-1.94 dB for a fixed 128k across pb1's nine windows. Emitting
+    // only the label ratio would be a column of 1.000x that reads as a passed
+    // test while the real variation went unrecorded (N3).
+    // `lsdDb` is on EVERY family's measurement (it comes from `base`), so the
+    // damage spread is only meaningful where the label is not the damage.
+    const damages =
+      family === "lossy-artifact" ? group.map((c) => c.measured.lsdDb).filter((v) => typeof v === "number") : [];
+    const damage =
+      damages.length > 1
+        ? {
+            damageMinDb: Math.min(...damages),
+            damageMaxDb: Math.max(...damages),
+            damageRatio: +(Math.max(...damages) / Math.min(...damages)).toFixed(3),
+          }
+        : {};
     rows.push({
       key,
       family,
+      ...(family === "lossy-artifact" ? { sourceId } : {}),
       level,
       n: group.length,
       min,
       max,
       ratio: +(max / min).toFixed(3),
+      ...damage,
       windows: group.map((c) => ({ window: `${c.sourceId}@${c.startSec}s`, value: c.measured.value })),
     });
   }
@@ -655,13 +760,19 @@ export function crossWindowAgreement(clips) {
  * between two levels the ruler cannot tell apart and report a precision it does
  * not have (N3).
  */
-export function ladderMonotone(rows) {
-  const series = rows.map((r) => r.measured.value);
+export function ladderMonotone(rows, family = "pitch-drift") {
+  // THE AXIS COMES FROM THE FAMILY, not from an assumption that bigger labels
+  // mean more damage. Lossy labels a level with its BITRATE, so its ladder
+  // ascends in damage while DESCENDING in label (RT-85a) — checked as written,
+  // this reported every lossy ladder as broken.
+  const axis = FAMILY_AXIS[family] ?? FAMILY_AXIS["pitch-drift"];
+  const ordered = axis.descending ? [...rows].reverse() : rows;
+  const series = ordered.map((r) => r.measured[axis.damageField]);
   const breaks = [];
   for (let i = 1; i < series.length; i++) {
     if (!(series[i] > series[i - 1])) breaks.push({ at: i, prev: series[i - 1], value: series[i] });
   }
-  return { series, monotone: breaks.length === 0, breaks };
+  return { series, monotone: breaks.length === 0, breaks, damageField: axis.damageField };
 }
 
 export async function staircaseRenderCli(args = []) {
@@ -687,8 +798,20 @@ export async function staircaseRenderCli(args = []) {
     }
   }
 
-  let sources = opt("sources", Object.keys(STAIRCASE_WINDOWS).join(",")).split(",").map((s) => s.trim());
-  let windows = STAIRCASE_WINDOWS;
+  // WINDOWS ARE PER FAMILY. Lossy draws from its own nine (RT-79a/RT-84a) and
+  // from a different source set — pb4 serves lossy, pb8 does not. Running one
+  // window table for every family would render lossy at pitch's three windows
+  // and silently produce a third of the pool.
+  const lossyOnly = families.length === 1 && families[0] === "lossy-artifact";
+  const familyWindows = lossyOnly ? LOSSY_WINDOWS : STAIRCASE_WINDOWS;
+  if (!lossyOnly && families.includes("lossy-artifact")) {
+    throw new Error(
+      "staircase-render: lossy-artifact draws from different windows AND different sources than pitch/timing " +
+        "(RT-79a) — render it on its own: --families lossy-artifact",
+    );
+  }
+  let sources = opt("sources", Object.keys(familyWindows).join(",")).split(",").map((s) => s.trim());
+  let windows = familyWindows;
 
   // --only pb1@75,pb6@30 — a subset of windows, for proving one before running
   // all nine. Expressed as (source, window) pairs rather than two independent
@@ -749,8 +872,43 @@ export async function staircaseRenderCli(args = []) {
   // Merge: entries this run did not touch stay, so `--only` does not delete the
   // rest of the pool from the manifest.
   const touched = new Set([...references, ...clips].map((e) => e.id));
-  const mergedRefs = [...(priorManifest.references ?? []).filter((e) => !touched.has(e.id)), ...references];
-  const mergedClips = [...(priorManifest.clips ?? []).filter((e) => !touched.has(e.id)), ...clips];
+  // PRUNE LEVELS THIS RUN NO LONGER PLANS. Merging keeps entries a run did not
+  // touch, which is what makes `--only` safe — but when a ladder SHRINKS, the
+  // dropped levels are exactly "not touched" and would survive in the manifest
+  // as though they were still part of the pool. A level removed for inverting
+  // its ladder must not come back as a stale row (MEASURED_LOSSY_FLOOR_KBPS).
+  const planned = new Set();
+  for (const t of targets) for (const family of families) {
+    for (const level of levelsFor(family, t.sourceId)) planned.add(`${t.sourceId}@${t.startSec}/${family}/${level}`);
+  }
+  // A WINDOW CAN BE DROPPED TOO, not just a level (RT-86a dropped three of
+  // pb4's). Those clips are also "not touched", so scope is by SOURCE rather
+  // than by (source, window) — otherwise a removed window's clips survive as a
+  // pool nothing plans to serve.
+  const inScope = (e) => families.includes(e.family) && sources.includes(e.sourceId);
+  const pruned = (priorManifest.clips ?? []).filter(
+    (e) => !touched.has(e.id) && inScope(e) && !planned.has(`${e.sourceId}@${e.startSec}/${e.family}/${e.level}`),
+  );
+  const prunedIds = new Set(pruned.map((e) => e.id));
+  // A reference belongs to a window, and a window can serve several families,
+  // so one is only stale when NO family plans it any more.
+  const anyFamilyWindow = new Set();
+  for (const family of STAIRCASE_RENDER_FAMILIES) {
+    const table = windowsFor(family);
+    for (const [sourceId, ws] of Object.entries(table)) for (const w of ws) anyFamilyWindow.add(`${sourceId}@${w}`);
+  }
+  const prunedRefs = (priorManifest.references ?? []).filter(
+    (e) => !touched.has(e.id) && sources.includes(e.sourceId) && !anyFamilyWindow.has(`${e.sourceId}@${e.startSec}`),
+  );
+  const prunedRefIds = new Set(prunedRefs.map((e) => e.id));
+  const mergedRefs = [
+    ...(priorManifest.references ?? []).filter((e) => !touched.has(e.id) && !prunedRefIds.has(e.id)),
+    ...references,
+  ];
+  const mergedClips = [
+    ...(priorManifest.clips ?? []).filter((e) => !touched.has(e.id) && !prunedIds.has(e.id)),
+    ...clips,
+  ];
   mergedRefs.sort((a, b) => a.id.localeCompare(b.id));
   mergedClips.sort((a, b) => a.id.localeCompare(b.id));
 
@@ -763,7 +921,7 @@ export async function staircaseRenderCli(args = []) {
       const rows = mergedClips
         .filter((c) => c.sourceId === t.sourceId && c.startSec === t.startSec && c.family === family)
         .sort((a, b) => a.level - b.level);
-      ladders.push({ sourceId: t.sourceId, startSec: t.startSec, family, n: rows.length, ...ladderMonotone(rows), rows });
+      ladders.push({ sourceId: t.sourceId, startSec: t.startSec, family, n: rows.length, ...ladderMonotone(rows, family), rows });
     }
   }
 
@@ -845,7 +1003,18 @@ export async function staircaseRenderCli(args = []) {
      * 2.70-3.07 (1.137x) where every level from 12.5 up sits at or below 1.06x,
      * and that limit is stated rather than hidden by dropping the level.
      */
-    crossWindowSpread: agreement.map((r) => ({ family: r.family, level: r.level, n: r.n, min: r.min, max: r.max, ratio: r.ratio })),
+    crossWindowSpread: agreement.map((r) => ({
+      family: r.family,
+      ...(r.sourceId ? { sourceId: r.sourceId } : {}),
+      level: r.level,
+      n: r.n,
+      min: r.min,
+      max: r.max,
+      ratio: r.ratio,
+      ...(r.damageRatio !== undefined
+        ? { damageMinDb: r.damageMinDb, damageMaxDb: r.damageMaxDb, damageRatio: r.damageRatio }
+        : {}),
+    })),
     references: mergedRefs,
     clips: mergedClips,
   };
@@ -872,17 +1041,32 @@ export async function staircaseRenderCli(args = []) {
       // page and look like a test that passed. What is actually being asked of a
       // timing clip is whether the correlator tracks the predicted trajectory.
       const traj = l.rows[0]?.measured.trajectoryR !== undefined;
+      // LOSSY PRINTS DIFFERENT COLUMNS AGAIN, for the third time and the same
+      // reason. Its label is the bitrate and is exact (RT-85a), so an err%
+      // column reads "+0%" down the page and looks like a passed test; LSD is
+      // not a side-note for this family, it IS the magnitude; and it has no
+      // confidence measure at all, so a conf% column printed NaN%.
+      const isLossy = l.family === "lossy-artifact";
       console.log(
-        traj
-          ? "    level    labelled   correlator   traj r   slope   conf%   LSD dB   clip%"
-          : "    level    measured   predicted   err%   conf%   LSD dB   clip%",
+        isLossy
+          ? "    level      damage dB   step x   clip%"
+          : traj
+            ? "    level    labelled   correlator   traj r   slope   conf%   LSD dB   clip%"
+            : "    level    measured   predicted   err%   conf%   LSD dB   clip%",
       );
-      for (const r of l.rows) {
+      // Ordered by DAMAGE, which for lossy means descending bitrate.
+      const printRows = isLossy ? [...l.rows].reverse() : l.rows;
+      let prevDb = null;
+      for (const r of printRows) {
         const m = r.measured;
-        const tail =
-          `${(m.confidentFraction * 100).toFixed(0)}%`.padStart(8) +
-          `${m.lsdDb.toFixed(2)}`.padStart(9) +
-          `${(r.preNormClippedFraction * 100).toFixed(4)}`.padStart(9);
+        const clip = `${(r.preNormClippedFraction * 100).toFixed(4)}`.padStart(9);
+        if (isLossy) {
+          const step = prevDb == null ? "-" : (m.lsdDb / prevDb).toFixed(2) + "x";
+          prevDb = m.lsdDb;
+          console.log(`    ${(r.level + "k").padEnd(9)}${m.lsdDb.toFixed(3).padStart(11)}${step.padStart(9)}${clip}`);
+          continue;
+        }
+        const tail = `${(m.confidentFraction * 100).toFixed(0)}%`.padStart(8) + `${m.lsdDb.toFixed(2)}`.padStart(9) + clip;
         console.log(
           traj
             ? `    ${String(r.level).padEnd(9)}${String(m.value).padStart(8)}${String(m.correlatorIqrMs).padStart(13)}` +
@@ -896,7 +1080,10 @@ export async function staircaseRenderCli(args = []) {
       }
       console.log(
         `    strictly increasing: ${l.monotone ? "YES" : `NO — ${l.breaks.map((b) => `${b.prev}→${b.value}`).join(", ")}`}` +
-          (traj
+          (isLossy
+            ? `  (in DAMAGE, i.e. descending bitrate)   damage ${Math.min(...l.rows.map((r) => r.measured.lsdDb)).toFixed(2)}-${Math.max(...l.rows.map((r) => r.measured.lsdDb)).toFixed(2)} dB
+`
+            : traj
             ? `   worst traj r ${Math.min(...l.rows.map((r) => r.measured.trajectoryR)).toFixed(3)}` +
               `   slope ${Math.min(...l.rows.map((r) => r.measured.trajectorySlope)).toFixed(2)}-${Math.max(...l.rows.map((r) => r.measured.trajectorySlope)).toFixed(2)}\n` +
               `    label is the MODEL, exact by construction (RT-74a) — the check is the trajectory\n`
@@ -913,12 +1100,19 @@ export async function staircaseRenderCli(args = []) {
         if (!cur || r.ratio > cur.ratio) worst.set(r.family, r);
       }
       console.log(`  cross-window agreement — the same level, measured on every window serving it`);
-      console.log(`    family          levels  worst spread                              max ratio`);
+      console.log(`    family          levels  worst level   range           label ratio`);
       for (const [family, r] of worst) {
+        // THE LABEL RATIO, THEN THE DAMAGE RATIO. For lossy the first is 1.00x
+        // by construction and says nothing; the second is the real variation
+        // and must not be omitted just because it has no gate. Listing all 27
+        // windows inline ran the last column into the values, too.
         console.log(
           `    ${family.padEnd(16)}${String(agreement.filter((x) => x.family === family).length).padStart(5)}   ` +
-            `level ${String(r.level).padEnd(6)} ${r.windows.map((w) => `${w.window} ${w.value}`).join(" vs ")}`.padEnd(42) +
-            `${r.ratio.toFixed(2)}x ${r.ratio > MAX_CROSS_WINDOW_RATIO ? `FAIL (>${MAX_CROSS_WINDOW_RATIO})` : "ok"}`,
+            `level ${String(r.level).padEnd(7)}${`${r.min}-${r.max}`.padEnd(16)}` +
+            `${r.ratio.toFixed(2)}x ${r.ratio > MAX_CROSS_WINDOW_RATIO ? `FAIL (>${MAX_CROSS_WINDOW_RATIO})` : "ok"}` +
+            (r.damageRatio !== undefined
+              ? `   ·  damage ${r.damageMinDb.toFixed(2)}-${r.damageMaxDb.toFixed(2)} dB = ${r.damageRatio.toFixed(2)}x (recorded, not gated)`
+              : ""),
         );
       }
       console.log("");
@@ -931,6 +1125,31 @@ export async function staircaseRenderCli(args = []) {
         ` · ${(bytes / 1024 / 1024).toFixed(1)} MB on disk · ${elapsedSec.toFixed(1)}s`,
     );
     console.log(`  manifest: src/content/delicacy/staircase.json`);
+    if (prunedRefs.length) {
+      console.log(
+        `  PRUNED  ${prunedRefs.length} reference(s) for window(s) no family plans any more: ` +
+          prunedRefs.map((e) => e.id).join(", "),
+      );
+    }
+    if (pruned.length) {
+      console.log(
+        `  PRUNED  ${pruned.length} clip(s) this run no longer plans, removed from the manifest: ` +
+          pruned.slice(0, 6).map((e) => e.id).join(", ") + (pruned.length > 6 ? `, +${pruned.length - 6} more` : ""),
+      );
+    }
+    // ORPHANS ON DISK. Reported, never deleted — the audio is expensive to
+    // reproduce and this stage has no mandate to remove files. It also finally
+    // names the 16 excluded timing clips that have sat unexplained in this
+    // directory since E4/S3.
+    const known = new Set([...mergedRefs, ...mergedClips].map((e) => e.file));
+    const onDisk = existsSync(STAIRCASE_OUT) ? readdirSync(STAIRCASE_OUT).filter((f) => f.endsWith(".mp3")) : [];
+    const orphans = onDisk.filter((f) => !known.has(f));
+    if (orphans.length) {
+      console.log(
+        `  ORPHANS ${orphans.length} file(s) in public/audio/staircase are not in the manifest and are NOT served: ` +
+          orphans.slice(0, 4).join(", ") + (orphans.length > 4 ? `, +${orphans.length - 4} more` : ""),
+      );
+    }
     console.log(
       `  NOTE  these are MAGNITUDES, not audibility, and not Layer A. Fitness to put in front of a\n` +
         `        listener (dead air, quiet fraction, clipping, floors) is \`clip-pipeline staircase-validate\`.`,

@@ -391,20 +391,27 @@ export function staircaseRender(family, level) {
   if (!spec) {
     throw new Error(`staircaseRender: unknown family "${family}" (know: ${Object.keys(STAIRCASE_LEVELS).join(", ")})`);
   }
+  if (family === "lossy-artifact") {
+    // A LOSSY LEVEL IS A BITRATE (RT-85a). `spec.values` is the NOMINAL dB
+    // range, not the levels rendered — those come from `lossyLadderForSource`
+    // per source — so the check here is that the level is a bitrate MP3 can
+    // actually produce. It is not a formality: LAME silently snaps anything
+    // else to a neighbour, which is how three "levels" once came out as one
+    // audio file.
+    if (!LEGAL_MP3_BITRATES_KBPS.includes(level)) {
+      throw new Error(
+        `staircaseRender: ${level} is not a bitrate MP3 can produce at 44.1 kHz — ` +
+          `have ${LEGAL_MP3_BITRATES_KBPS.join(", ")} (levels come from lossyLadderForSource)`,
+      );
+    }
+    // THE UNIT SUFFIX IS LOAD-BEARING. `-b:a 128` is 128 BITS per second; the
+    // ladder carries integers, and this is the one place they become a render
+    // parameter, so the conversion lives here rather than at a call site.
+    return { param: `${level}k`, opts: {} };
+  }
   if (!spec.values.some((v) => v === level)) {
     throw new Error(
       `staircaseRender: ${level} is not a ${family} level (${spec.unit}) — have ${spec.values.join(", ")}`,
-    );
-  }
-  if (family === "lossy-artifact") {
-    // A dB target is not a render parameter. The bitrate that reaches it
-    // depends on the material, so it has to be solved against THAT source's
-    // measured curve, and a level no source can reach must be skipped rather
-    // than clamped (see lossyLadderForSource).
-    throw new Error(
-      `staircaseRender: lossy-artifact levels are per-source — call lossyLadderForSource(curve) and render the ` +
-        `bitrates it returns, labelling each clip with its BITRATE in ${spec.unit} (RT-85a) and recording the ` +
-        `dB measured on that window beside it`,
     );
   }
   return { param: level, opts: spec.renderMode ? { timingMode: spec.renderMode } : {} };
