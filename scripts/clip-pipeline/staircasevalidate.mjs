@@ -54,7 +54,7 @@ import {
   MIN_CONFIDENT_PITCH_FRACTION,
   TMP,
 } from "./validate.mjs";
-import { MIN_MEASURABLE_PITCH_CENTS } from "./rungs.mjs";
+import { MIN_LOSSY_LEVEL_RATIO, MIN_MEASURABLE_PITCH_CENTS } from "./rungs.mjs";
 import { decodeMono } from "./degrade.mjs";
 import { clippingStats, longestSilenceSec, quietFraction, DEFAULT_SPECTRAL_OPTS } from "./spectral.mjs";
 import {
@@ -89,6 +89,7 @@ export {
   MAX_SILENCE_SEC,
   MIN_CONFIDENT_BLOCK_FRACTION,
   MIN_CONFIDENT_PITCH_FRACTION,
+  MIN_LOSSY_LEVEL_RATIO,
   MIN_MEASURABLE_PITCH_CENTS,
 };
 
@@ -120,14 +121,16 @@ export const MIN_MEASURABLE_DRIFT_MS = 12;
  * of `staircase-render`'s gates supplies the audio-level evidence.
  *
  * A TABLE RATHER THAN A CHAIN OF `if`s, so a family with no entry is a visible
- * hole instead of an unhandled branch falling through to PASS. The lossy family
- * deliberately has NO entry yet: `staircase-render` refuses to render it (it is
- * per-source, E4/S4), so no lossy staircase clip exists to grade, and inventing
- * its gate now would mean pre-registering a threshold against zero
- * observations. When E4/S4 renders them, the missing entry makes every one of
- * them ERROR rather than silently PASS.
+ * hole instead of an unhandled branch falling through to PASS — an unknown
+ * family ERRORs rather than silently passing.
  *
- * THE FLOORS ARE IN THE PARAMETER DOMAIN, NOT THE MEASUREMENT DOMAIN.
+ * ALL THREE FAMILIES NOW HAVE AN ENTRY. Lossy's was written in E4/S4/S2 BEFORE
+ * any lossy audio existed, deliberately: a gate authored after seeing the
+ * render is fitted to it. See its own block below for why its floor has a
+ * different shape from the other two.
+ *
+ * THE PITCH AND TIMING FLOORS ARE IN THE PARAMETER DOMAIN, NOT THE MEASUREMENT
+ * DOMAIN.
  *
  * FOUND BY RUNNING THIS OVER THE REAL POOL (E4/S5/S2) — the first version
  * compared `MIN_MEASURABLE_PITCH_CENTS` against each clip's MEASURED p95 and
@@ -192,7 +195,90 @@ export const STAIRCASE_MAGNITUDE_GATES = {
     evidenceField: "trajectoryVerified",
     evidenceLabel: "drift trajectory (staircase-render's r/slope gate)",
   },
+  /**
+   * PRE-REGISTERED BEFORE ANY LOSSY AUDIO EXISTS (E4/S4/S2, 2026-08-19). A gate
+   * authored after seeing the render is fitted to it, and this family has
+   * already cost two sessions to defects that a fitted gate would have passed.
+   *
+   * ITS FLOOR IS NOT LIKE THE OTHER TWO, and the asymmetry is real rather than
+   * an oversight. Pitch and timing put their floor on `level` — a ladder-table
+   * property — and therefore need a separate evidence field pointing at
+   * something measured from the audio. Lossy's floor IS measured from the
+   * audio: the damage this clip actually did, against the transparency anchor
+   * of ITS OWN window. So it needs no `evidenceField`, and adding one for
+   * symmetry would be inventing a check rather than making one.
+   *
+   * THE FLOOR IS THE TRANSPARENCY ANCHOR, ratio 1.0 — deliberately far below
+   * `validate.mjs`'s fair-trial MIN_ANCHOR_RATIO of 3.0, exactly as pitch's
+   * staircase floor of 3 sits below its fair-trial 10. A staircase converging
+   * toward a threshold must be allowed below the fair-trial floor; what it must
+   * never do is claim damage smaller than a manipulation known to be inaudible
+   * on that same material.
+   *
+   * NON-BINDING AT THE BOTTOM RUNG BY CONSTRUCTION, and said out loud: the
+   * anchor IS a 320 kbps round-trip and the ladder's gentlest rung IS 320 kbps,
+   * so that rung measures exactly 1.0x. This is a guard against a level ever
+   * being added above 320k, not a live gate — the same standing as
+   * MIN_MEASURABLE_DRIFT_MS.
+   *
+   * NO CONFIDENCE CHECK, because there is no confidence figure to check.
+   * Log-spectral distance compares frames deterministically; it has no analogue
+   * of the correlator's block confidence or the cents ruler's frame match. That
+   * is a declared absence, not a skipped test — `null` here means "this family
+   * has no such measure", and the grader must not silently treat a missing
+   * number as a pass.
+   */
+  "lossy-artifact": {
+    unit: "kbps",
+    /**
+     * Gated on the measured damage relative to this window's own transparent
+     * round-trip, NOT on the level. The level is a bitrate; the bitrate is
+     * exact by construction (RT-85a) and so could never fail a check.
+     */
+    anchorFloorRatio: 1.0,
+    minConfidentFraction: null,
+    confidenceLabel: null,
+  },
 };
+
+/**
+ * Are two adjacent lossy levels still distinguishable ON THIS WINDOW?
+ *
+ * PRE-REGISTERED WITH THE GATE ABOVE, and it is the check that the RT-85a
+ * measurement actually makes necessary. `lossyLadderForSource` thins the ladder
+ * so neighbours differ by at least MIN_LOSSY_LEVEL_RATIO in dB — but it does
+ * that against the curve measured on ONE window. A fixed bitrate does 1.38x
+ * different damage across pb1's nine windows, so two levels comfortably apart
+ * at @75 s can collapse into each other somewhere else, and a staircase
+ * stepping between two magnitudes its own ruler cannot separate reports a
+ * precision it does not have (N3).
+ *
+ * A LADDER PROPERTY, NOT A CLIP PROPERTY, which is why it is a separate
+ * function rather than a field in the gate: no single clip is at fault when two
+ * of them are too close, and the answer is to drop a level on that window or
+ * drop the window, both of which are decisions about the ladder.
+ *
+ * @param rows [{ level, lsdDb }] one window's lossy clips, any order.
+ * @returns [{ from, to, ratio }] the adjacent pairs that are too close.
+ */
+export function lossyStepCollapses(rows, { minRatio = MIN_LOSSY_LEVEL_RATIO } = {}) {
+  // Ascending by DAMAGE, which is descending by bitrate — the inverted axis.
+  const ordered = [...rows].filter((r) => typeof r.lsdDb === "number").sort((a, b) => a.lsdDb - b.lsdDb);
+  const collapses = [];
+  for (let i = 1; i < ordered.length; i++) {
+    const ratio = ordered[i].lsdDb / ordered[i - 1].lsdDb;
+    if (!(ratio >= minRatio)) {
+      collapses.push({
+        from: ordered[i - 1].level,
+        to: ordered[i].level,
+        fromDb: ordered[i - 1].lsdDb,
+        toDb: ordered[i].lsdDb,
+        ratio: +ratio.toFixed(3),
+      });
+    }
+  }
+  return collapses;
+}
 
 /**
  * Grade ONE staircase entry — a degraded clip or a window reference.
@@ -215,6 +301,7 @@ export const STAIRCASE_MAGNITUDE_GATES = {
  *   preNormClippedFraction?: number|null,
  *   measuredValue?: number|null, confidentFraction?: number|null,
  *   trajectoryVerified?: boolean|null, levelErrVerified?: boolean|null,
+ *   anchorRatio?: number|null,
  *   flatTopFraction: number, longestSilenceSec: number, quietFraction: number,
  * }}
  * @returns the row plus `verdict` ("PASS" | "FLAG" | "ERROR"), `gatedOn`, `reasons`.
@@ -261,11 +348,31 @@ export function gradeStaircaseClip(m) {
         );
       }
     }
-    if (!(m.confidentFraction >= gate.minConfidentFraction)) {
+    // A DECLARED ABSENCE, not a skipped check. `null` means this family's ruler
+    // has no confidence measure at all (lossy — log-spectral distance compares
+    // frames deterministically). A family that HAS one and is missing the
+    // number still fails below.
+    if (gate.minConfidentFraction !== null && !(m.confidentFraction >= gate.minConfidentFraction)) {
       reasons.push(
         `magnitude unmeasurable — only ${((m.confidentFraction ?? 0) * 100).toFixed(0)}% of ${gate.confidenceLabel} ` +
           `(need >=${(gate.minConfidentFraction * 100).toFixed(0)}%)`,
       );
+    } else if (gate.anchorFloorRatio !== undefined) {
+      // AN AUDIO MEASUREMENT, not a ladder property — the damage this clip
+      // actually did, against a transparent round-trip of its own window.
+      // Absent is an ERROR: without the anchor there is no floor to check.
+      if (m.anchorRatio === undefined || m.anchorRatio === null) {
+        return err(
+          `no transparency anchor for this clip's window — the ${gate.unit} floor is measured relative to one, ` +
+            `so nothing here can judge the damage it did`,
+        );
+      }
+      if (!(m.anchorRatio >= gate.anchorFloorRatio)) {
+        reasons.push(
+          `damage ${m.anchorRatio.toFixed(2)}x this window's transparent round-trip ` +
+            `(need >=${gate.anchorFloorRatio}x) — smaller than a manipulation known to be inaudible on this material`,
+        );
+      }
     } else if (!(m.level >= gate.floor)) {
       // THE LEVEL, NOT THE MEASUREMENT — see the gate table. The floor was
       // measured in the parameter domain, and a ramp peaks below its parameter.

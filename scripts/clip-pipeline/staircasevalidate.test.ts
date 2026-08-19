@@ -28,7 +28,7 @@ import {
   MIN_MEASURABLE_PITCH_CENTS,
   STAIRCASE_MAGNITUDE_GATES,
 } from "./staircasevalidate.mjs";
-import { eligibleWindows, levelErrVerdict, trajectoryVerdict } from "./staircasevalidate.mjs";
+import { eligibleWindows, levelErrVerdict, lossyStepCollapses, trajectoryVerdict, MIN_LOSSY_LEVEL_RATIO } from "./staircasevalidate.mjs";
 import { MAX_LEVEL_ERR_PCT, MIN_TRAJECTORY_R, MAX_TRAJECTORY_SLOPE_ERR_PCT } from "./staircaserender.mjs";
 import { MIN_PITCH_CENTS } from "./validate.mjs";
 import { STAIRCASE_LEVELS } from "./rungs.mjs";
@@ -337,13 +337,8 @@ describe("the fitness gates — measured fresh, and never measured before this s
 });
 
 describe("a family with no gate cannot pass", () => {
-  it("lossy has no staircase gate yet, and a lossy clip ERRORs rather than passing", () => {
-    // E4/S4 renders these. Until its gate is pre-registered against real
-    // observations, the missing table entry must be loud.
-    expect(gateFor("lossy-artifact")).toBeUndefined();
-    const r = gradeStaircaseClip({ ...pitch, family: "lossy-artifact", id: "pb1-w75-lossy-4.4" });
-    expect(r.verdict).toBe("ERROR");
-    expect(r.reasons[0]).toMatch(/no Layer A magnitude gate defined/);
+  it("lossy now HAS a gate, pre-registered in E4/S4/S2 before any lossy audio existed", () => {
+    expect(gateFor("lossy-artifact")).toBeDefined();
   });
 
   it("an unknown family ERRORs", () => {
@@ -437,5 +432,130 @@ describe("eligibleWindows is the INTERSECTION, so E5 cannot use one list alone",
     const noLayerA = { instanceWindows: manifest.instanceWindows };
     expect(eligibleWindows(noLayerA, "timing-smear")).toEqual([{ sourceId: "pb1", startSec: 30 }]);
     expect(eligibleWindows({}, "timing-smear")).toEqual([]);
+  });
+});
+
+/** A healthy LOSSY clip. Level is a BITRATE (RT-85a); the floor is measured. */
+const lossy = {
+  id: "pb1-w105-lossy-128",
+  kind: "degraded" as const,
+  sourceId: "pb1",
+  startSec: 105,
+  family: "lossy-artifact",
+  level: 128,
+  sha256Match: true,
+  preNormClippedFraction: 0,
+  lsdDb: 1.46,
+  anchorRatio: 2.1,
+  flatTopFraction: 0,
+  longestSilenceSec: 0.4,
+  quietFraction: 0.05,
+};
+
+describe("the lossy gate, PRE-REGISTERED before any lossy audio existed (E4/S4/S2)", () => {
+  it("a healthy lossy clip passes, gated in kbps", () => {
+    const r = gradeStaircaseClip(lossy);
+    expect(r.verdict).toBe("PASS");
+    expect(r.gatedOn).toBe("kbps-floor + fitness");
+  });
+
+  it("its floor is the window's own transparency anchor, not the level", () => {
+    // The level is a bitrate, exact by construction, so it could never fail a
+    // check. What is checked is the damage the clip actually did.
+    expect(gateFor("lossy-artifact")).toHaveProperty("anchorFloorRatio", 1.0);
+    expect(gateFor("lossy-artifact")).not.toHaveProperty("floor");
+  });
+
+  it("damage below the window's transparent round-trip FLAGS", () => {
+    const r = gradeStaircaseClip({ ...lossy, anchorRatio: 0.99 });
+    expect(r.verdict).toBe("FLAG");
+    expect(r.reasons[0]).toMatch(/smaller than a manipulation known to be inaudible/);
+  });
+
+  it("exactly AT the anchor passes — that is the 320k rung, by construction", () => {
+    // The anchor IS a 320 kbps round-trip and the ladder's gentlest rung IS
+    // 320 kbps, so it measures exactly 1.0x. Non-binding there on purpose.
+    expect(gradeStaircaseClip({ ...lossy, level: 320, anchorRatio: 1.0 }).verdict).toBe("PASS");
+  });
+
+  it("a MISSING anchor is an ERROR — there is no floor to check without one", () => {
+    const r = gradeStaircaseClip(without(lossy, "anchorRatio"));
+    expect(r.verdict).toBe("ERROR");
+    expect(r.reasons[0]).toMatch(/no transparency anchor/);
+  });
+
+  it("its floor sits far below the fixed assessment's fair-trial 3.0x", () => {
+    // Same relationship as pitch's staircase 3 against its fair-trial 10: a
+    // staircase converging toward a threshold must be allowed below it.
+    expect(gateFor("lossy-artifact")).toHaveProperty("anchorFloorRatio");
+    expect((gateFor("lossy-artifact") as { anchorFloorRatio: number }).anchorFloorRatio).toBeLessThan(3.0);
+  });
+
+  it("has NO confidence check, because LSD has no confidence measure", () => {
+    // A declared absence, not a skipped test.
+    expect((gateFor("lossy-artifact") as { minConfidentFraction: number | null }).minConfidentFraction).toBeNull();
+    // A lossy row carrying no confidentFraction at all still passes...
+    expect(gradeStaircaseClip(without(lossy, "confidentFraction")).verdict).toBe("PASS");
+    // ...while a PITCH row missing it does not. The absence is family-specific.
+    expect(gradeStaircaseClip(without(pitch, "confidentFraction")).verdict).toBe("FLAG");
+  });
+
+  it("needs no evidence field — its floor already IS an audio measurement", () => {
+    expect(gateFor("lossy-artifact")).not.toHaveProperty("evidenceField");
+  });
+
+  it("the fitness gates still apply to lossy", () => {
+    expect(gradeStaircaseClip({ ...lossy, longestSilenceSec: 9 }).verdict).toBe("FLAG");
+    expect(gradeStaircaseClip({ ...lossy, quietFraction: 0.9 }).verdict).toBe("FLAG");
+  });
+});
+
+describe("lossyStepCollapses — the check RT-85a's measurement makes necessary", () => {
+  // lossyLadderForSource thins the ladder against a curve measured on ONE
+  // window. A fixed bitrate does 1.38x different damage across pb1's nine
+  // windows, so two levels comfortably apart at @75s can collapse elsewhere.
+  it("a well-separated ladder reports nothing", () => {
+    const rows = [
+      { level: 320, lsdDb: 0.43 },
+      { level: 128, lsdDb: 1.94 },
+      { level: 64, lsdDb: 6.88 },
+      { level: 32, lsdDb: 12.39 },
+    ];
+    expect(lossyStepCollapses(rows)).toEqual([]);
+  });
+
+  it("adjacent levels too close in dB are reported, ordered by DAMAGE not bitrate", () => {
+    const rows = [
+      { level: 128, lsdDb: 1.5 },
+      { level: 112, lsdDb: 1.6 }, // 1.067x — collapsed
+      { level: 64, lsdDb: 6.0 },
+    ];
+    const c = lossyStepCollapses(rows);
+    expect(c).toHaveLength(1);
+    expect(c[0].from).toBe(128);
+    expect(c[0].to).toBe(112);
+    expect(c[0].ratio).toBeLessThan(MIN_LOSSY_LEVEL_RATIO);
+  });
+
+  it("exactly at MIN_LOSSY_LEVEL_RATIO is NOT a collapse", () => {
+    const rows = [
+      { level: 128, lsdDb: 1.0 },
+      { level: 112, lsdDb: MIN_LOSSY_LEVEL_RATIO },
+    ];
+    expect(lossyStepCollapses(rows)).toEqual([]);
+  });
+
+  it("it sorts by damage, so input order does not matter — THE INVERTED AXIS", () => {
+    const rows = [
+      { level: 64, lsdDb: 6.0 },
+      { level: 320, lsdDb: 0.5 },
+      { level: 128, lsdDb: 1.9 },
+    ];
+    expect(lossyStepCollapses(rows)).toEqual(lossyStepCollapses([...rows].reverse()));
+  });
+
+  it("clips with no dB figure are excluded rather than treated as zero", () => {
+    const rows = [{ level: 320, lsdDb: 0.5 }, { level: 128 }, { level: 64, lsdDb: 6.0 }];
+    expect(lossyStepCollapses(rows)).toEqual([]);
   });
 });

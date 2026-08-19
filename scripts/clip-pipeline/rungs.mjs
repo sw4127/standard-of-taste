@@ -221,8 +221,51 @@ export const STAIRCASE_LEVELS = {
    * tempo manipulation does, and pretending otherwise would put levels where
    * the measure cannot tell them apart.
    */
+  /**
+   * A LOSSY LEVEL IS LABELLED IN kbps, AND SELECTED BY dB (PM ruling RT-85a,
+   * option a, 2026-08-19). This amends the labelling only; everything the block
+   * above says about how the ladder is BUILT still holds.
+   *
+   * WHY THE LABEL CHANGED. The dB figure in `lossyLadderForSource` is measured
+   * on ONE window (@75 s). Measured across all nine windows pb1 would serve, a
+   * fixed 128 kbps does:
+   *
+   *     @1s   @27s  @53s  @79s  @105s @131s @157s @183s @209s
+   *     1.94  1.85  1.75  1.71  1.46  1.94  1.41  1.81  1.70   dB   -> 1.376x
+   *
+   * against a MAX_CROSS_WINDOW_RATIO of 1.15. `assignInstances` cycles those
+   * files inside ONE session, so a level labelled "1.796 dB" would silently
+   * mean anything from 1.41 to 1.94 depending on which window served it — the
+   * exact defect `driftMs` mode was introduced to fix at the seed level, one
+   * layer up. It is worse at the top of the ladder, which is the wrong end:
+   * 32k agrees to 1.04x, 64k to 1.17x, 128k to 1.38x, and the 320k anchors
+   * span 1.68x, while a staircase spends its trials near the threshold.
+   *
+   * kbps IS EXACT ACROSS WINDOWS BY CONSTRUCTION — render every window at 128k
+   * and every instance is 128k. Same resolution as timing's under RT-74a: the
+   * label states the parameter, the measurement is recorded beside it, and the
+   * substantive check moves to whether the audio corroborates. D4's own wording
+   * names kbps as this family's unit.
+   *
+   * WHAT IS NOT CLAIMED (N3). A kbps threshold is a property of listener AND
+   * material, not of the listener alone — the objection above stands and is not
+   * waved away. It is survivable only because a lossy session stays on ONE
+   * source (RT-65), so the threshold is per-source however it is labelled, and
+   * the source is named when it is reported. The dB each level actually
+   * measured is recorded per clip, and the range it spans across windows is
+   * stated as a known limit rather than hidden.
+   *
+   * THE AXIS IS INVERTED, and every consumer must know: damage RISES as the
+   * label FALLS. A ladder ordered by increasing damage is ordered by DECREASING
+   * kbps, so a monotonicity check reading `measured.value` must take the
+   * direction from the family rather than assuming "up".
+   */
   "lossy-artifact": {
-    unit: "dB log-spectral distance",
+    unit: "kbps",
+    /** The unit the ladder is SELECTED in, and which each clip records. */
+    selectionUnit: "dB log-spectral distance",
+    /** Damage rises as the label falls. See the note above. */
+    descending: true,
     ratio: 1.249,
     renderMode: "perSourceLegalBitrate",
     /**
@@ -359,7 +402,9 @@ export function staircaseRender(family, level) {
     // measured curve, and a level no source can reach must be skipped rather
     // than clamped (see lossyLadderForSource).
     throw new Error(
-      `staircaseRender: lossy-artifact levels are in ${spec.unit} and are per-source — call lossyLadderForSource(curve) and render the bitrates it returns, labelling each clip with the dB measured there`,
+      `staircaseRender: lossy-artifact levels are per-source — call lossyLadderForSource(curve) and render the ` +
+        `bitrates it returns, labelling each clip with its BITRATE in ${spec.unit} (RT-85a) and recording the ` +
+        `dB measured on that window beside it`,
     );
   }
   return { param: level, opts: spec.renderMode ? { timingMode: spec.renderMode } : {} };
