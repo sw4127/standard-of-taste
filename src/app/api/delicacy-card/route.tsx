@@ -12,9 +12,9 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
-import { computeDelicacyResult, decodeDelicacyResponses } from "@/engine/delicacy";
+import { computeDelicacyResult, decodeDelicacyResponses, detectionBand } from "@/engine/delicacy";
 import { DELICACY_INSTRUMENT_ID, DELICACY_LIVE, DELICACY_POOL_VERSION, MEASURED_TRIALS } from "@/content/delicacy/items";
-import { delicacyVerdict } from "@/content/delicacy/copy";
+import { detectionCardAnchor, detectionCardFigure } from "@/content/delicacy/copy";
 import { baseUrl } from "@/lib/site";
 
 export const runtime = "nodejs";
@@ -62,7 +62,7 @@ export async function GET(request: Request) {
     });
   }
   const result = computeDelicacyResult(DELICACY_INSTRUMENT_ID, MEASURED_TRIALS, responses);
-  const verdict = delicacyVerdict(result.nCorrect, result.nTrials);
+  const band = detectionBand(result.nCorrect, result.nTrials);
   const flawLine =
     result.flawAccuracy !== null
       ? `named the flaw ${result.flawCorrect} of ${result.flawEligible} times`
@@ -120,7 +120,7 @@ export async function GET(request: Request) {
           </div>
         </div>
         <div style={{ display: "flex", marginTop: 22 * s, fontSize: 30 * s, color: MUTED }}>
-          originals caught — a coin flip calls 3
+          {detectionCardAnchor(band)}
         </div>
         <div
           style={{
@@ -132,7 +132,7 @@ export async function GET(request: Request) {
             fontWeight: 900,
           }}
         >
-          {verdict.title}
+          {detectionCardFigure(band)}
         </div>
         {flawLine && !isOg ? (
           <div
