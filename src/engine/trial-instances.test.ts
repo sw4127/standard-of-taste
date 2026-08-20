@@ -17,7 +17,7 @@ import { describe, expect, it } from "vitest";
 import { observer as obs, rng, runStaircaseSession, type Observer } from "@/analytics/observer";
 import { DEFAULT_STAIRCASE, type StaircaseConfig } from "./staircase";
 import { assignInstances, instancesForFamily, pickInstance, type TrialInstance } from "./trial-instances";
-import { eligibleSources, eligibleWindows, sessionInstances } from "./staircase-pool";
+import { eligibleSources, eligibleWindows, isRetiredSource, sessionInstances } from "./staircase-pool";
 
 const PITCH = [3.1, 4.4, 6.3, 8.8, 12.5, 17.7, 25, 35.4, 50, 70.7, 100];
 
@@ -183,9 +183,16 @@ describe("the instance pool comes from the manifest, not from a hand-written lis
     expect(eligibleWindows("pitch-drift").map((w) => `${w.sourceId}@${w.startSec}`)).toContain("pb1@120");
   });
 
-  it("lossy runs on a different source set — pb4 in, pb8 out", () => {
-    expect(eligibleSources("lossy-artifact")).toEqual(["pb1", "pb4", "pb6"]);
+  it("lossy runs on a different source set — pb4 in, pb8 out, pb6 retired", () => {
+    // The POOL still holds three (pb8 never served lossy, RT-79a d)...
+    expect(eligibleSources("lossy-artifact", true)).toEqual(["pb1", "pb4", "pb6"]);
+    // ...but only two can be presented: pb6's 3.5x ladder cannot be measured
+    // honestly at any tolerable session length (RT-92a, E5/S4).
+    expect(eligibleSources("lossy-artifact")).toEqual(["pb1", "pb4"]);
     expect(eligibleSources("pitch-drift")).toEqual(["pb1", "pb6", "pb8"]);
+    // Retirement is per FAMILY: pb6 still carries a third of pitch's windows.
+    expect(isRetiredSource("lossy-artifact", "pb6")).toBe(true);
+    expect(isRetiredSource("pitch-drift", "pb6")).toBe(false);
   });
 
   it("a lossy session must lock to a source, and gets only that source", () => {

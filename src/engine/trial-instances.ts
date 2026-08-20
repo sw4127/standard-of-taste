@@ -27,6 +27,8 @@
  * carry raw answers rather than conclusions.
  */
 
+import { isSourceLocked } from "./staircase-pool";
+
 /** One rendered (source, window) pair — a specific musical moment on disk. */
 export interface TrialInstance {
   sourceId: string;
@@ -104,7 +106,7 @@ export function instancesForFamily(
   all: TrialInstance[],
   lockedSourceId?: string,
 ): TrialInstance[] {
-  if (family !== "lossy-artifact") return all;
+  if (!isSourceLocked(family)) return all;
   if (!lockedSourceId) throw new Error("instancesForFamily: lossy sessions must name a source (RT-65)");
   const locked = all.filter((i) => i.sourceId === lockedSourceId);
   if (!locked.length) throw new Error(`instancesForFamily: no windows rendered for source ${lockedSourceId}`);

@@ -88,9 +88,68 @@ export function eligibleWindows(family: string): TrialInstance[] {
   return usable.map((w) => ({ sourceId: w.sourceId, startSec: w.startSec }));
 }
 
-/** The sources a family can run a session on. Lossy must lock to one (RT-65). */
-export function eligibleSources(family: string): string[] {
-  return [...new Set(eligibleWindows(family).map((w) => w.sourceId))].sort();
+/**
+ * SOURCES WHOSE LADDER CANNOT BE MEASURED HONESTLY IN A SESSION ANYONE WOULD SIT
+ * THROUGH (PM ruling RT-92a a, 2026-08-20).
+ *
+ * pb6's lossy ladder spans 3.5x across 7 rungs — the narrowest in the pool,
+ * because `MEASURED_LOSSY_FLOOR_KBPS` puts its gentlest rung at 112 kbps rather
+ * than the 160-192 the other two reach. E5/S4 measured what that costs: at the
+ * 16 reversals the lossy family ships, its fitted point is biased -0.67 ladder
+ * steps, and the best cell it EVER reaches is +0.21 at a 32-minute session, for
+ * 1.3 points of band per minute against pitch's 5.7. It is the worst use of a
+ * person's time in the product and it cannot be made honest by spending more of
+ * it.
+ *
+ * THE CLIPS ARE NOT DELETED and the manifest is untouched — this is a shipping
+ * filter, not a re-render, so the decision reverses by deleting three lines. The
+ * pipeline still validates all 198 lossy clips, and `staircase-manifest.test.ts`
+ * still proves pb6's ladder is internally sound; it is the SESSION that cannot
+ * use it.
+ */
+const RETIRED_SOURCES: Record<string, ReadonlySet<string>> = {
+  "lossy-artifact": new Set(["pb6"]),
+};
+
+/**
+ * The sources a family can run a session on. Lossy must lock to one (RT-65).
+ *
+ * `includeRetired` exists for the Lab and the pipeline, which describe the pool
+ * as rendered rather than as shipped. Every product path takes the default.
+ */
+export function eligibleSources(family: string, includeRetired = false): string[] {
+  const all = [...new Set(eligibleWindows(family).map((w) => w.sourceId))].sort();
+  if (includeRetired) return all;
+  const retired = RETIRED_SOURCES[family];
+  const shipping = retired ? all.filter((s) => !retired.has(s)) : all;
+  if (!shipping.length) {
+    throw new Error(`eligibleSources: every source for "${family}" is retired — it cannot be presented`);
+  }
+  return shipping;
+}
+
+/** Whether a source is rendered and validated but withheld from sessions. */
+export function isRetiredSource(family: string, sourceId: string): boolean {
+  return RETIRED_SOURCES[family]?.has(sourceId) ?? false;
+}
+
+/**
+ * FAMILIES WHOSE LEVELS MEAN NOTHING WITHOUT THE MATERIAL (PM ruling RT-65).
+ *
+ * A lossy level is a bitrate, and the damage a bitrate does depends entirely on
+ * the recording — measured at up to 1.999x across the windows serving one level
+ * (`layerA.knownLimits`). Pitch and timing have manipulation-intrinsic units: a
+ * cent is a cent whatever it is played on.
+ *
+ * IT IS EXPORTED because this fact was being re-typed as `family !==
+ * "lossy-artifact"` in every consumer that needed it, which is the two-tables
+ * defect in its smallest form — the one that is invisible until the day a third
+ * source-locked family exists and only three of the four sites learn about it.
+ */
+export const SOURCE_LOCKED_FAMILIES: ReadonlySet<string> = new Set(["lossy-artifact"]);
+
+export function isSourceLocked(family: string): boolean {
+  return SOURCE_LOCKED_FAMILIES.has(family);
 }
 
 /**
@@ -103,7 +162,7 @@ export function eligibleSources(family: string): string[] {
  */
 export function sessionInstances(family: string, lockedSourceId?: string): TrialInstance[] {
   const all = eligibleWindows(family);
-  if (family !== "lossy-artifact") return all;
+  if (!isSourceLocked(family)) return all;
   if (!lockedSourceId) throw new Error("sessionInstances: lossy sessions must name a source (RT-65)");
   const locked = all.filter((i) => i.sourceId === lockedSourceId);
   if (!locked.length) {
