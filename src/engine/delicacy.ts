@@ -314,3 +314,87 @@ export const DELICACY_METRICS: MetricSpec[] = [
       "Scored only on trials where the side pick was right — judging the flaw in the wrong file is unscoreable, not wrong.",
   },
 ];
+
+/**
+ * THE DETECTION BAND — what a delicacy session can honestly say it measured
+ * (E6/S8; PM ruling RT-105a b, applying RT-90a's band-not-point rule).
+ *
+ * WHY THIS REPLACED A TIER NAME. E6/S8 measured how often the six shipped
+ * tiers put a person in the right one at the shipping length: 30.5%. Coarser
+ * cuts do not rescue it — two bands reach 70.2% against the 89.3% the Prestige
+ * verdict manages. There is no granularity at which fifteen trials support a
+ * ranked verdict, and RT-90a already ruled the general case for the staircase:
+ * report the band, never the point, because a point estimate from a noisy
+ * measurement is a claim the measurement cannot support. A tier name is a point
+ * estimate wearing an adjective.
+ *
+ * TWO CORRECTIONS, BOTH NECESSARY, NEITHER COSMETIC:
+ *
+ * 1. GUESSING. A two-way choice hands out 50% for free, so raw accuracy of 73%
+ *    is not "hears 73% of flaws" — it is mostly the coin. The detection rate is
+ *    d = 2p - 1: the share of pairs where hearing, rather than luck, did the
+ *    work. Eleven of fifteen is 73% correct and 47% detected. Printing the
+ *    first as if it were the second is the hoax this function exists to avoid.
+ *
+ * 2. THE INTERVAL IS WILSON, NOT NORMAL. The textbook p +/- z*sqrt(p(1-p)/n)
+ *    is badly wrong at n = 15 and catastrophically wrong near the ends: at 15
+ *    of 15 it has zero width, which would print "you detected 100% of flaws,
+ *    give or take nothing" from fifteen coin flips. Wilson keeps a sensible
+ *    width at the boundaries, which is exactly where a short session lands its
+ *    luckiest and unluckiest users.
+ *
+ * `excludesChance` is the one categorical claim that survives: whether the
+ * whole interval sits above zero detection. That is a statement about THIS
+ * session, not a rank against other people, and it is the only line here that
+ * says something binary.
+ */
+export interface DetectionBand {
+  nCorrect: number;
+  nTrials: number;
+  /** Share correct, including the pairs luck handed over. */
+  accuracy: number;
+  /** Guessing-corrected point estimate, d = 2p - 1, clipped at 0. */
+  rate: number;
+  /** Lower and upper bounds of d at 95%, clipped to [0, 1]. */
+  lo: number;
+  hi: number;
+  /** Whether the interval clears zero detection — i.e. beat the coin. */
+  excludesChance: boolean;
+}
+
+/** 95% two-sided. Named because a bare 1.96 in the arithmetic explains nothing. */
+const WILSON_Z = 1.96;
+
+export function detectionBand(nCorrect: number, nTrials: number): DetectionBand {
+  if (!Number.isInteger(nTrials) || nTrials <= 0) {
+    throw new Error(`detectionBand: nTrials must be a positive integer, got ${nTrials}`);
+  }
+  if (!Number.isInteger(nCorrect) || nCorrect < 0 || nCorrect > nTrials) {
+    throw new Error(`detectionBand: nCorrect ${nCorrect} out of range for ${nTrials} trials`);
+  }
+
+  const n = nTrials;
+  const p = nCorrect / n;
+  const z2 = WILSON_Z * WILSON_Z;
+  const denom = 1 + z2 / n;
+  const centre = (p + z2 / (2 * n)) / denom;
+  const half = (WILSON_Z / denom) * Math.sqrt((p * (1 - p)) / n + z2 / (4 * n * n));
+
+  // Bounds on the CORRECT-share first, then mapped through d = 2p - 1. The map
+  // is monotone, so the interval maps to an interval and the order is kept.
+  const pLo = Math.max(0, centre - half);
+  const pHi = Math.min(1, centre + half);
+  const toRate = (x: number) => Math.max(0, Math.min(1, 2 * x - 1));
+
+  return {
+    nCorrect,
+    nTrials,
+    accuracy: p,
+    rate: toRate(p),
+    lo: toRate(pLo),
+    hi: toRate(pHi),
+    // Strictly above chance: pLo must clear 0.5 outright. Equality is not
+    // evidence, and at these sample sizes it is the common case.
+    excludesChance: pLo > 0.5,
+  };
+}

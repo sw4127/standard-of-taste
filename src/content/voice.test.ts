@@ -15,9 +15,12 @@ import {
   PROVISIONAL_FOOTNOTE,
   delicacyResultSummary,
   delicacyVerdict,
+  detectionTitle,
+  detectionBody,
   shareText as delicacyShareText,
 } from "./delicacy/copy";
 import { DELICACY_TRIALS, FLAW_LABELS } from "./delicacy/items";
+import { detectionBand } from "@/engine/delicacy";
 import {
   FAMILY_BLURB,
   cooldownTitle,
@@ -49,6 +52,18 @@ function shippingStrings(): VoiceString[] {
     out.push({ surface: `delicacy/verdict/${correct}/sub`, text: v.sub, intensity: "pointed" });
   }
   out.push({ surface: "delicacy/share", text: delicacyShareText(12, n), intensity: "full" });
+  /**
+   * THE DETECTION READOUT (E6/S9). Every reachable score at the shipping
+   * length, not a sample — all three branches (cleared the coin, ahead but not
+   * proven, at or under it) and both boundaries between them. A score nobody
+   * exercised is exactly where an off-voice line survives; that is the same
+   * argument the tier sweep above makes, and it caught a live bug once.
+   */
+  for (let k = 0; k <= n; k++) {
+    const band = detectionBand(k, n);
+    out.push({ surface: `delicacy/detection/${k}/title`, text: detectionTitle(band), intensity: "pointed" });
+    out.push({ surface: `delicacy/detection/${k}/body`, text: detectionBody(band), intensity: "calm" });
+  }
   out.push({
     surface: "delicacy/summary",
     text: delicacyResultSummary({ nCorrect: 12, nTrials: n } as never),
