@@ -20,6 +20,9 @@ import {
 import { DELICACY_TRIALS, FLAW_LABELS } from "./delicacy/items";
 import {
   FAMILY_BLURB,
+  cooldownTitle,
+  cooldownBody,
+  COOLDOWN_ALTERNATIVE,
   FAMILY_LABEL,
   NO_COHORT_FOOTNOTE,
   resultLines,
@@ -88,6 +91,18 @@ function shippingStrings(): VoiceString[] {
     out.push({ surface: `staircase/limit/${k}/blurb`, text: v.blurb, intensity: "calm" });
   }
   out.push({ surface: "staircase/retired-source", text: RETIRED_SOURCE_NOTE, intensity: "calm" });
+  /**
+   * The retest gate (RT-89a). Every family, and BOTH day phrasings — "Tomorrow"
+   * is a separate sentence from "In N days" and only one of them is reachable
+   * on any given day, which is exactly the shape of line that escapes a gate.
+   */
+  for (const k of Object.keys(FAMILY_LABEL)) {
+    out.push({ surface: `staircase/cooldown/${k}/title`, text: cooldownTitle(k), intensity: "calm" });
+  }
+  for (const days of [1, 2, 7]) {
+    out.push({ surface: `staircase/cooldown/body/${days}`, text: cooldownBody(days), intensity: "calm" });
+  }
+  out.push({ surface: "staircase/cooldown/alternative", text: COOLDOWN_ALTERNATIVE, intensity: "calm" });
   return out;
 }
 

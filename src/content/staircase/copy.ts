@@ -241,3 +241,40 @@ export function resultLines(result: StaircaseResult): string[] {
     NO_COHORT_FOOTNOTE,
   ].filter((l): l is string => l !== null);
 }
+
+/**
+ * WHAT THE GYM SAYS WHEN IT REFUSES A RETEST (RT-89a, D4 amendment).
+ *
+ * The refusal and the reason arrive together. A gate that says only "not yet"
+ * reads as withholding, and this one is not withholding anything — there is no
+ * paid tier and never was (D4 amendment, RT-44a). It is refusing to hand back a
+ * number it already knows is contaminated, which is the honest thing a
+ * measuring instrument does (N3).
+ *
+ * It also does not scold. The user did the right thing by coming back; they
+ * just came back early, and the second line tells them what the wait buys
+ * rather than what they did wrong.
+ */
+export function cooldownTitle(family: string): string {
+  return `You measured your ${familyLabel(family).toLowerCase()} this week.`;
+}
+
+export function cooldownBody(daysLeft: number): string {
+  const when = daysLeft === 1 ? "Tomorrow" : `In ${daysLeft} days`;
+  return (
+    `Run it again now and the staircase will find a smaller rung — not because you hear better, ` +
+    `but because you remember the recordings. ${when} that memory has faded and the number means ` +
+    `your ear again.`
+  );
+}
+
+/**
+ * The way out of the gate. It lives here and not in the JSX because a fragment
+ * in a component is a fragment outside the voice gate — the exact hole that
+ * swallowed the lines either side of PROVISIONAL_FOOTNOTE.
+ *
+ * It offers the other two instruments rather than a countdown to this one: the
+ * cooldown is per family, so there is always something to measure today, and a
+ * gate that only says "wait" wastes a visit that could have produced a number.
+ */
+export const COOLDOWN_ALTERNATIVE = "Measure a different flaw instead";
