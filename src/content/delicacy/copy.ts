@@ -181,7 +181,7 @@ export function minToClearChance(nTrials: number): number | null {
 
 /** One named line. It describes the measurement; it does not rank the person. */
 export function detectionTitle(band: DetectionBand): string {
-  return `${band.nCorrect} of ${band.nTrials}. What that narrows it to.`;
+  return `${band.nCorrect} of ${band.nTrials}. Now subtract the guessing.`;
 }
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
@@ -199,43 +199,62 @@ const pct = (x: number) => `${Math.round(x * 100)}%`;
 export function detectionBody(band: DetectionBand): string {
   const chance = chanceCall(band.nTrials);
   const margin = band.nCorrect - band.nTrials / 2;
-  const range = `${pct(band.lo)} and ${pct(band.hi)}`;
-  const pairs = `${band.nTrials} pairs`;
+  const need = minToClearChance(band.nTrials);
+  const n = band.nTrials;
+
+  // The opening move is shared by all three branches ON PURPOSE: the one thing
+  // a reader must leave understanding is that a two-way choice pays out half
+  // the paper before they hear anything, and that has to be said whether they
+  // beat the coin or not.
+  const generosity =
+    `A two-way choice is generous: guess every pair blind and the long-run average is ` +
+    `${chance} of ${n}, half the paper handed over before you hear anything.`;
 
   if (band.excludesChance) {
+    // THE ONE DEVIATION FROM THE COPY AS DELIVERED, and it is a factual one.
+    // The line read "past the {need} it takes", which is true at 13, 14 and 15
+    // and false at exactly 12 — you MET the threshold, you did not pass it. On a
+    // screen whose entire purpose is not claiming more than the number supports,
+    // an off-by-one at the boundary is the last place to let it go. Landing
+    // exactly on the bar is also the more interesting sentence.
+    const clearance = band.nCorrect > (need ?? 0) ? `past the ${need}` : `exactly the ${need}`;
     return (
-      `A coin flip averages ${chance} of ${band.nTrials}, so ${band.nCorrect} sits ${margin} above what ` +
-      `luck alone returns. Take out the pairs you would have guessed right anyway and what is left — the ` +
-      `flaws you actually heard — falls somewhere between ${range} of them. A wide window, because ` +
-      `${pairs} is ${pairs}. But all of it sits above zero, and that is the part a coin cannot do.`
+      `${generosity} You returned ${band.nCorrect} — ${margin} beyond what that generosity ` +
+      `covers, and ${clearance} it takes to clear the coin at 95% confidence. Subtract the ` +
+      `pairs luck would have handed you anyway and what remains, flaws actually detected rather ` +
+      `than merely called, lands somewhere between ${pct(band.lo)} and ${pct(band.hi)}. That ` +
+      `window is embarrassingly wide, and wide for an honest reason: ${n} pairs is ${n} pairs. ` +
+      `But every value inside it sits above zero, and staying above zero is the one thing a coin ` +
+      `cannot arrange.`
     );
   }
 
   if (margin > 0) {
-    const need = minToClearChance(band.nTrials);
     return (
-      `A coin flip averages ${chance} of ${band.nTrials}, so ${band.nCorrect} sits ${margin} above what ` +
-      `luck alone returns — and ${margin} is not enough. Take out the pairs you would have guessed right ` +
-      `anyway and the range that fits runs between ${range}, which still touches zero. On ${pairs} it ` +
-      `takes ${need} to pull clear of the coin outright. You may well hear more than nothing; ${pairs} ` +
-      `cannot say so.`
+      `${generosity} You returned ${band.nCorrect} — ${margin} beyond what that generosity ` +
+      `covers, and ${margin} is not a margin anyone can defend. Subtract the pairs luck would ` +
+      `have handed you anyway and the range that still fits your session runs from ` +
+      `${pct(band.lo)} to ${pct(band.hi)} detected, touching zero at the bottom. On ${n} pairs ` +
+      `it takes ${need} to pull clear of the coin at 95% confidence. So the honest reading is ` +
+      `not that you heard nothing — it is that a session this short cannot tell you apart from ` +
+      `a lucky afternoon. A longer one can.`
     );
   }
 
-  // Below about a quarter right, the corrected range collapses to a point at
-  // zero — Wilson's upper bound is still under chance, so there is no positive
-  // detection the data can support at all. "Runs between 0% and 0%" is
-  // arithmetically true and reads like a rendering bug, so the collapse is
-  // stated instead of printed as a degenerate interval.
-  const floor = band.lo === band.hi;
-  const rangeClause = floor
-    ? `there is no range left to draw: it sits flat at ${pct(band.hi)}`
-    : `the range that fits runs between ${range}`;
+  // `margin` IS DELIBERATELY ABSENT BELOW (Cowork, RT-107a). At or under chance
+  // it is zero or negative, and "sits -0.5 beyond" is the same class of nonsense
+  // as a coin calling 7.5. "At or beneath what that generosity alone returns"
+  // carries the same fact without printing a negative as if it were a margin.
+  const collapsed = band.lo === band.hi;
+  const rangeClause = collapsed
+    ? `there is no range left to draw, it sits flat at ${pct(band.hi)} detected`
+    : `the range that fits runs from ${pct(band.lo)} to ${pct(band.hi)} detected`;
 
   return (
-    `A coin flip averages ${chance} of ${band.nTrials}. You called ${band.nCorrect}, at or under what ` +
-    `luck alone returns, so nothing is left once the lucky guesses come out — ${rangeClause}. These ` +
-    `${pairs} found nothing that separates your ear from a coin, which is a statement about ${pairs}, ` +
-    `and not yet one about your ear.`
+    `${generosity} You returned ${band.nCorrect}, at or beneath what that generosity alone ` +
+    `returns, so once the lucky guesses come out there is nothing left to credit: ${rangeClause}. ` +
+    `Clearing the coin at 95% confidence would have taken ${need} of ${n}. What these ${n} pairs ` +
+    `found is nothing that separates your ear from chance — which is a sentence about ${n} pairs, ` +
+    `and not yet a sentence about your ear.`
   );
 }
