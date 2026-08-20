@@ -152,6 +152,45 @@ export default function ThresholdFlow({ family }: { family: string }) {
 
   const armed = armedA && armedB;
 
+  /* --------------------------------------------------------- frame, gated */
+  /**
+   * A BLOCKED FRAME IS A DIFFERENT SCREEN, NOT THE SAME SCREEN WITH A NOTICE.
+   *
+   * The first version kept the pitch — headline, both explanatory paragraphs —
+   * and appended the refusal in a card below. Measured on the rendered page,
+   * that left a 36px `h1` asking "How small a flaw can you still hear?" as the
+   * focal point of a screen whose entire message was "not this week", with the
+   * actual message at 18px inside a box. One focal point per screen is the
+   * Design Quality Bar's first line, and that had two, of which the loud one
+   * was wrong.
+   *
+   * The explanation of how the staircase works is written for someone about to
+   * start. Someone being turned away does not need it.
+   */
+  if (phase === "frame" && blocked) {
+    return (
+      <main className={SHELL + " justify-center"}>
+        <FluidField colors={FLUID} baseColor={BASE} intensity={0.6} scrim={false} vignette />
+        <div className="relative z-10">
+          <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
+            THE TASTE GYM
+          </p>
+          <h1 className="mt-6 font-display text-4xl font-semibold leading-tight">
+            {cooldownTitle(family)}
+          </h1>
+          <p className="mt-5 text-base leading-relaxed text-muted">{cooldownBody(daysLeft)}</p>
+          <Link
+            href="/threshold"
+            className="mt-8 inline-flex min-h-[44px] items-center self-start rounded-full px-7 py-3.5 text-base font-bold text-black transition active:scale-[0.98]"
+            style={{ background: ICE, boxShadow: `0 10px 30px ${ICE_GLOW}` }}
+          >
+            {COOLDOWN_ALTERNATIVE}
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
   /* ---------------------------------------------------------------- frame */
   if (phase === "frame") {
     return (
@@ -180,37 +219,21 @@ export default function ThresholdFlow({ family }: { family: string }) {
               without the material it was measured on.
             </p>
           ) : null}
-          {blocked ? (
-            <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-              <p className="font-display text-lg font-semibold">{cooldownTitle(family)}</p>
-              <p className="mt-2 text-sm leading-relaxed text-muted">
-                {cooldownBody(daysLeft)}
-              </p>
-              <Link
-                href="/threshold"
-                className="mt-4 inline-block text-sm font-semibold underline underline-offset-4"
-                style={{ color: ICE }}
-              >
-                {COOLDOWN_ALTERNATIVE}
-              </Link>
-            </div>
-          ) : (
-            <button
-              type="button"
-              disabled={!cooldownKnown}
-              onClick={() => {
-                const seed = newSeed();
-                const started = startSession(family, seed);
-                setSession(started);
-                track("threshold_start", { family, sourceId: started.sourceId ?? null });
-                setPhase("trial");
-              }}
-              className="mt-8 self-start rounded-full px-7 py-3.5 text-base font-bold text-black transition active:scale-[0.98] disabled:opacity-40"
-              style={{ background: ICE, boxShadow: `0 10px 30px ${ICE_GLOW}` }}
-            >
-              Start
-            </button>
-          )}
+          <button
+            type="button"
+            disabled={!cooldownKnown}
+            onClick={() => {
+              const seed = newSeed();
+              const started = startSession(family, seed);
+              setSession(started);
+              track("threshold_start", { family, sourceId: started.sourceId ?? null });
+              setPhase("trial");
+            }}
+            className="mt-8 self-start rounded-full px-7 py-3.5 text-base font-bold text-black transition active:scale-[0.98] disabled:opacity-40"
+            style={{ background: ICE, boxShadow: `0 10px 30px ${ICE_GLOW}` }}
+          >
+            Start
+          </button>
           <p className="mt-4 text-xs text-muted">
 ~{sessionMinutes(family)} minutes. No sign-up. Headphones strongly advised —
             laptop speakers cannot reproduce most of what this measures.
