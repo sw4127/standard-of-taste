@@ -56,9 +56,23 @@ public/audio/preview-shortlist/
 public/audio/bias/dev-test-8s.wav
 # S1 delicacy proof pairs: deterministic re-renders (degrade stage), not the pool of record
 public/audio/delicacy/proof-*
-# E4 staircase pool — NOT committed yet (PM ruling RT-71b, 2026-08-18). 69 MB for pitch
-# + timing, ~99 MB with lossy, against a .git that is 99 MB today, and every re-render
-# adds another copy that never leaves history. The renders are deterministic from the
-# cached sources and the manifest carries every hash and measurement, so nothing is lost
-# by waiting. E5 wires these into the Gym and forces the decision.
+# E4/E5 staircase pool — THE DIRECTORY STAYS IGNORED, AND THE SHIPPING CLIPS ARE
+# TRACKED ANYWAY (PM ruling RT-94a b, 2026-08-20; supersedes RT-71b's "not yet").
+#
+# 486 files sit here after a render. Exactly 400 of them — 129.6 MB — are the ones a
+# session or the Lab can name, and those are committed with `git add -f`. gitignore
+# does not un-track a tracked file, so they clone and they deploy; the rule only
+# governs what happens to files nobody has decided about yet.
+#
+# THE DIRECTORY IS IGNORED ON PURPOSE, and it is not an oversight to be tidied up.
+# This is a PUBLIC repo: a commit here is permanent, and `git add -A` after a re-render
+# would sweep in the 86 files that must never ship — 66 orphans no code path names, and
+# 20 timing clips on pb1@120s / pb6@75s whose drift trajectory the correlator could not
+# verify (RT-75a). `clipFor` refuses to hand those back; publishing them would put
+# stimuli on a CDN whose labels the audio itself does not corroborate.
+#
+# To add clips after a re-render: regenerate the reachable set from the engine and
+# `git add -f` exactly that list. A comment cannot enforce this and is not trying to;
+# the guard that can — a test that fails when a reachable clip is untracked — is the
+# next slice, and until it lands this rule is only as good as whoever reads it.
 public/audio/staircase/
