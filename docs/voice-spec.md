@@ -40,3 +40,37 @@ by-design (line 3); the actual defect was diction drift (dare/number motifs not 
 - Neutral chrome in verdicts ("Your results are ready") — the examiner is never beige.
 - Snark in instructions — the test must feel scrupulously fair *while measuring*, or the verdict
   reads as rigged when it lands.
+
+---
+
+## What is automated, and what is not (PM ruling RT-106a, 2026-08-21)
+
+`src/content/voice.ts` is a **hazard gate**, not a voice pass. The distinction was
+costing us: the standing rule said new copy must be "registered in the voice gate", and a
+green run was being read — by the PM and by Claude Code alike — as "this copy is in
+voice". It never meant that.
+
+**What the gate decides** (five banned moves with surface forms, plus one structural check):
+
+| Rule | Catches |
+|---|---|
+| `motive-attribution` | imputed intent — "because you wanted to", "trying to look clever" |
+| `person-verdict` | identity or worth — "you have no ear", "your taste is bad" |
+| `beige-chrome` | neutral chrome where a verdict belongs, on full/pointed surfaces |
+| `fabricated-norm` | percentiles, "top N%", "better than N%", implied cohorts (N3) |
+| `unmeasured-claim` | audibility overclaims — "anyone can hear", "proves your ears" |
+| `datum-anchored` | a full-intensity line citing no measured quantity |
+
+**What it cannot decide.** Register, rhythm, freshness, whether a line is dull, whether it
+sounds like this product or like any product. Those have no surface form. A string reading
+*"13 of 15. LITERALLY INSANE bestie no cap fr fr."* passes the gate, and so does
+*"You got 13 of 15 correct. That is a fine result."* Both are asserted to pass in
+`voice.test.ts` — deliberately, so the boundary is visible rather than rediscovered.
+
+**Consequence for the workflow.** Registering a string proves it carries no named hazard.
+It does not discharge the question of whether the copy is any good, and nothing in the
+pipeline does. That question is unowned by design: the 2026-08-07 pivot deleted the PM
+sign-off because a gate only the PM can discharge is debt, and re-adding one would rebuild
+the debt. What replaces it is honesty about the gap — copy ships gated against hazards and
+ungated against mediocrity, and a session producing user-facing prose should say so rather
+than presenting a green suite as a verdict on the writing.
