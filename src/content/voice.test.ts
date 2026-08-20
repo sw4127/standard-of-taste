@@ -17,6 +17,8 @@ import {
   delicacyVerdict,
   detectionTitle,
   detectionBody,
+  detectionCardAnchor,
+  detectionCardFigure,
   shareText as delicacyShareText,
 } from "./delicacy/copy";
 import { DELICACY_TRIALS, FLAW_LABELS } from "./delicacy/items";
@@ -63,6 +65,11 @@ function shippingStrings(): VoiceString[] {
     const band = detectionBand(k, n);
     out.push({ surface: `delicacy/detection/${k}/title`, text: detectionTitle(band), intensity: "pointed" });
     out.push({ surface: `delicacy/detection/${k}/body`, text: detectionBody(band), intensity: "calm" });
+    // The share card is the most public surface we have, and its previous line
+    // was a JSX literal the gate never saw — hardcoded "a coin flip calls 3"
+    // against a fifteen-trial pool. Both card lines are gated now.
+    out.push({ surface: `delicacy/card/${k}/anchor`, text: detectionCardAnchor(band), intensity: "calm" });
+    out.push({ surface: `delicacy/card/${k}/figure`, text: detectionCardFigure(band), intensity: "pointed" });
   }
   out.push({
     surface: "delicacy/summary",

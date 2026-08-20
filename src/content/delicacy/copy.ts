@@ -260,3 +260,32 @@ export function detectionBody(band: DetectionBand): string {
     `and not yet a sentence about your ear.`
   );
 }
+
+/**
+ * THE SHARE CARD'S TWO LINES (PM ruling RT-111a a).
+ *
+ * A card is good at being a stat and bad at being a paragraph, so it carries
+ * the count, the chance anchor, and the detected range as a figure — no
+ * verdict, no prose. The one thing a reader must leave with is that a two-way
+ * choice pays out half the paper for free, and a range labelled "detected"
+ * next to a raw count out of fifteen carries that without a sentence.
+ *
+ * THEY LIVE HERE BECAUSE THE CARD'S OLD LINE DID NOT. It was a literal in the
+ * route's JSX reading "originals caught — a coin flip calls 3" — hardcoded from
+ * the six-trial pool, never updated when the scored set went to fifteen, and
+ * shipped on every card anyone shared. The gate never saw it because the gate
+ * only reads the copy deck, which is precisely the failure `PROVISIONAL_FOOTNOTE`
+ * was moved here to prevent. A fragment in a component is a fragment outside
+ * the gate.
+ */
+export function detectionCardAnchor(band: DetectionBand): string {
+  return `originals caught — a coin flip averages ${chanceCall(band.nTrials)}`;
+}
+
+export function detectionCardFigure(band: DetectionBand): string {
+  // A collapsed interval is a point, and an en-dash between two identical
+  // numbers reads as a rendering fault rather than a measurement.
+  return band.lo === band.hi
+    ? `${pct(band.hi)} detected`
+    : `${pct(band.lo)}\u2013${pct(band.hi)} detected`;
+}
