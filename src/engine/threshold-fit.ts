@@ -202,7 +202,63 @@ function buildGrid(levels: number[]): FitGrid {
  * choice of what to present next depends only on answers already given, which
  * makes the adaptive design ignorable for the likelihood.
  */
+/**
+ * THE POSTERIOR ITSELF, before any refusal is applied (E5/S3, 2026-08-20).
+ *
+ * `fitThreshold` computes this and then decides whether the session has earned
+ * the right to print a point estimate. That decision is the right one — but it
+ * throws the INTERVAL away with the point, and the interval is the part that
+ * was never in doubt: R4 measured its coverage at 94-100% while the point was
+ * the contested quantity.
+ *
+ * E5/S2 measured what discarding it costs. Refusing per session and reporting
+ * only the survivors SELECTS on having produced a narrow posterior, and that
+ * selection is correlated with where the estimate landed: pb4's survivors came
+ * back 0.54 ladder steps too sensitive, against 0.04-0.11 for the same ladder
+ * at a budget where it never has to refuse. A selected minority getting a
+ * flattering number is worse than everyone getting a wide honest one.
+ *
+ * So this is exported: it lets a surface report EVERY session's interval and
+ * withhold only the interpolated point, which removes the selection rather than
+ * correcting for it (PM ruling RT-90a b).
+ *
+ * Returns `null` for a session with no answers — there is a posterior there,
+ * but it is exactly the prior, and handing that back as a measurement is the
+ * thing this whole module exists to refuse.
+ */
+export interface ThresholdPosterior {
+  /** All in LOG magnitude, on the config's own axis. */
+  logMedian: number;
+  logLo: number;
+  logHi: number;
+  trials: number;
+  reversalsUsed: number;
+}
+
+export function fitPosterior(
+  state: StaircaseState,
+  config: StaircaseConfig,
+  /**
+   * One-sided tail probability for `logLo`/`logHi`. 0.025 gives the 95%
+   * interval `fitThreshold` uses for its own refusal; a caller reporting a
+   * BAND may ask for a tighter one, provided it measures what that costs in
+   * coverage (E5/S3 does).
+   */
+  tail = 0.025,
+): ThresholdPosterior | null {
+  const r = fitInternal(state, config, tail);
+  return r.posterior;
+}
+
 export function fitThreshold(state: StaircaseState, config: StaircaseConfig): ThresholdOutcome {
+  return fitInternal(state, config, 0.025).outcome;
+}
+
+function fitInternal(
+  state: StaircaseState,
+  config: StaircaseConfig,
+  tail: number,
+): { outcome: ThresholdOutcome; posterior: ThresholdPosterior | null } {
   const { levels } = config;
   const trials = state.trials.length;
   const nCorrect = new Float64Array(levels.length);
@@ -211,7 +267,9 @@ export function fitThreshold(state: StaircaseState, config: StaircaseConfig): Th
     if (t.correct) nCorrect[t.index]++;
     else nWrong[t.index]++;
   }
-  if (trials === 0) return { kind: "inconclusive", reversalsUsed: 0, trials };
+  if (trials === 0) {
+    return { outcome: { kind: "inconclusive", reversalsUsed: 0, trials }, posterior: null };
+  }
 
   const grid = buildGrid(levels);
   const logPost = new Float64Array(grid.cells);
@@ -245,11 +303,12 @@ export function fitThreshold(state: StaircaseState, config: StaircaseConfig): Th
   };
 
   const median = quantile(0.5);
-  const lo = quantile(0.025);
-  const hi = quantile(0.975);
+  const lo = quantile(tail);
+  const hi = quantile(1 - tail);
   const floor = levels[0];
   const top = levels[levels.length - 1];
   const reversalsUsed = Math.min(state.reversalIndices.length, config.useLastReversals);
+  const posterior: ThresholdPosterior = { logMedian: median, logLo: lo, logHi: hi, trials, reversalsUsed };
 
   /**
    * THE REFUSALS, restated as posterior statements rather than heuristics.
@@ -260,15 +319,15 @@ export function fitThreshold(state: StaircaseState, config: StaircaseConfig): Th
    * half a step of an end; this one asks where the fit actually believes the
    * answer is, which is the question that was always meant.
    */
-  if (median < Math.log(floor)) return { kind: "below", bound: floor, trials };
-  if (median > Math.log(top)) return { kind: "above", bound: top, trials };
+  if (median < Math.log(floor)) return { outcome: { kind: "below", bound: floor, trials }, posterior };
+  if (median > Math.log(top)) return { outcome: { kind: "above", bound: top, trials }, posterior };
 
   /**
    * And if the interval is wider than the whole ladder, the session has not
    * located anything — reporting its midpoint would be reporting the prior.
    */
   if (hi - lo >= Math.log(top) - Math.log(floor)) {
-    return { kind: "inconclusive", reversalsUsed, trials };
+    return { outcome: { kind: "inconclusive", reversalsUsed, trials }, posterior };
   }
 
   /**
@@ -285,10 +344,13 @@ export function fitThreshold(state: StaircaseState, config: StaircaseConfig): Th
    * into that region drags a mean and barely moves a median.
    */
   return {
-    kind: "threshold",
-    threshold: Math.exp(median),
-    ci95: [Math.exp(lo), Math.exp(hi)],
-    reversalsUsed,
-    trials,
+    outcome: {
+      kind: "threshold",
+      threshold: Math.exp(median),
+      ci95: [Math.exp(lo), Math.exp(hi)],
+      reversalsUsed,
+      trials,
+    },
+    posterior,
   };
 }
