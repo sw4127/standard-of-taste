@@ -75,4 +75,22 @@ public/audio/delicacy/proof-*
 # `git add -f` exactly that list. A comment cannot enforce this and is not trying to;
 # the guard that can — a test that fails when a reachable clip is untracked — is the
 # next slice, and until it lands this rule is only as good as whoever reads it.
+#
+# AND THEN THE PUSH WILL FAIL, which is worth knowing before you spend an hour on it.
+# A ~130 MB pack over HTTPS dies with `RPC failed; HTTP 408` — twice, here, including
+# once with http.postBuffer raised to 500 MB, which is the fix everyone suggests and
+# does not work. There is no SSH remote on this machine. What works: push the blobs
+# ahead of the real commit in chunks, on a throwaway ref, then push the real branch
+# against a remote that already has them (its pack is then a few KB).
+#
+#   git ls-tree -r <commit> -- public/audio/staircase > /tmp/blobs.txt
+#   split -l 50 -d /tmp/blobs.txt /tmp/chunk_
+#   GIT_INDEX_FILE=/tmp/chunk.idx  # never touches your working tree or HEAD
+#   read-tree the base commit, then per chunk: update-index --add --cacheinfo,
+#   write-tree, commit-tree, update-ref refs/heads/tmp-audio-upload, push
+#   finally: push the real branch, then `git push origin --delete tmp-audio-upload`
+#
+# 50 files (~16 MB) per chunk went up first try, 8 for 8. The throwaway commits are
+# unreferenced afterwards and GitHub garbage-collects them, so history keeps exactly
+# one audio commit.
 public/audio/staircase/
