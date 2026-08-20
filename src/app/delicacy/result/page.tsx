@@ -18,10 +18,9 @@ import { redirect } from "next/navigation";
 import {
   computeDelicacyResult,
   decodeDelicacyResponses,
-  type DelicacyResult,
-} from "@/engine/delicacy";
+  type DelicacyResult, detectionBand } from "@/engine/delicacy";
 import { DELICACY_INSTRUMENT_ID, DELICACY_LIVE, DELICACY_POOL_VERSION, MEASURED_TRIALS } from "@/content/delicacy/items";
-import { chanceCall, delicacyVerdict, shareText } from "@/content/delicacy/copy";
+import { shareText, detectionTitle, detectionBody } from "@/content/delicacy/copy";
 import { baseUrl } from "@/lib/site";
 import FluidField from "@/components/FluidField";
 import Track from "@/components/Track";
@@ -76,7 +75,7 @@ export default async function DelicacyResultPage({ searchParams }: { searchParam
   const data = resultFrom(await searchParams);
   if (!data) redirect("/delicacy");
   const { result, p } = data;
-  const v = delicacyVerdict(result.nCorrect, result.nTrials);
+  const band = detectionBand(result.nCorrect, result.nTrials);
   const permalink = `${baseUrl()}/delicacy/result?pv=${DELICACY_POOL_VERSION}&p=${encodeURIComponent(p)}`;
 
   return (
@@ -93,11 +92,11 @@ export default async function DelicacyResultPage({ searchParams }: { searchParam
             /{result.nTrials}
           </span>
         </p>
-        <p className="mt-3 text-sm text-muted">
-          originals identified — a coin flip calls {chanceCall(result.nTrials)}
+        <p className="mt-3 text-sm text-muted">originals identified</p>
+        <h1 className="mt-6 font-display text-3xl font-semibold">{detectionTitle(band)}</h1>
+        <p className="mt-3 max-w-sm text-left text-base leading-relaxed text-muted">
+          {detectionBody(band)}
         </p>
-        <h1 className="mt-6 font-display text-3xl font-semibold">{v.title}</h1>
-        <p className="mt-2 max-w-sm text-base leading-relaxed text-muted">{v.sub}</p>
 
         {/* The card itself — server-rendered, long-press-saveable in webviews. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}

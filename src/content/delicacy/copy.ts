@@ -81,7 +81,9 @@ export function calibrationLine(cal: CalibrationResult): string {
 
 /** The one-line share text next to the permalink. */
 export function shareText(nCorrect: number, nTrials: number): string {
-  return `I called ${nCorrect} of ${nTrials} originals in the Delicacy Trials — a coin flip calls ${chanceCall(nTrials)}. Think your ears are better?`;
+  // "calls 7.5" again — the third surface carrying it. A coin averages a
+  // fraction; it cannot call one. Same number, same fix as the summary line.
+  return `I called ${nCorrect} of ${nTrials} originals in the Delicacy Trials — a coin flip averages ${chanceCall(nTrials)}. Think your ears are better?`;
 }
 
 /**
