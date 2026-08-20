@@ -141,7 +141,7 @@ function promisesPayment(text: string): boolean {
   );
 }
 
-describe("voice gate — the shipping decks", () => {
+describe("hazard gate — the shipping decks", () => {
   it("every cohort-visible string passes the spec", () => {
     const violations = checkVoice(shippingStrings());
     if (violations.length > 0) console.log(formatVoiceReport(violations));
@@ -196,7 +196,7 @@ describe("voice gate — the shipping decks", () => {
   });
 });
 
-describe("voice gate — it CATCHES what the spec bans", () => {
+describe("hazard gate — it CATCHES what the spec bans", () => {
   const at = (text: string, intensity: VoiceString["intensity"] = "pointed"): VoiceString[] => [
     { surface: "fixture", text, intensity },
   ];
@@ -278,5 +278,53 @@ describe("delicacy verdicts are POOL-SIZE-RELATIVE (the bug this caught)", () =>
     expect(delicacyVerdict(6, 6).title).toBe("The key in the wine.");
     expect(delicacyVerdict(3, 6).title).toBe("The coin ties you.");
     expect(delicacyVerdict(1, 6).title).toBe("The village.");
+  });
+});
+
+/**
+ * THE BOUNDARY OF THIS GATE, MADE EXECUTABLE (PM ruling RT-106a a, 2026-08-21).
+ *
+ * WHAT WENT WRONG WITH THE OLD NAME. The standing rule said every new
+ * user-facing string must be "registered in the voice gate", and both the PM
+ * and I read a passing run as "the copy is in voice". It does not mean that.
+ * `voice.ts` says so in its own header — it cannot tell you a line is dull —
+ * but the header is not what anyone reads at 1am; the green tick is. So the
+ * suites above are now the HAZARD gate, and this block pins why.
+ *
+ * It catches five named dangers with surface forms: motive attribution,
+ * person-verdicts, beige chrome in a verdict, fabricated norms, unmeasured
+ * audibility claims. It also requires a full-intensity line to cite a measured
+ * quantity. That is the whole of it.
+ *
+ * It does NOT check register, rhythm, or whether a line is any good. The test
+ * below asserts that a deliberately off-brand string PASSES — which is a
+ * boundary, not a bug, and asserting it is how the boundary stays visible
+ * instead of being rediscovered by someone shipping slop with a green suite.
+ *
+ * MEASURED, NOT ASSUMED: this exact string was run through the gate and passed
+ * (2026-08-21). It is the specimen that prompted the rename.
+ */
+describe("hazard gate — what it deliberately does NOT check", () => {
+  it("lets off-register copy through, because register has no surface form", () => {
+    const offBrand: VoiceString[] = [
+      { surface: "specimen/slang", text: "13 of 15. LITERALLY INSANE bestie no cap fr fr.", intensity: "pointed" },
+      { surface: "specimen/limp", text: "You got 13 of 15 correct. That is a fine result.", intensity: "pointed" },
+    ];
+    // Both are bad copy. Neither contains a banned move, so both pass — and a
+    // green run on new strings therefore means "no named hazard", never "this
+    // reads well". Nothing in the pipeline judges the second thing.
+    expect(checkVoice(offBrand)).toEqual([]);
+  });
+
+  it("still catches a named hazard hiding inside otherwise fine copy", () => {
+    const hazard: VoiceString[] = [
+      {
+        surface: "specimen/hazard",
+        text: "13 of 15, and the coin calls 7.5 — you are better than 80% of listeners.",
+        intensity: "pointed",
+      },
+    ];
+    const found = checkVoice(hazard);
+    expect(found.map((v) => v.rule)).toContain("fabricated-norm");
   });
 });
