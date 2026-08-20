@@ -230,11 +230,22 @@ describe("E5/S1 — the direction rule, proven both ways", () => {
 
 /**
  * THE URLS ARE ONLY AS TRUE AS THE DISK. Every lookup above proves the manifest
- * is internally consistent; none of it proves a file exists. `public/audio/
- * staircase` is git-ignored (RT-71b), so this cannot be a hard requirement in
- * CI — but it CAN be a hard requirement wherever the pool is present, which is
- * every machine that could ship it. Skipping silently is what would make this
- * test worthless, so the skip is loud.
+ * is internally consistent; none of it proves a file exists.
+ *
+ * ITS OLD JUSTIFICATION WAS FALSIFIED BY RT-88a, and the correction is the
+ * point. This check used to be the only one of its kind, excused as soft
+ * because "`public/audio/staircase` is git-ignored (RT-71b), so this cannot be
+ * a hard requirement in CI". That was true and it was not enough: the pool was
+ * present on disk on the one machine that ran this test, absent from every
+ * deploy, and this test passed the whole time. On disk and in the deploy are
+ * different facts.
+ *
+ * The pool is tracked now (RT-94a b), so `present` should be true everywhere —
+ * and the deploy-side guarantee is asserted separately, against git rather than
+ * the filesystem, in `staircase-shipping.test.ts`. Keep this one anyway: it is
+ * the check that a working tree is intact, which is a different failure from a
+ * deploy that is missing files. Skipping silently is what made it worthless, so
+ * the skip stays loud.
  */
 describe("E5/S1 — every URL resolves to a file that exists", () => {
   const dir = join(process.cwd(), "public", "audio", "staircase");
