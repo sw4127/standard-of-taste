@@ -16,7 +16,7 @@
  *
  * Thresholds are judgment, not data (N3).
  */
-import type { DelicacyResult } from "@/engine/delicacy";
+import { detectionBand, type DelicacyResult, type DetectionBand } from "@/engine/delicacy";
 import type { CalibrationResult } from "@/engine/calibration";
 
 export interface DelicacyVerdictCopy {
@@ -135,5 +135,107 @@ export const MAGNITUDE_WORDS: Record<1 | 2 | 3 | 4, string> = {
 };
 
 export function delicacyResultSummary(r: DelicacyResult): string {
-  return `${r.nCorrect} of ${r.nTrials} originals — a coin flip calls ${chanceCall(r.nTrials)}`;
+  // "calls 7.5" was live here. An odd trial count makes chanceCall fractional,
+  // and a coin cannot CALL a fraction — it can average one. Same number, and it
+  // stops reading as a broken sentence. See the note on `detectionBody`.
+  return `${r.nCorrect} of ${r.nTrials} originals — a coin flip averages ${chanceCall(r.nTrials)}`;
+}
+
+/**
+ * THE DETECTION READOUT — what replaced the six ranked tiers (PM ruling
+ * RT-105a b, on E6/S8's measurement).
+ *
+ * THE RULE THIS FOLLOWS. E6/S8 measured the six shipped tiers placing people
+ * correctly 30.5% of the time at fifteen trials, and found no granularity that
+ * rescues it — two bands reach 70.2% against the 89.3% the Prestige verdict
+ * manages. RT-90a had already ruled the general case for the staircase: report
+ * the band, never the point. A tier name is a point estimate wearing an
+ * adjective, so the same ruling lands here.
+ *
+ * WHAT SURVIVES, AND WHAT DOES NOT. The ranked adjective goes. The numbers and
+ * the prose around them stay and get MORE room, because the interesting thing
+ * was never the rank — it was that a two-way choice hands out half the score
+ * for free and almost nobody knows it. The one categorical line left is whether
+ * the whole interval clears chance, which is a claim about this session rather
+ * than a rank against other people.
+ *
+ * IT MUST NOT BE A HOAX AND IT MUST NOT CONFUSE (PM, 2026-08-21). So: no
+ * percentage is printed without saying which percentage it is, the guessing
+ * correction is explained in the sentence that uses it rather than in a
+ * footnote, and the width of the band is named as a property of a short session
+ * instead of being hidden behind a confident midpoint.
+ */
+
+/**
+ * The smallest score that clears chance outright at this length — COMPUTED from
+ * the same function the readout uses, never typed in. At fifteen trials it is
+ * 12, and if the session length ever changes this sentence changes with it
+ * instead of quietly becoming false.
+ */
+export function minToClearChance(nTrials: number): number | null {
+  for (let k = Math.ceil(nTrials / 2); k <= nTrials; k++) {
+    if (detectionBand(k, nTrials).excludesChance) return k;
+  }
+  return null;
+}
+
+/** One named line. It describes the measurement; it does not rank the person. */
+export function detectionTitle(band: DetectionBand): string {
+  return `${band.nCorrect} of ${band.nTrials}. What that narrows it to.`;
+}
+
+const pct = (x: number) => `${Math.round(x * 100)}%`;
+
+/**
+ * "A COIN FLIP CALLS 7.5" IS WHAT THE FIRST DRAFT SAID, and a coin cannot call
+ * 7.5 of anything. `chanceCall` returns nTrials/2 exactly, which is the right
+ * NUMBER — the expected score really is 7.5 on fifteen two-way choices — paired
+ * with a verb that makes it read like a nonsense prediction rather than a mean.
+ * "Averages" carries the same number and is true of a fraction.
+ *
+ * Found by reading the rendered output rather than the source, and the same
+ * defect is live in `delicacyResultSummary` above, where it has been shipping.
+ */
+export function detectionBody(band: DetectionBand): string {
+  const chance = chanceCall(band.nTrials);
+  const margin = band.nCorrect - band.nTrials / 2;
+  const range = `${pct(band.lo)} and ${pct(band.hi)}`;
+  const pairs = `${band.nTrials} pairs`;
+
+  if (band.excludesChance) {
+    return (
+      `A coin flip averages ${chance} of ${band.nTrials}, so ${band.nCorrect} sits ${margin} above what ` +
+      `luck alone returns. Take out the pairs you would have guessed right anyway and what is left — the ` +
+      `flaws you actually heard — falls somewhere between ${range} of them. A wide window, because ` +
+      `${pairs} is ${pairs}. But all of it sits above zero, and that is the part a coin cannot do.`
+    );
+  }
+
+  if (margin > 0) {
+    const need = minToClearChance(band.nTrials);
+    return (
+      `A coin flip averages ${chance} of ${band.nTrials}, so ${band.nCorrect} sits ${margin} above what ` +
+      `luck alone returns — and ${margin} is not enough. Take out the pairs you would have guessed right ` +
+      `anyway and the range that fits runs between ${range}, which still touches zero. On ${pairs} it ` +
+      `takes ${need} to pull clear of the coin outright. You may well hear more than nothing; ${pairs} ` +
+      `cannot say so.`
+    );
+  }
+
+  // Below about a quarter right, the corrected range collapses to a point at
+  // zero — Wilson's upper bound is still under chance, so there is no positive
+  // detection the data can support at all. "Runs between 0% and 0%" is
+  // arithmetically true and reads like a rendering bug, so the collapse is
+  // stated instead of printed as a degenerate interval.
+  const floor = band.lo === band.hi;
+  const rangeClause = floor
+    ? `there is no range left to draw: it sits flat at ${pct(band.hi)}`
+    : `the range that fits runs between ${range}`;
+
+  return (
+    `A coin flip averages ${chance} of ${band.nTrials}. You called ${band.nCorrect}, at or under what ` +
+    `luck alone returns, so nothing is left once the lucky guesses come out — ${rangeClause}. These ` +
+    `${pairs} found nothing that separates your ear from a coin, which is a statement about ${pairs}, ` +
+    `and not yet one about your ear.`
+  );
 }
