@@ -23,15 +23,13 @@ import FluidField from "@/components/FluidField";
 import { track } from "@/lib/analytics";
 import {
   DEGRADATION_FAMILIES,
-  DELICACY_CHANCE,
   computeDelicacyResult,
   encodeDelicacyResponses,
   type DelicacyConfidence,
   type DelicacyResponses,
   type DelicacyResult,
   type DegradationFamily,
-  type PairSide,
-} from "@/engine/delicacy";
+  type PairSide, detectionBand } from "@/engine/delicacy";
 import { BRIER_COIN_FLIP, binDisplayPct, computeCalibration } from "@/engine/calibration";
 import {
   DELICACY_INSTRUMENT_ID,
@@ -50,9 +48,7 @@ import {
   MAGNITUDE_WORDS,
   PROVISIONAL_FOOTNOTE,
   calibrationLine,
-  delicacyVerdict,
-  shareText,
-} from "@/content/delicacy/copy";
+  shareText, detectionTitle, detectionBody } from "@/content/delicacy/copy";
 
 /* One accent in play (design bar): delicacy ice — the cold, fine-grained room
  * of the gym, deliberately opposite the prestige gold. Same formula, new hue. */
@@ -512,7 +508,7 @@ export default function DelicacyFlow() {
   /* --------------------------------------------------------------- reveal */
   if (phase === "done" && result) {
     const cal = computeCalibration(result.receipts.map((r) => ({ confidence: r.confidence, correct: r.correct })));
-    const v = delicacyVerdict(result.nCorrect, result.nTrials);
+    const band = detectionBand(result.nCorrect, result.nTrials);
     // MEASURED_TRIALS, not the pool: practice trials are never answered into
     // `responses`, and the share payload is positional against the SCORED set.
     const p = encodeURIComponent(encodeDelicacyResponses(MEASURED_TRIALS, responses));
@@ -530,11 +526,11 @@ export default function DelicacyFlow() {
               {result.nCorrect}
               <span className="text-5xl text-muted">/{result.nTrials}</span>
             </p>
-            <p className="mt-3 text-sm text-muted">
-              originals identified — a coin flip calls {Math.round(result.nTrials * DELICACY_CHANCE)}
+            <p className="mt-3 text-sm text-muted">originals identified</p>
+            <h1 className="mt-7 font-display text-4xl font-semibold">{detectionTitle(band)}</h1>
+            <p className="mx-auto mt-3 max-w-sm text-left text-base leading-relaxed text-muted">
+              {detectionBody(band)}
             </p>
-            <h1 className="mt-7 font-display text-4xl font-semibold">{v.title}</h1>
-            <p className="mx-auto mt-2 max-w-sm text-base leading-relaxed text-muted">{v.sub}</p>
             {result.flawAccuracy !== null ? (
               <p className="mt-5 inline-block rounded-full border border-white/10 px-4 py-1.5 text-sm text-muted">
                 And on the ones you caught, you named the flaw{" "}
