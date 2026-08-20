@@ -23,7 +23,8 @@
  * comparable either. Same-moment A/B unlocks after it, per RT-34b.
  */
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, useSyncExternalStore } from "react";
+import Link from "next/link";
 import FluidField from "@/components/FluidField";
 import ClipPlayer from "@/app/bias/ClipPlayer";
 import AbCompare from "@/app/delicacy/AbCompare";
@@ -40,7 +41,19 @@ import {
   type StaircaseSession,
 } from "@/engine/staircase-session";
 import { isSourceLocked } from "@/engine/staircase-pool";
-import { FAMILY_BLURB, familyLabel } from "@/content/staircase/copy";
+import {
+  FAMILY_BLURB,
+  familyLabel,
+  cooldownTitle,
+  cooldownBody,
+  COOLDOWN_ALTERNATIVE,
+} from "@/content/staircase/copy";
+import {
+  cooldownDaysLeft,
+  recordCompletion,
+  serverSnapshot,
+  subscribeCooldown,
+} from "@/lib/retest-cooldown";
 import ThresholdResult from "./ThresholdResult";
 
 const ICE = "hsl(190 75% 62%)";
@@ -79,6 +92,33 @@ export default function ThresholdFlow({ family }: { family: string }) {
   const [armedB, setArmedB] = useState(false);
   const switches = useRef(0);
 
+  /**
+   * THE RETEST GATE (RT-89a).
+   *
+   * `localStorage` does not exist on the server, and this component IS server
+   * rendered — the same fact that made `newSeed` a click-handler concern above.
+   * Reading it during render gives the server one answer and the browser
+   * another, which is a hydration mismatch; here it would also mean the server
+   * shipping markup that offers a session the browser is about to refuse.
+   *
+   * `useSyncExternalStore` AND NOT A `useEffect`. The effect version was written
+   * first and eslint's `react-hooks/set-state-in-effect` rejected it, correctly
+   * and on the same grounds this file already gives for `newSeed`: it is a
+   * cascading render. This hook exists precisely to read an external store with
+   * a separate server answer, so it says what is meant instead of simulating it.
+   *
+   * The snapshot is one number: -1 not known, 0 ready, >0 days remaining. The
+   * Start button waits for a real answer rather than rendering optimistically
+   * and snatching it back.
+   */
+  const daysLeft = useSyncExternalStore(
+    subscribeCooldown,
+    () => cooldownDaysLeft(family),
+    serverSnapshot,
+  );
+  const cooldownKnown = daysLeft >= 0;
+  const blocked = daysLeft > 0;
+
   // `nextTrial` is idempotent by construction (E5/S2), so calling it on every
   // render is safe — the visit counter only moves when an answer is recorded.
   const trial = session && !isFinished(session) ? nextTrial(session) : null;
@@ -94,6 +134,10 @@ export default function ThresholdFlow({ family }: { family: string }) {
       switches.current = 0;
       if (isFinished(next)) {
         const result = sessionResult(next);
+        // Stamped on COMPLETION, never on start: a session abandoned at trial
+        // three measured nothing, and charging someone a week for it would be
+        // the gate punishing them instead of protecting the number.
+        recordCompletion(family, Date.now());
         track("threshold_complete", {
           family,
           sourceId: result.sourceId ?? null,
@@ -136,20 +180,37 @@ export default function ThresholdFlow({ family }: { family: string }) {
               without the material it was measured on.
             </p>
           ) : null}
-          <button
-            type="button"
-            onClick={() => {
-              const seed = newSeed();
-              const started = startSession(family, seed);
-              setSession(started);
-              track("threshold_start", { family, sourceId: started.sourceId ?? null });
-              setPhase("trial");
-            }}
-            className="mt-8 self-start rounded-full px-7 py-3.5 text-base font-bold text-black transition active:scale-[0.98]"
-            style={{ background: ICE, boxShadow: `0 10px 30px ${ICE_GLOW}` }}
-          >
-            Start
-          </button>
+          {blocked ? (
+            <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+              <p className="font-display text-lg font-semibold">{cooldownTitle(family)}</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted">
+                {cooldownBody(daysLeft)}
+              </p>
+              <Link
+                href="/threshold"
+                className="mt-4 inline-block text-sm font-semibold underline underline-offset-4"
+                style={{ color: ICE }}
+              >
+                {COOLDOWN_ALTERNATIVE}
+              </Link>
+            </div>
+          ) : (
+            <button
+              type="button"
+              disabled={!cooldownKnown}
+              onClick={() => {
+                const seed = newSeed();
+                const started = startSession(family, seed);
+                setSession(started);
+                track("threshold_start", { family, sourceId: started.sourceId ?? null });
+                setPhase("trial");
+              }}
+              className="mt-8 self-start rounded-full px-7 py-3.5 text-base font-bold text-black transition active:scale-[0.98] disabled:opacity-40"
+              style={{ background: ICE, boxShadow: `0 10px 30px ${ICE_GLOW}` }}
+            >
+              Start
+            </button>
+          )}
           <p className="mt-4 text-xs text-muted">
 ~{sessionMinutes(family)} minutes. No sign-up. Headphones strongly advised —
             laptop speakers cannot reproduce most of what this measures.
