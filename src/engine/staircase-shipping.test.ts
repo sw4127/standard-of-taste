@@ -101,13 +101,19 @@ describe("E6/S3 — the shipping pool is exactly what git carries (RT-88a)", () 
     const extra = [...tracked!].filter((f) => !reachable.has(f)).sort();
     if (extra.length) {
       throw new Error(
-        `${extra.length} tracked clip(s) are not reachable through the engine, which means a ` +
-          `\`git add -A\` after a re-render put files into a PUBLIC repo's permanent history ` +
-          `and onto a CDN. Some of these are stimuli whose labelled magnitude the audio itself ` +
-          `does not corroborate (RT-75a) — publishing them is the failure, not merely the size.\n` +
-          `First few: ${extra.slice(0, 5).join(", ")}\n` +
-          `Fix: \`git rm --cached\` those paths. Removing them from HISTORY, if it matters, is a ` +
-          `separate and much larger job.`,
+        `${extra.length} tracked clip(s) are not reachable through the engine. There are TWO ` +
+          `causes and they need opposite fixes, so read the list before acting.\n` +
+          `First few: ${extra.slice(0, 5).join(", ")}\n\n` +
+          `(1) A \`git add -A\` after a re-render swept files into a PUBLIC repo's permanent ` +
+          `history and onto a CDN. Some of those are stimuli whose labelled magnitude the audio ` +
+          `itself does not corroborate (RT-75a); publishing them is the failure, not the size. ` +
+          `Fix: \`git rm --cached\` those paths — removing them from HISTORY, if it matters, is ` +
+          `a separate and much larger job.\n\n` +
+          `(2) \`reachableClips\` above no longer walks everything the product can reach — a new ` +
+          `family, or a changed signature it silently skips. Then these files are FINE and the ` +
+          `traversal is what is broken. A whole family going missing shows up here as a large, ` +
+          `suspiciously uniform list; that is this check catching the other check, which is why ` +
+          `both directions exist. Fix the traversal, not the repo.`,
       );
     }
     expect(extra).toEqual([]);
