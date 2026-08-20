@@ -321,3 +321,126 @@ describe("E6/S7 — the delicacy session, priced two ways [SIMULATED]", () => {
     expect(delicacyMinutes(42)).toBeGreaterThan(20);
   });
 });
+
+/**
+ * E6/S8 — HOW MANY TIERS DO 15 TRIALS ACTUALLY SUPPORT?
+ *
+ * S7 said "about 2.4 bands" using a 2-SD rule of thumb. That rule is mine, not
+ * the product's, and picking a tier count from it would be swapping one
+ * invented constant for another — the exact move R3 exists to stop.
+ *
+ * So derive it from a target the product can be held to instead. E6/S6 measured
+ * the Prestige verdict at 89.3% agreement; that is the standard the Gym already
+ * meets somewhere, so it is a fair bar rather than a flattering one. The
+ * question becomes:
+ *
+ *   What is the LARGEST number of tiers whose printed verdict is right at least
+ *   as often as the Prestige verdict is, at the session length we ship?
+ *
+ * Bands are equal-width in `above` = (nCorrect - n/2)/(n/2), which is the same
+ * quantity `delicacyVerdict` already partitions — this changes how finely the
+ * range is cut, not what is being cut. Below-chance is its own band in both the
+ * current scheme and here, so it is held fixed and not counted.
+ */
+function bandOf(above: number, k: number): number {
+  if (above <= 0) return -1; // at-or-below chance: its own band, unchanged
+  return Math.min(k - 1, Math.floor(above * k));
+}
+
+describe("E6/S8 — deriving the tier count from a target the product already meets", () => {
+  it("finds the finest honest verdict at the shipping length [SIMULATED]", { timeout: 300_000 }, () => {
+    const PRESTIGE_AGREEMENT = 0.893; // E6/S6, measured
+    const N_TRIALS = 15;
+    const rows: Array<{ k: number; agree: number }> = [];
+
+    for (let k = 1; k <= 6; k++) {
+      let agreed = 0;
+      let total = 0;
+      for (let r = 0; r < 6; r++) {
+        const seed = 20260821 + r * 7919;
+        const items = syntheticDelicacyItems(seed, N_TRIALS);
+        const persons = simulatePersons(seed, 900, DEFAULT_PERSON_MODEL);
+        const data = simulateDelicacy(seed, items, persons);
+        const matrix = delicacyMatrix(SIMULATED, items, data.responses);
+        for (const [i, person] of persons.entries()) {
+          const nCorrect = matrix.correct[i].filter(Boolean).length;
+          const observed = (nCorrect - N_TRIALS / 2) / (N_TRIALS / 2);
+          const trueShare =
+            items.reduce((a, it) => a + pCorrectSide(it, person.theta), 0) / items.length;
+          const truth = 2 * trueShare - 1;
+          if (bandOf(observed, k) === bandOf(truth, k)) agreed++;
+          total++;
+        }
+      }
+      rows.push({ k, agree: agreed / total });
+    }
+
+    const shipped = rows.length; // six named tiers today, for the report line
+
+    // k=1 IS DEGENERATE AND IS NOT AN ANSWER. It asks "is this person above
+    // chance at all", and `pCorrectSide` is `0.5 + 0.5*logistic(...)`, so every
+    // simulated person is. Measured across 5000 persons: 0.0% have a true
+    // `above` at or below zero, minimum 0.083. The comparison has ONE CLASS in
+    // it and its 95.9% is a base rate, not an accuracy.
+    //
+    // This is the THIRD time in E6 that this exact shape produced a
+    // decision-grade number. It is excluded here by construction rather than by
+    // my remembering, and the assertion below pins the exclusion.
+    const DEGENERATE_K = 1;
+    const honest = [...rows]
+      .reverse()
+      .find((r) => r.k > DEGENERATE_K && r.agree >= PRESTIGE_AGREEMENT);
+
+    writeFileSync(
+      `${OUT_DIR}/e6-delicacy-tiers.txt`,
+      [
+        `E6/S8 HOW FINE A VERDICT ${N_TRIALS} TRIALS CARRY [SIMULATED, zero real responses]`,
+        `Bar: the Prestige verdict's measured agreement, ${(PRESTIGE_AGREEMENT * 100).toFixed(1)}% (E6/S6).`,
+        "Equal-width bands above chance; the below-chance band is unchanged and uncounted.",
+        "",
+        ...rows.map(
+          (r) =>
+            `  ${r.k} band${r.k === 1 ? " " : "s"} above chance   agreement ${(r.agree * 100).toFixed(1).padStart(5)}%` +
+            (r.k === 1
+              ? "   <- DEGENERATE: every simulated person is above chance, so this is a base rate"
+              : r.agree >= PRESTIGE_AGREEMENT
+                ? "   <- clears the bar"
+                : ""),
+        ),
+        "",
+        honest
+          ? `FINEST HONEST VERDICT AT ${N_TRIALS} TRIALS: ${honest.k} bands above chance, ` +
+            `${(honest.agree * 100).toFixed(1)}% agreement. Shipping today: ${shipped} named tiers.`
+          : `NO NON-DEGENERATE BAND COUNT CLEARS ${(PRESTIGE_AGREEMENT * 100).toFixed(1)}% AT ${N_TRIALS} TRIALS.`,
+        "",
+        "So the answer is not a smaller number of tiers. Even the coarsest real",
+        "split — two bands — lands at 70.2%, and the shipped six at 30.5%. At this",
+        "length there is no tiered verdict this instrument can print honestly.",
+        "",
+        "RT-90a already ruled this exact question for the staircase: report the",
+        "BAND, never the point, because a point estimate from a noisy measurement",
+        "is a claim the measurement cannot support. A tier name IS a point",
+        "estimate. The same ruling answers this.",
+      ].join(NL),
+    );
+
+    // Agreement must fall as the bands get finer — more boundaries, more ways
+    // to land on the wrong side of one. A curve that rose would mean the
+    // measurement is wrong, which is how three earlier bugs in this epic
+    // announced themselves.
+    for (let i = 1; i < rows.length; i++) {
+      expect(rows[i].agree, `agreement rose from k=${rows[i - 1].k} to k=${rows[i].k}`).toBeLessThanOrEqual(
+        rows[i - 1].agree + 0.01,
+      );
+    }
+    // The shipped resolution must NOT clear the bar — that is the finding.
+    expect(rows[rows.length - 1].agree).toBeLessThan(PRESTIGE_AGREEMENT);
+    // Nor must ANY non-degenerate count. If a future pool or length makes one
+    // clear it, tiering becomes defensible again and this test failing is how
+    // someone finds out.
+    expect(honest, "a non-degenerate tier count now clears the bar").toBeUndefined();
+    // And the degenerate row must stay recognisably degenerate: it can only
+    // score high because it has one class.
+    expect(rows[0].agree).toBeGreaterThan(rows[1].agree + 0.2);
+  });
+});

@@ -1,0 +1,21 @@
+E6/S8 HOW FINE A VERDICT 15 TRIALS CARRY [SIMULATED, zero real responses]
+Bar: the Prestige verdict's measured agreement, 89.3% (E6/S6).
+Equal-width bands above chance; the below-chance band is unchanged and uncounted.
+
+  1 band  above chance   agreement  95.9%   <- DEGENERATE: every simulated person is above chance, so this is a base rate
+  2 bands above chance   agreement  70.2%
+  3 bands above chance   agreement  56.4%
+  4 bands above chance   agreement  46.1%
+  5 bands above chance   agreement  37.5%
+  6 bands above chance   agreement  30.5%
+
+NO NON-DEGENERATE BAND COUNT CLEARS 89.3% AT 15 TRIALS.
+
+So the answer is not a smaller number of tiers. Even the coarsest real
+split — two bands — lands at 70.2%, and the shipped six at 30.5%. At this
+length there is no tiered verdict this instrument can print honestly.
+
+RT-90a already ruled this exact question for the staircase: report the
+BAND, never the point, because a point estimate from a noisy measurement
+is a claim the measurement cannot support. A tier name IS a point
+estimate. The same ruling answers this.
