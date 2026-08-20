@@ -72,9 +72,10 @@ public/audio/delicacy/proof-*
 # stimuli on a CDN whose labels the audio itself does not corroborate.
 #
 # To add clips after a re-render: regenerate the reachable set from the engine and
-# `git add -f` exactly that list. A comment cannot enforce this and is not trying to;
-# the guard that can — a test that fails when a reachable clip is untracked — is the
-# next slice, and until it lands this rule is only as good as whoever reads it.
+# `git add -f` exactly that list. A comment cannot enforce this and `staircase-shipping.
+# test.ts` does: it fails if a reachable clip is untracked, and it ALSO fails if anything
+# untracked-for-a-reason gets swept in. Both directions are proven by mutation, so if you
+# are reading this because that test is red, believe it.
 #
 # AND THEN THE PUSH WILL FAIL, which is worth knowing before you spend an hour on it.
 # A ~130 MB pack over HTTPS dies with `RPC failed; HTTP 408` — twice, here, including
