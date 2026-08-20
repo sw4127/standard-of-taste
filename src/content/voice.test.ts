@@ -18,6 +18,14 @@ import {
   shareText as delicacyShareText,
 } from "./delicacy/copy";
 import { DELICACY_TRIALS, FLAW_LABELS } from "./delicacy/items";
+import {
+  FAMILY_BLURB,
+  FAMILY_LABEL,
+  NO_COHORT_FOOTNOTE,
+  resultLines,
+} from "./staircase/copy";
+import { staircaseCopyFixtures } from "./staircase/fixtures";
+import { LIMIT_KIND_COPY, RETIRED_SOURCE_NOTE } from "./staircase/limits";
 
 /** Every cohort-visible string, with the intensity its surface is allowed. */
 function shippingStrings(): VoiceString[] {
@@ -54,6 +62,32 @@ function shippingStrings(): VoiceString[] {
   for (const [k, v] of Object.entries(MAGNITUDE_WORDS)) {
     out.push({ surface: `delicacy/rung/${k}`, text: v, intensity: "calm" });
   }
+
+  /**
+   * THE GYM'S RESULT DECK (E5/S5). Every reachable line, for every outcome kind
+   * on every shipping ladder — generated from real sessions rather than sampled,
+   * because an outcome nobody exercised is exactly where an off-voice line
+   * survives (the same argument the delicacy tier sweep above makes).
+   */
+  for (const { surface, lines } of staircaseCopyFixtures()) {
+    lines.forEach((text, i) => {
+      // The band headline is the verdict; the rest is explanation and caveat.
+      out.push({ surface: `${surface}/${i}`, text, intensity: i === 0 ? "pointed" : "calm" });
+    });
+  }
+  for (const [k, v] of Object.entries(FAMILY_LABEL)) {
+    out.push({ surface: `staircase/family/${k}/label`, text: v, intensity: "calm" });
+  }
+  for (const [k, v] of Object.entries(FAMILY_BLURB)) {
+    out.push({ surface: `staircase/family/${k}/blurb`, text: v, intensity: "calm" });
+  }
+  out.push({ surface: "staircase/no-cohort", text: NO_COHORT_FOOTNOTE, intensity: "calm" });
+  // The Lab's limits page (E5/S7) — cohort-facing prose, so it is gated too.
+  for (const [k, v] of Object.entries(LIMIT_KIND_COPY)) {
+    out.push({ surface: `staircase/limit/${k}/title`, text: v.title, intensity: "calm" });
+    out.push({ surface: `staircase/limit/${k}/blurb`, text: v.blurb, intensity: "calm" });
+  }
+  out.push({ surface: "staircase/retired-source", text: RETIRED_SOURCE_NOTE, intensity: "calm" });
   return out;
 }
 
@@ -91,8 +125,10 @@ describe("voice gate — the shipping decks", () => {
    *
    * Asserted on the ASSEMBLED footnote, because that is the unit a user reads.
    */
-  it("no user-facing delicacy copy promises a paid tier (D4 amendment)", () => {
-    const surfaces = shippingStrings().filter((s) => s.surface.startsWith("delicacy/"));
+  it("no user-facing delicacy or Gym copy promises a paid tier (D4 amendment)", () => {
+    const surfaces = shippingStrings().filter(
+      (s) => s.surface.startsWith("delicacy/") || s.surface.startsWith("staircase/"),
+    );
     expect(surfaces.length).toBeGreaterThan(0);
     for (const s of surfaces) {
       expect(promisesPayment(s.text), `${s.surface} promises payment`).toBe(false);
