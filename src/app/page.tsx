@@ -78,6 +78,28 @@ const MACHINES: Machine[] = [
         } satisfies Machine,
       ]
     : []),
+  /**
+   * MACHINE 03 — the threshold staircase (E5/S7, PM ruling RT-59a).
+   *
+   * It shares Delicacy's ice rather than taking a third accent: both machines
+   * measure the same criterion, and the design bar allows ONE accent in play.
+   * What separates them is the deliverable — Delicacy asks a fixed set and
+   * reports how many you caught; this one adapts and reports the SIZE of the
+   * smallest flaw you can still hear.
+   */
+  {
+    id: "threshold",
+    href: "/threshold",
+    n: "03",
+    accent: ICE,
+    field: ["hsl(190 55% 45%)", "hsl(205 50% 42%)", "hsl(175 45% 42%)", "hsl(215 40% 38%)"],
+    surface: "#070C0E",
+    title: "The Threshold Test",
+    criterion: "Delicacy of taste · measured",
+    blurb:
+      "The damage gets smaller every time you catch it, and bigger every time you miss. It stops at the size where you stop being sure — and that size is your number.",
+    meta: "14-26 min · a number in cents, ms or kbps",
+  },
 ];
 const FLUID = ["hsl(42 55% 48%)", "hsl(28 50% 44%)", "hsl(52 45% 46%)", "hsl(20 40% 40%)"];
 

@@ -70,6 +70,21 @@ export const LAB_PANELS: LabPanel[] = [
     href: "/lab/instrument-health",
   },
   {
+    id: "instrument-limits",
+    title: "What this instrument cannot do",
+    blurb:
+      "Every limit the clip pipeline measured in the threshold ladders and could not fix — rungs that are not separable, levels whose damage varies by passage, and the bottom of what the rulers can read.",
+    /**
+     * NO BADGE. These are acoustic measurements of audio files; no respondents
+     * are involved, so SIMULATED would be wrong and REAL would imply a cohort
+     * that does not exist. Same reasoning as Layer A on instrument-health.
+     */
+    dataSource: null,
+    metricIds: [],
+    status: "live",
+    href: "/lab/instrument-limits",
+  },
+  {
     id: "calibration-bias",
     title: "Calibration & bias distributions",
     blurb:
