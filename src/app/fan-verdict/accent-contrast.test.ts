@@ -65,3 +65,34 @@ describe("E6/S20 — fan-verdict accents are readable with the ink S19 picks", (
     expect(passedOnWhite.length).toBeLessThan(everyAccent().length);
   });
 });
+
+/**
+ * E6/S21 — the SECOND hardcoded white on this page, found by sweeping the
+ * rendered routes rather than by grepping for a spelling I guessed.
+ *
+ * S19 fixed `ShareButton`. This page also paints its funnel CTA with
+ * `text-white` on the same per-nation accent, and on England's it measured
+ * 4.17:1 against a 4.5 bar — a near-miss, which is the kind that survives a
+ * glance. Both controls on this page now choose their ink the same way, so
+ * this test covers the page rather than one component.
+ */
+describe("E6/S21 — every control on the page, not just the share button", () => {
+  it("the funnel CTA clears AA on every accent too", () => {
+    const failures: string[] = [];
+    for (const { label, accent } of everyAccent()) {
+      const ratio = contrastRatio(readableOn(accent), accent);
+      if (ratio === null || ratio < 4.5) failures.push(`${label} ${accent}: ${ratio?.toFixed(2)}`);
+    }
+    expect(failures, failures.join("; ")).toEqual([]);
+  });
+
+  it("pins the near-miss that white produced on the tightest accent", () => {
+    // ENG's #e8344e with white is 4.17 — under the bar, and close enough to it
+    // that nobody would catch it by eye. The number is recorded so a future
+    // change back to white fails loudly instead of looking fine.
+    const eng = everyAccent().find((a) => a.accent.toLowerCase() === "#e8344e");
+    expect(eng, "ENG accent is no longer in the roster").toBeTruthy();
+    expect(contrastRatio("#fff", eng!.accent)!).toBeLessThan(4.5);
+    expect(contrastRatio(readableOn(eng!.accent), eng!.accent)!).toBeGreaterThan(4.5);
+  });
+});
