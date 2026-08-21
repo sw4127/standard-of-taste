@@ -357,3 +357,30 @@ export function thresholdCardCaption(result: StaircaseResult): string {
   }
   return `the smallest ${flaw}${src} I can still hear`;
 }
+
+/**
+ * THE SHARE BLOCK'S OWN STRINGS (E6/S16).
+ *
+ * They live in the deck rather than the component for the reason the delicacy
+ * card taught us the hard way: a fragment in JSX is a fragment the hazard gate
+ * never reads, and that is where "a coin flip calls 3" survived for months.
+ */
+export const THRESHOLD_SHARE_LABEL = "Share this number";
+export const THRESHOLD_STORY_LABEL = "Story card";
+
+/**
+ * What travels with the link. It states the measurement and never ranks the
+ * person, and it carries no cohort claim — there is no cohort (N3).
+ */
+export function thresholdShareText(result: StaircaseResult): string {
+  const flaw = familyLabel(result.family).toLowerCase();
+  if (result.kind === "inconclusive") {
+    // THE TRIAL COUNT IS NOT DECORATION. The hazard gate rejected the first
+    // version of this line for citing no measured quantity, at full share
+    // intensity — correctly: a share that says only "it did not work" is a
+    // claim about the instrument with nothing behind it. The count is what was
+    // actually spent, and it is the honest thing an inconclusive session has.
+    return `${result.trials} trials of the ${flaw} staircase and it still could not read me. Think your ears do better?`;
+  }
+  return `${thresholdCardFigure(result)} — ${thresholdCardCaption(result)}. Measured, not guessed. Your turn.`;
+}

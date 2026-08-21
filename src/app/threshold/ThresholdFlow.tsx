@@ -55,6 +55,7 @@ import {
   subscribeCooldown,
 } from "@/lib/retest-cooldown";
 import ThresholdResult from "./ThresholdResult";
+import { SLUG_BY_FAMILY } from "./families";
 
 const ICE = "hsl(190 75% 62%)";
 const ICE_GLOW = "hsl(190 80% 60% / 0.4)";
@@ -88,6 +89,20 @@ function newSeed(): number {
 export default function ThresholdFlow({ family }: { family: string }) {
   const [phase, setPhase] = useState<Phase>("frame");
   const [session, setSession] = useState<StaircaseSession | null>(null);
+  /**
+   * THE ANSWERS, AS THE SHARE PAYLOAD (E6/S16).
+   *
+   * The result screen shares a REPLAY LINK, not a number: `?s=<seed>&r=<0s and
+   * 1s>`. That is the same design as /bias/result and the delicacy card — the
+   * receiving page recomputes the threshold from the responses, so there is no
+   * field anyone could edit to claim a threshold they did not measure.
+   *
+   * It is kept here rather than derived from the session because the session
+   * holds the staircase's STATE, not its history; reconstructing the answer
+   * string from state afterwards would be a second implementation of the replay
+   * format, and the two would drift.
+   */
+  const [answers, setAnswers] = useState("");
   const [armedA, setArmedA] = useState(false);
   const [armedB, setArmedB] = useState(false);
   const switches = useRef(0);
@@ -129,6 +144,7 @@ export default function ThresholdFlow({ family }: { family: string }) {
       const correct = isCorrectPick(trial, side);
       const next = answer(session, correct);
       setSession(next);
+      setAnswers((a) => a + (correct ? "1" : "0"));
       setArmedA(false);
       setArmedB(false);
       switches.current = 0;
@@ -245,7 +261,12 @@ export default function ThresholdFlow({ family }: { family: string }) {
 
   /* ---------------------------------------------------------------- done */
   if (session && (phase === "done" || !trial)) {
-    return <ThresholdResult result={sessionResult(session)} />;
+    return (
+      <ThresholdResult
+        result={sessionResult(session)}
+        share={{ slug: SLUG_BY_FAMILY[family], seed: session.seed, answers, sourceId: session.sourceId }}
+      />
+    );
   }
   if (!trial || !session) return null;
 
