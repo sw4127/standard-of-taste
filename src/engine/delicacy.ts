@@ -29,6 +29,7 @@
 
 import { fnv1a } from "./hash";
 import type { MetricSpec } from "./metricMeta";
+import { CONFIDENCE_Z } from "./confidence";
 
 /** The degradation families the toolchain can author (clip-pipeline degrade). */
 export const DEGRADATION_FAMILIES = ["pitch-drift", "timing-smear", "lossy-artifact"] as const;
@@ -362,8 +363,12 @@ export interface DetectionBand {
   excludesChance: boolean;
 }
 
-/** 95% two-sided. Named because a bare 1.96 in the arithmetic explains nothing. */
-const WILSON_Z = 1.96;
+/**
+ * The shared level, not a second copy of it (E6/S14). This was `1.96` written
+ * out here while the copy deck typed "95% confidence" by hand — two statements
+ * of one decision, only one of which anyone would remember to change.
+ */
+const WILSON_Z = CONFIDENCE_Z;
 
 export function detectionBand(nCorrect: number, nTrials: number): DetectionBand {
   if (!Number.isInteger(nTrials) || nTrials <= 0) {

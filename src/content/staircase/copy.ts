@@ -30,6 +30,7 @@
  */
 
 import type { StaircaseResult, ThresholdBand } from "@/engine/staircase-session";
+import { CONFIDENCE_PCT } from "@/engine/confidence";
 
 /**
  * The short unit, DERIVED from the pipeline's own label rather than kept in a
@@ -148,7 +149,7 @@ export function thresholdLine(result: StaircaseResult): string | null {
   const unit = result.unit;
   return (
     `Fitted to a threshold of ${quantity(result.label, unit)}${onSource(result)}, ` +
-    `with a 95% interval from ${quantity(result.ci95[0], unit)} to ${quantity(result.ci95[1], unit)}. ` +
+    `with a ${CONFIDENCE_PCT}% interval from ${quantity(result.ci95[0], unit)} to ${quantity(result.ci95[1], unit)}. ` +
     `That interval is wide because ${result.trials} two-way choices is what it is worth.`
   );
 }

@@ -36,6 +36,8 @@
  * responses rather than conclusions.
  */
 
+import { CONFIDENCE_Z } from "./confidence";
+
 /** Ascending magnitudes in a family's physical unit (cents, ms, dB). */
 export interface StaircaseConfig {
   levels: number[];
@@ -253,7 +255,7 @@ export function estimateThreshold(state: StaircaseState, config: StaircaseConfig
   return {
     kind: "threshold",
     threshold: Math.exp(mean),
-    ci95: [Math.exp(mean - 1.96 * se), Math.exp(mean + 1.96 * se)],
+    ci95: [Math.exp(mean - CONFIDENCE_Z * se), Math.exp(mean + CONFIDENCE_Z * se)],
     reversalsUsed: used.length,
     trials,
   };
