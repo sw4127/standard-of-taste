@@ -46,6 +46,8 @@ const GATES: { file: string; floor: number; guards: string }[] = [
   { file: "src/app/fan-verdict/accent-contrast.test.ts", floor: 6, guards: "all twenty nation accents stay readable" },
   { file: "src/app/threshold/share-links.test.ts", floor: 4, guards: "one builder for the share payload; a card cannot describe a different session than its page" },
   { file: "src/app/bias/clip-player-errors.test.ts", floor: 4, guards: "an interrupted play is not a failed clip, and a real failure still locks the gate" },
+  { file: "src/content/delicacy/card-lines.test.ts", floor: 3, guards: "the delicacy card's figure fits the card at the size it renders" },
+  { file: "src/content/staircase/card-fit.test.ts", floor: 5, guards: "every threshold card figure fits, proven against the character-count rule it replaced" },
   { file: "src/lib/retest-cooldown.test.ts", floor: 15, guards: "the 7-day validity gate, including its fail-open cases" },
 ];
 
