@@ -20,16 +20,6 @@ import { detectionBand, type DelicacyResult, type DetectionBand } from "@/engine
 import type { CalibrationResult } from "@/engine/calibration";
 import { CONFIDENCE_LABEL } from "@/engine/confidence";
 
-export interface DelicacyVerdictCopy {
-  title: string;
-  sub: string;
-}
-
-/**
- * Tiered on how far above CHANCE the score sits, as a share of the headroom
- * available. A 2AFC task floors at half the trials, so raw counts mean nothing
- * without the pool size: 6 correct is a triumph out of 6 and a failure out of 18.
- */
 /**
  * The chance expectation, as text. ONE definition, because the scored set went
  * odd (15 trials) and the surfaces disagreed in the browser: the result heading
@@ -42,23 +32,22 @@ export function chanceCall(nTrials: number): string {
   return String(nTrials / 2);
 }
 
-export function delicacyVerdict(nCorrect: number, nTrials: number): DelicacyVerdictCopy {
-  const chance = chanceCall(nTrials);
-  const headroom = nTrials / 2;
-  const above = (nCorrect - nTrials / 2) / headroom; // 1 = perfect, 0 = chance, <0 = worse
-
-  if (nCorrect === nTrials)
-    return { title: "The key in the wine.", sub: `All ${nTrials} flaws found. Sancho's kinsmen would pour you a glass.` };
-  if (above >= 0.75)
-    return { title: "Sharp ears.", sub: `${nCorrect} of ${nTrials}, against a coin flip's ${chance}. Very little got past you.` };
-  if (above >= 0.4)
-    return { title: "Better than the coin.", sub: `${nCorrect} of ${nTrials} — the coin calls ${chance}. You hear something real.` };
-  if (above > 0)
-    return { title: "A hair above chance.", sub: `${nCorrect} of ${nTrials}, and the coin calls ${chance}. Not nothing — barely.` };
-  if (above === 0)
-    return { title: "The coin ties you.", sub: `A flipped coin calls ${chance} of ${nTrials}. So did you.` };
-  return { title: "The village.", sub: `${nCorrect} of ${nTrials}, under the coin's ${chance}. You laughed at the tasters. The key was at the bottom of the barrel.` };
-}
+/**
+ * THE SIX RANKED VERDICTS ARE GONE (E6/S23).
+ *
+ * "The key in the wine.", "Sharp ears.", "The village." and the rest shipped
+ * here until E6/S9-S11 replaced them with a measured detection band. E6/S8
+ * showed why: at fifteen trials they placed a person in the right tier 30.5% of
+ * the time, and no coarser cut reached the 89.3% the Prestige verdict manages.
+ * RT-90a had already ruled the general case — report the band, never the point.
+ *
+ * They are deleted rather than left exported, because a retired thing that is
+ * still callable is how it gets accidentally re-wired. The definition survives
+ * VERBATIM in `src/analytics/delicacy-budget.test.ts`, which is the analysis
+ * that retired it and would be unreadable without its subject.
+ *
+ * What replaced them starts at `detectionBand` below.
+ */
 
 /**
  * The calibration sentence — the S4 header contract enforced in words:
