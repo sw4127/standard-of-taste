@@ -198,6 +198,17 @@ export function evidenceLine(band: ThresholdBand, unit: string): string {
  * behind a link, because with zero real sessions the absence of a cohort is the
  * single most important thing about the number on screen.
  */
+/**
+ * The same honesty as `NO_COHORT_FOOTNOTE`, at card length (E6/S15).
+ *
+ * The footnote is four sentences because a result screen has room to explain
+ * why there is no percentile. A card has room for a chip. Both say the same
+ * thing and neither leaves the absence for the reader to fill in, which is the
+ * failure mode N3 is actually about: a card with no comparison on it reads as
+ * a comparison the reader has not been shown.
+ */
+export const NO_COHORT_BADGE = "no percentile — cohort n = 0";
+
 export const NO_COHORT_FOOTNOTE =
   "There is no comparison here and there is not going to be one until real people have taken this. " +
   "Nobody has: the cohort behind this instrument currently has 0 sessions in it, so every reference " +
@@ -279,3 +290,70 @@ export function cooldownBody(daysLeft: number): string {
  * gate that only says "wait" wastes a visit that could have produced a number.
  */
 export const COOLDOWN_ALTERNATIVE = "Measure a different flaw instead";
+
+/**
+ * THE THRESHOLD SHARE CARD (E6/S15, PM ruling RT-108a a).
+ *
+ * The Gym's flagship instrument had no share affordance at all, while the two
+ * fixed-form tests both had one. That is backwards: a per-flaw threshold in
+ * physical units is the most distinctive thing this product makes, and
+ * CLAUDE.md's north star names the shareable stat card as what carries it.
+ *
+ * A CARD IS A FIGURE AND A CAPTION, so the long `bandLine` prose does not go on
+ * it — that sentence has four shapes and up to thirty words. What travels is
+ * the band as a numeral with its unit, plus one line naming what it is. The
+ * card is deliberately a STAT, the same ruling RT-111a made for delicacy.
+ *
+ * IT MUST NEVER PRINT A NUMBER FOR A SESSION THAT PRODUCED NONE. An
+ * inconclusive session has no figure, and the card says so rather than
+ * borrowing the nearest rung — the anti-clone clause bans scores and ranks, and
+ * a fabricated figure would be worse than either.
+ */
+export function thresholdCardFigure(result: StaircaseResult): string {
+  const u = shortUnit(result.unit);
+  if (result.kind === "inconclusive") return "no reading";
+  // `below` and `above` put the LADDER'S BOUND on the card, not a comparison
+  // against it. See the caption for why.
+  if (result.kind === "below" || result.kind === "above") {
+    return `${fmt(result.boundLabel)} ${u}`;
+  }
+  const { heardAt, missedAt } = result.band;
+  if (heardAt !== null && missedAt !== null) {
+    // ASCENDING BY NUMBER, for the reason `bandLine` gives at length: on the
+    // inverted lossy axis the harder rung is the LARGER number, so ordering by
+    // difficulty renders "160-64 kbps", which is right as physics and backwards
+    // as English.
+    const [lo, hi] = [heardAt, missedAt].sort((a, b) => a - b);
+    return `${fmt(lo)}–${fmt(hi)} ${u}`;
+  }
+  if (heardAt !== null) return `${fmt(heardAt)} ${u}`;
+  if (missedAt !== null) return `${fmt(missedAt)} ${u}`;
+  return "no reading";
+}
+
+/**
+ * One line under the figure. Names the measurement; never ranks the person.
+ *
+ * IT CARRIES THE DIRECTION IN WORDS, NOT IN A COMPARISON, and that is what
+ * makes it safe on the inverted lossy axis. The first version wrote "under 160
+ * kbps" for a `below` result — meaning the listener heard damage even at the
+ * gentlest rung, which on that ladder is the HIGHEST bitrate. "Under 160" reads
+ * as more damage, i.e. the opposite of what happened. The handoff's standing
+ * warning is that any new consumer reading magnitudes must reckon with
+ * `flipAxis`; a card is a consumer reading magnitudes, and I did not.
+ *
+ * "Gentlest" and "loudest" are true on both axes because they describe the
+ * ladder rather than the number, which is the same move `reachLine` makes.
+ */
+export function thresholdCardCaption(result: StaircaseResult): string {
+  const flaw = familyLabel(result.family).toLowerCase();
+  const src = onSource(result);
+  if (result.kind === "inconclusive") return `${flaw}${src} — the session ended without a reading`;
+  if (result.kind === "below") {
+    return `the gentlest ${flaw}${src} this test can render — and I still heard it`;
+  }
+  if (result.kind === "above") {
+    return `the loudest ${flaw}${src} this test can render — and I missed it`;
+  }
+  return `the smallest ${flaw}${src} I can still hear`;
+}

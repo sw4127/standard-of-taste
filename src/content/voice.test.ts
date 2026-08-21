@@ -30,9 +30,12 @@ import {
   COOLDOWN_ALTERNATIVE,
   FAMILY_LABEL,
   NO_COHORT_FOOTNOTE,
+  NO_COHORT_BADGE,
+  thresholdCardFigure,
+  thresholdCardCaption,
   resultLines,
 } from "./staircase/copy";
-import { staircaseCopyFixtures } from "./staircase/fixtures";
+import { staircaseCopyFixtures, staircaseCardFixtures } from "./staircase/fixtures";
 import { LIMIT_KIND_COPY, RETIRED_SOURCE_NOTE } from "./staircase/limits";
 
 /** Every cohort-visible string, with the intensity its surface is allowed. */
@@ -122,6 +125,17 @@ function shippingStrings(): VoiceString[] {
     out.push({ surface: `staircase/family/${k}/blurb`, text: v, intensity: "calm" });
   }
   out.push({ surface: "staircase/no-cohort", text: NO_COHORT_FOOTNOTE, intensity: "calm" });
+  out.push({ surface: "staircase/no-cohort-badge", text: NO_COHORT_BADGE, intensity: "calm" });
+  /**
+   * THE THRESHOLD SHARE CARD (E6/S15). Driven from the SAME generated fixtures
+   * as the result deck, so every outcome kind on every shipping ladder is
+   * covered — including `inconclusive`, which is the one that must never print
+   * a number and is therefore the one worth gating.
+   */
+  for (const { surface, result } of staircaseCardFixtures()) {
+    out.push({ surface: `${surface}/card-figure`, text: thresholdCardFigure(result), intensity: "pointed" });
+    out.push({ surface: `${surface}/card-caption`, text: thresholdCardCaption(result), intensity: "calm" });
+  }
   // The Lab's limits page (E5/S7) — cohort-facing prose, so it is gated too.
   for (const [k, v] of Object.entries(LIMIT_KIND_COPY)) {
     out.push({ surface: `staircase/limit/${k}/title`, text: v.title, intensity: "calm" });
@@ -348,5 +362,46 @@ describe("hazard gate — what it deliberately does NOT check", () => {
     ];
     const found = checkVoice(hazard);
     expect(found.map((v) => v.rule)).toContain("fabricated-norm");
+  });
+});
+
+/**
+ * E6/S15 — the norm rule now reads past an explicit denial, and this pins the
+ * exact width of that hole.
+ *
+ * WHY IT WAS OPENED. N3 requires the product to SAY there is no cohort. The
+ * blunt pattern flagged "no percentile — cohort n = 0" for containing the word
+ * it exists to deny, which makes the honest sentence unwritable inside the deck
+ * — and an unwritable sentence gets written in ungated JSX instead, which is
+ * exactly where the delicacy card's "a coin flip calls 3" survived for months.
+ * A gate that pushes copy out of the gate is worse than a slightly narrower
+ * gate.
+ *
+ * WHY IT IS SAFE. Only a negation attached to the word is stripped. Everything
+ * that actually claims a norm still trips, including a claim that tries to hide
+ * behind a nearby denial.
+ */
+describe("hazard gate — denying a norm is not claiming one", () => {
+  const check = (text: string) =>
+    checkVoice([{ surface: "specimen", text, intensity: "calm" }]).map((v) => v.rule);
+
+  it("lets the product say there is no cohort", () => {
+    expect(check("no percentile — cohort n = 0")).toEqual([]);
+    expect(check("Percentiles arrive when the cohort does, not before.")).toEqual([]);
+    expect(check("There is not a percentile here and there will not be one yet.")).toEqual([]);
+  });
+
+  it("still catches a real population claim", () => {
+    expect(check("Your percentile is 87.")).toContain("fabricated-norm");
+    expect(check("You scored better than 80% of listeners.")).toContain("fabricated-norm");
+    expect(check("That is above average for this test.")).toContain("fabricated-norm");
+    expect(check("You are in the top 5% of ears.")).toContain("fabricated-norm");
+  });
+
+  it("catches a claim that hides behind a denial in the same sentence", () => {
+    // The strip removes the denial, not the claim beside it.
+    expect(check("No percentiles yet, but you are better than 90% of listeners.")).toContain(
+      "fabricated-norm",
+    );
   });
 });
