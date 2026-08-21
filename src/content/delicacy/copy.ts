@@ -18,6 +18,7 @@
  */
 import { detectionBand, type DelicacyResult, type DetectionBand } from "@/engine/delicacy";
 import type { CalibrationResult } from "@/engine/calibration";
+import { CONFIDENCE_LABEL } from "@/engine/confidence";
 
 export interface DelicacyVerdictCopy {
   title: string;
@@ -222,7 +223,7 @@ export function detectionBody(band: DetectionBand): string {
     const clearance = band.nCorrect > (need ?? 0) ? `past the ${need}` : `exactly the ${need}`;
     return (
       `${generosity} You returned ${band.nCorrect} — ${margin} beyond what that generosity ` +
-      `covers, and ${clearance} it takes to clear the coin at 95% confidence. Subtract the ` +
+      `covers, and ${clearance} it takes to clear the coin at ${CONFIDENCE_LABEL}. Subtract the ` +
       `pairs luck would have handed you anyway and what remains, flaws actually detected rather ` +
       `than merely called, lands somewhere between ${pct(band.lo)} and ${pct(band.hi)}. That ` +
       `window is embarrassingly wide, and wide for an honest reason: ${n} pairs is ${n} pairs. ` +
@@ -237,7 +238,7 @@ export function detectionBody(band: DetectionBand): string {
       `covers, and ${margin} is not a margin anyone can defend. Subtract the pairs luck would ` +
       `have handed you anyway and the range that still fits your session runs from ` +
       `${pct(band.lo)} to ${pct(band.hi)} detected, touching zero at the bottom. On ${n} pairs ` +
-      `it takes ${need} to pull clear of the coin at 95% confidence. So the honest reading is ` +
+      `it takes ${need} to pull clear of the coin at ${CONFIDENCE_LABEL}. So the honest reading is ` +
       `not that you heard nothing — it is that a session this short cannot tell you apart from ` +
       `a lucky afternoon. A longer one can.`
     );
@@ -255,7 +256,7 @@ export function detectionBody(band: DetectionBand): string {
   return (
     `${generosity} You returned ${band.nCorrect}, at or beneath what that generosity alone ` +
     `returns, so once the lucky guesses come out there is nothing left to credit: ${rangeClause}. ` +
-    `Clearing the coin at 95% confidence would have taken ${need} of ${n}. What these ${n} pairs ` +
+    `Clearing the coin at ${CONFIDENCE_LABEL} would have taken ${need} of ${n}. What these ${n} pairs ` +
     `found is nothing that separates your ear from chance — which is a sentence about ${n} pairs, ` +
     `and not yet a sentence about your ear.`
   );

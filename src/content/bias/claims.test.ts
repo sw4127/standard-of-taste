@@ -2,6 +2,9 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { BIAS_CLIPS } from "./items";
+import { MEASURED_TRIALS, PRACTICE_TRIALS } from "@/content/delicacy/items";
+import { CONFIDENCE_PCT } from "@/engine/confidence";
+import { STAIRCASE_CLIP_SECONDS } from "@/engine/staircase-manifest";
 import { MIN_LISTEN_MS_PER_CLIP, REPLAY_FACTOR } from "@/engine/staircase-session";
 
 /**
@@ -30,6 +33,9 @@ import { MIN_LISTEN_MS_PER_CLIP, REPLAY_FACTOR } from "@/engine/staircase-sessio
  * stands between the pool growing and the copy lying.
  */
 
+/** A newline, as a constant: this file was broken twice by generating it. */
+const NL = String.fromCharCode(10);
+
 /** The same minutes model the Gym and E6/S6 use — imported, never retyped. */
 function prestigeMinutes(nItems: number): number {
   return (nItems * 2 * (MIN_LISTEN_MS_PER_CLIP / 1000) * REPLAY_FACTOR) / 60;
@@ -45,10 +51,17 @@ const NUMBER_WORDS: Record<number, string> = {
 
 /** Every tracked source file, read once. */
 function userFacingSources(): { file: string; text: string }[] {
-  const files = execSync('git ls-files "src/app/**/*.tsx" "src/app/**/*.ts"', { encoding: "utf8" })
+  // E6/S14 (RT-115a b): the sweep now reaches the copy decks and the launch
+  // kit as well as the app. The kit is the sharpest of the three — it is copy
+  // that goes to real channels, it had never been gated at all, and it was
+  // claiming "6 minutes" against a 5.1-minute session while the site said ~5.
+  // A wrong number there reaches people who never visit the site to be
+  // corrected by it.
+  const files = execSync('git ls-files "src/app/**/*.tsx" "src/app/**/*.ts" "src/content/**/*.ts" "docs/launch-post-kit.md"', { encoding: "utf8" })
     .trim()
     .split("\n")
-    .filter(Boolean);
+    .filter(Boolean)
+    .filter((f) => !/\.test\.ts$/.test(f));
   return files.map((file) => ({ file, text: readFileSync(file, "utf8") }));
 }
 
@@ -130,12 +143,17 @@ describe("E6/S12 — hardcoded Prestige Test claims still match the pool", () =>
    * without anyone noticing is how the next "calls 3" gets written.
    */
   it("no NEW surface has started hand-writing the pool size", () => {
+    // Widened in E6/S14 with the sweep itself (RT-115a b). The launch kit is
+    // on the list deliberately: it states the count on purpose, for channels,
+    // and the point of the list is that a NEW surface joining is a decision
+    // somebody made rather than a thing that happened.
     const known = [
       "src/app/bias/BiasFlow.tsx",
       "src/app/bias/page.tsx",
       "src/app/bias/result/page.tsx",
       "src/app/learn/prestige-bias-test/page.tsx",
       "src/app/page.tsx",
+      "docs/launch-post-kit.md",
     ];
     const found = filesContaining(/\b(ten|\d+) clips\b/i).sort();
     const unexpected = found.filter((f) => !known.includes(f));
@@ -144,5 +162,84 @@ describe("E6/S12 — hardcoded Prestige Test claims still match the pool", () =>
       `New surfaces are hand-writing the clip count. Either compute it, or add ` +
         `the file here deliberately:\n` + unexpected.join("\n"),
     ).toEqual([]);
+  });
+});
+
+/**
+ * E6/S14 — the other instruments' claims, and the shared constants behind them.
+ *
+ * The bias sweep above found the class; this is the rest of the surface area
+ * the PM asked for (RT-115a b): the copy decks and the launch kit, which had
+ * never been gated at all.
+ */
+describe("E6/S14 — every other stated quantity still matches its source", () => {
+  it("the delicacy session length is stated as the pool actually is", () => {
+    const scored = MEASURED_TRIALS.length;
+    const wrong: string[] = [];
+    for (const { file, text } of userFacingSources()) {
+      for (const m of text.matchAll(/\b(\d+)\s+(?:scored\s+)?(?:pairs|trials)\b/gi)) {
+        const said = Number(m[1]);
+        // Only judge claims about the SCORED set; practice counts and ladder
+        // rungs are different quantities that happen to share the noun.
+        if (!/scored|pairs/i.test(m[0])) continue;
+        if (said !== scored && said !== scored + PRACTICE_TRIALS.length && said !== PRACTICE_TRIALS.length) {
+          wrong.push(`${file}: "${m[0]}" but the scored set is ${scored}`);
+        }
+      }
+    }
+    expect(wrong, wrong.join(NL)).toEqual([]);
+  });
+
+  it("no surface types a confidence level the engine does not use", () => {
+    const wrong: string[] = [];
+    for (const { file, text } of userFacingSources()) {
+      for (const m of text.matchAll(/(\d{2})%\s+(?:confidence|interval)/gi)) {
+        if (Number(m[1]) !== CONFIDENCE_PCT) {
+          wrong.push(`${file}: "${m[0]}" but CONFIDENCE_PCT is ${CONFIDENCE_PCT}`);
+        }
+      }
+    }
+    expect(
+      wrong,
+      `The level lives in src/engine/confidence.ts and the multiplier is derived ` +
+        `from it. A deck that types the percentage itself can drift.` + NL + wrong.join(NL),
+    ).toEqual([]);
+  });
+
+  it("the stated clip length matches what was rendered", () => {
+    const words: Record<number, string> = { 10: "ten", 15: "fifteen", 20: "twenty", 30: "thirty" };
+    const word = words[STAIRCASE_CLIP_SECONDS];
+    const wrong: string[] = [];
+    for (const { file, text } of userFacingSources()) {
+      for (const m of text.matchAll(/\b(ten|fifteen|twenty|thirty|\d+)[- ]seconds?\b/gi)) {
+        const said = m[1].toLowerCase();
+        // ONLY FILES THAT ARE TALKING ABOUT THE STAIRCASE. The first version of
+        // this check flagged `/vs`'s "~30 seconds", which is how long that page
+        // takes, not how long a clip is — a guard that cannot tell a duration
+        // from a length will be switched off by whoever it wakes at 2am. The
+        // music and world-cup spines are legacy figurative prose for the same
+        // reason ("three seconds before it turns").
+        if (!/staircase|threshold/i.test(file)) continue;
+        if (said !== word && said !== String(STAIRCASE_CLIP_SECONDS)) {
+          wrong.push(`${file}: "${m[0]}" but clips are ${STAIRCASE_CLIP_SECONDS}s`);
+        }
+      }
+    }
+    expect(wrong, wrong.join(NL)).toEqual([]);
+  });
+
+  /**
+   * The launch kit is copy that leaves the site. It is asserted separately so a
+   * failure names it explicitly rather than hiding in a list of app files.
+   */
+  it("the launch kit agrees with the app about the Prestige session", () => {
+    const kit = userFacingSources().find((s) => s.file.endsWith("launch-post-kit.md"));
+    expect(kit, "launch-post-kit.md is no longer being swept").toBeTruthy();
+    const minutes = Math.round(prestigeMinutes(BIAS_CLIPS.length));
+    const stated = [...kit!.text.matchAll(/~?\s*(\d+)\s*min(?:utes)?\b/gi)].map((m) => Number(m[1]));
+    expect(stated.length, "the kit no longer states a duration at all").toBeGreaterThan(0);
+    for (const v of stated) {
+      expect(v, `the kit says ${v} min; the session is ${minutes}`).toBe(minutes);
+    }
   });
 });
