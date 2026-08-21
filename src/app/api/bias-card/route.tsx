@@ -14,7 +14,7 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { computeBiasResult, decodeBiasRatings } from "@/engine/bias";
 import { BIAS_CLIPS, BIAS_INSTRUMENT_ID, BIAS_POOL_VERSION } from "@/content/bias/items";
-import { VERDICT_COPY } from "@/content/bias/copy";
+import { VERDICT_COPY, biasCardSwayLine, biasCardCta } from "@/content/bias/copy";
 import { baseUrl } from "@/lib/site";
 
 export const runtime = "nodejs";
@@ -59,7 +59,7 @@ export async function GET(request: Request) {
   const result = computeBiasResult(BIAS_INSTRUMENT_ID, BIAS_CLIPS, blind, labeled);
   const verdict = VERDICT_COPY[result.verdict];
   const swayed = result.swayShare !== null
-    ? `moved with the label on ${Math.round(result.swayShare * result.movableCount)} of ${result.movableCount} clips`
+    ? biasCardSwayLine(Math.round(result.swayShare * result.movableCount), result.movableCount)
     : null;
   const host = baseUrl().replace(/^https?:\/\//, "");
 
@@ -159,7 +159,7 @@ export async function GET(request: Request) {
             color: GOLD,
           }}
         >
-          {`${host}/bias — get your number`}
+          {biasCardCta(host)}
         </div>
       </div>
     ),

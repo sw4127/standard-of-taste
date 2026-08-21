@@ -8,7 +8,7 @@
 
 import { describe, expect, it } from "vitest";
 import { checkVoice, formatVoiceReport, type VoiceString } from "./voice";
-import { VERDICT_COPY, shareText as biasShareText } from "./bias/copy";
+import { VERDICT_COPY, biasCardSwayLine, biasCardCta, shareText as biasShareText } from "./bias/copy";
 import {
   CALIBRATION_PHASE_LINE,
   MAGNITUDE_WORDS,
@@ -45,6 +45,21 @@ function shippingStrings(): VoiceString[] {
     out.push({ surface: `bias/verdict/${k}/sub`, text: v.sub, intensity: "pointed" });
   }
   out.push({ surface: "bias/share", text: biasShareText(31), intensity: "full" });
+  /**
+   * The bias share card's own two lines (E6/S13). They were composed in the
+   * route, which is outside this gate — the same structural gap the delicacy
+   * card's hardcoded "calls 3" lived in. Swept every reachable denominator
+   * rather than one example, because the boundary cases (0 of 8, 8 of 8) are
+   * where a sentence stops reading like a sentence.
+   */
+  for (const [moved, movable] of [[0, 8], [1, 8], [7, 8], [8, 8]]) {
+    out.push({
+      surface: `bias/card/sway/${moved}-${movable}`,
+      text: biasCardSwayLine(moved, movable),
+      intensity: "calm",
+    });
+  }
+  out.push({ surface: "bias/card/cta", text: biasCardCta("example.com"), intensity: "calm" });
 
   // Sweep every reachable delicacy verdict tier, not a sample: a tier nobody
   // exercised is exactly where an off-voice line survives.
