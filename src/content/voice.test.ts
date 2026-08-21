@@ -14,7 +14,6 @@ import {
   MAGNITUDE_WORDS,
   PROVISIONAL_FOOTNOTE,
   delicacyResultSummary,
-  delicacyVerdict,
   detectionTitle,
   detectionBody,
   detectionCardAnchor,
@@ -70,13 +69,6 @@ function shippingStrings(): VoiceString[] {
   }
   out.push({ surface: "bias/card/cta", text: biasCardCta("example.com"), intensity: "calm" });
 
-  // Sweep every reachable delicacy verdict tier, not a sample: a tier nobody
-  // exercised is exactly where an off-voice line survives.
-  for (let correct = 0; correct <= n; correct++) {
-    const v = delicacyVerdict(correct, n);
-    out.push({ surface: `delicacy/verdict/${correct}/title`, text: v.title, intensity: "pointed" });
-    out.push({ surface: `delicacy/verdict/${correct}/sub`, text: v.sub, intensity: "pointed" });
-  }
   out.push({ surface: "delicacy/share", text: delicacyShareText(12, n), intensity: "full" });
   /**
    * THE DETECTION READOUT (E6/S9). Every reachable score at the shipping
@@ -224,6 +216,11 @@ describe("hazard gate — the shipping decks", () => {
    * original pattern required "paid" adjacent to tier/arc/plan — and the line
    * it was written to prevent said "the paid TRAINING arc". A gate that cannot
    * catch the specimen that motivated it is decoration.
+   *
+   * RESTORED IN E6/S23. Deleting the retired delicacy tiers took this and its
+   * sibling with them — they sat in the same `describe` and had nothing to do
+   * with tiers. The suite went GREEN with the paid-tier guard's reverse proof
+   * missing, which is the exact failure this whole session has been about.
    */
   it("would have caught the line it replaced", () => {
     expect(
@@ -236,12 +233,18 @@ describe("hazard gate — the shipping decks", () => {
     expect(promisesPayment("There is no premium version.")).toBe(false);
   });
 
-  it("covers every reachable verdict tier, not a sample", () => {
+  /**
+   * The sweep must stay a SWEEP. Its old form counted delicacy verdict tiers,
+   * which no longer exist; it now counts detection-readout scores, which is the
+   * same guarantee against the same failure — a deck that quietly starts
+   * sampling instead of enumerating.
+   */
+  it("covers every reachable readout score, not a sample", () => {
     const strings = shippingStrings();
-    const tiers = new Set(
-      strings.filter((s) => s.surface.startsWith("delicacy/verdict/")).map((s) => s.surface.split("/")[2]),
+    const scores = new Set(
+      strings.filter((s) => s.surface.startsWith("delicacy/detection/")).map((s) => s.surface.split("/")[2]),
     );
-    expect(tiers.size).toBe(DELICACY_TRIALS.length + 1);
+    expect(scores.size).toBe(DELICACY_TRIALS.length + 1);
     expect(strings.length).toBeGreaterThan(40);
   });
 });
@@ -288,46 +291,6 @@ describe("hazard gate — it CATCHES what the spec bans", () => {
   it("reports EVERY violation in a line, not just the first", () => {
     const v = checkVoice(at("You're basic — bottom percentile, out of spite."));
     expect(new Set(v.map((x) => x.rule)).size).toBeGreaterThanOrEqual(3);
-  });
-});
-
-describe("delicacy verdicts are POOL-SIZE-RELATIVE (the bug this caught)", () => {
-  const n = DELICACY_TRIALS.length;
-  const chance = n / 2;
-
-  it("a below-chance score never earns a positive verdict", () => {
-    // The defect: tiers were keyed on raw counts out of six, so after the pool
-    // expanded to eighteen a score of 6 — two-thirds of the way BELOW chance —
-    // still returned "The key in the wine."
-    for (let correct = 0; correct < chance; correct++) {
-      expect(delicacyVerdict(correct, n).title, `${correct}/${n}`).toBe("The village.");
-    }
-  });
-
-  it("exactly chance ties the coin", () => {
-    expect(delicacyVerdict(chance, n).title).toBe("The coin ties you.");
-  });
-
-  it("a perfect score earns the top verdict, and only a perfect score", () => {
-    expect(delicacyVerdict(n, n).title).toBe("The key in the wine.");
-    expect(delicacyVerdict(n - 1, n).title).not.toBe("The key in the wine.");
-  });
-
-  it("verdicts are monotone in score — a better score never reads worse", () => {
-    const rank = ["The village.", "The coin ties you.", "A hair above chance.", "Better than the coin.", "Sharp ears.", "The key in the wine."];
-    let last = -1;
-    for (let correct = 0; correct <= n; correct++) {
-      const r = rank.indexOf(delicacyVerdict(correct, n).title);
-      expect(r, `${correct}/${n} produced an unranked title`).toBeGreaterThanOrEqual(0);
-      expect(r, `${correct}/${n} ranks below ${correct - 1}/${n}`).toBeGreaterThanOrEqual(last);
-      last = r;
-    }
-  });
-
-  it("works for a six-trial pool too — the tiers are computed, not hardcoded", () => {
-    expect(delicacyVerdict(6, 6).title).toBe("The key in the wine.");
-    expect(delicacyVerdict(3, 6).title).toBe("The coin ties you.");
-    expect(delicacyVerdict(1, 6).title).toBe("The village.");
   });
 });
 

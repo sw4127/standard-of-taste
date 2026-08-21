@@ -65,7 +65,7 @@
 import { describe, it, expect } from "vitest";
 import { writeFileSync, mkdirSync } from "node:fs";
 import { MEASURED_TRIALS } from "@/content/delicacy/items";
-import { delicacyVerdict } from "@/content/delicacy/copy";
+
 import {
   assignDelicacyParams,
   simulateDelicacy,
@@ -78,6 +78,48 @@ import {
 } from "./simulate";
 import { delicacyMatrix, estimateReliability } from "./estimate";
 import { MIN_LISTEN_MS_PER_CLIP, REPLAY_FACTOR } from "@/engine/staircase-session";
+
+/**
+ * THE RETIRED SHIPPING TIERS, kept here as the SUBJECT of the measurement that
+ * retired them (E6/S23).
+ *
+ * These six verdicts shipped on the delicacy result until E6/S9-S11 replaced
+ * them with a detection band. They were removed from the copy deck because no
+ * surface renders them any more and dead product code is how a retired thing
+ * gets accidentally re-wired.
+ *
+ * They live on HERE because the E6/S7 and S8 analyses are about them: the
+ * finding is that these tiers place a person correctly 30.5% of the time at
+ * fifteen trials, and that no coarser cut reaches the 89.3% the Prestige
+ * verdict manages. An analysis whose subject has been deleted is unreadable,
+ * and re-deriving the boundaries from prose later would be worse than keeping
+ * the function that defined them.
+ *
+ * VERBATIM from `src/content/delicacy/copy.ts` at commit a98a634. Do not
+ * "improve" it — it is a record of what shipped, not code with a future.
+ */
+interface RetiredVerdict {
+  title: string;
+  sub: string;
+}
+
+function delicacyVerdict(nCorrect: number, nTrials: number): RetiredVerdict {
+  const chance = String(nTrials / 2);
+  const headroom = nTrials / 2;
+  const above = (nCorrect - nTrials / 2) / headroom;
+
+  if (nCorrect === nTrials)
+    return { title: "The key in the wine.", sub: `All ${nTrials} flaws found. Sancho's kinsmen would pour you a glass.` };
+  if (above >= 0.75)
+    return { title: "Sharp ears.", sub: `${nCorrect} of ${nTrials}, against a coin flip's ${chance}. Very little got past you.` };
+  if (above >= 0.4)
+    return { title: "Better than the coin.", sub: `${nCorrect} of ${nTrials} — the coin calls ${chance}. You hear something real.` };
+  if (above > 0)
+    return { title: "A hair above chance.", sub: `${nCorrect} of ${nTrials}, and the coin calls ${chance}. Not nothing — barely.` };
+  if (above === 0)
+    return { title: "The coin ties you.", sub: `A flipped coin calls ${chance} of ${nTrials}. So did you.` };
+  return { title: "The village.", sub: `${nCorrect} of ${nTrials}, under the coin's ${chance}. You laughed at the tasters.` };
+}
 
 const NL = String.fromCharCode(10);
 const OUT_DIR = "docs/analytics";
