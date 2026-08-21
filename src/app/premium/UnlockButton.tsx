@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { track } from "@/lib/analytics";
+import { readableOn, BRAND_ACCENT } from "@/lib/readable-on";
 
 /**
  * Starts the hosted MoR checkout (spec §24) and redirects to it. If payments
@@ -53,7 +54,12 @@ export default function UnlockButton({
         type="button"
         onClick={unlock}
         disabled={busy}
-        className="rounded-full bg-accent px-10 py-4 text-lg font-bold text-white transition hover:opacity-90 active:scale-[0.98] disabled:opacity-60"
+        // `text-white` on the violet accent measured 3.86:1 against a 4.5 bar
+        // at 18px/700 — the primary paid CTA was the least readable control on
+        // its own page. Black clears at 5.45 and matches every other accent
+        // button after E6/S19 and S21.
+        className="rounded-full bg-accent px-10 py-4 text-lg font-bold transition hover:opacity-90 active:scale-[0.98] disabled:opacity-60"
+        style={{ color: readableOn(BRAND_ACCENT) }}
       >
         {busy ? "Opening checkout…" : `Unlock the full read · ${price}`}
       </button>
