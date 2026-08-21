@@ -50,6 +50,30 @@ export function isPlaceholderSrc(src: string): boolean {
  * single player on screen (the bias flow) this is a no-op.
  */
 let activeStop: { stop: () => void } | null = null;
+/**
+ * AN INTERRUPTED PLAY IS NOT A LOAD FAILURE (E6/S18, PM ruling RT-119a a).
+ *
+ * MEASURED IN THE BROWSER, not reasoned about: calling `play()` and then
+ * `pause()` before it resolves rejects the pending promise with
+ * `AbortError: The play() request was interrupted by a call to pause()`. That
+ * is normal, documented behaviour and it is exactly what this component does to
+ * itself — `claimPlayback` stops whichever clip currently holds playback, so
+ * tapping B while A is still buffering aborts A's pending play.
+ *
+ * The catch below used to treat every rejection alike and show "clip failed to
+ * load — tap to retry" on a clip that loaded perfectly. Worse than a wrong
+ * caption: a failed clip deliberately keeps the rating gate LOCKED, so the
+ * trial becomes unanswerable until the user notices the retry hint.
+ *
+ * The window is the buffering time of a cold clip, and the screen above these
+ * players says "Hear both all the way through first" — which invites precisely
+ * the tap-A-then-B sequence that opens it. Narrow on localhost; wider on a
+ * phone connection, which is where the audio is 420 KB and the users are.
+ */
+export function isInterruptedPlay(err: unknown): boolean {
+  return err instanceof DOMException && err.name === "AbortError";
+}
+
 function claimPlayback(self: { stop: () => void }) {
   if (activeStop && activeStop !== self) activeStop.stop();
   activeStop = self;
@@ -280,9 +304,11 @@ export default function ClipPlayer({
       }
       await el.play(); // resolves only when playback actually starts
       setPlaying(true);
-    } catch {
+    } catch (err) {
       setPlaying(false);
-      setFailed(true);
+      // See `isInterruptedPlay`: an aborted play means another clip took over,
+      // which is this component working, not the audio failing.
+      if (!isInterruptedPlay(err)) setFailed(true);
     }
   }
 
