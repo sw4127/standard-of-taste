@@ -97,6 +97,38 @@ const UNMEASURED_CLAIM_PATTERNS: [RegExp, string][] = [
   [/\bproves? (?:you|your) (?:ears?|taste)\b/i, "overclaim"],
 ];
 
+/**
+ * DENYING A NORM IS NOT CLAIMING ONE (E6/S15).
+ *
+ * `promisesPayment` in voice.test.ts already documents this exact defect one
+ * rule over: "a blunt substring match cannot tell 'no paid tier' from 'join the
+ * paid tier'". The norm rule had the same hole and it bit immediately — the
+ * card badge "no percentile — cohort n = 0" was flagged as percentile language,
+ * for containing the word it exists to deny.
+ *
+ * That is worse than an annoyance. N3 requires us to SAY there is no cohort,
+ * and a gate that forbids the word makes the honest sentence unwritable, which
+ * pushes it into ungated JSX — which is precisely where the delicacy card's
+ * "a coin flip calls 3" survived for months.
+ *
+ * The stripping is deliberately narrow: an explicit negation immediately
+ * attached to the claim. "no percentile", "percentiles arrive when the cohort
+ * does" — the two shapes this product actually writes. Anything further from
+ * the word still trips, so "top 10%, no really" is still caught.
+ */
+function stripNormDenials(text: string): string {
+  // NO \b IN THESE PATTERNS, deliberately. Two attempts to generate this
+  // function wrote a literal 0x08 BACKSPACE where the word boundary belonged,
+  // because Python reads \b as backspace and every tool that renders the file
+  // shows it as nothing. Word boundaries are not needed here — the words are
+  // long and distinctive — so the escape that keeps going wrong is simply not
+  // used. See src/content/bias/claims.test.ts for the same fix.
+  return text
+    .replace(/no\s+percentiles?/gi, "")
+    .replace(/not?\s+a\s+percentile/gi, "")
+    .replace(/percentiles?\s+(?:arrive|come|exist|are)[^.]*/gi, "");
+}
+
 const RULES: [string, [RegExp, string][], (s: VoiceString) => boolean][] = [
   ["motive-attribution", MOTIVE_PATTERNS, () => true],
   ["person-verdict", PERSON_VERDICT_PATTERNS, () => true],
@@ -118,8 +150,11 @@ export function checkVoice(strings: VoiceString[]): VoiceViolation[] {
   for (const s of strings) {
     for (const [rule, patterns, applies] of RULES) {
       if (!applies(s)) continue;
+      // The norm rule reads the text with explicit denials removed; every
+      // other rule reads it whole. See `stripNormDenials`.
+      const subject = rule === "fabricated-norm" ? stripNormDenials(s.text) : s.text;
       for (const [re, detail] of patterns) {
-        if (re.test(s.text)) out.push({ surface: s.surface, rule, detail, text: s.text });
+        if (re.test(subject)) out.push({ surface: s.surface, rule, detail, text: s.text });
       }
     }
     // Only the loudest tier must carry a datum; pointed surfaces often pair

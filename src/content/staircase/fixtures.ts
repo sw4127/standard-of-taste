@@ -98,3 +98,44 @@ export function staircaseCopyFixtures(): StaircaseCopyFixture[] {
   }
   return out;
 }
+
+export interface StaircaseCardFixture {
+  surface: string;
+  result: StaircaseResult;
+}
+
+/**
+ * The same ladders and placements as `staircaseCopyFixtures`, but carrying the
+ * RESULT rather than the rendered lines — the share card needs the object, not
+ * the deck's prose (E6/S15).
+ *
+ * It exists as its own function rather than a field on the copy fixture because
+ * the two consumers want different things and a fixture that carried both would
+ * make every result-deck test drag a card's worth of unused state through it.
+ * The generation is shared, so the two can never cover different sessions.
+ */
+export function staircaseCardFixtures(): StaircaseCardFixture[] {
+  const out: StaircaseCardFixture[] = [];
+  const ladders: Array<{ family: string; sourceId?: string }> = [
+    { family: "pitch-drift" },
+    { family: "timing-smear" },
+    ...eligibleSources("lossy-artifact").map((sourceId) => ({ family: "lossy-artifact", sourceId })),
+  ];
+
+  for (const { family, sourceId } of ladders) {
+    for (const placement of PLACEMENTS) {
+      for (const seed of [7919, 15838, 23757]) {
+        const result = resultFor(family, sourceId, placement, seed);
+        const surface = `staircase/${family}${sourceId ? `/${sourceId}` : ""}/${placement}/${result.kind}`;
+        if (out.some((f) => f.surface === surface)) continue;
+        out.push({ surface, result });
+      }
+    }
+    // The abandoned session, which is the only way `inconclusive` reaches a
+    // real card and therefore the branch that must never print a number.
+    const empty = sessionResult(startSession(family, 1, sourceId));
+    const surface = `staircase/${family}${sourceId ? `/${sourceId}` : ""}/unstarted/${empty.kind}`;
+    if (!out.some((f) => f.surface === surface)) out.push({ surface, result: empty });
+  }
+  return out;
+}
