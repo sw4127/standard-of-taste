@@ -6,6 +6,7 @@ import { replaySession } from "@/engine/staircase-replay";
 import { sessionResult } from "@/engine/staircase-session";
 import { thresholdCardFigure, thresholdCardCaption } from "@/content/staircase/copy";
 import { baseUrl } from "@/lib/site";
+import { thresholdCardPath } from "../../share-links";
 
 /**
  * A RESULT RECOMPUTED FROM RAW ANSWERS (E5/S6) — never from a number in the URL.
@@ -56,9 +57,7 @@ export async function generateMetadata({
     return base;
   }
 
-  const q = new URLSearchParams({ s: String(seed), r: responses });
-  if (sourceId) q.set("src", sourceId);
-  const og = `${baseUrl()}/api/threshold-card?format=og&slug=${slug}&${q.toString()}`;
+  const og = `${baseUrl()}${thresholdCardPath("og", { slug, seed, answers: responses, sourceId })}`;
   const title = `${thresholdCardFigure(result)} — The Taste Gym`;
   const description = thresholdCardCaption(result);
   return {
