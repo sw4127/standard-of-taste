@@ -33,6 +33,9 @@ import {
   NO_COHORT_BADGE,
   thresholdCardFigure,
   thresholdCardCaption,
+  thresholdShareText,
+  THRESHOLD_SHARE_LABEL,
+  THRESHOLD_STORY_LABEL,
   resultLines,
 } from "./staircase/copy";
 import { staircaseCopyFixtures, staircaseCardFixtures } from "./staircase/fixtures";
@@ -135,7 +138,10 @@ function shippingStrings(): VoiceString[] {
   for (const { surface, result } of staircaseCardFixtures()) {
     out.push({ surface: `${surface}/card-figure`, text: thresholdCardFigure(result), intensity: "pointed" });
     out.push({ surface: `${surface}/card-caption`, text: thresholdCardCaption(result), intensity: "calm" });
+    out.push({ surface: `${surface}/share-text`, text: thresholdShareText(result), intensity: "full" });
   }
+  out.push({ surface: "staircase/share-label", text: THRESHOLD_SHARE_LABEL, intensity: "calm" });
+  out.push({ surface: "staircase/story-label", text: THRESHOLD_STORY_LABEL, intensity: "calm" });
   // The Lab's limits page (E5/S7) — cohort-facing prose, so it is gated too.
   for (const [k, v] of Object.entries(LIMIT_KIND_COPY)) {
     out.push({ surface: `staircase/limit/${k}/title`, text: v.title, intensity: "calm" });

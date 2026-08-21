@@ -4,6 +4,8 @@ import ThresholdResult from "../../ThresholdResult";
 import { familyForSlug } from "../../families";
 import { replaySession } from "@/engine/staircase-replay";
 import { sessionResult } from "@/engine/staircase-session";
+import { thresholdCardFigure, thresholdCardCaption } from "@/content/staircase/copy";
+import { baseUrl } from "@/lib/site";
 
 /**
  * A RESULT RECOMPUTED FROM RAW ANSWERS (E5/S6) — never from a number in the URL.
@@ -15,10 +17,58 @@ import { sessionResult } from "@/engine/staircase-session";
  *
  * `noindex` because every URL is one person's session, not a page.
  */
-export const metadata: Metadata = {
-  title: "Your threshold — The Taste Gym",
-  robots: { index: false, follow: false },
-};
+/**
+ * NOINDEX, BUT AN UNFURL (E6/S16).
+ *
+ * Every URL here is one person's session, so it must not be indexed — but it
+ * WILL be pasted into a chat, and until now that pasted link showed the site's
+ * default image. The unfurl now carries the threshold card, which is generated
+ * from the same raw answers this page recomputes from: the picture and the page
+ * cannot disagree, because neither is given a number to trust.
+ *
+ * A malformed payload falls back to the plain title rather than a card. The
+ * card route would 400 on it, and an unfurl pointing at a 400 is a broken
+ * preview on somebody else's screen.
+ */
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: Params;
+  searchParams: Search;
+}): Promise<Metadata> {
+  const base: Metadata = {
+    title: "Your threshold — The Taste Gym",
+    robots: { index: false, follow: false },
+  };
+  const { slug } = await params;
+  const family = familyForSlug(slug);
+  if (!family) return base;
+
+  const sp = await searchParams;
+  const seed = Number(one(sp.s));
+  const responses = one(sp.r) ?? "";
+  const sourceId = one(sp.src);
+  let result;
+  try {
+    result = sessionResult(replaySession(family, seed, responses, sourceId));
+  } catch {
+    return base;
+  }
+
+  const q = new URLSearchParams({ s: String(seed), r: responses });
+  if (sourceId) q.set("src", sourceId);
+  const og = `${baseUrl()}/api/threshold-card?format=og&slug=${slug}&${q.toString()}`;
+  const title = `${thresholdCardFigure(result)} — The Taste Gym`;
+  const description = thresholdCardCaption(result);
+  return {
+    ...base,
+    title,
+    description,
+    openGraph: { title, description, images: [{ url: og, width: 1200, height: 630 }] },
+    twitter: { card: "summary_large_image", title, description, images: [og] },
+  };
+}
 
 type Params = Promise<{ slug: string }>;
 type Search = Promise<Record<string, string | string[] | undefined>>;
@@ -53,5 +103,9 @@ export default async function ThresholdResultPage({
     // reaches a screen.
     notFound();
   }
+  // NO SHARE BLOCK HERE, deliberately. This page is how you read SOMEBODY
+  // ELSE'S session; a share button on it would offer a stranger's number as
+  // your own. The block belongs to the flow, where the session was actually
+  // taken.
   return <ThresholdResult result={result} />;
 }
