@@ -34,6 +34,7 @@ import {
   THRESHOLD_STORY_LABEL,
 } from "@/content/staircase/copy";
 import ShareButton from "@/app/result/ShareButton";
+import { thresholdCardPath, thresholdResultPath, type ThresholdShare } from "./share-links";
 import DownloadButton from "@/app/result/DownloadButton";
 import { baseUrl } from "@/lib/site";
 import type { StaircaseResult } from "@/engine/staircase-session";
@@ -42,34 +43,6 @@ const ICE = "hsl(190 75% 62%)";
 const FLUID = ["hsl(195 45% 40%)", "hsl(210 40% 36%)", "hsl(180 40% 38%)", "hsl(225 35% 34%)"];
 const BASE = "#07090B";
 const BRAND = "rgba(244,245,248,0.72)";
-
-/**
- * WHAT A SHARE NEEDS, AND WHY IT IS THE RAW ANSWERS (E6/S16).
- *
- * Not a threshold. The card and the permalink both carry `?s=<seed>&r=<0s and
- * 1s>` and recompute server-side, so nothing in a URL can claim a number the
- * engine would not derive from those responses (N3). Optional because the
- * result screen is also reached by replaying someone else's link, where a
- * further share button would be sharing a stranger's session as your own.
- */
-export interface ThresholdShare {
-  slug: string;
-  seed: number;
-  answers: string;
-  sourceId?: string;
-}
-
-
-/** One place builds the payload query, so the card and the permalink agree. */
-function shareQuery(share: ThresholdShare): string {
-  const q = new URLSearchParams({ s: String(share.seed), r: share.answers });
-  if (share.sourceId) q.set("src", share.sourceId);
-  return q.toString();
-}
-
-function thresholdCardUrl(format: "story" | "square" | "og", share: ThresholdShare): string {
-  return `/api/threshold-card?format=${format}&slug=${share.slug}&${shareQuery(share)}`;
-}
 
 export default function ThresholdResult({
   result,
@@ -130,13 +103,13 @@ export default function ThresholdResult({
           <div className="mt-9">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={thresholdCardUrl("square", share)}
+              src={thresholdCardPath("square", share)}
               alt={`Threshold card: ${thresholdCardFigure(result)}`}
               className="w-full max-w-xs rounded-2xl border border-white/10"
             />
             <div className="mt-5 flex flex-wrap items-center gap-3">
               <ShareButton
-                url={`${baseUrl()}/threshold/${share.slug}/result?${shareQuery(share)}`}
+                url={`${baseUrl()}${thresholdResultPath(share)}`}
                 text={thresholdShareText(result)}
                 label={THRESHOLD_SHARE_LABEL}
                 event="threshold_share"
@@ -144,7 +117,7 @@ export default function ThresholdResult({
                 accent={ICE}
               />
               <DownloadButton
-                url={thresholdCardUrl("story", share)}
+                url={thresholdCardPath("story", share)}
                 label={THRESHOLD_STORY_LABEL}
                 filename={`threshold-${share.slug}-story.png`}
               />
