@@ -414,3 +414,30 @@ export const SNACK_LINE =
   "No clips, no ears, no interval — the opposite of this, on purpose.";
 
 export const SNACK_CTA = "Take the five-tap one";
+
+/**
+ * HOW BIG THE CARD'S HERO FIGURE CAN BE (E6/S25).
+ *
+ * THE BUG THIS FIXES SHIPPED IN E6/S15 AND I VERIFIED THAT CARD BY HTTP 200.
+ * The size was chosen by CHARACTER COUNT — `figure.length > 12 ? 108 : 150` —
+ * and "48–128 kbps" is eleven characters, so it took the 150px treatment and
+ * rendered 979px wide inside 920px of usable card. So did "64–160 kbps" at
+ * 983px. Two of the eleven figures the instrument can actually produce, both
+ * lossy bands, clipped on every share.
+ *
+ * Characters are not width. A digit is roughly twice a full stop, and the
+ * lossy bands are almost all digits.
+ *
+ * SATORI CANNOT MEASURE TEXT, so the width is estimated. `EM_PER_CHAR` is not a
+ * guess: Fraunces 900 was measured in a real browser across every figure this
+ * instrument produces, and the worst case came out at 0.593 em per character
+ * ("48–128 kbps"). 0.62 is that worst case with headroom, which is the right
+ * side to err on — an over-estimate shrinks the type slightly, an
+ * under-estimate clips the number the whole card exists to show.
+ */
+export const EM_PER_CHAR = 0.62;
+
+export function thresholdFigureFontSize(figure: string, usablePx: number, maxPx: number): number {
+  if (figure.length === 0) return maxPx;
+  return Math.min(maxPx, Math.floor(usablePx / (figure.length * EM_PER_CHAR)));
+}

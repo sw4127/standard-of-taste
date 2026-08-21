@@ -16,7 +16,12 @@ import { ImageResponse } from "next/og";
 import { replaySession } from "@/engine/staircase-replay";
 import { sessionResult } from "@/engine/staircase-session";
 import { familyForSlug } from "@/app/threshold/families";
-import { thresholdCardFigure, thresholdCardCaption, NO_COHORT_BADGE } from "@/content/staircase/copy";
+import {
+  thresholdCardFigure,
+  thresholdCardCaption,
+  thresholdFigureFontSize,
+  NO_COHORT_BADGE,
+} from "@/content/staircase/copy";
 import { baseUrl } from "@/lib/site";
 
 export const runtime = "nodejs";
@@ -112,7 +117,10 @@ export async function GET(request: Request) {
           style={{
             display: "flex",
             marginTop: px(isOg ? 26 : 64),
-            fontSize: px(figure.length > 12 ? 108 : 150),
+            // Sized by estimated WIDTH, not character count — see
+            // `thresholdFigureFontSize`. The card is 1080 wide with 80 of
+            // padding each side at scale 1.
+            fontSize: px(thresholdFigureFontSize(figure, 920, 150)),
             lineHeight: 1,
             fontWeight: 900,
             color: ICE,
