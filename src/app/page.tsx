@@ -163,9 +163,9 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
         <div className="mt-8 flex flex-col gap-2.5 text-sm">
           <Link href="/music/quiz" className="group text-muted transition-colors hover:text-white">
             <span className="font-semibold text-[hsl(42_45%_52%)] transition-colors group-hover:text-[hsl(42_80%_62%)]">
-              Warm-up.
+              Snack.
             </span>{" "}
-            The original music-taste read.
+            Five taps, a verdict, and no measurement behind it.
           </Link>
           {/* The library (§3.C7) — crawlable path into the explainers (D5). */}
           <Link href="/learn" className="group text-muted transition-colors hover:text-white">
