@@ -9,6 +9,7 @@ import {
 import { baseUrl, cardPath } from "@/lib/site";
 import Track from "@/components/Track";
 import ShareButton from "../result/ShareButton";
+import { readableOn } from "@/lib/readable-on";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -123,9 +124,12 @@ export default async function FanVerdictPage({ searchParams }: { searchParams: S
         style={{ background: `${accent}14`, border: `1px solid ${accent}40` }}
       >
         <p className="text-lg font-bold">That&apos;s your team. Now what does your taste say?</p>
+        {/* `text-white` here measured 4.17:1 on ENG's accent against a 4.5 bar
+            (E6/S21) — the same hardcode E6/S19 removed from ShareButton, in a
+            second place. The ink is chosen from the accent's real luminance. */}
         <span
-          className="mt-4 inline-block rounded-full px-8 py-3.5 text-sm font-bold text-white"
-          style={{ background: accent }}
+          className="mt-4 inline-block rounded-full px-8 py-3.5 text-sm font-bold"
+          style={{ background: accent, color: readableOn(accent) }}
         >
           Read my music taste →
         </span>
