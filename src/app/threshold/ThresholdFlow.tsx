@@ -47,6 +47,9 @@ import {
   cooldownTitle,
   cooldownBody,
   COOLDOWN_ALTERNATIVE,
+  SNACK_LEAD,
+  SNACK_LINE,
+  SNACK_CTA,
 } from "@/content/staircase/copy";
 import {
   cooldownDaysLeft,
@@ -202,6 +205,24 @@ export default function ThresholdFlow({ family }: { family: string }) {
           >
             {COOLDOWN_ALTERNATIVE}
           </Link>
+
+          {/* THE SNACK, IN THE GAP THE GATE CREATES (PM direction 2026-08-22).
+              A person told to come back in seven days has time and nothing to
+              do with it. This is the one place in the product where a lighter,
+              parallel thing is genuinely useful rather than an upsell — and it
+              is quieter than the CTA above on purpose: the instrument is still
+              the point. */}
+          <div className="mt-10 border-t border-white/10 pt-6">
+            <p className="text-sm font-semibold">{SNACK_LEAD}</p>
+            <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted">{SNACK_LINE}</p>
+            <Link
+              href="/music/quiz?ref=cooldown"
+              className="mt-4 inline-flex min-h-[44px] items-center text-sm font-semibold underline underline-offset-4"
+              style={{ color: BRAND }}
+            >
+              {SNACK_CTA} &rarr;
+            </Link>
+          </div>
         </div>
       </main>
     );
