@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { track } from "@/lib/analytics";
+import { readableOn } from "@/lib/readable-on";
 
 /**
  * Link-first share — the ONLY path back to the app from a social post is a
@@ -48,8 +49,13 @@ export default function ShareButton({
 
   const base =
     "rounded-full px-6 py-3 text-sm font-bold transition active:scale-[0.98]";
+  // THE INK IS CHOSEN, NOT ASSUMED (E6/S19). This said `color: "#fff"` for
+  // every primary button, which measured 1.83:1 on the delicacy result's
+  // "Share these ears" — white on ice, at 14px bold, where AA wants 4.5:1. The
+  // same hardcode shipped on five surfaces in two accents. See `readableOn`.
+  const background = accent ?? "var(--accent)";
   const style = primary
-    ? { background: accent ?? "var(--accent)", color: "#fff" }
+    ? { background, color: readableOn(background) }
     : { border: "1px solid rgba(255,255,255,0.2)" };
 
   return (
