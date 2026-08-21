@@ -104,3 +104,14 @@ export function contrastRatio(a: string, b: string): number | null {
   const [hi, lo] = [relativeLuminance(...x), relativeLuminance(...y)].sort((m, n) => n - m);
   return (hi + 0.05) / (lo + 0.05);
 }
+
+/**
+ * The brand accent, mirrored from `--accent` in `src/app/globals.css`.
+ *
+ * A second copy of a colour is exactly the defect this session has spent five
+ * slices removing, so it is mirrored under protest and pinned by a test that
+ * reads the stylesheet: `readable-on.test.ts` fails if the two ever disagree.
+ * The alternative — reading a CSS custom property at render — needs a live
+ * document, which server components do not have.
+ */
+export const BRAND_ACCENT = "#7c6cff";
