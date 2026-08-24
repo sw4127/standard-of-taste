@@ -40,6 +40,7 @@ import { baseUrl } from "@/lib/site";
 import type { StaircaseResult } from "@/engine/staircase-session";
 
 const ICE = "hsl(190 75% 62%)";
+const ICE_GLOW = "hsl(190 80% 60% / 0.4)";
 const FLUID = ["hsl(195 45% 40%)", "hsl(210 40% 36%)", "hsl(180 40% 38%)", "hsl(225 35% 34%)"];
 const BASE = "#07090B";
 const BRAND = "rgba(244,245,248,0.72)";
@@ -85,7 +86,34 @@ export default function ThresholdResult({
           </span>
         </div>
 
-        <h1 className="mt-3 font-display text-3xl font-semibold leading-tight tracking-tight">
+        {/*
+          THE REVEAL (RT-102a, ruled 2026-08-21).
+          
+          The Design Quality Bar asks the result screen to feel like a reveal
+          rather than a form submit, and the PM ruled this deck not-done against
+          it. The diagnosis was concrete rather than a matter of taste: both
+          sibling instruments lead with their number — the delicacy trials at
+          text-7xl, the prestige test with its signed percentage — while the
+          FLAGSHIP, whose whole deliverable is "a per-flaw threshold in physical
+          units", opened with a sentence and left the number inside it.
+          
+          So the figure leads, at the size its siblings use, in the accent they
+          use. It is the same string the share card shows, from the same gated
+          function, so the screen and the card cannot describe the session
+          differently.
+          
+          It is allowed to WRAP, which the card is not: a screen can afford two
+          lines and "6.3–17.7 cents" breaking after the range reads fine. That
+          is why this uses a plain size and the card computes one.
+        */}
+        <p
+          className="mt-5 font-display text-5xl font-semibold leading-[1.05] tracking-tight"
+          style={{ color: ICE, textShadow: `0 0 60px ${ICE_GLOW}` }}
+        >
+          {thresholdCardFigure(result)}
+        </p>
+
+        <h1 className="mt-4 font-display text-2xl font-semibold leading-snug tracking-tight">
           {headline}
         </h1>
 
