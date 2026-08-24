@@ -49,20 +49,141 @@ const NUMBER_WORDS: Record<number, string> = {
   8: "eight",
 };
 
-/** Every tracked source file, read once. */
-function userFacingSources(): { file: string; text: string }[] {
-  // E6/S14 (RT-115a b): the sweep now reaches the copy decks and the launch
-  // kit as well as the app. The kit is the sharpest of the three — it is copy
-  // that goes to real channels, it had never been gated at all, and it was
-  // claiming "6 minutes" against a 5.1-minute session while the site said ~5.
-  // A wrong number there reaches people who never visit the site to be
-  // corrected by it.
-  const files = execSync('git ls-files "src/app/**/*.tsx" "src/app/**/*.ts" "src/content/**/*.ts" "docs/launch-post-kit.md"', { encoding: "utf8" })
+/**
+ * E7/S1 — THE SWEEP HAD A HOLE, AND IT WAS SHAPED LIKE THE BUG IT HUNTS.
+ *
+ * The list above used to be built from `git ls-files "src/app/**` + `/*.tsx"`.
+ * In a git pathspec `**` is not the recursive wildcard it is in a shell: the
+ * pattern needs a LITERAL `/` after it, so `src/app/<star><star>/<star>.tsx`
+ * matches `src/app/bias/page.tsx` and does NOT match `src/app/page.tsx`. Every
+ * top-level file under `src/app` and `src/content` was invisible.
+ *
+ * Fifteen files. Three of them state the pool size by hand, and they are the
+ * three this file's own docblock names as the reason it exists:
+ *
+ *   src/app/page.tsx            the homepage       "Ten clips" · "~5 min · 10 clips"
+ *   src/app/opengraph-image.tsx the default OG PNG "Ten clips" · "Free · five minutes"
+ *   src/content/learn.ts        the FAQPage JSON-LD "the same ten clips" · "eight
+ *                                                    with artist names" · "Three
+ *                                                    of the eight labels"
+ *
+ * Every one was TRUE, so nothing failed and the hole stayed shut. RT-103a is
+ * what would have opened it: grow the pool, fix the seven files the test names,
+ * ship green, and the homepage, the share unfurl and the structured data Google
+ * reads all keep saying ten. That is the "coin flip calls 3" defect, reproduced
+ * by the guard written to prevent it.
+ *
+ * The fix takes no pathspec glob at all — directories in, extensions filtered
+ * in JS — and `the sweep reaches every file a user's eyes reach` below pins it.
+ */
+const SWEPT_DIRS = ["src/app", "src/content", "src/components"] as const;
+
+/**
+ * NOT src/engine, src/analytics or src/lib. Those are where the quantities are
+ * DEFINED — `CONFIDENCE_PCT = 95`, `MIN_LISTEN_MS_PER_CLIP`, and the doc
+ * comments that explain them. A guard that flags a constant's own definition
+ * for disagreeing with itself is a guard somebody switches off at 2am, which
+ * is the same reasoning that keeps `/vs`'s "~30 seconds" out of the clip-length
+ * check below. The rule is: swept iff a user can read it.
+ */
+const EXTRA_SWEPT_FILES = ["docs/launch-post-kit.md"] as const;
+
+/** The file list, exported in spirit so the meta-test can check it. */
+function sweptFiles(): string[] {
+  // E6/S14 (RT-115a b): the sweep reaches the copy decks and the launch kit as
+  // well as the app. The kit is the sharpest of the three — it is copy that
+  // goes to real channels, it had never been gated at all, and it was claiming
+  // "6 minutes" against a 5.1-minute session while the site said ~5. A wrong
+  // number there reaches people who never visit the site to be corrected by it.
+  const tracked = execSync(`git ls-files ${SWEPT_DIRS.map((d) => `"${d}"`).join(" ")}`, { encoding: "utf8" })
     .trim()
     .split("\n")
     .filter(Boolean)
-    .filter((f) => !/\.test\.ts$/.test(f));
-  return files.map((file) => ({ file, text: readFileSync(file, "utf8") }));
+    .filter((f) => /\.tsx?$/.test(f))
+    .filter((f) => !/\.test\.tsx?$/.test(f));
+  return [...tracked, ...EXTRA_SWEPT_FILES].sort();
+}
+
+/** Every tracked source file, read once. */
+function userFacingSources(): { file: string; text: string }[] {
+  return sweptFiles().map((file) => ({ file, text: readFileSync(file, "utf8") }));
+}
+
+/**
+ * E7/S1 — WHICH INSTRUMENT IS THIS SENTENCE ABOUT?
+ *
+ * The duration check used to answer that from the FILENAME: judge a `~N min`
+ * if the path matched `bias|prestige|opengraph|page.tsx`, unless it matched
+ * `delicacy|threshold`. That worked only while every file described one
+ * instrument. The moment the sweep reached `src/app/page.tsx` — the homepage,
+ * which lists all three machines side by side — it read the Delicacy Trials'
+ * "~10 min · 3 practice + 15 scored" and reported the Prestige Test as wrong
+ * by five minutes. The homepage was right: `SESSION_MINUTES` is
+ * `ceil(18 · 2 · 8s · 1.9 / 60) = ceil(9.12) = 10`.
+ *
+ * A guard whose first live run accuses a correct sentence is a guard somebody
+ * disables. So attribution is now positional, not per-file: a duration belongs
+ * to the instrument most recently NAMED above it. On the homepage that is
+ * `id: "bias"` / "The Prestige Test" for one card and "The Delicacy Trials"
+ * for the next, which is also how a human reads the page.
+ *
+ * Falls back to the filename only when nothing is named above the match at
+ * all — the case `src/app/bias/BiasFlow.tsx` used to rely on.
+ */
+/**
+ * The lookarounds are lowercase-only ON PURPOSE, and they are not `\b`.
+ *
+ * `\b` would reject `BiasFlow` and `delicacyItems` — camelCase identifiers are
+ * the strongest attribution signal in a .tsx file, and losing them would send
+ * matches to the filename fallback. Lowercase-only boundaries keep those
+ * (`bias` followed by `F` is fine) while rejecting the English inflections that
+ * genuinely mislead: `biased`, `unbiased`, `thresholds` in a sentence about
+ * something else.
+ *
+ * Measured before changing it: across 113 swept files and 7 duration claims,
+ * strict boundaries change ZERO attributions today. This is a latent hole being
+ * shut, not a live bug — the day someone writes "an unbiased listener" above a
+ * duration on the delicacy page, it becomes live and silent.
+ *
+ * (Not `\b` also because a `\b` typed into this repo by a generator becomes a
+ * literal 0x08 that renders as nothing. This file has been broken that way.)
+ */
+const INSTRUMENT_NAMED = /(?<![a-z])(?:prestige|bias|delicacy|threshold|staircase)(?![a-z])/gi;
+const IS_PRESTIGE = /prestige|bias/i;
+
+function isAboutPrestige(text: string, index: number, file: string): boolean {
+  let nearest: string | null = null;
+  for (const m of text.slice(0, index).matchAll(INSTRUMENT_NAMED)) nearest = m[0];
+  if (nearest !== null) return IS_PRESTIGE.test(nearest);
+  return /bias|prestige|opengraph/.test(file);
+}
+
+/**
+ * Extracted so it can be proven in BOTH directions on synthetic text — the
+ * lesson of E6/S26, where the delicacy card's width guard could not have caught
+ * the bug it was written for and nobody noticed, because a guard that never
+ * fails and a guard that works look identical from the outside.
+ */
+function wrongMinuteClaims(sources: { file: string; text: string }[], minutes: number): string[] {
+  const word = NUMBER_WORDS[minutes];
+  const wrong: string[] = [];
+  for (const { file, text } of sources) {
+    // "~5 min", "~5 minutes", "five minutes", "five-minute". The delicacy and
+    // threshold flows interpolate their own durations, so only literal numbers
+    // are judged here.
+    for (const m of text.matchAll(/~\s*(\d+)\s*min|\b(five|ten|fifteen|twenty)[-\s]minutes?\b/gi)) {
+      if (!isAboutPrestige(text, m.index, file)) continue;
+      const digits = m[1];
+      const spelled = m[2]?.toLowerCase();
+      if (digits && Number(digits) !== minutes) {
+        wrong.push(`${file}: "${m[0]}" but the session is ${minutes} min`);
+      }
+      if (spelled && spelled !== word) {
+        wrong.push(`${file}: "${m[0]}" but the session is ${minutes} min (${word})`);
+      }
+    }
+  }
+  return wrong;
 }
 
 function filesContaining(pattern: RegExp): string[] {
@@ -98,23 +219,7 @@ describe("E6/S12 — hardcoded Prestige Test claims still match the pool", () =>
   });
 
   it("the stated duration still matches the pool and the listen gate", () => {
-    const word = NUMBER_WORDS[minutes];
-    const wrong: string[] = [];
-    for (const { file, text } of userFacingSources()) {
-      // "~5 min", "~5 minutes", "five minutes", "five-minute"
-      for (const m of text.matchAll(/~\s*(\d+)\s*min|\b(five|ten|fifteen|twenty)[-\s]minutes?\b/gi)) {
-        const digits = m[1];
-        const spelled = m[2]?.toLowerCase();
-        // The delicacy and threshold flows interpolate their own durations, so
-        // only literal numbers are judged here.
-        if (digits && Number(digits) !== minutes && /bias|prestige|opengraph|page\.tsx/.test(file)) {
-          if (!/delicacy|threshold/i.test(file)) wrong.push(`${file}: "${m[0]}" but the session is ${minutes} min`);
-        }
-        if (spelled && spelled !== word && /bias|prestige|opengraph/.test(file)) {
-          wrong.push(`${file}: "${m[0]}" but the session is ${minutes} min (${word})`);
-        }
-      }
-    }
+    const wrong = wrongMinuteClaims(userFacingSources(), minutes);
     expect(
       wrong,
       `The Prestige session is ${prestigeMinutes(nClips).toFixed(1)} min at ${nClips} clips.\n` +
@@ -154,6 +259,12 @@ describe("E6/S12 — hardcoded Prestige Test claims still match the pool", () =>
       "src/app/learn/prestige-bias-test/page.tsx",
       "src/app/page.tsx",
       "docs/launch-post-kit.md",
+      // E7/S1: these two were ALWAYS hand-writing the count. They are new to
+      // the list, not new to the sin — the sweep simply could not see them
+      // (see the pathspec note above). They are the two surfaces this file's
+      // docblock names as its reason for existing, which is the whole point.
+      "src/app/opengraph-image.tsx", // the default share PNG — nobody reads a PNG
+      "src/content/learn.ts", // the FAQPage JSON-LD — nobody reads structured data either
     ];
     const found = filesContaining(/\b(ten|\d+) clips\b/i).sort();
     const unexpected = found.filter((f) => !known.includes(f));
@@ -241,5 +352,111 @@ describe("E6/S14 — every other stated quantity still matches its source", () =
     for (const v of stated) {
       expect(v, `the kit says ${v} min; the session is ${minutes}`).toBe(minutes);
     }
+  });
+});
+
+/**
+ * E7/S1 — THE SWEEP IS NOW AUDITED BY SOMETHING THAT IS NOT THE SWEEP.
+ *
+ * Everything above trusts one list of files. That list was wrong for as long as
+ * it existed and no test noticed, because every test that uses it also inherits
+ * its blind spot: a file nobody reads cannot fail a check nobody runs on it.
+ *
+ * These two tests are the audit. The first enumerates the same files by a
+ * mechanism with no pathspec glob in it at all — `git ls-files` with no
+ * arguments, filtered by string prefix in JS — so it cannot share the bug it
+ * is checking for. The second pins the bug itself, in the form of the fact
+ * that caused it, so that a future "tidy-up" back to a `<star><star>/` pattern
+ * fails immediately and reads its own explanation.
+ */
+describe("E7/S1 — the sweep reaches every file a user's eyes reach", () => {
+  it("covers every non-test .ts/.tsx under the swept directories", () => {
+    const everything = execSync("git ls-files", { encoding: "utf8" })
+      .trim()
+      .split("\n")
+      .filter(Boolean)
+      .filter((f) => SWEPT_DIRS.some((d) => f.startsWith(`${d}/`)))
+      .filter((f) => /\.tsx?$/.test(f))
+      .filter((f) => !/\.test\.tsx?$/.test(f))
+      .sort();
+
+    const swept = sweptFiles().filter((f) => !f.endsWith(".md"));
+    const missed = everything.filter((f) => !swept.includes(f));
+    expect(
+      missed,
+      `These files are user-facing and unswept. A claim can rot in any of them ` +
+        `without a single test going red:${NL}${missed.join(NL)}`,
+    ).toEqual([]);
+
+    // THE CHECK ABOVE PASSES VACUOUSLY IF `SWEPT_DIRS` IS EMPTIED: `everything`
+    // is derived from the same list, so nothing swept means nothing missed
+    // means green. That is the same shape as the bug this whole slice is about
+    // — a guard that reports success because it looked nowhere. These three
+    // lines are what make it non-vacuous, and they are floors, not targets:
+    // lowering one is allowed, doing it silently is not.
+    expect(SWEPT_DIRS, "the app is no longer swept").toContain("src/app");
+    expect(SWEPT_DIRS, "the copy decks are no longer swept").toContain("src/content");
+    expect(swept.length, "the sweep has stopped finding files").toBeGreaterThan(100);
+  });
+
+  it("the pathspec that hid the homepage for months would still hide it", () => {
+    // The fact, not the symptom: in a git pathspec `**` is not the shell's
+    // recursive wildcard — it needs a literal `/` after it, so the pattern
+    // requires at least one directory below src/app and top-level files never
+    // matched. Anyone who "simplifies" sweptFiles() back to a glob trips this.
+    const globbed = execSync('git ls-files "src/app/**/*.tsx"', { encoding: "utf8" })
+      .trim()
+      .split("\n")
+      .filter(Boolean);
+    expect(globbed.length, "sanity: the old pathspec matched nested files fine").toBeGreaterThan(40);
+    expect(
+      globbed.filter((f) => /^src\/app\/[^/]+\.tsx$/.test(f)),
+      "if this is non-empty, git changed its pathspec semantics and the note above is stale",
+    ).toEqual([]);
+    // ...and the current list does not have that hole.
+    expect(sweptFiles()).toContain("src/app/page.tsx");
+    expect(sweptFiles()).toContain("src/app/opengraph-image.tsx");
+  });
+});
+
+/**
+ * E7/S1 — and the duration check itself, proven in both directions on text it
+ * cannot have been tuned against.
+ */
+describe("E7/S1 — the duration check can tell the machines apart", () => {
+  const homepageShaped = [
+    {
+      file: "src/app/page.tsx",
+      text: [
+        'id: "bias", title: "The Prestige Test",',
+        'meta: "~5 min · 10 clips",',
+        'id: "delicacy", title: "The Delicacy Trials",',
+        'meta: "~10 min · 3 practice + 15 scored",',
+      ].join(NL),
+    },
+  ];
+
+  it("passes the real shape: a correct Prestige claim beside a longer Delicacy one", () => {
+    expect(wrongMinuteClaims(homepageShaped, 5)).toEqual([]);
+  });
+
+  it("catches a wrong Prestige claim in that same shape", () => {
+    // The RT-103a case: the pool grew, the session is 8 minutes, the card was
+    // never updated — and the Delicacy line beside it must stay unaccused.
+    const found = wrongMinuteClaims(homepageShaped, 8);
+    expect(found.length, found.join(NL)).toBe(1);
+    expect(found[0]).toContain('"~5 min"');
+    expect(found.join(" "), "the Delicacy card was accused too").not.toContain("~10 min");
+  });
+
+  it("does not judge a duration under a heading that names another machine", () => {
+    const staircase = [{ file: "src/app/page.tsx", text: `The Threshold Test${NL}~5 min` }];
+    expect(wrongMinuteClaims(staircase, 8)).toEqual([]);
+  });
+
+  it("falls back to the filename when nothing names an instrument", () => {
+    const bare = [{ file: "src/app/opengraph-image.tsx", text: "Free · five minutes · no sign-up" }];
+    expect(wrongMinuteClaims(bare, 8).length).toBe(1);
+    expect(wrongMinuteClaims([{ file: "src/app/legal/page.tsx", text: "five minutes" }], 8)).toEqual([]);
   });
 });
