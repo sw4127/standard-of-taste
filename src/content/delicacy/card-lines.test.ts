@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { detectionBand } from "@/engine/delicacy";
 import { detectionCardAnchor, detectionCardFigure } from "./copy";
-import { EM_PER_CHAR } from "@/content/staircase/copy";
+import { EM_PER_CHAR_FIGURE } from "@/content/staircase/copy";
 /**
  * E6/S11 — the share card's two lines, at every reachable score.
  *
@@ -42,7 +42,7 @@ describe("E6/S11 — share card lines across every score", () => {
     const tooWide: string[] = [];
     for (let k = 0; k <= 15; k++) {
       const f = detectionCardFigure(detectionBand(k, 15));
-      const estimated = f.length * EM_PER_CHAR * HERO_PX;
+      const estimated = f.length * EM_PER_CHAR_FIGURE * HERO_PX;
       if (estimated > USABLE) tooWide.push(`${f}: ~${Math.round(estimated)}px of ${USABLE}`);
     }
     expect(tooWide, tooWide.join("; ")).toEqual([]);
@@ -55,7 +55,7 @@ describe("E6/S11 — share card lines across every score", () => {
     // clipped PNG nobody opens.
     const HERO_PX = 76;
     const USABLE = 1080 - 64 * 2;
-    const maxChars = Math.floor(USABLE / (EM_PER_CHAR * HERO_PX));
+    const maxChars = Math.floor(USABLE / (EM_PER_CHAR_FIGURE * HERO_PX));
     let widest = 0;
     for (let k = 0; k <= 15; k++) widest = Math.max(widest, detectionCardFigure(detectionBand(k, 15)).length);
     expect(maxChars, `fits ${maxChars} chars, widest figure is ${widest}`).toBeGreaterThan(widest);

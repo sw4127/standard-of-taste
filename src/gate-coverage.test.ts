@@ -48,6 +48,7 @@ const GATES: { file: string; floor: number; guards: string }[] = [
   { file: "src/app/bias/clip-player-errors.test.ts", floor: 4, guards: "an interrupted play is not a failed clip, and a real failure still locks the gate" },
   { file: "src/content/delicacy/card-lines.test.ts", floor: 3, guards: "the delicacy card's figure fits the card at the size it renders" },
   { file: "src/content/staircase/card-fit.test.ts", floor: 5, guards: "every threshold card figure fits, proven against the character-count rule it replaced" },
+  { file: "src/content/bias/card-fit.test.ts", floor: 4, guards: "every bias card line fits, at every pool size RT-103a could reach" },
   { file: "src/lib/retest-cooldown.test.ts", floor: 15, guards: "the 7-day validity gate, including its fail-open cases" },
 ];
 

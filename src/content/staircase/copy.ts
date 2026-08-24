@@ -428,16 +428,69 @@ export const SNACK_CTA = "Take the five-tap one";
  * Characters are not width. A digit is roughly twice a full stop, and the
  * lossy bands are almost all digits.
  *
- * SATORI CANNOT MEASURE TEXT, so the width is estimated. `EM_PER_CHAR` is not a
+ * SATORI CANNOT MEASURE TEXT, so the width is estimated. `EM_PER_CHAR_FIGURE` is not a
  * guess: Fraunces 900 was measured in a real browser across every figure this
  * instrument produces, and the worst case came out at 0.593 em per character
  * ("48–128 kbps"). 0.62 is that worst case with headroom, which is the right
  * side to err on — an over-estimate shrinks the type slightly, an
  * under-estimate clips the number the whole card exists to show.
  */
-export const EM_PER_CHAR = 0.62;
+export const EM_PER_CHAR_FIGURE = 0.6;
+
+/**
+ * PROSE IS NARROWER THAN FIGURES, AND ONE CONSTANT FOR BOTH IS WRONG (E6/S27).
+ *
+ * Measured in the same browser session as the figure constant, with the same
+ * bundled Fraunces: a digit-heavy figure runs 0.594 em per character, and
+ * lowercase prose runs 0.467-0.509. Using the figure constant on prose
+ * over-estimates by about 30%.
+ *
+ * That is not academic. The bias card's CTA — the real production host plus
+ * "/bias — get your number" — measures 824px against an 876px target and FITS.
+ * Judged with the figure constant it estimates 1004px and reads as an
+ * overflow. The first version of the bias fit guard failed on exactly that, and
+ * a guard that fails a working card is worse than no guard: someone goes and
+ * "fixes" something that was never broken.
+ *
+ * 0.52 is the measured prose worst case (0.509), rounded up a hair and no
+ * further — see the note on FIT_SAFETY for why the constants deliberately do
+ * NOT carry margin of their own.
+ */
+export const EM_PER_CHAR_PROSE = 0.52;
+
+/**
+ * EXPLICIT HEADROOM, so the whole margin does not rest on one constant
+ * (E6/S27, my call on RT-133a).
+ *
+ * The PM asked whether to pin `EM_PER_CHAR_FIGURE` to the bundled font with a hash. I
+ * decided against it: a hash is a bump-the-number ritual, and it catches a font
+ * SWAP but not a font UPDATE that keeps the filename. It also treats the wrong
+ * risk as the risk.
+ *
+ * The actual fragility is that after E6/S25 the sizing filled the box exactly.
+ * "48–128 kbps" came out at 134px, estimating 913.9px of 920 — so every bit of
+ * slack was `EM_PER_CHAR_FIGURE` being generous (0.62 assumed against 0.593 measured).
+ * A single constant carried the entire margin, and if the font's metrics ever
+ * moved even slightly the wrong way, three guards would agree that a clipped
+ * card was fine.
+ *
+ * Targeting 92% of the box costs a few points of type size and buys margin that
+ * survives a font whose real metrics differ from the measurement. That is worth
+ * more than knowing the font file is byte-identical, because it protects
+ * against the change we would NOT think to re-measure.
+ *
+ * MARGIN LIVES HERE AND ONLY HERE. The first version padded the em constants
+ * too — 0.62 against a measured 0.594, 0.55 against 0.509 — and then applied
+ * this factor on top. Stacking margins made the guard reject the bias card's
+ * CTA, which measures 824px against an 876px target and fits perfectly well. A
+ * guard that fails a working card sends somebody to break it, which is the same
+ * class of harm as a guard that cannot fail, arrived at from the other side.
+ * The constants now state what was MEASURED; this factor is the only cushion.
+ */
+export const FIT_SAFETY = 0.92;
 
 export function thresholdFigureFontSize(figure: string, usablePx: number, maxPx: number): number {
   if (figure.length === 0) return maxPx;
-  return Math.min(maxPx, Math.floor(usablePx / (figure.length * EM_PER_CHAR)));
+  const target = usablePx * FIT_SAFETY;
+  return Math.min(maxPx, Math.floor(target / (figure.length * EM_PER_CHAR_FIGURE)));
 }
