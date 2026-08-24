@@ -4,6 +4,7 @@
  * PM only ear-confirms; this does the mechanics. Stages:
  *
  *   node scripts/clip-pipeline/index.mjs download   # fetch sources -> .cache, SHA-256 into manifest
+ *   node scripts/clip-pipeline/index.mjs download --only pb9,pb10   # ...only these ids (leaves other hashes alone)
  *   node scripts/clip-pipeline/index.mjs snapshot   # save license-proof pages -> src/content/bias/licenses/
  *   node scripts/clip-pipeline/index.mjs analyze    # propose top-2 20s windows per item (PM ear-confirms)
  *   node scripts/clip-pipeline/index.mjs render     # trim approved windows, R128 loudnorm to target LUFS,
@@ -18,7 +19,7 @@
 
 import { createHash } from "node:crypto";
 import { execFileSync, spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
@@ -46,11 +47,20 @@ function sha256(buf) {
 }
 
 /* ------------------------------------------------------------ download */
-async function download() {
+async function download(args = []) {
   const m = loadManifest();
   mkdirSync(CACHE, { recursive: true });
+  // --only pb9,pb10 : E7/S2. Without this, adding one item re-fetches all of
+  // them and rewrites every recorded sha256. Those hashes are the provenance
+  // record — the evidence that the bytes we normalized are the bytes the
+  // licensed source served. If archive.org ever re-encodes a file, a blanket
+  // re-download would silently replace that evidence with a new hash and no
+  // trace that anything moved. Untouched items must stay untouched.
+  const onlyIdx = args.indexOf("--only");
+  const only = onlyIdx >= 0 ? new Set(args[onlyIdx + 1].split(",")) : null;
   let done = 0, skipped = 0;
   for (const item of m.items) {
+    if (only && !only.has(item.id)) continue;
     if (!item.source.downloadUrl) {
       console.log(`- ${item.id}: no downloadUrl yet (resolve from proof page first) — SKIP`);
       skipped++;
@@ -253,7 +263,7 @@ function render(args) {
 /* ---------------------------------------------------------------- main */
 const [stage, ...args] = process.argv.slice(2);
 try {
-  if (stage === "download") await download();
+  if (stage === "download") await download(args);
   else if (stage === "snapshot") await snapshot(args);
   else if (stage === "analyze") analyze(args);
   else if (stage === "render") render(args);

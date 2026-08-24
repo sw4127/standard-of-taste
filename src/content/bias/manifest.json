@@ -1,6 +1,6 @@
 {
   "$comment": "Pool-of-record manifest — seeded from docs/bias-pool-candidates.md (Tier 1 = items 1-8, backups B1-B3). Processed by scripts/clip-pipeline. DO NOT invent items here; the candidates doc + PM C/D pass are the authority (rt-answers RT-1). downloadUrl is filled at research time from the proof page; sha256/licenseSnapshot are written by the pipeline; window.approved is the PM's ear-confirmation.",
-  "poolVersionTarget": 3,
+  "poolVersionTarget": 5,
   "lufsTarget": -16,
   "clipSeconds": 20,
   "items": [
@@ -601,6 +601,218 @@
         "renderedAt": "2026-07-12",
         "attribution": "\"The Wind (Tale on the Late)\" — Komiku · https://archive.org/details/Komiku-TaleOnTheLate · CC0 · excerpt (trimmed + loudness-normalized)"
       }
+    },
+    {
+      "id": "pb9",
+      "candidateRef": null,
+      "title": "Meditation on the Old Czech Chorale “St Wenceslas”, Op. 35a",
+      "composerOrArtist": "J. Suk",
+      "performer": "Musopen Kickstarter ensemble (per item page)",
+      "role": {
+        "labelDirection": "up",
+        "labelIsTrue": true
+      },
+      "license": {
+        "expected": "Public Domain (Musopen Kickstarter PD release; PD-mark licenseurl on item)",
+        "proofPageUrl": "https://archive.org/details/MusopenCollectionAsFlac",
+        "confirmedAt": "2026-08-24",
+        "snapshotFile": "pb9.html",
+        "readLine": "Public Domain Mark 1.0",
+        "readEvidence": "licenseurl \"http://creativecommons.org/publicdomain/mark/1.0/\" in the item metadata block; subject \"musopen; kickstarter; public domain\"",
+        "readBy": "engineer (E7/S2, 2026-08-25) — read from the committed snapshot, not from the live page"
+      },
+      "source": {
+        "pageUrl": "https://archive.org/details/MusopenCollectionAsFlac",
+        "downloadUrl": "https://archive.org/download/MusopenCollectionAsFlac/Suk_Meditation/JosefSuk-Meditation.mp3",
+        "sha256": "151918b931c999c9c546dd479816679b8e9460398f1896c22b13ef796f4e570b",
+        "cachedFile": "pb9.mp3"
+      },
+      "window": {
+        "suggestions": [],
+        "approved": null
+      },
+      "warnings": [
+        "E7/S2 recognizability: PASSES R1-R4. No nickname in popular circulation; not a media cue; not an opera overture; Suk's most-programmed work is the Serenade for Strings, not this. String-orchestra sound-world is NEW to the pool.",
+        "Draft blurb pending (engineer, E7/S4). Role: up, true — the piece is genuinely revered in the Czech string repertoire, so an admiring frame is honest."
+      ],
+      "render": null
+    },
+    {
+      "id": "pb10",
+      "candidateRef": null,
+      "title": "String Quartet No. 6 in F minor, Op. 80 — III. Adagio",
+      "composerOrArtist": "F. Mendelssohn",
+      "performer": "Musopen Kickstarter ensemble (per item page)",
+      "role": {
+        "labelDirection": "up",
+        "labelIsTrue": true
+      },
+      "license": {
+        "expected": "Public Domain (Musopen Kickstarter PD release; PD-mark licenseurl on item)",
+        "proofPageUrl": "https://archive.org/details/MusopenCollectionAsFlac",
+        "confirmedAt": "2026-08-24",
+        "snapshotFile": "pb10.html",
+        "readLine": "Public Domain Mark 1.0",
+        "readEvidence": "same item record as pb4/pb9 — licenseurl publicdomain/mark/1.0 on MusopenCollectionAsFlac",
+        "readBy": "engineer (E7/S2, 2026-08-25) — read from the committed snapshot, not from the live page"
+      },
+      "source": {
+        "pageUrl": "https://archive.org/details/MusopenCollectionAsFlac",
+        "downloadUrl": "https://archive.org/download/MusopenCollectionAsFlac/Mendelssohn_StringQuartetNo.6inFMinorOp.80/FelixMendelssohn-StringQuartetNo.6InFMinorOp.80-03-Adagio.mp3",
+        "sha256": "b12da10126670d9c1e0bbcbd0d7ec8302ea3b3c906f6b5df32efb1ffa54c2bb1",
+        "cachedFile": "pb10.mp3"
+      },
+      "window": {
+        "suggestions": [],
+        "approved": null
+      },
+      "warnings": [
+        "E7/S2 recognizability: PASSES R1-R4. Op. 80 has no popular nickname, is not a media cue, and Mendelssohn's most-programmed works are the Violin Concerto and the Midsummer Night's Dream music.",
+        "Draft blurb pending (engineer, E7/S4). Role: up, true — his last completed work, written after his sister's death; the admiring frame is factual."
+      ],
+      "render": null
+    },
+    {
+      "id": "pb11",
+      "candidateRef": null,
+      "title": "Tragic Overture, Op. 81",
+      "composerOrArtist": "J. Brahms",
+      "performer": "Musopen Kickstarter ensemble (per item page)",
+      "role": {
+        "labelDirection": "down",
+        "labelIsTrue": true
+      },
+      "license": {
+        "expected": "Public Domain (Musopen Kickstarter PD release; PD-mark licenseurl on item)",
+        "proofPageUrl": "https://archive.org/details/MusopenCollectionAsFlac",
+        "confirmedAt": "2026-08-24",
+        "snapshotFile": "pb11.html",
+        "readLine": "Public Domain Mark 1.0",
+        "readEvidence": "same item record as pb4/pb9 — licenseurl publicdomain/mark/1.0 on MusopenCollectionAsFlac",
+        "readBy": "engineer (E7/S2, 2026-08-25) — read from the committed snapshot, not from the live page"
+      },
+      "source": {
+        "pageUrl": "https://archive.org/details/MusopenCollectionAsFlac",
+        "downloadUrl": "https://archive.org/download/MusopenCollectionAsFlac/Brahms_TragicOverture/JohannesBrahms-TragicOverture.mp3",
+        "sha256": "0b2c8f70be7cbf1447418c76313349bca2f22305824783809ed6ca32601136b1",
+        "cachedFile": "pb11.mp3"
+      },
+      "window": {
+        "suggestions": [],
+        "approved": null
+      },
+      "warnings": [
+        "E7/S2 recognizability: PASSES R1-R4. Brahms's most-programmed works are the symphonies and the Hungarian Dances; the Tragic Overture is the less-played half of its own pair (the Academic Festival Overture is the other).",
+        "Draft blurb pending (engineer, E7/S4). Role: down, true — under-programmed relative to its twin, which is a checkable dismissal rather than an invented one. FULL ORCHESTRA is a sound-world the pool did not have."
+      ],
+      "render": null
+    },
+    {
+      "id": "pb12",
+      "candidateRef": null,
+      "title": "String Quartet No. 1 in A major — II. Andante con moto",
+      "composerOrArtist": "A. Borodin",
+      "performer": "Musopen Kickstarter ensemble (per item page)",
+      "role": {
+        "labelDirection": "down",
+        "labelIsTrue": true
+      },
+      "license": {
+        "expected": "Public Domain (Musopen Kickstarter PD release; PD-mark licenseurl on item)",
+        "proofPageUrl": "https://archive.org/details/MusopenCollectionAsFlac",
+        "confirmedAt": "2026-08-24",
+        "snapshotFile": "pb12.html",
+        "readLine": "Public Domain Mark 1.0",
+        "readEvidence": "same item record as pb4/pb9 — licenseurl publicdomain/mark/1.0 on MusopenCollectionAsFlac",
+        "readBy": "engineer (E7/S2, 2026-08-25) — read from the committed snapshot, not from the live page"
+      },
+      "source": {
+        "pageUrl": "https://archive.org/details/MusopenCollectionAsFlac",
+        "downloadUrl": "https://archive.org/download/MusopenCollectionAsFlac/Borodin_StringQuartetNo.1inAMajor/AlexanderBorodin-StringQuartetNo.1InAMajor-02-AndanteConMoto.mp3",
+        "sha256": "e646bcbce1959e7448b213b713584c969c3c4b5007a1b9cdf2a890aa1bb2c498",
+        "cachedFile": "pb12.mp3"
+      },
+      "window": {
+        "suggestions": [],
+        "approved": null
+      },
+      "warnings": [
+        "E7/S2 recognizability: PASSES R1-R4. Explicitly NOT Quartet No. 2, whose Nocturne is the famous one (and became a Broadway song) — that would fail R4. No. 1 is genuinely obscure.",
+        "Draft blurb pending (engineer, E7/S4). Role: down, true — completely overshadowed by No. 2; an honest dismissal."
+      ],
+      "render": null
+    },
+    {
+      "id": "pb13",
+      "candidateRef": null,
+      "title": "Il y a un bout de ciel bleu (Rosée)",
+      "composerOrArtist": "Monplaisir",
+      "performer": "Monplaisir",
+      "role": {
+        "labelDirection": "down",
+        "labelIsTrue": true
+      },
+      "license": {
+        "expected": "CC0",
+        "proofPageUrl": "https://archive.org/details/Monplaisir-Rose",
+        "confirmedAt": "2026-08-24",
+        "snapshotFile": "pb13.html",
+        "readLine": "CC0 1.0 Universal",
+        "readEvidence": "licenseurl \"http://creativecommons.org/publicdomain/zero/1.0/\" in the item metadata for \"Monplaisir - Rosee\"; uploader links the artist FMA page, i.e. the rights-holder’s own release. subject: rock, folk, noise, experimental",
+        "readBy": "engineer (E7/S2, 2026-08-25) — read from the committed snapshot, not from the live page"
+      },
+      "source": {
+        "pageUrl": "https://archive.org/details/Monplaisir-Rose",
+        "downloadUrl": "https://archive.org/download/Monplaisir-Rose/Monplaisir_-_02_-_Il_y_a_un_bout_de_ciel_bleu.mp3",
+        "sha256": "76e2ed3f9073947b11606bdd88476fa7ca78598c548970a538b5a3fd91ecf3c3",
+        "cachedFile": "pb13.mp3"
+      },
+      "window": {
+        "suggestions": [],
+        "approved": null
+      },
+      "warnings": [
+        "E7/S2 recognizability: N/A for R1-R4 (not repertoire). Candidates doc item 7 named Monplaisir as an alternative to Komiku; chosen over a THIRD Komiku track because Komiku is already the true artist behind pb7's fiction and the b3 control — a third appearance would surface the swap at the debrief.",
+        "E7/S2 licence hygiene: CC0 comes from the rights-holder's own release (Rrrrrose Azerty), not from a licenseurl field on a third-party upload. The archive.org CC0 search returns plainly-wrong fields on pirate uploads (Freddie Gibbs, Mars Volta); provenance, not the field, is the gate.",
+        "Draft blurb pending (engineer, E7/S4). Role: down, true — the candidates doc's own drafted line for this slot: composed at volume, released in bulk."
+      ],
+      "render": null
+    },
+    {
+      "id": "pb14",
+      "candidateRef": null,
+      "title": "Closer To Jazz",
+      "composerOrArtist": "Jason Shaw",
+      "performer": "Jason Shaw",
+      "role": {
+        "labelDirection": "down",
+        "labelIsTrue": true
+      },
+      "license": {
+        "expected": "CC-BY 4.0",
+        "proofPageUrl": "https://audionautix.com/creative-commons-music",
+        "confirmedAt": "2026-08-24",
+        "snapshotFile": "pb14.html",
+        "readLine": "Creative Commons Attribution 4.0 International",
+        "readEvidence": "verbatim from the page: \"All music produced by Jason Shaw on AudionautiX is released under Creative Commons Attribution 4.0 International License\"",
+        "readBy": "engineer (E7/S2, 2026-08-25) — read from the committed snapshot, not from the live page"
+      },
+      "source": {
+        "pageUrl": "https://audionautix.com/free-music/jazz",
+        "downloadUrl": "https://audionautix.com/Music/CloserToJazz.mp3",
+        "sha256": "6ef151aebb725a68af7ac6636f8206a25d1a765b4990321d63ef522a19560e22",
+        "cachedFile": "pb14.mp3"
+      },
+      "window": {
+        "suggestions": [],
+        "approved": null
+      },
+      "warnings": [
+        "Credit line required: music by audionautix.com (TASL)",
+        "E7/S2: fills the JAZZ gap the candidates doc opened for Tier-2 item 10 (Dee Yan-Key). Dee Yan-Key was REJECTED at this slice: every archive.org release found is CC-BY-NC or NC-SA, which the doc puts off-limits. Kai Engel (item 9) was also rejected — its archive.org mirrors carry NC licences and its FMA mirrors carry NO licence field at all, so there is nothing to read.",
+        "Draft blurb pending (engineer, E7/S4). Role: down, true — production-library music, same honest framing as pb8, differentiated in the copy."
+      ],
+      "render": null
     }
   ],
   "pmEarPass": {
