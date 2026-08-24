@@ -192,7 +192,12 @@ function analyze(args) {
     return;
   }
   const m = loadManifest();
+  // --only: E7/S3, same reasoning as download's. Re-analysing every item
+  // rewrites suggestions that an approved window was chosen against.
+  const onlyIdx = args.indexOf("--only");
+  const only = onlyIdx >= 0 ? new Set(args[onlyIdx + 1].split(",")) : null;
   for (const item of m.items) {
+    if (only && !only.has(item.id)) continue;
     if (!item.source.cachedFile) {
       console.log(`- ${item.id}: not downloaded — SKIP`);
       continue;
@@ -247,7 +252,15 @@ function render(args) {
     return;
   }
   const m = loadManifest();
+  // --only: E7/S3. WITHOUT THIS, RENDERING ONE NEW CLIP RE-ENCODES ALL OF THEM.
+  // The eleven shipped mp3s under public/audio/bias are the exact bytes the
+  // live site serves and the exact bytes every past session measured. Silently
+  // replacing them while adding an unrelated item is how a pool change becomes
+  // an audio change nobody looked for.
+  const onlyIdx = args.indexOf("--only");
+  const only = onlyIdx >= 0 ? new Set(args[onlyIdx + 1].split(",")) : null;
   for (const item of m.items) {
+    if (only && !only.has(item.id)) continue;
     if (!item.source.cachedFile || !item.window.approved) {
       console.log(`- ${item.id}: needs cachedFile + PM-approved window — SKIP`);
       continue;
