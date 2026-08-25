@@ -22,6 +22,13 @@ Canonical funnel: `landing_view → bias_frame_view → bias_start → bias_blin
 **E2E QA 2026-07-16:** full scripted local session — every event above fired in order (dev `[track]` log). **Prod wire verified 2026-07-16:** deployed bundle carries the PostHog key; `landing_view` capture observed returning HTTP 200 from `us.i.posthog.com`.
 QA/dev sessions: enter with `?ref=dev` so analysis scripts can exclude them from norms (N3).
 
+**Entry tags (`?ref=`) are registered in `src/lib/refs.ts`, one line each.** `src/lib/refs.test.ts`
+sweeps everything we ship and fails on a tag that is not in that list. The reason is that a mistyped
+tag does not fail — it invents a channel: `?ref=hnn` produces real-looking traffic under a name
+nobody recognises while Hacker News under-counts by the same amount, and nothing goes red. Nothing
+rejects an unknown `ref` at runtime, deliberately; people paste and strip links, and dropping their
+attribution would lose real traffic to tidiness. The discipline is on the half we control.
+
 ## Events (legacy funnel — WC/music)
 | Event | Fires | Props |
 |---|---|---|
