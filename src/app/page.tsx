@@ -5,6 +5,7 @@ import GymFloor, { type Machine } from "./GymFloor";
 import Track from "@/components/Track";
 import { worldCup } from "@/content/world-cup";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
+import { THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE } from "@/content/instrument-accents";
 
 /**
  * The taste-gym landing (RT-3c, memo §9.7 RESOLVED 2026-07-11): /bias is the
@@ -81,8 +82,10 @@ const MACHINES: Machine[] = [
   /**
    * MACHINE 03 — the threshold staircase (E5/S7, PM ruling RT-59a).
    *
-   * It shares Delicacy's ice rather than taking a third accent: both machines
-   * measure the same criterion, and the design bar allows ONE accent in play.
+   * IT HAS ITS OWN ACCENT SINCE E7/S18 (RT-148). It used to share Delicacy's
+   * ice on the argument that both measure the same Hume criterion — true about
+   * the taxonomy, false about the experience: two different tests whose result
+   * cards were indistinguishable at a glance.
    * What separates them is the deliverable — Delicacy asks a fixed set and
    * reports how many you caught; this one adapts and reports the SIZE of the
    * smallest flaw you can still hear.
@@ -91,9 +94,9 @@ const MACHINES: Machine[] = [
     id: "threshold",
     href: "/threshold",
     n: "03",
-    accent: ICE,
-    field: ["hsl(190 55% 45%)", "hsl(205 50% 42%)", "hsl(175 45% 42%)", "hsl(215 40% 38%)"],
-    surface: "#070C0E",
+    accent: THRESHOLD_VIOLET,
+    field: THRESHOLD_FIELD,
+    surface: THRESHOLD_BASE,
     title: "The Threshold Test",
     criterion: "Delicacy of taste · measured",
     blurb:

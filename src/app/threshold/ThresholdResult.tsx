@@ -35,12 +35,13 @@ import {
 } from "@/content/staircase/copy";
 import ShareButton from "@/app/result/ShareButton";
 import { thresholdCardPath, thresholdResultPath, type ThresholdShare } from "./share-links";
+import { THRESHOLD_VIOLET, THRESHOLD_VIOLET_GLOW } from "@/content/instrument-accents";
 import DownloadButton from "@/app/result/DownloadButton";
 import { baseUrl } from "@/lib/site";
 import type { StaircaseResult } from "@/engine/staircase-session";
 
-const ICE = "hsl(190 75% 62%)";
-const ICE_GLOW = "hsl(190 80% 60% / 0.4)";
+const ICE = THRESHOLD_VIOLET;
+const ICE_GLOW = THRESHOLD_VIOLET_GLOW;
 const FLUID = ["hsl(195 45% 40%)", "hsl(210 40% 36%)", "hsl(180 40% 38%)", "hsl(225 35% 34%)"];
 const BASE = "#07090B";
 const BRAND = "rgba(244,245,248,0.72)";

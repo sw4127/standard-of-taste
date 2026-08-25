@@ -25,6 +25,7 @@
 
 import { useCallback, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import { THRESHOLD_VIOLET, THRESHOLD_VIOLET_GLOW, THRESHOLD_FIELD, THRESHOLD_BASE } from "@/content/instrument-accents";
 import FluidField from "@/components/FluidField";
 import ClipPlayer from "@/app/bias/ClipPlayer";
 import AbCompare from "@/app/delicacy/AbCompare";
@@ -60,10 +61,10 @@ import {
 import ThresholdResult from "./ThresholdResult";
 import { SLUG_BY_FAMILY } from "./families";
 
-const ICE = "hsl(190 75% 62%)";
-const ICE_GLOW = "hsl(190 80% 60% / 0.4)";
-const FLUID = ["hsl(195 45% 40%)", "hsl(210 40% 36%)", "hsl(180 40% 38%)", "hsl(225 35% 34%)"];
-const BASE = "#07090B";
+const ICE = THRESHOLD_VIOLET;
+const ICE_GLOW = THRESHOLD_VIOLET_GLOW;
+const FLUID = THRESHOLD_FIELD;
+const BASE = THRESHOLD_BASE;
 const BRAND = "rgba(244,245,248,0.72)";
 
 type Phase = "frame" | "trial" | "done";

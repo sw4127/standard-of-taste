@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { THRESHOLD_VIOLET, THRESHOLD_VIOLET_GLOW } from "@/content/instrument-accents";
 import FluidField from "@/components/FluidField";
 import { THRESHOLD_SLUGS, familyForSlug } from "./families";
 import { FAMILY_BLURB, familyLabel, quantity } from "@/content/staircase/copy";
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
   },
 };
 
-const ICE = "hsl(190 75% 62%)";
+const ICE = THRESHOLD_VIOLET;
 const FLUID = ["hsl(195 45% 40%)", "hsl(210 40% 36%)", "hsl(180 40% 38%)", "hsl(225 35% 34%)"];
 const BRAND = "rgba(244,245,248,0.72)";
 

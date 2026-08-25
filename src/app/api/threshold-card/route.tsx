@@ -26,6 +26,8 @@ import { baseUrl } from "@/lib/site";
 
 export const runtime = "nodejs";
 
+import { THRESHOLD_VIOLET, THRESHOLD_BASE } from "@/content/instrument-accents";
+
 const FONT_DIR = join(process.cwd(), "src", "fonts");
 const fontBlack = readFileSync(join(FONT_DIR, "fraunces-900.woff"));
 const fontSemi = readFileSync(join(FONT_DIR, "fraunces-600.woff"));
@@ -37,8 +39,8 @@ const SIZES = {
 } as const;
 type Format = keyof typeof SIZES;
 
-const ICE = "hsl(190, 75%, 62%)";
-const BASE = "#07090B";
+const ICE = THRESHOLD_VIOLET;
+const BASE = THRESHOLD_BASE;
 const MUTED = "rgba(255,255,255,0.55)";
 
 function bad(message: string, status = 400) {
@@ -104,11 +106,11 @@ export async function GET(request: Request) {
             display: "flex",
             fontSize: px(26),
             letterSpacing: px(8),
-            color: MUTED,
+            color: ICE,
             fontWeight: 600,
           }}
         >
-          THE TASTE GYM
+          THE THRESHOLD TEST
         </div>
 
         {/* The figure is the hero. It is the only thing that has to survive a
@@ -135,7 +137,12 @@ export async function GET(request: Request) {
             marginTop: px(isOg ? 20 : 40),
             fontSize: px(34),
             lineHeight: 1.3,
-            color: MUTED,
+            // WHITE, not muted (RT-147a). The Prestige and Delicacy cards each
+            // carry one white line saying what the number means; this card had
+            // none, so its hierarchy read flat beside them. The sentence that
+            // belongs in that slot already existed — it is promoted rather than
+            // a headline being invented to fill the gap.
+            color: "#FFFFFF",
             maxWidth: px(760),
           }}
         >
@@ -165,7 +172,8 @@ export async function GET(request: Request) {
             display: "flex",
             marginTop: px(isOg ? 26 : 70),
             fontSize: px(26),
-            color: MUTED,
+            color: ICE,
+            fontWeight: 600,
           }}
         >
           {`${host}/threshold`}
