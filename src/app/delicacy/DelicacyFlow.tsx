@@ -30,7 +30,7 @@ import {
   type DelicacyResult,
   type DegradationFamily,
   type PairSide, detectionBand } from "@/engine/delicacy";
-import { BRIER_COIN_FLIP, binDisplayPct, computeCalibration } from "@/engine/calibration";
+import { computeCalibration } from "@/engine/calibration";
 import {
   DELICACY_INSTRUMENT_ID,
   DELICACY_POOL_VERSION,
@@ -42,14 +42,12 @@ import {
 } from "@/content/delicacy/items";
 import ClipPlayer from "@/app/bias/ClipPlayer";
 import AbCompare from "./AbCompare";
+import { CalibrationBlock, FlawLine } from "./RevealBlocks";
 import ShareButton from "@/app/result/ShareButton";
 import DownloadButton from "@/app/result/DownloadButton";
 import {
   MAGNITUDE_WORDS,
   PROVISIONAL_FOOTNOTE,
-  calibrationLine,
-  FLAW_LINE_PREFIX,
-  flawTimesLabel,
   shareText, detectionTitle, detectionBody } from "@/content/delicacy/copy";
 
 /* One accent in play (design bar): delicacy ice — the cold, fine-grained room
@@ -517,7 +515,6 @@ export default function DelicacyFlow() {
     const resultPath = `/delicacy/result?pv=${DELICACY_POOL_VERSION}&p=${p}`;
     const origin = typeof window === "undefined" ? "" : window.location.origin;
     const credits = [...new Set(DELICACY_TRIALS.map((t) => `${t.sourceCredit} — ${t.license} · ${t.attribution}`))];
-    const showableBins = cal.bins.filter((b) => binDisplayPct(b) !== null);
     return (
       <main className={shell}>
         <FluidField colors={FLUID} baseColor={BASE} intensity={0.72} scrim={false} vignette />
@@ -533,40 +530,13 @@ export default function DelicacyFlow() {
             <p className="mx-auto mt-3 max-w-sm text-left text-base leading-relaxed text-muted">
               {detectionBody(band)}
             </p>
-            {result.flawAccuracy !== null ? (
-              <p className="mt-5 inline-block rounded-full border border-white/10 px-4 py-1.5 text-sm text-muted">
-                {FLAW_LINE_PREFIX}{" "}
-                <span className="font-semibold" style={{ color: ICE }}>
-                  {result.flawCorrect} of {result.flawEligible}
-                </span>{" "}
-                {flawTimesLabel(result.flawEligible)}.
-              </p>
-            ) : null}
+            <FlawLine result={result} />
           </div>
 
-          {/* Good sense — whole-session numbers lead; bins only when they stand (S4 ruling) */}
-          <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
-            <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">DID YOU KNOW WHEN YOU KNEW?</p>
-            <p className="mt-2 text-sm leading-relaxed">{calibrationLine(cal)}</p>
-            <p className="mt-2 text-xs leading-relaxed text-muted">
-              Brier score {cal.brier.toFixed(3)} — pure coin-flip guessing scores {BRIER_COIN_FLIP.toFixed(2)}; lower is better,
-              but only next to the direction above.
-            </p>
-            {showableBins.length > 0 ? (
-              <div className="mt-3 flex flex-col gap-1 text-xs text-muted">
-                {showableBins.map((b) => (
-                  <p key={b.confidencePct}>
-                    When you said {b.confidencePct}%: right {b.correct} of {b.n}.
-                  </p>
-                ))}
-              </div>
-            ) : (
-              <p className="mt-2 text-xs text-muted">
-                Per-level breakdowns need 3+ answers at a level. The whole-session
-                read above is the honest number.
-              </p>
-            )}
-          </div>
+          {/* Good sense. SHARED with the permalink (RevealBlocks) since RT-142a:
+              two copies of one paragraph is how a flow and its page start
+              describing the same session differently. */}
+          <CalibrationBlock cal={cal} />
 
           {/* The reveal — every pair, full disclosure (N3) */}
           <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-5">

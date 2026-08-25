@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { computeDelicacyResult, detectionBand } from "@/engine/delicacy";
 import { BRIER_COIN_FLIP, MIN_BIN_N, binDisplayPct, computeCalibration } from "@/engine/calibration";
-import { calibrationLine, detectionTitle, detectionBody, flawLineText, flawTimesLabel } from "@/content/delicacy/copy";
+import { calibrationLine, detectionTitle, detectionBody, flawLineText } from "@/content/delicacy/copy";
 import { MEASURED_TRIALS, DELICACY_INSTRUMENT_ID } from "@/content/delicacy/items";
 import { DEGRADATION_FAMILIES } from "@/engine/delicacy";
 

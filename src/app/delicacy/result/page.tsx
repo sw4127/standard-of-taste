@@ -25,6 +25,8 @@ import { baseUrl } from "@/lib/site";
 import FluidField from "@/components/FluidField";
 import Track from "@/components/Track";
 import ShareButton from "@/app/result/ShareButton";
+import { CalibrationBlock, FlawLine } from "../RevealBlocks";
+import { computeCalibration } from "@/engine/calibration";
 import DownloadButton from "@/app/result/DownloadButton";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -76,6 +78,11 @@ export default async function DelicacyResultPage({ searchParams }: { searchParam
   if (!data) redirect("/delicacy");
   const { result, p } = data;
   const band = detectionBand(result.nCorrect, result.nTrials);
+  // Recomputed here exactly as the flow recomputes it — the payload carries the
+  // per-trial confidence, so this is the same number the taker already saw.
+  const calibration = computeCalibration(
+    result.receipts.map((r) => ({ confidence: r.confidence, correct: r.correct })),
+  );
   const permalink = `${baseUrl()}/delicacy/result?pv=${DELICACY_POOL_VERSION}&p=${encodeURIComponent(p)}`;
 
   return (
@@ -97,6 +104,15 @@ export default async function DelicacyResultPage({ searchParams }: { searchParam
         <p className="mt-3 max-w-sm text-left text-base leading-relaxed text-muted">
           {detectionBody(band)}
         </p>
+
+        {/* RT-142(a), E7/S10b: the taker's OWN performance, recomputed from the
+            same payload the score comes from. It used to exist only inside the
+            flow, so sharing your permalink and coming back showed you less than
+            you had already seen — your calibration read vanished.
+            NOT the per-pair disclosure: that is the answer key, and this page is
+            a share target (see the docblock at the top of this file). */}
+        <FlawLine result={result} />
+        <CalibrationBlock cal={calibration} />
 
         {/* The card itself — server-rendered, long-press-saveable in webviews. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
