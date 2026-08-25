@@ -39,13 +39,33 @@
 import { readableOn } from "@/lib/readable-on";
 import { useEffect, useRef, useState } from "react";
 
-const ICE = "hsl(190 75% 62%)";
+/**
+ * E7/S21 — THE CONTROL WEARS ITS CALLER'S COLOUR, NOT DELICACY'S.
+ *
+ * This component is shared: the Delicacy Trials use it, and so does the
+ * Threshold Test. It hardcoded Delicacy's ice in six places, so after E7/S18
+ * gave Threshold its own violet, the central control of that instrument — the
+ * A/B comparison the whole test runs on — still rendered in the OTHER
+ * instrument's blue. The one screen a Threshold taker looks at most was the one
+ * screen the colour change missed.
+ *
+ * The default keeps Delicacy's ice so its own call sites are unchanged.
+ */
+const DEFAULT_ACCENT = "hsl(190 75% 62%)";
+
+/** A faint edge in the caller's own hue — derived, so it can never disagree. */
+function tint(accent: string): string {
+  return accent.replace(/\)$/, " / 0.35)");
+}
 
 export default function AbCompare({
+  accent = DEFAULT_ACCENT,
   srcA,
   srcB,
   onSwitch,
 }: {
+  /** The calling instrument's accent. Delicacy's ice by default. */
+  accent?: string;
   srcA: string;
   srcB: string;
   /** Reported for the dataset: how hard this listener actually worked (D6). */
@@ -228,9 +248,9 @@ export default function AbCompare({
   const pct = duration > 0 ? (pos / duration) * 100 : 0;
 
   return (
-    <div className="mt-5 rounded-2xl border p-4" style={{ borderColor: "hsl(190 60% 55% / 0.35)", background: "rgba(255,255,255,0.03)" }}>
+    <div className="mt-5 rounded-2xl border p-4" style={{ borderColor: tint(accent), background: "rgba(255,255,255,0.03)" }}>
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-        <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: ICE }}>
+        <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: accent }}>
           COMPARE — SAME MOMENT
         </p>
         <p className="text-[11px] text-muted">
@@ -255,7 +275,7 @@ export default function AbCompare({
           disabled={!ready}
           aria-label={playing ? "Stop comparing" : "Start comparing"}
           className="shrink-0 rounded-full px-4 py-2 text-sm font-bold transition active:scale-[0.97] disabled:opacity-40"
-          style={{ color: readableOn(ICE), background: ICE }}
+          style={{ color: readableOn(accent), background: accent }}
         >
           {playing ? "Stop" : ready ? "Compare" : "Loading"}
         </button>
@@ -272,7 +292,7 @@ export default function AbCompare({
               className="flex-1 py-2 text-sm font-bold transition disabled:opacity-40"
               style={
                 side === s
-                  ? { background: ICE, color: "black" }
+                  ? { background: accent, color: readableOn(accent) }
                   : { background: "transparent", color: "rgba(255,255,255,0.7)" }
               }
             >
@@ -290,7 +310,7 @@ export default function AbCompare({
       )}
 
       <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/10">
-        <div className="h-full rounded-full" style={{ width: `${pct}%`, background: ICE }} />
+        <div className="h-full rounded-full" style={{ width: `${pct}%`, background: accent }} />
       </div>
     </div>
   );

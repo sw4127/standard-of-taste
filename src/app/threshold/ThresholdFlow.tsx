@@ -356,6 +356,7 @@ export default function ThresholdFlow({ family }: { family: string }) {
         {armed ? (
           <AbCompare
             key={`${trial.trialNumber}-cmp`}
+            accent={ICE}
             srcA={trial.srcA}
             srcB={trial.srcB}
             onSwitch={(n) => {

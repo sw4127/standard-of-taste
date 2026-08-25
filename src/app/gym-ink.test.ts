@@ -44,6 +44,16 @@ describe("E7/S20 — every accent-backed button derives its ink", () => {
           offenders.push(`${file}:${i + 1}  ${line.trim().slice(0, 60)}`);
         }
       });
+
+      // E7/S21: the SAME-LINE shape, which the two-line check above missed
+      // entirely — `{ background: ICE, color: "black" }` inside a ternary. It
+      // was live in AbCompare, the control the Threshold Test runs on, and it
+      // is the same defect wearing different punctuation.
+      lines.forEach((line, i) => {
+        if (!/background:\s*[A-Za-z_]{3,}/.test(line)) return;
+        const inline = /color:\s*"(black|white|#[0-9a-fA-F]{3,6})"/.exec(line);
+        if (inline) offenders.push(`${file}:${i + 1}  literal ink ${inline[1]} beside a colour token`);
+      });
     }
     expect(
       offenders,
