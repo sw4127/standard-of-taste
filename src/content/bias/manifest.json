@@ -628,14 +628,35 @@
         "cachedFile": "pb9.mp3"
       },
       "window": {
-        "suggestions": [],
-        "approved": null
+        "suggestions": [
+          {
+            "startSec": 155,
+            "endSec": 175,
+            "score": 84.1,
+            "onsets": 5
+          },
+          {
+            "startSec": 169.5,
+            "endSec": 189.5,
+            "score": 72.2,
+            "onsets": 5
+          }
+        ],
+        "approved": {
+          "startSec": 155,
+          "by": "engineer per PM delegation (E7/S4) — analyzer suggestion #1; gate 2 (speech.mjs windowStartVerdict) checked, see below — MUSOPEN: starts 155s, floor is 60s, PASS"
+        }
       },
       "warnings": [
         "E7/S2 recognizability: PASSES R1-R4. No nickname in popular circulation; not a media cue; not an opera overture; Suk's most-programmed work is the Serenade for Strings, not this. String-orchestra sound-world is NEW to the pool.",
         "Draft blurb pending (engineer, E7/S4). Role: up, true — the piece is genuinely revered in the Czech string repertoire, so an admiring frame is honest."
       ],
-      "render": null
+      "render": {
+        "mp3": "pb9.mp3",
+        "durationSec": 20.035918,
+        "renderedAt": "2026-08-25",
+        "attribution": "\"Meditation on the Old Czech Chorale “St Wenceslas”, Op. 35a\" — J. Suk, perf. Musopen Kickstarter ensemble (per item page) · https://archive.org/details/MusopenCollectionAsFlac · Public Domain (Musopen Kickstarter PD release; PD-mark licenseurl on item) · excerpt (trimmed + loudness-normalized)"
+      }
     },
     {
       "id": "pb10",
@@ -663,14 +684,35 @@
         "cachedFile": "pb10.mp3"
       },
       "window": {
-        "suggestions": [],
-        "approved": null
+        "suggestions": [
+          {
+            "startSec": 172.5,
+            "endSec": 192.5,
+            "score": 45,
+            "onsets": 5
+          },
+          {
+            "startSec": 343.5,
+            "endSec": 363.5,
+            "score": 40.8,
+            "onsets": 5
+          }
+        ],
+        "approved": {
+          "startSec": 172.5,
+          "by": "engineer per PM delegation (E7/S4) — analyzer suggestion #1; gate 2 (speech.mjs windowStartVerdict) checked, see below — MUSOPEN: starts 172.5s, floor is 60s, PASS"
+        }
       },
       "warnings": [
         "E7/S2 recognizability: PASSES R1-R4. Op. 80 has no popular nickname, is not a media cue, and Mendelssohn's most-programmed works are the Violin Concerto and the Midsummer Night's Dream music.",
         "Draft blurb pending (engineer, E7/S4). Role: up, true — his last completed work, written after his sister's death; the admiring frame is factual."
       ],
-      "render": null
+      "render": {
+        "mp3": "pb10.mp3",
+        "durationSec": 20.035918,
+        "renderedAt": "2026-08-25",
+        "attribution": "\"String Quartet No. 6 in F minor, Op. 80 — III. Adagio\" — F. Mendelssohn, perf. Musopen Kickstarter ensemble (per item page) · https://archive.org/details/MusopenCollectionAsFlac · Public Domain (Musopen Kickstarter PD release; PD-mark licenseurl on item) · excerpt (trimmed + loudness-normalized)"
+      }
     },
     {
       "id": "pb11",
@@ -698,14 +740,35 @@
         "cachedFile": "pb11.mp3"
       },
       "window": {
-        "suggestions": [],
-        "approved": null
+        "suggestions": [
+          {
+            "startSec": 320.5,
+            "endSec": 340.5,
+            "score": 47.1,
+            "onsets": 6
+          },
+          {
+            "startSec": 104,
+            "endSec": 124,
+            "score": 40.5,
+            "onsets": 2
+          }
+        ],
+        "approved": {
+          "startSec": 320.5,
+          "by": "engineer per PM delegation (E7/S4) — analyzer suggestion #1; gate 2 (speech.mjs windowStartVerdict) checked, see below — MUSOPEN: starts 320.5s, floor is 60s, PASS"
+        }
       },
       "warnings": [
         "E7/S2 recognizability: PASSES R1-R4. Brahms's most-programmed works are the symphonies and the Hungarian Dances; the Tragic Overture is the less-played half of its own pair (the Academic Festival Overture is the other).",
         "Draft blurb pending (engineer, E7/S4). Role: down, true — under-programmed relative to its twin, which is a checkable dismissal rather than an invented one. FULL ORCHESTRA is a sound-world the pool did not have."
       ],
-      "render": null
+      "render": {
+        "mp3": "pb11.mp3",
+        "durationSec": 20.035918,
+        "renderedAt": "2026-08-25",
+        "attribution": "\"Tragic Overture, Op. 81\" — J. Brahms, perf. Musopen Kickstarter ensemble (per item page) · https://archive.org/details/MusopenCollectionAsFlac · Public Domain (Musopen Kickstarter PD release; PD-mark licenseurl on item) · excerpt (trimmed + loudness-normalized)"
+      }
     },
     {
       "id": "pb12",
@@ -733,14 +796,35 @@
         "cachedFile": "pb12.mp3"
       },
       "window": {
-        "suggestions": [],
-        "approved": null
+        "suggestions": [
+          {
+            "startSec": 341.5,
+            "endSec": 361.5,
+            "score": 125,
+            "onsets": 2
+          },
+          {
+            "startSec": 331.5,
+            "endSec": 351.5,
+            "score": 110.7,
+            "onsets": 1
+          }
+        ],
+        "approved": {
+          "startSec": 180,
+          "by": "engineer (E7/S4) — analyzer suggestion #1 (341.5s) FAILED Layer A with 2.80s of dead air in a 20s clip (max 1.5s) and 19.8% near-silence: the movement pauses there. Re-chosen by sweeping every 10s window, keeping only those passing dead-air + quiet-fraction AND gate 2 (>=60s, spoken-intro collection), then taking the analyzer highest score among the survivors: 180s at 48.0. Not a taste judgement — the sweep is in the E7/S4 proof."
+        }
       },
       "warnings": [
         "E7/S2 recognizability: PASSES R1-R4. Explicitly NOT Quartet No. 2, whose Nocturne is the famous one (and became a Broadway song) — that would fail R4. No. 1 is genuinely obscure.",
         "Draft blurb pending (engineer, E7/S4). Role: down, true — completely overshadowed by No. 2; an honest dismissal."
       ],
-      "render": null
+      "render": {
+        "mp3": "pb12.mp3",
+        "durationSec": 20.035918,
+        "renderedAt": "2026-08-25",
+        "attribution": "\"String Quartet No. 1 in A major — II. Andante con moto\" — A. Borodin, perf. Musopen Kickstarter ensemble (per item page) · https://archive.org/details/MusopenCollectionAsFlac · Public Domain (Musopen Kickstarter PD release; PD-mark licenseurl on item) · excerpt (trimmed + loudness-normalized)"
+      }
     },
     {
       "id": "pb13",
@@ -768,15 +852,36 @@
         "cachedFile": "pb13.mp3"
       },
       "window": {
-        "suggestions": [],
-        "approved": null
+        "suggestions": [
+          {
+            "startSec": 15,
+            "endSec": 35,
+            "score": 19.6,
+            "onsets": 3
+          },
+          {
+            "startSec": 0,
+            "endSec": 20,
+            "score": 16.8,
+            "onsets": 3
+          }
+        ],
+        "approved": {
+          "startSec": 15,
+          "by": "engineer per PM delegation (E7/S4) — analyzer suggestion #1; gate 2 (speech.mjs windowStartVerdict) checked, see below — not a spoken-intro collection, gate 2 not applicable"
+        }
       },
       "warnings": [
         "E7/S2 recognizability: N/A for R1-R4 (not repertoire). Candidates doc item 7 named Monplaisir as an alternative to Komiku; chosen over a THIRD Komiku track because Komiku is already the true artist behind pb7's fiction and the b3 control — a third appearance would surface the swap at the debrief.",
         "E7/S2 licence hygiene: CC0 comes from the rights-holder's own release (Rrrrrose Azerty), not from a licenseurl field on a third-party upload. The archive.org CC0 search returns plainly-wrong fields on pirate uploads (Freddie Gibbs, Mars Volta); provenance, not the field, is the gate.",
         "Draft blurb pending (engineer, E7/S4). Role: down, true — the candidates doc's own drafted line for this slot: composed at volume, released in bulk."
       ],
-      "render": null
+      "render": {
+        "mp3": "pb13.mp3",
+        "durationSec": 20.035918,
+        "renderedAt": "2026-08-25",
+        "attribution": "\"Il y a un bout de ciel bleu (Rosée)\" — Monplaisir · https://archive.org/details/Monplaisir-Rose · CC0 · excerpt (trimmed + loudness-normalized)"
+      }
     },
     {
       "id": "pb14",
@@ -804,15 +909,36 @@
         "cachedFile": "pb14.mp3"
       },
       "window": {
-        "suggestions": [],
-        "approved": null
+        "suggestions": [
+          {
+            "startSec": 8.5,
+            "endSec": 28.5,
+            "score": 22.9,
+            "onsets": 1
+          },
+          {
+            "startSec": 18.5,
+            "endSec": 38.5,
+            "score": 13.6,
+            "onsets": 1
+          }
+        ],
+        "approved": {
+          "startSec": 8.5,
+          "by": "engineer per PM delegation (E7/S4) — analyzer suggestion #1; gate 2 (speech.mjs windowStartVerdict) checked, see below — not a spoken-intro collection, gate 2 not applicable"
+        }
       },
       "warnings": [
         "Credit line required: music by audionautix.com (TASL)",
         "E7/S2: fills the JAZZ gap the candidates doc opened for Tier-2 item 10 (Dee Yan-Key). Dee Yan-Key was REJECTED at this slice: every archive.org release found is CC-BY-NC or NC-SA, which the doc puts off-limits. Kai Engel (item 9) was also rejected — its archive.org mirrors carry NC licences and its FMA mirrors carry NO licence field at all, so there is nothing to read.",
         "Draft blurb pending (engineer, E7/S4). Role: down, true — production-library music, same honest framing as pb8, differentiated in the copy."
       ],
-      "render": null
+      "render": {
+        "mp3": "pb14.mp3",
+        "durationSec": 20.035918,
+        "renderedAt": "2026-08-25",
+        "attribution": "\"Closer To Jazz\" — Jason Shaw · https://audionautix.com/creative-commons-music · CC-BY 4.0 · excerpt (trimmed + loudness-normalized)"
+      }
     }
   ],
   "pmEarPass": {

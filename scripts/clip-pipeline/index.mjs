@@ -84,6 +84,7 @@ async function download(args = []) {
     writeFileSync(dest, buf);
     item.source.sha256 = sha256(buf);
     item.source.cachedFile = `${item.id}.${ext}`;
+    saveManifest(m); // per item — see render()
     console.log(`  saved ${dest} (${(buf.length / 1e6).toFixed(1)} MB, sha256 ${item.source.sha256.slice(0, 12)}…)`);
     done++;
   }
@@ -224,9 +225,26 @@ function renderOne(input, startSec, lenSec, outBase, lufs) {
   // pass 2 applies with measured_* + linear=true → accurate integrated target.
   const cut = ["-ss", String(startSec), "-t", String(lenSec), "-i", input, "-vn"];
   const probeOut = spawnSync(FFMPEG, [...cut, "-af", `loudnorm=I=${lufs}:TP=-1.5:LRA=11:print_format=json`, "-f", "null", "-"], { encoding: "utf8" });
-  const jsonMatch = (probeOut.stderr || "").match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error(`loudnorm measure failed for ${outBase}`);
-  const mm = JSON.parse(jsonMatch[0]);
+  // ANCHOR ON THE LAST OBJECT, NOT THE FIRST BRACE (E7/S4). This used to match
+  // /\{[\s\S]*\}/ — first "{" to last "}" — which works only while no source
+  // has a brace in its metadata. pb14 (Audionautix) does: ffmpeg prints its ID3
+  // tags, and `id3v2_priv.AverageLevel` contains a literal "{" byte. The match
+  // then spanned from that tag all the way to the real JSON's close and parsed
+  // as garbage. loudnorm prints its object last and it has no nested objects,
+  // so the last brace pair IS the measurement — and it is verified to carry
+  // input_i rather than trusted to be the right object.
+  const stderr = probeOut.stderr || "";
+  const open = stderr.lastIndexOf("{");
+  const close = stderr.lastIndexOf("}");
+  let mm = null;
+  if (open >= 0 && close > open) {
+    try {
+      mm = JSON.parse(stderr.slice(open, close + 1));
+    } catch {
+      mm = null;
+    }
+  }
+  if (!mm || mm.input_i === undefined) throw new Error(`loudnorm measure failed for ${outBase}`);
   const ln = `loudnorm=I=${lufs}:TP=-1.5:LRA=11:measured_I=${mm.input_i}:measured_TP=${mm.input_tp}:measured_LRA=${mm.input_lra}:measured_thresh=${mm.input_thresh}:offset=${mm.target_offset}:linear=true`;
   // -vn: sources often embed cover art as a video stream, which containers
   // reject — we render audio only.
@@ -267,6 +285,10 @@ function render(args) {
     }
     const r = renderOne(join(CACHE, item.source.cachedFile), item.window.approved.startSec, m.clipSeconds, item.id, m.lufsTarget);
     item.render = { ...r, renderedAt: new Date().toISOString().slice(0, 10), attribution: tasl(item) };
+    // SAVED PER ITEM (E7/S4). This used to save once after the loop, so when
+    // pb14 threw on the last iteration it took the five successful renders with
+    // it — the files were on disk and the manifest denied they existed.
+    saveManifest(m);
     console.log(`- ${item.id}: ${r.mp3} · attribution: ${item.render.attribution}`);
   }
   saveManifest(m);
@@ -282,6 +304,7 @@ try {
   else if (stage === "render") render(args);
   else if (stage === "degrade") await (await import("./degrade.mjs")).degrade(args);
   else if (stage === "validate") await (await import("./validate.mjs")).validate(args);
+  else if (stage === "bias-validate") (await import("./biasvalidate.mjs")).biasValidate(args);
   else if (stage === "expand") await (await import("./expand.mjs")).expand(args);
   else if (stage === "ladder") await (await import("./ladder.mjs")).ladder(args);
   else if (stage === "sweep") await (await import("./sweep.mjs")).sweep(args);
