@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MACHINES } from "@/components/OtherMachines";
 import FluidField from "@/components/FluidField";
 
 /**
@@ -50,9 +51,17 @@ export default function LabLayout({ children }: { children: React.ReactNode }) {
             Methodology
           </Link>{" "}
           ·{" "}
-          <Link href="/bias" className="transition hover:text-white">
-            Take the Prestige Test
-          </Link>
+          {/* E7/S24: this said "Take the Prestige Test" and named one of three.
+              The Lab is a surface built to attract strangers, and it funnelled
+              every one of them into a third of the product. */}
+          {MACHINES.filter((m) => m.live).map((m, i) => (
+            <span key={m.id}>
+              {i > 0 ? " · " : ""}
+              <Link href={m.href} className="transition hover:text-white" style={{ color: m.accent }}>
+                {m.title}
+              </Link>
+            </span>
+          ))}
         </p>
       </div>
     </main>

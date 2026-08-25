@@ -311,6 +311,17 @@ export default function BiasFlow() {
             Start the blind pass
           </button>
           <p className="mt-4 text-xs text-muted">~8 minutes. No sign-up. Headphones help.</p>
+          {/* THE CREDIBILITY CHECK (E7/S24). Only the Threshold frame offered
+              one, so on the two instruments people actually start with there
+              was no way to ask "should I trust this before I give it eight
+              minutes" without leaving the product. */}
+          <p className="mt-6 text-sm text-muted">
+            <Jump href="/lab/instrument-health" accent={GOLD}>
+              How this is measured.
+            </Jump>{" "}
+            Item behaviour, reliability, and what the numbers can carry.
+          </p>
+
         </div>
       </main>
     );

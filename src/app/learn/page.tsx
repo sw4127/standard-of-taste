@@ -1,6 +1,6 @@
-import { readableOn } from "@/lib/readable-on";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { MACHINES } from "@/components/OtherMachines";
 import JsonLd from "@/components/JsonLd";
 import { baseUrl } from "@/lib/site";
 import { LEARN_PAGES } from "@/content/learn";
@@ -23,7 +23,6 @@ export const metadata: Metadata = {
   },
 };
 
-const GOLD = "hsl(42 80% 62%)";
 
 export default function LearnIndex() {
   const base = baseUrl();
@@ -56,13 +55,25 @@ export default function LearnIndex() {
         ))}
       </div>
 
-      <Link
-        href="/bias"
-        className="mt-10 inline-block rounded-full px-7 py-3.5 font-bold transition hover:opacity-95 active:scale-[0.98]"
-        style={{ color: readableOn(GOLD), background: GOLD }}
-      >
-        Enough reading — take the Prestige Test
-      </Link>
+      {/* E7/S24: this was a single gold button into the Prestige Test. The
+          reading room is the product's search-facing surface, so every stranger
+          who arrived by search was funnelled into one of three instruments. */}
+      <p className="mt-10 text-sm text-muted">Enough reading — the machines are through here.</p>
+      <div className="mt-4 flex flex-col gap-3">
+        {MACHINES.filter((m) => m.live).map((m) => (
+          <Link
+            key={m.id}
+            href={m.href}
+            className="block rounded-2xl border p-5 text-left transition hover:bg-white/[0.05]"
+            style={{ borderColor: m.accent.replace(/\)$/, " / 0.35)"), background: "rgba(255,255,255,0.03)" }}
+          >
+            <p className="font-display text-lg font-semibold" style={{ color: m.accent }}>
+              {m.title}
+            </p>
+            <p className="mt-1 text-sm leading-relaxed text-muted">{m.line}</p>
+          </Link>
+        ))}
+      </div>
 
       <JsonLd
         data={{
