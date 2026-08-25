@@ -36,6 +36,7 @@
  * then comparison — two phases rather than one compromise.
  */
 
+import { readableOn } from "@/lib/readable-on";
 import { useEffect, useRef, useState } from "react";
 
 const ICE = "hsl(190 75% 62%)";
@@ -253,8 +254,8 @@ export default function AbCompare({
           onClick={() => (playing ? stop() : void start())}
           disabled={!ready}
           aria-label={playing ? "Stop comparing" : "Start comparing"}
-          className="shrink-0 rounded-full px-4 py-2 text-sm font-bold text-black transition active:scale-[0.97] disabled:opacity-40"
-          style={{ background: ICE }}
+          className="shrink-0 rounded-full px-4 py-2 text-sm font-bold transition active:scale-[0.97] disabled:opacity-40"
+          style={{ color: readableOn(ICE), background: ICE }}
         >
           {playing ? "Stop" : ready ? "Compare" : "Loading"}
         </button>

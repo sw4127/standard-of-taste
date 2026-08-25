@@ -18,6 +18,7 @@
  * under every degradation) — analysis excludes pv0.
  */
 
+import { readableOn } from "@/lib/readable-on";
 import { useEffect, useRef, useState } from "react";
 import FluidField from "@/components/FluidField";
 import { track } from "@/lib/analytics";
@@ -229,8 +230,8 @@ export default function DelicacyFlow() {
               track("delicacy_start", {});
               setPhase("practice");
             }}
-            className="mt-8 self-start rounded-full px-7 py-3.5 text-base font-bold text-black transition active:scale-[0.98]"
-            style={{ background: ICE, boxShadow: `0 10px 30px ${ICE_GLOW}` }}
+            className="mt-8 self-start rounded-full px-7 py-3.5 text-base font-bold transition active:scale-[0.98]"
+            style={{ color: readableOn(ICE), background: ICE, boxShadow: `0 10px 30px ${ICE_GLOW}` }}
           >
             Start the trials
           </button>
@@ -332,8 +333,8 @@ export default function DelicacyFlow() {
                   if (practiceIdx + 1 < PRACTICE_TRIALS.length) setPracticeIdx(practiceIdx + 1);
                   else setPhase("trial");
                 }}
-                className="mt-4 rounded-full px-6 py-3 text-sm font-bold text-black transition active:scale-[0.98]"
-                style={{ background: ICE }}
+                className="mt-4 rounded-full px-6 py-3 text-sm font-bold transition active:scale-[0.98]"
+                style={{ color: readableOn(ICE), background: ICE }}
               >
                 {practiceIdx + 1 < PRACTICE_TRIALS.length
                   ? "Next practice pair"

@@ -8,6 +8,7 @@
  * to the test-taker's own run in /bias, not to a shared link; here the CTA
  * sends the viewer to take the test themselves.
  */
+import { readableOn } from "@/lib/readable-on";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -110,8 +111,8 @@ export default async function BiasResultPage({ searchParams }: { searchParams: S
         <p className="mt-8 text-sm text-muted">Someone sent you their number? They&apos;re daring you.</p>
         <Link
           href="/bias"
-          className="mt-3 rounded-full px-7 py-3.5 text-base font-bold text-black transition active:scale-[0.98]"
-          style={{ background: GOLD, boxShadow: `0 10px 30px ${GOLD_GLOW}` }}
+          className="mt-3 rounded-full px-7 py-3.5 text-base font-bold transition active:scale-[0.98]"
+          style={{ color: readableOn(GOLD), background: GOLD, boxShadow: `0 10px 30px ${GOLD_GLOW}` }}
         >
           Get yours — take the test
         </Link>

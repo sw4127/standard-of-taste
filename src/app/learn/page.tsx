@@ -1,3 +1,4 @@
+import { readableOn } from "@/lib/readable-on";
 import type { Metadata } from "next";
 import Link from "next/link";
 import JsonLd from "@/components/JsonLd";
@@ -57,8 +58,8 @@ export default function LearnIndex() {
 
       <Link
         href="/bias"
-        className="mt-10 inline-block rounded-full px-7 py-3.5 font-bold text-black transition hover:opacity-95 active:scale-[0.98]"
-        style={{ background: GOLD }}
+        className="mt-10 inline-block rounded-full px-7 py-3.5 font-bold transition hover:opacity-95 active:scale-[0.98]"
+        style={{ color: readableOn(GOLD), background: GOLD }}
       >
         Enough reading — take the Prestige Test
       </Link>

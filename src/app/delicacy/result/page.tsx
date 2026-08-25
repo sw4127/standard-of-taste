@@ -12,6 +12,7 @@
  * Version gate (the delicacy.ts codec contract): pv must equal the live
  * DELICACY_POOL_VERSION or the link dies gracefully into /delicacy.
  */
+import { readableOn } from "@/lib/readable-on";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -137,8 +138,8 @@ export default async function DelicacyResultPage({ searchParams }: { searchParam
         <p className="mt-8 text-sm text-muted">Someone sent you their score? They&apos;re daring you.</p>
         <Link
           href="/delicacy"
-          className="mt-3 rounded-full px-7 py-3.5 text-base font-bold text-black transition active:scale-[0.98]"
-          style={{ background: ICE, boxShadow: `0 10px 30px ${ICE_GLOW}` }}
+          className="mt-3 rounded-full px-7 py-3.5 text-base font-bold transition active:scale-[0.98]"
+          style={{ color: readableOn(ICE), background: ICE, boxShadow: `0 10px 30px ${ICE_GLOW}` }}
         >
           Get your ears tested
         </Link>

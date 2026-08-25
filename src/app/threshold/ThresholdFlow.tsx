@@ -23,6 +23,7 @@
  * comparable either. Same-moment A/B unlocks after it, per RT-34b.
  */
 
+import { readableOn } from "@/lib/readable-on";
 import { useCallback, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { THRESHOLD_VIOLET, THRESHOLD_VIOLET_GLOW, THRESHOLD_FIELD, THRESHOLD_BASE } from "@/content/instrument-accents";
@@ -218,8 +219,8 @@ export default function ThresholdFlow({ family }: { family: string }) {
           <p className="mt-5 text-base leading-relaxed text-muted">{cooldownBody(daysLeft)}</p>
           <Link
             href="/threshold"
-            className="mt-8 inline-flex min-h-[44px] items-center self-start rounded-full px-7 py-3.5 text-base font-bold text-black transition active:scale-[0.98]"
-            style={{ background: ICE, boxShadow: `0 10px 30px ${ICE_GLOW}` }}
+            className="mt-8 inline-flex min-h-[44px] items-center self-start rounded-full px-7 py-3.5 text-base font-bold transition active:scale-[0.98]"
+            style={{ color: readableOn(ICE), background: ICE, boxShadow: `0 10px 30px ${ICE_GLOW}` }}
           >
             {COOLDOWN_ALTERNATIVE}
           </Link>
@@ -284,8 +285,8 @@ export default function ThresholdFlow({ family }: { family: string }) {
               track("threshold_start", { family, sourceId: started.sourceId ?? null });
               setPhase("trial");
             }}
-            className="mt-8 self-start rounded-full px-7 py-3.5 text-base font-bold text-black transition active:scale-[0.98] disabled:opacity-40"
-            style={{ background: ICE, boxShadow: `0 10px 30px ${ICE_GLOW}` }}
+            className="mt-8 self-start rounded-full px-7 py-3.5 text-base font-bold transition active:scale-[0.98] disabled:opacity-40"
+            style={{ color: readableOn(ICE), background: ICE, boxShadow: `0 10px 30px ${ICE_GLOW}` }}
           >
             Start
           </button>

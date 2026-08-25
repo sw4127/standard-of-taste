@@ -14,6 +14,7 @@
  * same seam (ClipPlayer).
  */
 
+import { readableOn } from "@/lib/readable-on";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import FluidField from "@/components/FluidField";
@@ -302,8 +303,8 @@ export default function BiasFlow() {
               track("bias_start", {});
               setPhase("blind");
             }}
-            className="mt-8 self-start rounded-full px-7 py-3.5 text-base font-bold text-black transition active:scale-[0.98]"
-            style={{ background: GOLD, boxShadow: `0 10px 30px ${GOLD_GLOW}` }}
+            className="mt-8 self-start rounded-full px-7 py-3.5 text-base font-bold transition active:scale-[0.98]"
+            style={{ color: readableOn(GOLD), background: GOLD, boxShadow: `0 10px 30px ${GOLD_GLOW}` }}
           >
             Start the blind pass
           </button>
@@ -369,8 +370,8 @@ export default function BiasFlow() {
           <button
             type="button"
             onClick={() => setPhase("labeled")}
-            className="mt-8 rounded-full px-7 py-3.5 text-base font-bold text-black transition active:scale-[0.98]"
-            style={{ background: GOLD, boxShadow: `0 10px 30px ${GOLD_GLOW}` }}
+            className="mt-8 rounded-full px-7 py-3.5 text-base font-bold transition active:scale-[0.98]"
+            style={{ color: readableOn(GOLD), background: GOLD, boxShadow: `0 10px 30px ${GOLD_GLOW}` }}
           >
             Start the labeled pass
           </button>
@@ -531,8 +532,8 @@ export default function BiasFlow() {
               track("bias_debrief_view", {});
               setPhase("debrief");
             }}
-            className="mt-8 rounded-full px-7 py-3.5 text-base font-bold text-black transition active:scale-[0.98]"
-            style={{ background: GOLD, boxShadow: `0 10px 30px ${GOLD_GLOW}` }}
+            className="mt-8 rounded-full px-7 py-3.5 text-base font-bold transition active:scale-[0.98]"
+            style={{ color: readableOn(GOLD), background: GOLD, boxShadow: `0 10px 30px ${GOLD_GLOW}` }}
           >
             One more thing — about those names
           </button>
