@@ -18,6 +18,7 @@
  * under every degradation) — analysis excludes pv0.
  */
 
+import Jump from "@/components/Jump";
 import { readableOn } from "@/lib/readable-on";
 import { useEffect, useRef, useState } from "react";
 import FluidField from "@/components/FluidField";
@@ -588,9 +589,9 @@ export default function DelicacyFlow() {
                 label="Story card"
                 filename="delicacy-trials-story.png"
               />
-              <a href={resultPath} className="text-sm text-muted underline underline-offset-4 transition hover:text-white">
+              <Jump href={resultPath} accent={ICE} className="text-muted">
                 View your result page →
-              </a>
+              </Jump>
             </div>
           </div>
 
@@ -607,12 +608,12 @@ export default function DelicacyFlow() {
           </div>
 
           <div className="mt-8 flex flex-wrap items-center gap-5">
-            <a href="/delicacy" className="text-sm text-muted underline underline-offset-4 transition hover:text-white">
+            <Jump href="/delicacy" accent={ICE} className="text-muted">
               Run it again →
-            </a>
-            <a href="/bias" className="text-sm text-muted underline underline-offset-4 transition hover:text-white">
+            </Jump>
+            <Jump href="/bias" accent={ICE} className="text-muted">
               The other machine: the Prestige Test →
-            </a>
+            </Jump>
           </div>
         </div>
       </main>

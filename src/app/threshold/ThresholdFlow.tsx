@@ -23,6 +23,7 @@
  * comparable either. Same-moment A/B unlocks after it, per RT-34b.
  */
 
+import Jump from "@/components/Jump";
 import { readableOn } from "@/lib/readable-on";
 import { useCallback, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
@@ -234,13 +235,13 @@ export default function ThresholdFlow({ family }: { family: string }) {
           <div className="mt-10 border-t border-white/10 pt-6">
             <p className="text-sm font-semibold">{SNACK_LEAD}</p>
             <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted">{SNACK_LINE}</p>
-            <Link
+            <Jump
               href="/music/quiz?ref=cooldown"
-              className="mt-4 inline-flex min-h-[44px] items-center text-sm font-semibold underline underline-offset-4"
+              className="mt-4"
               style={{ color: BRAND }}
             >
               {SNACK_CTA} &rarr;
-            </Link>
+            </Jump>
           </div>
         </div>
       </main>

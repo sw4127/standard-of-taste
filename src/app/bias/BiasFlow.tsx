@@ -14,6 +14,7 @@
  * same seam (ClipPlayer).
  */
 
+import Jump from "@/components/Jump";
 import { readableOn } from "@/lib/readable-on";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -642,12 +643,9 @@ export default function BiasFlow() {
                 label="Story card"
                 filename="prestige-test-story.png"
               />
-              <a
-                href={resultPath}
-                className="text-sm text-muted underline underline-offset-4 transition hover:text-white"
-              >
+              <Jump href={resultPath} accent={GOLD} className="text-muted">
                 View your result page →
-              </a>
+              </Jump>
             </div>
           </div>
 
@@ -692,9 +690,9 @@ export default function BiasFlow() {
             ))}
           </div>
 
-          <a href="/bias" className="mt-8 inline-block text-sm text-muted underline underline-offset-4 transition hover:text-white">
+          <Jump href="/bias" accent={GOLD} className="mt-8 text-muted">
             Run it again →
-          </a>
+          </Jump>
         </div>
       </main>
     );
