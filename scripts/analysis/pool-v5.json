@@ -1,0 +1,23 @@
+{
+  "_comment": "Pool v5 item metadata for the .mjs analysis scripts (they can't import items.ts). Presentation order. DRIFT-PROOFED: scripts/analysis/pool-json.test.ts fails if this file disagrees with src/content/bias/items.ts — regenerate on any pool bump. v5 grows the scored set from 8 to 14 (RT-103a, E7/S5); the two controls are unchanged and stay excluded from the swapped/truthful sway charts.",
+  "poolVersion": 5,
+  "scaleMax": 10,
+  "items": [
+    {"id":"pb1","labelDirection":"down","labelIsTrue":false},
+    {"id":"pb7","labelDirection":"up","labelIsTrue":false},
+    {"id":"pb3","labelDirection":"down","labelIsTrue":true},
+    {"id":"pb9","labelDirection":"up","labelIsTrue":true},
+    {"id":"b3","labelDirection":"up","labelIsTrue":true,"isControl":true},
+    {"id":"pb6","labelDirection":"up","labelIsTrue":false},
+    {"id":"pb10","labelDirection":"up","labelIsTrue":true},
+    {"id":"pb2","labelDirection":"up","labelIsTrue":true},
+    {"id":"pb11","labelDirection":"down","labelIsTrue":true},
+    {"id":"pb8","labelDirection":"down","labelIsTrue":true},
+    {"id":"pb13","labelDirection":"down","labelIsTrue":true},
+    {"id":"pb5","labelDirection":"up","labelIsTrue":true},
+    {"id":"pb4","labelDirection":"up","labelIsTrue":true},
+    {"id":"pb14","labelDirection":"down","labelIsTrue":true},
+    {"id":"b1","labelDirection":"up","labelIsTrue":true,"isControl":true},
+    {"id":"pb12","labelDirection":"down","labelIsTrue":true}
+  ]
+}

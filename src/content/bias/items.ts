@@ -34,7 +34,7 @@ export const BIAS_INSTRUMENT_ID = "prestige-bias-v1";
  * permanently interpretable against the exact pool that produced them (D6).
  * Old-version URLs die gracefully (redirect to /bias), never lie.
  */
-export const BIAS_POOL_VERSION = 4; // v4: +2 unlabeled control items b3/b1 (v1.1 hardening, PM ruling RT-1a 2026-07-19)
+export const BIAS_POOL_VERSION = 5; // v5: +6 scored items pb9-pb14, pool 8->14 scored (RT-103a; E7/S5)
 
 /** One playable, labelable clip. Extends the engine spec with presentation. */
 export interface BiasClip extends BiasItemSpec {
@@ -52,7 +52,8 @@ export interface BiasClip extends BiasItemSpec {
   attribution: string;
 }
 
-export const BIAS_CLIPS: BiasClip[] = [
+export const BIAS_CLIPS: BiasClip[
+] = [
   {
     id: "pb1",
     audioSrc: "/audio/bias/pb1.mp3",
@@ -90,6 +91,18 @@ export const BIAS_CLIPS: BiasClip[] = [
     labelIsTrue: true,
   },
   {
+    id: "pb9",
+    audioSrc: "/audio/bias/pb9.mp3",
+    trueArtist: "J. Suk — Musopen Kickstarter ensemble",
+    shownArtist: "J. Suk — Musopen Kickstarter ensemble",
+    shownBlurb: "Written in 1914 as a patriotic act, when Czech orchestras were forbidden the national anthem and played this instead.",
+    license: "Public Domain (Musopen Kickstarter release)",
+    attribution:
+      "“Meditation on the Old Czech Chorale ‘St Wenceslas’, Op. 35a” — J. Suk, perf. Musopen Kickstarter ensemble · archive.org/details/MusopenCollectionAsFlac · Public Domain · excerpt (trimmed + loudness-normalized)",
+    labelDirection: "up",
+    labelIsTrue: true,
+  },
+  {
     // CONTROL (v1.1, instrument-defenses §hardening): rated in both passes,
     // labeled in neither — measures pure re-exposure drift. shownArtist/
     // shownBlurb are intentionally empty (nothing is ever shown); the UI
@@ -121,6 +134,18 @@ export const BIAS_CLIPS: BiasClip[] = [
     labelIsTrue: false, // up-swap: acclaim fiction on a lesser-known work
   },
   {
+    id: "pb10",
+    audioSrc: "/audio/bias/pb10.mp3",
+    trueArtist: "F. Mendelssohn — Musopen Kickstarter ensemble",
+    shownArtist: "F. Mendelssohn — Musopen Kickstarter ensemble",
+    shownBlurb: "His last completed work, written in the months after his sister died; the one piece where the polish drops away.",
+    license: "Public Domain (Musopen Kickstarter release)",
+    attribution:
+      "“String Quartet No. 6 in F minor, Op. 80 — III. Adagio” — F. Mendelssohn, perf. Musopen Kickstarter ensemble · archive.org/details/MusopenCollectionAsFlac · Public Domain · excerpt (trimmed + loudness-normalized)",
+    labelDirection: "up",
+    labelIsTrue: true,
+  },
+  {
     id: "pb2",
     audioSrc: "/audio/bias/pb2.mp3",
     trueArtist: "J.S. Bach — Kimiko Ishizaka, piano",
@@ -133,6 +158,18 @@ export const BIAS_CLIPS: BiasClip[] = [
     labelIsTrue: true,
   },
   {
+    id: "pb11",
+    audioSrc: "/audio/bias/pb11.mp3",
+    trueArtist: "J. Brahms — Musopen Kickstarter ensemble",
+    shownArtist: "J. Brahms — Musopen Kickstarter ensemble",
+    shownBlurb: "The unloved half of a pair: its cheerful twin gets programmed, and this one gets explained.",
+    license: "Public Domain (Musopen Kickstarter release)",
+    attribution:
+      "“Tragic Overture, Op. 81” — J. Brahms, perf. Musopen Kickstarter ensemble · archive.org/details/MusopenCollectionAsFlac · Public Domain · excerpt (trimmed + loudness-normalized)",
+    labelDirection: "down",
+    labelIsTrue: true,
+  },
+  {
     id: "pb8",
     audioSrc: "/audio/bias/pb8.mp3",
     trueArtist: "Jason Shaw (Audionautix)",
@@ -141,6 +178,18 @@ export const BIAS_CLIPS: BiasClip[] = [
     license: "CC-BY 4.0",
     attribution:
       "“Folk Bed” — music by audionautix.com (Jason Shaw) · audionautix.com/creative-commons-music · CC-BY 4.0 · excerpt (trimmed + loudness-normalized)",
+    labelDirection: "down",
+    labelIsTrue: true,
+  },
+  {
+    id: "pb13",
+    audioSrc: "/audio/bias/pb13.mp3",
+    trueArtist: "Monplaisir",
+    shownArtist: "Monplaisir",
+    shownBlurb: "Background music in the most literal sense; composed at volume, released in bulk.",
+    license: "CC0",
+    attribution:
+      "“Il y a un bout de ciel bleu” (Rosée) — Monplaisir · archive.org/details/Monplaisir-Rose · CC0 · excerpt (trimmed + loudness-normalized)",
     labelDirection: "down",
     labelIsTrue: true,
   },
@@ -169,6 +218,18 @@ export const BIAS_CLIPS: BiasClip[] = [
     labelIsTrue: true,
   },
   {
+    id: "pb14",
+    audioSrc: "/audio/bias/pb14.mp3",
+    trueArtist: "Jason Shaw (Audionautix)",
+    shownArtist: "Jason Shaw (Audionautix)",
+    shownBlurb: "Library music filed under jazz: the sound of the genre with nobody taking a risk inside it.",
+    license: "CC-BY 4.0",
+    attribution:
+      "“Closer To Jazz” — music by audionautix.com (Jason Shaw) · audionautix.com/creative-commons-music · CC-BY 4.0 · excerpt (trimmed + loudness-normalized)",
+    labelDirection: "down",
+    labelIsTrue: true,
+  },
+  {
     // CONTROL (v1.1): see b3 above. Clip: backup B1, previewed in the PM ear
     // pass of 2026-07-12 (no veto). Piano control balances b3's modern
     // instrumental so the drift baseline samples both of the pool's
@@ -183,6 +244,18 @@ export const BIAS_CLIPS: BiasClip[] = [
     attribution:
       "“Well-Tempered Clavier Bk 1 — Prelude No. 4 in C-sharp minor, BWV 849” — J.S. Bach, perf. Kimiko Ishizaka · archive.org/details/bach-well-tempered-clavier-book-1 · CC0 · excerpt (trimmed + loudness-normalized)",
     labelDirection: "up",
+    labelIsTrue: true,
+  },
+  {
+    id: "pb12",
+    audioSrc: "/audio/bias/pb12.mp3",
+    trueArtist: "A. Borodin — Musopen Kickstarter ensemble",
+    shownArtist: "A. Borodin — Musopen Kickstarter ensemble",
+    shownBlurb: "Overshadowed by the quartet he wrote next, whose slow movement became a Broadway song. This one did not.",
+    license: "Public Domain (Musopen Kickstarter release)",
+    attribution:
+      "“String Quartet No. 1 in A major — II. Andante con moto” — A. Borodin, perf. Musopen Kickstarter ensemble · archive.org/details/MusopenCollectionAsFlac · Public Domain · excerpt (trimmed + loudness-normalized)",
+    labelDirection: "down",
     labelIsTrue: true,
   },
 ];

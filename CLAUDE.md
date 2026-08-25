@@ -35,6 +35,16 @@ Appended, not overwritten. Amends **D4 only**; D1, D2, D3, D5, D6 and N1–N3 ar
 
 **Consequences for §9.1 and the Payments update below:** progression-tier pricing is **closed, not open** — the answer is "no tier." The MoR constraint is retained for history and would only matter if this ruling were reversed.
 
+**Floor length update (owner-approved RT-136, 2026-08-25) — appended, nothing above is amended away.** The
+Floor sentence above says "~5 min, no account", which was RT-59a's ruled text and was true of a ten-clip pool.
+RT-103a grew the Prestige Test's scored pool from 8 to 14 items (16 clips including the two drift controls), and
+**the Floor session is now ~8 minutes**. The reason is precision, not ambition: at 8 scored clips the headline
+number carries SD 3.65 percentage points; at 14 it carries **2.58**, with verdict agreement rising 89.2% -> 92.7%
+and near-the-line agreement 72.8% -> 80.0% (measured at the grown pool, `docs/analytics/e6-prestige.txt`).
+RT-59a's actual constraint — that the Floor stays a short fixed set with no account, and that the adaptive
+staircase stays in the Gym — is **unchanged**. What changed is one number inside it, and it is recorded here
+rather than left to contradict the shipped product (N3).
+
 **Why (N2/N3):** revenue was never the point (memo C4 — revenue = proof of viability, not income), and a paywall on the training loop would have made the honest deliverable — *does your ear actually move* — the thing behind the wall. Any user-facing copy still promising a paid tier is a false claim and must be fixed on sight (this ruling's first casualty was `CALIBRATION_PHASE_LINE`).
 
 ## Roles

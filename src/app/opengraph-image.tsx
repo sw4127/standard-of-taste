@@ -68,12 +68,12 @@ export default function OgImage() {
               maxWidth: 900,
             }}
           >
-            Ten clips, rated twice — the gap is how far a famous name can move you.
+            Sixteen clips, rated twice — the gap is how far a famous name can move you.
           </div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div style={{ display: "flex", fontSize: 26, fontWeight: 600, color: SUB }}>
-            Free · five minutes · no sign-up
+            Free · eight minutes · no sign-up
           </div>
           <div style={{ display: "flex", fontSize: 26, fontWeight: 600, color: GOLD }}>
             The Prestige Test →

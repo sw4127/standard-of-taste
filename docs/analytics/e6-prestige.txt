@@ -1,15 +1,21 @@
 E6/S6 PRESTIGE TEST — LENGTH vs PRECISION [SIMULATED, zero real responses]
 16 random subsets x 1200 simulated persons per length; 2 controls always carried.
 
-n= 2 scored (+2 ctrl)   2.0 min  SD  7.40 pts  verdict-agree  75.2%  near-line  60.0%  1/sqrt(n) fit 7.79
-n= 3 scored (+2 ctrl)   2.5 min  SD  6.71 pts  verdict-agree  80.5%  near-line  63.9%  1/sqrt(n) fit 6.36
-n= 4 scored (+2 ctrl)   3.0 min  SD  5.46 pts  verdict-agree  83.1%  near-line  65.3%  1/sqrt(n) fit 5.51
-n= 5 scored (+2 ctrl)   3.5 min  SD  4.96 pts  verdict-agree  85.7%  near-line  68.5%  1/sqrt(n) fit 4.93
-n= 6 scored (+2 ctrl)   4.1 min  SD  4.60 pts  verdict-agree  86.2%  near-line  68.7%  1/sqrt(n) fit 4.50
-n= 7 scored (+2 ctrl)   4.6 min  SD  4.22 pts  verdict-agree  87.9%  near-line  70.7%  1/sqrt(n) fit 4.16
-n= 8 scored (+2 ctrl)   5.1 min  SD  3.75 pts  verdict-agree  89.3%  near-line  73.3%  1/sqrt(n) fit 3.90
+n= 2 scored (+2 ctrl)   2.0 min  SD  7.61 pts  verdict-agree  73.8%  near-line  58.5%  1/sqrt(n) fit 7.29
+n= 3 scored (+2 ctrl)   2.5 min  SD  6.31 pts  verdict-agree  81.3%  near-line  64.2%  1/sqrt(n) fit 5.95
+n= 4 scored (+2 ctrl)   3.0 min  SD  5.63 pts  verdict-agree  82.5%  near-line  65.1%  1/sqrt(n) fit 5.15
+n= 5 scored (+2 ctrl)   3.5 min  SD  4.80 pts  verdict-agree  86.1%  near-line  69.0%  1/sqrt(n) fit 4.61
+n= 6 scored (+2 ctrl)   4.1 min  SD  4.15 pts  verdict-agree  87.5%  near-line  70.3%  1/sqrt(n) fit 4.21
+n= 7 scored (+2 ctrl)   4.6 min  SD  3.89 pts  verdict-agree  88.9%  near-line  72.3%  1/sqrt(n) fit 3.89
+n= 8 scored (+2 ctrl)   5.1 min  SD  3.65 pts  verdict-agree  89.2%  near-line  72.8%  1/sqrt(n) fit 3.64
+n= 9 scored (+2 ctrl)   5.6 min  SD  3.28 pts  verdict-agree  90.7%  near-line  75.7%  1/sqrt(n) fit 3.43
+n=10 scored (+2 ctrl)   6.1 min  SD  3.19 pts  verdict-agree  90.7%  near-line  75.4%  1/sqrt(n) fit 3.26
+n=11 scored (+2 ctrl)   6.6 min  SD  3.04 pts  verdict-agree  90.7%  near-line  75.6%  1/sqrt(n) fit 3.11
+n=12 scored (+2 ctrl)   7.1 min  SD  2.86 pts  verdict-agree  91.8%  near-line  77.8%  1/sqrt(n) fit 2.97
+n=13 scored (+2 ctrl)   7.6 min  SD  2.74 pts  verdict-agree  92.1%  near-line  78.4%  1/sqrt(n) fit 2.86
+n=14 scored (+2 ctrl)   8.1 min  SD  2.58 pts  verdict-agree  92.7%  near-line  80.0%  1/sqrt(n) fit 2.75
 
-fitted SD = 11.02 / sqrt(n) percentage points of scale
-  to reach SD 3.5: 9.9 scored clips -> 6.0 min
-  to reach SD 3.0: 13.5 scored clips -> 7.8 min
-  to reach SD 2.5: 19.4 scored clips -> 10.9 min
+fitted SD = 10.30 / sqrt(n) percentage points of scale
+  to reach SD 3.5: 8.7 scored clips -> 5.4 min
+  to reach SD 3.0: 11.8 scored clips -> 7.0 min
+  to reach SD 2.5: 17.0 scored clips -> 9.6 min

@@ -21,6 +21,7 @@ import {
   shareText as delicacyShareText,
 } from "./delicacy/copy";
 import { DELICACY_TRIALS, FLAW_LABELS } from "./delicacy/items";
+import { BIAS_CLIPS } from "./bias/items";
 import { detectionBand } from "@/engine/delicacy";
 import {
   FAMILY_BLURB,
@@ -68,6 +69,23 @@ function shippingStrings(): VoiceString[] {
     });
   }
   out.push({ surface: "bias/card/cta", text: biasCardCta("example.com"), intensity: "calm" });
+
+  /**
+   * THE ITEM BLURBS (E7/S5) — the most consequential strings in the product,
+   * and the gate had never seen one of them.
+   *
+   * Everything else here is copy ABOUT a result. These are the instrument
+   * itself: the blurb is the prestige cue whose effect the test measures, and
+   * three of them are the sanctioned deception (memo §3). A blurb that reads
+   * fake weakens the very thing being measured, and a blurb that crosses one of
+   * the five named hazards does it while wearing our brand.
+   *
+   * Every scored item, not a sample. RT-103a took the pool from 8 to 14 and six
+   * of these have never been read by anyone but their author.
+   */
+  for (const clip of BIAS_CLIPS.filter((c) => !c.isControl)) {
+    out.push({ surface: `bias/item/${clip.id}/blurb`, text: clip.shownBlurb, intensity: "pointed" });
+  }
 
   out.push({ surface: "delicacy/share", text: delicacyShareText(12, n), intensity: "full" });
   /**

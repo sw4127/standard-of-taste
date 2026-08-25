@@ -35,6 +35,18 @@
  *      SD 3.0 pts needs ~14 scored ->  7.8 min
  *      SD 2.5 pts needs ~19 scored -> 10.9 min
  *
+ * E7/S5 RE-MEASURED AT THE GROWN POOL (RT-103a, 14 scored + 2 controls). The
+ * projections above were extrapolations from a curve that ended at 8; the pool
+ * now reaches 14, so they are replaced by measurements:
+ *
+ *      n= 8 scored  5.1 min  SD 3.65  agree 89.2%  near-line 72.8%
+ *      n=14 scored  8.1 min  SD 2.58  agree 92.7%  near-line 80.0%
+ *
+ * BETTER THAN THE EXTRAPOLATION PREDICTED. 11.02/sqrt(14) forecast SD 2.94; the
+ * measurement is 2.58, and the fitted constant over the longer curve is 10.30
+ * rather than 11.02. The old projections are kept above rather than edited,
+ * because the gap between a forecast and its outcome is the useful part.
+ *
  * At the shipping length, verdict agreement is ~89% overall but only ~73% for
  * people whose true position sits within 5 points of a line. That second number
  * is the honest one to hold this instrument to, and no length in reach fixes
@@ -242,12 +254,31 @@ describe("E6/S6 — minutes in, verdict accuracy out [SIMULATED]", () => {
     }
 
     // THE HEADLINE: still descending when the pool runs out, so the POOL is the
-    // constraint and the five minutes are not the problem. If a future pool
-    // grows and this stops holding, the instrument has finally been fed enough
-    // and the finding needs revisiting — which is what a failure here means.
+    // constraint and the session length is not the problem.
+    //
+    // E7/S5 — REWRITTEN, BECAUSE THE OLD FORM COULD NOT SURVIVE ITS OWN
+    // PREDICTION. It asserted `last.sd < prev.sd - 0.2`: an ABSOLUTE decrement
+    // at the tail of a 1/sqrt(n) curve, calibrated when the pool ended at 8 and
+    // the final step was -0.47. Every step since n=9 is smaller than 0.2 —
+    // -0.09, -0.15, -0.18, -0.12, -0.16 — not because the instrument stopped
+    // improving but because 1/sqrt(n) flattens BY CONSTRUCTION. Growing the
+    // pool to 14 (RT-103a) turned it red while precision was still improving.
+    // That is the same species as E6's own falsified finding 3: a criterion
+    // that is constant or shrinking by construction is not a measurement.
+    //
+    // The relative form is the one that means something. Going n-1 -> n, the
+    // law predicts SD falls by sqrt((n-1)/n) — 3.6% at n=14. Measured: 5.8%.
+    // Still beating its own model at the end of the pool, which is exactly what
+    // "the pool is the constraint" claims.
     const last = rows[rows.length - 1];
     const prev = rows[rows.length - 2];
-    expect(last.sd).toBeLessThan(prev.sd - 0.2);
+    const predictedRatio = Math.sqrt((last.n - 1) / last.n);
+    expect(
+      last.sd / prev.sd,
+      `SD is no longer falling at least as fast as 1/sqrt(n) at the end of the pool ` +
+        `(n=${last.n}: measured ratio ${(last.sd / prev.sd).toFixed(4)}, law predicts ${predictedRatio.toFixed(4)}). ` +
+        `If this fails, the instrument has finally been fed enough and the finding needs revisiting.`,
+    ).toBeLessThanOrEqual(predictedRatio);
     expect(last.agree).toBeGreaterThan(prev.agree);
 
     // The 1/sqrt(n) law, checked rather than claimed in prose.

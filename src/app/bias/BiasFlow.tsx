@@ -56,7 +56,7 @@ const RATE_BEAT_MS = 420;
  * RECALL DEFENCES (PM ruling RT-38b, after user testing 2026-08-08).
  *
  * The report was blunt and correct: "the prestige test now feels like a test of
- * only short-term memory." It was. Ten clips rated blind, then the SAME ten in
+ * only short-term memory." It was. Sixteen clips rated blind, then the SAME sixteen in
  * the SAME order asked the SAME question — a careful person simply reproduces
  * their first answer, and the instrument measures recall rather than the pull
  * of a famous name. The engine already conceded this direction ("re-rating
@@ -293,7 +293,7 @@ export default function BiasFlow() {
             a famous name can make a mediocre thing sound profound. He called it prejudice.
           </p>
           <p className="mt-3 text-base leading-relaxed text-muted">
-            Ten clips. You rate them twice: once with nothing but your ears, once with the names and
+            Sixteen clips. You rate them twice: once with nothing but your ears, once with the names and
             the acclaim attached. <span className="text-foreground">The gap is your number.</span>
           </p>
           <button
@@ -307,7 +307,7 @@ export default function BiasFlow() {
           >
             Start the blind pass
           </button>
-          <p className="mt-4 text-xs text-muted">~5 minutes. No sign-up. Headphones help.</p>
+          <p className="mt-4 text-xs text-muted">~8 minutes. No sign-up. Headphones help.</p>
         </div>
       </main>
     );
@@ -340,7 +340,7 @@ export default function BiasFlow() {
           {kicker}
           <h1 className="mt-6 font-display text-4xl font-semibold leading-tight">Round two.</h1>
           <p className="mt-4 text-base leading-relaxed text-muted">
-            Same ten clips — this time the names and the reputations come attached, and the question
+            Same sixteen clips — this time the names and the reputations come attached, and the question
             changes. A couple stay blank on purpose. Rate what you hear.
           </p>
 

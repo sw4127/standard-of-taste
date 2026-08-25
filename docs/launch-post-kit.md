@@ -42,7 +42,7 @@ The `?ref=` value is captured once per session by the existing entry-path taggin
 > labels (artist, acclaim, dismissal), two stay deliberately unlabeled as drift controls. Some
 > labels are true; some are deliberately swapped (every deception is confessed on a debrief screen
 > at the end, with the real attributions). Your score is the measured gap between your blind and
-> labeled ratings, corrected by your own drift on the unlabeled controls. About 5 minutes, no signup.
+> labeled ratings, corrected by your own drift on the unlabeled controls. About 8 minutes, no signup.
 >
 > Technical notes: scoring is fully deterministic — no LLM anywhere in the loop; the share links
 > carry raw ratings and recompute server-side, so a score can't be forged by editing the URL.
@@ -85,7 +85,7 @@ and log it as an issue — HN rewards that more than defense.
 
 ## Reddit variant 1 — r/samplesize (norming-cohort fit, rules-native)
 
-**Title:** `[Casual] How much do famous names sway your music ratings? Rate 10 clips blind, then labeled (~5 min, no signup)`
+**Title:** `[Casual] How much do famous names sway your music ratings? Rate 16 clips blind, then labeled (~8 min, no signup)`
 
 **Body:**
 
@@ -93,7 +93,7 @@ and log it as an issue — HN rewards that more than defense.
 > you rate short clips blind, then rate them again with artist/acclaim labels — some labels are
 > deliberately false, and the end screen confesses every lie and shows your real attributions.
 > Your result is the measured gap between your two passes.
-> No signup, no email, ~5 minutes. Responses are stored anonymized and become the norming dataset
+> No signup, no email, ~8 minutes. Responses are stored anonymized and become the norming dataset
 > (you're scored against provisional norms and it says so — early takers literally build the curve).
 > Happy to answer anything about the scoring or the audio licensing.
 > https://vibe-check-app-sepia.vercel.app/bias?ref=rs

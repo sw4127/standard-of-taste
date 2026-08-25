@@ -16,7 +16,7 @@ import { DELICACY_LIVE } from "@/content/delicacy/items";
 export const metadata: Metadata = {
   title: "The Taste Gym — do you hear the music, or the name?",
   description:
-    "Your taste has a number. The Prestige Test measures how far a famous name can move your ratings. Ten clips, rated twice — the gap is your number.",
+    "Your taste has a number. The Prestige Test measures how far a famous name can move your ratings. Sixteen clips, rated twice — the gap is your number.",
   alternates: { canonical: "/" },
   openGraph: {
     title: "The Taste Gym — do you hear the music, or the name?",
@@ -58,8 +58,8 @@ const MACHINES: Machine[] = [
     title: "The Prestige Test",
     criterion: "Freedom from prejudice",
     blurb:
-      "Rate ten clips blind, then again with the famous names attached — asked a different way, in a different order. Your number is the gap.",
-    meta: "~5 min · 10 clips",
+      "Rate sixteen clips blind, then again with the famous names attached — asked a different way, in a different order. Your number is the gap.",
+    meta: "~8 min · 16 clips",
   },
   ...(DELICACY_LIVE
     ? [
