@@ -1,0 +1,696 @@
+E7/S10 DELICACY REVEAL — EVERY LINE IT CAN PRINT [SIMULATED inputs, real copy]
+The DelicacyFlow 'done' screen is reachable only by finishing 18 gated trials,
+so nothing had ever read what it says. This is its composition, exhaustively.
+
+=== always 95 ===
+-- 0/15
+   0/15 originals identified
+   0 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 0, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   Claimed 95% sure on average, delivered 0%. You claim more than your ears deliver.
+   Brier score 0.902 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 0 of 15.
+-- 1/15
+   1/15 originals identified
+   1 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 1, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 1 of 1 time.
+   Claimed 95% sure on average, delivered 7%. You claim more than your ears deliver.
+   Brier score 0.842 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 1 of 15.
+-- 2/15
+   2/15 originals identified
+   2 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 2, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 2 of 2 times.
+   Claimed 95% sure on average, delivered 13%. You claim more than your ears deliver.
+   Brier score 0.782 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 2 of 15.
+-- 3/15
+   3/15 originals identified
+   3 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 3, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 3 of 3 times.
+   Claimed 95% sure on average, delivered 20%. You claim more than your ears deliver.
+   Brier score 0.722 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 3 of 15.
+-- 4/15
+   4/15 originals identified
+   4 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 4, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 4% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 4 of 4 times.
+   Claimed 95% sure on average, delivered 27%. You claim more than your ears deliver.
+   Brier score 0.662 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 4 of 15.
+-- 5/15
+   5/15 originals identified
+   5 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 5, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 17% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 5 of 5 times.
+   Claimed 95% sure on average, delivered 33%. You claim more than your ears deliver.
+   Brier score 0.602 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 5 of 15.
+-- 6/15
+   6/15 originals identified
+   6 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 6, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 29% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 6 of 6 times.
+   Claimed 95% sure on average, delivered 40%. You claim more than your ears deliver.
+   Brier score 0.542 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 6 of 15.
+-- 7/15
+   7/15 originals identified
+   7 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 7, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 40% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 7 of 7 times.
+   Claimed 95% sure on average, delivered 47%. You claim more than your ears deliver.
+   Brier score 0.482 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 7 of 15.
+-- 8/15
+   8/15 originals identified
+   8 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 8 — 0.5 beyond what that generosity covers, and 0.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 50% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+   And on the ones you caught, you named the flaw 8 of 8 times.
+   Claimed 95% sure on average, delivered 53%. You claim more than your ears deliver.
+   Brier score 0.422 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 8 of 15.
+-- 9/15
+   9/15 originals identified
+   9 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 9 — 1.5 beyond what that generosity covers, and 1.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 60% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+   And on the ones you caught, you named the flaw 9 of 9 times.
+   Claimed 95% sure on average, delivered 60%. You claim more than your ears deliver.
+   Brier score 0.362 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 9 of 15.
+-- 10/15
+   10/15 originals identified
+   10 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 10 — 2.5 beyond what that generosity covers, and 2.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 70% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+   And on the ones you caught, you named the flaw 10 of 10 times.
+   Claimed 95% sure on average, delivered 67%. You claim more than your ears deliver.
+   Brier score 0.302 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 10 of 15.
+-- 11/15
+   11/15 originals identified
+   11 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 11 — 3.5 beyond what that generosity covers, and 3.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 78% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+   And on the ones you caught, you named the flaw 11 of 11 times.
+   Claimed 95% sure on average, delivered 73%. You claim more than your ears deliver.
+   Brier score 0.242 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 11 of 15.
+-- 12/15
+   12/15 originals identified
+   12 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 12 — 4.5 beyond what that generosity covers, and exactly the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 10% and 86%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+   And on the ones you caught, you named the flaw 12 of 12 times.
+   Claimed 95% sure on average, delivered 80%. You claim more than your ears deliver.
+   Brier score 0.182 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 12 of 15.
+-- 13/15
+   13/15 originals identified
+   13 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 13 — 5.5 beyond what that generosity covers, and past the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 24% and 93%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+   And on the ones you caught, you named the flaw 13 of 13 times.
+   Claimed 95% sure on average, delivered 87% — a gap of +8 points, inside the ±9 noise of 15 trials. Too close to call.
+   Brier score 0.122 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 13 of 15.
+-- 14/15
+   14/15 originals identified
+   14 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 14 — 6.5 beyond what that generosity covers, and past the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 40% and 98%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+   And on the ones you caught, you named the flaw 14 of 14 times.
+   Claimed 95% sure on average, delivered 93% — a gap of +2 points, inside the ±6 noise of 15 trials. Too close to call.
+   Brier score 0.063 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 14 of 15.
+-- 15/15
+   15/15 originals identified
+   15 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 15 — 7.5 beyond what that generosity covers, and past the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 59% and 100%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+   And on the ones you caught, you named the flaw 15 of 15 times.
+   Claimed 95% sure on average, delivered 100%. Claim and delivery line up.
+   Brier score 0.003 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 15 of 15.
+=== always 50 ===
+-- 0/15
+   0/15 originals identified
+   0 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 0, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   Claimed 50% sure on average, delivered 0%. You claim more than your ears deliver.
+   Brier score 0.250 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 0 of 15.
+-- 1/15
+   1/15 originals identified
+   1 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 1, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 1 of 1 time.
+   Claimed 50% sure on average, delivered 7%. You claim more than your ears deliver.
+   Brier score 0.250 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 1 of 15.
+-- 2/15
+   2/15 originals identified
+   2 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 2, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 2 of 2 times.
+   Claimed 50% sure on average, delivered 13%. You claim more than your ears deliver.
+   Brier score 0.250 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 2 of 15.
+-- 3/15
+   3/15 originals identified
+   3 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 3, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 3 of 3 times.
+   Claimed 50% sure on average, delivered 20%. You claim more than your ears deliver.
+   Brier score 0.250 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 3 of 15.
+-- 4/15
+   4/15 originals identified
+   4 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 4, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 4% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 4 of 4 times.
+   Claimed 50% sure on average, delivered 27%. You claim more than your ears deliver.
+   Brier score 0.250 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 4 of 15.
+-- 5/15
+   5/15 originals identified
+   5 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 5, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 17% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 5 of 5 times.
+   Claimed 50% sure on average, delivered 33%. You claim more than your ears deliver.
+   Brier score 0.250 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 5 of 15.
+-- 6/15
+   6/15 originals identified
+   6 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 6, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 29% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 6 of 6 times.
+   Claimed 50% sure on average, delivered 40% — a gap of +10 points, inside the ±13 noise of 15 trials. Too close to call.
+   Brier score 0.250 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 6 of 15.
+-- 7/15
+   7/15 originals identified
+   7 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 7, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 40% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 7 of 7 times.
+   Claimed 50% sure on average, delivered 47% — a gap of +3 points, inside the ±13 noise of 15 trials. Too close to call.
+   Brier score 0.250 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 7 of 15.
+-- 8/15
+   8/15 originals identified
+   8 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 8 — 0.5 beyond what that generosity covers, and 0.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 50% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+   And on the ones you caught, you named the flaw 8 of 8 times.
+   Claimed 50% sure on average, delivered 53% — a gap of -3 points, inside the ±13 noise of 15 trials. Too close to call.
+   Brier score 0.250 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 8 of 15.
+-- 9/15
+   9/15 originals identified
+   9 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 9 — 1.5 beyond what that generosity covers, and 1.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 60% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+   And on the ones you caught, you named the flaw 9 of 9 times.
+   Claimed 50% sure on average, delivered 60% — a gap of -10 points, inside the ±13 noise of 15 trials. Too close to call.
+   Brier score 0.250 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 9 of 15.
+-- 10/15
+   10/15 originals identified
+   10 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 10 — 2.5 beyond what that generosity covers, and 2.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 70% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+   And on the ones you caught, you named the flaw 10 of 10 times.
+   Claimed 50% sure on average, delivered 67%. Your ears deliver more than you claim.
+   Brier score 0.250 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 10 of 15.
+-- 11/15
+   11/15 originals identified
+   11 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 11 — 3.5 beyond what that generosity covers, and 3.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 78% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+   And on the ones you caught, you named the flaw 11 of 11 times.
+   Claimed 50% sure on average, delivered 73%. Your ears deliver more than you claim.
+   Brier score 0.250 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 11 of 15.
+-- 12/15
+   12/15 originals identified
+   12 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 12 — 4.5 beyond what that generosity covers, and exactly the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 10% and 86%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+   And on the ones you caught, you named the flaw 12 of 12 times.
+   Claimed 50% sure on average, delivered 80%. Your ears deliver more than you claim.
+   Brier score 0.250 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 12 of 15.
+-- 13/15
+   13/15 originals identified
+   13 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 13 — 5.5 beyond what that generosity covers, and past the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 24% and 93%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+   And on the ones you caught, you named the flaw 13 of 13 times.
+   Claimed 50% sure on average, delivered 87%. Your ears deliver more than you claim.
+   Brier score 0.250 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 13 of 15.
+-- 14/15
+   14/15 originals identified
+   14 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 14 — 6.5 beyond what that generosity covers, and past the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 40% and 98%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+   And on the ones you caught, you named the flaw 14 of 14 times.
+   Claimed 50% sure on average, delivered 93%. Your ears deliver more than you claim.
+   Brier score 0.250 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 14 of 15.
+-- 15/15
+   15/15 originals identified
+   15 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 15 — 7.5 beyond what that generosity covers, and past the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 59% and 100%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+   And on the ones you caught, you named the flaw 15 of 15 times.
+   Claimed 50% sure on average, delivered 100%. Your ears deliver more than you claim.
+   Brier score 0.250 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 15 of 15.
+=== rotating 95/70/50 ===
+-- 0/15
+   0/15 originals identified
+   0 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 0, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   Claimed 72% sure on average, delivered 0%. You claim more than your ears deliver.
+   Brier score 0.547 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 0 of 5.
+   When you said 70%: right 0 of 5.
+   When you said 50%: right 0 of 5.
+-- 1/15
+   1/15 originals identified
+   1 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 1, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 1 of 1 time.
+   Claimed 72% sure on average, delivered 7%. You claim more than your ears deliver.
+   Brier score 0.487 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 1 of 5.
+   When you said 70%: right 0 of 5.
+   When you said 50%: right 0 of 5.
+-- 2/15
+   2/15 originals identified
+   2 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 2, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 2 of 2 times.
+   Claimed 72% sure on average, delivered 13%. You claim more than your ears deliver.
+   Brier score 0.461 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 1 of 5.
+   When you said 70%: right 1 of 5.
+   When you said 50%: right 0 of 5.
+-- 3/15
+   3/15 originals identified
+   3 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 3, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 3 of 3 times.
+   Claimed 72% sure on average, delivered 20%. You claim more than your ears deliver.
+   Brier score 0.461 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 1 of 5.
+   When you said 70%: right 1 of 5.
+   When you said 50%: right 1 of 5.
+-- 4/15
+   4/15 originals identified
+   4 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 4, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 4% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 4 of 4 times.
+   Claimed 72% sure on average, delivered 27%. You claim more than your ears deliver.
+   Brier score 0.401 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 2 of 5.
+   When you said 70%: right 1 of 5.
+   When you said 50%: right 1 of 5.
+-- 5/15
+   5/15 originals identified
+   5 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 5, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 17% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 5 of 5 times.
+   Claimed 72% sure on average, delivered 33%. You claim more than your ears deliver.
+   Brier score 0.374 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 2 of 5.
+   When you said 70%: right 2 of 5.
+   When you said 50%: right 1 of 5.
+-- 6/15
+   6/15 originals identified
+   6 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 6, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 29% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 6 of 6 times.
+   Claimed 72% sure on average, delivered 40%. You claim more than your ears deliver.
+   Brier score 0.374 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 2 of 5.
+   When you said 70%: right 2 of 5.
+   When you said 50%: right 2 of 5.
+-- 7/15
+   7/15 originals identified
+   7 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 7, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 40% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 7 of 7 times.
+   Claimed 72% sure on average, delivered 47%. You claim more than your ears deliver.
+   Brier score 0.314 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 3 of 5.
+   When you said 70%: right 2 of 5.
+   When you said 50%: right 2 of 5.
+-- 8/15
+   8/15 originals identified
+   8 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 8 — 0.5 beyond what that generosity covers, and 0.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 50% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+   And on the ones you caught, you named the flaw 8 of 8 times.
+   Claimed 72% sure on average, delivered 53%. You claim more than your ears deliver.
+   Brier score 0.287 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 3 of 5.
+   When you said 70%: right 3 of 5.
+   When you said 50%: right 2 of 5.
+-- 9/15
+   9/15 originals identified
+   9 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 9 — 1.5 beyond what that generosity covers, and 1.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 60% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+   And on the ones you caught, you named the flaw 9 of 9 times.
+   Claimed 72% sure on average, delivered 60% — a gap of +12 points, inside the ±13 noise of 15 trials. Too close to call.
+   Brier score 0.287 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 3 of 5.
+   When you said 70%: right 3 of 5.
+   When you said 50%: right 3 of 5.
+-- 10/15
+   10/15 originals identified
+   10 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 10 — 2.5 beyond what that generosity covers, and 2.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 70% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+   And on the ones you caught, you named the flaw 10 of 10 times.
+   Claimed 72% sure on average, delivered 67% — a gap of +5 points, inside the ±12 noise of 15 trials. Too close to call.
+   Brier score 0.227 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 4 of 5.
+   When you said 70%: right 3 of 5.
+   When you said 50%: right 3 of 5.
+-- 11/15
+   11/15 originals identified
+   11 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 11 — 3.5 beyond what that generosity covers, and 3.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 78% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+   And on the ones you caught, you named the flaw 11 of 11 times.
+   Claimed 72% sure on average, delivered 73% — a gap of -2 points, inside the ±11 noise of 15 trials. Too close to call.
+   Brier score 0.201 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 4 of 5.
+   When you said 70%: right 4 of 5.
+   When you said 50%: right 3 of 5.
+-- 12/15
+   12/15 originals identified
+   12 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 12 — 4.5 beyond what that generosity covers, and exactly the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 10% and 86%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+   And on the ones you caught, you named the flaw 12 of 12 times.
+   Claimed 72% sure on average, delivered 80% — a gap of -8 points, inside the ±10 noise of 15 trials. Too close to call.
+   Brier score 0.201 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 4 of 5.
+   When you said 70%: right 4 of 5.
+   When you said 50%: right 4 of 5.
+-- 13/15
+   13/15 originals identified
+   13 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 13 — 5.5 beyond what that generosity covers, and past the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 24% and 93%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+   And on the ones you caught, you named the flaw 13 of 13 times.
+   Claimed 72% sure on average, delivered 87%. Your ears deliver more than you claim.
+   Brier score 0.141 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 5 of 5.
+   When you said 70%: right 4 of 5.
+   When you said 50%: right 4 of 5.
+-- 14/15
+   14/15 originals identified
+   14 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 14 — 6.5 beyond what that generosity covers, and past the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 40% and 98%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+   And on the ones you caught, you named the flaw 14 of 14 times.
+   Claimed 72% sure on average, delivered 93%. Your ears deliver more than you claim.
+   Brier score 0.114 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 5 of 5.
+   When you said 70%: right 5 of 5.
+   When you said 50%: right 4 of 5.
+-- 15/15
+   15/15 originals identified
+   15 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 15 — 7.5 beyond what that generosity covers, and past the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 59% and 100%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+   And on the ones you caught, you named the flaw 15 of 15 times.
+   Claimed 72% sure on average, delivered 100%. Your ears deliver more than you claim.
+   Brier score 0.114 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 5 of 5.
+   When you said 70%: right 5 of 5.
+   When you said 50%: right 5 of 5.
+=== perfect discrimination (95 when right, 50 when wrong) ===
+-- 0/15
+   0/15 originals identified
+   0 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 0, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   Claimed 50% sure on average, delivered 0%. You claim more than your ears deliver.
+   Brier score 0.250 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 0 of 15.
+-- 1/15
+   1/15 originals identified
+   1 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 1, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 1 of 1 time.
+   Claimed 53% sure on average, delivered 7%. You claim more than your ears deliver.
+   Brier score 0.233 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 0 of 14.
+-- 2/15
+   2/15 originals identified
+   2 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 2, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 2 of 2 times.
+   Claimed 56% sure on average, delivered 13%. You claim more than your ears deliver.
+   Brier score 0.217 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 0 of 13.
+-- 3/15
+   3/15 originals identified
+   3 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 3, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 3 of 3 times.
+   Claimed 59% sure on average, delivered 20%. You claim more than your ears deliver.
+   Brier score 0.201 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 3 of 3.
+   When you said 50%: right 0 of 12.
+-- 4/15
+   4/15 originals identified
+   4 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 4, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 4% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 4 of 4 times.
+   Claimed 62% sure on average, delivered 27%. You claim more than your ears deliver.
+   Brier score 0.184 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 4 of 4.
+   When you said 50%: right 0 of 11.
+-- 5/15
+   5/15 originals identified
+   5 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 5, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 17% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 5 of 5 times.
+   Claimed 65% sure on average, delivered 33%. You claim more than your ears deliver.
+   Brier score 0.168 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 5 of 5.
+   When you said 50%: right 0 of 10.
+-- 6/15
+   6/15 originals identified
+   6 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 6, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 29% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 6 of 6 times.
+   Claimed 68% sure on average, delivered 40%. You claim more than your ears deliver.
+   Brier score 0.151 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 6 of 6.
+   When you said 50%: right 0 of 9.
+-- 7/15
+   7/15 originals identified
+   7 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 7, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 40% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 7 of 7 times.
+   Claimed 71% sure on average, delivered 47%. You claim more than your ears deliver.
+   Brier score 0.135 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 7 of 7.
+   When you said 50%: right 0 of 8.
+-- 8/15
+   8/15 originals identified
+   8 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 8 — 0.5 beyond what that generosity covers, and 0.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 50% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+   And on the ones you caught, you named the flaw 8 of 8 times.
+   Claimed 74% sure on average, delivered 53%. You claim more than your ears deliver.
+   Brier score 0.118 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 8 of 8.
+   When you said 50%: right 0 of 7.
+-- 9/15
+   9/15 originals identified
+   9 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 9 — 1.5 beyond what that generosity covers, and 1.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 60% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+   And on the ones you caught, you named the flaw 9 of 9 times.
+   Claimed 77% sure on average, delivered 60%. You claim more than your ears deliver.
+   Brier score 0.101 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 9 of 9.
+   When you said 50%: right 0 of 6.
+-- 10/15
+   10/15 originals identified
+   10 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 10 — 2.5 beyond what that generosity covers, and 2.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 70% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+   And on the ones you caught, you named the flaw 10 of 10 times.
+   Claimed 80% sure on average, delivered 67%. You claim more than your ears deliver.
+   Brier score 0.085 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 10 of 10.
+   When you said 50%: right 0 of 5.
+-- 11/15
+   11/15 originals identified
+   11 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 11 — 3.5 beyond what that generosity covers, and 3.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 78% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+   And on the ones you caught, you named the flaw 11 of 11 times.
+   Claimed 83% sure on average, delivered 73% — a gap of +10 points, inside the ±11 noise of 15 trials. Too close to call.
+   Brier score 0.069 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 11 of 11.
+   When you said 50%: right 0 of 4.
+-- 12/15
+   12/15 originals identified
+   12 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 12 — 4.5 beyond what that generosity covers, and exactly the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 10% and 86%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+   And on the ones you caught, you named the flaw 12 of 12 times.
+   Claimed 86% sure on average, delivered 80% — a gap of +6 points, inside the ±10 noise of 15 trials. Too close to call.
+   Brier score 0.052 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 12 of 12.
+   When you said 50%: right 0 of 3.
+-- 13/15
+   13/15 originals identified
+   13 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 13 — 5.5 beyond what that generosity covers, and past the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 24% and 93%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+   And on the ones you caught, you named the flaw 13 of 13 times.
+   Claimed 89% sure on average, delivered 87% — a gap of +2 points, inside the ±9 noise of 15 trials. Too close to call.
+   Brier score 0.036 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 13 of 13.
+-- 14/15
+   14/15 originals identified
+   14 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 14 — 6.5 beyond what that generosity covers, and past the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 40% and 98%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+   And on the ones you caught, you named the flaw 14 of 14 times.
+   Claimed 92% sure on average, delivered 93% — a gap of -1 points, inside the ±6 noise of 15 trials. Too close to call.
+   Brier score 0.019 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 14 of 14.
+-- 15/15
+   15/15 originals identified
+   15 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 15 — 7.5 beyond what that generosity covers, and past the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 59% and 100%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+   And on the ones you caught, you named the flaw 15 of 15 times.
+   Claimed 95% sure on average, delivered 100%. Claim and delivery line up.
+   Brier score 0.003 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 15 of 15.
+=== inverted (50 when right, 95 when wrong) ===
+-- 0/15
+   0/15 originals identified
+   0 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 0, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   Claimed 95% sure on average, delivered 0%. You claim more than your ears deliver.
+   Brier score 0.902 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 0 of 15.
+-- 1/15
+   1/15 originals identified
+   1 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 1, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 1 of 1 time.
+   Claimed 92% sure on average, delivered 7%. You claim more than your ears deliver.
+   Brier score 0.859 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 0 of 14.
+-- 2/15
+   2/15 originals identified
+   2 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 2, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 2 of 2 times.
+   Claimed 89% sure on average, delivered 13%. You claim more than your ears deliver.
+   Brier score 0.815 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 0 of 13.
+-- 3/15
+   3/15 originals identified
+   3 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 3, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 3 of 3 times.
+   Claimed 86% sure on average, delivered 20%. You claim more than your ears deliver.
+   Brier score 0.772 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 0 of 12.
+   When you said 50%: right 3 of 3.
+-- 4/15
+   4/15 originals identified
+   4 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 4, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 4% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 4 of 4 times.
+   Claimed 83% sure on average, delivered 27%. You claim more than your ears deliver.
+   Brier score 0.728 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 0 of 11.
+   When you said 50%: right 4 of 4.
+-- 5/15
+   5/15 originals identified
+   5 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 5, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 17% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 5 of 5 times.
+   Claimed 80% sure on average, delivered 33%. You claim more than your ears deliver.
+   Brier score 0.685 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 0 of 10.
+   When you said 50%: right 5 of 5.
+-- 6/15
+   6/15 originals identified
+   6 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 6, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 29% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 6 of 6 times.
+   Claimed 77% sure on average, delivered 40%. You claim more than your ears deliver.
+   Brier score 0.641 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 0 of 9.
+   When you said 50%: right 6 of 6.
+-- 7/15
+   7/15 originals identified
+   7 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 7, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 40% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+   And on the ones you caught, you named the flaw 7 of 7 times.
+   Claimed 74% sure on average, delivered 47%. You claim more than your ears deliver.
+   Brier score 0.598 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 0 of 8.
+   When you said 50%: right 7 of 7.
+-- 8/15
+   8/15 originals identified
+   8 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 8 — 0.5 beyond what that generosity covers, and 0.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 50% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+   And on the ones you caught, you named the flaw 8 of 8 times.
+   Claimed 71% sure on average, delivered 53%. You claim more than your ears deliver.
+   Brier score 0.554 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 0 of 7.
+   When you said 50%: right 8 of 8.
+-- 9/15
+   9/15 originals identified
+   9 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 9 — 1.5 beyond what that generosity covers, and 1.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 60% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+   And on the ones you caught, you named the flaw 9 of 9 times.
+   Claimed 68% sure on average, delivered 60% — a gap of +8 points, inside the ±13 noise of 15 trials. Too close to call.
+   Brier score 0.511 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 0 of 6.
+   When you said 50%: right 9 of 9.
+-- 10/15
+   10/15 originals identified
+   10 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 10 — 2.5 beyond what that generosity covers, and 2.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 70% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+   And on the ones you caught, you named the flaw 10 of 10 times.
+   Claimed 65% sure on average, delivered 67% — a gap of -2 points, inside the ±12 noise of 15 trials. Too close to call.
+   Brier score 0.467 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 0 of 5.
+   When you said 50%: right 10 of 10.
+-- 11/15
+   11/15 originals identified
+   11 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 11 — 3.5 beyond what that generosity covers, and 3.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 78% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+   And on the ones you caught, you named the flaw 11 of 11 times.
+   Claimed 62% sure on average, delivered 73% — a gap of -11 points, inside the ±11 noise of 15 trials. Too close to call.
+   Brier score 0.424 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 0 of 4.
+   When you said 50%: right 11 of 11.
+-- 12/15
+   12/15 originals identified
+   12 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 12 — 4.5 beyond what that generosity covers, and exactly the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 10% and 86%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+   And on the ones you caught, you named the flaw 12 of 12 times.
+   Claimed 59% sure on average, delivered 80%. Your ears deliver more than you claim.
+   Brier score 0.380 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 95%: right 0 of 3.
+   When you said 50%: right 12 of 12.
+-- 13/15
+   13/15 originals identified
+   13 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 13 — 5.5 beyond what that generosity covers, and past the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 24% and 93%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+   And on the ones you caught, you named the flaw 13 of 13 times.
+   Claimed 56% sure on average, delivered 87%. Your ears deliver more than you claim.
+   Brier score 0.337 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 13 of 13.
+-- 14/15
+   14/15 originals identified
+   14 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 14 — 6.5 beyond what that generosity covers, and past the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 40% and 98%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+   And on the ones you caught, you named the flaw 14 of 14 times.
+   Claimed 53% sure on average, delivered 93%. Your ears deliver more than you claim.
+   Brier score 0.293 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 14 of 14.
+-- 15/15
+   15/15 originals identified
+   15 of 15. Now subtract the guessing.
+   A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 15 — 7.5 beyond what that generosity covers, and past the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 59% and 100%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+   And on the ones you caught, you named the flaw 15 of 15 times.
+   Claimed 50% sure on average, delivered 100%. Your ears deliver more than you claim.
+   Brier score 0.250 — pure coin-flip guessing scores 0.25; lower is better.
+   When you said 50%: right 15 of 15.

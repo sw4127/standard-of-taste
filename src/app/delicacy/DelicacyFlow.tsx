@@ -48,6 +48,8 @@ import {
   MAGNITUDE_WORDS,
   PROVISIONAL_FOOTNOTE,
   calibrationLine,
+  FLAW_LINE_PREFIX,
+  flawTimesLabel,
   shareText, detectionTitle, detectionBody } from "@/content/delicacy/copy";
 
 /* One accent in play (design bar): delicacy ice — the cold, fine-grained room
@@ -533,11 +535,11 @@ export default function DelicacyFlow() {
             </p>
             {result.flawAccuracy !== null ? (
               <p className="mt-5 inline-block rounded-full border border-white/10 px-4 py-1.5 text-sm text-muted">
-                And on the ones you caught, you named the flaw{" "}
+                {FLAW_LINE_PREFIX}{" "}
                 <span className="font-semibold" style={{ color: ICE }}>
                   {result.flawCorrect} of {result.flawEligible}
                 </span>{" "}
-                times.
+                {flawTimesLabel(result.flawEligible)}.
               </p>
             ) : null}
           </div>

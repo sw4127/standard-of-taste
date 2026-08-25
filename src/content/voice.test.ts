@@ -21,6 +21,7 @@ import {
   shareText as delicacyShareText,
 } from "./delicacy/copy";
 import { DELICACY_TRIALS, FLAW_LABELS } from "./delicacy/items";
+import { flawLineText } from "./delicacy/copy";
 import { BIAS_CLIPS } from "./bias/items";
 import { detectionBand } from "@/engine/delicacy";
 import {
@@ -98,6 +99,15 @@ function shippingStrings(): VoiceString[] {
   }
 
   out.push({ surface: "delicacy/share", text: delicacyShareText(12, n), intensity: "full" });
+
+  /**
+   * The reveal's flaw line (E7/S10). It was a JSX fragment — the same structural
+   * gap "a coin flip calls 3" lived in — and it read "1 of 1 times" for anyone
+   * who caught exactly one pair. Both boundaries are gated, not just a sample.
+   */
+  for (const [correct, eligible] of [[0, 1], [1, 1], [1, 2], [12, 12]]) {
+    out.push({ surface: `delicacy/flaw/${correct}-${eligible}`, text: flawLineText(correct, eligible), intensity: "calm" });
+  }
   /**
    * THE DETECTION READOUT (E6/S9). Every reachable score at the shipping
    * length, not a sample — all three branches (cleared the coin, ahead but not

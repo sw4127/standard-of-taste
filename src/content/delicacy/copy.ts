@@ -69,6 +69,30 @@ export function calibrationLine(cal: CalibrationResult): string {
   return `Claimed ${Math.round(cal.meanConfidencePct)}% sure on average, delivered ${Math.round(cal.accuracyPct)}%. ${label}`;
 }
 
+/**
+ * E7/S10 — THE FLAW LINE, moved out of JSX and made plural-correct.
+ *
+ * It read "you named the flaw 1 of 1 times" for anyone who caught exactly one
+ * pair. Found by composing every reachable score and READING the output, which
+ * had never been done — the reveal is only reachable by finishing eighteen
+ * gated trials, so no test and no person had seen this sentence.
+ *
+ * It lived as a JSX fragment, which is precisely where "a coin flip calls 3"
+ * lived for months: the hazard gate reads the copy deck, and a fragment in a
+ * component is outside it. The number keeps its styling in the flow by
+ * composing these two pieces around the styled span.
+ */
+export const FLAW_LINE_PREFIX = "And on the ones you caught, you named the flaw";
+
+export function flawTimesLabel(eligible: number): string {
+  return eligible === 1 ? "time" : "times";
+}
+
+/** The whole sentence, for surfaces that do not style the number. */
+export function flawLineText(correct: number, eligible: number): string {
+  return `${FLAW_LINE_PREFIX} ${correct} of ${eligible} ${flawTimesLabel(eligible)}.`;
+}
+
 /** The one-line share text next to the permalink. */
 export function shareText(nCorrect: number, nTrials: number): string {
   // "calls 7.5" again — the third surface carrying it. A coin averages a
