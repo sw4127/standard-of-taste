@@ -34,7 +34,7 @@ export const BIAS_INSTRUMENT_ID = "prestige-bias-v1";
  * permanently interpretable against the exact pool that produced them (D6).
  * Old-version URLs die gracefully (redirect to /bias), never lie.
  */
-export const BIAS_POOL_VERSION = 6; // v6: deception recast off recordings other instruments credit (RT-139a; E7/S8)
+export const BIAS_POOL_VERSION = 7; // v7: swap fiction reverts to the PM-checked name (RT-141b; E7/S9)
 
 /** One playable, labelable clip. Extends the engine spec with presentation. */
 export interface BiasClip extends BiasItemSpec {
@@ -174,7 +174,7 @@ export const BIAS_CLIPS: BiasClip[] = [
     id: "pb11",
     audioSrc: "/audio/bias/pb11.mp3",
     trueArtist: "J. Brahms — Musopen Kickstarter ensemble",
-    shownArtist: "Tobias Renn",
+    shownArtist: "Alexander Vane",
     shownBlurb: "A student overture, wheeled out when an orchestra needs something short before the interval.",
     license: "Public Domain (Musopen Kickstarter release)",
     attribution:
@@ -184,8 +184,11 @@ export const BIAS_CLIPS: BiasClip[] = [
     // role pb1 used to carry. Moved here because pb11 is used by NO other
     // instrument: the staircase renders from pb1/pb6/pb8 and the delicacy pool
     // from pb3/pb8, so nothing else can credit this recording and give the game
-    // away. "Tobias Renn" is an engineer draft pending the same
-    // not-a-real-artist check the earlier fictional names passed (checklist §B).
+    // away. The name is "Alexander Vane" — PM-approved 2026-07-12 and free
+    // again now that pb6 is truthfully labelled (RT-141 b). An already-checked
+    // fiction beat a fresh invention because checklist §B's "never a real
+    // artist" rule is not something an engineer discharges by liking the sound
+    // of a name.
     labelIsTrue: false,
   },
   {
