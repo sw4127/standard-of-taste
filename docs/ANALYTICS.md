@@ -4,14 +4,21 @@ Sinks: Vercel Web Analytics (pageviews; custom events Pro-only) + **PostHog free
 
 **Ops self-check:** `/api/health` reports env completeness (booleans only). Missing analytics env now fails LOUD: build-time warning (next.config.ts) + dev banner + console warning (`src/components/EnvBanner.tsx`). Silent no-op class killed 2026-07-16 (brief §3.A2).
 
+**The full event list lives in `src/lib/events.ts`**, one line each, with `src/lib/events.test.ts`
+asserting it BOTH ways: an event emitted but unregistered fails, and an event registered but fired
+nowhere fails too. This document had documented 23 of the 42 events the code emits — every Delicacy
+and Threshold event was missing, along with all three instruments' share events — and read as
+complete, because nothing related the two sets. The tables below stay as the funnel NARRATIVE; the
+registry is the inventory.
+
 ## Bias funnel (taste gym flagship — the D6 dataset)
 | Event | Fires | Props |
 |---|---|---|
 | `landing_view` | `/` mount | `variant: "gym"` |
 | `bias_frame_view` | `/bias` Hume frame shown | — |
 | `bias_start` | blind pass begun | — |
-| `bias_blind_complete` | 8th blind rating | — |
-| `bias_labeled_complete` | 8th labeled rating | `pct`, `verdict` |
+| `bias_blind_complete` | the FINAL blind rating of the pass (was written as "8th"; the pool is 16 clips since RT-103a, and a number here goes stale every time the pool moves) | — |
+| `bias_labeled_complete` | the FINAL labelled rating; the verdict is computed | `pct`, `verdict` |
 | `bias_result` | verdict computed (interim D6 record) | `pool`, `poolVersion`, `hash`, `blind`/`labeled` CSVs, `listen_b`/`listen_l` CSVs, `pct`, `swappedPct`, `swayShare`, `edges`, `verdict` |
 | `bias_debrief_view` | mandatory debrief shown | — |
 | `bias_result_view` | `/bias/result` (own + shared links) | `pct`, `verdict` |
