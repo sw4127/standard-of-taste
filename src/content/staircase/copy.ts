@@ -434,8 +434,28 @@ export const SNACK_CTA = "Take the five-tap one";
  * ("48–128 kbps"). 0.62 is that worst case with headroom, which is the right
  * side to err on — an over-estimate shrinks the type slightly, an
  * under-estimate clips the number the whole card exists to show.
+ *
+ * E7/S15 — RE-MEASURED, AND THE CODE NOW MATCHES THE PARAGRAPH ABOVE.
+ *
+ * That paragraph said 0.62 twice. The constant said 0.6, and `git log -S` says
+ * it was never anything else — so the file justified 4.6% of headroom while
+ * shipping 1.2%.
+ *
+ * `em-metrics.test.ts` settles it by rendering through the real Satori with the
+ * real bundled font and reading the LAID-OUT width off the pixels. It
+ * reproduces the original browser measurement to three decimals ("48–128
+ * kbps" = 0.5936 against the 0.593 recorded above), which is good evidence for
+ * both. It also finds six governed figures ABOVE 0.6, worst "100 ms" at 0.6183
+ * — percent signs, spaces and short strings all push the per-character
+ * average up, and the delicacy band figures are full of them.
+ *
+ * NOTHING WAS CLIPPING. Every one still fits, because FIT_SAFETY was carrying
+ * the margin exactly as it was designed to. But "64–160 kbps" rendered 840px
+ * against an 846px target — the model was accurate there by luck, not by
+ * cover. 0.62 restores the cover the paragraph always claimed, and the sweep
+ * fails if a future figure exceeds it.
  */
-export const EM_PER_CHAR_FIGURE = 0.6;
+export const EM_PER_CHAR_FIGURE = 0.62;
 
 /**
  * PROSE IS NARROWER THAN FIGURES, AND ONE CONSTANT FOR BOTH IS WRONG (E6/S27).
