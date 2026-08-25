@@ -1,0 +1,23 @@
+{
+  "_comment": "Pool v6 item metadata for the .mjs analysis scripts (they can't import items.ts). Presentation order. DRIFT-PROOFED: scripts/analysis/pool-json.test.ts fails if this file disagrees with src/content/bias/items.ts — regenerate on any pool bump. v6 recasts the deception (RT-139a): all three former swaps (pb1, pb6, pb7) were recordings the delicacy trials credit by title, so the game was already given away on another instrument. The deception moved to pb11 (down) and pb13 (up), which no other instrument uses. Two swaps now, not three.",
+  "poolVersion": 6,
+  "scaleMax": 10,
+  "items": [
+    {"id":"pb1","labelDirection":"down","labelIsTrue":true},
+    {"id":"pb7","labelDirection":"down","labelIsTrue":true},
+    {"id":"pb3","labelDirection":"down","labelIsTrue":true},
+    {"id":"pb9","labelDirection":"up","labelIsTrue":true},
+    {"id":"b3","labelDirection":"up","labelIsTrue":true,"isControl":true},
+    {"id":"pb6","labelDirection":"up","labelIsTrue":true},
+    {"id":"pb10","labelDirection":"up","labelIsTrue":true},
+    {"id":"pb2","labelDirection":"up","labelIsTrue":true},
+    {"id":"pb11","labelDirection":"down","labelIsTrue":false},
+    {"id":"pb8","labelDirection":"down","labelIsTrue":true},
+    {"id":"pb13","labelDirection":"up","labelIsTrue":false},
+    {"id":"pb5","labelDirection":"up","labelIsTrue":true},
+    {"id":"pb4","labelDirection":"up","labelIsTrue":true},
+    {"id":"pb14","labelDirection":"down","labelIsTrue":true},
+    {"id":"b1","labelDirection":"up","labelIsTrue":true,"isControl":true},
+    {"id":"pb12","labelDirection":"down","labelIsTrue":true}
+  ]
+}

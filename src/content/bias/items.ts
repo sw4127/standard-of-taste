@@ -34,7 +34,7 @@ export const BIAS_INSTRUMENT_ID = "prestige-bias-v1";
  * permanently interpretable against the exact pool that produced them (D6).
  * Old-version URLs die gracefully (redirect to /bias), never lie.
  */
-export const BIAS_POOL_VERSION = 5; // v5: +6 scored items pb9-pb14, pool 8->14 scored (RT-103a; E7/S5)
+export const BIAS_POOL_VERSION = 6; // v6: deception recast off recordings other instruments credit (RT-139a; E7/S8)
 
 /** One playable, labelable clip. Extends the engine spec with presentation. */
 export interface BiasClip extends BiasItemSpec {
@@ -52,31 +52,40 @@ export interface BiasClip extends BiasItemSpec {
   attribution: string;
 }
 
-export const BIAS_CLIPS: BiasClip[
-] = [
+export const BIAS_CLIPS: BiasClip[] = [
   {
     id: "pb1",
     audioSrc: "/audio/bias/pb1.mp3",
     trueArtist: "J.S. Bach — Kimiko Ishizaka, piano (Open Goldberg Variations)",
-    shownArtist: "M. Novak — home piano sessions",
-    shownBlurb: "A crowd-funded amateur recording; often cited as an example of why great works need great labels.",
+    shownArtist: "J.S. Bach — Kimiko Ishizaka, piano (Open Goldberg Variations)",
+    shownBlurb: "One of thirty variations, and not one of the ones anybody quotes.",
     license: "CC0",
     attribution:
       "“Goldberg Variations — Variatio 13 a 2 Clav.” — J.S. Bach, perf. Kimiko Ishizaka · archive.org/details/The_Open_Goldberg_Variations-11823 · CC0 · excerpt (trimmed + loudness-normalized)",
     labelDirection: "down",
-    labelIsTrue: false, // down-swap: dismissive fiction on a strong work
+    // RT-139(a), E7/S8: WAS the down-swap. Recast truthful because the delicacy
+    // trials credit this exact recording — "Goldberg Variations — Variatio 13 a
+    // 2 Clav." — J.S. Bach — Kimiko Ishizaka — by name, as CC0 attribution. A
+    // deception is only defensible if it is confessed where we say it is, and
+    // this one was discoverable on another instrument.
+    labelIsTrue: true,
   },
   {
     id: "pb7",
     audioSrc: "/audio/bias/pb7.mp3",
     trueArtist: "Komiku",
-    shownArtist: "Noé Calvet",
-    shownBlurb: "A minimalist study praised on year-end experimental lists for doing more with less.",
+    shownArtist: "Komiku",
+    shownBlurb: "Written to be dropped into other people's games, and released by the album-load.",
     license: "CC0",
     attribution:
       "“The road we use to travel when we were kids” (Tale on the Late) — Komiku · archive.org/details/Komiku-TaleOnTheLate · CC0 · excerpt (trimmed + loudness-normalized)",
-    labelDirection: "up",
-    labelIsTrue: false, // up-swap (RT-9b): acclaim fiction on a modest work
+    labelDirection: "down",
+    // RT-139(a), E7/S8: WAS the up-swap. The delicacy trials credit this exact
+    // recording by title too — which the first version of the anonymity guard
+    // MISSED, because it compared artist names and "Komiku" is six characters
+    // against a filter that kept names longer than six. Two of three exposures
+    // were found; this one was invisible until the guard compared work titles.
+    labelIsTrue: true,
   },
   {
     id: "pb3",
@@ -125,13 +134,17 @@ export const BIAS_CLIPS: BiasClip[
     id: "pb6",
     audioSrc: "/audio/bias/pb6.mp3",
     trueArtist: "Chris Zabriskie",
-    shownArtist: "Alexander Vane",
-    shownBlurb: "Festival-commissioned; the closing piece of an award-winning installation about memory.",
+    shownArtist: "Chris Zabriskie",
+    shownBlurb: "Released into the open under a Creative Commons licence, and picked up by film and podcast makers ever since.",
     license: "CC-BY 4.0",
     attribution:
       "“That Hopeful Future Is All I've Ever Known” (Music from Neptune Flux) — Chris Zabriskie · CC-BY 4.0 (teamopen.cc/chris) · excerpt (trimmed + loudness-normalized)",
     labelDirection: "up",
-    labelIsTrue: false, // up-swap: acclaim fiction on a lesser-known work
+    // RT-139(a), E7/S8: WAS an up-swap shown as "Alexander Vane". Recast
+    // truthful for the same reason as pb1, and more sharply — pb6 is CC-BY 4.0,
+    // so the delicacy trials are LEGALLY OBLIGED to credit Chris Zabriskie by
+    // name. The deception could not survive a licence we must honour.
+    labelIsTrue: true,
   },
   {
     id: "pb10",
@@ -161,13 +174,19 @@ export const BIAS_CLIPS: BiasClip[
     id: "pb11",
     audioSrc: "/audio/bias/pb11.mp3",
     trueArtist: "J. Brahms — Musopen Kickstarter ensemble",
-    shownArtist: "J. Brahms — Musopen Kickstarter ensemble",
-    shownBlurb: "The unloved half of a pair: its cheerful twin gets programmed, and this one gets explained.",
+    shownArtist: "Tobias Renn",
+    shownBlurb: "A student overture, wheeled out when an orchestra needs something short before the interval.",
     license: "Public Domain (Musopen Kickstarter release)",
     attribution:
       "“Tragic Overture, Op. 81” — J. Brahms, perf. Musopen Kickstarter ensemble · archive.org/details/MusopenCollectionAsFlac · Public Domain · excerpt (trimmed + loudness-normalized)",
     labelDirection: "down",
-    labelIsTrue: true,
+    // DOWN-SWAP (RT-139a, E7/S8): dismissive fiction on a strong work — the
+    // role pb1 used to carry. Moved here because pb11 is used by NO other
+    // instrument: the staircase renders from pb1/pb6/pb8 and the delicacy pool
+    // from pb3/pb8, so nothing else can credit this recording and give the game
+    // away. "Tobias Renn" is an engineer draft pending the same
+    // not-a-real-artist check the earlier fictional names passed (checklist §B).
+    labelIsTrue: false,
   },
   {
     id: "pb8",
@@ -185,13 +204,18 @@ export const BIAS_CLIPS: BiasClip[
     id: "pb13",
     audioSrc: "/audio/bias/pb13.mp3",
     trueArtist: "Monplaisir",
-    shownArtist: "Monplaisir",
-    shownBlurb: "Background music in the most literal sense; composed at volume, released in bulk.",
+    shownArtist: "Noé Calvet",
+    shownBlurb: "A minimalist study praised on year-end experimental lists for doing more with less.",
     license: "CC0",
     attribution:
       "“Il y a un bout de ciel bleu” (Rosée) — Monplaisir · archive.org/details/Monplaisir-Rose · CC0 · excerpt (trimmed + loudness-normalized)",
-    labelDirection: "down",
-    labelIsTrue: true,
+    labelDirection: "up",
+    // UP-SWAP (RT-139a, E7/S8): acclaim fiction on a modest work — the role pb7
+    // used to carry, moved here because no other instrument credits this
+    // recording. The fictional name and the blurb are the ones the PM approved
+    // on 2026-07-12, deliberately unchanged: what moved is the recording they
+    // are attached to, not the deception itself.
+    labelIsTrue: false,
   },
   {
     id: "pb5",

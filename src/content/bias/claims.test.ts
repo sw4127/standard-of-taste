@@ -228,6 +228,45 @@ describe("E6/S12 — hardcoded Prestige Test claims still match the pool", () =>
     ).toEqual([]);
   });
 
+  /**
+   * E7/S8 — THE SWAP COUNT, which this file did not cover and should have.
+   *
+   * RT-139(a) recast the deception off pb1 and pb6, taking the swaps from three
+   * to two. Two surfaces stated "three of the fourteen labels": the learn page
+   * and the FAQPage JSON-LD. Nothing would have caught them — `bias.test.ts`
+   * checks the pool has 2-3 swaps, never that the copy agrees with the pool.
+   *
+   * It is the same species as everything else here, and it is arguably the
+   * worst one to get wrong: the swap count is the size of the deception we
+   * disclose, so a stale number there is a false statement about how much we
+   * misled someone.
+   */
+  it("the stated number of false labels matches the pool", () => {
+    const nSwaps = BIAS_CLIPS.filter((c) => !c.isControl && !c.labelIsTrue).length;
+    const nScored = BIAS_CLIPS.filter((c) => !c.isControl).length;
+    const word = NUMBER_WORDS[nSwaps];
+    const wrong: string[] = [];
+    for (const { file, text } of userFacingSources()) {
+      for (const m of text.matchAll(
+        /\b(one|two|three|four|five|\d+)\s+of\s+the\s+(\w+)\s+labels?\b[^.\n]*/gi,
+      )) {
+        const said = m[1].toLowerCase();
+        if (said !== word && said !== String(nSwaps)) {
+          wrong.push(`${file}: "${m[0].slice(0, 70)}" but ${nSwaps} labels are false`);
+        }
+        const denom = m[2].toLowerCase();
+        if (denom !== NUMBER_WORDS[nScored] && denom !== String(nScored)) {
+          wrong.push(`${file}: "${m[0].slice(0, 70)}" but there are ${nScored} labelled clips`);
+        }
+      }
+    }
+    expect(
+      wrong,
+      `${nSwaps} of ${nScored} labels are deliberately false. A stale number here is a false ` +
+        `statement about how far we misled someone.${NL}${wrong.join(NL)}`,
+    ).toEqual([]);
+  });
+
   it("the control count is still what the debrief and the learn page promise", () => {
     const word = NUMBER_WORDS[nControls];
     const wrong: string[] = [];

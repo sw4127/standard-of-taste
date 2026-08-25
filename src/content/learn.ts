@@ -38,7 +38,7 @@ export const LEARN_PAGES: LearnPage[] = [
     faq: [
       {
         q: "How does the Prestige Test work?",
-        a: "You rate sixteen short music clips blind, then rate the same sixteen clips again — fourteen with artist names and reputations attached, two deliberately left unlabeled as drift controls. Three of the fourteen labels are deliberately swapped. Your score is computed from how far your ratings moved toward the labels, corrected by your measured drift on the unlabeled controls — a measured gap, not a self-report.",
+        a: "You rate sixteen short music clips blind, then rate the same sixteen clips again — fourteen with artist names and reputations attached, two deliberately left unlabeled as drift controls. Two of the fourteen labels are deliberately swapped. Your score is computed from how far your ratings moved toward the labels, corrected by your measured drift on the unlabeled controls — a measured gap, not a self-report.",
       },
       {
         q: "Why does the test lie about some labels?",

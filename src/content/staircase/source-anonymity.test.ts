@@ -4,44 +4,60 @@ import { execSync } from "node:child_process";
 import { BIAS_CLIPS } from "@/content/bias/items";
 
 /**
- * E7/S7 — THE STAIRCASE MUST NOT SPOIL THE PRESTIGE TEST.
+ * E7/S7-S8 — A DECEPTION MUST BE CONFESSED WHERE WE SAY IT IS, AND NOWHERE ELSE.
  *
  * FOUND BY LOOKING AT A RENDERED CARD. The threshold share card reads "the
- * smallest compression damage on pb4 I can still hear" — it prints a raw
- * database id to a public audience, which is plainly a copy defect and the
- * obvious thing to go and fix.
+ * smallest compression damage on pb4 I can still hear" — a raw database id
+ * printed to a public audience. The obvious fix is to name the recording, and
+ * that fix was a trap: the staircase renders from pb1, pb6 and pb8, and pb1 and
+ * pb6 were SWAP items whose true artists the Prestige Test conceals.
  *
- * IT IS A TRAP. The staircase draws its degradation sources from the BIAS pool
- * — pb1, pb6 and pb8 — and two of those are SWAP items. pb1 is shown in the
- * Prestige Test as "M. Novak — home piano sessions" and is really Bach played
- * by Kimiko Ishizaka; pb6 is shown as "Alexander Vane" and is really Chris
- * Zabriskie. Those names are the sanctioned deception (memo §3), and the
- * product's promise is that they are confessed on the mandatory debrief and
- * nowhere else.
+ * Writing that guard surfaced something worse, which nobody had looked for. The
+ * delicacy trials use the same recordings and credit them IN FULL — "Goldberg
+ * Variations — Variatio 13 a 2 Clav." — J.S. Bach — Kimiko Ishizaka, and "That
+ * Hopeful Future Is All I've Ever Known" — Chris Zabriskie. Not the same artist:
+ * the same works, named. So anyone who took the Delicacy Trials had already been
+ * told the answer to two of the Prestige Test's three deceptions. And pb6 is
+ * CC-BY 4.0, so that credit is a LEGAL obligation — the exposure could not be
+ * closed by staying quieter.
  *
- * So "tidying" the jargon by naming the source honestly would print the answer
- * to the Prestige Test on a card designed to be posted publicly. The ugly id
- * is, by accident, the thing protecting the deception.
+ * RT-139(a) resolved it by moving the deception instead of the credit: pb1 and
+ * pb6 are truthfully labelled now, and pb11 (Brahms, used by no other
+ * instrument) carries the down-swap.
  *
- * This file does not fix the jargon — how to describe a recording without
- * identifying it is a product decision. It makes the trap impossible to fall
- * into silently, which is the part engineering owns.
+ * THIS FILE IS THE INVARIANT THAT KEEPS IT RESOLVED. The conflict was invisible
+ * because nothing related the two pools; anyone adding a delicacy pair or a
+ * staircase source from a swapped item would reopen it in one line, and the
+ * suite would stay green.
  */
 
-/** Sources the staircase actually renders against, from the render plan. */
+/** Sources the staircase renders against, from its render plan. */
 const STAIRCASE_SOURCE_IDS = ["pb1", "pb6", "pb8"] as const;
 
 const NL = String.fromCharCode(10);
 
 /**
- * The surfaces this test POLICES: what the staircase and threshold print.
- * Deliberately NOT the delicacy deck — see the known-exposure pin below, which
- * records a conflict engineering cannot resolve on its own.
+ * WHAT IDENTIFIES A RECORDING IS ITS WORK TITLE, NOT ITS ARTIST.
+ *
+ * The first version of this compared artist names and was wrong in both
+ * directions at once. It FALSELY flagged pb11, because "Musopen Kickstarter
+ * ensemble" is a performer shared by dozens of unrelated recordings — two
+ * different works looked like one. And it SILENTLY SKIPPED pb7, because its
+ * artist is "Komiku", six characters, and the filter kept only names longer
+ * than six. The check that was supposed to protect the deception was not
+ * looking at one of the two items still carrying it.
+ *
+ * The quoted title in the TASL attribution is the precise signal: the same
+ * title in two decks means the same recording, which is the thing that gives
+ * the game away. `titlesOf` returns every quoted span so a missing one is
+ * visible rather than silently empty.
  */
-function staircaseSurfaces(): { file: string; text: string }[] {
-  return execSync('git ls-files "src/content/staircase" "src/app/threshold" "src/app/api/threshold-card"', {
-    encoding: "utf8",
-  })
+function titlesOf(attribution: string): string[] {
+  return [...attribution.matchAll(/[“"]([^”"]{6,})[”"]/g)].map((m) => m[1].trim());
+}
+
+function filesUnder(...dirs: string[]): { file: string; text: string }[] {
+  return execSync(`git ls-files ${dirs.map((d) => `"${d}"`).join(" ")}`, { encoding: "utf8" })
     .trim()
     .split(NL)
     .filter(Boolean)
@@ -50,82 +66,89 @@ function staircaseSurfaces(): { file: string; text: string }[] {
     .map((file) => ({ file, text: readFileSync(file, "utf8") }));
 }
 
-/** The distinctive names that would identify a concealed recording. */
-function identifyingNames(trueArtist: string): string[] {
-  return trueArtist
-    .split(/[—,()]/)
-    .map((p) => p.trim())
-    .filter((p) => p.length > 6);
-}
-
-describe("E7/S7 — a staircase source never reveals a swapped artist", () => {
+describe("E7/S8 — no other instrument can give away a swapped item", () => {
   const swaps = BIAS_CLIPS.filter((c) => !c.isControl && !c.labelIsTrue);
 
-  it("the premise still holds: staircase sources overlap the bias swaps", () => {
-    // If this goes empty the hazard is gone and this file can be deleted — but
-    // deliberately, not by decaying into a test that passes because it stopped
-    // checking anything.
-    const overlap = swaps.filter((c) => (STAIRCASE_SOURCE_IDS as readonly string[]).includes(c.id));
+  it("every swapped item yields a usable title, or the checks below see nothing", () => {
+    // The failure mode this replaces: an artist-name comparison that skipped
+    // pb7 entirely because "Komiku" is six characters long.
+    for (const clip of swaps) {
+      expect(titlesOf(clip.attribution).length, `${clip.id}: no quoted title in its attribution`).toBeGreaterThan(0);
+    }
+  });
+
+  it("there is still a deception to protect", () => {
+    // If this empties, the Prestige Test has stopped deceiving anyone and the
+    // whole file is moot — but that must be a decision, not a silent decay into
+    // a suite of checks that pass because they check nothing.
+    expect(swaps.map((c) => c.id).length, "the pool has no swapped labels at all").toBeGreaterThan(0);
+  });
+
+  it("no swapped item is a staircase source", () => {
+    const clash = swaps.filter((c) => (STAIRCASE_SOURCE_IDS as readonly string[]).includes(c.id));
     expect(
-      overlap.map((c) => c.id),
-      "no staircase source is a bias swap any more — read this file's docblock before deleting it",
-    ).not.toEqual([]);
+      clash.map((c) => c.id),
+      "A swapped item is a staircase source. The threshold surfaces name their source, so " +
+        "the Prestige Test's answer becomes reachable from another instrument.",
+    ).toEqual([]);
+  });
+
+  it("no swapped item's recording is credited by the delicacy trials", () => {
+    // The delicacy deck credits its sources truthfully and MUST — several are
+    // CC-BY, where attribution is a licence condition rather than a courtesy.
+    // So the constraint has to run the other way: the deception moves, the
+    // credit never does.
+    const delicacy = readFileSync("src/content/delicacy/items.ts", "utf8");
+    const exposed: string[] = [];
+    for (const clip of swaps) {
+      for (const needle of titlesOf(clip.attribution)) {
+        if (delicacy.includes(needle)) exposed.push(`${clip.id}: delicacy credits "${needle}"`);
+      }
+    }
+    expect(
+      exposed,
+      "A swapped item's true artist is credited on the delicacy surface. Do not fix this by " +
+        "removing the credit — CC-BY makes it a legal obligation. Move the deception to an item " +
+        "no other instrument uses, as RT-139(a) did:" + NL + exposed.join(NL),
+    ).toEqual([]);
   });
 
   it("no staircase or threshold surface names a swapped item's true artist", () => {
     const leaked: string[] = [];
     for (const clip of swaps) {
-      for (const { file, text } of staircaseSurfaces()) {
-        for (const needle of identifyingNames(clip.trueArtist)) {
+      for (const { file, text } of filesUnder("src/content/staircase", "src/app/threshold", "src/app/api/threshold-card")) {
+        for (const needle of [...titlesOf(clip.attribution), clip.trueArtist]) {
           if (text.includes(needle)) leaked.push(`${file} names "${needle}" (truly behind ${clip.id})`);
         }
       }
     }
-    expect(
-      leaked,
-      "A swapped item's true artist reached a staircase surface. The deception is only " +
-        "defensible because it is confessed in exactly one place:" + NL + leaked.join(NL),
-    ).toEqual([]);
+    expect(leaked, "A swapped item's true artist reached a staircase surface:" + NL + leaked.join(NL)).toEqual([]);
   });
 
-  /**
-   * THE EXPOSURE THAT ALREADY EXISTS, PINNED RATHER THAN HIDDEN.
-   *
-   * The delicacy trials are built from the same source recordings and credit
-   * them truthfully (`DelicacyFlow` renders every `sourceCredit`). So a user who
-   * takes the Delicacy Trials reads "Chris Zabriskie", then meets the same
-   * recording in the Prestige Test labelled "Alexander Vane".
-   *
-   * THIS IS NOT SIMPLY A BUG TO FIX. pb6 is CC-BY 4.0 and attribution is a
-   * LEGAL obligation — the credit cannot be dropped. The conflict is between a
-   * licence we must honour and a deception the instrument depends on; resolving
-   * it is a product decision (RT-139), not an engineering one. What engineering
-   * owns is making sure the exposure cannot GROW without anyone noticing.
-   */
-  it("the known delicacy exposure is exactly the two items already known", () => {
+  it("would catch the exposure that actually happened", () => {
+    // Proven against the real historical case rather than a hypothetical: pb1
+    // and pb6 WERE swaps, and the delicacy deck credits both recordings by
+    // name. If this check could not see that, it could not have found the bug
+    // it was written for.
     const delicacy = readFileSync("src/content/delicacy/items.ts", "utf8");
-    const exposed = swaps
-      .filter((c) => identifyingNames(c.trueArtist).some((n) => delicacy.includes(n)))
-      .map((c) => c.id)
-      .sort();
-    expect(
-      exposed,
-      "The set of swapped items whose true artist is credited on the delicacy surface has " +
-        "CHANGED. Growing it makes the Prestige Test's deception discoverable in more places; " +
-        "shrinking it may mean the conflict was resolved and this pin should be updated on purpose.",
-    ).toEqual(["pb1", "pb6"]);
+    for (const id of ["pb1", "pb6"]) {
+      const clip = BIAS_CLIPS.find((c) => c.id === id);
+      expect(clip, `${id} left the pool`).toBeDefined();
+      const seen = titlesOf(clip!.attribution).some((n) => delicacy.includes(n));
+      expect(seen, `${id}'s recording is no longer credited by delicacy — the historical case is gone`).toBe(true);
+      expect(clip!.labelIsTrue, `${id} is a swap again, which is exactly what RT-139(a) forbade`).toBe(true);
+    }
   });
 
-  it("the source is still referred to by id, not by name, wherever it is printed", () => {
-    // Pinning the CURRENT state, not endorsing it. `onSource` interpolates the
-    // raw id; that is a live copy defect awaiting a ruling on how to describe a
-    // recording without identifying it. If someone replaces it with a name
-    // lookup, this fails and sends them to the docblock above first.
+  it("the threshold copy still prints the raw source id (RT-140 c)", () => {
+    // Pinned as CURRENT-state-not-endorsed. The PM ruled to leave the id until
+    // the deception had moved; it now has, so naming a source is safe again and
+    // RT-140 can be revisited. Anyone doing that should read this file first.
     const copy = readFileSync("src/content/staircase/copy.ts", "utf8");
     expect(
       copy.includes("` on ${result.sourceId}`"),
-      "onSource no longer prints the raw id. That may be the right fix — but if it now prints " +
-        "a NAME, check it is not a swapped item's true artist before shipping it.",
+      "onSource no longer prints the raw id. That is now SAFE (RT-139a moved the deception off " +
+        "pb1/pb6), but check the checks above still pass before shipping a name.",
     ).toBe(true);
   });
 });
