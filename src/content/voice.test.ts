@@ -202,6 +202,26 @@ function shippingStrings(): VoiceString[] {
 }
 
 /**
+ * THE GYM, NAMED. Every instrument the D4 amendment governs — the Prestige
+ * Test, the Delicacy Trials, the Threshold staircase — where the ruling is
+ * that there is no paid tier and never was one to promise.
+ *
+ * Named here rather than inlined at the call site because the call site's
+ * two-prefix list had already gone stale: `bias/` joined the deck and nothing
+ * noticed, so 31 strings sat outside the ruling that governs them.
+ */
+const GYM_SURFACE_PREFIXES = ["bias", "delicacy", "staircase"] as const;
+
+/**
+ * Surfaces where a price is LEGITIMATE — the legacy music/world-cup funnel,
+ * whose $3.99 unlock RT-125a explicitly kept alive. Empty today because none of
+ * that funnel's copy is registered in this deck; it exists so that the day some
+ * of it is, the answer is "classify it", not "widen the pattern until the test
+ * goes quiet".
+ */
+const LEGACY_PAID_PREFIXES: readonly string[] = [];
+
+/**
  * Does this string PROMISE that something costs money? (RT-44a, D4 amendment.)
  *
  * One definition, shared by the forward and reverse tests, so the check that
@@ -235,9 +255,9 @@ describe("hazard gate — the shipping decks", () => {
    *
    * Asserted on the ASSEMBLED footnote, because that is the unit a user reads.
    */
-  it("no user-facing delicacy or Gym copy promises a paid tier (D4 amendment)", () => {
-    const surfaces = shippingStrings().filter(
-      (s) => s.surface.startsWith("delicacy/") || s.surface.startsWith("staircase/"),
+  it("no Gym copy promises a paid tier (D4 amendment)", () => {
+    const surfaces = shippingStrings().filter((s) =>
+      GYM_SURFACE_PREFIXES.some((p) => s.surface.startsWith(`${p}/`)),
     );
     expect(surfaces.length).toBeGreaterThan(0);
     for (const s of surfaces) {
@@ -245,6 +265,34 @@ describe("hazard gate — the shipping decks", () => {
     }
     // ...and the footnote must still SAY so, rather than going quiet about it.
     expect(PROVISIONAL_FOOTNOTE).toMatch(/no paid tier/i);
+  });
+
+  /**
+   * E7/S11 — THE SCOPE MUST STAY COMPLETE, NOT JUST CORRECT.
+   *
+   * The check above used to name two prefixes inline: `delicacy/` and
+   * `staircase/`. Nothing kept that list current, and it had already gone
+   * stale — the deck carries 31 `bias/` strings, including all fourteen item
+   * blurbs and the result-page title, and NONE of them were being checked. The
+   * guard was passing because it was looking at part of the room.
+   *
+   * So the prefixes are named once, above, and this test asserts they cover
+   * EVERYTHING in the deck. A new instrument's strings cannot slip past the
+   * no-paid-tier ruling by arriving under a prefix nobody added to a list; they
+   * fail here instead, and somebody decides on purpose whether that surface is
+   * Gym (D4 applies) or legacy funnel (RT-125a sanctions the $3.99).
+   */
+  it("the Gym prefix list covers every surface in the deck", () => {
+    const known = new Set<string>([...GYM_SURFACE_PREFIXES, ...LEGACY_PAID_PREFIXES]);
+    const unclassified = [...new Set(shippingStrings().map((s) => s.surface.split("/")[0]))]
+      .filter((p) => !known.has(p))
+      .sort();
+    expect(
+      unclassified,
+      "These surfaces belong to neither the Gym nor the legacy funnel, so the paid-tier " +
+        "ruling is silently not being applied to them. Classify each one deliberately:\n" +
+        unclassified.join("\n"),
+    ).toEqual([]);
   });
 
   /**
