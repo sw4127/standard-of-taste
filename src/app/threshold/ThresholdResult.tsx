@@ -35,15 +35,20 @@ import {
 } from "@/content/staircase/copy";
 import ShareButton from "@/app/result/ShareButton";
 import { thresholdCardPath, thresholdResultPath, type ThresholdShare } from "./share-links";
-import { THRESHOLD_VIOLET, THRESHOLD_VIOLET_GLOW } from "@/content/instrument-accents";
+import { THRESHOLD_VIOLET, THRESHOLD_VIOLET_GLOW, THRESHOLD_FIELD, THRESHOLD_BASE } from "@/content/instrument-accents";
 import DownloadButton from "@/app/result/DownloadButton";
+import OtherMachines from "@/components/OtherMachines";
 import { baseUrl } from "@/lib/site";
 import type { StaircaseResult } from "@/engine/staircase-session";
 
 const ICE = THRESHOLD_VIOLET;
 const ICE_GLOW = THRESHOLD_VIOLET_GLOW;
-const FLUID = ["hsl(195 45% 40%)", "hsl(210 40% 36%)", "hsl(180 40% 38%)", "hsl(225 35% 34%)"];
-const BASE = "#07090B";
+// E7/S23: these were still Delicacy's blues. E7/S18 moved the accent and the
+// flow's field but missed this file, and the accent guard could not see it —
+// it looked for hsl(190 exactly, and an ambient field is built from the
+// accent's NEIGHBOURS, which are 180-225. The guard now checks the range.
+const FLUID = THRESHOLD_FIELD;
+const BASE = THRESHOLD_BASE;
 const BRAND = "rgba(244,245,248,0.72)";
 
 export default function ThresholdResult({
@@ -161,13 +166,14 @@ export default function ThresholdResult({
             </span>{" "}
             Every limit we measured and could not fix.
           </Link>
-          <Link href="/" className="group text-muted transition-colors hover:text-white">
-            <span className="font-semibold transition-colors" style={{ color: ICE }}>
-              The gym.
-            </span>{" "}
-            The other machines.
-          </Link>
+
         </div>
+
+        {/* E7/S23: this reveal used to offer a link called "The other machines"
+            that went to the gym floor and named neither of them. Whoever
+            finished the longest instrument in the product got the vaguest
+            onward door. */}
+        <OtherMachines from="threshold" />
       </div>
     </main>
   );

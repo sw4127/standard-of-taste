@@ -53,6 +53,25 @@ describe("E7/S13 — every event the code fires is one we wrote down", () => {
     expect(emittedEvents().size, "the scan found almost no events — a pattern broke").toBeGreaterThan(35);
   });
 
+  it("no event name is built at runtime", () => {
+    // E7/S23: a reveal briefly fired track(`bias_to_${id}_tap`). The scan below
+    // cannot see a name that does not exist until it runs, and neither can an
+    // analyst reading the dictionary — a dynamic name is a row nobody can look
+    // up. One event with a `from` and a `to` says the same thing and stays
+    // countable.
+    const dynamic: string[] = [];
+    for (const { file, text } of shippedSources()) {
+      for (const m of text.matchAll(/track\(`([^`]*\$\{[^`]*)`/g)) {
+        dynamic.push(`${file}: track(\`${m[1]}\`)`);
+      }
+    }
+    expect(
+      dynamic,
+      "These event names are assembled at runtime, so the dictionary cannot list them " +
+        "and nobody can look them up:" + NL + dynamic.join(NL),
+    ).toEqual([]);
+  });
+
   it("no event is emitted without being registered", () => {
     const unregistered = [...emittedEvents().entries()]
       .filter(([name]) => !isKnownEvent(name))

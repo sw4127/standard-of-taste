@@ -19,6 +19,7 @@
  */
 
 import Jump from "@/components/Jump";
+import OtherMachines from "@/components/OtherMachines";
 import { readableOn } from "@/lib/readable-on";
 import { useEffect, useRef, useState } from "react";
 import FluidField from "@/components/FluidField";
@@ -611,10 +612,8 @@ export default function DelicacyFlow() {
             <Jump href="/delicacy" accent={ICE} className="text-muted">
               Run it again →
             </Jump>
-            <Jump href="/bias" accent={ICE} className="text-muted">
-              The other machine: the Prestige Test →
-            </Jump>
           </div>
+          <OtherMachines from="delicacy" onPick={(to) => track("gym_machine_tap", { from: "delicacy", to })} />
         </div>
       </main>
     );

@@ -36,7 +36,7 @@ export const KNOWN_EVENTS: Readonly<Record<string, string>> = {
   bias_share: "the share control is used on the reveal",
   bias_result_view: "/bias/result renders — the taker's own return or someone else's link",
   bias_locked_tier_tap: "a locked instrument is tapped from the gym floor",
-  bias_to_delicacy_tap: "the reveal's onward link into the Delicacy Trials is taken",
+  gym_machine_tap: "a reveal's onward card to another instrument is taken, carrying from and to",
 
   // --- Delicacy Trials ------------------------------------------------------
   delicacy_frame_view: "the Delicacy frame is shown",

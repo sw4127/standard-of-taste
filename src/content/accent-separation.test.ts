@@ -66,7 +66,18 @@ describe("E7/S18 — three instruments, three accents", () => {
       .trim()
       .split(NL)
       .filter((f) => /\.tsx?$/.test(f) && !/\.test\.tsx?$/.test(f));
-    const offenders = files.filter((f) => /hsl\(\s*190/.test(readFileSync(f, "utf8")));
+    // THE RANGE, NOT THE EXACT HUE. The first version tested for hsl(190
+    // literally and missed three files whose ambient FIELD was built from ice's
+    // neighbours — 180, 195, 210, 225. A background is as much the instrument's
+    // colour as its accent is, and it was still blue in a violet room.
+    const iceFamily = /hsl\(\s*(1[7-9][0-9]|2[0-2][0-9])[\s,]/;
+    // CODE ONLY. The first widened version flagged this repo's own comments
+    // explaining the rule — a guard that fails on prose about itself is one
+    // somebody switches off.
+    const isComment = (l: string) => /^\s*(\/\/|\*|\/\*)/.test(l);
+    const offenders = files.filter((f) =>
+      readFileSync(f, "utf8").split(NL).some((l) => !isComment(l) && iceFamily.test(l)),
+    );
     expect(
       offenders,
       "A threshold surface is painting itself Delicacy's blue:" + NL + offenders.join(NL),
