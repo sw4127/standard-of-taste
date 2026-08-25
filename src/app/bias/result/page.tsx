@@ -13,7 +13,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { computeBiasResult, decodeBiasRatings, type BiasResult } from "@/engine/bias";
 import { BIAS_CLIPS, BIAS_INSTRUMENT_ID, BIAS_POOL_VERSION } from "@/content/bias/items";
-import { VERDICT_COPY, shareText } from "@/content/bias/copy";
+import { VERDICT_COPY, shareText, resultTitleFragment } from "@/content/bias/copy";
 import { baseUrl } from "@/lib/site";
 import FluidField from "@/components/FluidField";
 import Track from "@/components/Track";
@@ -49,7 +49,7 @@ function cardUrl(format: "story" | "square" | "og", b: string, l: string): strin
 export async function generateMetadata({ searchParams }: { searchParams: SearchParams }): Promise<Metadata> {
   const data = resultFrom(await searchParams);
   if (!data) return { title: "The Prestige Test" };
-  const title = `${data.result.pct > 0 ? "+" : ""}${data.result.pct}% label-driven — The Prestige Test`;
+  const title = `${resultTitleFragment(data.result.pct)} — The Prestige Test`;
   const description = "Rate sixteen clips blind, then with the names attached. The gap is your number.";
   const og = `${baseUrl()}${cardUrl("og", data.b, data.l)}`;
   return {
@@ -91,7 +91,7 @@ export default async function BiasResultPage({ searchParams }: { searchParams: S
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={cardUrl("square", b, l)}
-          alt={`Prestige Test card: ${result.pct}% label-driven`}
+          alt={`Prestige Test card: ${resultTitleFragment(result.pct)}`}
           className="mt-8 w-full max-w-xs rounded-2xl border border-white/10"
         />
 

@@ -8,7 +8,7 @@
 
 import { describe, expect, it } from "vitest";
 import { checkVoice, formatVoiceReport, type VoiceString } from "./voice";
-import { VERDICT_COPY, biasCardSwayLine, biasCardCta, shareText as biasShareText } from "./bias/copy";
+import { VERDICT_COPY, biasCardSwayLine, biasCardCta, shareText as biasShareText, resultTitleFragment } from "./bias/copy";
 import {
   CALIBRATION_PHASE_LINE,
   MAGNITUDE_WORDS,
@@ -69,6 +69,16 @@ function shippingStrings(): VoiceString[] {
     });
   }
   out.push({ surface: "bias/card/cta", text: biasCardCta("example.com"), intensity: "calm" });
+
+  /**
+   * The result page's <title> and the card's alt text (E7/S6). Both sides of
+   * zero and the zero itself: the defect this replaced said "label-driven" on
+   * every result, which was simply the wrong verdict for a steady session and
+   * the OPPOSITE of what a contrarian one did.
+   */
+  for (const pct of [-31, -1, 0, 1, 31]) {
+    out.push({ surface: `bias/result/title/${pct}`, text: resultTitleFragment(pct), intensity: "calm" });
+  }
 
   /**
    * THE ITEM BLURBS (E7/S5) — the most consequential strings in the product,

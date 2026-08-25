@@ -18,6 +18,32 @@ export const VERDICT_COPY: Record<BiasVerdict, { title: string; sub: string }> =
 };
 
 /** The one-line share text next to the permalink. */
+/**
+ * E7/S6 — HOW A RESULT DESCRIBES ITSELF IN A TITLE AND AN ALT ATTRIBUTE.
+ *
+ * FOUND BY LOOKING AT THE RENDERED PAGE, which had never been done. The result
+ * page's <title> was built inline as `${pct}% label-driven`, on every result,
+ * whatever the verdict. But "Label-driven." IS the name of the SWAYED verdict
+ * (see VERDICT_COPY above), so a steady session unfurled into Slack, iMessage
+ * and Twitter as "+10% label-driven" while the page it linked to said "Steady
+ * ears." — two verdicts for one session, on the most public surface we have.
+ *
+ * Worse at the other end: a contrarian result rendered as "-20% label-driven",
+ * which states the opposite of what the person did. They resisted the label.
+ *
+ * The same string was also the card's `alt` text, so a screen reader announced
+ * the wrong verdict too.
+ *
+ * The fix is to describe the MEASUREMENT rather than assert a verdict the
+ * number may not carry — the page body already says "how far these ratings
+ * moved toward the labels", and a signed percentage toward something reads
+ * correctly in both directions. Verdict names stay where the verdict is
+ * actually computed.
+ */
+export function resultTitleFragment(pct: number): string {
+  return `${pct > 0 ? "+" : ""}${pct}% toward the labels`;
+}
+
 export function shareText(pct: number): string {
   return `My ratings moved ${pct > 0 ? "+" : ""}${pct}% when the famous names showed up. Get your number:`;
 }
