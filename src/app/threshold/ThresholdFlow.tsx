@@ -108,7 +108,12 @@ export default function ThresholdFlow({ family }: { family: string }) {
   const [answers, setAnswers] = useState("");
   const [armedA, setArmedA] = useState(false);
   const [armedB, setArmedB] = useState(false);
+  /**
+   * Same-moment A/B switches. `switches` counts the CURRENT trial; the banked
+   * per-trial series is what reaches the data (D6) — see the note in `pick`.
+   */
   const switches = useRef(0);
+  const switchesPerTrial = useRef<number[]>([]);
 
   /**
    * THE RETEST GATE (RT-89a).
@@ -150,6 +155,14 @@ export default function ThresholdFlow({ family }: { family: string }) {
       setAnswers((a) => a + (correct ? "1" : "0"));
       setArmedA(false);
       setArmedB(false);
+      // BANKED, then reset (E7/S14). This used to reset straight to zero, so
+      // the count of A/B switches was collected on every trial and thrown away
+      // on every trial — by completion the ref held the last trial's number and
+      // nothing had ever read it. Kept per trial rather than summed: a listener
+      // who switched fifteen times on one pair and once on the rest is a
+      // different observation from one who switched twice throughout, and a
+      // total cannot tell them apart.
+      switchesPerTrial.current.push(switches.current);
       switches.current = 0;
       if (isFinished(next)) {
         const result = sessionResult(next);
@@ -162,6 +175,10 @@ export default function ThresholdFlow({ family }: { family: string }) {
           sourceId: result.sourceId ?? null,
           kind: result.kind,
           trials: result.trials,
+          // How hard this listener actually worked at each comparison. Same
+          // shape as delicacy's listen_a/listen_b: one figure per trial, in
+          // trial order, so it lines up with `answers`.
+          switches: switchesPerTrial.current.join(","),
         });
         setPhase("done");
       }

@@ -178,6 +178,10 @@ export default function DelicacyFlow() {
         picks: encodeDelicacyResponses(MEASURED_TRIALS, nextResponses),
         listen_a: MEASURED_TRIALS.map((t) => listenMs.current.a[t.id] ?? 0).join(","),
         listen_b: MEASURED_TRIALS.map((t) => listenMs.current.b[t.id] ?? 0).join(","),
+        // E7/S14: collected since the flow was written and recorded nowhere.
+        // Same shape and order as the listen series above, so a row of the D6
+        // dataset can be read across: answers, exposure, effort.
+        switches: MEASURED_TRIALS.map((t) => switches.current[t.id] ?? 0).join(","),
         nCorrect: r.nCorrect,
         accuracy: r.accuracy,
         flawEligible: r.flawEligible,

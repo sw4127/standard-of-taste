@@ -4,6 +4,25 @@ Sinks: Vercel Web Analytics (pageviews; custom events Pro-only) + **PostHog free
 
 **Ops self-check:** `/api/health` reports env completeness (booleans only). Missing analytics env now fails LOUD: build-time warning (next.config.ts) + dev banner + console warning (`src/components/EnvBanner.tsx`). Silent no-op class killed 2026-07-16 (brief §3.A2).
 
+### Why the three share events do not fire from the same places (RT-144 c, 2026-08-25)
+
+`bias_share` and `delicacy_share` fire from BOTH the flow and the result permalink.
+`threshold_share` fires from the flow only — the Threshold result page has no Share button, and that
+is deliberate: the permalink is how you read **somebody else's** session, and a Share button there
+offers a stranger's number as your own.
+
+The split is kept (PM ruling RT-144 c) rather than resolved either way, so the reasoning is written
+here instead of being rediscovered:
+
+- Making them all like Threshold would remove a share path from the two instruments that actually
+  spread, and the share loop is the only acquisition channel we have.
+- Making them all like the others adds a way to forward someone else's number as yours, which
+  quietly corrupts what a share count means.
+
+**Consequence when reading the data:** `threshold_share` counts only people sharing their own
+session; `bias_share` and `delicacy_share` may include re-shares from a permalink. Do not compare the
+three rates directly without accounting for that.
+
 **The full event list lives in `src/lib/events.ts`**, one line each, with `src/lib/events.test.ts`
 asserting it BOTH ways: an event emitted but unregistered fails, and an event registered but fired
 nowhere fails too. This document had documented 23 of the 42 events the code emits — every Delicacy
