@@ -16,8 +16,8 @@
 import { describe, expect, it } from "vitest";
 import { observer as obs, rng, runStaircaseSession, type Observer } from "@/analytics/observer";
 import { DEFAULT_STAIRCASE, type StaircaseConfig } from "./staircase";
-import { assignInstances, instancesForFamily, pickInstance, type TrialInstance } from "./trial-instances";
-import { eligibleSources, eligibleWindows, isRetiredSource, sessionInstances } from "./staircase-pool";
+import { assignInstances, instancesForFamily, pickInstance, sessionInstances, type TrialInstance } from "./trial-instances";
+import { eligibleSources, eligibleWindows, isRetiredSource } from "./staircase-pool";
 
 const PITCH = [3.1, 4.4, 6.3, 8.8, 12.5, 17.7, 25, 35.4, 50, 70.7, 100];
 
@@ -130,7 +130,7 @@ describe("trial instances — lossy is source-locked (RT-65)", () => {
 
   it("refuses a lossy session that names no source, rather than picking one", () => {
     expect(() => instancesForFamily("lossy-artifact", PLANNED)).toThrow(/must name a source/);
-    expect(() => instancesForFamily("lossy-artifact", PLANNED, "pb99")).toThrow(/no windows rendered/);
+    expect(() => instancesForFamily("lossy-artifact", PLANNED, "pb99")).toThrow(/no eligible windows/);
   });
 
   /**

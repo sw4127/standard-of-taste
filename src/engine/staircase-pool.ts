@@ -152,24 +152,4 @@ export function isSourceLocked(family: string): boolean {
   return SOURCE_LOCKED_FAMILIES.has(family);
 }
 
-/**
- * The instances one SESSION may use — the pool, narrowed to a single source for
- * lossy.
- *
- * A lossy level is a bitrate, and the damage a bitrate does depends entirely on
- * the material (RT-85a), so a session that mixed sources would be stepping a
- * ladder whose rungs changed size underneath it.
- */
-export function sessionInstances(family: string, lockedSourceId?: string): TrialInstance[] {
-  const all = eligibleWindows(family);
-  if (!isSourceLocked(family)) return all;
-  if (!lockedSourceId) throw new Error("sessionInstances: lossy sessions must name a source (RT-65)");
-  const locked = all.filter((i) => i.sourceId === lockedSourceId);
-  if (!locked.length) {
-    throw new Error(
-      `sessionInstances: no eligible windows for source "${lockedSourceId}" ` +
-        `(have: ${eligibleSources(family).join(", ")})`,
-    );
-  }
-  return locked;
-}
+

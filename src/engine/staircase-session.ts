@@ -64,8 +64,8 @@ import {
   type StaircaseClip,
   type StaircaseReference,
 } from "./staircase-manifest";
-import { eligibleSources, isRetiredSource, isSourceLocked, sessionInstances } from "./staircase-pool";
-import { pickInstance, type TrialInstance } from "./trial-instances";
+import { eligibleSources, isRetiredSource, isSourceLocked } from "./staircase-pool";
+import { pickInstance, sessionInstances, type TrialInstance } from "./trial-instances";
 
 /**
  * Label <-> magnitude, and it is its own inverse for both directions.

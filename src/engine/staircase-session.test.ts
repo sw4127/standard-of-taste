@@ -24,6 +24,7 @@
  * SIMULATED throughout. Zero real responses (N3).
  */
 
+import { sessionInstances } from "./trial-instances";
 import { describe, expect, it } from "vitest";
 import { claimTarget, observer as obs, pCorrect, rng, type Observer } from "@/analytics/observer";
 import { DEFAULT_STAIRCASE, recordResponse, startStaircase, type StaircaseConfig } from "./staircase";

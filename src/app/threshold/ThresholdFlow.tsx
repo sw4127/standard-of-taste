@@ -23,6 +23,7 @@
  * comparable either. Same-moment A/B unlocks after it, per RT-34b.
  */
 
+import { sessionInstances } from "@/engine/trial-instances";
 import Jump from "@/components/Jump";
 import { readableOn } from "@/lib/readable-on";
 import { useCallback, useRef, useState, useSyncExternalStore } from "react";

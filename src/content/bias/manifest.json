@@ -643,8 +643,8 @@
           }
         ],
         "approved": {
-          "startSec": 155,
-          "by": "engineer per PM delegation (E7/S4) — analyzer suggestion #1; gate 2 (speech.mjs windowStartVerdict) checked, see below — MUSOPEN: starts 155s, floor is 60s, PASS"
+          "startSec": 280,
+          "by": "engineer (E7/S25) — the 155s window PASSED Layer A but at 19.0% near-silence against a 20% limit, i.e. by one point. Suk's Meditation is a quiet piece, so a marginal pass there is a property of the window rather than of the work. Re-chosen by sweeping every 5s window from the 60s spoken-intro floor, keeping only those at <=5% quiet and <1.5s dead air, then taking the analyzer highest score among the survivors: 280s at 27.6. Same procedure as pb12."
         }
       },
       "warnings": [
@@ -654,7 +654,7 @@
       "render": {
         "mp3": "pb9.mp3",
         "durationSec": 20.035918,
-        "renderedAt": "2026-08-25",
+        "renderedAt": "2026-08-26",
         "attribution": "\"Meditation on the Old Czech Chorale “St Wenceslas”, Op. 35a\" — J. Suk, perf. Musopen Kickstarter ensemble (per item page) · https://archive.org/details/MusopenCollectionAsFlac · Public Domain (Musopen Kickstarter PD release; PD-mark licenseurl on item) · excerpt (trimmed + loudness-normalized)"
       }
     },

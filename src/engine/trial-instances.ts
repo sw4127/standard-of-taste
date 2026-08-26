@@ -27,7 +27,7 @@
  * carry raw answers rather than conclusions.
  */
 
-import { isSourceLocked } from "./staircase-pool";
+import { eligibleWindows, isSourceLocked } from "./staircase-pool";
 
 /** One rendered (source, window) pair — a specific musical moment on disk. */
 export interface TrialInstance {
@@ -107,8 +107,34 @@ export function instancesForFamily(
   lockedSourceId?: string,
 ): TrialInstance[] {
   if (!isSourceLocked(family)) return all;
-  if (!lockedSourceId) throw new Error("instancesForFamily: lossy sessions must name a source (RT-65)");
+  if (!lockedSourceId) throw new Error("staircase pool: lossy sessions must name a source (RT-65)");
   const locked = all.filter((i) => i.sourceId === lockedSourceId);
-  if (!locked.length) throw new Error(`instancesForFamily: no windows rendered for source ${lockedSourceId}`);
+  if (!locked.length) {
+    // The available sources come from `all`, which this function already holds —
+    // so the helpful message costs nothing and does not need a second parameter.
+    const have = [...new Set(all.map((i) => i.sourceId))].sort().join(", ");
+    throw new Error(`staircase pool: no eligible windows for source "${lockedSourceId}" (have: ${have})`);
+  }
   return locked;
+}
+
+/**
+ * The instances one SESSION may use — the pool, narrowed to a single source for
+ * lossy.
+ *
+ * A lossy level is a bitrate, and the damage a bitrate does depends entirely on
+ * the material (RT-85a), so a session that mixed sources would be stepping a
+ * ladder whose rungs changed size underneath it.
+ */
+export function sessionInstances(family: string, lockedSourceId?: string): TrialInstance[] {
+  // E7/S25: MOVED HERE FROM staircase-pool, and reduced to what it always was.
+  // It used to repeat `instancesForFamily`'s filtering line for line — two
+  // functions with one rule between them, and two tests pinning two different
+  // error strings for the same condition, which is how you could tell.
+  //
+  // It lives on this side because the dependency already ran this way:
+  // trial-instances imports from staircase-pool, so pool calling back would
+  // have been a cycle. The composition is the only thing that was ever
+  // specific to it.
+  return instancesForFamily(family, eligibleWindows(family), lockedSourceId);
 }

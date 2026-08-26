@@ -87,7 +87,15 @@ const SWEPT_DIRS = ["src/app", "src/content", "src/components"] as const;
  * is the same reasoning that keeps `/vs`'s "~30 seconds" out of the clip-length
  * check below. The rule is: swept iff a user can read it.
  */
-const EXTRA_SWEPT_FILES = ["docs/launch-post-kit.md"] as const;
+const EXTRA_SWEPT_FILES = [
+  "docs/launch-post-kit.md",
+  // E7/S25: ANALYTICS.md sat outside every automatic check. A stale number was
+  // found in it once — by accident, while reading for something else, not by any
+  // guard. It is the document an analyst consults to interpret the data, so a
+  // wrong count there is worse than a wrong count on a page: the page is
+  // obviously marketing, and this is supposed to be the reference.
+  "docs/ANALYTICS.md",
+] as const;
 
 /** The file list, exported in spirit so the meta-test can check it. */
 function sweptFiles(): string[] {
@@ -305,6 +313,10 @@ describe("E6/S12 — hardcoded Prestige Test claims still match the pool", () =>
       // docblock names as its reason for existing, which is the whole point.
       "src/app/opengraph-image.tsx", // the default share PNG — nobody reads a PNG
       "src/content/learn.ts", // the FAQPage JSON-LD — nobody reads structured data either
+      // E7/S25: the event dictionary. It states the pool size while explaining
+      // why a number there goes stale — which is exactly the sentence that
+      // should be checked rather than trusted.
+      "docs/ANALYTICS.md",
     ];
     const found = filesContaining(/\b(ten|\d+) clips\b/i).sort();
     const unexpected = found.filter((f) => !known.includes(f));

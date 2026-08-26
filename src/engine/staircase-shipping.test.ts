@@ -1,7 +1,8 @@
+import { sessionInstances } from "./trial-instances";
 import { describe, it, expect } from "vitest";
 import { execFileSync } from "node:child_process";
 import { STAIRCASE_FAMILIES, ladderLevels, clipFor, referenceFor } from "./staircase-manifest";
-import { eligibleSources, sessionInstances, isSourceLocked } from "./staircase-pool";
+import { eligibleSources, isSourceLocked } from "./staircase-pool";
 
 /**
  * THE BUG THIS EXISTS TO PREVENT SHIPPED, AND NOTHING CAUGHT IT (RT-88a).

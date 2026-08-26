@@ -14,10 +14,11 @@
  * fails loudly rather than the Gym stepping its ladder backwards in silence.
  */
 
+import { sessionInstances } from "./trial-instances";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { eligibleSources, eligibleWindows, sessionInstances } from "./staircase-pool";
+import { eligibleSources, eligibleWindows } from "./staircase-pool";
 import {
   STAIRCASE_FAMILIES,
   STAIRCASE_POOL_VERSION,
