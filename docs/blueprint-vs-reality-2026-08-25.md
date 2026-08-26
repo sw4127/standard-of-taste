@@ -1,4 +1,4 @@
-# Blueprint vs Built — 2026-08-25
+# Blueprint vs Built — 2026-08-25, refreshed 2026-08-26
 
 **For the planning conversation, not for engineering.** `docs/handoff-2026-08-25.md` is the
 engineering state; this is the map from what the plan promised to what exists, so a new direction can
@@ -82,8 +82,17 @@ training loop, not every model.
 - **Honesty is a hard constraint.** It has already deleted features — six ranked tiers went when they
   placed people correctly only 30.5% of the time, replaced by a wide, unflattering band.
 
-## One engineering observation (input, not direction)
+## What changed on 2026-08-26 (this doc's own finding, now fixed)
 
-`/learn` and `/lab` — the two surfaces built to attract strangers — both link to the Prestige Test and
-nowhere else. The top of the funnel currently leaks into one third of the product. Cheap to fix, and
-worth knowing before anyone reasons about traffic.
+The version of this document written yesterday flagged that `/learn` and `/lab` — the two surfaces
+built to attract strangers — both led to the Prestige Test and named neither of the others, so the
+top of the funnel leaked into a third of the product. **That is fixed; both now offer all three.**
+
+Also since: the Threshold Test took its own colour (it shared Delicacy's blue, so two different tests
+produced result cards nobody could tell apart); clickable text is now recognisable at rest by its
+typeface; the two reading-room articles whose criterion has no instrument now say so plainly; and the
+Prestige Test grew from 8 scored clips to 14, cutting the headline number's run-to-run spread by
+about a third and lifting near-the-boundary agreement from 73% to 80%.
+
+**The published page is kept in step with this file.** Both are written against the same snapshot; if
+one moves without the other, treat the repository as the truth.
