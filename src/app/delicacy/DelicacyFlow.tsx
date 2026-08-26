@@ -45,7 +45,9 @@ import {
 } from "@/content/delicacy/items";
 import ClipPlayer from "@/app/bias/ClipPlayer";
 import AbCompare from "./AbCompare";
-import { CalibrationBlock, FlawLine } from "./RevealBlocks";
+import { CalibrationBlock, FlawLine, InYourWork } from "./RevealBlocks";
+import { recordResult } from "@/lib/result-store";
+import { POOL_VERSIONS } from "@/lib/result-recall";
 import ShareButton from "@/app/result/ShareButton";
 import DownloadButton from "@/app/result/DownloadButton";
 import {
@@ -174,6 +176,13 @@ export default function DelicacyFlow() {
       const r = computeDelicacyResult(DELICACY_INSTRUMENT_ID, MEASURED_TRIALS, nextResponses);
       const cal = computeCalibration(r.receipts.map((rec) => ({ confidence: rec.confidence, correct: rec.correct })));
       setResult(r);
+      // Raw picks only; the combined view recomputes them (E8/S7).
+      recordResult(
+        "delicacy",
+        POOL_VERSIONS.delicacy,
+        { kind: "delicacy", picks: encodeDelicacyResponses(MEASURED_TRIALS, nextResponses) },
+        Date.now(),
+      );
       track("delicacy_result", {
         pool: DELICACY_INSTRUMENT_ID,
         poolVersion: DELICACY_POOL_VERSION,
@@ -550,6 +559,8 @@ export default function DelicacyFlow() {
             </p>
             <FlawLine result={result} />
           </div>
+
+          <InYourWork result={result} />
 
           {/* Good sense. SHARED with the permalink (RevealBlocks) since RT-142a:
               two copies of one paragraph is how a flow and its page start

@@ -15,6 +15,8 @@ import { redirect } from "next/navigation";
 import { computeBiasResult, decodeBiasRatings, type BiasResult } from "@/engine/bias";
 import { BIAS_CLIPS, BIAS_INSTRUMENT_ID, BIAS_POOL_VERSION } from "@/content/bias/items";
 import { VERDICT_COPY, shareText, resultTitleFragment } from "@/content/bias/copy";
+import { creatorLines } from "@/content/vocabulary/bias";
+import AcrossSessions from "@/components/AcrossSessions";
 import { baseUrl } from "@/lib/site";
 import FluidField from "@/components/FluidField";
 import Track from "@/components/Track";
@@ -87,6 +89,10 @@ export default async function BiasResultPage({ searchParams }: { searchParams: S
         <h1 className="mt-6 font-display text-3xl font-semibold">{v.title}</h1>
         <p className="mt-2 max-w-sm text-base leading-relaxed text-muted">{v.sub}</p>
 
+        <InYourWork result={result} />
+
+        <AcrossSessions accent={GOLD} own={{ kind: "bias", blind: b, labeled: l }} />
+
         {/* The card itself — real server-rendered image, long-press-saveable
             in webviews where programmatic download is blocked. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -121,5 +127,42 @@ export default async function BiasResultPage({ searchParams }: { searchParams: S
         </p>
       </div>
     </main>
+  );
+}
+
+/**
+ * THE CREATOR TRANSLATION (E8/S6).
+ *
+ * Sits under the verdict and above the card, which is the reading order the
+ * other two instruments use: number -> verdict -> what it means for your work.
+ *
+ * NO NUMBERS IN IT. The receipt ("moved with the label on N of M clips") lives
+ * in the measurement layer — the flow renders it as a pill, and it is printed
+ * on the share card this page already displays. This block is vocabulary and
+ * boundary only, so the two cannot drift apart.
+ *
+ * `text-left` explicitly: this page centres its whole column, and centred
+ * multi-line prose is the craft defect `detectionBody` opts out of on the
+ * delicacy side.
+ *
+ * Renders nothing when no rating had headroom to move — `biasClaim` refuses,
+ * because "0% swayed" would describe the scale rather than the person (N3).
+ */
+function InYourWork({ result }: { result: BiasResult }) {
+  const lines = creatorLines(result);
+  if (lines.length === 0) return null;
+  return (
+    <section className="mt-8 w-full rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-left">
+      <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: GOLD }}>
+        WHAT THIS MEANS IN YOUR WORK
+      </p>
+      <div className="mt-3 flex flex-col gap-3">
+        {lines.map((line) => (
+          <p key={line} className="text-sm leading-relaxed text-neutral-300">
+            {line}
+          </p>
+        ))}
+      </div>
+    </section>
   );
 }

@@ -17,6 +17,7 @@
 import type { DelicacyResult } from "@/engine/delicacy";
 import { BRIER_COIN_FLIP, binDisplayPct, type CalibrationResult } from "@/engine/calibration";
 import { calibrationLine, FLAW_LINE_PREFIX, flawTimesLabel } from "@/content/delicacy/copy";
+import { creatorLines } from "@/content/vocabulary/delicacy";
 
 const ICE = "hsl(190 75% 62%)";
 
@@ -34,11 +35,61 @@ export function FlawLine({ result }: { result: DelicacyResult }) {
   );
 }
 
+/**
+ * THE CREATOR TRANSLATION (E8/S5).
+ *
+ * Sits between the flaw line it interprets and the calibration block, because
+ * the reading order is score -> what the score means against chance -> how often
+ * you named the flaw -> WHAT NAMING BUYS YOU -> whether you knew when you knew.
+ *
+ * ITS SECOND SENTENCE IS A REFUSAL, and that is the substance rather than a
+ * caveat: at five pairs a family the per-flaw split is noise 88.7-92.8% of the
+ * time (measured, `src/content/vocabulary/delicacy.test.ts`), so the block says
+ * why it will not break the result down instead of breaking it down with a
+ * disclaimer underneath.
+ *
+ * ACCENT EYEBROW, where the measurement blocks on this page use a muted one.
+ * That is the system, not a one-off: across both instruments the translation
+ * layer wears the instrument's accent and the measurement blocks do not, so a
+ * reader can tell "what we measured" from "what it means for you" at a glance.
+ *
+ * `text-left` explicitly. The permalink centres its whole column, and prose of
+ * this length centred is unreadable — `detectionBody` already opts out the same
+ * way, for the same reason.
+ */
+export function InYourWork({ result }: { result: DelicacyResult }) {
+  const lines = creatorLines(result);
+  if (lines.length === 0) return null;
+  return (
+    <section className="mt-8 w-full rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-left">
+      <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: ICE }}>
+        WHAT THIS MEANS IN YOUR WORK
+      </p>
+      <div className="mt-3 flex flex-col gap-3">
+        {lines.map((line) => (
+          <p key={line} className="text-sm leading-relaxed text-neutral-300">
+            {line}
+          </p>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 /** Good sense — whole-session numbers lead; bins only when they stand (S4 ruling). */
 export function CalibrationBlock({ cal }: { cal: CalibrationResult }) {
   const showableBins = cal.bins.filter((b) => binDisplayPct(b) !== null);
   return (
-    <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+    /*
+     * `text-left` added E8/S5. Both surfaces that mount this block centre their
+     * column, so every paragraph in here — the calibration verdict, the Brier
+     * sentence, the per-level bins — was rendering centred. `detectionBody` opts
+     * out the same way a few lines up, for the same reason: centred multi-line
+     * prose is hard to read and the Design Quality Bar counts it under craft.
+     * Found because the new translation block sits directly above this one and
+     * the two alignments disagreed on screen.
+     */
+    <div className="mt-8 w-full rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-left">
       <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">DID YOU KNOW WHEN YOU KNEW?</p>
       <p className="mt-2 text-sm leading-relaxed">{calibrationLine(cal)}</p>
       <p className="mt-2 text-xs leading-relaxed text-muted">

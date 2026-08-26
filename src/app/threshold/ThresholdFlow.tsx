@@ -61,6 +61,8 @@ import {
   serverSnapshot,
   subscribeCooldown,
 } from "@/lib/retest-cooldown";
+import { recordResult } from "@/lib/result-store";
+import { POOL_VERSIONS } from "@/lib/result-recall";
 import ThresholdResult from "./ThresholdResult";
 import { SLUG_BY_FAMILY } from "./families";
 
@@ -156,7 +158,17 @@ export default function ThresholdFlow({ family }: { family: string }) {
       const correct = isCorrectPick(trial, side);
       const next = answer(session, correct);
       setSession(next);
-      setAnswers((a) => a + (correct ? "1" : "0"));
+      /*
+       * COMPUTED ONCE, USED TWICE (E8/S7). This was `setAnswers((a) => a + …)`,
+       * which is fine on its own — but the completion branch below also needs
+       * the finished string, and rebuilding it there left the replay payload
+       * expressed in two places, one line apart, free to drift. State is queued
+       * rather than applied, so the branch cannot simply read `answers`: it
+       * would store a session missing its final trial, which replays to a
+       * different threshold than the one on screen.
+       */
+      const nextAnswers = answers + (correct ? "1" : "0");
+      setAnswers(nextAnswers);
       setArmedA(false);
       setArmedB(false);
       // BANKED, then reset (E7/S14). This used to reset straight to zero, so
@@ -174,6 +186,20 @@ export default function ThresholdFlow({ family }: { family: string }) {
         // three measured nothing, and charging someone a week for it would be
         // the gate punishing them instead of protecting the number.
         recordCompletion(family, Date.now());
+        // Same moment, same reason: only a FINISHED session is worth recalling.
+        // Raw answers, never the computed threshold — see result-store.ts.
+        recordResult(
+          "threshold",
+          POOL_VERSIONS.threshold,
+          {
+            kind: "threshold",
+            slug: SLUG_BY_FAMILY[family],
+            seed: session.seed,
+            answers: nextAnswers,
+            sourceId: session.sourceId,
+          },
+          Date.now(),
+        );
         track("threshold_complete", {
           family,
           sourceId: result.sourceId ?? null,
@@ -187,7 +213,13 @@ export default function ThresholdFlow({ family }: { family: string }) {
         setPhase("done");
       }
     },
-    [family, session, trial],
+    // `answers` joined this list in E8/S7, and eslint caught its absence rather
+    // than me: reading state directly inside the callback without depending on
+    // it pins the closure to whatever the string was when `pick` was last
+    // rebuilt, so the stored payload would have been truncated to a stale
+    // prefix — a session that replays to the wrong threshold. The functional
+    // updater it replaced did not need the dependency; the direct read does.
+    [answers, family, session, trial],
   );
 
   const armed = armedA && armedB;

@@ -132,6 +132,17 @@ export interface BiasResult {
   swayShare: number | null;
   /** Denominator behind swayShare, for "N of M" copy. */
   movableCount: number;
+  /**
+   * THE NUMERATOR, carried rather than reconstructed (E8/S6).
+   *
+   * Three surfaces independently wrote `Math.round(swayShare * movableCount)`
+   * to get this back — the share card, the flow's reveal, and very nearly the
+   * vocabulary layer. It happens to be exact at these pool sizes, so this is a
+   * fragility rather than a live bug, but a count that the engine already has
+   * should not be recovered from a ratio in three places. Same fix, same
+   * reason, as `flawCorrect` on the delicacy result.
+   */
+  movedCount: number;
 }
 
 /**
@@ -263,6 +274,7 @@ export function computeBiasResult(
     swappedPct: swappedMeanShiftPts === null ? null : Math.round((swappedMeanShiftPts / SPAN) * 100),
     swayShare: movable.length > 0 ? movable.filter((r) => r.towardLabel > 0).length / movable.length : null,
     movableCount: movable.length,
+    movedCount: movable.filter((r) => r.towardLabel > 0).length,
   };
 }
 

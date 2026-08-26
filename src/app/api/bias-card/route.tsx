@@ -59,7 +59,7 @@ export async function GET(request: Request) {
   const result = computeBiasResult(BIAS_INSTRUMENT_ID, BIAS_CLIPS, blind, labeled);
   const verdict = VERDICT_COPY[result.verdict];
   const swayed = result.swayShare !== null
-    ? biasCardSwayLine(Math.round(result.swayShare * result.movableCount), result.movableCount)
+    ? biasCardSwayLine(result.movedCount, result.movableCount)
     : null;
   const host = baseUrl().replace(/^https?:\/\//, "");
 

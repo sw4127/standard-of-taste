@@ -26,7 +26,8 @@ import { baseUrl } from "@/lib/site";
 import FluidField from "@/components/FluidField";
 import Track from "@/components/Track";
 import ShareButton from "@/app/result/ShareButton";
-import { CalibrationBlock, FlawLine } from "../RevealBlocks";
+import { CalibrationBlock, FlawLine, InYourWork } from "../RevealBlocks";
+import AcrossSessions from "@/components/AcrossSessions";
 import { computeCalibration } from "@/engine/calibration";
 import DownloadButton from "@/app/result/DownloadButton";
 
@@ -113,7 +114,9 @@ export default async function DelicacyResultPage({ searchParams }: { searchParam
             NOT the per-pair disclosure: that is the answer key, and this page is
             a share target (see the docblock at the top of this file). */}
         <FlawLine result={result} />
+        <InYourWork result={result} />
         <CalibrationBlock cal={calibration} />
+        <AcrossSessions accent={ICE} own={{ kind: "delicacy", picks: p }} />
 
         {/* The card itself — server-rendered, long-press-saveable in webviews. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -43,6 +43,7 @@ import {
   resultLines,
 } from "./staircase/copy";
 import { staircaseCopyFixtures, staircaseCardFixtures } from "./staircase/fixtures";
+import { vocabularyStrings } from "./vocabulary/fixtures";
 import { LIMIT_KIND_COPY, RETIRED_SOURCE_NOTE } from "./staircase/limits";
 
 /** Every cohort-visible string, with the intensity its surface is allowed. */
@@ -218,6 +219,20 @@ function shippingStrings(): VoiceString[] {
   out.push({ surface: "staircase/snack/lead", text: SNACK_LEAD, intensity: "calm" });
   out.push({ surface: "staircase/snack/line", text: SNACK_LINE, intensity: "calm" });
   out.push({ surface: "staircase/snack/cta", text: SNACK_CTA, intensity: "calm" });
+
+  /**
+   * THE VOCABULARY LAYER (E8/S9). Every sentence the creator translation and the
+   * combined view can emit, ENUMERATED from real engine results rather than
+   * sampled — the same argument the staircase deck above makes, and the same
+   * one that motivated `covers every reachable readout score`: an outcome nobody
+   * exercised is exactly where an off-voice line survives.
+   *
+   * These lines live in `src/content/vocabulary/`, are rendered on all three
+   * result screens, and until this slice were gated only by their own module
+   * tests. A per-module check is not the deck — the deck is what the paid-tier
+   * ruling, the norm rule and the datum rule are applied to as a whole.
+   */
+  out.push(...vocabularyStrings());
   return out;
 }
 
@@ -233,7 +248,10 @@ function shippingStrings(): VoiceString[] {
 // "learn" joined in E7/S24b. The reading room is part of the Gym, not the
 // legacy funnel — so the no-paid-tier ruling applies to its copy too, which is
 // exactly what this classification decides.
-const GYM_SURFACE_PREFIXES = ["bias", "delicacy", "staircase", "learn"] as const;
+// "vocabulary" joined in E8/S9: the creator-translation and combined-view
+// sentences sit on the Gym's own result screens, so the no-paid-tier ruling
+// governs them exactly as it governs the rest of the deck.
+const GYM_SURFACE_PREFIXES = ["bias", "delicacy", "staircase", "learn", "vocabulary"] as const;
 
 /**
  * Surfaces where a price is LEGITIMATE — the legacy music/world-cup funnel,
@@ -355,6 +373,90 @@ describe("hazard gate — the shipping decks", () => {
     );
     expect(scores.size).toBe(DELICACY_TRIALS.length + 1);
     expect(strings.length).toBeGreaterThan(40);
+  });
+});
+
+/**
+ * THE VOCABULARY LAYER, PROVEN IN BOTH DIRECTIONS (E8/S9).
+ *
+ * A green deck proves the strings are CLEAN. It does not prove they are
+ * CHECKED — a surface that never reaches `checkVoice` passes for the same
+ * reason an empty list does. This repo has already shipped that failure twice:
+ * the delicacy card's "a coin flip calls 3" and the bias card's two lines both
+ * lived in JSX, outside the deck, passing by absence.
+ *
+ * So each test below breaks something on purpose and requires the break to be
+ * caught at the exact surface it was introduced.
+ */
+describe("hazard gate — the vocabulary layer is reached, not merely clean", () => {
+  const strings = vocabularyStrings();
+
+  it("is actually part of the shipping deck, not just checkable on its own", () => {
+    const deck = shippingStrings().filter((s) => s.surface.startsWith("vocabulary/"));
+    expect(deck.length).toBe(strings.length);
+    expect(deck.length).toBeGreaterThan(30);
+  });
+
+  /**
+   * ONE MUTATION PER SURFACE. Every registered sentence is replaced, in turn,
+   * with a line that violates a named rule — and the violation must be reported
+   * against THAT surface. A string the deck merely lists but never passes to
+   * the checker would sail through this.
+   */
+  it("catches a banned line at every single vocabulary surface", () => {
+    const banned = "Better than 80% of listeners — you were trying to look clever.";
+    const missed: string[] = [];
+    for (const s of strings) {
+      const violations = checkVoice([{ ...s, text: banned }]);
+      if (!violations.some((v) => v.surface === s.surface)) missed.push(s.surface);
+    }
+    expect(missed, `surfaces the gate did not flag: ${missed.join(" | ")}`).toEqual([]);
+  });
+
+  /** The rules that matter most for this layer, each proven to fire. */
+  it.each([
+    ["fabricated-norm", "Your pitch threshold puts you in the top 10% of ears."],
+    ["person-verdict", "You have no ear for compression damage."],
+    ["motive-attribution", "You rated it highly because you wanted the label to be right."],
+    ["unmeasured-claim", "Anyone can hear the drift at 25 cents."],
+  ])("a %s line is caught if it ever reaches this layer", (rule, text) => {
+    const violations = checkVoice([{ surface: "vocabulary/threshold/mutant/0", text, intensity: "pointed" }]);
+    expect(violations.map((v) => v.rule)).toContain(rule);
+  });
+
+  /**
+   * THE ENUMERATION MUST STAY AN ENUMERATION. If a branch stops being
+   * exercised, its sentences leave the deck silently and the suite stays green
+   * — the failure mode the staircase fixtures were built to prevent.
+   */
+  it("covers every branch the layer can take, not a sample", () => {
+    const surfaces = strings.map((s) => s.surface);
+    for (const family of ["pitch-drift", "timing-smear", "lossy-artifact"]) {
+      expect(surfaces.some((s) => s.includes(`/threshold/${family}`)), family).toBe(true);
+    }
+    for (const kind of ["threshold", "below", "above", "inconclusive"]) {
+      expect(surfaces.some((s) => s.startsWith("vocabulary/threshold/") && s.includes(`/${kind}/`)), kind).toBe(true);
+    }
+    for (const state of ["all", "some", "none"]) {
+      expect(surfaces.some((s) => s === `vocabulary/delicacy/${state}/0`), state).toBe(true);
+    }
+    for (const verdict of ["swayed", "steady", "contrarian"]) {
+      expect(surfaces.some((s) => s.startsWith(`vocabulary/bias/${verdict}/`)), verdict).toBe(true);
+    }
+    for (const across of ["bias-delicacy", "delicacy-threshold", "all-three", "full-coverage"]) {
+      expect(surfaces.some((s) => s.startsWith(`vocabulary/across/${across}/`)), across).toBe(true);
+    }
+  });
+
+  /**
+   * The layer's own N3 promise, asserted over the WHOLE deck rather than per
+   * module: no sentence anywhere claims a paid tier, a percentile, or a cohort.
+   */
+  it("promises no payment and no cohort anywhere in the layer", () => {
+    for (const s of strings) {
+      expect(promisesPayment(s.text), s.surface).toBe(false);
+      expect(s.text, s.surface).not.toMatch(/\bpercentile\b|\btop \d+\s*%/i);
+    }
   });
 });
 

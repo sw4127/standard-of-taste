@@ -31,6 +31,7 @@
 
 import type { StaircaseResult, ThresholdBand } from "@/engine/staircase-session";
 import { CONFIDENCE_PCT } from "@/engine/confidence";
+import { isWideBand } from "@/engine/evidence";
 
 /**
  * The short unit, DERIVED from the pipeline's own label rather than kept in a
@@ -101,9 +102,10 @@ export function bandLine(band: ThresholdBand, unit: string, source: string): str
      * finding rather than as a shrug. Six rungs of an eleven-rung ladder is over
      * half the range it can express; past that the honest word is "somewhere".
      */
-    const spanned = (band.heardIndex ?? 0) - (band.missedIndex ?? 0);
-    const wide = spanned >= Math.ceil(band.rungs.length * 0.55);
-    if (wide) {
+    // The rule itself now lives in `@/engine/evidence` (`WIDE_BAND_FRACTION`),
+    // because the creator-translation layer writes its own sentence off this
+    // same band and the two must not disagree about what "wide" means.
+    if (isWideBand(band)) {
       /**
        * ASCENDING BY NUMBER, not by difficulty. "Between X and Y" is read as a
        * numeric range by everyone, and on the inverted lossy axis the harder

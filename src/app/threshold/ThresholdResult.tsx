@@ -25,6 +25,7 @@ import Link from "next/link";
 import FluidField from "@/components/FluidField";
 import {
   familyLabel,
+  NO_COHORT_FOOTNOTE,
   quantity,
   resultLines,
   shortUnit,
@@ -40,6 +41,9 @@ import DownloadButton from "@/app/result/DownloadButton";
 import OtherMachines from "@/components/OtherMachines";
 import { baseUrl } from "@/lib/site";
 import type { StaircaseResult } from "@/engine/staircase-session";
+import { thresholdClaim } from "@/engine/evidence";
+import { creatorLines } from "@/content/vocabulary/threshold";
+import AcrossSessions from "@/components/AcrossSessions";
 
 const ICE = THRESHOLD_VIOLET;
 const ICE_GLOW = THRESHOLD_VIOLET_GLOW;
@@ -60,6 +64,12 @@ export default function ThresholdResult({
 }) {
   const lines = resultLines(result);
   const [headline, ...rest] = lines;
+  // Partitioned BY IDENTITY, not by position. `resultLines` happens to put the
+  // footnote last today; a test that relied on that would pass until somebody
+  // reordered the array, and the failure would be a missing footnote nobody
+  // notices rather than an error.
+  const footnote = rest.find((l) => l === NO_COHORT_FOOTNOTE) ?? null;
+  const body = rest.filter((l) => l !== NO_COHORT_FOOTNOTE);
   const unit = shortUnit(result.unit);
 
   return (
@@ -126,12 +136,40 @@ export default function ThresholdResult({
         <Ladder result={result} unit={unit} />
 
         <div className="mt-8 space-y-4">
-          {rest.map((line) => (
+          {body.map((line) => (
             <p key={line} className="text-sm leading-relaxed text-muted">
               {line}
             </p>
           ))}
         </div>
+
+        <InRender result={result} />
+
+        {/* Only when this page is showing THIS device's own session — see
+            AcrossSessions. Without `share` there is no payload to compare, so
+            there is nothing to claim ownership of. */}
+        {share ? (
+          <AcrossSessions
+            accent={ICE}
+            own={{
+              kind: "threshold",
+              slug: share.slug,
+              seed: share.seed,
+              answers: share.answers,
+              ...(share.sourceId ? { sourceId: share.sourceId } : {}),
+            }}
+          />
+        ) : null}
+
+        {/*
+          THE NO-COHORT FOOTNOTE STAYS LAST, which is why the translation panel
+          is spliced in ABOVE it rather than appended after `resultLines`.
+          Appending was the first version, and reading the rendered page showed
+          why it was wrong: the footnote closes the screen — "measured on you,
+          against physics, and stands on its own" — and the panel then started
+          the conversation up again underneath the sign-off.
+        */}
+        {footnote ? <p className="mt-4 text-sm leading-relaxed text-muted">{footnote}</p> : null}
 
         {share ? (
           <div className="mt-9">
@@ -176,6 +214,47 @@ export default function ThresholdResult({
         <OtherMachines from="threshold" />
       </div>
     </main>
+  );
+}
+
+/**
+ * WHAT THIS MEANS IN A RENDER — the creator translation (E8/S3).
+ *
+ * PLACED AFTER THE MEASUREMENT, DELIBERATELY. The reading order on this screen
+ * is figure -> headline -> ladder -> what was measured -> what it means for your
+ * own work. Putting the translation first would make the instrument sound like
+ * it was reasoning backwards from a conclusion; putting it last lets the number
+ * land on its own, which is the reveal the design bar asks for.
+ *
+ * IT CAN RENDER NOTHING, AND THAT IS A REAL STATE. `thresholdClaim` refuses when
+ * the session resolved no rung at all, and a screen that always finds something
+ * encouraging to say is exactly the failure N3 exists to prevent. When the claim
+ * is refused this component returns null and the screen simply ends after the
+ * measurement — no apology, no filler panel.
+ *
+ * ONE ACCENT, still. The panel borrows the Ladder's card treatment rather than
+ * introducing a second visual language; the only colour is the eyebrow, in the
+ * same violet the figure already uses.
+ */
+function InRender({ result }: { result: StaircaseResult }) {
+  const claim = thresholdClaim(result);
+  if (!claim.ok) return null;
+  const lines = creatorLines(claim.value);
+  if (lines.length === 0) return null;
+
+  return (
+    <section className="mt-7 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+      <p className="text-[0.6rem] font-bold tracking-[0.25em]" style={{ color: ICE }}>
+        WHAT THIS MEANS IN A RENDER
+      </p>
+      <div className="mt-3 space-y-3">
+        {lines.map((line) => (
+          <p key={line} className="text-sm leading-relaxed text-neutral-300">
+            {line}
+          </p>
+        ))}
+      </div>
+    </section>
   );
 }
 

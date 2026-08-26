@@ -31,6 +31,9 @@ import {
 import { BIAS_CLIPS, BIAS_INSTRUMENT_ID, BIAS_POOL_VERSION, type BiasClip } from "@/content/bias/items";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
 import { VERDICT_COPY, shareText } from "@/content/bias/copy";
+import { creatorLines as biasCreatorLines } from "@/content/vocabulary/bias";
+import { recordResult } from "@/lib/result-store";
+import { POOL_VERSIONS } from "@/lib/result-recall";
 import ShareButton from "@/app/result/ShareButton";
 import DownloadButton from "@/app/result/DownloadButton";
 import ClipPlayer, { isPlaceholderSrc } from "./ClipPlayer";
@@ -245,6 +248,17 @@ export default function BiasFlow() {
       // Labeled pass done → compute the verdict (deterministic, in code).
       const r = computeBiasResult(BIAS_INSTRUMENT_ID, BIAS_CLIPS, blind, nextRatings);
       setResult(r);
+      // Both raw passes, never the verdict — see result-store.ts (E8/S7).
+      recordResult(
+        "bias",
+        POOL_VERSIONS.bias,
+        {
+          kind: "bias",
+          blind: encodeBiasRatings(BIAS_CLIPS, blind),
+          labeled: encodeBiasRatings(BIAS_CLIPS, nextRatings),
+        },
+        Date.now(),
+      );
       track("bias_labeled_complete", { pct: r.pct, verdict: r.verdict });
       try {
         sessionStorage.removeItem(SESSION_KEY);
@@ -526,10 +540,24 @@ export default function BiasFlow() {
             <p className="mt-5 rounded-full border border-white/10 px-4 py-1.5 text-sm text-muted">
               You moved with the label on{" "}
               <span className="font-semibold" style={{ color: GOLD }}>
-                {Math.round(result.swayShare * result.movableCount)} of {result.movableCount}
+                {result.movedCount} of {result.movableCount}
               </span>{" "}
               clips that could move.
             </p>
+          ) : null}
+          {biasCreatorLines(result).length > 0 ? (
+            <section className="mt-7 w-full rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-left">
+              <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: GOLD }}>
+                WHAT THIS MEANS IN YOUR WORK
+              </p>
+              <div className="mt-3 flex flex-col gap-3">
+                {biasCreatorLines(result).map((line) => (
+                  <p key={line} className="text-sm leading-relaxed text-neutral-300">
+                    {line}
+                  </p>
+                ))}
+              </div>
+            </section>
           ) : null}
           {result.edgeCount > 0 ? (
             <p className="mt-3 text-xs text-muted">
