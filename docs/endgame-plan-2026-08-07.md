@@ -1,5 +1,21 @@
 # Endgame Plan — 5.5 weeks to 09-15 (dated 2026-08-07)
 
+> **SUPERSEDED IN PART — read this first (added 2026-08-26).**
+> `docs/artifact-pivot-2026-08-07.md` explicitly supersedes this document's SCHEDULE and its
+> launch-dependent KPI path. The status table below was true on 2026-08-07 and several rows are now
+> false in ways that mislead:
+>
+> - **"PM ear pass" and "PM voice pass" are not outstanding — they were ABOLISHED.** Replacing a human
+>   quality gate with measurement is the pivot's central move (§1). Nothing in this product waits on
+>   the owner listening to a clip.
+> - **The Delicacy Trials are LIVE**, not "S1–S6 built".
+> - **The 2026-09-15 deadline is not a live constraint.** The pivot removed marketing/launch as a
+>   dependency on purpose (§0.2).
+>
+> For current state use `docs/handoff-2026-08-26.md`; for planning use
+> `docs/blueprint-vs-reality-2026-08-25.md`. Kept unedited below as history.
+
+
 ## Status against the KPI framework (docs/kpis.md)
 
 | Gate | State |

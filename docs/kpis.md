@@ -1,5 +1,12 @@
 # KPI Framework — of record (2026-07-16 brief §2; PM-confirmed 2026-07-17, RT-1a)
 
+> **PARTLY SUPERSEDED — read this first (added 2026-08-26).**
+> The metric definitions here are still good. The SCHEDULE is not: the 2026-09-15 deadline and the
+> launch-dependent gates were superseded by `docs/artifact-pivot-2026-08-07.md`, which made marketing
+> optional by design. Items listed as in scope for 09-15 — notably the delicacy battery — have since
+> shipped. Current state: `docs/handoff-2026-08-26.md`. Planning: `docs/blueprint-vs-reality-2026-08-25.md`.
+
+
 North star: **"an interviewer or admissions committee finds this project credible, rigorous, and
 alive."** (Serves memo C4 — resume-competitive identity; honesty caps per N3.)
 
