@@ -73,6 +73,26 @@ training loop, not every model.
 4. **How it pays for itself.** Unanswered rather than closed.
 5. **What the composite index actually is.** Promised, never specified.
 
+## Queued and not started — plan around it
+
+**A method page inside the product** (`/method`), approved 2026-08-26 as RT-158(a) / RT-159(a).
+
+The owner's reason for building any of this is that it has to work as a portfolio piece for
+product-manager, business-analyst and data-analyst roles. What is unusual here is not the instrument —
+it is the **operating model** that produced it: 119 recorded rulings, four written process documents,
+and a rule set that repeatedly deleted work for being untrue rather than for being wrong. The page
+describes that method with the product as its evidence.
+
+**Why it belongs in the planning conversation and not just the build queue:** the business model and
+the method page are two halves of one story aimed at the same three readers. A commercial model that
+cannot be described honestly on that page is not usable however clever it is; a method page describing
+a product with no commercial thinking in it is the exact gap the owner is trying to close. Design them
+as a pair.
+
+Also outstanding, worth knowing before estimating: several pieces of user-facing copy are shipped but
+await a writing pass, and almost nothing has been checked by a person looking at the screen — the
+verification in this project is measurement, not eyes.
+
 ## Constraints any plan must survive
 
 - **Zero real responses.** Every psychometric figure is simulated from a known model and badged.
