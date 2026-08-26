@@ -72,6 +72,26 @@ function shippingStrings(): VoiceString[] {
   out.push({ surface: "bias/card/cta", text: biasCardCta("example.com"), intensity: "calm" });
 
   /**
+   * The "not built yet" notice (E7/S24b, RT-155a). It appears on two reading-room
+   * articles whose criterion has no instrument, and it is the one place the
+   * product tells a reader that a door they came looking for is not there. If
+   * that sentence goes off-voice it reads as an excuse instead of a fact.
+   */
+  for (const [criterion, blocker] of [
+    ["comparison", "it needs no new audio, so what it waits on is a decision rather than a build"],
+    ["practice", "it needs the product to remember you between sessions, and today it does not"],
+  ]) {
+    out.push({
+      surface: `learn/not-built/${criterion}`,
+      text:
+        `There is no instrument for ${criterion} in the gym today. It is in the plan and not in ` +
+        `the product — ${blocker}. When it exists it will be measured the same way as the rest, ` +
+        `and until then this page is an explanation rather than a door.`,
+      intensity: "calm",
+    });
+  }
+
+  /**
    * The result page's <title> and the card's alt text (E7/S6). Both sides of
    * zero and the zero itself: the defect this replaced said "label-driven" on
    * every result, which was simply the wrong verdict for a steady session and
@@ -210,7 +230,10 @@ function shippingStrings(): VoiceString[] {
  * two-prefix list had already gone stale: `bias/` joined the deck and nothing
  * noticed, so 31 strings sat outside the ruling that governs them.
  */
-const GYM_SURFACE_PREFIXES = ["bias", "delicacy", "staircase"] as const;
+// "learn" joined in E7/S24b. The reading room is part of the Gym, not the
+// legacy funnel — so the no-paid-tier ruling applies to its copy too, which is
+// exactly what this classification decides.
+const GYM_SURFACE_PREFIXES = ["bias", "delicacy", "staircase", "learn"] as const;
 
 /**
  * Surfaces where a price is LEGITIMATE — the legacy music/world-cup funnel,

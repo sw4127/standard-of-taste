@@ -1,3 +1,4 @@
+import NotBuiltYet from "../NotBuiltYet";
 import Link from "next/link";
 import Explainer, { explainerMetadata } from "../Explainer";
 import { learnPage } from "@/content/learn";
@@ -39,6 +40,7 @@ export default function Page() {
         starts where prejudice is caught in the act:{" "}
         <Link href="/learn/prestige-bias-test">the Prestige Test</Link>.
       </p>
+      <NotBuiltYet criterion="practice" blocker="it needs the product to remember you between sessions, and today it does not" />
     </Explainer>
   );
 }

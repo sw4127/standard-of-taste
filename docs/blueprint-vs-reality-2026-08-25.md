@@ -19,6 +19,21 @@ Nothing compares one session to another, so the plan's stated deliverable — *d
 move* — is not answerable by the product today. The **Taste Index** (five sub-scores + composite)
 cannot be assembled.
 
+### Are the two missing instruments planned? (PM asked, 2026-08-26)
+
+**Yes — both are in the blueprint. Neither has been started, and neither has a date.**
+The product now says so on their reading-room pages rather than implying a door that isn't there.
+
+| | What it would measure | What it is waiting on | Cost |
+|---|---|---|---|
+| **Comparison** | breadth of what you have actually heard — era, tradition, instrumentation | **a decision, not a build.** The pivot scoped it as needing zero audio authoring: it is scoreable from catalogue metadata the product already has patterns for | small |
+| **Practice** | whether your ear moved between sessions — the plan's stated deliverable | **accounts and persistence.** It cannot exist until the product remembers you, and that decision has been sanctioned but never made | blocked |
+
+The ordering matters for planning: **Comparison is cheap and unblocked; Practice is the one that
+unlocks the plan's headline promise and is blocked behind the single decision this document flags
+as the biggest divergence.** Anyone deciding what to build next is really deciding whether the
+product remembers people — everything else follows from it.
+
 ## The three surfaces
 
 | Surface | Promised | Built |

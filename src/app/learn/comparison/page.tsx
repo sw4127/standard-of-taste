@@ -1,3 +1,4 @@
+import NotBuiltYet from "../NotBuiltYet";
 import Link from "next/link";
 import Explainer, { explainerMetadata } from "../Explainer";
 import { learnPage } from "@/content/learn";
@@ -40,6 +41,7 @@ export default function Page() {
         start; comparison arrives later on the roadmap, clearly marked as an exposure measure and
         nothing more.
       </p>
+      <NotBuiltYet criterion="comparison" blocker="it needs no new audio, so what it waits on is a decision rather than a build" />
     </Explainer>
   );
 }
