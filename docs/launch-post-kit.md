@@ -2,7 +2,15 @@
 
 Strategy: **Option A confirmed** — the site is the link; repo + methodology ride in the first comment
 (serves Tier-2 sessions KPI; repo costs one click, a README landing costs a session).
-**Gate: DO NOT POST until launch-checklist item 1 is green (pb4/pb8 ear pass, pb6 professional review).**
+**Gate: DO NOT POST until launch-checklist item 1 is green** (pool of record wired — every item
+through `docs/bias-pool-gatekeeping.md` §A–D, no placeholder items reachable in production).
+
+> **Corrected 2026-08-27 (E8/S10, Track F2).** This line used to read "…(pb4/pb8 ear pass, pb6
+> professional review)". **Both of those gates were abolished on 2026-08-08** — see
+> `docs/launch-checklist.md` § RETIRED GATES. Clip audibility is now computed by Layer A
+> (`clip-pipeline validate`) and enforced in code; the PM approves the rules, never the clips.
+> A launch gate naming a check nobody performs any more is a false statement in the repository,
+> and it points whoever reads this at a sign-off they cannot give (N3).
 Voice note: HN/Reddit launch copy is NOT the Examiner — it's the maker speaking: plain, honest,
 technical, zero marketing gloss. The Examiner lives inside the product.
 
@@ -114,7 +122,9 @@ Only worth it if you'll actively hold the discussion thread.
 ---
 
 ## Sequencing
-1. PM sign-offs (pb4/pb8/pb6) → checklist item 1 green.
+1. Checklist item 1 green (pool of record wired; §A–D gatekeeping). **Not a PM listening session** —
+   that step read "PM sign-offs (pb4/pb8/pb6)" until 2026-08-27 and named gates retired on
+   2026-08-08.
 2. CC builds the server-rendered write-up page (charts auto-slot when N arrives; none synthetic — N3).
 3. HN post (one attempt; if it dies quietly, that's allowed — do NOT repost same-week).
 4. 24–48h later: r/samplesize → r/InternetIsBeautiful.

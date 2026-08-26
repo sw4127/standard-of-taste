@@ -8,9 +8,28 @@
  * → this file. Audio rendered by scripts/clip-pipeline (20s excerpts,
  * EBU R128 two-pass to −16 LUFS, mp3 + m4a).
  *
- * PM ear pass of record: manifest.pmEarPass (no veto, 2026-07-12); pb4/pb8
- * joined after that pass and await the same check. pb6 is PROVISIONAL
- * (professional reviewer pending) — swapping it bumps BIAS_POOL_VERSION.
+ * THE PM EAR PASS IS RETIRED (2026-08-08) and nothing here waits on it.
+ *
+ * `manifest.pmEarPass` (no veto, 2026-07-12) is kept as a HISTORICAL RECORD of
+ * what was previewed before the gate was abolished; it grants no passage and
+ * blocks none. This docblock used to say "pb4/pb8 joined after that pass and
+ * await the same check" — corrected 2026-08-27 (E8/S10, Track F2), because that
+ * sentence described a pending sign-off that could not be given by anyone, in a
+ * file that ships. Clip fitness is computed: Layer A (`clip-pipeline validate`)
+ * gates rendering, and `docs/bias-pool-gatekeeping.md` §A–D governs licensing
+ * and IP safety, which is a legal judgement rather than a listening one.
+ *
+ * pb6's PROFESSIONAL REVIEW IS DONE, and this docblock spent months saying it
+ * was not. `manifest.json`'s `pmEarPass.note` has recorded it since 2026-07-12:
+ * "pb6 passed the professional review — pool v3 fully signed off (C.1/C.3/D
+ * complete for all 8 items)". This file's own authority chain names that
+ * manifest as its source, and this file disagreed with it — the two-tables
+ * defect, in the one direction that manufactures work: a derived comment
+ * inventing an obligation its own source says was discharged.
+ *
+ * Corrected 2026-08-27 (E8/S11) after the PM said, not for the first time, that
+ * the review had been obtained. It had, and it was written down; nobody had
+ * propagated it here. Swapping pb6 still bumps BIAS_POOL_VERSION.
  *
  * Swap items (labelIsTrue: false) show a FICTIONAL artist + framing — the
  * sanctioned deception (memo §3), confessed with true attribution on the
