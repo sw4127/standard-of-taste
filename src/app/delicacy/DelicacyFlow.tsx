@@ -46,6 +46,7 @@ import {
 import ClipPlayer from "@/app/bias/ClipPlayer";
 import AbCompare from "./AbCompare";
 import { CalibrationBlock, FlawLine, InYourWork } from "./RevealBlocks";
+import AcrossSessions from "@/components/AcrossSessions";
 import { recordResult } from "@/lib/result-store";
 import { POOL_VERSIONS } from "@/lib/result-recall";
 import ShareButton from "@/app/result/ShareButton";
@@ -566,6 +567,21 @@ export default function DelicacyFlow() {
               two copies of one paragraph is how a flow and its page start
               describing the same session differently. */}
           <CalibrationBlock cal={cal} />
+
+          {/*
+            THE COMBINED VIEW BELONGS HERE MOST OF ALL (E8/S12). It was mounted
+            on /delicacy/result in E8/S8 and missed here, because the permalink
+            and this reveal build their own markup. Finishing a SECOND
+            instrument is the exact moment the combined view first has anything
+            to say, and this is the screen a person lands on when they do — so
+            the one surface that was missing it was the one that needed it.
+            Found by driving a real session to completion.
+
+            `own` is the payload this session just recorded, so the block obeys
+            the same rule it does everywhere: it speaks only about this device's
+            own result.
+          */}
+          <AcrossSessions accent={ICE} own={{ kind: "delicacy", picks: decodeURIComponent(p) }} />
 
           {/* The reveal — every pair, full disclosure (N3) */}
           <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-5">

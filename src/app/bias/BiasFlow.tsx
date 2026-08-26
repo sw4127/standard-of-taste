@@ -32,6 +32,7 @@ import { BIAS_CLIPS, BIAS_INSTRUMENT_ID, BIAS_POOL_VERSION, type BiasClip } from
 import { DELICACY_LIVE } from "@/content/delicacy/items";
 import { VERDICT_COPY, shareText } from "@/content/bias/copy";
 import { creatorLines as biasCreatorLines } from "@/content/vocabulary/bias";
+import AcrossSessions from "@/components/AcrossSessions";
 import { recordResult } from "@/lib/result-store";
 import { POOL_VERSIONS } from "@/lib/result-recall";
 import ShareButton from "@/app/result/ShareButton";
@@ -559,6 +560,19 @@ export default function BiasFlow() {
               </div>
             </section>
           ) : null}
+          {/*
+            Same omission, same reason, as the delicacy reveal (E8/S12): mounted
+            on /bias/result in E8/S8 and missed on the screen a person actually
+            finishes on. `own` is the pair of raw passes this session recorded.
+          */}
+          <AcrossSessions
+            accent={GOLD}
+            own={{
+              kind: "bias",
+              blind: encodeBiasRatings(BIAS_CLIPS, blind),
+              labeled: encodeBiasRatings(BIAS_CLIPS, labeled),
+            }}
+          />
           {result.edgeCount > 0 ? (
             <p className="mt-3 text-xs text-muted">
               {result.edgeCount} clip{result.edgeCount > 1 ? "s were" : " was"} already at the edge of the scale blind — your real sway may run higher.
