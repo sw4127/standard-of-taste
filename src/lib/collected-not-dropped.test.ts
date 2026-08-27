@@ -53,16 +53,32 @@ describe("E7/S14 — a flow that collects a signal also records it", () => {
   });
 
   it("the threshold flow banks the count per trial instead of resetting it away", () => {
-    // The specific defect: `switches.current = 0` ran on every answer with no
-    // read in between. If the bank disappears, the reset is back to destroying
-    // the measurement.
+    /*
+     * THE ORIGINAL DEFECT: `switches.current = 0` ran on every answer with no
+     * read in between, so every trial's count was collected and destroyed.
+     *
+     * This used to be checked by finding the two statements in the source and
+     * asserting the bank appeared before the reset — the best available check
+     * while both lived inline in the component. E10/S3 moved the accumulator
+     * into `switch-log.ts`, where `bank()` does both in one call, so the
+     * ordering is now true BY CONSTRUCTION and is proven behaviourally in
+     * `switch-log.test.ts` ("banks the trial in progress and starts the next at
+     * zero", "an unobserved trial banks zero rather than repeating the last
+     * count"). That is strictly stronger than a statement-order check, which
+     * could pass while the values were wrong.
+     *
+     * What is left for THIS file to check is the half the unit test cannot see:
+     * that the flow still routes through the log rather than going back to
+     * hand-rolled refs.
+     */
     const text = readFileSync(FLOWS[0], "utf8");
-    const bankAt = text.indexOf("switchesPerTrial.current.push");
-    const resetAt = text.indexOf("switches.current = 0");
-    expect(bankAt, "the threshold flow no longer banks the per-trial count").toBeGreaterThan(-1);
+    expect(text, "the threshold flow no longer banks the per-trial count").toMatch(
+      /\blog\.bank\(\)/,
+    );
     expect(
-      bankAt,
-      "the count is reset BEFORE it is banked, which is the original defect exactly",
-    ).toBeLessThan(resetAt);
+      text,
+      "the threshold flow has gone back to hand-rolled switch refs; the bank/reset " +
+        "ordering is no longer guaranteed by construction",
+    ).not.toMatch(/switches\.current\s*=\s*0/);
   });
 });

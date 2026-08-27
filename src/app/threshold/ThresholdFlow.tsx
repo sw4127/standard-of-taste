@@ -26,6 +26,7 @@
 import { sessionInstances } from "@/engine/trial-instances";
 import Jump from "@/components/Jump";
 import { readableOn } from "@/lib/readable-on";
+import { createSwitchLog, type SwitchLog } from "@/lib/switch-log";
 import { useCallback, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { THRESHOLD_VIOLET, THRESHOLD_VIOLET_GLOW, THRESHOLD_FIELD, THRESHOLD_BASE } from "@/content/instrument-accents";
@@ -115,11 +116,16 @@ export default function ThresholdFlow({ family }: { family: string }) {
   const [armedA, setArmedA] = useState(false);
   const [armedB, setArmedB] = useState(false);
   /**
-   * Same-moment A/B switches. `switches` counts the CURRENT trial; the banked
-   * per-trial series is what reaches the data (D6) — see the note in `pick`.
+   * Same-moment A/B switches, one figure per trial, banked as each answer is
+   * recorded — see `switch-log.ts` for what it is and why it left this file.
+   *
+   * Lazily initialised rather than `useRef(createSwitchLog())`, which would
+   * build a log on every render and throw all but the first away. This is the
+   * pattern React documents for a ref holding a constructed object.
    */
-  const switches = useRef(0);
-  const switchesPerTrial = useRef<number[]>([]);
+  const logRef = useRef<SwitchLog | null>(null);
+  if (logRef.current === null) logRef.current = createSwitchLog();
+  const log = logRef.current;
 
   /**
    * THE RETEST GATE (RT-89a).
@@ -171,15 +177,10 @@ export default function ThresholdFlow({ family }: { family: string }) {
       setAnswers(nextAnswers);
       setArmedA(false);
       setArmedB(false);
-      // BANKED, then reset (E7/S14). This used to reset straight to zero, so
-      // the count of A/B switches was collected on every trial and thrown away
-      // on every trial — by completion the ref held the last trial's number and
-      // nothing had ever read it. Kept per trial rather than summed: a listener
-      // who switched fifteen times on one pair and once on the rest is a
-      // different observation from one who switched twice throughout, and a
-      // total cannot tell them apart.
-      switchesPerTrial.current.push(switches.current);
-      switches.current = 0;
+      // BANKED, then reset (E7/S14) — now one call, so the order cannot be got
+      // wrong here. It used to reset straight to zero, so the count of A/B
+      // switches was collected on every trial and thrown away on every trial.
+      log.bank();
       if (isFinished(next)) {
         const result = sessionResult(next);
         // Stamped on COMPLETION, never on start: a session abandoned at trial
@@ -208,7 +209,7 @@ export default function ThresholdFlow({ family }: { family: string }) {
           // How hard this listener actually worked at each comparison. Same
           // shape as delicacy's listen_a/listen_b: one figure per trial, in
           // trial order, so it lines up with `answers`.
-          switches: switchesPerTrial.current.join(","),
+          switches: log.serialize(),
         });
         setPhase("done");
       }
@@ -219,7 +220,12 @@ export default function ThresholdFlow({ family }: { family: string }) {
     // rebuilt, so the stored payload would have been truncated to a stale
     // prefix — a session that replays to the wrong threshold. The functional
     // updater it replaced did not need the dependency; the direct read does.
-    [answers, family, session, trial],
+    // `log` is the same object for the life of the component (a lazily built
+    // ref), so listing it changes nothing at runtime — but eslint is right that
+    // a value read inside the callback belongs in the list, and this file has
+    // already been bitten once by a read that was not declared: `answers` was
+    // missing here, which pinned the closure to a stale prefix of the payload.
+    [answers, family, log, session, trial],
   );
 
   const armed = armedA && armedB;
@@ -315,6 +321,30 @@ export default function ThresholdFlow({ family }: { family: string }) {
             onClick={() => {
               const seed = newSeed();
               const started = startSession(family, seed);
+              /*
+               * A SESSION'S DATA BEGINS WHEN THE SESSION DOES, NOT WHEN THE
+               * COMPONENT MOUNTS (E10/S3, Track F3).
+               *
+               * Every accumulator below was initialised at mount and never
+               * reset. That is correct today only by accident: this flow is a
+               * forward-only phase machine, so a session can start exactly once
+               * per mount. The day a result screen grows a "start again" button
+               * — the obvious thing to add there — the second session inherits
+               * the first one's data. `answers` is the serious one: it is what
+               * the result and the share link recompute the threshold FROM, so
+               * a stale prefix reports a number the session did not measure
+               * (N3). The switch log is the quieter one: a D6 column that is
+               * wrong only for the people who took the test twice, with no
+               * screen to show it.
+               *
+               * `threshold-session-reset.test.ts` holds this block to the
+               * component's state declarations, so a new accumulator cannot be
+               * added without being classified here.
+               */
+              log.reset();
+              setAnswers("");
+              setArmedA(false);
+              setArmedB(false);
               setSession(started);
               track("threshold_start", { family, sourceId: started.sourceId ?? null });
               setPhase("trial");
@@ -393,9 +423,7 @@ export default function ThresholdFlow({ family }: { family: string }) {
             accent={ICE}
             srcA={trial.srcA}
             srcB={trial.srcB}
-            onSwitch={(n) => {
-              switches.current = n;
-            }}
+            onSwitch={(n) => log.observe(n)}
           />
         ) : null}
 
