@@ -1,6 +1,15 @@
 # Copy brief — the delicacy detection readout
 
-**Status:** out for a Cowork pass (PM ruling RT-107a, 2026-08-21). Claude Code drafted the
+**Status: CLOSED — the pass happened and the copy shipped (2026-08-22).** The returned lines are
+wired verbatim but for one factual fix at the 12-of-15 boundary; `src/content/delicacy/copy.ts`
+cites this pass by name where it omits `margin`. Kept as the record of what was asked for and why.
+
+*This line said "out for a Cowork pass" until 2026-08-27 — five days after the work came back and
+shipped. A document describing finished work as outstanding is the same defect as one describing a
+retired gate as owed (`src/content/retired-gates.test.ts`), and it is not covered by that guard,
+which looks for ear passes and voice passes rather than copy passes.*
+
+**Original brief follows.** Status was: out for a Cowork pass (PM ruling RT-107a, 2026-08-21). Claude Code drafted the
 strings below; the PM rates CC's prose the weaker of the two tools, and the hazard gate
 cannot judge register (RT-106a). Structure and numbers are settled and must not move.
 Sentences are open.
