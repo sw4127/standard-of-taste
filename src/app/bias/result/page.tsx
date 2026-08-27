@@ -74,7 +74,7 @@ export default async function BiasResultPage({ searchParams }: { searchParams: S
 
   return (
     <main className="relative mx-auto flex min-h-dvh w-full max-w-lg flex-col justify-center overflow-hidden px-6 py-12 text-center">
-      <FluidField colors={FLUID} baseColor="#0B0A08" intensity={0.7} scrim={false} vignette />
+      <FluidField colors={FLUID} intensity={0.7} scrim={false} vignette />
       <Track event="bias_result_view" props={{ pct: result.pct, verdict: result.verdict }} />
       <div className="relative z-10 flex flex-col items-center">
         <p className="text-xs font-bold tracking-[0.4em]" style={{ color: GOLD }}>

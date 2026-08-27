@@ -70,7 +70,6 @@ import { SLUG_BY_FAMILY } from "./families";
 const ICE = THRESHOLD_VIOLET;
 const ICE_GLOW = THRESHOLD_VIOLET_GLOW;
 const FLUID = THRESHOLD_FIELD;
-const BASE = THRESHOLD_BASE;
 const BRAND = "rgba(244,245,248,0.72)";
 
 type Phase = "frame" | "trial" | "done";
@@ -248,7 +247,7 @@ export default function ThresholdFlow({ family }: { family: string }) {
   if (phase === "frame" && blocked) {
     return (
       <main className={SHELL + " justify-center"}>
-        <FluidField colors={FLUID} baseColor={BASE} intensity={0.6} scrim={false} vignette />
+        <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
         <div className="relative z-10">
           <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
             THE TASTE GYM
@@ -291,7 +290,7 @@ export default function ThresholdFlow({ family }: { family: string }) {
   if (phase === "frame") {
     return (
       <main className={SHELL + " justify-center"}>
-        <FluidField colors={FLUID} baseColor={BASE} intensity={0.6} scrim={false} vignette />
+        <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
         <div className="relative z-10">
           <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
             THE TASTE GYM
@@ -377,7 +376,7 @@ export default function ThresholdFlow({ family }: { family: string }) {
   /* --------------------------------------------------------------- trial */
   return (
     <main className={SHELL}>
-      <FluidField colors={FLUID} baseColor={BASE} intensity={0.6} scrim={false} vignette />
+      <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
       <div className="relative z-10 flex flex-1 flex-col">
         <div className="flex items-center justify-between text-xs font-medium text-muted">
           <span className="tracking-[0.3em]">

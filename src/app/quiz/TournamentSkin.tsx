@@ -16,5 +16,5 @@ export default function TournamentSkin({ hue }: { hue: number }) {
     `hsl(${(hue + 326) % 360} 80% 58%)`,
     `hsl(${(hue + 180) % 360} 72% 60%)`,
   ];
-  return <FluidField colors={colors} baseColor={SHEET} intensity={0.5} />;
+  return <FluidField colors={colors} baseColor={SHEET} intensity={0.5} scrim />;
 }

@@ -133,7 +133,7 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
 
   return (
     <main className="relative mx-auto flex min-h-dvh w-full max-w-lg flex-col justify-center overflow-hidden px-6 py-12">
-      <FluidField colors={FLUID} baseColor="#0B0A08" intensity={FIELD_CHOOSING} scrim={false} vignette />
+      <FluidField colors={FLUID} intensity={FIELD_CHOOSING} scrim={false} vignette />
       <Track event="landing_view" props={{ variant: "gym" }} />
       <div className="relative z-10">
         <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>

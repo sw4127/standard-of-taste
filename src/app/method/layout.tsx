@@ -26,7 +26,7 @@ const FLUID = GYM_FIELD;
 export default function MethodLayout({ children }: { children: React.ReactNode }) {
   return (
     <main className="relative mx-auto flex min-h-dvh w-full max-w-3xl flex-col overflow-hidden px-6 py-12">
-      <FluidField colors={FLUID} baseColor="#0B0A08" intensity={FIELD_READING} scrim={false} vignette />
+      <FluidField colors={FLUID} intensity={FIELD_READING} scrim={false} vignette />
       <div className="relative z-10">
         <div className="flex items-baseline justify-between gap-4">
           <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>

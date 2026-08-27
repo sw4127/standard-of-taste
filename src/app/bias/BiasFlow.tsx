@@ -57,7 +57,6 @@ const GOLD_DIM = "hsl(42 45% 50%)";
 const GOLD_TINT = PRESTIGE_GOLD_SOFT;
 const GOLD_GLOW = PRESTIGE_GOLD_GLOW;
 const FLUID = PRESTIGE_FIELD;
-const BASE = "#0B0A08"; // warm near-black — the gym after hours
 
 const RATE_BEAT_MS = 420;
 
@@ -302,7 +301,7 @@ export default function BiasFlow() {
   if (phase === "frame") {
     return (
       <main className={`${shell} justify-center`}>
-        <FluidField colors={FLUID} baseColor={BASE} intensity={0.6} scrim={false} vignette />
+        <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
         <div className="relative z-10">
           {kicker}
           <h1 className="mt-6 font-display text-4xl font-semibold leading-tight">
@@ -366,7 +365,7 @@ export default function BiasFlow() {
   if (phase === "bridge") {
     return (
       <main className={`${shell} justify-center`}>
-        <FluidField colors={FLUID} baseColor={BASE} intensity={0.68} scrim={false} vignette />
+        <FluidField colors={FLUID} intensity={0.68} scrim={false} vignette />
         <div className="relative z-10">
           {kicker}
           <h1 className="mt-6 font-display text-4xl font-semibold leading-tight">Round two.</h1>
@@ -423,7 +422,7 @@ export default function BiasFlow() {
         : "tap to listen · rating unlocks at the notch";
     return (
       <main className={shell}>
-        <FluidField colors={FLUID} baseColor={BASE} intensity={0.6} scrim={false} vignette />
+        <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
         <div className="relative z-10 flex flex-1 flex-col">
           <div className="mb-8">
             <div className="flex items-center justify-between text-xs font-medium text-muted">
@@ -527,7 +526,7 @@ export default function BiasFlow() {
     const v = VERDICT_COPY[result.verdict];
     return (
       <main className={`${shell} justify-center text-center`}>
-        <FluidField colors={FLUID} baseColor={BASE} intensity={0.78} scrim={false} vignette />
+        <FluidField colors={FLUID} intensity={0.78} scrim={false} vignette />
         <div className="relative z-10 flex flex-col items-center">
           <p className="text-xs font-bold tracking-[0.4em] text-muted">YOUR NUMBER</p>
           <p className="mt-4 font-display text-8xl font-semibold leading-none" style={{ color: GOLD, textShadow: `0 0 60px ${GOLD_GLOW}` }}>
@@ -621,7 +620,7 @@ export default function BiasFlow() {
     const origin = typeof window === "undefined" ? "" : window.location.origin;
     return (
       <main className={shell}>
-        <FluidField colors={FLUID} baseColor={BASE} intensity={0.55} scrim={false} vignette />
+        <FluidField colors={FLUID} intensity={0.55} scrim={false} vignette />
         <div className="relative z-10">
           {kicker}
           <h1 className="mt-6 font-display text-4xl font-semibold leading-tight">

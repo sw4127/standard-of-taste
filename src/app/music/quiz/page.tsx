@@ -332,7 +332,7 @@ export default function MusicQuizPage() {
   if (phase === "belief") {
     return (
       <main className="relative mx-auto flex min-h-dvh w-full max-w-lg flex-col justify-center overflow-hidden px-6 py-10">
-        <FluidField colors={fluidColors} baseColor="#0A0A11" intensity={0.7} scrim={false} vignette />
+        <FluidField colors={fluidColors} intensity={0.7} scrim={false} vignette />
         <div className="relative z-10">
           <p className="text-xs font-bold tracking-[0.4em] text-accent">VIBE CHECK</p>
           {/* §slice-5 — the disagreement hook: football read it as <X>; will taste agree? */}
@@ -372,7 +372,7 @@ export default function MusicQuizPage() {
         className="relative mx-auto flex min-h-dvh w-full max-w-lg cursor-pointer flex-col items-center justify-center overflow-hidden px-6 text-center"
         onClick={advance}
       >
-        <FluidField colors={fluidColors} baseColor="#0A0A11" intensity={0.78} scrim={false} vignette />
+        <FluidField colors={fluidColors} intensity={0.78} scrim={false} vignette />
         <div className="relative z-10 flex flex-col items-center">
           {/* §20.C2 — the sigil locks in: the curiosity gap is literal */}
           <div className="mb-8 animate-pulse">
@@ -408,7 +408,7 @@ export default function MusicQuizPage() {
         if (selected && !blendMode) advance();
       }}
     >
-      <FluidField colors={fluidColors} baseColor="#0A0A11" intensity={0.7} scrim={false} vignette />
+      <FluidField colors={fluidColors} intensity={0.7} scrim={false} vignette />
       <div className="relative z-10 flex flex-1 flex-col">
       {/* Progress + §18.A permission line */}
       <div className="mb-8">

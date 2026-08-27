@@ -74,7 +74,6 @@ const ICE = DELICACY_ICE;
 const ICE_TINT = DELICACY_ICE_SOFT;
 const ICE_GLOW = DELICACY_ICE_GLOW;
 const FLUID = DELICACY_FIELD;
-const BASE = "#07090B"; // cold near-black
 
 const BEAT_MS = 420;
 
@@ -221,7 +220,7 @@ export default function DelicacyFlow() {
   if (phase === "frame") {
     return (
       <main className={`${shell} justify-center`}>
-        <FluidField colors={FLUID} baseColor={BASE} intensity={0.6} scrim={false} vignette />
+        <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
         <div className="relative z-10">
           {kicker}
           <h1 className="mt-6 font-display text-4xl font-semibold leading-tight">
@@ -283,7 +282,7 @@ export default function DelicacyFlow() {
     const right = practicePick === p.originalSide;
     return (
       <main className={shell}>
-        <FluidField colors={FLUID} baseColor={BASE} intensity={0.6} scrim={false} vignette />
+        <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
         <div className="relative z-10 flex flex-1 flex-col">
           <div className="flex items-center justify-between text-xs font-medium text-muted">
             <span className="tracking-[0.3em]">PRACTICE — NOT SCORED</span>
@@ -380,7 +379,7 @@ export default function DelicacyFlow() {
       armed ? "heard enough — it plays on" : "tap to listen · unlocks at the notch";
     return (
       <main className={shell}>
-        <FluidField colors={FLUID} baseColor={BASE} intensity={0.6} scrim={false} vignette />
+        <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
         <div className="relative z-10 flex flex-1 flex-col">
           <div className="mb-6">
             <div className="flex items-center justify-between text-xs font-medium text-muted">
@@ -551,7 +550,7 @@ export default function DelicacyFlow() {
     const credits = [...new Set(DELICACY_TRIALS.map((t) => `${t.sourceCredit} — ${t.license} · ${t.attribution}`))];
     return (
       <main className={shell}>
-        <FluidField colors={FLUID} baseColor={BASE} intensity={0.72} scrim={false} vignette />
+        <FluidField colors={FLUID} intensity={0.72} scrim={false} vignette />
         <div className="relative z-10">
           <div className="text-center">
             <p className="text-xs font-bold tracking-[0.4em] text-muted">YOUR EARS, MEASURED</p>

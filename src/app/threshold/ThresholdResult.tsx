@@ -55,7 +55,6 @@ const ICE_GLOW = THRESHOLD_VIOLET_GLOW;
 // it looked for hsl(190 exactly, and an ambient field is built from the
 // accent's NEIGHBOURS, which are 180-225. The guard now checks the range.
 const FLUID = THRESHOLD_FIELD;
-const BASE = THRESHOLD_BASE;
 const BRAND = "rgba(244,245,248,0.72)";
 
 export default function ThresholdResult({
@@ -109,7 +108,7 @@ export default function ThresholdResult({
 
   return (
     <main className="relative mx-auto flex min-h-dvh w-full max-w-lg flex-col overflow-hidden px-6 py-10">
-      <FluidField colors={FLUID} baseColor={BASE} intensity={0.6} scrim={false} vignette />
+      <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
       <div className="relative z-10">
         <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
           THE TASTE GYM

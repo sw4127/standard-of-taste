@@ -15,18 +15,35 @@
  */
 import { useEffect, useRef, useState } from "react";
 
-type Props = {
+type Common = {
   colors: string[];
-  baseColor: string;
   /** 0–1 blob opacity. Lower = subtler field. */
   intensity?: number;
   animated?: boolean;
-  /** Top fade to baseColor — helps dark-ink legibility on a LIGHT stage
-   *  (football). Turn OFF on dark stages (music) so the top zone keeps colour. */
-  scrim?: boolean;
   /** Radial edge-darkening for painterly depth/chiaroscuro (oil-painting feel). */
   vignette?: boolean;
 };
+
+/**
+ * `baseColor` IS ONLY READ UNDER `scrim`, AND THE TYPE NOW SAYS SO (E10/S7,
+ * PM ruling RT-AI:a).
+ *
+ * It was a required prop, and 23 of the 24 call sites passed one while also
+ * passing `scrim={false}` — so 23 colours were handed to a component that
+ * never painted them. Three of those were constants named as each instrument's
+ * own dark backdrop (`#0B0A08` "warm near-black — the gym after hours",
+ * `#07090B` "cold near-black", `THRESHOLD_BASE`), describing a difference the
+ * eye has never seen: every one of those pages takes its surface from
+ * `--app-bg`, which `RouteBackground` sets to `#08090d` for all of them.
+ *
+ * A union rather than an optional prop. `baseColor?: string` would have let the
+ * dead argument keep being passed; `baseColor?: never` makes passing it without
+ * `scrim` a compile error, so the 23 had to actually go — and `scrim: true`
+ * cannot be turned on without supplying the colour it needs.
+ */
+type Props =
+  | (Common & { scrim: true; baseColor: string })
+  | (Common & { scrim?: false; baseColor?: never });
 
 // Fixed blob anchors (% positions) — stable across SSR/CSR.
 const ANCHORS = ["14% 16%", "84% 20%", "22% 82%", "80% 74%", "48% 46%", "6% 56%"];
