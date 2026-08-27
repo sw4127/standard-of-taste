@@ -31,13 +31,13 @@ import AcrossSessions from "@/components/AcrossSessions";
 import ExpertPanel from "@/components/ExpertPanel";
 import { computeCalibration } from "@/engine/calibration";
 import DownloadButton from "@/app/result/DownloadButton";
-import { DELICACY_ICE, DELICACY_ICE_GLOW } from "@/content/instrument-accents";
+import { DELICACY_ICE, DELICACY_ICE_GLOW, DELICACY_FIELD } from "@/content/instrument-accents";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
 const ICE = DELICACY_ICE;
 const ICE_GLOW = DELICACY_ICE_GLOW;
-const FLUID = ["hsl(195 45% 40%)", "hsl(210 40% 36%)", "hsl(180 40% 38%)", "hsl(225 35% 34%)"];
+const FLUID = DELICACY_FIELD;
 
 /**
  * Prod gate: until the pool of record is live, no share surface exists in

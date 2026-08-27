@@ -3,8 +3,10 @@ import { join, sep } from "node:path";
 import { describe, expect, it } from "vitest";
 import { MACHINES } from "@/components/OtherMachines";
 import {
+  DELICACY_FIELD,
   DELICACY_ICE,
   DELICACY_ICE_GLOW,
+  PRESTIGE_FIELD,
   PRESTIGE_GOLD,
   PRESTIGE_GOLD_GLOW,
   THRESHOLD_BASE,
@@ -323,5 +325,104 @@ describe("the registry's values are declared in exactly one place", () => {
         "owns. Import the named constant instead — otherwise changing the accent " +
         "there changes some of the product and not the rest:\n" + holders.join("\n"),
     ).toEqual(ALLOWED);
+  });
+});
+
+describe("the ambient fields are declared once too", () => {
+  /**
+   * E10/S4b — THE ARRAY VERSION OF THE SAME DEFECT.
+   *
+   * The gold field was re-typed verbatim in seven files and the delicacy field
+   * in two, while `THRESHOLD_FIELD` sat in the registry doing the job properly
+   * for the one instrument that had bothered. The sweep in S4a matched single
+   * quoted colours and so could not see any of it — a four-element array is
+   * seven quoted colours in a row, and no one of them is a registry value.
+   *
+   * So this checks the FIRST COLOUR of each field, which is what a copy of the
+   * array necessarily carries and what a legitimately different field would
+   * not.
+   */
+  const FIELDS: [string, readonly string[]][] = [
+    ["PRESTIGE_FIELD", PRESTIGE_FIELD],
+    ["DELICACY_FIELD", DELICACY_FIELD],
+    ["THRESHOLD_FIELD", THRESHOLD_FIELD],
+  ];
+
+  it("each field has four analogous colours and they are all tintable accents", () => {
+    for (const [name, field] of FIELDS) {
+      expect(field.length, `${name} is not four colours`).toBe(4);
+      for (const c of field) expect(tint(c), `${name} holds ${c}`).toMatch(TINTED);
+    }
+  });
+
+  it("the three fields are distinct, so this cannot pass by collision", () => {
+    const heads = FIELDS.map(([, f]) => f[0]);
+    expect(new Set(heads).size).toBe(3);
+  });
+
+  it("no file re-types a field the registry owns", () => {
+    const files = tsFiles("src");
+    expect(files.length, "found no source files, so this sweep proves nothing").toBeGreaterThan(100);
+    const offenders: string[] = [];
+    for (const f of files) {
+      if (posix(f).startsWith("src/content/instrument-accents")) continue;
+      const text = readFileSync(f, "utf8");
+      for (const [name, field] of FIELDS) {
+        // The array literal's opening: `["<first colour>",` — prose and single
+        // uses of the colour elsewhere do not match this shape.
+        if (text.includes(`["${field[0]}",`)) offenders.push(`${posix(f)} re-types ${name}`);
+      }
+    }
+    expect(
+      offenders,
+      "These files re-type an ambient field the registry already owns. Import the " +
+        "named constant — otherwise changing an instrument's ambience changes some " +
+        "of its surfaces and not the rest:\n" + offenders.join("\n"),
+    ).toEqual([]);
+  });
+
+  /**
+   * THE DEAD ARRAY, PINNED SO IT CANNOT BE FORGOTTEN OR SILENTLY TIDIED.
+   *
+   * The home page carries a second delicacy field that RENDERS NOTHING —
+   * `Machine.field` is populated for every machine and read by none. It is
+   * recorded, not resolved (RT-AD). This test states the fact; when the ruling
+   * comes it fails and has to be updated deliberately, which is the point.
+   *
+   * Note what this test does NOT claim: it does not claim the two fields look
+   * different on screen. They cannot, because one of them never reaches a
+   * screen. An earlier draft of this file asserted otherwise, from the field's
+   * name and its doc comment, before anyone checked what read it.
+   */
+  it("records that the home page still carries its unread delicacy field", () => {
+    const home = readFileSync("src/app/page.tsx", "utf8");
+    expect(
+      home.includes(`["hsl(190 55% 45%)",`),
+      "The home page's delicacy field has changed. If RT-AD was ruled, update " +
+        "this test to match the decision; if it was changed by accident, that is " +
+        "the accident this test exists to catch.",
+    ).toBe(true);
+    expect(
+      DELICACY_FIELD[0],
+      "the instrument's own delicacy field has changed; re-check RT-AD",
+    ).toBe("hsl(195 45% 40%)");
+  });
+
+  it("records that Machine.field is still read by nothing", () => {
+    /*
+     * The fact the one above depends on. If someone WIRES `field` — which is
+     * one of the two answers RT-AD can take — this fails, and the test above
+     * stops being a note about dead data and becomes a real claim about two
+     * different-looking surfaces. It must not change meaning silently.
+     */
+    const floor = readFileSync("src/app/GymFloor.tsx", "utf8");
+    expect(floor, "GymFloor no longer declares Machine.field").toMatch(/^\s+field: string\[\];/m);
+    const reads = [...floor.matchAll(/\.field\b/g)];
+    expect(
+      reads.length,
+      "GymFloor now READS Machine.field. If RT-AD was ruled 'wire it', update " +
+        "these tests to describe two live fields. If this is accidental, the " +
+        "floor's ambience just started changing on selection.",
+    ).toBe(0);
   });
 });

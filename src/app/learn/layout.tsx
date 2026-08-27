@@ -1,6 +1,6 @@
 import Link from "next/link";
 import FluidField from "@/components/FluidField";
-import { PRESTIGE_GOLD } from "@/content/instrument-accents";
+import { PRESTIGE_GOLD, PRESTIGE_FIELD } from "@/content/instrument-accents";
 
 /**
  * Reading-room shell (2026-07-16 brief §3.C7 — serves C2/N1, voice per D5).
@@ -20,7 +20,7 @@ import { PRESTIGE_GOLD } from "@/content/instrument-accents";
  */
 const BRAND = "rgba(244,245,248,0.72)";
 const GOLD = PRESTIGE_GOLD;
-const FLUID = ["hsl(42 55% 48%)", "hsl(28 50% 44%)", "hsl(52 45% 46%)", "hsl(20 40% 40%)"];
+const FLUID = PRESTIGE_FIELD;
 
 export default function LearnLayout({ children }: { children: React.ReactNode }) {
   return (

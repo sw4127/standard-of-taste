@@ -1,5 +1,6 @@
 import Link from "next/link";
 import FluidField from "@/components/FluidField";
+import { PRESTIGE_FIELD } from "@/content/instrument-accents";
 
 /**
  * The `/method` shell (E9/S5, Track E — approved RT-158a / RT-159a).
@@ -20,7 +21,7 @@ import FluidField from "@/components/FluidField";
  * colour.
  */
 const BRAND = "rgba(244,245,248,0.72)";
-const FLUID = ["hsl(42 55% 48%)", "hsl(28 50% 44%)", "hsl(52 45% 46%)", "hsl(20 40% 40%)"];
+const FLUID = PRESTIGE_FIELD;
 
 export default function MethodLayout({ children }: { children: React.ReactNode }) {
   return (

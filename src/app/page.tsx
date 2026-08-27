@@ -5,7 +5,7 @@ import GymFloor, { type Machine } from "./GymFloor";
 import Track from "@/components/Track";
 import { worldCup } from "@/content/world-cup";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
-import { PRESTIGE_GOLD, DELICACY_ICE, THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE } from "@/content/instrument-accents";
+import { PRESTIGE_GOLD, PRESTIGE_FIELD, DELICACY_ICE, THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE } from "@/content/instrument-accents";
 
 /**
  * The taste-gym landing (RT-3c, memo §9.7 RESOLVED 2026-07-11): /bias is the
@@ -54,7 +54,7 @@ const MACHINES: Machine[] = [
     href: "/bias",
     n: "01",
     accent: GOLD,
-    field: ["hsl(42 55% 48%)", "hsl(28 50% 44%)", "hsl(52 45% 46%)", "hsl(20 40% 40%)"],
+    field: PRESTIGE_FIELD,
     surface: "#0B0A08",
     title: "The Prestige Test",
     criterion: "Freedom from prejudice",
@@ -69,6 +69,18 @@ const MACHINES: Machine[] = [
           href: "/delicacy",
           n: "02",
           accent: ICE,
+          /*
+           * NOT `DELICACY_FIELD`, AND THIS ARRAY RENDERS NOTHING (E10/S4b).
+           *
+           * `field` is never read. `GymFloor` reads `accent` and `surface`;
+           * the floor's ambience comes from the page-level `FLUID` below and
+           * stays gold whichever machine is selected. Measured on the rendered
+           * page: choosing Delicacy leaves the gradient at rgb(190, 149, 55).
+           *
+           * Kept verbatim rather than pointed at DELICACY_FIELD, because the
+           * two differ and that difference is the only surviving record of
+           * what this was meant to look like. Wire it or delete it — RT-AD.
+           */
           field: ["hsl(190 55% 45%)", "hsl(205 50% 42%)", "hsl(175 45% 42%)", "hsl(215 40% 38%)"],
           surface: "#070C0E",
           title: "The Delicacy Trials",
@@ -104,7 +116,7 @@ const MACHINES: Machine[] = [
     meta: "14-26 min · a number in cents, ms or kbps",
   },
 ];
-const FLUID = ["hsl(42 55% 48%)", "hsl(28 50% 44%)", "hsl(52 45% 46%)", "hsl(20 40% 40%)"];
+const FLUID = PRESTIGE_FIELD;
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 

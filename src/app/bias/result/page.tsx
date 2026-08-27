@@ -23,13 +23,13 @@ import FluidField from "@/components/FluidField";
 import Track from "@/components/Track";
 import ShareButton from "@/app/result/ShareButton";
 import DownloadButton from "@/app/result/DownloadButton";
-import { PRESTIGE_GOLD, PRESTIGE_GOLD_GLOW } from "@/content/instrument-accents";
+import { PRESTIGE_GOLD, PRESTIGE_GOLD_GLOW, PRESTIGE_FIELD } from "@/content/instrument-accents";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
 const GOLD = PRESTIGE_GOLD;
 const GOLD_GLOW = PRESTIGE_GOLD_GLOW;
-const FLUID = ["hsl(42 55% 48%)", "hsl(28 50% 44%)", "hsl(52 45% 46%)", "hsl(20 40% 40%)"];
+const FLUID = PRESTIGE_FIELD;
 
 function resultFrom(sp: Record<string, string | string[] | undefined>): {
   result: BiasResult;

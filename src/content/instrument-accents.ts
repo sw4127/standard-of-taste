@@ -62,7 +62,46 @@ export const THRESHOLD_VIOLET_GLOW = "hsl(276 75% 68% / 0.4)";
 /**
  * The ambient field behind each instrument — analogous neighbours of its own
  * accent, never a second accent (design bar: one accent in play per screen).
+ *
+ * ONLY THRESHOLD'S LIVED HERE UNTIL E10/S4b. The gold field was re-typed
+ * verbatim in SEVEN places (both Prestige surfaces, the Lab, the reading room,
+ * `/method`, and twice on the home page) and the delicacy field in two. The
+ * registry held one instrument's field and the other two were loose, which is
+ * the same defect as the accents themselves and for the same reason: whoever
+ * changes gold's ambience will change one file of seven.
  */
+export const PRESTIGE_FIELD = [
+  "hsl(42 55% 48%)",
+  "hsl(28 50% 44%)",
+  "hsl(52 45% 46%)",
+  "hsl(20 40% 40%)",
+];
+
+/**
+ * The field the Delicacy instrument actually paints — its flow and its result
+ * page (E10/S4b).
+ *
+ * A SECOND, DIFFERENT DELICACY FIELD EXISTS ON THE HOME PAGE AND RENDERS
+ * NOTHING. `Machine.field` in `GymFloor` is documented as "ambient field
+ * colours while this machine is selected" and is populated for all three
+ * machines — and it is never read. Selecting a machine sets `--app-bg` from
+ * `Machine.surface`; the floor's ambience comes from the page-level array and
+ * stays gold throughout. Verified on the rendered page: choosing Delicacy
+ * leaves the gradient at `rgb(190, 149, 55)`, which is PRESTIGE_FIELD's first
+ * colour.
+ *
+ * So the home page's delicacy array is not a divergence in what the product
+ * looks like. It is dead data, and pointing it here would quietly erase the
+ * evidence of what the floor was once meant to do. Left alone for a ruling —
+ * see RT-AD.
+ */
+export const DELICACY_FIELD = [
+  "hsl(195 45% 40%)",
+  "hsl(210 40% 36%)",
+  "hsl(180 40% 38%)",
+  "hsl(225 35% 34%)",
+];
+
 export const THRESHOLD_FIELD = [
   "hsl(276 45% 44%)",
   "hsl(290 40% 40%)",

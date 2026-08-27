@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { MACHINES } from "@/components/OtherMachines";
 import FluidField from "@/components/FluidField";
-import { PRESTIGE_GOLD } from "@/content/instrument-accents";
+import { PRESTIGE_GOLD, PRESTIGE_FIELD } from "@/content/instrument-accents";
 
 /**
  * The Lab shell (artifact pivot §4). Same gold/dark system, display face, and
@@ -24,7 +24,7 @@ import { PRESTIGE_GOLD } from "@/content/instrument-accents";
  */
 const BRAND = "rgba(244,245,248,0.72)";
 const GOLD = PRESTIGE_GOLD;
-const FLUID = ["hsl(42 55% 48%)", "hsl(28 50% 44%)", "hsl(52 45% 46%)", "hsl(20 40% 40%)"];
+const FLUID = PRESTIGE_FIELD;
 
 export default function LabLayout({ children }: { children: React.ReactNode }) {
   return (
