@@ -22,9 +22,10 @@
  * state.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { tint } from "@/content/instrument-accents";
+import { useMachineSelection } from "./GymStage";
 
 export interface Machine {
   id: string;
@@ -43,7 +44,7 @@ export interface Machine {
 
 export default function GymFloor({ machines, locked }: { machines: Machine[]; locked?: React.ReactNode }) {
   const router = useRouter();
-  const [selected, setSelected] = useState<string | null>(null);
+  const { selected, select } = useMachineSelection();
   const chosen = machines.find((m) => m.id === selected) ?? null;
 
   // Repaint the page surface to the chosen instrument. RouteBackground owns
@@ -76,7 +77,7 @@ export default function GymFloor({ machines, locked }: { machines: Machine[]; lo
               type="button"
               aria-pressed={isSelected}
               aria-label={isSelected ? `Start ${m.title}` : `Choose ${m.title}`}
-              onClick={() => (isSelected ? router.push(m.href) : setSelected(m.id))}
+              onClick={() => (isSelected ? router.push(m.href) : select(m.id))}
               className="group flex flex-col rounded-2xl border p-5 text-left transition duration-300 active:scale-[0.99]"
               style={{
                 borderColor: isSelected ? m.accent : tint(m.accent),

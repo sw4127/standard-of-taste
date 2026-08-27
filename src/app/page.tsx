@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import FluidField from "@/components/FluidField";
+import GymStage from "./GymStage";
 import GymFloor, { type Machine } from "./GymFloor";
 import Track from "@/components/Track";
 import { worldCup } from "@/content/world-cup";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
-import { PRESTIGE_GOLD, PRESTIGE_FIELD, DELICACY_ICE, THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE, GYM_FIELD, FIELD_CHOOSING } from "@/content/instrument-accents";
+import { PRESTIGE_GOLD, PRESTIGE_FIELD, DELICACY_ICE, DELICACY_FIELD, THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE } from "@/content/instrument-accents";
 
 /**
  * The taste-gym landing (RT-3c, memo §9.7 RESOLVED 2026-07-11): /bias is the
@@ -70,20 +70,22 @@ const MACHINES: Machine[] = [
           n: "02",
           accent: ICE,
           /*
-           * NOT `DELICACY_FIELD`, AND THIS ARRAY RENDERS NOTHING (E10/S4b).
+           * RESOLVED IN E10/S8, ON THE PATTERN THE OTHER TWO ALREADY SET.
            *
-           * `field` is never read. `GymFloor` reads `accent` and `surface`;
-           * the floor's ambience comes from the page-level `FLUID` below and
-           * does not change when a machine is selected. Measured on the
-           * rendered page: choosing a machine leaves the gradient at
-           * GYM_FIELD's rgb(83, 87, 101). (Before E10/S6a it stayed gold,
-           * which is how this was first found.)
+           * This held a hand-written blue — `hsl(190 55% 45%) …` — different
+           * from the field the Delicacy Trials themselves paint. While `field`
+           * was dead (E10/S4b) that difference was invisible and was left
+           * alone rather than tidied away, because tidying it would have
+           * decided RT-AD by stealth.
            *
-           * Kept verbatim rather than pointed at DELICACY_FIELD, because the
-           * two differ and that difference is the only surviving record of
-           * what this was meant to look like. Wire it or delete it — RT-AD.
+           * Wiring it makes the difference visible: selecting Delicacy would
+           * show one blue and entering it another. Prestige and Threshold both
+           * already point at their instrument's own field, and no reason was
+           * ever recorded for delicacy being the exception — so it joins them.
+           * The promise this feature makes is that the room shows you the
+           * machine you picked, which only holds if it is the same colour.
            */
-          field: ["hsl(190 55% 45%)", "hsl(205 50% 42%)", "hsl(175 45% 42%)", "hsl(215 40% 38%)"],
+          field: DELICACY_FIELD,
           surface: "#070C0E",
           title: "The Delicacy Trials",
           criterion: "Delicacy of taste",
@@ -118,7 +120,6 @@ const MACHINES: Machine[] = [
     meta: "14-26 min · a number in cents, ms or kbps",
   },
 ];
-const FLUID = GYM_FIELD;
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -133,8 +134,8 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
 
   return (
     <main className="relative mx-auto flex min-h-dvh w-full max-w-lg flex-col justify-center overflow-hidden px-6 py-12">
-      <FluidField colors={FLUID} intensity={FIELD_CHOOSING} scrim={false} vignette />
       <Track event="landing_view" props={{ variant: "gym" }} />
+      <GymStage machines={MACHINES}>
       <div className="relative z-10">
         <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
           THE TASTE GYM
@@ -199,6 +200,7 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
           </Link>
         </p>
       </div>
+      </GymStage>
     </main>
   );
 }

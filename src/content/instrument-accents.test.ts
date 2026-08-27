@@ -390,48 +390,79 @@ describe("the ambient fields are declared once too", () => {
   });
 
   /**
-   * THE DEAD ARRAY, PINNED SO IT CANNOT BE FORGOTTEN OR SILENTLY TIDIED.
+   * `Machine.field` IS LIVE NOW (E10/S8, RT-AH:a) — and the pin that was
+   * guarding its deadness was scoped to the wrong file.
    *
-   * The home page carries a second delicacy field that RENDERS NOTHING —
-   * `Machine.field` is populated for every machine and read by none. It is
-   * recorded, not resolved (RT-AD). This test states the fact; when the ruling
-   * comes it fails and has to be updated deliberately, which is the point.
+   * The E10/S4b version asserted that `GymFloor` reads `.field` zero times, on
+   * the reasoning that the floor owned the selection so the floor would be
+   * where a wiring appeared. The wiring appeared in `GymStage` instead — the
+   * state had to move UP to reach the background — so that guard stayed green
+   * through the exact change it existed to catch. Fifth instance in this
+   * repository of a guard watching part of the room, and the first one I wrote
+   * myself and then walked past.
    *
-   * Note what this test does NOT claim: it does not claim the two fields look
-   * different on screen. They cannot, because one of them never reaches a
-   * screen. An earlier draft of this file asserted otherwise, from the field's
-   * name and its doc comment, before anyone checked what read it.
+   * So it is replaced by a check of the BEHAVIOUR rather than of a file: every
+   * machine carries a field, the stage hands the chosen machine's field to the
+   * background, and the resting state is the gym's own.
    */
-  it("records that the home page still carries its unread delicacy field", () => {
+  it("every machine's field is its own instrument's field", () => {
+    /*
+     * RT-AD, resolved. The home page used to carry a hand-written delicacy blue
+     * that differed from the one the Delicacy Trials paint. Invisible while
+     * `field` was dead; a visible inconsistency the moment it was wired, since
+     * the whole promise is that the room shows you the machine you picked.
+     */
     const home = readFileSync("src/app/page.tsx", "utf8");
+    for (const [machine, field] of [
+      ["bias", "PRESTIGE_FIELD"],
+      ["delicacy", "DELICACY_FIELD"],
+      ["threshold", "THRESHOLD_FIELD"],
+    ]) {
+      expect(
+        home,
+        `the ${machine} machine no longer takes ${field}; the floor would light in a ` +
+          `colour the instrument does not use`,
+      ).toContain(`field: ${field},`);
+    }
     expect(
-      home.includes(`["hsl(190 55% 45%)",`),
-      "The home page's delicacy field has changed. If RT-AD was ruled, update " +
-        "this test to match the decision; if it was changed by accident, that is " +
-        "the accident this test exists to catch.",
-    ).toBe(true);
-    expect(
-      DELICACY_FIELD[0],
-      "the instrument's own delicacy field has changed; re-check RT-AD",
-    ).toBe("hsl(195 45% 40%)");
+      home.includes(`["hsl(`),
+      "a machine's field is hand-written again instead of naming a registry field",
+    ).toBe(false);
   });
 
-  it("records that Machine.field is still read by nothing", () => {
-    /*
-     * The fact the one above depends on. If someone WIRES `field` — which is
-     * one of the two answers RT-AD can take — this fails, and the test above
-     * stops being a note about dead data and becomes a real claim about two
-     * different-looking surfaces. It must not change meaning silently.
-     */
-    const floor = readFileSync("src/app/GymFloor.tsx", "utf8");
-    expect(floor, "GymFloor no longer declares Machine.field").toMatch(/^\s+field: string\[\];/m);
-    const reads = [...floor.matchAll(/\.field\b/g)];
+  it("the stage lights the room from the chosen machine, and rests on the gym's own", () => {
+    const stage = readFileSync("src/app/GymStage.tsx", "utf8");
+    // The read that E10/S4b's guard was looking for in the wrong file.
+    expect(stage, "the stage no longer reads the chosen machine's field").toMatch(
+      /chosen\s*\?\s*chosen\.field\s*:\s*GYM_FIELD/,
+    );
+    expect(stage, "the stage no longer brightens on selection").toMatch(
+      /chosen\s*\?\s*FIELD_MEASURING\s*:\s*FIELD_CHOOSING/,
+    );
+  });
+
+  it("nothing else renders a floor without a stage to light", () => {
+    // `useMachineSelection` throws outside a stage, so this is belt-and-braces
+    // — but a second floor somewhere would be a second room with no lighting.
+    // Assembled, so this file does not match its own sweep — the same trap
+    // E10/S1 and E10/S2 both fell into.
+    const FLOOR = "<" + "GymFloor";
+    const STAGE = "<" + "GymStage";
+    const floors = tsFiles("src")
+      .filter((f) => readFileSync(f, "utf8").includes(FLOOR))
+      .map(posix);
+    expect(floors).toEqual(["src/app/page.tsx"]);
+
+    const home = readFileSync("src/app/page.tsx", "utf8");
+    const stageAt = home.indexOf(STAGE);
+    const floorAt = home.indexOf(FLOOR);
+    const closeAt = home.indexOf("</" + "GymStage>");
+    expect(stageAt, "the home page renders no stage").toBeGreaterThan(-1);
+    expect(closeAt, "the stage is never closed").toBeGreaterThan(floorAt);
     expect(
-      reads.length,
-      "GymFloor now READS Machine.field. If RT-AD was ruled 'wire it', update " +
-        "these tests to describe two live fields. If this is accidental, the " +
-        "floor's ambience just started changing on selection.",
-    ).toBe(0);
+      floorAt > stageAt && floorAt < closeAt,
+      "the floor is not inside the stage, so choosing a machine lights nothing",
+    ).toBe(true);
   });
 });
 
