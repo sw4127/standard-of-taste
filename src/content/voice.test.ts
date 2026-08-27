@@ -6,6 +6,7 @@
  * that has only ever returned "clean" is not known to check anything.
  */
 
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { checkVoice, formatVoiceReport, type VoiceString } from "./voice";
 import { VERDICT_COPY, biasCardSwayLine, biasCardCta, shareText as biasShareText, resultTitleFragment } from "./bias/copy";
@@ -45,6 +46,7 @@ import {
 import { staircaseCopyFixtures, staircaseCardFixtures } from "./staircase/fixtures";
 import { vocabularyStrings } from "./vocabulary/fixtures";
 import { LIMIT_KIND_COPY, RETIRED_SOURCE_NOTE } from "./staircase/limits";
+import { LEARN_PAGES } from "./learn";
 
 /** Every cohort-visible string, with the intensity its surface is allowed. */
 function shippingStrings(): VoiceString[] {
@@ -90,6 +92,42 @@ function shippingStrings(): VoiceString[] {
         `and until then this page is an explanation rather than a door.`,
       intensity: "calm",
     });
+  }
+
+  /**
+   * THE READING-ROOM FAQ (E9/S1) — the largest block of cohort-visible prose
+   * that was never in this deck.
+   *
+   * THE DEFECT THIS EXISTS FOR, in the words it shipped in:
+   *
+   *   learn.ts     "The paid tier is the training arc — retests, progression
+   *                 charts, and the delicacy battery — not the reading itself."
+   *   learn.ts     "The paid training arc is practice made measurable..."
+   *
+   * Both render as visible <dt>/<dd> pairs on /learn/prestige-bias-test and
+   * /learn/practice, AND are emitted as FAQPage JSON-LD, so a search engine
+   * repeats them. There is no paid tier and never was one (CLAUDE.md, "D4
+   * amendment", RT-44a), and the amendment says user-facing copy promising one
+   * "must be fixed on sight".
+   *
+   * The no-paid-tier check was already here and already passing, because the
+   * deck harvested two hand-written `learn/` strings and never the registry.
+   * That is the same failure the prefix-coverage test below was written for:
+   * A GUARD LOOKING AT PART OF THE ROOM. Fixing the two sentences without
+   * harvesting the registry would leave the next FAQ entry free to repeat them.
+   *
+   * ONE STRING PER ENTRY, question and answer assembled, because a <dt>/<dd>
+   * pair is the unit a person reads — the same reasoning the footnote assertion
+   * gives for testing the assembled line rather than its parts.
+   */
+  for (const p of LEARN_PAGES) {
+    for (const f of p.faq) {
+      out.push({
+        surface: `learn/faq/${p.slug}`,
+        text: `${f.q} ${f.a}`,
+        intensity: "calm",
+      });
+    }
   }
 
   /**
@@ -301,11 +339,55 @@ describe("hazard gate — the shipping decks", () => {
       GYM_SURFACE_PREFIXES.some((p) => s.surface.startsWith(`${p}/`)),
     );
     expect(surfaces.length).toBeGreaterThan(0);
-    for (const s of surfaces) {
-      expect(promisesPayment(s.text), `${s.surface} promises payment`).toBe(false);
-    }
+    /**
+     * COLLECTED, NOT THROWN ON THE FIRST (E9/S1). This loop used to assert
+     * inside the iteration, so the run stopped at the first offending surface.
+     * When the reading-room registry joined the deck it carried TWO paid-tier
+     * sentences and the report named one — which is how a second defect gets
+     * fixed a session later than the first, if at all.
+     */
+    const promising = surfaces.filter((s) => promisesPayment(s.text));
+    expect(
+      promising.map((s) => `${s.surface}  "${s.text}"`),
+      "These promise a tier the D4 amendment abolished:",
+    ).toEqual([]);
     // ...and the footnote must still SAY so, rather than going quiet about it.
     expect(PROVISIONAL_FOOTNOTE).toMatch(/no paid tier/i);
+  });
+
+  /**
+   * THE PUBLISHED TEXT FILES (E9/S1) — served, indexed, and outside every deck.
+   *
+   * `public/llms.txt` and `public/llms-full.txt` are shipped at /llms.txt and
+   * /llms-full.txt for AI crawlers. `llms-full.txt` said "The paid tier, when
+   * it ships, is the training arc", which is a promise of a tier that does not
+   * exist, addressed to the readers least able to check it against the product.
+   *
+   * NOT run through `checkVoice`, deliberately. The voice spec governs the
+   * examiner's register on instrument copy; these files are a factual
+   * description written for machines, and pushing them through a register gate
+   * would either fail them for being flat — which they are supposed to be — or
+   * force the gate to be widened until it stops meaning anything. What binds
+   * here is the D4 ruling, and only that.
+   *
+   * PER LINE, so the failure names the sentence rather than the file.
+   */
+  it("no published text file promises a paid tier (D4 amendment)", () => {
+    const files = ["public/llms.txt", "public/llms-full.txt"];
+    const offences: string[] = [];
+    for (const path of files) {
+      const lines = readFileSync(path, "utf8").split("\n");
+      // Two lines joined, because these files hard-wrap mid-sentence and the
+      // specimen sentence began on one line and named its tier on the next.
+      lines.forEach((line, i) => {
+        const unit = `${line} ${lines[i + 1] ?? ""}`;
+        if (promisesPayment(unit)) offences.push(`${path}:${i + 1}  ${line.trim()}`);
+      });
+    }
+    expect(
+      offences,
+      "These published files promise a tier the D4 amendment abolished:\n" + offences.join("\n"),
+    ).toEqual([]);
   });
 
   /**
@@ -577,10 +659,17 @@ describe("hazard gate — denying a norm is not claiming one", () => {
     expect(check("no percentile — cohort n = 0")).toEqual([]);
     expect(check("Percentiles arrive when the cohort does, not before.")).toEqual([]);
     expect(check("There is not a percentile here and there will not be one yet.")).toEqual([]);
+    // E9/S1 — the reading-room FAQ heading. A question is not a claim, and the
+    // answer beneath it is "Not yet."
+    expect(check("Is my result a percentile? Not yet.")).toEqual([]);
   });
 
   it("still catches a real population claim", () => {
     expect(check("Your percentile is 87.")).toContain("fabricated-norm");
+    // The interrogative strip is narrow ON PURPOSE: only the exact phrase
+    // "a percentile?". A rhetorical question is still the shape a real
+    // population claim takes, and it must still trip.
+    expect(check("You're top 10 percentile?")).toContain("fabricated-norm");
     expect(check("You scored better than 80% of listeners.")).toContain("fabricated-norm");
     expect(check("That is above average for this test.")).toContain("fabricated-norm");
     expect(check("You are in the top 5% of ears.")).toContain("fabricated-norm");

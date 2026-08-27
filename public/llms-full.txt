@@ -10,9 +10,10 @@ self-report. Every instrument is a performance task where the user can be object
 every score is computed by a deterministic engine in code — no machine-learning model or language
 model classifies the user.
 
-The product is free at the assessment level (take an instrument, get your headline score). The
-paid tier, when it ships, is the training arc: retests over time, progression charts, and the
-delicacy battery — selling cultivation, not the reading.
+The product is free, and there is no paid tier and no pricing question: the assessment, the
+headline score, and the training arc when it exists are all free. The only gate is a seven-day
+per-family retest cooldown, which exists because a retest taken sooner measures a person's memory
+of the clips rather than their ear. It is a validity gate, not a revenue gate.
 
 ## The Prestige Test (flagship instrument, live)
 

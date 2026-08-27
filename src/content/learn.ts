@@ -50,7 +50,7 @@ export const LEARN_PAGES: LearnPage[] = [
       },
       {
         q: "Is the Prestige Test free?",
-        a: "Yes. The assessment and your headline score are free. The paid tier is the training arc — retests, progression charts, and the delicacy battery — not the reading itself.",
+        a: "Yes, and so is everything else. There is no paid tier here: the assessment, your headline score, and the training arc when it exists are all free. The only gate anywhere in the gym is a seven-day wait before you retake a family of trials — sooner than that and a retest measures your memory of the clips rather than your ear.",
       },
     ],
   },
@@ -108,7 +108,7 @@ export const LEARN_PAGES: LearnPage[] = [
       },
       {
         q: "How does the Taste Gym use practice?",
-        a: "The paid training arc is practice made measurable: retests over time, progression charts, and calibration-improvement curves. The claim is never 'you feel more refined' — it is a before-and-after number on the same instruments.",
+        a: "It does not yet, and this page says so above rather than implying a door that is not there. The training arc is designed as practice made measurable: retests over time on the same instruments, and a before-and-after number rather than a claim that you feel more refined. It will be free, because charging for the training loop would put the one honest question — did your ear actually move — behind a wall. What it waits on is the product remembering you between sessions, which it does not do today.",
       },
     ],
   },

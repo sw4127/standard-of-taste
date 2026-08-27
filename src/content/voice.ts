@@ -126,7 +126,20 @@ function stripNormDenials(text: string): string {
   return text
     .replace(/no\s+percentiles?/gi, "")
     .replace(/not?\s+a\s+percentile/gi, "")
-    .replace(/percentiles?\s+(?:arrive|come|exist|are)[^.]*/gi, "");
+    .replace(/percentiles?\s+(?:arrive|come|exist|are)[^.]*/gi, "")
+    /**
+     * A QUESTION IS NOT A CLAIM (E9/S1). The reading-room FAQ asks "Is my
+     * result a percentile?" and answers "Not yet." Both halves are the honest
+     * position, and the answer's half was already stripped by the rule above —
+     * only the heading tripped, for containing the word it exists to deny.
+     *
+     * This is the third instance of the defect the block above describes, so
+     * the shape is deliberately the narrowest that covers it: the exact phrase
+     * "a percentile" ending in a question mark. It does NOT strip every
+     * interrogative mention — "you're top 10 percentile?" still trips, which
+     * is the rhetorical form an actual population claim would take.
+     */
+    .replace(/(^|\s)a percentile\?/gi, "$1");
 }
 
 const RULES: [string, [RegExp, string][], (s: VoiceString) => boolean][] = [
