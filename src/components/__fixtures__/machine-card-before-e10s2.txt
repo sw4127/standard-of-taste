@@ -1,0 +1,22 @@
+The machine card as the /learn index hand-wrote it, immediately before E10/S2
+(Track F3), copied byte-for-byte from src/app/learn/page.tsx at commit b4b8e1b.
+
+A .txt on purpose, for the same reason as tint-before-e10s1.txt: the guard in
+MachineCard.test.ts sweeps every .ts/.tsx file under src/ for the signature
+below and allows no exceptions, so the sample it is tested against cannot live
+in a source file. Reading it here is what makes the self-test non-circular —
+the needle is proven against the real duplicate as it really was, not against a
+string the test assembled in order to find it.
+
+--- src/app/learn/page.tsx:65-76 (before) ---
+<Link
+  key={m.id}
+  href={m.href}
+  className="block rounded-2xl border p-5 text-left transition hover:bg-white/[0.05]"
+  style={{ borderColor: tint(m.accent), background: "rgba(255,255,255,0.03)" }}
+>
+  <p className="font-display text-lg font-semibold" style={{ color: m.accent }}>
+    {m.title}
+  </p>
+  <p className="mt-1 text-sm leading-relaxed text-muted">{m.line}</p>
+</Link>

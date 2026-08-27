@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { MACHINES } from "@/components/OtherMachines";
-import { tint } from "@/content/instrument-accents";
+import MachineCard from "@/components/MachineCard";
 import JsonLd from "@/components/JsonLd";
 import { baseUrl } from "@/lib/site";
 import { LEARN_PAGES } from "@/content/learn";
@@ -62,17 +62,7 @@ export default function LearnIndex() {
       <p className="mt-10 text-sm text-muted">Enough reading — the machines are through here.</p>
       <div className="mt-4 flex flex-col gap-3">
         {MACHINES.filter((m) => m.live).map((m) => (
-          <Link
-            key={m.id}
-            href={m.href}
-            className="block rounded-2xl border p-5 text-left transition hover:bg-white/[0.05]"
-            style={{ borderColor: tint(m.accent), background: "rgba(255,255,255,0.03)" }}
-          >
-            <p className="font-display text-lg font-semibold" style={{ color: m.accent }}>
-              {m.title}
-            </p>
-            <p className="mt-1 text-sm leading-relaxed text-muted">{m.line}</p>
-          </Link>
+          <MachineCard key={m.id} machine={m} size="index" />
         ))}
       </div>
 

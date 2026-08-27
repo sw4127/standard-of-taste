@@ -1,6 +1,8 @@
-import Link from "next/link";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
-import { PRESTIGE_GOLD, DELICACY_ICE, THRESHOLD_VIOLET, tint } from "@/content/instrument-accents";
+import { PRESTIGE_GOLD, DELICACY_ICE, THRESHOLD_VIOLET } from "@/content/instrument-accents";
+import MachineCard, { type MachineRef } from "./MachineCard";
+
+export type { MachineRef };
 
 /**
  * THE OTHER TWO MACHINES, FROM ONE PLACE (E7/S23).
@@ -20,16 +22,12 @@ import { PRESTIGE_GOLD, DELICACY_ICE, THRESHOLD_VIOLET, tint } from "@/content/i
  * colour now come from one registry, so a card can never describe an
  * instrument in the wrong instrument's colour.
  */
-export interface MachineRef {
-  id: string;
-  href: string;
-  title: string;
-  accent: string;
-  /** What it measures, in the user's words rather than Hume's. */
-  line: string;
-  live: boolean;
-}
-
+/**
+ * E10/S2: the card itself now lives in `MachineCard`, because the `/learn`
+ * index had hand-written a second copy of it. `MachineRef` moved with the card
+ * (the card is what consumes the shape) and is re-exported above, so the four
+ * modules importing it from here keep working.
+ */
 export const MACHINES: MachineRef[] = [
   {
     id: "bias",
@@ -72,18 +70,7 @@ export default function OtherMachines({
     <div className="mt-8 flex flex-col gap-3">
       <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">THE OTHER MACHINES</p>
       {others.map((m) => (
-        <Link
-          key={m.id}
-          href={m.href}
-          onClick={() => onPick?.(m.id)}
-          className="block rounded-2xl border p-5 transition hover:bg-white/[0.05]"
-          style={{ borderColor: tint(m.accent), background: "rgba(255,255,255,0.03)" }}
-        >
-          <p className="font-display text-xl font-semibold" style={{ color: m.accent }}>
-            {m.title}
-          </p>
-          <p className="mt-1 text-sm leading-relaxed text-muted">{m.line}</p>
-        </Link>
+        <MachineCard key={m.id} machine={m} size="reveal" onPick={onPick} />
       ))}
     </div>
   );
