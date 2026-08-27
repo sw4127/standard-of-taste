@@ -59,6 +59,33 @@ export interface MethodClaim {
 }
 
 /**
+ * A REFUSAL AND ITS PRICE (E9/S3 — blueprint E2).
+ *
+ * The page is organised around things this project refused, not around a count
+ * of decisions made. A ruling ledger says "119 decisions" and proves nothing; a
+ * list of work deleted for being untrue is checkable, and it is the only part
+ * of the record a reader cannot get from a repository of any other project.
+ *
+ * EVERY REFUSAL STATES WHAT IT COST. A refusal with no price is not a decision,
+ * it is a boast — and this page is the most tempting surface in the product on
+ * which to write one. `claims.test.ts` requires the `price` field and rejects
+ * the shapes that mean "nothing".
+ */
+export interface MethodRefusal {
+  id: string;
+  /** What was refused, as the page's heading for it. */
+  what: string;
+  /** The rule or conclusion it was refused under — "N3", "the D4 amendment". */
+  rule: string;
+  /** The refusal itself. */
+  refusal: string;
+  /** What it cost. Never "nothing". */
+  price: string;
+  kind: ClaimKind;
+  sources: ClaimSource[];
+}
+
+/**
  * Seed entries (E9/S2). The refusals and the worst finding arrive in S3 and S4;
  * these four exist so the verifier is proved against real content rather than
  * an empty list, and because the operating-model section needs them anyway.
@@ -130,3 +157,121 @@ export const METHOD_CLAIMS: MethodClaim[] = [
     ],
   },
 ];
+
+/**
+ * THE REFUSALS (E9/S3 — blueprint E2, in the order the blueprint names them).
+ *
+ * Four of the five. Display advertising was declined on measurement grounds —
+ * an advertisement is a brand cue inside an instrument that measures whether
+ * brand cues move judgment — but that ruling is recorded ONLY in
+ * `docs/redirection-blueprint-2026-08-26.md`, which is deliberately untracked
+ * (RT-M:c). The verifier refuses untracked sources for a reason that applies
+ * here exactly: a citation only this machine can open reads as evidence and is
+ * not. It is awaiting a ruling rather than shipped without one.
+ */
+export const METHOD_REFUSALS: MethodRefusal[] = [
+  {
+    id: "refusal-ranked-tiers",
+    what: "Six ranked verdict tiers on the Delicacy result",
+    rule: "N3, applying RT-90a — report the band, never the point",
+    kind: "quoted",
+    refusal:
+      "They shipped first, and then the measurement meant to justify them killed them. Asked how often the six tiers put a person in the right one at the shipping length: 30.5%. No coarser cut rescued it. A tier name is a point estimate wearing an adjective.",
+    price:
+      "The result screen lost the one line a person could repeat to a friend and got an interval instead — wider, duller, and true. Earning a ranked verdict honestly would land on ~42–45 trials = 21 min, which is the session 15 was chosen to avoid. The product kept the shorter session and gave up the sharper claim, rather than keeping both and hoping nobody checked.",
+    sources: [
+      {
+        path: "src/engine/delicacy.ts",
+        anchor: "put a person in the right one at the shipping length: 30.5%",
+      },
+      {
+        path: "src/engine/delicacy.ts",
+        anchor: "A tier name is a point estimate wearing an adjective.",
+      },
+      {
+        path: "docs/handoff-2026-08-22.md",
+        anchor: "~42–45 trials = 21 min, which is the session 15 was chosen to avoid",
+      },
+    ],
+  },
+  {
+    id: "refusal-paid-tier",
+    what: "The paid training arc — the entire business model",
+    rule: "the D4 amendment",
+    kind: "quoted",
+    refusal:
+      "The plan was to give the assessment away and charge for the training arc. It was withdrawn in one line — there is no paid tier, and no pricing question — because a paywall on the training loop would have put the honest deliverable, whether your ear actually moved, behind the wall.",
+    price:
+      "The project gave up its only means of showing that anyone would pay for this, at a point where monetization remains a goal but as proof of commercial viability, not income. It also created upkeep nobody budgeted for: six weeks after the ruling, three published sentences still promised the tier — on two reading-room pages and in the file the product serves to AI crawlers. Writing a rule down does not enforce it.",
+    sources: [
+      { path: "CLAUDE.md", anchor: "there is no paid tier, and no pricing question" },
+      {
+        path: "restructuring_decision_memo_2026-07-11.md",
+        anchor: "Monetization remains a goal but as proof of commercial viability, not income.",
+      },
+      {
+        path: "src/content/voice.test.ts",
+        anchor: "The paid tier is the training arc — retests, progression",
+      },
+    ],
+  },
+  {
+    id: "refusal-priced-consumer-product",
+    what: "The $3.99 consumer product, and the funnel built to feed it",
+    rule: "memo C1 — a conclusion of record rather than a rule",
+    kind: "quoted",
+    refusal:
+      "Viral consumer distribution for a $3.99 impulse product is dead, concluded on twenty-nine visitors across a month, with the World Cup front door spreading to nobody at all.",
+    price:
+      "A quiz, a share-card pipeline, a paywall and a Merchant-of-Record payment adapter all became legacy in a single decision. And here is the part that is easiest to leave off a page like this: the paid product itself was never tested (4 paywall views). The verdict was reached on distribution evidence, and the pricing question it looks like it answers was never actually asked.",
+    sources: [
+      {
+        path: "restructuring_decision_memo_2026-07-11.md",
+        anchor: "Viral consumer distribution for a $3.99 impulse product is dead",
+      },
+      {
+        path: "restructuring_decision_memo_2026-07-11.md",
+        anchor: "The paid product itself was never tested (4 paywall views)",
+      },
+    ],
+  },
+  {
+    id: "refusal-human-ear-check",
+    what: "The human ear-check on every audio clip",
+    rule: "a gate only one person can discharge is debt; artifact pivot §1",
+    kind: "quoted",
+    refusal:
+      "Quality control was a person listening to each clip and approving it. It was abolished — The PM never judges a clip again — on the owner's own finding: Ear-passes by a non-musician = unstable labels = no value. The gate was not adding quality. It was adding a delay only one person could clear.",
+    price:
+      "The replacement has two layers, and the one the pivot itself calls the real gate — item difficulty and discrimination estimated from response data — has never run, because there are Zero real responses. What gates clips today is the acoustic layer alone: loudness, spectral distance, silence, clipping. It can measure how large a manipulation is. It cannot notice that a clip is bad in a way nobody thought to model.",
+    sources: [
+      { path: "docs/artifact-pivot-2026-08-07.md", anchor: "The PM never judges a clip again." },
+      {
+        path: "docs/artifact-pivot-2026-08-07.md",
+        anchor: "Ear-passes by a non-musician = unstable labels = no value",
+      },
+      { path: "docs/artifact-pivot-2026-08-07.md", anchor: "estimated from response data" },
+      { path: "docs/blueprint-vs-reality-2026-08-25.md", anchor: "Zero real responses" },
+    ],
+  },
+];
+
+/**
+ * One list for the verifier, so claims and refusals are held to the SAME rule.
+ *
+ * Two ledgers checked by two copies of the same logic is how the rung tables
+ * came to disagree with each other. A refusal's verifiable text is everything
+ * the reader sees of it, because that is what a quotation has to survive being
+ * embedded in.
+ */
+export function verifiableEntries(): MethodClaim[] {
+  return [
+    ...METHOD_CLAIMS,
+    ...METHOD_REFUSALS.map((r) => ({
+      id: r.id,
+      kind: r.kind,
+      text: `${r.what} ${r.refusal} ${r.price}`,
+      sources: r.sources,
+    })),
+  ];
+}

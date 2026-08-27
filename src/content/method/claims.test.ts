@@ -1,7 +1,7 @@
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { METHOD_CLAIMS, type MethodClaim } from "./claims";
+import { METHOD_CLAIMS, METHOD_REFUSALS, verifiableEntries, type MethodClaim } from "./claims";
 
 /**
  * THE CITATION VERIFIER (E9/S2).
@@ -71,17 +71,36 @@ describe("the /method claim ledger", () => {
     expect(METHOD_CLAIMS.some((c) => c.kind === "inferred")).toBe(true);
   });
 
+  /**
+   * EVERY REFUSAL STATES WHAT IT COST (E9/S3 — blueprint E2).
+   *
+   * A page listing things a project refused, with no cost attached to any of
+   * them, is not a record of judgment — it is a list of things the author is
+   * pleased about. The blueprint asks for refusals AND THEIR PRICE, and the
+   * failure mode is not forgetting the field: it is filling it with a denial.
+   * So the shapes that mean "nothing" are rejected by name.
+   */
+  it("attaches a real price to every refusal", () => {
+    expect(METHOD_REFUSALS.length).toBeGreaterThan(3);
+    const nothing = /^(?:\s*)(?:none|nothing|no cost|n\/?a)\b/i;
+    for (const r of METHOD_REFUSALS) {
+      expect(r.rule.trim().length, `${r.id} names no rule`).toBeGreaterThan(0);
+      expect(r.price.trim().length, `${r.id} states no price`).toBeGreaterThan(40);
+      expect(nothing.test(r.price), `${r.id} claims the refusal was free`).toBe(false);
+    }
+  });
+
   it("gives every claim a unique id and at least one source", () => {
-    const ids = METHOD_CLAIMS.map((c) => c.id);
+    const ids = verifiableEntries().map((c) => c.id);
     expect(new Set(ids).size, `duplicate ids: ${ids.join(", ")}`).toBe(ids.length);
-    for (const c of METHOD_CLAIMS) {
+    for (const c of verifiableEntries()) {
       expect(c.sources.length, `${c.id} cites nothing`).toBeGreaterThan(0);
       expect(c.text.trim().length, `${c.id} has no text`).toBeGreaterThan(0);
     }
   });
 
   it("cites only files the repository actually contains", () => {
-    const bad = METHOD_CLAIMS.flatMap((c) =>
+    const bad = verifiableEntries().flatMap((c) =>
       c.sources
         .filter((s) => !existsSync(s.path) || !tracked.has(s.path))
         .map((s) => `${c.id} -> ${s.path} (${existsSync(s.path) ? "untracked" : "missing"})`),
@@ -112,7 +131,7 @@ describe("the /method claim ledger", () => {
    * is folded into the middle of a sentence. No WORD may differ.
    */
   it("makes a quoted claim actually contain its quotation", () => {
-    const bad = METHOD_CLAIMS.filter((c) => c.kind === "quoted").filter(
+    const bad = verifiableEntries().filter((c) => c.kind === "quoted").filter(
       (c) =>
         !c.sources.some((s) => flat(c.text).toLowerCase().includes(flat(s.anchor).toLowerCase())),
     );
@@ -130,7 +149,7 @@ describe("the /method claim ledger", () => {
       return cache.get(p)!;
     };
     const missing: string[] = [];
-    for (const c of METHOD_CLAIMS) {
+    for (const c of verifiableEntries()) {
       for (const s of c.sources) {
         if (!existsSync(s.path)) continue; // reported by the check above
         if (!read(s.path).includes(flat(s.anchor))) {
