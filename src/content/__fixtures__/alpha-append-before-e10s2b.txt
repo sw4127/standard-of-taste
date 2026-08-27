@@ -1,0 +1,20 @@
+The four alpha-appends E10/S1 MISSED, byte-for-byte from commit 16892ae.
+
+S1 consolidated three copies of `tint` that were written with a regex, and its
+guard swept for that regex. These four were written with `slice(0, -1)` instead
+and were invisible to it, so S1's commit message claimed a consolidation that
+had not happened. They carry the identical silent-failure property: hand a hex
+accent to any of these lines and you get `#0A070` + " / 0.35)", which is not a
+colour, with no error anywhere.
+
+A .txt for the same reason as the other two fixtures: the sweep in
+instrument-accents.test.ts allows no exceptions, so the sample it is proven
+against cannot live in a .ts file.
+
+--- src/app/GymFloor.tsx:82-84 (before) ---
+borderColor: isSelected ? m.accent : `${m.accent.slice(0, -1)} / 0.35)`,
+background: isSelected ? `${m.accent.slice(0, -1)} / 0.10)` : "rgba(255,255,255,0.03)",
+boxShadow: isSelected ? `0 12px 40px ${m.accent.slice(0, -1)} / 0.25)` : "none",
+
+--- src/app/threshold/page.tsx:82 (before) ---
+style={{ borderColor: `${ICE.slice(0, -1)} / 0.3)`, background: "rgba(255,255,255,0.03)" }}

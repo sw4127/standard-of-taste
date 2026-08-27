@@ -24,6 +24,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { tint } from "@/content/instrument-accents";
 
 export interface Machine {
   id: string;
@@ -78,9 +79,9 @@ export default function GymFloor({ machines, locked }: { machines: Machine[]; lo
               onClick={() => (isSelected ? router.push(m.href) : setSelected(m.id))}
               className="group flex flex-col rounded-2xl border p-5 text-left transition duration-300 active:scale-[0.99]"
               style={{
-                borderColor: isSelected ? m.accent : `${m.accent.slice(0, -1)} / 0.35)`,
-                background: isSelected ? `${m.accent.slice(0, -1)} / 0.10)` : "rgba(255,255,255,0.03)",
-                boxShadow: isSelected ? `0 12px 40px ${m.accent.slice(0, -1)} / 0.25)` : "none",
+                borderColor: isSelected ? m.accent : tint(m.accent),
+                background: isSelected ? tint(m.accent, 0.1) : "rgba(255,255,255,0.03)",
+                boxShadow: isSelected ? `0 12px 40px ${tint(m.accent, 0.25)}` : "none",
                 // NOT opacity: the route-fade animation uses fill-mode both,
                 // and a CSS animation overrides inline styles — the dim was
                 // silently discarded. A filter is untouched by it.

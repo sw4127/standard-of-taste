@@ -98,12 +98,28 @@ export const THRESHOLD_BASE = "#0A070C";
  * forbid that regex ANYWHERE in `src/`, with no file excepted, rather than
  * excepting the one file that is allowed to keep it.
  */
-const TINT_ALPHA = 0.35;
+/**
+ * THE ALPHA IS A PARAMETER, AND S1 GOT THAT WRONG (corrected in E10/S2b).
+ *
+ * S1 shipped `tint` with 0.35 baked in, on a YAGNI argument: all three call
+ * sites it consolidated wanted a card edge. That argument was made by looking
+ * at the three copies it was fixing and not at the codebase, which already
+ * contained four MORE hand-rolled alpha-appends at 0.35, 0.10, 0.25 and 0.3 —
+ * in `GymFloor` and `/threshold` — written with `slice(0, -1)` instead of a
+ * regex, so S1's guard could not see them and S1's commit message claimed a
+ * consolidation it had not finished.
+ *
+ * The lesson, recorded because it is the fourth time this shape has cost this
+ * repository something: a guard proves what its needle describes, not what its
+ * name says. "No file re-implements the tint regex" was true. "tint exists
+ * once" was not, and the two are easy to confuse when you wrote both.
+ */
+const CARD_EDGE_ALPHA = 0.35;
 
 /** Plain, alpha-free, space-separated `hsl()` — the only shape an accent takes. */
 const PLAIN_HSL = /^hsl\(\s*[\d.]+\s+[\d.]+%\s+[\d.]+%\s*\)$/;
 
-export function tint(accent: string): string {
+export function tint(accent: string, alpha: number = CARD_EDGE_ALPHA): string {
   if (!PLAIN_HSL.test(accent)) {
     throw new Error(
       `tint() received ${JSON.stringify(accent)}, which is not a plain ` +
@@ -113,5 +129,10 @@ export function tint(accent: string): string {
         `widen tint() deliberately and extend its test.`,
     );
   }
-  return `${accent.slice(0, -1)} / ${TINT_ALPHA})`;
+  if (!(alpha > 0 && alpha <= 1)) {
+    // A caller who passes 35 instead of 0.35 gets a fully opaque colour from
+    // every browser, silently. Same failure family as the one above.
+    throw new Error(`tint() received alpha ${alpha}; it must be greater than 0 and at most 1.`);
+  }
+  return `${accent.slice(0, -1)} / ${alpha})`;
 }

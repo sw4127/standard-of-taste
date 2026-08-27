@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { THRESHOLD_VIOLET, THRESHOLD_VIOLET_GLOW, THRESHOLD_FIELD } from "@/content/instrument-accents";
+import { THRESHOLD_VIOLET, THRESHOLD_VIOLET_GLOW, THRESHOLD_FIELD, tint } from "@/content/instrument-accents";
 import FluidField from "@/components/FluidField";
 import { THRESHOLD_SLUGS, familyForSlug } from "./families";
 import { FAMILY_BLURB, familyLabel, quantity } from "@/content/staircase/copy";
@@ -79,7 +79,7 @@ export default function ThresholdIndex() {
               <Link
                 href={`/threshold/${slug}`}
                 className="group flex flex-col rounded-2xl border p-5 transition duration-300 active:scale-[0.99]"
-                style={{ borderColor: `${ICE.slice(0, -1)} / 0.3)`, background: "rgba(255,255,255,0.03)" }}
+                style={{ borderColor: tint(ICE, 0.3), background: "rgba(255,255,255,0.03)" }}
               >
                 <p className="font-display text-xl font-semibold">{familyLabel(family)}</p>
                 <p className="mt-1.5 text-sm leading-relaxed text-neutral-300">{FAMILY_BLURB[family]}</p>

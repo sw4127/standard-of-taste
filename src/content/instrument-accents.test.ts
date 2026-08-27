@@ -65,6 +65,28 @@ describe("tint survives everything that actually reaches it", () => {
   });
 
   /**
+   * E10/S2b. The four alphas that were already in the codebase when S1 decided
+   * one baked-in value was enough. Each is a real call site.
+   */
+  it("carries every alpha the product actually uses", () => {
+    expect(tint(PRESTIGE_GOLD)).toBe("hsl(42 80% 62% / 0.35)"); // GymFloor, unselected edge
+    expect(tint(PRESTIGE_GOLD, 0.1)).toBe("hsl(42 80% 62% / 0.1)"); // GymFloor, selected fill
+    expect(tint(PRESTIGE_GOLD, 0.25)).toBe("hsl(42 80% 62% / 0.25)"); // GymFloor, selected glow
+    expect(tint(THRESHOLD_VIOLET, 0.3)).toBe("hsl(276 70% 70% / 0.3)"); // /threshold family cards
+  });
+
+  it("refuses an alpha outside 0..1", () => {
+    // 35 instead of 0.35 renders fully opaque in every browser, silently —
+    // the same failure family as an unsupported colour shape.
+    for (const bad of [0, -0.5, 1.5, 35, Number.NaN]) {
+      expect(() => tint(PRESTIGE_GOLD, bad), `alpha ${bad} was accepted`).toThrow(/alpha/);
+    }
+    // And the legitimate edges are not refused.
+    expect(tint(PRESTIGE_GOLD, 1)).toBe("hsl(42 80% 62% / 1)");
+    expect(tint(PRESTIGE_GOLD, 0.01)).toBe("hsl(42 80% 62% / 0.01)");
+  });
+
+  /**
    * The cross-check. `MACHINES` can drift from the registry it imports from — a
    * card could be handed a literal instead of a named export, which is exactly
    * the leak this registry exists to prevent (E7/S18, E7/S21).
@@ -161,8 +183,58 @@ describe("the silent version cannot come back", () => {
       before.includes(NEEDLE),
       "the needle no longer matches the line this guard exists to catch",
     ).toBe(true);
-    // And it does not match a correct implementation.
-    expect(`const t = (a: string) => a.slice(0, -1) + " / 0.35)";`.includes(NEEDLE)).toBe(false);
+    // And it does not match the correct implementation — read from the real
+    // registry rather than from a sample string, so this cannot drift from it.
+    expect(readFileSync("src/content/instrument-accents.ts", "utf8").includes(NEEDLE)).toBe(false);
+  });
+
+  /**
+   * THE SWEEP ABOVE WAS TOO NARROW, AND SAID "CLEAN" ANYWAY (E10/S2b).
+   *
+   * S1's needle was the old REGEX form. Two files were appending an alpha to
+   * an accent with `slice(0, -1)` instead — four sites, at 0.35, 0.10, 0.25 and
+   * 0.3 — and the sweep could not see any of them while reporting no
+   * offenders. S1's red-team predicted this hole in words and shipped without
+   * closing it; S2's guard work found it by accident.
+   *
+   * So the rule is stated by what it PRODUCES rather than by how it is spelled:
+   * building an `hsl(... / a)` string by string surgery is the sanctioned job
+   * of exactly one function, in exactly one file. This is an equality
+   * assertion, not an exception list — if `instrument-accents.ts` ever stops
+   * being the place that does it, this fails too.
+   */
+  /*
+   * Matches an alpha appended to a sliced colour, whether the alpha is a
+   * literal (`/ 0.35)`, how all four offenders were written) or an
+   * interpolation (`/ ${alpha})`, how the registry itself is written). The
+   * narrower literal-only version was tried first and reported ZERO builders
+   * including the sanctioned one — a sweep that finds nothing anywhere is the
+   * exact failure this test exists to stop being.
+   */
+  const APPEND = /slice\(\s*0\s*,\s*-1\s*\)[^\n]*\/\s*(?:[\d.]+|\$\{[^}]+\})\)/;
+
+  it("the alpha-append needle matches the four sites S1's needle could not see", () => {
+    const before = readFileSync("src/content/__fixtures__/alpha-append-before-e10s2b.txt", "utf8");
+    const hits = before.split("\n").filter((l) => APPEND.test(l));
+    expect(
+      hits.length,
+      "the needle no longer matches the alpha-appends this guard exists to catch:\n" + before,
+    ).toBe(4);
+    // It does not fire on an ordinary array slice — `across.ts` has one.
+    expect(APPEND.test(`\${names.slice(0, -1).join(", ")} and \${names.at(-1)}`)).toBe(false);
+  });
+
+  it("exactly one file builds a colour by string surgery", () => {
+    const files = tsFiles("src");
+    expect(files.length, "found no source files, so this sweep proves nothing").toBeGreaterThan(100);
+    const builders = files.filter((f) => APPEND.test(readFileSync(f, "utf8"))).map(posix);
+    expect(
+      builders,
+      "These files append an alpha to a colour by hand instead of calling tint(). " +
+        "Hand any of them a hex accent and the result is not a colour, with no error " +
+        "anywhere — which is the defect E10/S1 was supposed to have ended:\n" +
+        builders.join("\n"),
+    ).toEqual(["src/content/instrument-accents.ts"]);
   });
 
   it("no file re-implements the tint regex", () => {
