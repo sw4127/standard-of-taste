@@ -124,7 +124,20 @@ function stripNormDenials(text: string): string {
   // long and distinctive — so the escape that keeps going wrong is simply not
   // used. See src/content/bias/claims.test.ts for the same fix.
   return text
-    .replace(/no\s+percentiles?/gi, "")
+    /**
+     * A DENIAL WRITTEN AS A LIST IS STILL A DENIAL (E9/S7).
+     *
+     * The rule this project runs on is quoted on `/method` in its own words:
+     * "no score, percentile, or claim the data can't support". The plain
+     * `no percentiles?` shape below could not see it, because two other nouns
+     * sit between the "no" and the word — so the honesty rule tripped the
+     * honesty gate, which is the third time this exact defect has appeared.
+     *
+     * The generalisation is narrow and stays inside the same idea: "no" plus a
+     * short comma-separated list, ending at the word. Nothing further away is
+     * stripped, so a population claim beyond the list still trips.
+     */
+    .replace(/no\s+(?:[\w'-]+,\s*){0,3}percentiles?/gi, "")
     .replace(/not?\s+a\s+percentile/gi, "")
     .replace(/percentiles?\s+(?:arrive|come|exist|are)[^.]*/gi, "")
     /**

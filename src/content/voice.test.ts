@@ -47,6 +47,12 @@ import { staircaseCopyFixtures, staircaseCardFixtures } from "./staircase/fixtur
 import { vocabularyStrings } from "./vocabulary/fixtures";
 import { LIMIT_KIND_COPY, RETIRED_SOURCE_NOTE } from "./staircase/limits";
 import { LEARN_PAGES } from "./learn";
+import {
+  METHOD_CLAIMS,
+  METHOD_FINDINGS,
+  METHOD_REFUSALS,
+  METHOD_SECTIONS,
+} from "./method/claims";
 
 /** Every cohort-visible string, with the intensity its surface is allowed. */
 function shippingStrings(): VoiceString[] {
@@ -128,6 +134,36 @@ function shippingStrings(): VoiceString[] {
         intensity: "calm",
       });
     }
+  }
+
+  /**
+   * `/method` (E9/S7) — every string a stranger reads on the method page.
+   *
+   * INTENSITY IS CALM THROUGHOUT. This is documentary prose about how the
+   * project is run; the examiner's register belongs to the instruments. What
+   * still binds here, and binds hard, is motive-attribution: the page discusses
+   * whether the project avoided its own launch, which is the one place in this
+   * product where writing about someone's REASONS is a live temptation.
+   */
+  for (const c of METHOD_CLAIMS) {
+    out.push({ surface: `method/claim/${c.id}`, text: c.text, intensity: "calm" });
+  }
+  for (const r of METHOD_REFUSALS) {
+    out.push({
+      surface: `method/refusal/${r.id}`,
+      text: `${r.what} ${r.refusal} ${r.price}`,
+      intensity: "calm",
+    });
+  }
+  for (const f of METHOD_FINDINGS) {
+    out.push({
+      surface: `method/finding/${f.id}`,
+      text: `${f.finding} ${f.consequence}`,
+      intensity: "calm",
+    });
+  }
+  for (const s of METHOD_SECTIONS) {
+    out.push({ surface: `method/section/${s.id}`, text: `${s.heading} ${s.lede}`, intensity: "calm" });
   }
 
   /**
@@ -301,6 +337,25 @@ const GYM_SURFACE_PREFIXES = ["bias", "delicacy", "staircase", "learn", "vocabul
 const LEGACY_PAID_PREFIXES: readonly string[] = [];
 
 /**
+ * SURFACES THAT DESCRIBE A REFUSED PAYMENT MODEL (E9/S7).
+ *
+ * `/method` is neither Gym copy nor legacy funnel. Its subject is decisions
+ * this project made, and two of them are about money: the paid training arc,
+ * withdrawn, and the $3.99 consumer product, concluded dead. It cannot say what
+ * was refused without naming it.
+ *
+ * The Gym rule — "must not mention a paid tier" — is the wrong instrument here,
+ * and the wrong repair would be to exempt the prefix and move on. So the rule
+ * is REPLACED WITH A STRICTER ONE rather than lifted: a documentary string may
+ * name a payment model only if the same string also says it is gone. That is
+ * checked below, and it is a harder test to pass than silence.
+ */
+const DOCUMENTARY_PREFIXES = ["method"] as const;
+
+/** Phrases that put a payment model in the past. Deliberately short. */
+const PAYMENT_IS_GONE = /there is no paid tier|is dead|was withdrawn|became legacy/i;
+
+/**
  * Does this string PROMISE that something costs money? (RT-44a, D4 amendment.)
  *
  * One definition, shared by the forward and reverse tests, so the check that
@@ -405,8 +460,36 @@ describe("hazard gate — the shipping decks", () => {
    * fail here instead, and somebody decides on purpose whether that surface is
    * Gym (D4 applies) or legacy funnel (RT-125a sanctions the $3.99).
    */
+  /**
+   * A DOCUMENTARY SURFACE MAY NAME A PAYMENT MODEL ONLY WHILE BURYING IT
+   * (E9/S7). Two /method entries mention money — the withdrawn training arc and
+   * the $3.99 product — and both must carry the sentence that kills it in the
+   * same breath a reader gets it. Silence would have been easier to arrange and
+   * would have told the reader less.
+   */
+  it("names a payment model only alongside its refusal (documentary surfaces)", () => {
+    const surfaces = shippingStrings().filter((s) =>
+      DOCUMENTARY_PREFIXES.some((p) => s.surface.startsWith(`${p}/`)),
+    );
+    expect(surfaces.length).toBeGreaterThan(0);
+    const mentions = surfaces.filter((s) => promisesPayment(s.text));
+    // The page would be hiding its own history if it stopped mentioning them.
+    expect(mentions.length, "no /method string mentions the refused payment models any more").toBe(
+      2,
+    );
+    const undenied = mentions.filter((s) => !PAYMENT_IS_GONE.test(s.text));
+    expect(
+      undenied.map((s) => `${s.surface}  "${s.text}"`),
+      "These name a payment model without saying, in the same block, that it is gone:",
+    ).toEqual([]);
+  });
+
   it("the Gym prefix list covers every surface in the deck", () => {
-    const known = new Set<string>([...GYM_SURFACE_PREFIXES, ...LEGACY_PAID_PREFIXES]);
+    const known = new Set<string>([
+      ...GYM_SURFACE_PREFIXES,
+      ...LEGACY_PAID_PREFIXES,
+      ...DOCUMENTARY_PREFIXES,
+    ]);
     const unclassified = [...new Set(shippingStrings().map((s) => s.surface.split("/")[0]))]
       .filter((p) => !known.has(p))
       .sort();
@@ -662,6 +745,9 @@ describe("hazard gate — denying a norm is not claiming one", () => {
     // E9/S1 — the reading-room FAQ heading. A question is not a claim, and the
     // answer beneath it is "Not yet."
     expect(check("Is my result a percentile? Not yet.")).toEqual([]);
+    // E9/S7 — the honesty rule quoted on /method, in its own words. A denial
+    // written as a list is still a denial.
+    expect(check("no score, percentile, or claim the data can't support")).toEqual([]);
   });
 
   it("still catches a real population claim", () => {
@@ -670,6 +756,9 @@ describe("hazard gate — denying a norm is not claiming one", () => {
     // "a percentile?". A rhetorical question is still the shape a real
     // population claim takes, and it must still trip.
     expect(check("You're top 10 percentile?")).toContain("fabricated-norm");
+    // The list strip is short and adjacent on purpose: a claim that merely
+    // follows a denial in the same sentence is not covered by it.
+    expect(check("No cohort, no norms — your percentile is 87.")).toContain("fabricated-norm");
     expect(check("You scored better than 80% of listeners.")).toContain("fabricated-norm");
     expect(check("That is above average for this test.")).toContain("fabricated-norm");
     expect(check("You are in the top 5% of ears.")).toContain("fabricated-norm");

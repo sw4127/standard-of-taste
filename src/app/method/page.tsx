@@ -48,11 +48,21 @@ export const metadata: Metadata = {
 
 const GOLD = "hsl(42 80% 62%)";
 
-/** The documents a block rests on, named so a reader can open them. */
+/**
+ * The documents a block rests on, named so a reader can open them.
+ *
+ * FULL OPACITY, NOT `text-muted/80` (E9/S7, measured on the rendered page).
+ * At 80% these came out at **4.37:1** against the page background — under the
+ * 4.5:1 WCAG AA floor for 11px text, and that figure is the optimistic bound,
+ * because the ambient field paints gold over the base and lightens it further.
+ * On a page whose entire proposition is that a reader can go and check the
+ * sources, the citations were the least readable thing on it. Full opacity
+ * measures 6.33:1, and it is the lowest ratio anywhere on the page.
+ */
 function Sources({ sources }: { sources: ClaimSource[] }) {
   const paths = [...new Set(sources.map((s) => s.path))];
   return (
-    <p className="mt-3 font-mono text-[11px] leading-relaxed text-muted/80">
+    <p className="mt-3 font-mono text-[11px] leading-relaxed text-muted">
       {paths.map((p, i) => (
         <span key={p}>
           {i > 0 ? " · " : ""}
