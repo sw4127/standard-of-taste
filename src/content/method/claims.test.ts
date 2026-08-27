@@ -1,7 +1,13 @@
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { METHOD_CLAIMS, METHOD_REFUSALS, verifiableEntries, type MethodClaim } from "./claims";
+import {
+  METHOD_CLAIMS,
+  METHOD_FINDINGS,
+  METHOD_REFUSALS,
+  verifiableEntries,
+  type MethodClaim,
+} from "./claims";
 
 /**
  * THE CITATION VERIFIER (E9/S2).
@@ -88,6 +94,53 @@ describe("the /method claim ledger", () => {
       expect(r.price.trim().length, `${r.id} states no price`).toBeGreaterThan(40);
       expect(nothing.test(r.price), `${r.id} claims the refusal was free`).toBe(false);
     }
+  });
+
+  /**
+   * THE FINDING AGAINST THE PROJECT MUST BE DATED, AND THE DATE MUST BE REAL
+   * (E9/S4 — blueprint E3 asks for the worst finding "dated, with the rule it
+   * broke").
+   *
+   * A date typed into a page is the easiest thing on it to get wrong and the
+   * hardest to notice, because nothing else moves when it drifts. So the date
+   * has to be traceable: it must appear in the path or the text of one of the
+   * documents the finding cites. `docs/endgame-plan-2026-08-07.md` carries it
+   * in its filename, which is what makes the claim checkable at all.
+   */
+  it("dates every finding against something in the record", () => {
+    expect(METHOD_FINDINGS.length).toBeGreaterThan(0);
+    for (const f of METHOD_FINDINGS) {
+      expect(f.date, `${f.id} has a malformed date`).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(f.rule.trim().length, `${f.id} names no rule`).toBeGreaterThan(0);
+      expect(f.consequence.trim().length, `${f.id} states no consequence`).toBeGreaterThan(40);
+      const traceable = f.sources.some(
+        (s) => s.path.includes(f.date) || (existsSync(s.path) && readFileSync(s.path, "utf8").includes(f.date)),
+      );
+      expect(
+        traceable,
+        `${f.id} is dated ${f.date}, but no document it cites carries that date in its name ` +
+          "or its text. A date nothing anchors is the one number on this page that can rot silently.",
+      ).toBe(true);
+    }
+  });
+
+  /**
+   * THE HARDEST SENTENCE ON THE PAGE MUST BE MARKED AS MINE (RT-159a).
+   *
+   * The finding about launch avoidance is quoted from the record. The reading
+   * of what happened NEXT — that the project may have removed the requirement
+   * it was avoiding — is a reconstruction of the owner's reasoning, which is
+   * precisely what RT-159(a) required be marked. If that entry were ever
+   * relabelled "quoted", the page would present my inference as the record's
+   * own words, on the one claim where the difference matters most.
+   */
+  it("keeps the reading of the avoidance marked as inference, not record", () => {
+    const reading = METHOD_FINDINGS.find((f) => f.id === "finding-avoidance-then-ratified");
+    expect(reading, "the inferred reading of the worst finding is gone").toBeDefined();
+    expect(reading!.kind).toBe("inferred");
+    // ...and the record's own account of the event stays quoted, or the page
+    // would be offering an opinion where it has evidence.
+    expect(METHOD_FINDINGS.find((f) => f.id === "finding-launch-avoidance")?.kind).toBe("quoted");
   });
 
   it("gives every claim a unique id and at least one source", () => {

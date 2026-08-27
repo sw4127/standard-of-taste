@@ -161,13 +161,21 @@ export const METHOD_CLAIMS: MethodClaim[] = [
 /**
  * THE REFUSALS (E9/S3 — blueprint E2, in the order the blueprint names them).
  *
- * Four of the five. Display advertising was declined on measurement grounds —
- * an advertisement is a brand cue inside an instrument that measures whether
- * brand cues move judgment — but that ruling is recorded ONLY in
+ * FOUR, AND FOUR IS THE FINAL NUMBER (RT-X:c, ruled 2026-08-27).
+ *
+ * The blueprint names five, the fifth being display advertising, declined on
+ * measurement grounds. That ruling is recorded only in
  * `docs/redirection-blueprint-2026-08-26.md`, which is deliberately untracked
- * (RT-M:c). The verifier refuses untracked sources for a reason that applies
- * here exactly: a citation only this machine can open reads as evidence and is
- * not. It is awaiting a ruling rather than shipped without one.
+ * (RT-M:c), and the verifier refuses untracked sources for a reason that
+ * applies here exactly: a citation only this machine can open reads as evidence
+ * and is not one.
+ *
+ * Offered the choice of copying the ruling into a tracked file, the owner ruled
+ * (c): leave it out entirely. The reason is worth keeping, because it governs
+ * anything else that wants to move into this repository — the repository is a
+ * portfolio artifact, and deliberation about how the product might make money
+ * is not what it is for. Do not re-propose the advertising refusal, and do not
+ * import blueprint material to support some future claim without asking again.
  */
 export const METHOD_REFUSALS: MethodRefusal[] = [
   {
@@ -273,5 +281,82 @@ export function verifiableEntries(): MethodClaim[] {
       text: `${r.what} ${r.refusal} ${r.price}`,
       sources: r.sources,
     })),
+    ...METHOD_FINDINGS.map((f) => ({
+      id: f.id,
+      kind: f.kind,
+      text: `${f.finding} ${f.consequence}`,
+      sources: f.sources,
+    })),
   ];
 }
+
+/**
+ * A FINDING AGAINST THE PROJECT ITSELF (E9/S4 — blueprint E3).
+ *
+ * The page carries the worst thing this project has found about how it works,
+ * dated, with the rule it broke. Not as atonement — as the only evidence that
+ * the review process described elsewhere on the page actually catches anything.
+ * A method page whose every example flatters the method is a brochure.
+ *
+ * `consequence` is what it has cost SINCE, in the present tense, because a
+ * finding written up and then left alone is the failure repeating itself.
+ */
+export interface MethodFinding {
+  id: string;
+  /** ISO date the finding was recorded. Must be traceable to a source. */
+  date: string;
+  /** The rule it broke. */
+  rule: string;
+  /** What happened. */
+  finding: string;
+  /** What it has cost since. */
+  consequence: string;
+  kind: ClaimKind;
+  sources: ClaimSource[];
+}
+
+export const METHOD_FINDINGS: MethodFinding[] = [
+  {
+    id: "finding-launch-avoidance",
+    date: "2026-08-07",
+    rule: "N2 — the anti-theater guardrail",
+    kind: "quoted",
+    finding:
+      "A ruling had already been made: post the flagship instrument on its own, within one to two weeks, and do not let the second instrument gate it. The second instrument got built instead. The plan written that day says it without softening: Delicacy got built instead. That is the N2 launch-avoidance pattern, on the record. And directly above it, the diagnosis: Nothing is blocked by engineering. Everything is blocked by the launch not having happened.",
+    consequence:
+      "Twenty days later, at the time this page was written, it still has not been posted. The product has had 29 real visitors, ever. There are Zero real responses, which is why every psychometric figure in the Lab is generated from a known model and badged as simulated — the dataset that was named as the project's proprietary asset does not exist. Building is the part that feels like progress, and it is the part that was never the constraint.",
+    sources: [
+      {
+        path: "docs/endgame-plan-2026-08-07.md",
+        anchor: "Delicacy got built instead. That is the N2 launch-avoidance pattern, on the record.",
+      },
+      {
+        path: "docs/endgame-plan-2026-08-07.md",
+        anchor:
+          "Nothing is blocked by engineering. Everything is blocked by the launch not having happened.",
+      },
+      { path: "docs/blueprint-vs-reality-2026-08-25.md", anchor: "29 real visitors, ever" },
+      { path: "docs/blueprint-vs-reality-2026-08-25.md", anchor: "Zero real responses" },
+    ],
+  },
+  {
+    id: "finding-avoidance-then-ratified",
+    date: "2026-08-07",
+    rule: "N2 — the same guardrail, applied to the response rather than the act",
+    kind: "inferred",
+    finding:
+      "What happened next is the part that is harder to read, and this reading is mine rather than a recorded ruling. Within the same week the project adopted a direction that made the avoided thing optional: Resume value cannot be hostage to a launch the owner has no energy to run, and after it, The 2026-09-15 deadline is not a live constraint. That argument is sound on its own terms. It is also, in sequence, a project noticing that it was avoiding something and then removing the requirement to do it.",
+    consequence:
+      "I cannot tell from the record which of the two it was, and neither can a reader, so the page says so rather than choosing the flattering reading. The test that would settle it is not an argument: it is whether the instruments are ever put in front of strangers. Until they are, the honest description of this project is that it has built three working instruments and measured them against simulated respondents.",
+    sources: [
+      {
+        path: "docs/artifact-pivot-2026-08-07.md",
+        anchor: "Resume value cannot be hostage to a launch the owner has no energy to run.",
+      },
+      {
+        path: "docs/endgame-plan-2026-08-07.md",
+        anchor: "The 2026-09-15 deadline is not a live constraint.",
+      },
+    ],
+  },
+];
