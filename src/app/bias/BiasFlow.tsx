@@ -39,7 +39,7 @@ import { POOL_VERSIONS } from "@/lib/result-recall";
 import ShareButton from "@/app/result/ShareButton";
 import DownloadButton from "@/app/result/DownloadButton";
 import ClipPlayer, { isPlaceholderSrc } from "./ClipPlayer";
-import { PRESTIGE_GOLD, PRESTIGE_GOLD_GLOW, PRESTIGE_FIELD } from "@/content/instrument-accents";
+import { PRESTIGE_GOLD, PRESTIGE_GOLD_SOFT, PRESTIGE_GOLD_GLOW, PRESTIGE_FIELD, PRESTIGE_PALETTE } from "@/content/instrument-accents";
 
 /* One accent in play (design bar): prestige gold. */
 /**
@@ -54,7 +54,7 @@ import { PRESTIGE_GOLD, PRESTIGE_GOLD_GLOW, PRESTIGE_FIELD } from "@/content/ins
 const BRAND = "rgba(244,245,248,0.72)";
 const GOLD = PRESTIGE_GOLD;
 const GOLD_DIM = "hsl(42 45% 50%)";
-const GOLD_TINT = "hsl(42 70% 55% / 0.14)";
+const GOLD_TINT = PRESTIGE_GOLD_SOFT;
 const GOLD_GLOW = PRESTIGE_GOLD_GLOW;
 const FLUID = PRESTIGE_FIELD;
 const BASE = "#0B0A08"; // warm near-black — the gym after hours
@@ -467,6 +467,7 @@ export default function BiasFlow() {
 
           {/* Player — key resets internal state per clip AND per pass. */}
           <ClipPlayer
+            palette={PRESTIGE_PALETTE}
             key={`${pass}-${clip.id}`}
             src={clip.audioSrc}
             index={idx}

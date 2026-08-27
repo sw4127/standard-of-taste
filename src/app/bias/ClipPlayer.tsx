@@ -30,14 +30,11 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import { PRESTIGE_GOLD, PRESTIGE_GOLD_GLOW } from "@/content/instrument-accents";
+import { type InstrumentPalette } from "@/content/instrument-accents";
 
 export const MIN_LISTEN_MS = 5000;
 const PLACEHOLDER_TONE_MS = 1500;
 
-const GOLD = PRESTIGE_GOLD;
-const GOLD_TINT = "hsl(42 70% 55% / 0.14)";
-const GOLD_GLOW = PRESTIGE_GOLD_GLOW;
 
 export function isPlaceholderSrc(src: string): boolean {
   return src.includes("PLACEHOLDER");
@@ -91,6 +88,7 @@ export default function ClipPlayer({
   onProgress,
   label,
   minListenMs = MIN_LISTEN_MS,
+  palette,
 }: {
   src: string;
   /** Position in the pool — seeds the placeholder triad + the label. */
@@ -109,6 +107,15 @@ export default function ClipPlayer({
    * a 5s gate could unlock a pick the user has had no real chance to hear.
    */
   minListenMs?: number;
+  /**
+   * THE HOST INSTRUMENT'S COLOURS. Required, not defaulted (E10/S5, RT-AE:a).
+   *
+   * This component used to hardcode gold while being rendered by the Delicacy
+   * Trials and the Threshold Test, so two instruments ran their central
+   * control in a third one's colour. A default would have let the next call
+   * site inherit that same bug silently; requiring it makes the compiler ask.
+   */
+  palette: InstrumentPalette;
 }) {
   const placeholder = isPlaceholderSrc(src);
   const [playing, setPlaying] = useState(false);
@@ -342,25 +349,25 @@ export default function ClipPlayer({
             cy="36"
             r={R}
             fill="none"
-            stroke={GOLD}
+            stroke={palette.accent}
             strokeWidth="2.5"
             strokeLinecap="round"
             strokeDasharray={CIRC}
             strokeDashoffset={CIRC * (1 - progress)}
             style={{
               transition: "stroke-dashoffset 120ms linear",
-              filter: ended ? `drop-shadow(0 0 6px ${GOLD_GLOW})` : undefined,
+              filter: ended ? `drop-shadow(0 0 6px ${palette.glow})` : undefined,
             }}
           />
           {showNotch ? (
             <line
               {...notch(R - 5, R + 5)}
-              stroke={armed ? GOLD : "rgba(255,255,255,0.35)"}
+              stroke={armed ? palette.accent : "rgba(255,255,255,0.35)"}
               strokeWidth={armed ? 3 : 2}
               strokeLinecap="round"
               style={{
                 transition: "stroke 300ms ease, stroke-width 300ms ease",
-                filter: armed ? `drop-shadow(0 0 5px ${GOLD_GLOW})` : undefined,
+                filter: armed ? `drop-shadow(0 0 5px ${palette.glow})` : undefined,
               }}
             />
           ) : null}
@@ -372,7 +379,7 @@ export default function ClipPlayer({
           className="absolute inset-1 flex items-center justify-center rounded-full border text-2xl transition active:scale-95"
           style={
             playing
-              ? { borderColor: GOLD, background: GOLD_TINT, boxShadow: `0 10px 30px ${GOLD_GLOW}` }
+              ? { borderColor: palette.accent, background: palette.soft, boxShadow: `0 10px 30px ${palette.glow}` }
               : { borderColor: "rgba(255,255,255,0.18)", background: "rgba(255,255,255,0.03)" }
           }
         >

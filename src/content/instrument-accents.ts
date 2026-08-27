@@ -60,6 +60,69 @@ export const DELICACY_ICE_GLOW = "hsl(190 80% 60% / 0.4)";
 export const THRESHOLD_VIOLET_GLOW = "hsl(276 75% 68% / 0.4)";
 
 /**
+ * The soft fill behind a selected control — the instrument's hue at 14%.
+ *
+ * `hsl(H 70% 55% / 0.14)` was ALREADY the convention and nobody had said so:
+ * `BiasFlow` and `ClipPlayer` both carried `hsl(42 70% 55% / 0.14)` and
+ * `DelicacyFlow` carried `hsl(190 70% 55% / 0.14)` — the same saturation, the
+ * same lightness, the same alpha, three files apart, differing only in hue.
+ * Threshold had none because its controls had never been given one, which is
+ * part of why `ClipPlayer` still wore gold there.
+ *
+ * NOT `tint(accent, 0.14)`. That would be the accent's own 80%/62% at low
+ * alpha, which is a paler, colder fill than the one that ships. This is a
+ * deliberately duller, darker tone and it is what has been on screen.
+ */
+export const PRESTIGE_GOLD_SOFT = "hsl(42 70% 55% / 0.14)";
+export const DELICACY_ICE_SOFT = "hsl(190 70% 55% / 0.14)";
+export const THRESHOLD_VIOLET_SOFT = "hsl(276 70% 55% / 0.14)";
+
+/**
+ * AN INSTRUMENT'S THREE-COLOUR KIT, PASSED AS ONE THING (E10/S5, RT-AE:a).
+ *
+ * `ClipPlayer` — the play button and progress ring, the control a person looks
+ * at most during a test — hardcoded gold and accepted no colour from its
+ * caller. It is rendered by the Delicacy Trials and the Threshold Test, so two
+ * of three instruments ran their central control in a third instrument's
+ * colour. Measured before this change: the ring stroke on `/threshold/pitch`
+ * and on `/delicacy` was `hsl(42 80% 62%)`, on violet and blue screens.
+ *
+ * That is the defect E7/S21 fixed for `AbCompare` and missed here.
+ *
+ * GROUPED RATHER THAN THREE PROPS. `DelicacyFlow` renders four clip players; at
+ * three colour props each that is twelve chances to pass two and forget the
+ * third, and a half-coloured control is the same drift in a new place. One
+ * object cannot be got half right — and the prop is REQUIRED, so the compiler
+ * refuses a call site that forgets, which is a better guard than any test.
+ */
+export interface InstrumentPalette {
+  /** The line, the ring, the text. */
+  accent: string;
+  /** The fill behind a selected control. */
+  soft: string;
+  /** The halo. */
+  glow: string;
+}
+
+export const PRESTIGE_PALETTE: InstrumentPalette = {
+  accent: PRESTIGE_GOLD,
+  soft: PRESTIGE_GOLD_SOFT,
+  glow: PRESTIGE_GOLD_GLOW,
+};
+
+export const DELICACY_PALETTE: InstrumentPalette = {
+  accent: DELICACY_ICE,
+  soft: DELICACY_ICE_SOFT,
+  glow: DELICACY_ICE_GLOW,
+};
+
+export const THRESHOLD_PALETTE: InstrumentPalette = {
+  accent: THRESHOLD_VIOLET,
+  soft: THRESHOLD_VIOLET_SOFT,
+  glow: THRESHOLD_VIOLET_GLOW,
+};
+
+/**
  * The ambient field behind each instrument — analogous neighbours of its own
  * accent, never a second accent (design bar: one accent in play per screen).
  *

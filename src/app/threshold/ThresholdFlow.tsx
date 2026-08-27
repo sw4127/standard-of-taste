@@ -29,7 +29,7 @@ import { readableOn } from "@/lib/readable-on";
 import { createSwitchLog, type SwitchLog } from "@/lib/switch-log";
 import { useCallback, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { THRESHOLD_VIOLET, THRESHOLD_VIOLET_GLOW, THRESHOLD_FIELD, THRESHOLD_BASE } from "@/content/instrument-accents";
+import { THRESHOLD_VIOLET, THRESHOLD_VIOLET_GLOW, THRESHOLD_FIELD, THRESHOLD_BASE, THRESHOLD_PALETTE } from "@/content/instrument-accents";
 import FluidField from "@/components/FluidField";
 import ClipPlayer from "@/app/bias/ClipPlayer";
 import AbCompare from "@/app/delicacy/AbCompare";
@@ -398,6 +398,7 @@ export default function ThresholdFlow({ family }: { family: string }) {
         </p>
 
         <ClipPlayer
+          palette={THRESHOLD_PALETTE}
           key={`${trial.trialNumber}-a`}
           src={trial.srcA}
           index={trial.trialNumber}
@@ -408,6 +409,7 @@ export default function ThresholdFlow({ family }: { family: string }) {
           onProgress={() => {}}
         />
         <ClipPlayer
+          palette={THRESHOLD_PALETTE}
           key={`${trial.trialNumber}-b`}
           src={trial.srcB}
           index={trial.trialNumber}

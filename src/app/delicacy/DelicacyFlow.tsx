@@ -56,7 +56,7 @@ import {
   MAGNITUDE_WORDS,
   PROVISIONAL_FOOTNOTE,
   shareText, detectionTitle, detectionBody } from "@/content/delicacy/copy";
-import { DELICACY_ICE, DELICACY_ICE_GLOW, DELICACY_FIELD } from "@/content/instrument-accents";
+import { DELICACY_ICE, DELICACY_ICE_SOFT, DELICACY_ICE_GLOW, DELICACY_FIELD, DELICACY_PALETTE } from "@/content/instrument-accents";
 
 /* One accent in play (design bar): delicacy ice — the cold, fine-grained room
  * of the gym, deliberately opposite the prestige gold. Same formula, new hue. */
@@ -71,7 +71,7 @@ import { DELICACY_ICE, DELICACY_ICE_GLOW, DELICACY_FIELD } from "@/content/instr
  */
 const BRAND = "rgba(244,245,248,0.72)";
 const ICE = DELICACY_ICE;
-const ICE_TINT = "hsl(190 70% 55% / 0.14)";
+const ICE_TINT = DELICACY_ICE_SOFT;
 const ICE_GLOW = DELICACY_ICE_GLOW;
 const FLUID = DELICACY_FIELD;
 const BASE = "#07090B"; // cold near-black
@@ -301,6 +301,7 @@ export default function DelicacyFlow() {
           </p>
 
           <ClipPlayer
+            palette={DELICACY_PALETTE}
             key={`${p.id}-pa`}
             src={p.srcA}
             index={practiceIdx}
@@ -311,6 +312,7 @@ export default function DelicacyFlow() {
             onProgress={() => {}}
           />
           <ClipPlayer
+            palette={DELICACY_PALETTE}
             key={`${p.id}-pb`}
             src={p.srcB}
             index={practiceIdx}
@@ -400,6 +402,7 @@ export default function DelicacyFlow() {
           </p>
 
           <ClipPlayer
+            palette={DELICACY_PALETTE}
             key={`${trial.id}-a`}
             src={trial.srcA}
             index={idx}
@@ -412,6 +415,7 @@ export default function DelicacyFlow() {
             }}
           />
           <ClipPlayer
+            palette={DELICACY_PALETTE}
             key={`${trial.id}-b`}
             src={trial.srcB}
             index={idx}

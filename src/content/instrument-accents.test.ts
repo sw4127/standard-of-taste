@@ -6,9 +6,12 @@ import {
   DELICACY_FIELD,
   DELICACY_ICE,
   DELICACY_ICE_GLOW,
+  DELICACY_PALETTE,
   PRESTIGE_FIELD,
   PRESTIGE_GOLD,
   PRESTIGE_GOLD_GLOW,
+  PRESTIGE_PALETTE,
+  THRESHOLD_PALETTE,
   THRESHOLD_BASE,
   THRESHOLD_FIELD,
   THRESHOLD_VIOLET,
@@ -424,5 +427,84 @@ describe("the ambient fields are declared once too", () => {
         "these tests to describe two live fields. If this is accidental, the " +
         "floor's ambience just started changing on selection.",
     ).toBe(0);
+  });
+});
+
+describe("every instrument's controls wear that instrument's colour", () => {
+  /**
+   * E10/S5 (RT-AE:a) — THE CONTROL PEOPLE LOOK AT MOST WAS THE WRONG COLOUR.
+   *
+   * `ClipPlayer` hardcoded gold and took no colour from its caller, while being
+   * rendered by the Delicacy Trials and the Threshold Test. Measured before the
+   * fix: the ring stroke on `/delicacy` and on `/threshold/pitch` was
+   * `hsl(42 80% 62%)` — Prestige's gold, on a blue screen and a violet one.
+   * Exactly the leak E7/S21 fixed for `AbCompare` and missed here.
+   *
+   * THE PRIMARY GUARD IS THE COMPILER: `palette` is a required prop, so a call
+   * site that forgets does not build. What a type cannot check is whether a
+   * flow passes the RIGHT palette — `<ClipPlayer palette={PRESTIGE_PALETTE}>`
+   * inside `DelicacyFlow` type-checks perfectly and is the original bug typed
+   * out longhand. That is what this checks.
+   */
+  const FLOWS: [string, string][] = [
+    ["src/app/bias/BiasFlow.tsx", "PRESTIGE_PALETTE"],
+    ["src/app/delicacy/DelicacyFlow.tsx", "DELICACY_PALETTE"],
+    ["src/app/threshold/ThresholdFlow.tsx", "THRESHOLD_PALETTE"],
+  ];
+
+  const ALL_PALETTES = ["PRESTIGE_PALETTE", "DELICACY_PALETTE", "THRESHOLD_PALETTE"];
+
+  it("the three palettes carry three different accents", () => {
+    const accents = [PRESTIGE_PALETTE, DELICACY_PALETTE, THRESHOLD_PALETTE].map((p) => p.accent);
+    expect(new Set(accents).size, "two instruments share an accent").toBe(3);
+    for (const p of [PRESTIGE_PALETTE, DELICACY_PALETTE, THRESHOLD_PALETTE]) {
+      expect(tint(p.accent), `${p.accent} is not a tintable accent`).toMatch(TINTED);
+      expect(p.soft, "soft is not a 14% fill").toMatch(/\/ 0\.14\)$/);
+      expect(p.glow, "glow carries no alpha").toMatch(/\/ 0\.\d+\)$/);
+    }
+  });
+
+  it("each flow renders clip players, and only in its own palette", () => {
+    for (const [file, own] of FLOWS) {
+      const text = readFileSync(file, "utf8");
+      const players = [...text.matchAll(/<ClipPlayer\b/g)].length;
+      expect(players, `${file} renders no ClipPlayer, so this proves nothing`).toBeGreaterThan(0);
+
+      const passes = [...text.matchAll(/palette=\{(\w+)\}/g)].map((m) => m[1]);
+      expect(
+        passes.length,
+        `${file} renders ${players} clip players but passes ${passes.length} palettes`,
+      ).toBe(players);
+
+      const foreign = passes.filter((p) => p !== own);
+      expect(
+        foreign,
+        `${file} passes ${foreign.join(", ")} to a control on an instrument whose palette ` +
+          `is ${own}. This type-checks and is precisely the defect RT-AE:a fixed: a control ` +
+          `wearing another instrument's colour.`,
+      ).toEqual([]);
+    }
+  });
+
+  it("no flow imports a palette belonging to another instrument", () => {
+    for (const [file, own] of FLOWS) {
+      const text = readFileSync(file, "utf8");
+      const others = ALL_PALETTES.filter((p) => p !== own && text.includes(p));
+      expect(
+        others,
+        `${file} imports ${others.join(", ")}. Even unused, that is the next accidental ` +
+          `cross-instrument paint waiting to happen.`,
+      ).toEqual([]);
+    }
+  });
+
+  it("ClipPlayer holds no colour of its own", () => {
+    const text = readFileSync("src/app/bias/ClipPlayer.tsx", "utf8");
+    expect(
+      text.includes("PRESTIGE_GOLD"),
+      "ClipPlayer references Prestige's colour again. It is rendered by all three " +
+        "instruments; any colour it names itself is wrong on two of them.",
+    ).toBe(false);
+    expect(text, "ClipPlayer no longer takes a palette").toMatch(/palette: InstrumentPalette;/);
   });
 });
