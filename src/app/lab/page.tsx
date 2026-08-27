@@ -3,6 +3,7 @@ import Link from "next/link";
 import SourceBadge from "@/components/lab/SourceBadge";
 import { METRICS, type MetricDefinition } from "@/content/lab/metrics";
 import { LAB_PANELS, LIVE_PANELS, PENDING_PANELS } from "@/content/lab/panels";
+import { PRESTIGE_GOLD } from "@/content/instrument-accents";
 
 /**
  * The Lab index (artifact pivot §4) — the analytics surface, in the product,
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
   },
 };
 
-const GOLD = "hsl(42 80% 62%)";
+const GOLD = PRESTIGE_GOLD;
 
 const OWNER_LABEL: Record<MetricDefinition["owner"], string> = {
   instrument: "Instrument",

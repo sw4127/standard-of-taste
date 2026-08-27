@@ -1,6 +1,19 @@
 import { describe, it, expect } from "vitest";
 import { readableOn, contrastRatio, parseColor, BRAND_ACCENT } from "./readable-on";
+import { DELICACY_ICE, PRESTIGE_GOLD } from "@/content/instrument-accents";
 
+/*
+ * PINNED LITERALS, AND A CHECK THAT THEY ARE STILL THE PRODUCT'S (E10/S4a).
+ *
+ * Every assertion below is specific to these exact colours — the 1.83:1 the
+ * shipped page measured, the black ink that clears AA on them. Importing the
+ * registry directly would silently re-point them at whatever the accents became
+ * and this file would keep passing while testing something else, under a
+ * heading that claims it tests "the accents actually in the product".
+ *
+ * So: literals, plus one assertion that they still ARE the product's accents.
+ * Change an accent and this fails with an instruction, rather than drifting.
+ */
 const ICE = "hsl(190 75% 62%)";
 const GOLD = "hsl(42 80% 62%)";
 
@@ -12,6 +25,16 @@ const GOLD = "hsl(42 80% 62%)";
  * bar rather than merely changing the colour.
  */
 describe("readableOn — the accents actually in the product", () => {
+  it("is still testing the accents the product actually ships", () => {
+    expect(
+      [ICE, GOLD],
+      "The instrument accents have changed. These tests pin contrast numbers " +
+        "measured against the OLD colours, so they are no longer testing the " +
+        "product. Re-measure the ratios and update both the constants and the " +
+        "expected values here.",
+    ).toEqual([DELICACY_ICE, PRESTIGE_GOLD]);
+  });
+
   it("reproduces the shipped failure so it cannot come back unnoticed", () => {
     expect(contrastRatio("#fff", ICE)!).toBeLessThan(2);
     expect(contrastRatio("#fff", GOLD)!).toBeLessThan(2);

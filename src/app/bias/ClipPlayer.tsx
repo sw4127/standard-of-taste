@@ -30,13 +30,14 @@
  */
 
 import { useEffect, useRef, useState } from "react";
+import { PRESTIGE_GOLD, PRESTIGE_GOLD_GLOW } from "@/content/instrument-accents";
 
 export const MIN_LISTEN_MS = 5000;
 const PLACEHOLDER_TONE_MS = 1500;
 
-const GOLD = "hsl(42 80% 62%)";
+const GOLD = PRESTIGE_GOLD;
 const GOLD_TINT = "hsl(42 70% 55% / 0.14)";
-const GOLD_GLOW = "hsl(42 80% 60% / 0.45)";
+const GOLD_GLOW = PRESTIGE_GOLD_GLOW;
 
 export function isPlaceholderSrc(src: string): boolean {
   return src.includes("PLACEHOLDER");

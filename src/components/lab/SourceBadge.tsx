@@ -1,4 +1,5 @@
 import type { DataSource } from "@/analytics/estimate";
+import { PRESTIGE_GOLD, tint } from "@/content/instrument-accents";
 
 /**
  * Data-provenance badge (artifact pivot §2/§4 — N3 made visible).
@@ -13,6 +14,14 @@ import type { DataSource } from "@/analytics/estimate";
  * without fighting the accent. MIXED is gold but dashed: partly earned.
  */
 
+/**
+ * A lighter gold for the badge's own text, so small type on a gold edge stays
+ * legible. Local on purpose (E10/S4a): it is used by this file alone, and a
+ * shade with one caller belongs beside its caller — the registry holds the
+ * colours instruments are IDENTIFIED by, not every derived tone in the product.
+ */
+const GOLD_INK = "hsl(42 80% 72%)";
+
 const STYLES: Record<DataSource, { className: string; style?: React.CSSProperties; note: string }> = {
   SIMULATED: {
     className: "border-dashed border-white/35 text-muted",
@@ -20,12 +29,12 @@ const STYLES: Record<DataSource, { className: string; style?: React.CSSPropertie
   },
   MIXED: {
     className: "border-dashed",
-    style: { borderColor: "hsl(42 80% 62% / 0.55)", color: "hsl(42 80% 72%)" },
+    style: { borderColor: tint(PRESTIGE_GOLD, 0.55), color: GOLD_INK },
     note: "combines model-generated and measured responses",
   },
   REAL: {
     className: "border-solid",
-    style: { borderColor: "hsl(42 80% 62%)", color: "hsl(42 80% 72%)" },
+    style: { borderColor: PRESTIGE_GOLD, color: GOLD_INK },
     note: "measured from real respondents",
   },
 };

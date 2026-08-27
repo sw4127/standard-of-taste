@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import JsonLd from "@/components/JsonLd";
 import { baseUrl } from "@/lib/site";
 import type { LearnPage } from "@/content/learn";
+import { PRESTIGE_GOLD } from "@/content/instrument-accents";
 
 /**
  * Shared explainer scaffold (brief §3.C7): renders the registry entry's
@@ -10,7 +11,7 @@ import type { LearnPage } from "@/content/learn";
  * so each page stays hand-written (D5: Hume narrates, no template mush).
  */
 
-const GOLD = "hsl(42 80% 62%)";
+const GOLD = PRESTIGE_GOLD;
 
 /** Per-page <head> metadata derived from the same registry entry. */
 export function explainerMetadata(page: LearnPage): Metadata {

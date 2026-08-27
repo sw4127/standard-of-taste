@@ -11,7 +11,8 @@
  * always also present in the table beside it.
  */
 
-const GOLD = "hsl(42 80% 62%)";
+import { PRESTIGE_GOLD } from "@/content/instrument-accents";
+const GOLD = PRESTIGE_GOLD;
 
 export interface ScatterPoint {
   x: number;

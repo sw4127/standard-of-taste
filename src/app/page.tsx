@@ -5,7 +5,7 @@ import GymFloor, { type Machine } from "./GymFloor";
 import Track from "@/components/Track";
 import { worldCup } from "@/content/world-cup";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
-import { THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE } from "@/content/instrument-accents";
+import { PRESTIGE_GOLD, DELICACY_ICE, THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE } from "@/content/instrument-accents";
 
 /**
  * The taste-gym landing (RT-3c, memo §9.7 RESOLVED 2026-07-11): /bias is the
@@ -38,9 +38,9 @@ export const metadata: Metadata = {
  * which two instruments can actually be peers.
  */
 const BRAND = "rgba(244,245,248,0.72)";
-const GOLD = "hsl(42 80% 62%)";
+const GOLD = PRESTIGE_GOLD;
 /** The delicacy instrument's own accent — each machine owns exactly one. */
-const ICE = "hsl(190 75% 62%)";
+const ICE = DELICACY_ICE;
 
 /**
  * The two machines as DATA. Each owns its accent, its ambient field and the

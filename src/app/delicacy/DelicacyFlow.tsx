@@ -56,6 +56,7 @@ import {
   MAGNITUDE_WORDS,
   PROVISIONAL_FOOTNOTE,
   shareText, detectionTitle, detectionBody } from "@/content/delicacy/copy";
+import { DELICACY_ICE, DELICACY_ICE_GLOW } from "@/content/instrument-accents";
 
 /* One accent in play (design bar): delicacy ice — the cold, fine-grained room
  * of the gym, deliberately opposite the prestige gold. Same formula, new hue. */
@@ -69,9 +70,9 @@ import {
  * which two instruments can actually be peers.
  */
 const BRAND = "rgba(244,245,248,0.72)";
-const ICE = "hsl(190 75% 62%)";
+const ICE = DELICACY_ICE;
 const ICE_TINT = "hsl(190 70% 55% / 0.14)";
-const ICE_GLOW = "hsl(190 80% 60% / 0.4)";
+const ICE_GLOW = DELICACY_ICE_GLOW;
 const FLUID = ["hsl(195 45% 40%)", "hsl(210 40% 36%)", "hsl(180 40% 38%)", "hsl(225 35% 34%)"];
 const BASE = "#07090B"; // cold near-black
 

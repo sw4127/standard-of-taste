@@ -18,8 +18,9 @@ import type { DelicacyResult } from "@/engine/delicacy";
 import { BRIER_COIN_FLIP, binDisplayPct, type CalibrationResult } from "@/engine/calibration";
 import { calibrationLine, FLAW_LINE_PREFIX, flawTimesLabel } from "@/content/delicacy/copy";
 import { creatorLines } from "@/content/vocabulary/delicacy";
+import { DELICACY_ICE } from "@/content/instrument-accents";
 
-const ICE = "hsl(190 75% 62%)";
+const ICE = DELICACY_ICE;
 
 /** "And on the ones you caught, you named the flaw 3 of 5 times." */
 export function FlawLine({ result }: { result: DelicacyResult }) {

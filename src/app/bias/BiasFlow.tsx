@@ -39,6 +39,7 @@ import { POOL_VERSIONS } from "@/lib/result-recall";
 import ShareButton from "@/app/result/ShareButton";
 import DownloadButton from "@/app/result/DownloadButton";
 import ClipPlayer, { isPlaceholderSrc } from "./ClipPlayer";
+import { PRESTIGE_GOLD, PRESTIGE_GOLD_GLOW } from "@/content/instrument-accents";
 
 /* One accent in play (design bar): prestige gold. */
 /**
@@ -51,10 +52,10 @@ import ClipPlayer, { isPlaceholderSrc } from "./ClipPlayer";
  * which two instruments can actually be peers.
  */
 const BRAND = "rgba(244,245,248,0.72)";
-const GOLD = "hsl(42 80% 62%)";
+const GOLD = PRESTIGE_GOLD;
 const GOLD_DIM = "hsl(42 45% 50%)";
 const GOLD_TINT = "hsl(42 70% 55% / 0.14)";
-const GOLD_GLOW = "hsl(42 80% 60% / 0.45)";
+const GOLD_GLOW = PRESTIGE_GOLD_GLOW;
 const FLUID = ["hsl(42 55% 48%)", "hsl(28 50% 44%)", "hsl(52 45% 46%)", "hsl(20 40% 40%)"];
 const BASE = "#0B0A08"; // warm near-black — the gym after hours
 

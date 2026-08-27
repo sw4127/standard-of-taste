@@ -39,8 +39,23 @@ export const DELICACY_ICE = "hsl(190 75% 62%)";
 /** Delicacy of taste, adaptive — the Threshold Test. */
 export const THRESHOLD_VIOLET = "hsl(276 70% 70%)";
 
-/** Glow variants, for the soft halo behind a hero figure. */
-export const PRESTIGE_GOLD_GLOW = "hsl(42 85% 60% / 0.4)";
+/**
+ * Glow variants, for the soft halo behind a hero figure.
+ *
+ * PRESTIGE_GOLD_GLOW WAS WRONG, AND NOTHING NOTICED BECAUSE NOTHING USED IT
+ * (corrected E10/S4a). It read `hsl(42 85% 60% / 0.4)`. Three files —
+ * `BiasFlow`, `ClipPlayer` and the Prestige result page — each declared their
+ * own `GOLD_GLOW` of `hsl(42 80% 60% / 0.45)`, agreeing with one another and
+ * disagreeing with this file, and not one of them imported this export. So the
+ * single source of truth held a value that had never been rendered.
+ *
+ * Corrected TOWARD WHAT SHIPS, not away from it. The three live copies are the
+ * colour that has actually been on screen and looked at; this export's value
+ * was never a decision anyone made, it was a copy made approximately. Changing
+ * the pages to match this line would have repainted a glow nobody asked to
+ * change, on the strength of a constant no page had ever read.
+ */
+export const PRESTIGE_GOLD_GLOW = "hsl(42 80% 60% / 0.45)";
 export const DELICACY_ICE_GLOW = "hsl(190 80% 60% / 0.4)";
 export const THRESHOLD_VIOLET_GLOW = "hsl(276 75% 68% / 0.4)";
 

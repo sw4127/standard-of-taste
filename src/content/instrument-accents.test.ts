@@ -31,6 +31,18 @@ import {
 /** The tinted shape: the accent, with an alpha channel appended. */
 const TINTED = /^hsl\(\s*[\d.]+\s+[\d.]+%\s+[\d.]+%\s+\/\s+0\.35\)$/;
 
+/** Every `.ts`/`.tsx` under `src/`. Module scope: three sweeps below use it. */
+function tsFiles(dir: string, out: string[] = []): string[] {
+  for (const entry of readdirSync(dir)) {
+    const p = join(dir, entry);
+    if (statSync(p).isDirectory()) tsFiles(p, out);
+    else if (/\.tsx?$/.test(entry)) out.push(p);
+  }
+  return out;
+}
+
+const posix = (p: string) => p.split(sep).join("/");
+
 describe("tint survives everything that actually reaches it", () => {
   /**
    * DERIVED, NOT TYPED OUT. `MACHINES` is the real runtime input set: both card
@@ -156,17 +168,6 @@ describe("the silent version cannot come back", () => {
    */
   const NEEDLE = "replace(/" + "\\)$/";
 
-  function tsFiles(dir: string, out: string[] = []): string[] {
-    for (const entry of readdirSync(dir)) {
-      const p = join(dir, entry);
-      if (statSync(p).isDirectory()) tsFiles(p, out);
-      else if (/\.tsx?$/.test(entry)) out.push(p);
-    }
-    return out;
-  }
-
-  const posix = (p: string) => p.split(sep).join("/");
-
   it("the needle detects the real defect, as it really was", () => {
     /*
      * NON-CIRCULAR ON PURPOSE. A self-test that builds its own sample by
@@ -254,5 +255,73 @@ describe("the silent version cannot come back", () => {
       .filter((f) => /(?:function|const)\s+tint\b/.test(readFileSync(f, "utf8")))
       .map(posix);
     expect(definers).toEqual(["src/content/instrument-accents.ts"]);
+  });
+});
+
+describe("the registry's values are declared in exactly one place", () => {
+  /**
+   * E10/S4a — THE DEFECT RT-AB WAS RULED ON.
+   *
+   * `hsl(42 80% 62%)` was re-typed as a local `const GOLD` in thirteen files
+   * and `hsl(190 75% 62%)` as `const ICE` in four, while this registry existed
+   * for the sole purpose of holding them once. Nothing was visibly wrong; the
+   * hazard is that changing a colour here changes one file in twenty and the
+   * other nineteen quietly keep the old one. That has already happened in this
+   * repository twice — the Threshold Test's main control rendered in the
+   * Delicacy Trials' blue for a slice (E7/S21), and `PRESTIGE_GOLD_GLOW` held
+   * a value no page had ever rendered until E10/S4a corrected it.
+   *
+   * The allow-list below has exactly two entries and is asserted by EQUALITY,
+   * not by exclusion: a third file holding a registry value fails, and so does
+   * either of these two ceasing to. Both sit beside the definition and are
+   * about the values themselves rather than about painting anything with them.
+   *
+   * THE HOLE, STATED: a new hardcoded accent added INSIDE
+   * `instrument-accents.test.ts` would not be caught. That is the price of
+   * letting the exact-output tests keep their literal arguments, which they
+   * need — `expect(tint(PRESTIGE_GOLD))` compared against a string built from
+   * `PRESTIGE_GOLD` would assert nothing.
+   */
+  const OWNED = [PRESTIGE_GOLD, DELICACY_ICE, THRESHOLD_VIOLET, PRESTIGE_GOLD_GLOW, DELICACY_ICE_GLOW, THRESHOLD_VIOLET_GLOW];
+
+  const ALLOWED = [
+    // Exact-output tests, which need literal arguments to assert anything.
+    "src/content/instrument-accents.test.ts",
+    // The definitions themselves.
+    "src/content/instrument-accents.ts",
+    /*
+     * Contrast regression pins. Every assertion in that file is tied to these
+     * exact colours — the 1.83:1 a shipped page measured, the ink that clears
+     * AA on them. Importing the registry there would silently re-point them at
+     * a new accent and the file would keep passing under a heading claiming it
+     * tests the product's accents. It holds literals AND asserts they still
+     * equal the registry, so drift fails there with an instruction instead of
+     * failing here with a demand to delete the pin.
+     */
+    "src/lib/readable-on.test.ts",
+  ].sort();
+
+  it("the values it owns are distinct, so this test cannot pass by collision", () => {
+    expect(new Set(OWNED).size).toBe(OWNED.length);
+  });
+
+  it("no other file re-types a colour the registry owns", () => {
+    const files = tsFiles("src");
+    expect(files.length, "found no source files, so this sweep proves nothing").toBeGreaterThan(100);
+    const holders = files
+      .filter((f) => {
+        const text = readFileSync(f, "utf8");
+        // The QUOTED literal — prose mentioning a colour in a comment uses
+        // backticks and is not a declaration of it.
+        return OWNED.some((v) => text.includes(`"${v}"`));
+      })
+      .map(posix)
+      .sort();
+    expect(
+      holders,
+      "These files re-type a colour that @/content/instrument-accents already " +
+        "owns. Import the named constant instead — otherwise changing the accent " +
+        "there changes some of the product and not the rest:\n" + holders.join("\n"),
+    ).toEqual(ALLOWED);
   });
 });

@@ -7,6 +7,7 @@ import { assignDelicacyParams, simulateDelicacy, simulatePersons } from "@/analy
 import { DELICACY_TRIALS } from "@/content/delicacy/items";
 import delicacyManifest from "@/content/delicacy/manifest.json";
 import { metric } from "@/content/lab/metrics";
+import { PRESTIGE_GOLD } from "@/content/instrument-accents";
 
 /**
  * Instrument-health panel (artifact pivot §4).
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
   },
 };
 
-const GOLD = "hsl(42 80% 62%)";
+const GOLD = PRESTIGE_GOLD;
 const SIM_PERSONS = 600;
 const SIM_SEED = 4242;
 

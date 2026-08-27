@@ -8,6 +8,7 @@ import {
   sectionClaims,
   type ClaimSource,
 } from "@/content/method/claims";
+import { PRESTIGE_GOLD } from "@/content/instrument-accents";
 
 /**
  * `/method` — how this project is run, with the product as its evidence
@@ -46,7 +47,7 @@ export const metadata: Metadata = {
   },
 };
 
-const GOLD = "hsl(42 80% 62%)";
+const GOLD = PRESTIGE_GOLD;
 
 /**
  * The documents a block rests on, named so a reader can open them.

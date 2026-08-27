@@ -5,6 +5,7 @@ import SourceBadge from "@/components/lab/SourceBadge";
 import { assignBiasParams, syntheticDelicacyItems } from "@/analytics/simulate";
 import { recoveryScatter, runRecovery, type RecoveryPoint } from "@/analytics/recovery";
 import { BIAS_CLIPS } from "@/content/bias/items";
+import { PRESTIGE_GOLD } from "@/content/instrument-accents";
 
 /**
  * Parameter-recovery panel (artifact pivot §2/§4).
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
   },
 };
 
-const GOLD = "hsl(42 80% 62%)";
+const GOLD = PRESTIGE_GOLD;
 const SEED = 4001;
 const REPS = 20;
 const SAMPLE_SIZES = [50, 200, 1000];

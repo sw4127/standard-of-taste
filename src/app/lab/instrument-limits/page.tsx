@@ -4,6 +4,7 @@ import { knownLimits, ladderLevels, familyUnit, STAIRCASE_RENDERED_AT } from "@/
 import { eligibleSources, isRetiredSource } from "@/engine/staircase-pool";
 import { familyLabel, shortUnit } from "@/content/staircase/copy";
 import { LIMIT_KIND_COPY, LIMIT_KIND_ORDER, RETIRED_SOURCE_NOTE } from "@/content/staircase/limits";
+import { PRESTIGE_GOLD } from "@/content/instrument-accents";
 
 /**
  * WHAT THE INSTRUMENT CANNOT DO (E5/S7).
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
   },
 };
 
-const GOLD = "hsl(42 80% 62%)";
+const GOLD = PRESTIGE_GOLD;
 
 export default function InstrumentLimits() {
   const all = knownLimits();
