@@ -324,7 +324,7 @@ export const METHOD_FINDINGS: MethodFinding[] = [
     finding:
       "A ruling had already been made: post the flagship instrument on its own, within one to two weeks, and do not let the second instrument gate it. The second instrument got built instead. The plan written that day says it without softening: Delicacy got built instead. That is the N2 launch-avoidance pattern, on the record. And directly above it, the diagnosis: Nothing is blocked by engineering. Everything is blocked by the launch not having happened.",
     consequence:
-      "Twenty days later, at the time this page was written, it still has not been posted. The product has had 29 real visitors, ever. There are Zero real responses, which is why every psychometric figure in the Lab is generated from a known model and badged as simulated — the dataset that was named as the project's proprietary asset does not exist. Building is the part that feels like progress, and it is the part that was never the constraint.",
+      "As of the revision date at the foot of this page, it still has not been posted. The product has had 29 real visitors, ever. There are Zero real responses, which is why every psychometric figure in the Lab is generated from a known model and badged as simulated — the dataset that was named as the project's proprietary asset does not exist. Building is the part that feels like progress, and it is the part that was never the constraint.",
     sources: [
       {
         path: "docs/endgame-plan-2026-08-07.md",
@@ -360,3 +360,16 @@ export const METHOD_FINDINGS: MethodFinding[] = [
     ],
   },
 ];
+
+/**
+ * THE DATE THE PAGE'S PROSE WAS LAST CHECKED AGAINST REALITY.
+ *
+ * The launch-avoidance consequence used to open "Twenty days later", which was
+ * true on the day it was written and started rotting the next morning. An
+ * elapsed-time phrase has nothing to derive itself from, so it cannot be
+ * guarded and cannot be trusted. The page renders this date instead and the
+ * prose refers to it, which turns an arithmetic claim into a dated one.
+ *
+ * Bump it when the standing facts are re-checked — not when the styling moves.
+ */
+export const METHOD_AS_OF = "2026-08-27";

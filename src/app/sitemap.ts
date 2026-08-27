@@ -26,6 +26,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // The Lab is a public artifact surface, not an admin console — it is meant
     // to be found and read (pivot §4).
     page("/lab", 0.8, "weekly"),
+    // E9/S5, RT-U(a). Same standing as /lab: a public artifact surface meant to
+    // be found and read, not an internal note.
+    page("/method", 0.8),
     page("/music/quiz", 0.4),
     page("/quiz", 0.3, "yearly"),
     page("/fan-verdict", 0.3, "yearly"),

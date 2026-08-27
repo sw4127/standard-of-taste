@@ -32,12 +32,23 @@ export default function LearnLayout({ children }: { children: React.ReactNode })
           </p>
           {/* Nav = the same tracked-caps voice as the kicker (PM 2026-07-17:
               no bare underline/arrow links — they read cheap). */}
-          <Link
-            href="/"
-            className="text-[0.65rem] font-bold tracking-[0.3em] text-muted transition hover:text-white"
-          >
-            THE GYM FLOOR
-          </Link>
+          <div className="flex items-baseline gap-4">
+            {/* E9/S5, RT-U(a): /method is reachable from the two surfaces
+                built to attract strangers. A page nothing points at is the
+                kind that goes stale unnoticed. */}
+            <Link
+              href="/method"
+              className="text-[0.65rem] font-bold tracking-[0.3em] text-muted transition hover:text-white"
+            >
+              THE METHOD
+            </Link>
+            <Link
+              href="/"
+              className="text-[0.65rem] font-bold tracking-[0.3em] text-muted transition hover:text-white"
+            >
+              THE GYM FLOOR
+            </Link>
+          </div>
         </div>
         {children}
         <p className="mt-14 text-[11px] text-muted/70">
