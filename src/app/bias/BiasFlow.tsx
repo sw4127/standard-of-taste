@@ -318,6 +318,32 @@ export default function BiasFlow() {
           <button
             type="button"
             onClick={() => {
+              /*
+               * A SESSION'S DATA BEGINS WHEN THE SESSION DOES (E10/S9).
+               *
+               * Same reasoning as the Threshold flow's start handler (E10/S3),
+               * extended here because leaving two of three flows unprotected
+               * was the same "guard watching part of the room" this session
+               * keeps finding. Every accumulator below is initialised at MOUNT
+               * and nothing resets it, which is correct only because this flow
+               * is forward-only and a session can start once per mount. The day
+               * a result screen grows a "start again" button, the second
+               * session inherits the first one's ratings — and `blind` and
+               * `labeled` ARE the measurement, so a stale pair reports a sway
+               * the session did not measure (N3).
+               *
+               * `session-reset.test.ts` holds this block to the component's
+               * state, so a new accumulator cannot be added without being
+               * classified.
+               */
+              if (timer.current) clearTimeout(timer.current);
+              setIdx(0);
+              setBlind({});
+              setLabeled({});
+              setPlayed(false);
+              setPicked(null);
+              setResult(null);
+              listenMs.current = { blind: {}, labeled: {} };
               track("bias_start", {});
               setPhase("blind");
             }}

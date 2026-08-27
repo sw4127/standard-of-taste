@@ -240,6 +240,35 @@ export default function DelicacyFlow() {
           <button
             type="button"
             onClick={() => {
+              /*
+               * A SESSION'S DATA BEGINS WHEN THE SESSION DOES (E10/S9).
+               *
+               * Same reasoning as the Threshold flow (E10/S3) and the Prestige
+               * flow. `responses` is the serious one — it is what the result
+               * and the share link are computed from, so a stale entry reports
+               * a score for trials this session did not run (N3). `switches`
+               * and `listenMs` are the quiet ones: D6 columns that would be
+               * wrong only for people who took the test twice, with no screen
+               * to show it.
+               *
+               * The timer is cleared FIRST. A pending beat-lock timeout from
+               * an abandoned session would otherwise fire into the new one and
+               * advance a trial nobody answered.
+               */
+              if (timer.current) clearTimeout(timer.current);
+              setIdx(0);
+              setStep("listen");
+              setArmedA(false);
+              setArmedB(false);
+              setPickedSide(null);
+              setFlawPick(null);
+              setConfPick(null);
+              setResponses({});
+              setResult(null);
+              setPracticeIdx(0);
+              setPracticePick(null);
+              switches.current = {};
+              listenMs.current = { a: {}, b: {} };
               track("delicacy_start", {});
               setPhase("practice");
             }}
