@@ -1,0 +1,21 @@
+The three copies of `tint` as they stood immediately before E10/S1 (Track F3),
+copied byte-for-byte from the working tree at commit b19f805.
+
+This is a .txt on purpose. The guard in `instrument-accents.test.ts` sweeps every
+`.ts` and `.tsx` file under `src/` for the byte sequence below and allows no
+exceptions — an exception list is exactly how the third copy survived unnoticed.
+So the sample the guard is tested against cannot live in a source file. It lives
+here, and the test reads it, which makes the self-test non-circular: the guard is
+proven against the real defect as it really was, not against a string the test
+assembled to be found.
+
+--- src/components/OtherMachines.tsx:61 ---
+const tint = (accent: string) => accent.replace(/\)$/, " / 0.35)");
+
+--- src/app/delicacy/AbCompare.tsx:57 ---
+function tint(accent: string): string {
+  return accent.replace(/\)$/, " / 0.35)");
+}
+
+--- src/app/learn/page.tsx:68 ---
+style={{ borderColor: m.accent.replace(/\)$/, " / 0.35)"), background: "rgba(255,255,255,0.03)" }}

@@ -57,3 +57,61 @@ export const THRESHOLD_FIELD = [
 
 /** The near-black each instrument sits on, tinted a hair toward its own accent. */
 export const THRESHOLD_BASE = "#0A070C";
+
+/* ------------------------------------------------------------------ tint */
+/**
+ * A FAINT EDGE IN A MACHINE'S OWN HUE — ONE IMPLEMENTATION (E10/S1, Track F3).
+ *
+ * This line existed three times: in `OtherMachines`, in `AbCompare`, and typed
+ * inline in the `/learn` index. All three replaced a trailing `)` with
+ * ` / 0.35)`, and all three fail SILENTLY on any accent that is not plain
+ * `hsl(H S% L%)`:
+ *
+ * (The old line is reproduced verbatim in `__fixtures__/tint-before-e10s1.txt`
+ * rather than here, because the guard test forbids that exact byte sequence
+ * anywhere in a `.ts`/`.tsx` file under `src/` — with no file excepted, this
+ * one included. The fixture is what proves the guard actually detects it.)
+ *
+ *   - a hex accent (`#0A070C`, which this very file exports as THRESHOLD_BASE)
+ *     does not match, so the regex returns the string untouched and the border
+ *     renders at FULL opacity instead of 35%. Nothing errors. Nothing logs.
+ *   - an accent that already carries alpha (`hsl(42 85% 60% / 0.4)` — the
+ *     _GLOW constants above are exactly that shape) becomes
+ *     `hsl(42 85% 60% / 0.4 / 0.35)`, which is not a colour. The browser drops
+ *     the declaration and the border falls back to whatever it inherited.
+ *
+ * Neither failure has a symptom. The page renders, the build passes, the tests
+ * pass, and a border is quietly the wrong colour — which is the same class of
+ * defect as the cross-instrument colour leak this registry was created to end
+ * (E7/S18, E7/S21).
+ *
+ * SO IT THROWS. The alternative — widening the function to handle hex and rgb
+ * and alpha — is more code in service of inputs that do not exist, and it
+ * would keep the failure quiet. Every value that reaches `tint` is a
+ * compile-time constant from this file, and `instrument-accents.test.ts` runs
+ * `tint` over the whole live registry, so an unsupported accent fails the suite
+ * before it can reach a page. A throw here cannot surprise a user without the
+ * build going red first.
+ *
+ * NOT A TRAILING-PAREN REPLACE INTERNALLY EITHER. The shape is validated by
+ * the time we get here, so the slice is exact — and it lets the guard test
+ * forbid that regex ANYWHERE in `src/`, with no file excepted, rather than
+ * excepting the one file that is allowed to keep it.
+ */
+const TINT_ALPHA = 0.35;
+
+/** Plain, alpha-free, space-separated `hsl()` — the only shape an accent takes. */
+const PLAIN_HSL = /^hsl\(\s*[\d.]+\s+[\d.]+%\s+[\d.]+%\s*\)$/;
+
+export function tint(accent: string): string {
+  if (!PLAIN_HSL.test(accent)) {
+    throw new Error(
+      `tint() received ${JSON.stringify(accent)}, which is not a plain ` +
+        `hsl(H S% L%) accent. Tinting it would silently produce either a ` +
+        `full-opacity border (no match) or invalid CSS (double alpha). Add ` +
+        `the accent to instrument-accents.ts in the supported shape, or ` +
+        `widen tint() deliberately and extend its test.`,
+    );
+  }
+  return `${accent.slice(0, -1)} / ${TINT_ALPHA})`;
+}

@@ -37,6 +37,7 @@
  */
 
 import { readableOn } from "@/lib/readable-on";
+import { DELICACY_ICE, tint } from "@/content/instrument-accents";
 import { useEffect, useRef, useState } from "react";
 
 /**
@@ -51,12 +52,7 @@ import { useEffect, useRef, useState } from "react";
  *
  * The default keeps Delicacy's ice so its own call sites are unchanged.
  */
-const DEFAULT_ACCENT = "hsl(190 75% 62%)";
-
-/** A faint edge in the caller's own hue — derived, so it can never disagree. */
-function tint(accent: string): string {
-  return accent.replace(/\)$/, " / 0.35)");
-}
+const DEFAULT_ACCENT = DELICACY_ICE;
 
 export default function AbCompare({
   accent = DEFAULT_ACCENT,

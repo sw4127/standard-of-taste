@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
-import { PRESTIGE_GOLD, DELICACY_ICE, THRESHOLD_VIOLET } from "@/content/instrument-accents";
+import { PRESTIGE_GOLD, DELICACY_ICE, THRESHOLD_VIOLET, tint } from "@/content/instrument-accents";
 
 /**
  * THE OTHER TWO MACHINES, FROM ONE PLACE (E7/S23).
@@ -56,9 +56,6 @@ export const MACHINES: MachineRef[] = [
     live: true,
   },
 ];
-
-/** A faint edge in the machine's own hue — derived, never a second literal. */
-const tint = (accent: string) => accent.replace(/\)$/, " / 0.35)");
 
 export default function OtherMachines({
   from,
