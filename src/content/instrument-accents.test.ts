@@ -2,11 +2,16 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, sep } from "node:path";
 import { describe, expect, it } from "vitest";
 import { MACHINES } from "@/components/OtherMachines";
+import { contrastRatio, parseColor } from "@/lib/readable-on";
 import {
   DELICACY_FIELD,
   DELICACY_ICE,
   DELICACY_ICE_GLOW,
   DELICACY_PALETTE,
+  FIELD_CHOOSING,
+  FIELD_MEASURING,
+  FIELD_READING,
+  GYM_FIELD,
   PRESTIGE_FIELD,
   PRESTIGE_GOLD,
   PRESTIGE_GOLD_GLOW,
@@ -506,5 +511,100 @@ describe("every instrument's controls wear that instrument's colour", () => {
         "instruments; any colour it names itself is wrong on two of them.",
     ).toBe(false);
     expect(text, "ClipPlayer no longer takes a palette").toMatch(/palette: InstrumentPalette;/);
+  });
+});
+
+describe("the gym's own surfaces stay readable", () => {
+  /**
+   * E10/S6a — THE FRONT DOOR HAD BEEN SHIPPING AT 1.99:1.
+   *
+   * The gold field it used to paint put `--muted` body copy at 1.99:1 against
+   * WCAG AA's 4.5, measured at the centre of the brightest blob. Nobody had
+   * measured it, because nothing measured it. This is that missing measurement,
+   * turned into a test.
+   *
+   * WHAT "WORST POINT" MEANS: the field is radial blobs that fall off to
+   * transparent, over the page surface, at the layer's opacity. The darkest
+   * text sits on the brightest blob's centre in the worst case, so that is what
+   * is checked. Real text elsewhere on the page has more contrast, not less.
+   *
+   * This cannot see the vignette (which only darkens, so it helps) nor where
+   * text actually falls relative to a blob. It is a floor, not a survey.
+   */
+  const SURFACE = "#08090d"; // RouteBackground's --app-bg for every gym route
+  const MUTED = "#8b91a3"; // --muted, the lightest-on-dark body copy in play
+  const AA = 4.5;
+
+  /** Composite an opaque colour over another at `alpha`, as the browser does. */
+  function over(fg: string, alpha: number, bg: string): string {
+    const f = parseColor(fg);
+    const b = parseColor(bg);
+    if (!f || !b) throw new Error(`unparseable colour: ${fg} / ${bg}`);
+    const mix = f.map((c, i) => Math.round(alpha * c + (1 - alpha) * b[i]));
+    return `#${mix.map((c) => c.toString(16).padStart(2, "0")).join("")}`;
+  }
+
+  it("the contrast meter agrees with known pairs before it is trusted", () => {
+    // A meter that has never been checked is not a meter (E9 finding 5).
+    expect(contrastRatio("#fff", "#000")).toBeCloseTo(21, 1);
+    expect(contrastRatio("#000", "#fff")).toBeCloseTo(21, 1);
+    expect(contrastRatio("#fff", "#fff")).toBeCloseTo(1, 2);
+    expect(contrastRatio("#767676", "#fff")!).toBeCloseTo(4.54, 1);
+  });
+
+  it("the compositor agrees with a hand-worked case", () => {
+    // 50% of white over black is mid grey; 0% leaves the ground untouched.
+    expect(over("#ffffff", 0.5, "#000000")).toBe("#808080");
+    expect(over("#ffffff", 0, "#000000")).toBe("#000000");
+    expect(over("#ffffff", 1, "#000000")).toBe("#ffffff");
+  });
+
+  const brightest = (field: string[]) =>
+    field.reduce((a, b) => {
+      const la = parseColor(a)!.reduce((s, c) => s + c, 0);
+      const lb = parseColor(b)!.reduce((s, c) => s + c, 0);
+      return lb > la ? b : a;
+    });
+
+  it("muted body copy clears AA at the worst point of every gym surface", () => {
+    const cases: [string, number][] = [
+      ["the front door", FIELD_CHOOSING],
+      ["the reading surfaces (/learn, /lab, /method)", FIELD_READING],
+    ];
+    for (const [where, intensity] of cases) {
+      const backdrop = over(brightest(GYM_FIELD), intensity, SURFACE);
+      const r = contrastRatio(MUTED, backdrop)!;
+      expect(
+        r,
+        `${where}: --muted body copy measures ${r.toFixed(2)}:1 over ${backdrop}, ` +
+          `below WCAG AA's ${AA}. Darken GYM_FIELD or lighten --muted. The gold field ` +
+          `this replaced measured 1.99:1 and shipped that way because nothing checked.`,
+      ).toBeGreaterThanOrEqual(AA);
+    }
+  });
+
+  it("the check is not vacuous — the field it replaced still fails it", () => {
+    /*
+     * The other direction. If `over` or `brightest` silently returned the page
+     * surface, every ratio above would pass and this file would be decoration.
+     * The gold field at the brightness it actually shipped must still fail.
+     */
+    const oldBackdrop = over(brightest(PRESTIGE_FIELD), 0.6, SURFACE);
+    const r = contrastRatio(MUTED, oldBackdrop)!;
+    expect(r, "the pre-E10/S6a front door should measure far below AA").toBeLessThan(2.5);
+  });
+
+  it("the gym field carries no instrument's hue", () => {
+    // Achromatic by rule, not by taste: any real chroma either belongs to an
+    // instrument or crowds the 86-degree separation between the three accents.
+    for (const c of GYM_FIELD) {
+      const sat = Number(c.match(/hsl\(\s*[\d.]+\s+([\d.]+)%/)![1]);
+      expect(sat, `${c} is saturated enough to read as a colour`).toBeLessThanOrEqual(12);
+    }
+  });
+
+  it("the tiers stay ordered: measuring is brightest, reading is dimmest", () => {
+    expect(FIELD_MEASURING).toBeGreaterThan(FIELD_CHOOSING);
+    expect(FIELD_CHOOSING).toBeGreaterThan(FIELD_READING);
   });
 });

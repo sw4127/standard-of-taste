@@ -149,9 +149,11 @@ export const PRESTIGE_FIELD = [
  * colours while this machine is selected" and is populated for all three
  * machines — and it is never read. Selecting a machine sets `--app-bg` from
  * `Machine.surface`; the floor's ambience comes from the page-level array and
- * stays gold throughout. Verified on the rendered page: choosing Delicacy
- * leaves the gradient at `rgb(190, 149, 55)`, which is PRESTIGE_FIELD's first
- * colour.
+ * does not change with the selection. Verified on the rendered page: choosing
+ * Delicacy left the gradient at `rgb(190, 149, 55)` — PRESTIGE_FIELD's first
+ * colour — which is how this was found. Since E10/S6a the floor paints
+ * GYM_FIELD instead, so it is now neutral rather than gold; still unaffected
+ * by the selection.
  *
  * So the home page's delicacy array is not a divergence in what the product
  * looks like. It is dead data, and pointing it here would quietly erase the
@@ -253,3 +255,76 @@ export function tint(accent: string, alpha: number = CARD_EDGE_ALPHA): string {
   }
   return `${accent.slice(0, -1)} / ${alpha})`;
 }
+
+/* ------------------------------------------------------- the gym itself */
+/**
+ * THE GYM HAS NO COLOUR OF ITS OWN (E10/S6a, PM ruling RT-AG:a + RT-AH:a).
+ *
+ * The front door, the reading room, the Lab and `/method` all painted the
+ * PRESTIGE field — so four surfaces belonging to no instrument wore one
+ * instrument's colour, and the front door in particular read as the Prestige
+ * Test rather than as the gym.
+ *
+ * This was already ruled once. On 2026-08-08 the PM's user testing produced
+ * the finding recorded in `DelicacyFlow`: "Gold now belongs to Prestige, ice to
+ * Delicacy, and the gym itself is neutral — which is the only arrangement in
+ * which two instruments can actually be peers." It was applied to the wordmark
+ * text and to nothing else.
+ *
+ * WHY NOT A FOURTH BRAND HUE. The three accents are placed to be maximally
+ * separable — 42°, 190°, 276°, nearest neighbours 86° apart — because hue
+ * separation is the property that lets someone tell two results apart before
+ * reading a word. A fourth hue must sit inside one of those gaps and would land
+ * within ~43° of two accents, halving the separation the system exists to
+ * protect. A brand colour would be bought by degrading what colour does here.
+ * So the gym is achromatic: not a mood, the only remaining option.
+ *
+ * WHY IT IS ALSO THE RIGHT MESSAGE. The product's claim is that it says nothing
+ * about you until you perform a task (D1 — about the performance, never the
+ * person). The floor makes the same claim: the room has no colour until you
+ * choose a machine and agree to be measured.
+ *
+ * WHY SLIGHTLY COOL RATHER THAN FLAT GREY. The gym's existing neutrals are
+ * already faintly cool — the surface is `#08090d` and the wordmark
+ * `rgba(244,245,248,0.72)`, both blue-leaning. At 6–10% saturation this reads
+ * as light rather than as a colour, and matches chrome that already exists
+ * instead of introducing a second kind of neutral.
+ *
+ * HOW DARK, DECIDED BY MEASUREMENT RATHER THAN BY EYE. The first draft of this
+ * set peaked at 46% lightness. Composited at FIELD_CHOOSING over the page
+ * surface, that puts `--muted` body copy at 4.07:1 — below WCAG AA's 4.5. The
+ * set is scaled so the brightest blob is 36%, which measures 4.67:1 at the
+ * centre of the brightest blob, the worst point on the page.
+ *
+ * For scale, the gold field this replaced measured **1.99:1** for the same text
+ * at the same point, and had been shipping that way. Nobody had measured it.
+ */
+export const GYM_FIELD = [
+  "hsl(225 10% 36%)",
+  "hsl(215 8% 32%)",
+  "hsl(235 8% 34%)",
+  "hsl(210 6% 28%)",
+];
+
+/**
+ * HOW LIT A SURFACE IS, BY WHAT HAPPENS ON IT (E10/S6a).
+ *
+ * These were five hand-tuned numbers — 0.6, 0.6, 0.35, 0.30, 0.28 — and the
+ * pattern in them was real but undeclared: surfaces where you DO something are
+ * lit, surfaces you READ are barely lit. 0.35 / 0.30 / 0.28 is one value with
+ * drift on top, so it is now one value.
+ *
+ * Naming them is the same fix as the machine-card size variants (E10/S2): an
+ * undeclared difference is indistinguishable from an accident, and the next
+ * person cannot honour a rule nobody wrote down.
+ */
+/** Inside an instrument. The brightest the product gets. */
+export const FIELD_MEASURING = 0.6;
+
+/** The front door at rest — dimmer than a machine, so choosing one lights the
+ *  room (RT-AH:a). Colour and light both arrive with the decision. */
+export const FIELD_CHOOSING = 0.4;
+
+/** Reading rooms: /learn, /lab, /method. The content is the figure; the field
+ *  is barely there. */
+export const FIELD_READING = 0.3;

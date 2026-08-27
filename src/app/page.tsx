@@ -5,7 +5,7 @@ import GymFloor, { type Machine } from "./GymFloor";
 import Track from "@/components/Track";
 import { worldCup } from "@/content/world-cup";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
-import { PRESTIGE_GOLD, PRESTIGE_FIELD, DELICACY_ICE, THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE } from "@/content/instrument-accents";
+import { PRESTIGE_GOLD, PRESTIGE_FIELD, DELICACY_ICE, THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE, GYM_FIELD, FIELD_CHOOSING } from "@/content/instrument-accents";
 
 /**
  * The taste-gym landing (RT-3c, memo §9.7 RESOLVED 2026-07-11): /bias is the
@@ -74,8 +74,10 @@ const MACHINES: Machine[] = [
            *
            * `field` is never read. `GymFloor` reads `accent` and `surface`;
            * the floor's ambience comes from the page-level `FLUID` below and
-           * stays gold whichever machine is selected. Measured on the rendered
-           * page: choosing Delicacy leaves the gradient at rgb(190, 149, 55).
+           * does not change when a machine is selected. Measured on the
+           * rendered page: choosing a machine leaves the gradient at
+           * GYM_FIELD's rgb(83, 87, 101). (Before E10/S6a it stayed gold,
+           * which is how this was first found.)
            *
            * Kept verbatim rather than pointed at DELICACY_FIELD, because the
            * two differ and that difference is the only surviving record of
@@ -116,7 +118,7 @@ const MACHINES: Machine[] = [
     meta: "14-26 min · a number in cents, ms or kbps",
   },
 ];
-const FLUID = PRESTIGE_FIELD;
+const FLUID = GYM_FIELD;
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -131,7 +133,7 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
 
   return (
     <main className="relative mx-auto flex min-h-dvh w-full max-w-lg flex-col justify-center overflow-hidden px-6 py-12">
-      <FluidField colors={FLUID} baseColor="#0B0A08" intensity={0.6} scrim={false} vignette />
+      <FluidField colors={FLUID} baseColor="#0B0A08" intensity={FIELD_CHOOSING} scrim={false} vignette />
       <Track event="landing_view" props={{ variant: "gym" }} />
       <div className="relative z-10">
         <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>

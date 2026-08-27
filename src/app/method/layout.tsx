@@ -1,6 +1,6 @@
 import Link from "next/link";
 import FluidField from "@/components/FluidField";
-import { PRESTIGE_FIELD } from "@/content/instrument-accents";
+import { GYM_FIELD, FIELD_READING } from "@/content/instrument-accents";
 
 /**
  * The `/method` shell (E9/S5, Track E — approved RT-158a / RT-159a).
@@ -21,12 +21,12 @@ import { PRESTIGE_FIELD } from "@/content/instrument-accents";
  * colour.
  */
 const BRAND = "rgba(244,245,248,0.72)";
-const FLUID = PRESTIGE_FIELD;
+const FLUID = GYM_FIELD;
 
 export default function MethodLayout({ children }: { children: React.ReactNode }) {
   return (
     <main className="relative mx-auto flex min-h-dvh w-full max-w-3xl flex-col overflow-hidden px-6 py-12">
-      <FluidField colors={FLUID} baseColor="#0B0A08" intensity={0.28} scrim={false} vignette />
+      <FluidField colors={FLUID} baseColor="#0B0A08" intensity={FIELD_READING} scrim={false} vignette />
       <div className="relative z-10">
         <div className="flex items-baseline justify-between gap-4">
           <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
