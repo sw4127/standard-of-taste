@@ -156,6 +156,98 @@ export const METHOD_CLAIMS: MethodClaim[] = [
       },
     ],
   },
+  {
+    id: "pm-is-not-an-engineer",
+    kind: "quoted",
+    text:
+      "The constitution opens by naming the owner's expertise as a constraint on how work is presented to them: they are newer to engineering, so explain tradeoffs in plain language and teach as you go. Every option put to them has to be legible without the jargon, or the ruling that comes back is a rubber stamp on a sentence nobody understood.",
+    sources: [
+      {
+        path: "CLAUDE.md",
+        anchor: "they are newer to engineering, so explain tradeoffs in plain language",
+      },
+    ],
+  },
+  {
+    id: "defaults-must-be-reversible",
+    kind: "quoted",
+    text:
+      "Each open question carries a default that applies if nobody answers, and the default is constrained rather than chosen: Defaults must be reversible choices, never one-way doors (pricing, data schema, deletions = no default, PM must answer). Silence can therefore only ever produce the undoable option.",
+    sources: [
+      {
+        path: "docs/redteam-protocol.md",
+        anchor: "Defaults must be reversible choices, never one-way doors",
+      },
+    ],
+  },
+  {
+    id: "stale-gate-is-a-false-statement",
+    kind: "quoted",
+    text:
+      "Two documents once described a quality gate that had been abolished months earlier, as though it were still owed. The rule that came out of it is stated as a matter of truth rather than tidiness: a gate nobody performs any more, written as a thing still to be done, is a false statement in the repository.",
+    sources: [
+      {
+        path: "src/content/retired-gates.test.ts",
+        anchor: "written as a thing still to be done, is a false statement in the",
+      },
+    ],
+  },
+  {
+    id: "fix-the-class-not-the-instance",
+    kind: "quoted",
+    text:
+      "The repair was not the two sentences. Fixing the two sentences leaves the class open, so the rule became a test that scans every document on every run, proved in both directions, because a guard that has only ever returned clean is not known to check anything.",
+    sources: [
+      {
+        path: "src/content/retired-gates.test.ts",
+        anchor: "Fixing the two sentences leaves the class open",
+      },
+    ],
+  },
+  {
+    id: "published-text-must-match-the-code",
+    kind: "quoted",
+    text:
+      "The same rule now binds the files this site publishes about itself. They described an instrument of eight clips long after it had grown to sixteen, so the quantities are derived from the shipped item pool instead of being retyped: change the pool without changing the sentence and this fails, naming both numbers.",
+    sources: [
+      {
+        path: "src/content/published-text.test.ts",
+        anchor: "change the pool without changing the sentence and this fails",
+      },
+    ],
+  },
+  {
+    id: "recovery-before-fielding",
+    kind: "quoted",
+    text:
+      "Before an estimator is trusted with real answers it is run on simulated ones generated from a known model, and required to recover the known parameters. The claim that buys is deliberately modest: I validated the estimator by parameter recovery before fielding it.",
+    sources: [
+      { path: "docs/artifact-pivot-2026-08-07.md", anchor: "recover the known parameters" },
+      {
+        path: "docs/artifact-pivot-2026-08-07.md",
+        anchor: "I validated the estimator by parameter recovery before fielding it.",
+      },
+    ],
+  },
+  {
+    id: "simulated-is-labelled",
+    kind: "quoted",
+    text:
+      "Nothing simulated is allowed to pass as observed, anywhere it might be seen: in-app, in charts, in the write-up, in the repo. The badge is not small print. It is the reason the analytics pages are allowed to exist before a single person has taken a test.",
+    sources: [
+      {
+        path: "docs/artifact-pivot-2026-08-07.md",
+        anchor: "in-app, in charts, in the write-up, in the repo.",
+      },
+    ],
+  },
+  {
+    id: "band-not-point",
+    kind: "quoted",
+    text:
+      "Where a measurement is noisy the product must show the uncertainty rather than hide it behind a label: report the band, never the point, because a point estimate from a noisy measurement is a claim the measurement cannot support.",
+    sources: [{ path: "src/engine/delicacy.ts", anchor: "report the band, never the point" }],
+  },
 ];
 
 /**
@@ -373,3 +465,77 @@ export const METHOD_FINDINGS: MethodFinding[] = [
  * Bump it when the standing facts are re-checked — not when the styling moves.
  */
 export const METHOD_AS_OF = "2026-08-27";
+
+/**
+ * THE READER ORDER (E9/S6 — blueprint E1: the page is for product-manager,
+ * business-analyst and data-analyst readers, IN THAT ORDER).
+ *
+ * WHY THIS IS DATA AND NOT JUST THE ORDER OF THE JSX. Three things have to stay
+ * true at once: the sections appear in the ruled order; every claim in the
+ * ledger appears in exactly one of them; and no section quietly empties out.
+ * None of those survives being a convention about how a file is typed. The
+ * middle one matters most — a claim added to the ledger and never placed in a
+ * section would verify perfectly and render nowhere, which is this repository's
+ * most repeated near-miss: a permalink mount is not a flow mount.
+ *
+ * The three audiences are not three topics. They are three questions: how a
+ * decision gets made and stays made · how a written requirement stays true ·
+ * how a number earns the right to be shown.
+ */
+export interface MethodSection {
+  id: "pm" | "ba" | "da";
+  /** The heading. Names the question, not the job title. */
+  heading: string;
+  /** Who it is for, said plainly — the ordering is itself a claim about readers. */
+  audience: string;
+  lede: string;
+  /** Claim ids from METHOD_CLAIMS, in reading order. */
+  claims: string[];
+}
+
+export const METHOD_SECTIONS: MethodSection[] = [
+  {
+    id: "pm",
+    heading: "How a decision gets made, and stays made",
+    audience: "For a product manager",
+    lede:
+      "The project runs on a written constitution and two review protocols. What is unusual is not that they exist. It is that they constrain the engineer more than the owner, and that they are enforced by tests rather than by good intentions.",
+    claims: [
+      "pm-is-not-an-engineer",
+      "asks-must-be-in-the-block",
+      "defaults-must-be-reversible",
+      "n2-complexity-is-a-cost",
+      "slice-protocol-rationale",
+      "protocols-defend-against-the-author",
+    ],
+  },
+  {
+    id: "ba",
+    heading: "How a written requirement stays true",
+    audience: "For a business analyst",
+    lede:
+      "Documentation drifting away from the system it describes is the normal condition of software, and it is usually filed under untidiness. Here it is a defect with a failing test attached — because a document describing a gate nobody performs sends the next reader to ask for a sign-off that cannot be given.",
+    claims: [
+      "stale-gate-is-a-false-statement",
+      "fix-the-class-not-the-instance",
+      "published-text-must-match-the-code",
+    ],
+  },
+  {
+    id: "da",
+    heading: "How a number earns the right to be shown",
+    audience: "For a data analyst",
+    lede:
+      "There are no real respondents yet. That single fact governs every figure on this site, and the interesting part is what it forbids rather than what it permits.",
+    claims: ["n3-honesty-rule", "recovery-before-fielding", "simulated-is-labelled", "band-not-point"],
+  },
+];
+
+/** Claims in reading order, resolved from the sections. Throws on an unknown id. */
+export function sectionClaims(section: MethodSection): MethodClaim[] {
+  return section.claims.map((id) => {
+    const claim = METHOD_CLAIMS.find((c) => c.id === id);
+    if (!claim) throw new Error(`METHOD_SECTIONS: section "${section.id}" names unknown claim "${id}"`);
+    return claim;
+  });
+}

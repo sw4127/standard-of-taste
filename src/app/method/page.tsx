@@ -3,7 +3,9 @@ import Link from "next/link";
 import {
   METHOD_AS_OF,
   METHOD_FINDINGS,
+  METHOD_SECTIONS,
   METHOD_REFUSALS,
+  sectionClaims,
   type ClaimSource,
 } from "@/content/method/claims";
 
@@ -110,6 +112,30 @@ export default function MethodPage() {
           instead of quietly becoming false.
         </p>
       </div>
+
+      {/* The operating model, in the ruled reader order (blueprint E1). The
+          order is data, not the order these blocks happen to be typed in —
+          see METHOD_SECTIONS and the test that pins it. */}
+      {METHOD_SECTIONS.map((section) => (
+        <section key={section.id} className="mt-14">
+          <p className="text-[0.62rem] font-bold uppercase tracking-[0.28em] text-muted">
+            {section.audience}
+          </p>
+          <h2 className="mt-2 font-display text-2xl font-semibold" style={{ color: GOLD }}>
+            {section.heading}
+          </h2>
+          <p className="mt-4 text-[15px] leading-relaxed text-neutral-300">{section.lede}</p>
+          <div className="mt-6 space-y-7">
+            {sectionClaims(section).map((c) => (
+              <div key={c.id} className="border-l-2 border-white/12 pl-5">
+                {c.kind === "inferred" ? <InferenceMark /> : null}
+                <p className="text-[15px] leading-relaxed text-neutral-300">{c.text}</p>
+                <Sources sources={c.sources} />
+              </div>
+            ))}
+          </div>
+        </section>
+      ))}
 
       <section className="mt-14">
         <h2 className="font-display text-2xl font-semibold" style={{ color: GOLD }}>

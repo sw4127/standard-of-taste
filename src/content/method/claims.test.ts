@@ -4,8 +4,10 @@ import { describe, expect, it } from "vitest";
 import {
   METHOD_CLAIMS,
   METHOD_FINDINGS,
+  METHOD_SECTIONS,
   METHOD_REFUSALS,
   verifiableEntries,
+  sectionClaims,
   type MethodClaim,
 } from "./claims";
 
@@ -141,6 +143,43 @@ describe("the /method claim ledger", () => {
     // ...and the record's own account of the event stays quoted, or the page
     // would be offering an opinion where it has evidence.
     expect(METHOD_FINDINGS.find((f) => f.id === "finding-launch-avoidance")?.kind).toBe("quoted");
+  });
+
+  /**
+   * NO CLAIM VERIFIES PERFECTLY AND RENDERS NOWHERE (E9/S6).
+   *
+   * The page shows claims through sections. A claim added to the ledger and
+   * never placed in one would pass every check above — real source, real
+   * passage, real quotation — and appear to nobody. That is this repository's
+   * most repeated near-miss in a new costume: a permalink mount is not a flow
+   * mount, and a verified claim is not a rendered one.
+   *
+   * The reader order is also pinned, because it is a ruled decision (blueprint
+   * E1: product manager, business analyst, data analyst, in that order) and
+   * nothing else would notice it being shuffled.
+   */
+  it("places every claim in exactly one section, and no section is empty", () => {
+    const placed = METHOD_SECTIONS.flatMap((s) => s.claims);
+    const duplicated = placed.filter((id, i) => placed.indexOf(id) !== i);
+    expect(duplicated, `these claims appear in more than one section: ${duplicated}`).toEqual([]);
+
+    const orphaned = METHOD_CLAIMS.map((c) => c.id).filter((id) => !placed.includes(id));
+    expect(
+      orphaned,
+      "These claims are in the ledger, fully verified, and render on no page:\n" +
+        orphaned.join("\n"),
+    ).toEqual([]);
+
+    for (const s of METHOD_SECTIONS) {
+      expect(s.claims.length, `section "${s.id}" is empty`).toBeGreaterThan(0);
+      expect(s.lede.trim().length, `section "${s.id}" has no lede`).toBeGreaterThan(40);
+      // Resolving throws on an unknown id — call it so a typo fails here.
+      expect(sectionClaims(s).length).toBe(s.claims.length);
+    }
+  });
+
+  it("keeps the sections in the ruled reader order", () => {
+    expect(METHOD_SECTIONS.map((s) => s.id)).toEqual(["pm", "ba", "da"]);
   });
 
   it("gives every claim a unique id and at least one source", () => {
