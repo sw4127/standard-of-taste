@@ -28,6 +28,7 @@ import Track from "@/components/Track";
 import ShareButton from "@/app/result/ShareButton";
 import { CalibrationBlock, FlawLine, InYourWork } from "../RevealBlocks";
 import AcrossSessions from "@/components/AcrossSessions";
+import ExpertPanel from "@/components/ExpertPanel";
 import { computeCalibration } from "@/engine/calibration";
 import DownloadButton from "@/app/result/DownloadButton";
 
@@ -117,6 +118,7 @@ export default async function DelicacyResultPage({ searchParams }: { searchParam
         <InYourWork result={result} />
         <CalibrationBlock cal={calibration} />
         <AcrossSessions accent={ICE} own={{ kind: "delicacy", picks: p }} />
+        <ExpertPanel accent={ICE} instrument={{ kind: "delicacy" }} own={{ kind: "delicacy", picks: p }} />
 
         {/* The card itself — server-rendered, long-press-saveable in webviews. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}

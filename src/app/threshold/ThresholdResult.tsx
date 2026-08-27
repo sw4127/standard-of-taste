@@ -44,8 +44,11 @@ import type { StaircaseResult } from "@/engine/staircase-session";
 import { thresholdClaim } from "@/engine/evidence";
 import { creatorLines } from "@/content/vocabulary/threshold";
 import AcrossSessions from "@/components/AcrossSessions";
+import ExpertPanel from "@/components/ExpertPanel";
+import type { StoredPayload } from "@/lib/result-store";
 
 const ICE = THRESHOLD_VIOLET;
+
 const ICE_GLOW = THRESHOLD_VIOLET_GLOW;
 // E7/S23: these were still Delicacy's blues. E7/S18 moved the accent and the
 // flow's field but missed this file, and the accent guard could not see it —
@@ -58,10 +61,42 @@ const BRAND = "rgba(244,245,248,0.72)";
 export default function ThresholdResult({
   result,
   share,
+  identity,
 }: {
   result: StaircaseResult;
   share?: ThresholdShare;
+  /**
+   * WHO THIS SESSION BELONGS TO — separate from `share` ON PURPOSE (E8/C2).
+   *
+   * `share` answers "may this page offer a share button and a card?", which the
+   * permalink answers NO, because it may be showing a stranger's number.
+   * `identity` answers "which session is on screen?", which the personal panels
+   * compare against this device's storage to decide whether to speak.
+   *
+   * E8/S8 keyed the panels off `share` and conflated the two, so withholding
+   * the share affordance also silenced `AcrossSessions` on the permalink — for
+   * everyone, the owner included. E8/S12 saw that and mis-read it as the
+   * ownership check working correctly; it was not, the panels were never
+   * reachable on that route at all. The flow passes both; the permalink passes
+   * only this.
+   */
+  identity?: StoredPayload;
 }) {
+  /*
+   * Either source yields the same comparison, so the components never learn
+   * which route they are on.
+   */
+  const own: StoredPayload | undefined =
+    identity ??
+    (share
+      ? {
+          kind: "threshold",
+          slug: share.slug,
+          seed: share.seed,
+          answers: share.answers,
+          ...(share.sourceId ? { sourceId: share.sourceId } : {}),
+        }
+      : undefined);
   const lines = resultLines(result);
   const [headline, ...rest] = lines;
   // Partitioned BY IDENTITY, not by position. `resultLines` happens to put the
@@ -148,17 +183,10 @@ export default function ThresholdResult({
         {/* Only when this page is showing THIS device's own session — see
             AcrossSessions. Without `share` there is no payload to compare, so
             there is nothing to claim ownership of. */}
-        {share ? (
-          <AcrossSessions
-            accent={ICE}
-            own={{
-              kind: "threshold",
-              slug: share.slug,
-              seed: share.seed,
-              answers: share.answers,
-              ...(share.sourceId ? { sourceId: share.sourceId } : {}),
-            }}
-          />
+        {own ? <AcrossSessions accent={ICE} own={own} /> : null}
+
+        {own && own.kind === "threshold" ? (
+          <ExpertPanel accent={ICE} instrument={{ kind: "threshold", slug: own.slug }} own={own} />
         ) : null}
 
         {/*

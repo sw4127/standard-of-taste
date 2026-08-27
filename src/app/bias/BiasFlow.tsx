@@ -33,6 +33,7 @@ import { DELICACY_LIVE } from "@/content/delicacy/items";
 import { VERDICT_COPY, shareText } from "@/content/bias/copy";
 import { creatorLines as biasCreatorLines } from "@/content/vocabulary/bias";
 import AcrossSessions from "@/components/AcrossSessions";
+import ExpertPanel from "@/components/ExpertPanel";
 import { recordResult } from "@/lib/result-store";
 import { POOL_VERSIONS } from "@/lib/result-recall";
 import ShareButton from "@/app/result/ShareButton";
@@ -567,6 +568,15 @@ export default function BiasFlow() {
           */}
           <AcrossSessions
             accent={GOLD}
+            own={{
+              kind: "bias",
+              blind: encodeBiasRatings(BIAS_CLIPS, blind),
+              labeled: encodeBiasRatings(BIAS_CLIPS, labeled),
+            }}
+          />
+          <ExpertPanel
+            accent={GOLD}
+            instrument={{ kind: "bias" }}
             own={{
               kind: "bias",
               blind: encodeBiasRatings(BIAS_CLIPS, blind),

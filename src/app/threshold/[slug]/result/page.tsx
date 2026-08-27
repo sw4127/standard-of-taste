@@ -106,5 +106,22 @@ export default async function ThresholdResultPage({
   // ELSE'S session; a share button on it would offer a stranger's number as
   // your own. The block belongs to the flow, where the session was actually
   // taken.
-  return <ThresholdResult result={result} />;
+  //
+  // `identity` IS PASSED, AND IT IS NOT THE SHARE BLOCK (E8/C2). Those two got
+  // conflated: E8/S8 keyed the personal panels off `share`, so withholding the
+  // share affordance also silenced `AcrossSessions` here — for everyone,
+  // including the person whose session it is. E8/S12 saw that and mis-read it
+  // as the ownership check working. It was not; the panels were never reachable
+  // on this route at all.
+  //
+  // They are different questions. "Should this page offer a share button?" is
+  // answered NO on a page that may be showing a stranger's number. "Is this the
+  // viewer's own session?" is answered in the browser, by comparing this payload
+  // to what the device recorded — which is exactly what the panels do.
+  return (
+    <ThresholdResult
+      result={result}
+      identity={{ kind: "threshold", slug, seed, answers: responses, ...(sourceId ? { sourceId } : {}) }}
+    />
+  );
 }

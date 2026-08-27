@@ -17,6 +17,7 @@ import { BIAS_CLIPS, BIAS_INSTRUMENT_ID, BIAS_POOL_VERSION } from "@/content/bia
 import { VERDICT_COPY, shareText, resultTitleFragment } from "@/content/bias/copy";
 import { creatorLines } from "@/content/vocabulary/bias";
 import AcrossSessions from "@/components/AcrossSessions";
+import ExpertPanel from "@/components/ExpertPanel";
 import { baseUrl } from "@/lib/site";
 import FluidField from "@/components/FluidField";
 import Track from "@/components/Track";
@@ -92,6 +93,7 @@ export default async function BiasResultPage({ searchParams }: { searchParams: S
         <InYourWork result={result} />
 
         <AcrossSessions accent={GOLD} own={{ kind: "bias", blind: b, labeled: l }} />
+        <ExpertPanel accent={GOLD} instrument={{ kind: "bias" }} own={{ kind: "bias", blind: b, labeled: l }} />
 
         {/* The card itself — real server-rendered image, long-press-saveable
             in webviews where programmatic download is blocked. */}

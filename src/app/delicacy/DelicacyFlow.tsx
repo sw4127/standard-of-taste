@@ -47,6 +47,7 @@ import ClipPlayer from "@/app/bias/ClipPlayer";
 import AbCompare from "./AbCompare";
 import { CalibrationBlock, FlawLine, InYourWork } from "./RevealBlocks";
 import AcrossSessions from "@/components/AcrossSessions";
+import ExpertPanel from "@/components/ExpertPanel";
 import { recordResult } from "@/lib/result-store";
 import { POOL_VERSIONS } from "@/lib/result-recall";
 import ShareButton from "@/app/result/ShareButton";
@@ -582,6 +583,7 @@ export default function DelicacyFlow() {
             own result.
           */}
           <AcrossSessions accent={ICE} own={{ kind: "delicacy", picks: decodeURIComponent(p) }} />
+          <ExpertPanel accent={ICE} instrument={{ kind: "delicacy" }} own={{ kind: "delicacy", picks: decodeURIComponent(p) }} />
 
           {/* The reveal — every pair, full disclosure (N3) */}
           <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
