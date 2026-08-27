@@ -45,6 +45,7 @@ import type {
 import type { StaircaseResult } from "./staircase-session";
 import type { KnownLimit } from "./staircase-manifest";
 import { RUNG_VALUE } from "./replication";
+import { BRIER_COIN_FLIP, binDisplayPct, computeCalibration } from "./calibration";
 import { SHARED_AXIS_FAMILIES } from "./evidence";
 
 /** The unit a shared-axis family's rung is quoted in. Null where unverified. */
@@ -76,6 +77,28 @@ export interface DelicacyTrialRecord {
   confidence: number;
 }
 
+export interface CalibrationPoint {
+  /** What was claimed, in %. One of the confidence levels the trials offer. */
+  claimedPct: number;
+  n: number;
+  correct: number;
+  /**
+   * What was actually delivered, in % — NULL when the bin holds fewer than
+   * `MIN_BIN_N` answers. Read through `binDisplayPct`, never off `actualPct`,
+   * because a bin standing on two trials is not a rate (N3).
+   */
+  observedPct: number | null;
+}
+
+export interface CalibrationCurve {
+  points: CalibrationPoint[];
+  /** Mean squared error of claim vs outcome. Lower is better. */
+  brier: number;
+  /** What always guessing 50% on a two-way choice scores — the honesty anchor. */
+  brierChance: number;
+  n: number;
+}
+
 export interface DelicacyExpert {
   nTrials: number;
   nCorrect: number;
@@ -84,6 +107,16 @@ export interface DelicacyExpert {
   perFamily: Array<{ family: DegradationFamily; n: number; correct: number }>;
   perMagnitude: Array<{ magnitude: DelicacyMagnitude; n: number; correct: number }>;
   trials: DelicacyTrialRecord[];
+  /**
+   * The reliability data, WITHOUT the direction verdict.
+   *
+   * `CalibrationResult.direction` is "overconfident" / "underconfident" /
+   * "calibrated" — a classification of the person, which is exactly what a
+   * verdict-free view may not carry and what `CalibrationBlock` already renders
+   * on the result screen. The points and the Brier score are measurements; the
+   * label on them is not, so only the measurements travel here.
+   */
+  calibration: CalibrationCurve;
   cohortN: 0;
 }
 
@@ -122,6 +155,10 @@ export function delicacyExpert(result: DelicacyResult): DelicacyExpert {
     .filter(([, t]) => t.n > 0)
     .map(([m, t]) => ({ magnitude: Number(m) as DelicacyMagnitude, n: t.n, correct: t.correct }));
 
+  const cal = computeCalibration(
+    result.receipts.map((r) => ({ confidence: r.confidence, correct: r.correct })),
+  );
+
   return {
     nTrials: result.nTrials,
     nCorrect: result.nCorrect,
@@ -130,6 +167,17 @@ export function delicacyExpert(result: DelicacyResult): DelicacyExpert {
     perFamily: families,
     perMagnitude: magnitudes,
     trials,
+    calibration: {
+      points: cal.bins.map((b) => ({
+        claimedPct: b.confidencePct,
+        n: b.n,
+        correct: b.correct,
+        observedPct: binDisplayPct(b),
+      })),
+      brier: cal.brier,
+      brierChance: BRIER_COIN_FLIP,
+      n: cal.n,
+    },
     cohortN: 0,
   };
 }

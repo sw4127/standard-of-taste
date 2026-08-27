@@ -3,7 +3,13 @@ import { biasExpert, delicacyExpert, thresholdExpert } from "./expert";
 import { SHARED_AXIS_FAMILIES } from "./evidence";
 import { RUNG_VALUE } from "./replication";
 import { DELICACY_INSTRUMENT_ID, MEASURED_TRIALS } from "@/content/delicacy/items";
-import { computeDelicacyResult, type DelicacyResponses } from "./delicacy";
+import {
+  computeDelicacyResult,
+  DELICACY_CONFIDENCE_LEVELS,
+  type DelicacyConfidence,
+  type DelicacyResponses,
+} from "./delicacy";
+import { BRIER_COIN_FLIP, MIN_BIN_N } from "./calibration";
 import { BIAS_CLIPS, BIAS_INSTRUMENT_ID } from "@/content/bias/items";
 import { BIAS_SCALE_MAX, BIAS_SCALE_MIN, computeBiasResult } from "./bias";
 import {
@@ -48,14 +54,14 @@ function thresholdFor(family: string, place: number, seed = 7919, sourceId?: str
  */
 const MIXED = [false, true, true, true, false, true, true, false, true, true, true, false, true, true, false];
 
-function delicacyFor(pick: (i: number) => boolean) {
+function delicacyFor(pick: (i: number) => boolean, conf?: (i: number) => DelicacyConfidence) {
   const responses: DelicacyResponses = {};
   MEASURED_TRIALS.forEach((t, i) => {
     const ok = pick(i);
     responses[t.id] = {
       pickedSide: ok ? t.originalSide : t.originalSide === "a" ? "b" : "a",
       flawPick: t.family,
-      confidence: ([95, 70, 50] as const)[i % 3],
+      confidence: conf ? conf(i) : ([95, 70, 50] as const)[i % 3],
     };
   });
   return computeDelicacyResult(DELICACY_INSTRUMENT_ID, MEASURED_TRIALS, responses);
@@ -266,6 +272,49 @@ describe("the answer key is present and correct", () => {
     const swapped = b.items.filter((i) => !i.labelIsTrue).map((i) => i.id).sort();
     expect(swapped).toEqual([...BIAS.swappedIds].sort());
     expect(swapped.length).toBeGreaterThan(0);
+  });
+});
+
+describe("the calibration curve", () => {
+  it("carries one point per confidence level the trials offer", () => {
+    const c = delicacyExpert(DELICACY).calibration;
+    expect(c.points.map((p) => p.claimedPct)).toEqual([...DELICACY_CONFIDENCE_LEVELS]);
+    expect(c.n).toBe(DELICACY.nTrials);
+    expect(c.brierChance).toBe(BRIER_COIN_FLIP);
+  });
+
+  it("derives observedPct from that bin's own counts", () => {
+    for (const p of delicacyExpert(DELICACY).calibration.points) {
+      if (p.observedPct === null) continue;
+      expect(p.observedPct).toBeCloseTo((p.correct / p.n) * 100, 6);
+    }
+  });
+
+  /**
+   * A bin standing on fewer than MIN_BIN_N answers has no rate (N3). It must
+   * come back null rather than as a number the chart would then plot — a point
+   * at 0% reads as "you got none right", not as "there is nothing to say".
+   */
+  it("suppresses a bin below the floor instead of reporting a rate", () => {
+    const thin = delicacyFor(() => true, (i) => (i < 12 ? 95 : i < 14 ? 70 : 50));
+    const pts = delicacyExpert(thin).calibration.points;
+    const byLevel = Object.fromEntries(pts.map((p) => [p.claimedPct, p]));
+    expect(byLevel[95].n).toBeGreaterThanOrEqual(MIN_BIN_N);
+    expect(byLevel[95].observedPct).not.toBeNull();
+    expect(byLevel[70].n).toBeLessThan(MIN_BIN_N);
+    expect(byLevel[70].observedPct).toBeNull();
+    expect(byLevel[50].observedPct).toBeNull();
+  });
+
+  /**
+   * THE VERDICT STAYS OUT. `CalibrationResult.direction` classifies the person
+   * as overconfident / underconfident / calibrated, which `CalibrationBlock`
+   * renders on the result screen and a verdict-free view may not carry.
+   */
+  it("carries no direction verdict", () => {
+    const c = delicacyExpert(DELICACY).calibration as unknown as Record<string, unknown>;
+    expect(c.direction).toBeUndefined();
+    expect(JSON.stringify(c)).not.toMatch(/overconfident|underconfident|calibrated/i);
   });
 });
 

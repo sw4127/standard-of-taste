@@ -39,8 +39,8 @@ import { useMemo, useSyncExternalStore } from "react";
 import { readResult, subscribeResults, type StoredPayload } from "@/lib/result-store";
 import { POOL_VERSIONS, recallBias, recallDelicacy, recallThreshold } from "@/lib/result-recall";
 import { biasExpert, delicacyExpert, thresholdExpert } from "@/engine/expert";
-import type { BiasExpert, DelicacyExpert, ThresholdExpert } from "@/engine/expert";
-import { familyLabel, quantity, shortUnit } from "@/content/staircase/copy";
+import type { BiasExpert, CalibrationCurve, DelicacyExpert, ThresholdExpert } from "@/engine/expert";
+import { quantity, shortUnit } from "@/content/staircase/copy";
 import { FLAW_LABELS } from "@/content/delicacy/items";
 
 type Instrument =
@@ -135,7 +135,91 @@ function Section({ title, children }: { title: string; children: React.ReactNode
  * Per-instrument bodies
  * ------------------------------------------------------------------ */
 
-function DelicacyBody({ d }: { d: DelicacyExpert }) {
+
+/**
+ * THE RELIABILITY DIAGRAM (E8/C3).
+ *
+ * Claimed confidence on x, delivered accuracy on y, with the diagonal as
+ * perfect calibration: a point ABOVE the line means you did better than you
+ * said, below means worse. It is the one thing in blueprint C1 that existed in
+ * no form — the bins were already listed as text on the result screen, but a
+ * list does not show DISTANCE FROM THE LINE, which is the whole quantity.
+ *
+ * IT IS READABLE WITHOUT THE PICTURE, and that is not only an accessibility
+ * note: this session cannot see pixels, so a chart whose only content is
+ * geometry could not be verified at all. Every point carries its numbers beside
+ * it, and the same figures repeat in the list below, so the SVG adds a spatial
+ * reading rather than being the sole carrier of the data.
+ *
+ * SUPPRESSED BINS ARE ABSENT, NOT PLOTTED AT ZERO. A confidence level answered
+ * twice has no rate (N3, `MIN_BIN_N`), and a point at the origin would read as
+ * "you got none of them right" rather than "there is nothing to say".
+ */
+function CalibrationCurveChart({ c, accent }: { c: CalibrationCurve; accent: string }) {
+  const shown = c.points.filter((p) => p.observedPct !== null);
+  const PAD = 26;
+  const SIZE = 150;
+  const x = (pct: number) => PAD + (pct / 100) * SIZE;
+  const y = (pct: number) => PAD + SIZE - (pct / 100) * SIZE;
+
+  return (
+    <>
+      {shown.length > 0 ? (
+        <svg
+          viewBox={`0 0 ${SIZE + PAD * 2} ${SIZE + PAD * 2}`}
+          className="mt-3 w-full max-w-[260px]"
+          role="img"
+          aria-label={`Calibration: ${shown
+            .map((p) => `claimed ${p.claimedPct}%, delivered ${Math.round(p.observedPct!)}%`)
+            .join("; ")}`}
+        >
+          <rect x={PAD} y={PAD} width={SIZE} height={SIZE} fill="none" stroke="rgba(255,255,255,0.12)" />
+          {/* Perfect calibration. Everything is read as distance from this. */}
+          <line
+            x1={x(0)} y1={y(0)} x2={x(100)} y2={y(100)}
+            stroke="rgba(255,255,255,0.28)" strokeDasharray="3 3"
+          />
+          {shown.map((p) => (
+            <g key={p.claimedPct}>
+              <line
+                x1={x(p.claimedPct)} y1={y(p.claimedPct)}
+                x2={x(p.claimedPct)} y2={y(p.observedPct!)}
+                stroke={accent} strokeOpacity={0.35}
+              />
+              <circle
+                cx={x(p.claimedPct)} cy={y(p.observedPct!)} r={3.5} fill={accent}
+                data-claimed={p.claimedPct} data-observed={Math.round(p.observedPct!)}
+              />
+            </g>
+          ))}
+          <text x={PAD} y={SIZE + PAD + 14} fill="rgba(255,255,255,0.45)" fontSize="9">0%</text>
+          <text x={x(100) - 14} y={SIZE + PAD + 14} fill="rgba(255,255,255,0.45)" fontSize="9">100%</text>
+          <text x={PAD} y={PAD - 8} fill="rgba(255,255,255,0.45)" fontSize="9">delivered</text>
+          <text x={x(100) - 30} y={SIZE + PAD + 24} fill="rgba(255,255,255,0.45)" fontSize="9">claimed</text>
+        </svg>
+      ) : null}
+      <Table
+        head={["You said", "Right", "Of", "Delivered", "Versus claim"]}
+        rows={c.points.map((p) => [
+          `${p.claimedPct}%`,
+          String(p.correct),
+          String(p.n),
+          p.observedPct === null ? "too few to say" : `${Math.round(p.observedPct)}%`,
+          p.observedPct === null
+            ? "—"
+            : `${Math.round(p.observedPct) - p.claimedPct > 0 ? "+" : ""}${Math.round(p.observedPct) - p.claimedPct} pts`,
+        ])}
+      />
+      <p className="mt-2 text-[0.65rem] leading-relaxed text-muted">
+        Brier score {c.brier.toFixed(3)} over {c.n} answers — always saying 50% on a two-way choice
+        scores {c.brierChance.toFixed(2)}. Lower is better, and it only means something next to the
+        distance from the line above.
+      </p>
+    </>
+  );
+}
+
+function DelicacyBody({ d, accent }: { d: DelicacyExpert; accent: string }) {
   return (
     <>
       <Section title="By flaw family">
@@ -149,6 +233,9 @@ function DelicacyBody({ d }: { d: DelicacyExpert }) {
           head={["Rung", "Caught", "Shown"]}
           rows={d.perMagnitude.map((m) => [String(m.magnitude), String(m.correct), String(m.n)])}
         />
+      </Section>
+      <Section title="Did you know when you knew?">
+        <CalibrationCurveChart c={d.calibration} accent={accent} />
       </Section>
       <Section title="Every pair, in the order you met them">
         <Table
@@ -286,7 +373,7 @@ export default function ExpertPanel({
     if (sig === "" || !isOwn(own)) return null;
     if (instrument.kind === "delicacy") {
       const r = recallDelicacy();
-      return r ? <DelicacyBody d={delicacyExpert(r.result)} /> : null;
+      return r ? <DelicacyBody d={delicacyExpert(r.result)} accent={accent} /> : null;
     }
     if (instrument.kind === "bias") {
       const r = recallBias();
@@ -294,7 +381,7 @@ export default function ExpertPanel({
     }
     const r = recallThreshold(instrument.slug);
     return r ? <ThresholdBody t={thresholdExpert(r.result)} /> : null;
-  }, [sig, own, instrument]);
+  }, [sig, own, instrument, accent]);
 
   if (!body) return null;
 
