@@ -2,28 +2,35 @@
 
 > A gym for musical taste. Instruments that measure David Hume's five criteria of taste
 > ("Of the Standard of Taste", 1757) as numbers, using performance tasks where the user can be
-> wrong — never self-report, never personality prediction. Free assessment; scores are honest:
-> results are labeled provisional until real cohort norms exist, and no percentile is ever
-> fabricated.
+> wrong — never self-report, never personality prediction. Everything is free: there is no paid
+> tier. Scores are honest: results are labeled provisional until real cohort norms exist, and no
+> percentile is ever fabricated.
 
-The flagship instrument is the Prestige Test: rate eight music clips blind, then rate the same
-clips with artist names attached — three labels are deliberately swapped (and disclosed in a
-mandatory debrief). The blind-vs-labeled rating gap is a measured prestige-bias number; the user
-serves as their own control. All scoring is deterministic code — no AI classifies the user.
+Three instruments are live. The flagship is the Prestige Test: rate sixteen short music clips
+blind, then rate the same clips again with artist names attached — fourteen carry artist names,
+two of the fourteen labels are deliberately false, and every swap is disclosed in a mandatory
+debrief. The blind-vs-labeled rating gap is a measured prestige-bias number; the user serves as
+their own control. The Delicacy Trials play damaged and undamaged pairs and ask which is which.
+The Threshold Test adapts until it finds the smallest flaw a listener can still hear, and reports
+that size in cents, milliseconds or kbps. All scoring is deterministic code — no AI classifies the
+user.
 
 ## Core pages
 
-- [The Taste Gym (home)](https://vibe-check-app-sepia.vercel.app/): what the gym is; the visible machines, open and locked
-- [The Prestige Test](https://vibe-check-app-sepia.vercel.app/bias): the flagship instrument — takes about five minutes, free, no sign-up
+- [The Taste Gym (home)](https://vibe-check-app-sepia.vercel.app/): what the gym is; the three machines
+- [The Prestige Test](https://vibe-check-app-sepia.vercel.app/bias): the flagship instrument — about eight minutes, free, no sign-up
+- [The Delicacy Trials](https://vibe-check-app-sepia.vercel.app/delicacy): three practice trials with answers shown, then fifteen scored pairs
+- [The Threshold Test](https://vibe-check-app-sepia.vercel.app/threshold): an adaptive staircase reporting a sensitivity threshold in physical units
 - [Reading room](https://vibe-check-app-sepia.vercel.app/learn): all explainers — the five criteria, the instruments, the methodology
 - [What is the Prestige Test?](https://vibe-check-app-sepia.vercel.app/learn/prestige-bias-test): the design, the sanctioned deception, the debrief
 - [Methodology](https://vibe-check-app-sepia.vercel.app/learn/methodology): performance tasks, within-subject control, deterministic scoring, honest-norms policy
+- [The Lab](https://vibe-check-app-sepia.vercel.app/lab): the analytics surface — metric dictionary, instrument health, parameter recovery, measured limits
 
 ## Hume's five criteria (one explainer each)
 
-- [Delicacy](https://vibe-check-app-sepia.vercel.app/learn/delicacy): the key-in-the-wine story; the planned Delicacy Trials (controlled audio degradations with objectively right answers)
-- [Practice](https://vibe-check-app-sepia.vercel.app/learn/practice): why taste is trainable; retests and progression
-- [Comparison](https://vibe-check-app-sepia.vercel.app/learn/comparison): Ogilby vs. Milton; breadth as measurable exposure
+- [Delicacy](https://vibe-check-app-sepia.vercel.app/learn/delicacy): the key-in-the-wine story; the Delicacy Trials and the Threshold Test both measure it
+- [Practice](https://vibe-check-app-sepia.vercel.app/learn/practice): why taste is trainable; no instrument yet, and the page says so
+- [Comparison](https://vibe-check-app-sepia.vercel.app/learn/comparison): Ogilby vs. Milton; breadth as measurable exposure; no instrument yet, and the page says so
 - [Freedom from prejudice](https://vibe-check-app-sepia.vercel.app/learn/freedom-from-prejudice): the criterion the Prestige Test measures
 - [Good sense](https://vibe-check-app-sepia.vercel.app/learn/good-sense): calibration — confidence vs. accuracy, Brier scores
 

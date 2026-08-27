@@ -19,10 +19,10 @@ of the clips rather than their ear. It is a validity gate, not a revenue gate.
 
 The Prestige Test measures Hume's "freedom from prejudice" criterion as a number.
 
-Design: a within-subject experiment taking about five minutes. The user rates ten short music
-clips blind (no labels), then rates the same ten clips again — eight with artist names and
-prestige framing attached, two deliberately unlabeled in both passes (drift controls). Three of
-the eight labels are deliberately false — a modest work presented with borrowed acclaim, or a
+Design: a within-subject experiment taking about eight minutes. The user rates sixteen short music
+clips blind (no labels), then rates the same clips again — fourteen with artist names and
+prestige framing attached, and two clips carry no label in either pass (drift controls). Two of
+the fourteen labels are deliberately false — a modest work presented with borrowed acclaim, or a
 distinguished one presented as unknown. Because the user rates the same audio twice, they serve
 as their own control: the component of rating movement that tracks the labels (including the
 false ones) can only be explained by prestige, not by the music. The unlabeled control clips
@@ -38,22 +38,47 @@ All audio is public-domain or Creative-Commons licensed, with attribution and li
 item. The item pool is versioned; every stored response and share link carries the pool version so
 data remains interpretable when items change.
 
-## Delicacy Trials (second instrument, visible but locked)
+## The Delicacy Trials (second instrument, live)
 
-Planned design for Hume's "delicacy" criterion, inspired by the key-in-the-wine story Hume borrows
-from Don Quixote: public-domain/CC recordings are processed with controlled degradations — pitch
-drift, compression artifacts, timing smear, a wrong note buried in the texture — and the user must
-identify the original and name the flaw. Trials have objectively correct answers, tunable
-difficulty, and are calibratable with item-response theory. On performance items the user attaches
-a confidence level (95% / 70% / 50%) to each answer; confidence-versus-accuracy yields a
-calibration curve and Brier score, which operationalizes Hume's "good sense" criterion.
-Confidence never weights or inflates scores — it is measured against accuracy, never blended in.
+Hume's "delicacy" criterion, after the key-in-the-wine story Hume borrows from Don Quixote:
+public-domain/CC recordings are processed with controlled degradations — pitch drift, timing
+smear, and lossy-codec artifacts — and the user hears each pair and says which member is damaged,
+then names the flaw. A session is three practice trials with the answer shown immediately,
+followed by fifteen scored pairs.
 
-## Comparison (planned)
+The readout is a detection band, not a rank. Because a two-alternative choice can be won by
+guessing, the score is guessing-corrected and reported as an interval (a Wilson interval on the
+corrected rate) rather than a point. At this session length it takes twelve of fifteen to beat the
+coin at 95% confidence, and the readout says so. Six ranked tiers shipped here until August 2026
+and were deleted: measured against simulated respondents they placed a person in the correct tier
+30.5% of the time, and no coarser cut rescued them.
 
-Hume's "comparison" criterion is breadth of exposure, which is a fact about listening history
-rather than a testable skill. The planned instrument maps breadth via optional streaming-history
-import (data only, no audio playback) and reports exposure without scoring judgment.
+On performance items the user attaches a confidence level (95% / 70% / 50%) to each answer;
+confidence-versus-accuracy yields a calibration curve and Brier score, which operationalizes
+Hume's "good sense" criterion. Confidence never weights or inflates scores — it is measured
+against accuracy, never blended in.
+
+## The Threshold Test (third instrument, live)
+
+Delicacy measured as a size rather than a count. An adaptive staircase makes the damage smaller
+after each correct answer and larger after each miss, converging on the smallest flaw the listener
+can still detect. It runs one flaw family per session and reports that family's threshold in
+physical units: cents of peak detune for pitch drift, milliseconds of drift IQR for timing smear,
+and kbps for lossy-codec artifacts. The deliverable is a per-flaw sensitivity threshold in real
+units, not a score.
+
+The instrument publishes what it cannot do. Ladder rungs that are not acoustically separable,
+levels whose damage varies by passage, and the floor of what the rulers can report are measured by
+the clip pipeline and listed at /lab/instrument-limits in the pipeline's own words.
+
+## Comparison (no instrument yet)
+
+Hume's "comparison" criterion is breadth of exposure — a fact about listening history rather than
+a testable skill. It is in the plan and not in the product. What it waits on is a decision about
+what breadth means in units the product can defend, not an audio build; the reading-room page for
+comparison says this plainly rather than implying a door that is not there. The same is true of
+practice, which waits on the product remembering a person between sessions, which it does not
+do today.
 
 ## Methodology and honesty rules
 
@@ -77,6 +102,12 @@ ad-tech cookies.
 
 - Home: https://vibe-check-app-sepia.vercel.app/
 - The Prestige Test (take it): https://vibe-check-app-sepia.vercel.app/bias
+- The Delicacy Trials (take it): https://vibe-check-app-sepia.vercel.app/delicacy
+- The Threshold Test (take it): https://vibe-check-app-sepia.vercel.app/threshold
+- The Lab (analytics surface): https://vibe-check-app-sepia.vercel.app/lab
+- Parameter recovery: https://vibe-check-app-sepia.vercel.app/lab/recovery
+- Instrument health: https://vibe-check-app-sepia.vercel.app/lab/instrument-health
+- What this instrument cannot do: https://vibe-check-app-sepia.vercel.app/lab/instrument-limits
 - Reading room index: https://vibe-check-app-sepia.vercel.app/learn
 - What is the Prestige Test?: https://vibe-check-app-sepia.vercel.app/learn/prestige-bias-test
 - Delicacy: https://vibe-check-app-sepia.vercel.app/learn/delicacy
