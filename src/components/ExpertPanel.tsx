@@ -42,6 +42,15 @@ import { biasExpert, delicacyExpert, thresholdExpert } from "@/engine/expert";
 import type { BiasExpert, CalibrationCurve, DelicacyExpert, ThresholdExpert } from "@/engine/expert";
 import { quantity, shortUnit } from "@/content/staircase/copy";
 import { FLAW_LABELS } from "@/content/delicacy/items";
+import {
+  EXPERT_COLUMNS as COL,
+  EXPERT_NOTES as NOTE,
+  EXPERT_PANEL as PANEL,
+  EXPERT_SECTIONS as SEC,
+  EXPERT_STATS as STAT,
+  EXPERT_VALUES as VAL,
+  brierNote,
+} from "@/content/vocabulary/expert";
 
 type Instrument =
   | { kind: "delicacy" }
@@ -199,21 +208,19 @@ function CalibrationCurveChart({ c, accent }: { c: CalibrationCurve; accent: str
         </svg>
       ) : null}
       <Table
-        head={["You said", "Right", "Of", "Delivered", "Versus claim"]}
+        head={[COL.youSaid, COL.right, COL.of, COL.delivered, COL.versusClaim]}
         rows={c.points.map((p) => [
           `${p.claimedPct}%`,
           String(p.correct),
           String(p.n),
-          p.observedPct === null ? "too few to say" : `${Math.round(p.observedPct)}%`,
+          p.observedPct === null ? VAL.tooFewToSay : `${Math.round(p.observedPct)}%`,
           p.observedPct === null
-            ? "—"
+            ? VAL.none
             : `${Math.round(p.observedPct) - p.claimedPct > 0 ? "+" : ""}${Math.round(p.observedPct) - p.claimedPct} pts`,
         ])}
       />
       <p className="mt-2 text-[0.65rem] leading-relaxed text-muted">
-        Brier score {c.brier.toFixed(3)} over {c.n} answers — always saying 50% on a two-way choice
-        scores {c.brierChance.toFixed(2)}. Lower is better, and it only means something next to the
-        distance from the line above.
+        {brierNote(c.brier, c.n, c.brierChance)}
       </p>
     </>
   );
@@ -222,37 +229,36 @@ function CalibrationCurveChart({ c, accent }: { c: CalibrationCurve; accent: str
 function DelicacyBody({ d, accent }: { d: DelicacyExpert; accent: string }) {
   return (
     <>
-      <Section title="By flaw family">
+      <Section title={SEC.delicacyByFamily}>
         <Table
-          head={["Family", "Caught", "Shown"]}
+          head={[COL.family, COL.caught, COL.shown]}
           rows={d.perFamily.map((f) => [FLAW_LABELS[f.family].label, String(f.correct), String(f.n)])}
         />
       </Section>
-      <Section title="By rung">
+      <Section title={SEC.delicacyByRung}>
         <Table
-          head={["Rung", "Caught", "Shown"]}
+          head={[COL.rung, COL.caught, COL.shown]}
           rows={d.perMagnitude.map((m) => [String(m.magnitude), String(m.correct), String(m.n)])}
         />
       </Section>
-      <Section title="Did you know when you knew?">
+      <Section title={SEC.delicacyCalibration}>
         <CalibrationCurveChart c={d.calibration} accent={accent} />
       </Section>
-      <Section title="Every pair, in the order you met them">
+      <Section title={SEC.delicacyTrials}>
         <Table
-          head={["#", "Family", "Rung", "Original", "You picked", "Flaw named", "Said"]}
+          head={[COL.index, COL.family, COL.rung, COL.original, COL.youPicked, COL.flawNamed, COL.said]}
           rows={d.trials.map((t) => [
             String(t.index),
             FLAW_LABELS[t.family].label,
             t.value === null ? `rung ${t.magnitude}` : `${t.value} ${t.unit}`,
             t.originalSide.toUpperCase(),
             `${t.pickedSide.toUpperCase()} ${t.correct ? "✓" : "✗"}`,
-            t.flawCorrect === null ? "—" : `${FLAW_LABELS[t.flawPick].label} ${t.flawCorrect ? "✓" : "✗"}`,
+            t.flawCorrect === null ? VAL.none : `${FLAW_LABELS[t.flawPick].label} ${t.flawCorrect ? "✓" : "✗"}`,
             `${t.confidence}%`,
           ])}
         />
         <p className="mt-2 text-[0.65rem] leading-relaxed text-muted">
-          Timing rungs are shown by number: the pool stores them as a tempo fraction and the
-          staircase measures milliseconds of drift, so quoting one as the other would be a guess.
+  {NOTE.timingRungs}
         </p>
       </Section>
     </>
@@ -263,34 +269,34 @@ function ThresholdBody({ t }: { t: ThresholdExpert }) {
   const u = shortUnit(t.unit);
   return (
     <>
-      <Section title="The session">
+      <Section title={SEC.thresholdSession}>
         <Stats
           items={[
-            ["Trials", String(t.trials)],
-            ["Outcome", t.kind],
-            ["Caught at", t.heardAt === null ? "—" : quantity(t.heardAt, t.unit)],
-            ["Missed at", t.missedAt === null ? "—" : quantity(t.missedAt, t.unit)],
-            ["Fitted point", t.point === null ? "not earned" : quantity(t.point, t.unit)],
+            [STAT.trials, String(t.trials)],
+            [STAT.outcome, t.kind],
+            [STAT.caughtAt, t.heardAt === null ? VAL.none : quantity(t.heardAt, t.unit)],
+            [STAT.missedAt, t.missedAt === null ? VAL.none : quantity(t.missedAt, t.unit)],
+            [STAT.fittedPoint, t.point === null ? VAL.notEarned : quantity(t.point, t.unit)],
             [
-              "95% interval",
-              t.ci95 === null ? "—" : `${quantity(t.ci95[0], t.unit)} – ${quantity(t.ci95[1], t.unit)}`,
+              STAT.interval,
+              t.ci95 === null ? VAL.none : `${quantity(t.ci95[0], t.unit)} – ${quantity(t.ci95[1], t.unit)}`,
             ],
           ]}
         />
       </Section>
-      <Section title={`Every rung · gentlest first · ${u}`}>
+      <Section title={`${SEC.thresholdRungs} · ${u}`}>
         <Table
-          head={["Rung", "Right", "Shown", "Where"]}
+          head={[COL.rung, COL.right, COL.shown, COL.where]}
           rows={t.rungs.map((r) => [
             quantity(r.label, t.unit),
             String(r.correct),
             String(r.shown),
-            r.isHeard ? "caught" : r.isMissed ? "guessed" : r.inBand ? "in band" : "",
+            r.isHeard ? VAL.caught : r.isMissed ? VAL.guessed : r.inBand ? VAL.inBand : "",
           ])}
         />
       </Section>
       {t.limits.length > 0 ? (
-        <Section title="What the pipeline measured and could not fix">
+        <Section title={SEC.thresholdLimits}>
           <ul className="mt-3 flex flex-col gap-2">
             {t.limits.map((l, i) => (
               <li key={i} className="text-xs leading-relaxed text-neutral-300">
@@ -310,37 +316,35 @@ function BiasBody({ b }: { b: BiasExpert }) {
       <Section title="The session">
         <Stats
           items={[
-            ["Before correction", `${b.rawPct > 0 ? "+" : ""}${b.rawPct}%`],
-            ["After correction", `${b.pct > 0 ? "+" : ""}${b.pct}%`],
-            ["Control drift", b.controlDriftPts === null ? "—" : `${b.controlDriftPts} pts`],
-            ["Moved with label", `${b.movedCount} of ${b.movableCount}`],
-            ["At the scale edge", String(b.edgeCount)],
-            ["Swapped items only", b.swappedPct === null ? "—" : `${b.swappedPct > 0 ? "+" : ""}${b.swappedPct}%`],
+            [STAT.beforeCorrection, `${b.rawPct > 0 ? "+" : ""}${b.rawPct}%`],
+            [STAT.afterCorrection, `${b.pct > 0 ? "+" : ""}${b.pct}%`],
+            [STAT.controlDrift, b.controlDriftPts === null ? VAL.none : `${b.controlDriftPts} pts`],
+            [STAT.movedWithLabel, `${b.movedCount} of ${b.movableCount}`],
+            [STAT.atScaleEdge, String(b.edgeCount)],
+            [STAT.swappedOnly, b.swappedPct === null ? VAL.none : `${b.swappedPct > 0 ? "+" : ""}${b.swappedPct}%`],
           ]}
         />
         <p className="mt-2 text-[0.65rem] leading-relaxed text-muted">
-          The two percentages agree because the pool carries as many acclaimed labels as dismissive
-          ones, and a balanced set cancels re-listen drift outright. The correction is shown anyway:
-          it is what would move if that balance ever changed.
+          {NOTE.balancedPool}
         </p>
       </Section>
-      <Section title="Every clip">
+      <Section title={SEC.biasItems}>
         <Table
-          head={["Clip", "Blind", "Labelled", "Toward label", "Room to move", "Label"]}
+          head={[COL.clip, COL.blind, COL.labelled, COL.towardLabel, COL.roomToMove, COL.label]}
           rows={b.items.map((i) => [
             i.id,
             String(i.blind),
             String(i.labeled),
             `${i.towardLabel > 0 ? "+" : ""}${i.towardLabel}`,
             String(i.headroom),
-            i.labelIsTrue ? "true" : "fictional",
+            i.labelIsTrue ? VAL.trueLabel : VAL.fictionalLabel,
           ])}
         />
       </Section>
       {b.controls.length > 0 ? (
-        <Section title="Controls · rated twice, labelled neither time">
+        <Section title={SEC.biasControls}>
           <Table
-            head={["Clip", "First", "Second", "Drift"]}
+            head={[COL.clip, COL.first, COL.second, COL.drift]}
             rows={b.controls.map((c) => [
               c.id,
               String(c.first),
@@ -389,14 +393,11 @@ export default function ExpertPanel({
     <details className="group mt-7 w-full rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-left">
       <summary className="cursor-pointer list-none">
         <span className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: accent }}>
-          THE RAW RECORD
+          {PANEL.eyebrow}
         </span>
-        <span className="ml-2 text-[0.65rem] text-muted group-open:hidden">show</span>
-        <span className="ml-2 hidden text-[0.65rem] text-muted group-open:inline">hide</span>
-        <p className="mt-2 text-xs leading-relaxed text-muted">
-          Every number behind the result, and the answers. No verdict, no interpretation — read from
-          this browser, so a link you share shows nobody else this.
-        </p>
+        <span className="ml-2 text-[0.65rem] text-muted group-open:hidden">{PANEL.show}</span>
+        <span className="ml-2 hidden text-[0.65rem] text-muted group-open:inline">{PANEL.hide}</span>
+        <p className="mt-2 text-xs leading-relaxed text-muted">{PANEL.blurb}</p>
       </summary>
       <div className="mt-5 border-t border-white/10 pt-5">{body}</div>
     </details>

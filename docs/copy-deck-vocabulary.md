@@ -192,6 +192,47 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 ---
 
-**46 concrete sentences across four surfaces.**
+## 5. The expert panel — “THE RAW RECORD”
+
+**Where it renders.** A collapsed panel on all five result surfaces, open only when the result on screen is the one this device recorded — on a link you share with someone else it renders nothing at all.
+
+**What the screen has already said.** Everything in sections 1–4. This panel repeats none of it: it shows the numbers underneath — per-family and per-rung tallies, every trial with the answer key, the staircase's rung visits and measured limits, the calibration curve, the prestige test's per-clip ratings.
+
+**This layer's job.** Label measurements and state limits. Never judge them — this is the verdict-free surface.
+
+**Rules this copy must keep:**
+
+- No verdict, ever. `expert.ts` cannot supply one — it carries numbers, ids and enums with no sentence in it — and the calibration data deliberately omits the overconfident/underconfident label the result screen shows.
+- Column headers and stat labels are copy too. They live in the deck precisely because deciding case by case which strings are ‘important enough to gate’ is how the gap reopens.
+- The notes state LIMITS, not findings. A limit stated loosely is the shape an unmeasured claim takes.
+- The blurb must warn that this is device-local, or a reader assumes a shared link carries it.
+
+**9 sentences to review**, plus 51 short labels — 60 concrete variants, 61 reachable renderings. Braces mark values the engine fills in; leave them as slots.
+
+*Labels:* `#` · `{n}% interval` · `After correction` · `At the scale edge` · `Before correction` · `Blind` · `By flaw family` · `By rung` · `Caught` · `Caught at` · `Clip` · `Control drift` · `Delivered` · `Drift` · `Every clip` · `Family` · `First` · `Fitted point` · `Flaw named` · `Label` · `Labelled` · `Missed at` · `Moved with label` · `Of` · `Original` · `Outcome` · `Right` · `Room to move` · `Rung` · `Said` · `Second` · `Shown` · `Swapped items only` · `THE RAW RECORD` · `The session` · `Toward label` · `Trials` · `Versus claim` · `Where` · `You picked` · `You said` · `caught` · `fictional` · `guessed` · `hide` · `in band` · `not earned` · `show` · `too few to say` · `true` · `—`
+
+> Brier score {n}.{n} over {n} answers — always saying {n}% on a two-way choice scores {n}.{n}. Lower is better, and it only means something next to the distance from the line above.
+
+  *As rendered:* “Brier score 0.287 over 15 answers — always saying 50% on a two-way choice scores 0.25. Lower is better, and it only means something next to the distance from the line above.”
+
+> Controls · rated twice, labelled neither time
+
+> Did you know when you knew?
+
+> Every number behind the result, and the answers. No verdict, no interpretation — read from this browser, so a link you share shows nobody else this.
+
+> Every pair, in the order you met them
+
+> Every rung · gentlest first
+
+> The two percentages agree because the pool carries as many acclaimed labels as dismissive ones, and a balanced set cancels re-listen drift outright. The correction is shown anyway: it is what would move if that balance ever changed.
+
+> Timing rungs are shown by number: the pool stores them as a tempo fraction and the staircase measures milliseconds of drift, so quoting one as the other would be a guess.
+
+> What the pipeline measured and could not fix
+
+---
+
+**106 concrete sentences across 5 surfaces.**
 
 Anything rewritten here must still pass `src/content/voice.test.ts`, which screens five named hazards — motive attribution, person-verdicts, beige chrome, fabricated norms, unmeasured audibility claims. A green run there does **not** mean the prose is good; it means no named hazard is present. Judging whether it is good is the point of this document.

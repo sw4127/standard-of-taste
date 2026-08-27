@@ -21,6 +21,7 @@ import { creatorLines as thresholdLines } from "./threshold";
 import { creatorLines as delicacyLines } from "./delicacy";
 import { creatorLines as biasLines } from "./bias";
 import { acrossLines, thresholdRoster, type AcrossInput } from "./across";
+import { brierNote, expertStrings } from "./expert";
 import { thresholdClaim } from "@/engine/evidence";
 import { replicationCheck } from "@/engine/replication";
 import type { ReplicationCheck } from "@/engine/replication";
@@ -179,6 +180,21 @@ export function vocabularyStrings(): VoiceString[] {
       out.push({ surface: `vocabulary/across/${name}/roster/${i}`, text, intensity: "calm" });
     });
   }
+
+  /**
+   * THE EXPERT PANEL (E8/C4). Every fixed string on the verdict-free surface,
+   * plus the one composed sentence. `intensity: "calm"` throughout: this deck
+   * labels measurements and states limits, and the "full" tier's datum rule
+   * would wrongly demand a figure inside a column header.
+   */
+  for (const { key, text } of expertStrings()) {
+    out.push({ surface: `vocabulary/expert/${key}`, text, intensity: "calm" });
+  }
+  out.push({
+    surface: "vocabulary/expert/note/brier",
+    text: brierNote(0.287, 15, 0.25),
+    intensity: "calm",
+  });
 
   return out;
 }

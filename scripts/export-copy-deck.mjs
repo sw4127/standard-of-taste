@@ -128,6 +128,28 @@ const SECTIONS = [
       "No sentence here may also appear in sections 1–3; a test enforces it.",
     ],
   },
+  {
+    key: "expert",
+    title: "5. The expert panel — “THE RAW RECORD”",
+    where:
+      "A collapsed panel on all five result surfaces, open only when the result on screen is the " +
+      "one this device recorded — on a link you share with someone else it renders nothing at all.",
+    already:
+      "Everything in sections 1–4. This panel repeats none of it: it shows the numbers underneath " +
+      "— per-family and per-rung tallies, every trial with the answer key, the staircase's rung " +
+      "visits and measured limits, the calibration curve, the prestige test's per-clip ratings.",
+    job: "Label measurements and state limits. Never judge them — this is the verdict-free surface.",
+    rules: [
+      "No verdict, ever. `expert.ts` cannot supply one — it carries numbers, ids and enums with " +
+        "no sentence in it — and the calibration data deliberately omits the " +
+        "overconfident/underconfident label the result screen shows.",
+      "Column headers and stat labels are copy too. They live in the deck precisely because " +
+        "deciding case by case which strings are ‘important enough to gate’ is how the gap reopens.",
+      "The notes state LIMITS, not findings. A limit stated loosely is the shape an unmeasured " +
+        "claim takes.",
+      "The blurb must warn that this is device-local, or a reader assumes a shared link carries it.",
+    ],
+  },
 ];
 
 const lines = [];
@@ -193,13 +215,29 @@ for (const section of SECTIONS) {
     templates.get(shape).push(text);
   }
 
+  /*
+   * SHORT LABELS ARE LISTED, NOT BLOCKED OUT. The expert panel contributes
+   * sixty strings, most of them single-word column headers — "Family",
+   * "Caught", "Shown". Rendering each as its own quoted block buries the four
+   * sentences that actually need a writer among fifty things that do not, which
+   * is the same failure as the template duplication fixed above.
+   */
+  const LABEL_MAX = 26;
+  const labels = [...templates.keys()].filter((t) => t.length <= LABEL_MAX);
+  const prose = [...templates.entries()].filter(([t]) => t.length > LABEL_MAX);
+
   lines.push(
-    `**${templates.size} sentence${templates.size === 1 ? "" : "s"} to review** ` +
-      `— ${unique.length} concrete variants, ${mine.length} reachable renderings. ` +
+    `**${prose.length} sentence${prose.length === 1 ? "" : "s"} to review**` +
+      (labels.length ? `, plus ${labels.length} short labels` : "") +
+      ` — ${unique.length} concrete variants, ${mine.length} reachable renderings. ` +
       `Braces mark values the engine fills in; leave them as slots.`,
   );
   lines.push("");
-  for (const [shape, examples] of templates) {
+  if (labels.length) {
+    lines.push(`*Labels:* ${labels.map((l) => `\`${l}\``).join(" · ")}`);
+    lines.push("");
+  }
+  for (const [shape, examples] of prose) {
     lines.push(`> ${shape}`);
     lines.push("");
     if (examples[0] !== shape) {
@@ -212,7 +250,7 @@ for (const section of SECTIONS) {
 
 lines.push("---");
 lines.push("");
-lines.push(`**${total} concrete sentences across four surfaces.**`);
+lines.push(`**${total} concrete sentences across ${SECTIONS.length} surfaces.**`);
 lines.push("");
 lines.push(
   "Anything rewritten here must still pass `src/content/voice.test.ts`, which screens five named " +
