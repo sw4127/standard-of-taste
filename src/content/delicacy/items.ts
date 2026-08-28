@@ -21,8 +21,8 @@
  *
  * PITCH-DRIFT'S LADDER WAS WIDENED to 25/50/100 cents (PM ruling RT-27a) after
  * Layer A measured its old shipping rungs as marginal wherever they were
- * placed. 100 cents is a semitone accumulated ACROSS a 20s clip — a drift, not
- * a wrong note. Windows were chosen MECHANICALLY
+ * placed. 100 cents is a semitone accumulated ACROSS a 20s clip — a slide, not
+ * a single bad pitch. Windows were chosen MECHANICALLY
  * (fixed offsets, skipping anything overlapping the same source's bias
  * excerpt) — the PM is out of the clip-judging loop by design, and a curated
  * window list would smuggle taste back in.

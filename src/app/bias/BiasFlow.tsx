@@ -752,7 +752,7 @@ export default function BiasFlow() {
               <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">NEXT MACHINE · LOCKED</p>
               <p className="mt-2 font-display text-xl font-semibold">Delicacy Trials</p>
               <p className="mt-1 text-sm leading-relaxed text-muted">
-                One of two clips has a wrong note buried in the mix. Prestige tested your prejudice —
+                One clip of each pair has been quietly damaged. Prestige tested your prejudice —
                 this one tests whether your ears can actually tell. In the gym soon.
               </p>
               <LockedTierButton />

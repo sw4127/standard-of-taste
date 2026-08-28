@@ -1,0 +1,35 @@
+The four places that named a fourth degradation family, exactly as they stood at
+commit d740cde, immediately before E11/S1 (Track B).
+
+There are three families. `DEGRADATION_FAMILIES` in src/engine/delicacy.ts has held
+exactly ["pitch-drift", "timing-smear", "lossy-artifact"] for the life of the pool,
+and the clip pipeline has never rendered a fourth. Two of the four sites below were
+LIVE pages: the delicacy explainer's body paragraph, and a reading-room FAQ answer
+that is also served as FAQPage JSON-LD, so search engines were told it as well.
+
+This is a .txt on purpose. The guard in `flaw-families.test.ts` sweeps every `.ts`
+and `.tsx` file under `src/` for the phrase below and allows NO exceptions — an
+exception list is exactly how the third copy of `tint` survived E10/S1. So the
+sample the guard is tested against cannot live in a source file. It lives here, and
+the test reads it, which makes the self-test non-circular: the guard is proven
+against the real defect as it really was, not against a string the test assembled in
+order to find it.
+
+The fourth site was a code comment saying the pitch ladder produces a drift and NOT
+this thing. It was true, and it was rewritten anyway, because keeping it would have
+forced the sweep to carry an exception — and the exception, not the phrase, is the
+part that has historically done the damage.
+
+--- src/app/learn/delicacy/page.tsx:29 ---
+        controlled degradations — pitch drift, compression artifacts, timing smear, a wrong note
+        buried in the texture — and ask which version is the original and what, precisely, is wrong
+
+--- src/content/learn.ts:89 ---
+        a: "Public-domain and Creative-Commons recordings are altered with controlled degradations — pitch drift, compression artifacts, timing smear, a buried wrong note — and you identify the original and name the flaw. Unlike a taste quiz, answers are objectively right or wrong, difficulty is tunable, and items can be calibrated with item-response theory.",
+
+--- src/app/bias/BiasFlow.tsx:755 ---
+                One of two clips has a wrong note buried in the mix. Prestige tested your prejudice —
+
+--- src/content/delicacy/items.ts:24 ---
+ * placed. 100 cents is a semitone accumulated ACROSS a 20s clip — a drift, not
+ * a wrong note. Windows were chosen MECHANICALLY

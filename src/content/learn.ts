@@ -10,6 +10,18 @@
  * numbers arrive when the cohort does.
  */
 
+import { flawFamilyList } from "./flaw-families";
+
+/**
+ * The degradation families, derived (E11/S1).
+ *
+ * This answer used to name four of them by hand, including one the pipeline
+ * has never rendered. It had been wrong since before the trials opened, and it
+ * is served as an FAQPage JSON-LD answer as well as on the page, so a search
+ * engine was being told it too.
+ */
+const FAMILY_LIST = flawFamilyList();
+
 export interface LearnFaq {
   q: string;
   a: string;
@@ -86,7 +98,7 @@ export const LEARN_PAGES: LearnPage[] = [
       },
       {
         q: "How will the Delicacy Trials work?",
-        a: "Public-domain and Creative-Commons recordings are altered with controlled degradations — pitch drift, compression artifacts, timing smear, a buried wrong note — and you identify the original and name the flaw. Unlike a taste quiz, answers are objectively right or wrong, difficulty is tunable, and items can be calibrated with item-response theory.",
+        a: `Public-domain and Creative-Commons recordings are altered with controlled degradations — ${FAMILY_LIST} — and you identify the original and name the flaw. Unlike a taste quiz, answers are objectively right or wrong, difficulty is tunable, and items can be calibrated with item-response theory.`,
       },
       {
         q: "When do the Delicacy Trials open?",

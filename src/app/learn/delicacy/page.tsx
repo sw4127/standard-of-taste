@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Explainer, { explainerMetadata } from "../Explainer";
 import { learnPage } from "@/content/learn";
+import { flawFamilyList } from "@/content/flaw-families";
 
 const page = learnPage("delicacy")!;
 export const metadata = explainerMetadata(page);
@@ -26,9 +27,8 @@ export default function Page() {
         Most taste tests never leave opinion territory, which is why they can&apos;t measure
         delicacy at all. The <strong>Delicacy Trials</strong> are built the other way around: start
         from recordings in the public domain or under Creative Commons licenses, introduce
-        controlled degradations — pitch drift, compression artifacts, timing smear, a wrong note
-        buried in the texture — and ask which version is the original and what, precisely, is wrong
-        with the other. Every trial has a key at the bottom of the barrel:{" "}
+        controlled degradations — {flawFamilyList()} — and ask which version is the original and
+        what, precisely, is wrong with the other. Every trial has a key at the bottom of the barrel:{" "}
         <strong>an objectively correct answer</strong>. Difficulty is tunable, so the trials can
         find the exact threshold where your ears give out, and items are calibratable with
         item-response theory as real response data accumulates.

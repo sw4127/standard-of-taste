@@ -9,6 +9,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { checkVoice, formatVoiceReport, type VoiceString } from "./voice";
+import { flawFamilies } from "./flaw-families";
 import { VERDICT_COPY, biasCardSwayLine, biasCardCta, shareText as biasShareText, resultTitleFragment } from "./bias/copy";
 import {
   CALIBRATION_PHASE_LINE,
@@ -306,6 +307,22 @@ function shippingStrings(): VoiceString[] {
    * tests. A per-module check is not the deck — the deck is what the paid-tier
    * ruling, the norm rule and the datum rule are applied to as a whole.
    */
+  /**
+   * THE FLAW-FAMILY VOCABULARY (E11/S1, Track B).
+   *
+   * Six sentences describing what each degradation sounds like to somebody
+   * whose own render is broken. They are written by engineering and have not
+   * had a writing pass, so registering them here is the difference between
+   * "cannot contain a NAMED hazard" and "nobody has looked". Swept from the
+   * registry rather than listed, so a family added later cannot enter the
+   * product ungated — the exact hole that let the delicacy card's hardcoded
+   * line survive for months.
+   */
+  for (const f of flawFamilies()) {
+    out.push({ surface: `learn/flaws/${f.family}/symptom`, text: f.symptom, intensity: "calm" });
+    out.push({ surface: `learn/flaws/${f.family}/mechanism`, text: f.mechanism, intensity: "calm" });
+  }
+
   out.push(...vocabularyStrings());
   return out;
 }
