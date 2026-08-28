@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import JsonLd from "@/components/JsonLd";
 import { baseUrl } from "@/lib/site";
 import type { LearnPage } from "@/content/learn";
-import { PRESTIGE_GOLD } from "@/content/instrument-accents";
+import { GYM_INK } from "@/content/instrument-accents";
 
 /**
  * Shared explainer scaffold (brief §3.C7): renders the registry entry's
@@ -11,7 +11,8 @@ import { PRESTIGE_GOLD } from "@/content/instrument-accents";
  * so each page stays hand-written (D5: Hume narrates, no template mush).
  */
 
-const GOLD = PRESTIGE_GOLD;
+/* The reading room belongs to no instrument (RT-AG, RT-AR:a). */
+const INK = GYM_INK;
 
 /** Per-page <head> metadata derived from the same registry entry. */
 export function explainerMetadata(page: LearnPage): Metadata {
@@ -53,12 +54,12 @@ export default function Explainer({
 
       {/* Prose links carry the accent colour instead of a bare underline
           (PM 2026-07-17); the underline appears only as hover feedback. */}
-      <div className="mt-7 space-y-5 text-[15px] leading-relaxed text-neutral-300 [&_blockquote]:border-l-2 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-neutral-200 [&_strong]:font-semibold [&_strong]:text-white [&_a]:font-medium [&_a]:text-[hsl(42_60%_58%)] [&_a]:transition-colors [&_a:hover]:text-[hsl(42_80%_66%)] [&_a:hover]:underline [&_a:hover]:underline-offset-4">
+      <div className="mt-7 space-y-5 text-[15px] leading-relaxed text-neutral-300 [&_blockquote]:border-l-2 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-neutral-200 [&_strong]:font-semibold [&_strong]:text-white [&_a]:font-medium [&_a]:text-[hsl(225_8%_78%)] [&_a]:transition-colors [&_a:hover]:text-[hsl(225_8%_90%)] [&_a:hover]:underline [&_a:hover]:underline-offset-4">
         {children}
       </div>
 
       <section className="mt-12">
-        <h2 className="font-display text-2xl font-semibold" style={{ color: GOLD }}>
+        <h2 className="font-display text-2xl font-semibold" style={{ color: INK }}>
           Questions, answered straight
         </h2>
         <dl className="mt-5 space-y-6">

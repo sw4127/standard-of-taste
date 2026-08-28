@@ -3,7 +3,7 @@ import Link from "next/link";
 import SourceBadge from "@/components/lab/SourceBadge";
 import { METRICS, type MetricDefinition } from "@/content/lab/metrics";
 import { LAB_PANELS, LIVE_PANELS, PENDING_PANELS } from "@/content/lab/panels";
-import { PRESTIGE_GOLD } from "@/content/instrument-accents";
+import { GYM_INK } from "@/content/instrument-accents";
 
 /**
  * The Lab index (artifact pivot §4) — the analytics surface, in the product,
@@ -27,7 +27,8 @@ export const metadata: Metadata = {
   },
 };
 
-const GOLD = PRESTIGE_GOLD;
+/* The Lab belongs to no instrument (RT-AG, RT-AR:a). */
+const INK = GYM_INK;
 
 const OWNER_LABEL: Record<MetricDefinition["owner"], string> = {
   instrument: "Instrument",
@@ -96,7 +97,7 @@ export default function LabIndex() {
                 className="group rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition hover:border-white/25"
               >
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                  <h3 className="font-display text-lg font-semibold transition-colors group-hover:text-[hsl(42_80%_62%)]">
+                  <h3 className="font-display text-lg font-semibold transition-colors group-hover:text-[hsl(225_8%_90%)]">
                     {p.title}
                   </h3>
                   {p.dataSource && <SourceBadge source={p.dataSource} />}
@@ -129,7 +130,7 @@ export default function LabIndex() {
         <nav aria-label="Metric index" className="mt-7 grid gap-x-8 gap-y-6 sm:grid-cols-3">
           {grouped.map((group) => (
             <div key={group.owner}>
-              <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: GOLD }}>
+              <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: INK }}>
                 {OWNER_LABEL[group.owner].toUpperCase()}
               </p>
               <p className="mt-1.5 text-xs leading-relaxed text-muted">{OWNER_BLURB[group.owner]}</p>
@@ -157,7 +158,7 @@ export default function LabIndex() {
 
         {grouped.map((group) => (
           <div key={group.owner} className="mt-12">
-            <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: GOLD }}>
+            <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: INK }}>
               {OWNER_LABEL[group.owner].toUpperCase()}
             </p>
             <div className="mt-3 flex flex-col gap-3">

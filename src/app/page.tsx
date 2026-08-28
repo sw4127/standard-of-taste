@@ -6,7 +6,7 @@ import Track from "@/components/Track";
 import { worldCup } from "@/content/world-cup";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
 import { landingLead, SECONDARY_DOORS } from "@/content/landing";
-import { PRESTIGE_GOLD, PRESTIGE_FIELD, DELICACY_ICE, DELICACY_FIELD, THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE } from "@/content/instrument-accents";
+import { PRESTIGE_GOLD, PRESTIGE_FIELD, DELICACY_ICE, DELICACY_FIELD, THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE, GYM_INK } from "@/content/instrument-accents";
 
 /**
  * The taste-gym landing (RT-3c, memo §9.7 RESOLVED 2026-07-11): /bias is the
@@ -144,9 +144,9 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
 
         {friendArchetype ? (
           <p className="mt-5 inline-block rounded-full border border-white/10 px-4 py-1.5 text-sm text-muted">
-            Your friend is <span className="font-semibold" style={{ color: GOLD }}>{friendArchetype}</span> on
+            Your friend is <span className="font-semibold" style={{ color: GYM_INK }}>{friendArchetype}</span> on
             the pitch — that game lives{" "}
-            <Link href="/quiz" className="underline underline-offset-4" style={{ color: GOLD }}>
+            <Link href="/quiz" className="underline underline-offset-4" style={{ color: GYM_INK }}>
               here
             </Link>
             . The gym is what&apos;s new.
@@ -187,7 +187,7 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
               href={d.href}
               className="group text-muted transition-colors hover:text-white"
             >
-              <span className="font-semibold text-[hsl(42_45%_52%)] transition-colors group-hover:text-[hsl(42_80%_62%)]">
+              <span className="font-semibold text-[hsl(225_8%_78%)] transition-colors group-hover:text-[hsl(225_8%_90%)]">
                 {d.label}
               </span>{" "}
               {d.line}

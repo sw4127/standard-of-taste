@@ -21,6 +21,8 @@ import {
   THRESHOLD_FIELD,
   THRESHOLD_VIOLET,
   THRESHOLD_VIOLET_GLOW,
+  GYM_INK,
+  GYM_INK_BRIGHT,
   tint,
 } from "@/content/instrument-accents";
 
@@ -637,5 +639,147 @@ describe("the gym's own surfaces stay readable", () => {
   it("the tiers stay ordered: measuring is brightest, reading is dimmest", () => {
     expect(FIELD_MEASURING).toBeGreaterThan(FIELD_CHOOSING);
     expect(FIELD_CHOOSING).toBeGreaterThan(FIELD_READING);
+  });
+});
+
+describe("the gym's ink belongs to no instrument (E11/S7, RT-AR:a)", () => {
+  const SURFACE = "#08090d";
+  const MUTED = "#8b91a3";
+  const FOREGROUND = "#f4f5f8";
+  const AA = 4.5;
+
+  function over(fg: string, alpha: number, bg: string): string {
+    const f = parseColor(fg);
+    const b = parseColor(bg);
+    if (!f || !b) throw new Error(`unparseable colour: ${fg} / ${bg}`);
+    const mix = f.map((c, i) => Math.round(alpha * c + (1 - alpha) * b[i]));
+    return `#${mix.map((c) => c.toString(16).padStart(2, "0")).join("")}`;
+  }
+  const brightest = (field: string[]) =>
+    field.reduce((a, b) =>
+      parseColor(b)!.reduce((x, c) => x + c, 0) > parseColor(a)!.reduce((x, c) => x + c, 0) ? b : a,
+    );
+
+  it("the meter agrees with known pairs before it is trusted", () => {
+    expect(contrastRatio("#fff", "#000")).toBeCloseTo(21, 1);
+    expect(contrastRatio("#000", "#fff")).toBeCloseTo(21, 1);
+    expect(contrastRatio("#fff", "#fff")).toBeCloseTo(1, 2);
+    expect(contrastRatio("#767676", "#fff")!).toBeCloseTo(4.54, 1);
+  });
+
+  const backdrops: [string, number][] = [
+    ["the front door", FIELD_CHOOSING],
+    ["the reading surfaces", FIELD_READING],
+  ];
+
+  it("carries no hue, by the same rule as the field", () => {
+    for (const c of [GYM_INK, GYM_INK_BRIGHT]) {
+      const sat = Number(c.match(/hsl\(\s*[\d.]+\s+([\d.]+)%/)![1]);
+      expect(sat, `${c} is saturated enough to read as a colour`).toBeLessThanOrEqual(12);
+    }
+  });
+
+  it("clears AA on every gym surface", () => {
+    for (const [where, intensity] of backdrops) {
+      const bg = over(brightest(GYM_FIELD), intensity, SURFACE);
+      for (const ink of [GYM_INK, GYM_INK_BRIGHT]) {
+        const r = contrastRatio(ink, bg)!;
+        expect(r, `${where}: ${ink} measures ${r.toFixed(2)}:1 over ${bg}`).toBeGreaterThanOrEqual(AA);
+      }
+    }
+  });
+
+  /**
+   * THE POINT OF THE WHOLE SLICE, MEASURED.
+   *
+   * The gold this replaces measured 5.56:1 on the front door while `--muted`
+   * body copy measures 4.67:1 — a separation of 0.89. The link was told apart
+   * from the paragraph around it almost entirely by BEING GOLD. Remove the hue
+   * at that lightness and a link stops looking like one, so the separation has
+   * to be carried by brightness instead. Three is a real step; 0.89 is not.
+   */
+  it("separates a link from body copy by brightness, not by hue", () => {
+    for (const [where, intensity] of backdrops) {
+      const bg = over(brightest(GYM_FIELD), intensity, SURFACE);
+      const delta = contrastRatio(GYM_INK, bg)! - contrastRatio(MUTED, bg)!;
+      expect(
+        delta,
+        `${where}: the ink is only ${delta.toFixed(2)} clear of body copy. Without a hue to ` +
+          "carry the difference, a link at this brightness does not read as a link.",
+      ).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it("stays under the foreground, which is still the brightest text", () => {
+    for (const [, intensity] of backdrops) {
+      const bg = over(brightest(GYM_FIELD), intensity, SURFACE);
+      expect(contrastRatio(GYM_INK_BRIGHT, bg)!).toBeLessThan(contrastRatio(FOREGROUND, bg)!);
+      expect(contrastRatio(GYM_INK, bg)!).toBeLessThan(contrastRatio(GYM_INK_BRIGHT, bg)!);
+    }
+  });
+
+  /**
+   * NOT VACUOUS. The gold it replaced must still fail the separation rule, or
+   * this file is decoration — the same shape of check E10/S6a needed on the
+   * field it replaced.
+   */
+  /**
+   * THE RULING, AS A SWEEP — because it was already ruled once and half-applied.
+   *
+   * RT-AG made the gym neutral on 2026-08-27, E10/S6a implemented it, and its
+   * commit said "on the front door the only colour left is the three machine
+   * cards themselves". Eleven sites across five files still painted gold. The
+   * difference between a ruling and a rule is whether something fails when it
+   * is broken, so: no gym-level surface may name an instrument hue, with one
+   * stated exception that is checked rather than waved through.
+   */
+  it("no gym-level surface paints an instrument's colour", () => {
+    const GYM_SURFACES = [
+      "src/app/page.tsx",
+      "src/app/GymFloor.tsx",
+      "src/app/learn/page.tsx",
+      "src/app/learn/Explainer.tsx",
+      "src/app/lab/page.tsx",
+      "src/app/method/page.tsx",
+    ];
+    const HUES = ["hsl(42", "hsl(42_", "hsl(190", "hsl(190_", "hsl(276", "hsl(276_"];
+    const offenders: string[] = [];
+    for (const file of GYM_SURFACES) {
+      readFileSync(file, "utf8")
+        .split(String.fromCharCode(10))
+        .forEach((line, i) => {
+          if (!HUES.some((h) => line.includes(h))) return;
+          const t = line.trim();
+          /*
+           * A COMMENT PAINTS NOTHING. `page.tsx` explains, in prose, the
+           * hand-written blue that E10/S8 deleted — quoting a colour in order
+           * to say it is gone is the opposite of the defect this looks for.
+           * Keyed on the line being a comment, which is a syntactic fact, and
+           * not on the file it happens to sit in: an exception list is how the
+           * third copy of `tint` survived E10/S1.
+           */
+          if (t.startsWith("*") || t.startsWith("//") || t.startsWith("/*")) return;
+          /*
+           * THE ONE REAL EXEMPTION, AND IT IS NARROW. `page.tsx` declares the
+           * three MACHINE CARDS, which must wear their instruments' colours —
+           * that is the whole point of the front door. Keyed to what the line
+           * DOES (assigning a card's accent, field or surface) rather than to
+           * the file it sits in.
+           */
+          if (["accent:", "field:", "surface:"].some((k) => t.startsWith(k))) return;
+          offenders.push(`${file}:${i + 1}: ${t.slice(0, 100)}`);
+        });
+    }
+    expect(
+      offenders,
+      "these gym-level lines paint an instrument's hue on a surface that belongs to no " +
+        "instrument (RT-AG, RT-AR):" + String.fromCharCode(10) + offenders.join(String.fromCharCode(10)),
+    ).toEqual([]);
+  });
+
+  it("the gold it replaced still fails the rule it was replaced for", () => {
+    const bg = over(brightest(GYM_FIELD), FIELD_CHOOSING, SURFACE);
+    const oldDelta = contrastRatio("hsl(42 45% 52%)", bg)! - contrastRatio(MUTED, bg)!;
+    expect(oldDelta, "the pre-E11/S7 link colour should sit far too close to body copy").toBeLessThan(1.5);
   });
 });

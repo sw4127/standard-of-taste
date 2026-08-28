@@ -328,3 +328,40 @@ export const FIELD_CHOOSING = 0.4;
 /** Reading rooms: /learn, /lab, /method. The content is the figure; the field
  *  is barely there. */
 export const FIELD_READING = 0.3;
+
+/**
+ * THE GYM'S OWN INK — for accents on surfaces that belong to no instrument
+ * (E11/S7, PM ruling RT-AR:a).
+ *
+ * E10/S6a made the four gym-level surfaces achromatic and its own commit
+ * message said "on the front door the only colour left is the three machine
+ * cards themselves". That was not true, and checking it rather than trusting
+ * it is the only reason this exists: eleven sites across five files still
+ * painted the Prestige Test's gold — the secondary links under the machine
+ * cards, the friend banner, every prose link and the FAQ heading in the
+ * reading room, two eyebrows in the Lab and three headings on /method. The
+ * ruling had been applied to the ambient fields and the wordmark, and not to
+ * the text.
+ *
+ * DERIVED, NOT PICKED, on RT-AG's own argument: a surface belonging to no
+ * instrument cannot wear one instrument's hue without making that instrument
+ * the host, and a fourth hue must land within ~43 degrees of two of the three
+ * accents. Achromatic is what is left.
+ *
+ * THE LIGHTNESS IS A MEASUREMENT, AND HUE'S JOB HAD TO MOVE INTO IT. The gold
+ * it replaces measured 5.56:1 against the front door's worst backdrop while
+ * `--muted` body copy measures 4.67:1 — a separation of 0.89, which means the
+ * link was told apart from the paragraph around it almost entirely by BEING
+ * GOLD. Remove the hue at the same lightness and the link stops looking like a
+ * link. So the ink sits where the separation is carried by brightness instead:
+ * 8.50:1 on the front door and 9.38:1 on the reading surfaces, a delta of 3.83
+ * over body copy, and close to the 8.37:1 the gold HEADINGS already measured —
+ * so the heading hierarchy is preserved exactly while the link gains the
+ * contrast the hue used to supply.
+ *
+ * It stays under `--foreground` (13.48:1), which remains the brightest text.
+ */
+export const GYM_INK = "hsl(225 8% 78%)";
+
+/** Hover and emphasis. Bright, still short of `--foreground`. */
+export const GYM_INK_BRIGHT = "hsl(225 8% 90%)";

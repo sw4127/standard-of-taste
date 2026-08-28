@@ -8,7 +8,7 @@ import {
   sectionClaims,
   type ClaimSource,
 } from "@/content/method/claims";
-import { PRESTIGE_GOLD } from "@/content/instrument-accents";
+import { GYM_INK } from "@/content/instrument-accents";
 
 /**
  * `/method` — how this project is run, with the product as its evidence
@@ -47,7 +47,8 @@ export const metadata: Metadata = {
   },
 };
 
-const GOLD = PRESTIGE_GOLD;
+/* /method belongs to no instrument (RT-AG, RT-AR:a). */
+const INK = GYM_INK;
 
 /**
  * The documents a block rests on, named so a reader can open them.
@@ -132,7 +133,7 @@ export default function MethodPage() {
           <p className="text-[0.62rem] font-bold uppercase tracking-[0.28em] text-muted">
             {section.audience}
           </p>
-          <h2 className="mt-2 font-display text-2xl font-semibold" style={{ color: GOLD }}>
+          <h2 className="mt-2 font-display text-2xl font-semibold" style={{ color: INK }}>
             {section.heading}
           </h2>
           <p className="mt-4 text-[15px] leading-relaxed text-neutral-300">{section.lede}</p>
@@ -149,7 +150,7 @@ export default function MethodPage() {
       ))}
 
       <section className="mt-14">
-        <h2 className="font-display text-2xl font-semibold" style={{ color: GOLD }}>
+        <h2 className="font-display text-2xl font-semibold" style={{ color: INK }}>
           Four refusals
         </h2>
         <div className="mt-6 space-y-10">
@@ -172,7 +173,7 @@ export default function MethodPage() {
       </section>
 
       <section className="mt-14">
-        <h2 className="font-display text-2xl font-semibold" style={{ color: GOLD }}>
+        <h2 className="font-display text-2xl font-semibold" style={{ color: INK }}>
           The worst finding against itself
         </h2>
         <p className="mt-4 text-[15px] leading-relaxed text-neutral-300">
@@ -199,9 +200,9 @@ export default function MethodPage() {
 
       <p className="mt-14 text-[13px] leading-relaxed text-muted">
         Standing facts on this page last checked {METHOD_AS_OF}. The instruments themselves are in
-        the <Link href="/learn" className="text-[hsl(42_60%_58%)] transition hover:text-white">reading room</Link>;
+        the <Link href="/learn" className="text-[hsl(225_8%_78%)] transition hover:text-[hsl(225_8%_90%)]">reading room</Link>;
         the measurements behind them are in{" "}
-        <Link href="/lab" className="text-[hsl(42_60%_58%)] transition hover:text-white">the Lab</Link>,
+        <Link href="/lab" className="text-[hsl(225_8%_78%)] transition hover:text-[hsl(225_8%_90%)]">the Lab</Link>,
         including a page listing what the instruments cannot do.
       </p>
     </article>
