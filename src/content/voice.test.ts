@@ -9,7 +9,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { checkVoice, formatVoiceReport, type VoiceString } from "./voice";
-import { flawFamilies } from "./flaw-families";
+import { flawFamilies, FLAWS_INTRO, FLAWS_LIMITS } from "./flaw-families";
 import { landingLead, landingHint } from "./landing";
 import { VERDICT_COPY, biasCardSwayLine, biasCardCta, shareText as biasShareText, resultTitleFragment } from "./bias/copy";
 import {
@@ -335,6 +335,11 @@ function shippingStrings(): VoiceString[] {
     out.push({ surface: `learn/landing/lead/${n}`, text: landingLead(n), intensity: "pointed" });
   }
   out.push({ surface: "learn/landing/hint", text: landingHint(), intensity: "calm" });
+
+  // The two claim-bearing sentences on /learn/flaws (E11/S3). The rest of that
+  // page is registry data already swept above, or connective wording.
+  out.push({ surface: "learn/flaws/intro", text: FLAWS_INTRO, intensity: "calm" });
+  out.push({ surface: "learn/flaws/limits", text: FLAWS_LIMITS, intensity: "calm" });
 
   out.push(...vocabularyStrings());
   return out;

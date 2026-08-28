@@ -6,7 +6,8 @@ import { STAIRCASE_FAMILIES, familyUnit } from "@/engine/staircase-manifest";
 import { FAMILY_LABEL } from "@/content/staircase/copy";
 import { MEASURED_TRIALS } from "@/content/delicacy/items";
 import { MACHINES } from "@/components/OtherMachines";
-import { flawFamilies, flawFamilyList } from "./flaw-families";
+import { flawFamilies, flawFamilyList, FLAWS_INTRO, FLAWS_LIMITS } from "./flaw-families";
+import { LEARN_PAGES, learnPage } from "./learn";
 
 /**
  * E11/S1 (Track B) — THE PRODUCT TESTS THREE FLAW FAMILIES, AND FOUR PLACES
@@ -236,5 +237,97 @@ describe("the fourth family that never existed cannot come back", () => {
     expect(faq).toContain("${FAMILY_LIST}");
     expect(explainer).toContain("{flawFamilyList()}");
     expect(flawFamilies().length).toBe(3);
+  });
+});
+
+describe("the reference page is built from the registry, not typed", () => {
+  const SRC = "src/app/learn/flaws/page.tsx";
+
+  it("is registered in the reading room, so the index, sitemap and JSON-LD carry it", () => {
+    const entry = learnPage("flaws");
+    expect(entry, "the /learn/flaws registry entry is missing").toBeDefined();
+    expect(LEARN_PAGES.map((p) => p.slug)).toContain("flaws");
+    expect(entry!.teaser.length).toBeGreaterThan(20);
+    expect(entry!.description.length).toBeGreaterThan(40);
+  });
+
+  /**
+   * THE POINT OF THE WHOLE SLICE, ASSERTED. A reference page is the worst
+   * place in the product to hand-type a family list, because it is the page a
+   * reader would trust. This fails if the page ever stops mapping over the
+   * registry, or starts naming a family in its own words.
+   */
+  it("renders the families by mapping the registry", () => {
+    const src = readFileSync(SRC, "utf8");
+    expect(src, "the page no longer maps over flawFamilies()").toContain("flawFamilies()");
+    expect(src).toContain("families.map(");
+    // No family is spelled out in the page's own source.
+    const typed = flawFamilies()
+      .map((f) => f.label)
+      .filter((label) => src.includes(label));
+    expect(typed, `these family names are hand-typed into ${SRC}`).toEqual([]);
+  });
+
+  it("shows the unit and the machines from the registry, not from prose", () => {
+    const src = readFileSync(SRC, "utf8");
+    expect(src).toContain("{f.unit}");
+    expect(src).toContain("{f.fullUnit}");
+    expect(src).toContain("machineLinks(f.machines)");
+    for (const f of flawFamilies()) {
+      expect(src, `${f.unit} is hand-typed into the page`).not.toContain(`>${f.unit}<`);
+    }
+    /*
+     * The unit expansion must not repeat the unit. `lossy-artifact` has
+     * fullUnit === unit ("kbps"), and the first version of this page shipped
+     * "Measured in kbps (kbps)" — found by reading the built HTML, not by any
+     * test. This asserts the branch that stops it exists at all.
+     */
+    expect(src, "the unit expansion is unconditional and will repeat itself").toContain(
+      "f.fullUnit === f.unit",
+    );
+    expect(
+      flawFamilies().some((f) => f.fullUnit === f.unit),
+      "no family exercises the equal-unit branch any more; if that is deliberate, delete the branch",
+    ).toBe(true);
+  });
+
+  /**
+   * THE HONESTY BLOCK IS NOT OPTIONAL (N3). Three named flaws read as "the
+   * flaws" unless the page says otherwise, and the sentence that says
+   * otherwise is the one a later tidy-up would cut as filler.
+   */
+  /*
+   * THE FIRST VERSION OF THIS SEARCHED FOR THE BARE NAME AND STAYED GREEN
+   * WHILE THE BLOCK WAS DELETED — the import line still contained it. That is
+   * the third needle in this session to match a part of the file that was not
+   * the point (E10 finding 1, and twice more in E11/S2). It asserts the
+   * BRACED form, which exists only where the value is actually rendered.
+   */
+  it("states that three is what we can measure, not what exists", () => {
+    const src = readFileSync(SRC, "utf8");
+    expect(src, "the N3 limits block is not rendered").toContain("{FLAWS_LIMITS}");
+    expect(src, "the intro is not rendered").toContain("{FLAWS_INTRO}");
+    expect(FLAWS_LIMITS.toLowerCase()).toContain("not a list of everything");
+    expect(FLAWS_INTRO.length).toBeGreaterThan(60);
+  });
+
+  /**
+   * NO CAUSAL PROMISE, ANYWHERE ON THE PAGE (blueprint hard lines: "no causal
+   * promise that training improves anyone's output"). The creator framing is
+   * exactly where that promise would be tempting to make.
+   */
+  it("promises nothing about the reader's own output", () => {
+    const strings = [FLAWS_INTRO, FLAWS_LIMITS, ...learnPage("flaws")!.faq.flatMap((f) => [f.q, f.a])];
+    const PROMISES = [
+      "will improve your",
+      "makes your tracks",
+      "fix your mix",
+      "better renders",
+      "will catch them in your",
+    ];
+    const found = strings.flatMap((t) =>
+      PROMISES.filter((p) => t.toLowerCase().includes(p)).map((p) => `${p} — ${t.slice(0, 70)}`),
+    );
+    expect(found).toEqual([]);
   });
 });

@@ -126,6 +126,35 @@ export const LEARN_PAGES: LearnPage[] = [
       },
     ],
   },
+  /**
+   * THE CREATOR REFERENCE (E11/S3, Track B / blueprint B1).
+   *
+   * The only page in the reading room addressed to somebody with a broken file
+   * rather than to somebody reading about Hume. RT-C(b) put the creator
+   * language here and on results, and left the landing page general.
+   */
+  {
+    slug: "flaws",
+    title: "Naming what went wrong",
+    metaTitle: "Naming what went wrong — The Taste Gym",
+    description:
+      "Three kinds of audio damage, what each one sounds like, the unit it is measured in, and which machine finds how small a dose of it you can still catch.",
+    teaser: "You can hear that it is wrong. Here is what it is called.",
+    faq: [
+      {
+        q: "Can you tell me which flaw is wrecking my track?",
+        a: "No. Nothing here listens to your files, and there is nowhere to upload one. What this gives you is the vocabulary — three kinds of damage, what each sounds like, and the machine that measures how small a dose of it your own ears still catch.",
+      },
+      {
+        q: "Why only three?",
+        a: `Because three is what the clip pipeline can render as a controlled dose with an objectively correct answer behind it: ${FAMILY_LIST}. Other things go wrong in a mix. They are absent because we cannot measure them yet, not because they do not matter.`,
+      },
+      {
+        q: "If I catch these in the trials, will I catch them in my own work?",
+        a: "Unmeasured, so it is not claimed. The instruments report what you caught in these trials, on these recordings, in physical units. Whether that transfers to your own sessions is a question no data here answers.",
+      },
+    ],
+  },
   {
     slug: "practice",
     title: "Practice",

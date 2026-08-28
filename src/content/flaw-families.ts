@@ -163,3 +163,30 @@ export function flawFamilyList(): string {
   const names = DEGRADATION_FAMILIES.map((f) => FAMILY_LABEL[f].toLowerCase());
   return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
 }
+
+/**
+ * THE TWO PAGE-LEVEL CLAIMS ON /learn/flaws.
+ *
+ * They live here, not in the page's JSX, for the reason E11/S2 established the
+ * hard way: prose written into a component is outside the voice deck, and the
+ * front door's lead sat there for months saying something false. Connective
+ * wording stays in the page; the two sentences that make a CLAIM are here,
+ * where `voice.test.ts` sweeps them.
+ */
+export const FLAWS_INTRO =
+  "You can hear that a render is wrong and have no word for it. That is the gap this page " +
+  "closes: three kinds of damage the gym can measure, what each one sounds like, and the " +
+  "machines that find how small a dose of it you can still catch.";
+
+/**
+ * N3, and the most important sentence on the page.
+ *
+ * A page listing three flaws invites the reading that these are THE flaws. They
+ * are the three the clip pipeline can render as a controlled dose with a known
+ * correct answer — which is a statement about our instruments, not about audio.
+ */
+export const FLAWS_LIMITS =
+  "These three are what the pipeline can render as a controlled dose with a right answer at the " +
+  "bottom of it. They are not a list of everything that can go wrong with a piece of audio. A " +
+  "render can fail in ways nothing here measures, and this page would rather be short than " +
+  "pretend otherwise.";
