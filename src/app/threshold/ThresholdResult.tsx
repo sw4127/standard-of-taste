@@ -43,6 +43,8 @@ import { baseUrl } from "@/lib/site";
 import type { StaircaseResult } from "@/engine/staircase-session";
 import { thresholdClaim } from "@/engine/evidence";
 import { creatorLines } from "@/content/vocabulary/threshold";
+import Jump from "@/components/Jump";
+import { FLAWS_HREF, FLAWS_INVITE } from "@/content/flaw-families";
 import AcrossSessions from "@/components/AcrossSessions";
 import ExpertPanel from "@/components/ExpertPanel";
 import type { StoredPayload } from "@/lib/result-store";
@@ -281,6 +283,12 @@ function InRender({ result }: { result: StaircaseResult }) {
           </p>
         ))}
       </div>
+      {/* E11/S5: this block names a flaw in the reader's own work and, until
+          now, offered nowhere to go with it. One family is measured per
+          session here; the reference covers all three. */}
+      <Jump href={FLAWS_HREF} accent={ICE} className="mt-2">
+        {FLAWS_INVITE}
+      </Jump>
     </section>
   );
 }

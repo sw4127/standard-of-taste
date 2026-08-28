@@ -18,6 +18,8 @@ import type { DelicacyResult } from "@/engine/delicacy";
 import { BRIER_COIN_FLIP, binDisplayPct, type CalibrationResult } from "@/engine/calibration";
 import { calibrationLine, FLAW_LINE_PREFIX, flawTimesLabel } from "@/content/delicacy/copy";
 import { creatorLines } from "@/content/vocabulary/delicacy";
+import Jump from "@/components/Jump";
+import { FLAWS_HREF, FLAWS_INVITE } from "@/content/flaw-families";
 import { DELICACY_ICE } from "@/content/instrument-accents";
 
 const ICE = DELICACY_ICE;
@@ -73,6 +75,11 @@ export function InYourWork({ result }: { result: DelicacyResult }) {
           </p>
         ))}
       </div>
+      {/* E11/S5: all three families are scored here, so the reference is the
+          long form of what this block says in a clause each. */}
+      <Jump href={FLAWS_HREF} accent={ICE} className="mt-2">
+        {FLAWS_INVITE}
+      </Jump>
     </section>
   );
 }

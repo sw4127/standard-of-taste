@@ -6,7 +6,16 @@ import { STAIRCASE_FAMILIES, familyUnit } from "@/engine/staircase-manifest";
 import { FAMILY_LABEL } from "@/content/staircase/copy";
 import { MEASURED_TRIALS } from "@/content/delicacy/items";
 import { MACHINES } from "@/components/OtherMachines";
-import { flawFamilies, flawFamilyList, FLAWS_INTRO, FLAWS_LIMITS } from "./flaw-families";
+import {
+  flawFamilies,
+  flawFamilyList,
+  FLAWS_INTRO,
+  FLAWS_LIMITS,
+  FLAWS_HREF,
+  FLAWS_INVITE,
+} from "./flaw-families";
+import { FLAW_IN_A_GENERATION } from "./vocabulary/threshold";
+import { FLAW_IN_YOUR_WORK } from "./vocabulary/delicacy";
 import { LEARN_PAGES, learnPage } from "./learn";
 
 /**
@@ -40,6 +49,9 @@ function tsFiles(dir: string, out: string[] = []): string[] {
 }
 
 const posix = (p: string) => p.split(sep).join("/");
+
+/** Anything that is not a letter, for splitting prose into words. */
+const NOT_LETTERS = new RegExp("[^a-z]+");
 
 /**
  * A line break, built rather than escaped.
@@ -329,5 +341,87 @@ describe("the reference page is built from the registry, not typed", () => {
       PROMISES.filter((p) => t.toLowerCase().includes(p)).map((p) => `${p} — ${t.slice(0, 70)}`),
     );
     expect(found).toEqual([]);
+  });
+});
+
+describe("every creator vocabulary covers the same families", () => {
+  /**
+   * THERE ARE THREE VOCABULARIES FOR THE SAME THREE FAMILIES, AND THAT IS
+   * DELIBERATE — but nothing was holding them together.
+   *
+   *   FLAW_IN_A_GENERATION  (threshold result)  one family per screen, long
+   *   FLAW_IN_YOUR_WORK     (delicacy result)   three at once, a clause each
+   *   flawFamilies()        (/learn/flaws)      the reference, symptom + cause
+   *
+   * E8 split the first two on purpose: one shared sentence would be the wrong
+   * length on one of the screens. The risk that creates is a family with an
+   * entry in one and not the others. `FLAW_IN_A_GENERATION` is typed
+   * `Record<string, string>` and falls back to the EMPTY STRING, so a missing
+   * family there does not throw and does not render — the Threshold result
+   * would simply say nothing about what it just measured, silently.
+   */
+  it("no family is missing from any of the three", () => {
+    const missing: string[] = [];
+    for (const f of flawFamilies()) {
+      if (!FLAW_IN_A_GENERATION[f.family]) missing.push(`FLAW_IN_A_GENERATION: ${f.family}`);
+      if (!FLAW_IN_YOUR_WORK[f.family]) missing.push(`FLAW_IN_YOUR_WORK: ${f.family}`);
+    }
+    expect(
+      missing,
+      "a family with no entry here renders as an empty string on a result screen, " +
+        "which looks exactly like having nothing to say:",
+    ).toEqual([]);
+  });
+
+  it("and none of them describes a family the engine does not have", () => {
+    const known = new Set<string>(flawFamilies().map((f) => f.family));
+    const strays = [
+      ...Object.keys(FLAW_IN_A_GENERATION).filter((k) => !known.has(k)),
+      ...Object.keys(FLAW_IN_YOUR_WORK).filter((k) => !known.has(k)),
+    ];
+    expect(strays, `these describe families the pipeline cannot render: ${strays.join(", ")}`).toEqual(
+      [],
+    );
+  });
+});
+
+describe("the route from a result to the reference", () => {
+  it("points at the page that exists", () => {
+    expect(FLAWS_HREF).toBe("/learn/flaws");
+    expect(learnPage(FLAWS_HREF.slice("/learn/".length)), "the invite points at no page").toBeDefined();
+  });
+
+  /**
+   * THE INVITE COUNTS NOTHING. Its first draft said "the other two flaws",
+   * true after a Threshold session (one family) and false after a Delicacy one
+   * (all three). Same defect as "pick either" under three machine cards
+   * (E11/S2): arity in a sentence that is reused where the arity differs.
+   */
+  it("does not count the families", () => {
+    const COUNTING = new Set(["other", "two", "three", "both", "either", "remaining"]);
+    const words = FLAWS_INVITE.toLowerCase().split(NOT_LETTERS).filter(Boolean);
+    const hits = words.filter((w) => COUNTING.has(w));
+    expect(hits, `this invite counts, and it is shown after sessions that measured different numbers of families: ${FLAWS_INVITE}`).toEqual([]);
+  });
+
+  /**
+   * OFFERED WHERE A FLAW WAS MEASURED, AND NOWHERE ELSE. The Prestige Test
+   * relabels audio rather than damaging it, so it measures no flaw family —
+   * asserted above. A flaw-reference link under a prestige verdict would
+   * imply a connection the engine does not make.
+   */
+  it("is offered by the two instruments that measure flaws, and not by Prestige", () => {
+    const threshold = readFileSync("src/app/threshold/ThresholdResult.tsx", "utf8");
+    const delicacy = readFileSync("src/app/delicacy/RevealBlocks.tsx", "utf8");
+    const bias = readFileSync("src/app/bias/result/page.tsx", "utf8");
+    expect(threshold, "the Threshold result offers no route to the reference").toContain(
+      "{FLAWS_INVITE}",
+    );
+    expect(delicacy, "the Delicacy result offers no route to the reference").toContain(
+      "{FLAWS_INVITE}",
+    );
+    expect(bias, "the Prestige result links to the flaw reference, which it does not measure").not.toContain(
+      "FLAWS_INVITE",
+    );
   });
 });

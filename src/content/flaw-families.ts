@@ -190,3 +190,33 @@ export const FLAWS_LIMITS =
   "bottom of it. They are not a list of everything that can go wrong with a piece of audio. A " +
   "render can fail in ways nothing here measures, and this page would rather be short than " +
   "pretend otherwise.";
+
+/** Where the reference page lives. One string, so no screen hardcodes a path. */
+export const FLAWS_HREF = "/learn/flaws";
+
+/**
+ * THE INVITATION FROM A RESULT SCREEN TO THE REFERENCE (E11/S5, Track B / B3).
+ *
+ * B3 asked for creator language in the result paragraphs, and Track A had
+ * already put it there — `FLAW_IN_A_GENERATION`, `FLAW_IN_YOUR_WORK` and
+ * `CUE_IN_YOUR_WORK` all ship on their screens today. What none of them had
+ * was anywhere to go next: three result screens name a flaw in the reader's
+ * own work and not one of them offered a route to the page that explains the
+ * other two.
+ *
+ * ONE string, and it COUNTS NOTHING. The first draft read "The other two
+ * flaws, and what each is called", which is true on a Threshold result — one
+ * family per session — and false on a Delicacy result, which scores all three.
+ * A door whose wording depends on how many families the screen behind it
+ * measured is the "pick either" defect again (E11/S2), one screen further in.
+ *
+ * The vocabularies themselves stay split by screen (E8's reason: one family
+ * per screen versus three at once, so one shared sentence would be the wrong
+ * length somewhere). The DOOR is the same door wherever you are standing.
+ *
+ * NOT OFFERED ON THE PRESTIGE RESULT, deliberately. That instrument damages no
+ * audio — it relabels it — so it measures no flaw family at all, which is
+ * asserted in `flaw-families.test.ts`. A link to the flaw reference under a
+ * prestige verdict would imply a connection the engine does not make.
+ */
+export const FLAWS_INVITE = "What each flaw is called, and what it sounds like";
