@@ -80,6 +80,21 @@ comparison says this plainly rather than implying a door that is not there. The 
 practice, which waits on the product remembering a person between sessions, which it does not
 do today.
 
+## The flaw families (what the two delicacy instruments manipulate)
+
+Three, and only three: pitch drift, timing smear and compression damage. They are the
+degradations the clip pipeline can render as a controlled dose with an objectively correct answer
+behind it — not a taxonomy of everything that can go wrong with audio. The reference page states
+that limit explicitly rather than letting three named flaws read as "the flaws".
+
+Each is reported in its own physical unit — cents of peak detune, milliseconds of drift IQR, and
+kilobits per second — and each is measured by both the Delicacy Trials and the Threshold Test.
+The Prestige Test measures none of them: it relabels audio rather than damaging it.
+
+The result screens of the two flaw instruments describe each family in the reader's own terms
+(what it sounds like in a render they made) alongside the number. That description is a
+deterministic template keyed to the measured family, not generated prose.
+
 ## Methodology and honesty rules
 
 1. Performance tasks over self-report: every score derives from what the user did on a task, not
@@ -109,6 +124,7 @@ ad-tech cookies.
 - Instrument health: https://vibe-check-app-sepia.vercel.app/lab/instrument-health
 - What this instrument cannot do: https://vibe-check-app-sepia.vercel.app/lab/instrument-limits
 - Reading room index: https://vibe-check-app-sepia.vercel.app/learn
+- Naming what went wrong (flaw reference): https://vibe-check-app-sepia.vercel.app/learn/flaws
 - What is the Prestige Test?: https://vibe-check-app-sepia.vercel.app/learn/prestige-bias-test
 - Delicacy: https://vibe-check-app-sepia.vercel.app/learn/delicacy
 - Practice: https://vibe-check-app-sepia.vercel.app/learn/practice

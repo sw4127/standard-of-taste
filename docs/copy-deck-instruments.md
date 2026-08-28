@@ -2,7 +2,7 @@
 
 **Generated, do not edit by hand.** `node scripts/export-instrument-deck.mjs > docs/copy-deck-instruments.md`
 
-The four batches recorded as awaiting a writing pass since 2026-08-26. They had no brief and no deck, which is why nothing happened to them: a bullet in a handoff is not a queue. Every string below is live in the product today.
+The four batches recorded as awaiting a writing pass since 2026-08-26, plus a fifth added in E11 (2026-08-28). They had no brief and no deck, which is why nothing happened to them: a bullet in a handoff is not a queue. Every string below is live in the product today.
 
 ## How to use this
 
@@ -258,6 +258,128 @@ There is no instrument for comparison in the gym today. It is in the plan and no
 There is no instrument for practice in the gym today. It is in the plan and not in the product — it needs the product to remember you between sessions, and today it does not. When it exists it will be measured the same way as the rest, and until then this page is an explanation rather than a door.
 
 The criteria that do have machines →
+```
+
+---
+
+## 5. The creator vocabulary — added in E11 (Track B), never written by a writer
+
+**Where it renders.** `/learn/flaws` (a new reading-room page), the front door's lead paragraph and its three secondary doors, the delicacy explainer's state sentences, and a link on the Delicacy and Threshold result screens.
+
+**What it is.** The half of the product that turns a measurement into a word. The blueprint's premise is that somebody can hear a render is wrong and cannot name why; these are the sentences that name it. They were written by the engineer in one session and have had no pass.
+
+**Rules this copy must keep:**
+
+- **No claim about the reader** (D1) and **no comparison to other people** (N3).
+- **No causal promise** that training here improves anybody's own output — it is unmeasured. A guard refuses five phrasings of it; it cannot refuse a sixth.
+- **Nothing may count.** Several of these strings are shown after sessions that measured different numbers of families, and one of them sits under a machine list that has changed length twice. Arity in a reused sentence is how “pick either” survived under three cards.
+- **Three families, and the limits sentence is load-bearing.** Three named flaws read as “the flaws” without it.
+- The unit names (`cents of peak detune`, `ms of drift IQR`) are the pipeline's own labels. They are the weakest lines here and the engineer flagged them; they are also the honest name of the measured quantity, so a friendlier synonym would add a second vocabulary rather than replace one.
+
+### 5.1 The flaw families — symptom and mechanism (`/learn/flaws`)
+
+The symptom is deliberately the complaint a person makes BEFORE they have the word; the mechanism is what is physically true. The gap between them is the vocabulary.
+
+**Pitch drift** — measured in cents
+
+```
+symptom:   It sounds sour or slightly seasick, and nothing you can point at is off-key.
+mechanism: The whole take slides out of tune while it plays. It starts where it should and ends somewhere else, so no single note is wrong — the drift is.
+```
+
+**Timing smear** — measured in ms
+
+```
+symptom:   It feels rubbery and unanchored. The groove will not lock, however hard the drums are pushed.
+mechanism: The beat wanders off the grid and back again in slow waves. No individual hit is late enough to notice on its own; the pattern of them is.
+```
+
+**Compression damage** — measured in kbps
+
+```
+symptom:   It sounds cheap, underwater or brittle — like a good idea saved one too many times.
+mechanism: Low-bitrate compression throws away quiet detail. Cymbals turn grainy and reverb tails go swishy and airless, while the loud middle survives intact.
+```
+
+### 5.2 The page's two claim-bearing sentences
+
+```
+intro:  You can hear that a render is wrong and have no word for it. That is the gap this page closes: three kinds of damage the gym can measure, what each one sounds like, and the machines that find how small a dose of it you can still catch.
+
+limits: These three are what the pipeline can render as a controlled dose with a right answer at the bottom of it. They are not a list of everything that can go wrong with a piece of audio. A render can fail in ways nothing here measures, and this page would rather be short than pretend otherwise.
+```
+
+### 5.3 The page's questions
+
+```
+Q: Can you tell me which flaw is wrecking my track?
+A: No. Nothing here listens to your files, and there is nowhere to upload one. What this gives you is the vocabulary — three kinds of damage, what each sounds like, and the machine that measures how small a dose of it your own ears still catch.
+```
+
+```
+Q: Why only three?
+A: Because three is what the clip pipeline can render as a controlled dose with an objectively correct answer behind it: pitch drift, timing smear and compression damage. Other things go wrong in a mix. They are absent because we cannot measure them yet, not because they do not matter.
+```
+
+```
+Q: If I catch these in the trials, will I catch them in my own work?
+A: Unmeasured, so it is not claimed. The instruments report what you caught in these trials, on these recordings, in physical units. Whether that transfers to your own sessions is a question no data here answers.
+```
+
+### 5.4 The front door
+
+The lead is shown with the machine count interpolated; three is what ships. The hint sits under the cards, and the three doors are the quiet rows beneath it.
+
+```
+lead:  Not a personality. Not a vibe. Three machines, each measuring one thing Hume said a real judge needs — whether a famous name can move your ratings, whether your ears can catch damage when nobody tells you where it is, and how small that damage can get before you lose it.
+
+hint:  Free · no sign-up · headphones help · pick one, the room follows
+```
+
+```
+/learn/flaws
+Something sounds wrong. Three kinds of damage, what each one is called, and which machine measures it.
+```
+
+```
+/learn
+Reading room. Hume's five criteria, and how we measure them.
+```
+
+```
+/music/quiz
+Snack. Five taps, a verdict, and no measurement behind it.
+```
+
+### 5.5 The route from a result to the reference
+
+One string, shown on both the Delicacy and Threshold results. It must stay true after a session that measured one family and after a session that measured three.
+
+```
+What each flaw is called, and what it sounds like
+```
+
+### 5.6 The delicacy explainer, now that the machine is open
+
+These read the live flag and have a second form for the locked state, which is not shown here because it is not what ships.
+
+```
+index card: Machine 02: can your ears find the key in the wine?
+```
+
+```
+Q: What is the key-in-the-wine story?
+A: Hume retells it from Don Quixote: two of Sancho's kinsmen judged a wine good but for a faint taste of leather and iron. They were ridiculed — until the hogshead was emptied and an old key on a leathern thong was found at the bottom. Their perception was real and verifiable; that is delicacy.
+```
+
+```
+Q: How do the Delicacy Trials work?
+A: Public-domain and Creative-Commons recordings are altered with controlled degradations — pitch drift, timing smear and compression damage — and you identify the original and name the flaw. Unlike a taste quiz, answers are objectively right or wrong, difficulty is tunable, and items can be calibrated with item-response theory.
+```
+
+```
+Q: Where do the Delicacy Trials sit in the gym?
+A: They are machine 02, and they are open. The battery was built after the Prestige Test, on the principle that a gym has equipment you can see before you are ready for it — and now you are.
 ```
 
 ---

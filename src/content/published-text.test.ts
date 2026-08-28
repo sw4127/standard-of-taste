@@ -4,6 +4,8 @@ import { BIAS_CLIPS } from "./bias/items";
 import { DELICACY_LIVE, MEASURED_TRIALS, PRACTICE_TRIALS } from "./delicacy/items";
 import { minToClearChance } from "./delicacy/copy";
 import { STAIRCASE_FAMILIES } from "@/engine/staircase-manifest";
+import { LEARN_PAGES } from "./learn";
+import { flawFamilies } from "./flaw-families";
 
 /**
  * THE PUBLISHED TEXT FILES MUST DESCRIBE THE PRODUCT THAT SHIPPED (E9/S1b).
@@ -228,5 +230,86 @@ describe("the published text files describe the product that shipped", () => {
       expect(full.includes(unit), `threshold unit "${unit}" not published`).toBe(true);
     }
     expect(/millisecond|\bms\b/i.test(full), "threshold timing unit not published").toBe(true);
+  });
+});
+
+describe("the published files index the pages that exist", () => {
+  const FILES = ["public/llms.txt", "public/llms-full.txt"];
+
+  /**
+   * A PAGE THAT EXISTS AND IS NOT PUBLISHED IS A SILENT OMISSION (E11/S6).
+   *
+   * These files were rewritten once already, were correct on the day, and had
+   * rotted by the time anyone looked — which is why the quantities above are
+   * pinned to the pool rather than typed. The page LIST had the same shape of
+   * hole and no guard at all: `/learn/flaws` shipped in E11/S3 and neither
+   * file mentioned it, so the readers these files are addressed to would have
+   * been told the reading room has seven pages when it has eight.
+   */
+  it("every reading-room page appears in both", () => {
+    const missing: string[] = [];
+    for (const file of FILES) {
+      const text = readFileSync(file, "utf8");
+      for (const page of LEARN_PAGES) {
+        if (!text.includes(`/learn/${page.slug}`)) missing.push(`${file}: /learn/${page.slug}`);
+      }
+    }
+    expect(
+      missing,
+      "these pages ship but are not indexed for AI readers:" + String.fromCharCode(10) + missing.join(String.fromCharCode(10)),
+    ).toEqual([]);
+  });
+
+  /**
+   * The families are named in prose in these files, so they can drift from the
+   * engine exactly as four source files did before E11/S1. This does not force
+   * a wording — `llms-full.txt` also calls the lossy family "lossy-codec
+   * artifacts" in an older paragraph, which is a fair synonym — it requires
+   * that each family is named SOMEWHERE, and that no family the pipeline
+   * cannot render is named at all.
+   */
+  it("names every flaw family the engine has, and no other", () => {
+    const full = readFileSync("public/llms-full.txt", "utf8").toLowerCase();
+    for (const f of flawFamilies()) {
+      expect(full, `${f.family} is not named in llms-full.txt`).toContain(f.label.toLowerCase());
+    }
+    /*
+     * AND THE COUNT IN PROSE MUST MATCH (E11/S6, red-teaming my own slice).
+     *
+     * The section added above opens "Three, and only three". The check
+     * directly beneath this would catch a FOURTH family going unnamed — but
+     * somebody adding the name and leaving the numeral is exactly how the
+     * front door came to say "Two machines" over three cards, and the numeral
+     * is the more emphatic half of the sentence.
+     */
+    const COUNT_WORDS = ["one", "two", "three", "four", "five"];
+    const expected = COUNT_WORDS[flawFamilies().length - 1];
+    /*
+     * NO REGEX, NO ESCAPES. Three attempts to script a backslash into a test
+     * file this session produced, in turn, a real newline, a literal BACKSPACE
+     * byte and a swallowed backreference. The phrase is found by string
+     * search and the word before it is read off the split — which needs no
+     * escape and cannot half-work.
+     */
+    const marker = ", and only ";
+    const at = full.indexOf(marker);
+    expect(at, "llms-full.txt lost its family-count sentence").toBeGreaterThan(-1);
+    const NL = String.fromCharCode(10);
+    // Split on newlines first: the sentence opens a paragraph, so the token
+    // before the marker carries the preceding line break with it otherwise.
+    const claimed = full.slice(0, at).split(NL).join(" ").split(" ").filter(Boolean).pop() ?? "";
+    expect(
+      claimed,
+      "llms-full.txt says " + claimed + marker + " while the engine has " +
+        flawFamilies().length + " families",
+    ).toBe(expected);
+
+    const phantom = "wrong" + " note";
+    for (const file of FILES) {
+      expect(
+        readFileSync(file, "utf8").toLowerCase().includes(phantom),
+        `${file} names a degradation family the pipeline has never rendered`,
+      ).toBe(false);
+    }
   });
 });

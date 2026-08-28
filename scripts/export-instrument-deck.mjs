@@ -27,6 +27,9 @@ const script = `
 import { BIAS_CLIPS, BIAS_POOL_VERSION } from "@/content/bias/items";
 import { resultTitleFragment } from "@/content/bias/copy";
 import { FLAW_LINE_PREFIX, flawLineText, flawTimesLabel } from "@/content/delicacy/copy";
+import { flawFamilies, FLAWS_INTRO, FLAWS_LIMITS, FLAWS_INVITE } from "@/content/flaw-families";
+import { landingLead, landingHint, SECONDARY_DOORS } from "@/content/landing";
+import { learnPage } from "@/content/learn";
 import { describe, it } from "vitest";
 
 describe("export", () => {
@@ -45,6 +48,21 @@ describe("export", () => {
       flawPrefix: FLAW_LINE_PREFIX,
       flawLines: [[1, 1], [3, 5], [5, 8], [0, 4]].map(([a, b]) => [a, b, flawLineText(a, b)]),
       flawLabels: [[1, flawTimesLabel(1)], [2, flawTimesLabel(2)]],
+      families: flawFamilies().map((f) => ({
+        label: f.label,
+        unit: f.unit,
+        symptom: f.symptom,
+        mechanism: f.mechanism,
+      })),
+      flawsIntro: FLAWS_INTRO,
+      flawsLimits: FLAWS_LIMITS,
+      flawsInvite: FLAWS_INVITE,
+      flawsFaq: learnPage("flaws").faq,
+      delicacyFaq: learnPage("delicacy").faq,
+      delicacyTeaser: learnPage("delicacy").teaser,
+      landingLead: landingLead(3),
+      landingHint: landingHint(),
+      doors: SECONDARY_DOORS,
     };
     console.log("DECK_START" + JSON.stringify(out) + "DECK_END");
   });
@@ -88,7 +106,8 @@ w();
 w("**Generated, do not edit by hand.** `node scripts/export-instrument-deck.mjs > docs/copy-deck-instruments.md`");
 w();
 w(
-  "The four batches recorded as awaiting a writing pass since 2026-08-26. They had no brief and no " +
+  "The four batches recorded as awaiting a writing pass since 2026-08-26, plus a fifth added in " +
+    "E11 (2026-08-28). They had no brief and no " +
     "deck, which is why nothing happened to them: a bullet in a handoff is not a queue. Every string " +
     "below is live in the product today.",
 );
@@ -285,6 +304,101 @@ for (const [criterion, blocker] of [
 w("The criteria that do have machines →");
 w("```");
 w();
+w("---");
+w();
+w("## 5. The creator vocabulary — added in E11 (Track B), never written by a writer");
+
+w();
+w(
+  "**Where it renders.** `/learn/flaws` (a new reading-room page), the front door's lead paragraph " +
+    "and its three secondary doors, the delicacy explainer's state sentences, and a link on the " +
+    "Delicacy and Threshold result screens.",
+);
+w();
+w(
+  "**What it is.** The half of the product that turns a measurement into a word. The blueprint's " +
+    "premise is that somebody can hear a render is wrong and cannot name why; these are the " +
+    "sentences that name it. They were written by the engineer in one session and have had no pass.",
+);
+w();
+w("**Rules this copy must keep:**");
+w();
+w("- **No claim about the reader** (D1) and **no comparison to other people** (N3).");
+w("- **No causal promise** that training here improves anybody's own output — it is unmeasured. A guard refuses five phrasings of it; it cannot refuse a sixth.");
+w("- **Nothing may count.** Several of these strings are shown after sessions that measured different numbers of families, and one of them sits under a machine list that has changed length twice. Arity in a reused sentence is how “pick either” survived under three cards.");
+w("- **Three families, and the limits sentence is load-bearing.** Three named flaws read as “the flaws” without it.");
+w("- The unit names (`cents of peak detune`, `ms of drift IQR`) are the pipeline's own labels. They are the weakest lines here and the engineer flagged them; they are also the honest name of the measured quantity, so a friendlier synonym would add a second vocabulary rather than replace one.");
+w();
+w("### 5.1 The flaw families — symptom and mechanism (`/learn/flaws`)");
+w();
+w("The symptom is deliberately the complaint a person makes BEFORE they have the word; the mechanism is what is physically true. The gap between them is the vocabulary.");
+w();
+for (const f of d.families) {
+  w(`**${f.label}** — measured in ${f.unit}`);
+  w();
+  w("```");
+  w(`symptom:   ${f.symptom}`);
+  w(`mechanism: ${f.mechanism}`);
+  w("```");
+  w();
+}
+w("### 5.2 The page's two claim-bearing sentences");
+w();
+w("```");
+w(`intro:  ${d.flawsIntro}`);
+w();
+w(`limits: ${d.flawsLimits}`);
+w("```");
+w();
+w("### 5.3 The page's questions");
+w();
+for (const f of d.flawsFaq) {
+  w("```");
+  w(`Q: ${f.q}`);
+  w(`A: ${f.a}`);
+  w("```");
+  w();
+}
+w("### 5.4 The front door");
+w();
+w("The lead is shown with the machine count interpolated; three is what ships. The hint sits under the cards, and the three doors are the quiet rows beneath it.");
+w();
+w("```");
+w(`lead:  ${d.landingLead}`);
+w();
+w(`hint:  ${d.landingHint}`);
+w("```");
+w();
+for (const door of d.doors) {
+  w("```");
+  w(`${door.href}`);
+  w(`${door.label} ${door.line}`);
+  w("```");
+  w();
+}
+w("### 5.5 The route from a result to the reference");
+w();
+w("One string, shown on both the Delicacy and Threshold results. It must stay true after a session that measured one family and after a session that measured three.");
+w();
+w("```");
+w(d.flawsInvite);
+w("```");
+w();
+w("### 5.6 The delicacy explainer, now that the machine is open");
+w();
+w("These read the live flag and have a second form for the locked state, which is not shown here because it is not what ships.");
+w();
+w("```");
+w(`index card: ${d.delicacyTeaser}`);
+w("```");
+w();
+for (const f of d.delicacyFaq) {
+  w("```");
+  w(`Q: ${f.q}`);
+  w(`A: ${f.a}`);
+  w("```");
+  w();
+}
 w("---");
 w();
 w(

@@ -17,6 +17,7 @@ import {
 import { FLAW_IN_A_GENERATION } from "./vocabulary/threshold";
 import { FLAW_IN_YOUR_WORK } from "./vocabulary/delicacy";
 import { LEARN_PAGES, learnPage } from "./learn";
+import { landingLead, landingHint, SECONDARY_DOORS } from "./landing";
 
 /**
  * E11/S1 (Track B) — THE PRODUCT TESTS THREE FLAW FAMILIES, AND FOUR PLACES
@@ -423,5 +424,47 @@ describe("the route from a result to the reference", () => {
     expect(bias, "the Prestige result links to the flaw reference, which it does not measure").not.toContain(
       "FLAWS_INVITE",
     );
+  });
+});
+
+describe("the writing pass can see every string this session shipped", () => {
+  const DECK = "docs/copy-deck-instruments.md";
+
+  /**
+   * THE DECK IS GENERATED, AND NOTHING HELD IT TO THE CODE (E11/S6).
+   *
+   * Track B was blocked for two sessions because three copy decks were out
+   * with the PM, and the reason those decks exist at all is that a bullet in a
+   * handoff is not a queue. A deck that silently falls behind the product is
+   * the same failure one level up: the pass would be performed on strings that
+   * no longer ship.
+   *
+   * So every string E11 added is required to appear in the deck verbatim. The
+   * fix when this fails is not to edit the file — it says "do not edit by
+   * hand" at the top — but to re-run the generator.
+   */
+  it("every new cohort-visible string is in the deck, verbatim", () => {
+    const deck = readFileSync(DECK, "utf8");
+    const shipped: [string, string][] = [
+      ["FLAWS_INTRO", FLAWS_INTRO],
+      ["FLAWS_LIMITS", FLAWS_LIMITS],
+      ["FLAWS_INVITE", FLAWS_INVITE],
+      ["landingLead(3)", landingLead(3)],
+      ["landingHint", landingHint()],
+      ...flawFamilies().flatMap(
+        (f) => [[`${f.family} symptom`, f.symptom], [`${f.family} mechanism`, f.mechanism]] as [string, string][],
+      ),
+      ...SECONDARY_DOORS.map((d) => [`door ${d.href}`, d.line] as [string, string]),
+      ...learnPage("flaws")!.faq.flatMap(
+        (f, i) => [[`flaws faq ${i} q`, f.q], [`flaws faq ${i} a`, f.a]] as [string, string][],
+      ),
+      ["delicacy teaser", learnPage("delicacy")!.teaser],
+    ];
+    const absent = shipped.filter(([, text]) => !deck.includes(text)).map(([name]) => name);
+    expect(
+      absent,
+      "these ship but are not in the deck, so the writing pass cannot see them. " +
+        "Re-run: node scripts/export-instrument-deck.mjs > " + DECK + " — missing:",
+    ).toEqual([]);
   });
 });
