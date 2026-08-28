@@ -5,7 +5,7 @@ import GymFloor, { type Machine } from "./GymFloor";
 import Track from "@/components/Track";
 import { worldCup } from "@/content/world-cup";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
-import { landingLead } from "@/content/landing";
+import { landingLead, SECONDARY_DOORS } from "@/content/landing";
 import { PRESTIGE_GOLD, PRESTIGE_FIELD, DELICACY_ICE, DELICACY_FIELD, THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE } from "@/content/instrument-accents";
 
 /**
@@ -176,21 +176,23 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
 
         {/* Secondary doors — quiet rows, no bare underline/arrow links
             (PM 2026-07-17): the lead-in word carries the accent, hover lifts
-            the whole line. */}
+            the whole line. The three are DATA now (E11/S4): two of them had
+            been ungated JSX prose on the busiest page in the product since the
+            gym opened, which is exactly how the lead paragraph above went on
+            saying "Two machines" over three cards. */}
         <div className="mt-8 flex flex-col gap-2.5 text-sm">
-          <Link href="/music/quiz" className="group text-muted transition-colors hover:text-white">
-            <span className="font-semibold text-[hsl(42_45%_52%)] transition-colors group-hover:text-[hsl(42_80%_62%)]">
-              Snack.
-            </span>{" "}
-            Five taps, a verdict, and no measurement behind it.
-          </Link>
-          {/* The library (§3.C7) — crawlable path into the explainers (D5). */}
-          <Link href="/learn" className="group text-muted transition-colors hover:text-white">
-            <span className="font-semibold text-[hsl(42_45%_52%)] transition-colors group-hover:text-[hsl(42_80%_62%)]">
-              Reading room.
-            </span>{" "}
-            Hume&apos;s five criteria, and how we measure them.
-          </Link>
+          {SECONDARY_DOORS.map((d) => (
+            <Link
+              key={d.href}
+              href={d.href}
+              className="group text-muted transition-colors hover:text-white"
+            >
+              <span className="font-semibold text-[hsl(42_45%_52%)] transition-colors group-hover:text-[hsl(42_80%_62%)]">
+                {d.label}
+              </span>{" "}
+              {d.line}
+            </Link>
+          ))}
         </div>
 
         <p className="mt-8 text-[11px] text-muted/70">

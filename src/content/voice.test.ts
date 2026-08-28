@@ -10,7 +10,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { checkVoice, formatVoiceReport, type VoiceString } from "./voice";
 import { flawFamilies, FLAWS_INTRO, FLAWS_LIMITS } from "./flaw-families";
-import { landingLead, landingHint } from "./landing";
+import { landingLead, landingHint, SECONDARY_DOORS } from "./landing";
 import { VERDICT_COPY, biasCardSwayLine, biasCardCta, shareText as biasShareText, resultTitleFragment } from "./bias/copy";
 import {
   CALIBRATION_PHASE_LINE,
@@ -340,6 +340,12 @@ function shippingStrings(): VoiceString[] {
   // page is registry data already swept above, or connective wording.
   out.push({ surface: "learn/flaws/intro", text: FLAWS_INTRO, intensity: "calm" });
   out.push({ surface: "learn/flaws/limits", text: FLAWS_LIMITS, intensity: "calm" });
+
+  // The three quiet doors under the machine cards (E11/S4). Two of them had
+  // never been through this gate; they were JSX.
+  for (const d of SECONDARY_DOORS) {
+    out.push({ surface: `learn/landing/door${d.href}`, text: `${d.label} ${d.line}`, intensity: "calm" });
+  }
 
   out.push(...vocabularyStrings());
   return out;

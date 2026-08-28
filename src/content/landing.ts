@@ -75,3 +75,47 @@ export function landingLead(machineCount: number): string {
 export function landingHint(): string {
   return "Free · no sign-up · headphones help · pick one, the room follows";
 }
+
+/** A quiet door under the machine cards: an accented label, then a plain line. */
+export interface SecondaryDoor {
+  href: string;
+  /** The accented lead. Short — it is what the eye lands on. */
+  label: string;
+  line: string;
+}
+
+/**
+ * THE SECONDARY DOORS, AS DATA (E11/S4, Track B / B1, PM ruling RT-AO(a)).
+ *
+ * The reference page needed a way in that was not "browse the reading room and
+ * hope", and RT-C(b) put creator language on that page and on results while
+ * leaving the landing general. So this is one more quiet line in a list that
+ * already had two — not a redesign, and it names no audience.
+ *
+ * WHY THE NEW ONE IS FIRST. The order of a list is a claim about what matters.
+ * Of the three, this is the only door that serves the person the blueprint is
+ * written for, and the one it displaces describes itself, accurately, as having
+ * no measurement behind it.
+ *
+ * WHY THEY MOVED OUT OF JSX AT ALL. Same reason as `landingLead` in E11/S2:
+ * prose written into a component is outside the voice deck. Two of these three
+ * lines have been on the busiest page in the product, ungated, since the gym
+ * opened.
+ */
+export const SECONDARY_DOORS: SecondaryDoor[] = [
+  {
+    href: "/learn/flaws",
+    label: "Something sounds wrong.",
+    line: "Three kinds of damage, what each one is called, and which machine measures it.",
+  },
+  {
+    href: "/learn",
+    label: "Reading room.",
+    line: "Hume's five criteria, and how we measure them.",
+  },
+  {
+    href: "/music/quiz",
+    label: "Snack.",
+    line: "Five taps, a verdict, and no measurement behind it.",
+  },
+];

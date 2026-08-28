@@ -1,8 +1,14 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { DELICACY_LIVE } from "./delicacy/items";
-import { LEARN_PAGES } from "./learn";
-import { landingLead, landingHint, countWord, countWordCapitalised } from "./landing";
+import { LEARN_PAGES, learnPage } from "./learn";
+import {
+  landingLead,
+  landingHint,
+  countWord,
+  countWordCapitalised,
+  SECONDARY_DOORS,
+} from "./landing";
 import { MACHINES } from "@/components/OtherMachines";
 
 /**
@@ -253,5 +259,42 @@ describe("the needles catch the statements this slice removed", () => {
     expect(
       landingLead(MACHINES.filter((m) => m.live).length).toLowerCase(),
     ).not.toContain("two machines");
+  });
+});
+
+describe("the secondary doors under the machines", () => {
+  it("offers the reference page, and offers it first", () => {
+    expect(SECONDARY_DOORS[0].href, "the creator reference is not the first door").toBe(
+      "/learn/flaws",
+    );
+    expect(SECONDARY_DOORS).toHaveLength(3);
+  });
+
+  /**
+   * EVERY DOOR GOES SOMEWHERE. A reading-room href is checked against the
+   * registry rather than against a string, so renaming a slug fails here
+   * instead of shipping a 404 on the front door.
+   */
+  it("every reading-room door resolves to a registered page", () => {
+    const broken = SECONDARY_DOORS.filter((d) => d.href.startsWith("/learn/"))
+      .filter((d) => !learnPage(d.href.slice("/learn/".length)))
+      .map((d) => d.href);
+    expect(broken, `these front-door links point at no registered page: ${broken.join(", ")}`).toEqual(
+      [],
+    );
+  });
+
+  /**
+   * RT-C(b) — THE LANDING STAYS GENERAL. The creator language lives on the
+   * reference page and on results; the front door may point at it without
+   * naming the audience. This is the ruling written as a check, because "one
+   * more line about who this is for" is the easiest sentence in the world to
+   * add later.
+   */
+  it("names no audience on the landing page", () => {
+    const AUDIENCE = ["ai music", "ai-generated", "producers", "creators", "generated music"];
+    const text = SECONDARY_DOORS.map((d) => `${d.label} ${d.line}`).join(" ").toLowerCase();
+    const named = AUDIENCE.filter((a) => text.includes(a));
+    expect(named, `RT-C(b) keeps the landing general; it now names: ${named.join(", ")}`).toEqual([]);
   });
 });
