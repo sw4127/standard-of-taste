@@ -2,6 +2,7 @@ import Link from "next/link";
 import Explainer, { explainerMetadata } from "../Explainer";
 import { learnPage } from "@/content/learn";
 import { flawFamilyList } from "@/content/flaw-families";
+import { DELICACY_LIVE } from "@/content/delicacy/items";
 
 const page = learnPage("delicacy")!;
 export const metadata = explainerMetadata(page);
@@ -34,9 +35,12 @@ export default function Page() {
         item-response theory as real response data accumulates.
       </p>
       <p>
-        In the gym, the Delicacy Trials are the visible, locked machine — built after{" "}
-        <Link href="/learn/prestige-bias-test">the Prestige Test</Link>, on display before they
-        open. And unlike prejudice, Hume insists delicacy improves with training — which is what{" "}
+        In the gym, the Delicacy Trials are{" "}
+        {DELICACY_LIVE
+          ? "machine 02, and they are open"
+          : "machine 02, visible and locked until their pool clears validation"}{" "}
+        — built after <Link href="/learn/prestige-bias-test">the Prestige Test</Link>. And unlike prejudice,
+        Hume insists delicacy improves with training — which is what{" "}
         <Link href="/learn/practice">practice</Link> is for.
       </p>
     </Explainer>

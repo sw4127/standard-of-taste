@@ -1,0 +1,42 @@
+The six live-false statements about instrument state, exactly as they stood at commit
+aeaf158, immediately before E11/S2 (Track B).
+
+The Delicacy Trials opened on 2026-08-08. DELICACY_POOL_VERSION has been 2 since, so
+DELICACY_LIVE has been true since, so every sentence below describing them as locked,
+unopened or forthcoming has been false for twenty days. The front door has said "Two
+machines" while rendering three ever since the Threshold Test shipped.
+
+TWO OTHER BLOCKS SAY "LOCKED" AND ARE NOT DEFECTS, which is the whole reason the guard
+in `instrument-state.test.ts` reads DELICACY_LIVE instead of sweeping source text:
+
+    src/app/page.tsx        MACHINE 02 - LOCKED / "Opens when its item pool clears validation."
+    src/app/bias/BiasFlow.tsx  NEXT MACHINE - LOCKED / "In the gym soon."
+
+Both sit inside `!DELICACY_LIVE` and are the D3 visible-and-locked door, kept deliberately
+for the state in which they are true. A text sweep cannot tell them from the six below.
+That is why the guard asserts the copy AGREES WITH THE FLAG, in both directions, rather
+than that a word is absent.
+
+This is a .txt so the guard's needles cannot match their own test file.
+
+--- src/content/learn.ts:93 ---
+    teaser: "The locked machine: can your ears find the key in the wine?",
+
+--- src/content/learn.ts:100 ---
+        q: "How will the Delicacy Trials work?",
+
+--- src/content/learn.ts:104 ---
+        q: "When do the Delicacy Trials open?",
+        a: "The battery is built after the Prestige Test and is visible in the gym now as a locked tier. A gym has equipment you can see before you're ready for it.",
+
+--- src/app/learn/delicacy/page.tsx:37 ---
+        In the gym, the Delicacy Trials are the visible, locked machine — built after{" "}
+        <Link href="/learn/prestige-bias-test">the Prestige Test</Link>, on display before they
+        open. And unlike prejudice, Hume insists delicacy improves with training — which is what{" "}
+
+--- src/app/page.tsx:158 ---
+        <p className="mt-5 text-base leading-relaxed text-muted">
+          Not a personality. Not a vibe. Two machines, each measuring one thing Hume said a real
+          judge needs — whether a famous name can move your ratings, and whether your ears can
+          catch damage when nobody tells you where it is.{" "}
+          <span className="text-foreground">You can be wrong, and that is the point.</span>

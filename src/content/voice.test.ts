@@ -10,6 +10,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { checkVoice, formatVoiceReport, type VoiceString } from "./voice";
 import { flawFamilies } from "./flaw-families";
+import { landingLead, landingHint } from "./landing";
 import { VERDICT_COPY, biasCardSwayLine, biasCardCta, shareText as biasShareText, resultTitleFragment } from "./bias/copy";
 import {
   CALIBRATION_PHASE_LINE,
@@ -322,6 +323,18 @@ function shippingStrings(): VoiceString[] {
     out.push({ surface: `learn/flaws/${f.family}/symptom`, text: f.symptom, intensity: "calm" });
     out.push({ surface: `learn/flaws/${f.family}/mechanism`, text: f.mechanism, intensity: "calm" });
   }
+
+  /**
+   * THE FRONT DOOR'S LEAD (E11/S2). The most-read paragraph in the product,
+   * and until it moved out of JSX in this slice it was outside every gate —
+   * which is how it went on saying "Two machines" over three cards. Swept at
+   * more than one count so the sentence is checked as a sentence rather than
+   * at the one value that happens to ship.
+   */
+  for (const n of [2, 3, 4]) {
+    out.push({ surface: `learn/landing/lead/${n}`, text: landingLead(n), intensity: "pointed" });
+  }
+  out.push({ surface: "learn/landing/hint", text: landingHint(), intensity: "calm" });
 
   out.push(...vocabularyStrings());
   return out;

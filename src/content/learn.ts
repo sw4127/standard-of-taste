@@ -11,6 +11,7 @@
  */
 
 import { flawFamilyList } from "./flaw-families";
+import { DELICACY_LIVE } from "./delicacy/items";
 
 /**
  * The degradation families, derived (E11/S1).
@@ -21,6 +22,21 @@ import { flawFamilyList } from "./flaw-families";
  * engine was being told it too.
  */
 const FAMILY_LIST = flawFamilyList();
+
+/**
+ * THE READING ROOM DESCRIBED A MACHINE THAT HAD BEEN OPEN FOR TWENTY DAYS (E11/S2).
+ *
+ * Three strings in this registry called the Delicacy Trials locked, unopened
+ * or forthcoming. They were written while that was true and nothing tied them
+ * to the flag that stopped it being true, so `DELICACY_LIVE` flipped on
+ * 2026-08-08 and the reading room went on advertising a machine you could
+ * already walk up to and use.
+ *
+ * Both states are written out because BOTH ARE REACHABLE: the D3
+ * visible-and-locked door is deliberately kept for a pool that has not cleared
+ * validation, and the front door and the bias debrief still render it. Copy
+ * that reads the flag is the only version that is true in both.
+ */
 
 export interface LearnFaq {
   q: string;
@@ -90,19 +106,23 @@ export const LEARN_PAGES: LearnPage[] = [
     metaTitle: "Delicacy of Taste — The Key in the Wine",
     description:
       "Sancho's kinsmen tasted leather and iron in a hogshead of wine and were laughed at — until the key on a leathern thong was found at the bottom. Delicacy is verifiable perception.",
-    teaser: "The locked machine: can your ears find the key in the wine?",
+    teaser: DELICACY_LIVE
+      ? "Machine 02: can your ears find the key in the wine?"
+      : "The locked machine: can your ears find the key in the wine?",
     faq: [
       {
         q: "What is the key-in-the-wine story?",
         a: "Hume retells it from Don Quixote: two of Sancho's kinsmen judged a wine good but for a faint taste of leather and iron. They were ridiculed — until the hogshead was emptied and an old key on a leathern thong was found at the bottom. Their perception was real and verifiable; that is delicacy.",
       },
       {
-        q: "How will the Delicacy Trials work?",
+        q: DELICACY_LIVE ? "How do the Delicacy Trials work?" : "How will the Delicacy Trials work?",
         a: `Public-domain and Creative-Commons recordings are altered with controlled degradations — ${FAMILY_LIST} — and you identify the original and name the flaw. Unlike a taste quiz, answers are objectively right or wrong, difficulty is tunable, and items can be calibrated with item-response theory.`,
       },
       {
-        q: "When do the Delicacy Trials open?",
-        a: "The battery is built after the Prestige Test and is visible in the gym now as a locked tier. A gym has equipment you can see before you're ready for it.",
+        q: DELICACY_LIVE ? "Where do the Delicacy Trials sit in the gym?" : "When do the Delicacy Trials open?",
+        a: DELICACY_LIVE
+          ? "They are machine 02, and they are open. The battery was built after the Prestige Test, on the principle that a gym has equipment you can see before you are ready for it — and now you are."
+          : "The battery is built after the Prestige Test and is visible in the gym now as a locked tier. A gym has equipment you can see before you're ready for it.",
       },
     ],
   },

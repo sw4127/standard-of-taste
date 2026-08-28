@@ -25,6 +25,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { tint } from "@/content/instrument-accents";
+import { landingHint } from "@/content/landing";
 import { useMachineSelection } from "./GymStage";
 
 export interface Machine {
@@ -113,7 +114,7 @@ export default function GymFloor({ machines, locked }: { machines: Machine[]; lo
       <p className="mt-4 text-xs text-muted">
         {chosen
           ? "Tap it again when you're ready. Nothing has started yet."
-          : "Free · no sign-up · headphones help · pick either, the room follows"}
+          : landingHint()}
       </p>
     </div>
   );

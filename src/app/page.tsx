@@ -5,6 +5,7 @@ import GymFloor, { type Machine } from "./GymFloor";
 import Track from "@/components/Track";
 import { worldCup } from "@/content/world-cup";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
+import { landingLead } from "@/content/landing";
 import { PRESTIGE_GOLD, PRESTIGE_FIELD, DELICACY_ICE, DELICACY_FIELD, THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE } from "@/content/instrument-accents";
 
 /**
@@ -43,7 +44,7 @@ const GOLD = PRESTIGE_GOLD;
 const ICE = DELICACY_ICE;
 
 /**
- * The two machines as DATA. Each owns its accent, its ambient field and the
+ * The machines as DATA. Each owns its accent, its ambient field and the
  * page surface the room takes when it is selected — so "the theme follows your
  * choice" is a property of this list rather than something a component
  * remembers to do.
@@ -156,9 +157,7 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
           Your taste has a number.
         </h1>
         <p className="mt-5 text-base leading-relaxed text-muted">
-          Not a personality. Not a vibe. Two machines, each measuring one thing Hume said a real
-          judge needs — whether a famous name can move your ratings, and whether your ears can
-          catch damage when nobody tells you where it is.{" "}
+          {landingLead(MACHINES.length)}{" "}
           <span className="text-foreground">You can be wrong, and that is the point.</span>
         </p>
 
