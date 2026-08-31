@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { BIAS_CLIPS } from "./bias/items";
 import { DELICACY_LIVE, MEASURED_TRIALS, PRACTICE_TRIALS } from "./delicacy/items";
@@ -7,6 +7,8 @@ import { STAIRCASE_FAMILIES } from "@/engine/staircase-manifest";
 import { LEARN_PAGES } from "./learn";
 import { flawFamilies } from "./flaw-families";
 import { MACHINES } from "@/components/OtherMachines";
+import { vocabularyStrings } from "./vocabulary/fixtures";
+import { expertStrings } from "./vocabulary/expert";
 
 /**
  * THE PUBLISHED TEXT FILES MUST DESCRIBE THE PRODUCT THAT SHIPPED (E9/S1b).
@@ -405,6 +407,174 @@ describe("the published text files describe the product that shipped", () => {
     expect(
       offences,
       `"both" counts to two; ${MACHINES.filter((m) => m.live).length} instruments are live:`,
+    ).toEqual([]);
+  });
+});
+
+/**
+ * THE README QUOTES THE PRODUCT, AND THE QUOTES ARE HELD TO IT (E12/S2, Track L1).
+ *
+ * S2 put three of the product's own sentences on the README as blockquotes,
+ * because a portfolio page that DESCRIBES a vocabulary layer is weaker than
+ * one that shows what it says. But a quotation is the most brittle thing a
+ * README can carry: change the template and the quote becomes a fabrication —
+ * a sentence attributed to a product that no longer says it, on a public page
+ * (N3). Prose about a feature can go vague and merely rot; a quote goes false.
+ *
+ * So every `> ` line in the README must be a substring of something the
+ * product actually renders — `vocabularyStrings()` is the same corpus the
+ * voice test runs over, and `expertStrings()` the expert panel's. Reword a
+ * template and this fails, naming the quote.
+ *
+ * WHY SUBSTRING AND NOT EQUALITY. The rendered lines interpolate counts
+ * ("You named it 15 of the 15 times", "at 5 pairs of each"), and a README
+ * quoting those would freeze a number that moves with the pool — the exact
+ * defect S1 removed. The quotes are chosen to be the count-free spans, and
+ * substring matching is what permits that choice while still pinning the
+ * words to the template.
+ */
+describe("the README quotes only sentences the product renders", () => {
+  const rendered = [
+    ...vocabularyStrings().map((s) => s.text),
+    ...expertStrings().map((s) => s.text),
+  ];
+
+  const quotes = readFileSync("README.md", "utf8")
+    .split(String.fromCharCode(10))
+    .map((l) => l.trim())
+    .filter((l) => l.startsWith("> "))
+    .map((l) => l.slice(2).trim());
+
+  it("has quotes to check, so this cannot pass vacuously", () => {
+    expect(quotes.length, "README.md has no blockquotes — did the section move?").toBeGreaterThan(0);
+    expect(rendered.length, "the product rendered no strings to check against").toBeGreaterThan(20);
+  });
+
+  it("attributes no sentence the product does not say", () => {
+    const invented = quotes.filter((q) => !rendered.some((text) => text.includes(q)));
+    expect(
+      invented,
+      "README.md quotes these as the product's words. Nothing the product renders contains them:" +
+        String.fromCharCode(10) +
+        invented.join(String.fromCharCode(10)),
+    ).toEqual([]);
+  });
+});
+
+/**
+ * THE README'S LINKS POINT AT PAGES THAT EXIST (E12/S2).
+ *
+ * S2 added links to /method and /learn/flaws. A README link is checked by
+ * nobody — GitHub will not follow it, the app's own route tests do not know
+ * the README exists, and a renamed route leaves a public 404 on the first
+ * page a stranger reads. The routes come off the filesystem, so this fails
+ * the day a directory moves rather than the day someone clicks.
+ */
+describe("the README links to routes that exist", () => {
+  const APP = "src/app";
+  const readme = readFileSync("README.md", "utf8");
+  const HOST = "vibe-check-app-sepia.vercel.app";
+
+  /** Paths this README points at on the live host, deduplicated, in order. */
+  const paths = [
+    ...new Set(
+      readme
+        .split(HOST)
+        .slice(1)
+        .map((after) => {
+          // Everything up to the closing paren of the markdown link.
+          const end = after.indexOf(")");
+          return end === -1 ? "" : after.slice(0, end);
+        })
+        .filter((p) => p.startsWith("/")),
+    ),
+  ];
+
+  it("links to at least the reading room, the Lab and the method page", () => {
+    for (const required of ["/lab", "/learn", "/method"]) {
+      expect(paths, `README no longer links to ${required}`).toContain(required);
+    }
+  });
+
+  /**
+   * AND IT NAMES THE FAMILIES BY THE PRODUCT'S OWN LABELS (E12/S2).
+   *
+   * Stricter than the llms-full.txt check below, deliberately. That one
+   * accepts synonyms because it is a long descriptive document; the README is
+   * the entry point, and a reader who meets a flaw here and then meets it in
+   * the app should meet the same word. This caught the README calling the
+   * lossy family "lossy artifacts" in two places while `FAMILY_LABEL` has
+   * said "Compression damage" — a retired name on the most public page.
+   *
+   * Derived from `flawFamilies()`, so a family added to the engine fails here
+   * until the README names it, and one renamed fails until it is renamed here.
+   */
+  it("names every flaw family by the label the product uses", () => {
+    const lower = readme.toLowerCase();
+    const missing = flawFamilies()
+      .map((f) => f.label)
+      .filter((label) => !lower.includes(label.toLowerCase()));
+    expect(
+      missing,
+      "README.md does not name these families by their FAMILY_LABEL:" +
+        String.fromCharCode(10) +
+        missing.join(String.fromCharCode(10)),
+    ).toEqual([]);
+  });
+
+  /**
+   * "EVERY RESULT CARRIES A VERDICT-FREE PANEL" IS A CLAIM ABOUT THREE SCREENS
+   * (E12/S2), so it is checked against all three rather than believed.
+   *
+   * Derived from `MACHINES` and the filesystem, with no hardcoded map from
+   * instrument to file: a fourth machine added without an expert panel fails
+   * this the day it ships, which is the point. The README says "every", and
+   * "every" is the word that goes false silently when a fourth thing appears.
+   */
+  /**
+   * THE JSX OPEN TAG, NOT THE IDENTIFIER — and this guard's own first version
+   * got it wrong (E12/S2, reverse-testing).
+   *
+   * It first searched each file for `"ExpertPanel"`. Reverse-tested by
+   * renaming every occurrence in `ThresholdResult.tsx` to `ExpertPanelX`, it
+   * PASSED — because "ExpertPanelX" contains "ExpertPanel". A bare identifier
+   * is a substring of every name built from it, and it also matches the import
+   * line of a component that is imported and never rendered. `<ExpertPanel`
+   * can only appear where the thing is actually placed on the page.
+   */
+  const RENDERED_PANEL = String.fromCharCode(60) + "ExpertPanel";
+
+  it("only claims a universal expert panel if every live machine has one", () => {
+    if (!readme.toLowerCase().includes("every result carries a verdict-free panel")) return;
+    const without = MACHINES.filter((m) => m.live).filter((m) => {
+      const dir = `${APP}${m.href}`;
+      if (!existsSync(dir)) return true;
+      const files = readdirSync(dir, { recursive: true, encoding: "utf8" });
+      return !files.some(
+        (f) =>
+          typeof f === "string" &&
+          f.endsWith(".tsx") &&
+          readFileSync(`${dir}/${f}`, "utf8").includes(RENDERED_PANEL),
+      );
+    });
+    expect(
+      without.map((m) => m.title),
+      "README.md claims every result has an expert panel. These do not:",
+    ).toEqual([]);
+  });
+
+  it("names no degradation family the pipeline has never rendered", () => {
+    const phantom = "wrong" + " note";
+    expect(readme.toLowerCase().includes(phantom), "README.md names a phantom family").toBe(false);
+  });
+
+  it("every linked path is a real route", () => {
+    const dead = paths.filter((p) => !existsSync(`${APP}${p}/page.tsx`));
+    expect(
+      dead,
+      "README.md links to paths with no page.tsx under src/app:" +
+        String.fromCharCode(10) +
+        dead.join(String.fromCharCode(10)),
     ).toEqual([]);
   });
 });

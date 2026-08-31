@@ -2,26 +2,46 @@
 
 **A measurement instrument for aesthetic judgment.** It gives you a number about your own taste that you can be *wrong* about — scored deterministically from what you did, not from what you said about yourself.
 
-**→ [Try it](https://vibe-check-app-sepia.vercel.app)** · [The Lab](https://vibe-check-app-sepia.vercel.app/lab) (the analytics layer, public) · [Reading room](https://vibe-check-app-sepia.vercel.app/learn)
+**→ [Try it](https://vibe-check-app-sepia.vercel.app)** · [The Lab](https://vibe-check-app-sepia.vercel.app/lab) (the analytics layer, public) · [Reading room](https://vibe-check-app-sepia.vercel.app/learn) · [Method](https://vibe-check-app-sepia.vercel.app/method) (how it was decided, including what was killed)
 
 ---
 
 In 1757 David Hume argued that taste is not arbitrary, and named five things a real judge needs: freedom from prejudice, delicacy, good sense, comparison, and practice. He never got to measure any of it.
 
-That's the project. Each criterion becomes a **performance task where you can be objectively wrong**, not a questionnaire. It predicts no personality, no mood, no psychological state. It measures whether a famous name moves your ratings, and whether your ears can find damage nobody pointed at.
+That's the project. Each criterion becomes a **performance task where you can be objectively wrong**, not a questionnaire. It predicts no personality, no mood, no psychological state. It measures whether a famous name moves your ratings, whether your ears can find damage nobody pointed at, and how small that damage can get before you lose it.
+
+**Who it's for.** People making music with AI tools — especially for game, video and film audio. The recurring problem is not that a generation sounds bad; it is that it sounds *wrong* in a way you cannot name, so you regenerate blind and hope. The kinds of damage these instruments measure are the ones that actually show up in generated audio: pitch drift (sour, seasick, nothing you can point at is off-key), timing smear (rubbery, the groove will not lock) and compression damage (cheap, underwater, brittle). Each has a name, a unit and a machine that measures it — [what each one is called and what it sounds like](https://vibe-check-app-sepia.vercel.app/learn/flaws).
 
 ## The instruments
 
 | Hume's criterion | Instrument | Status |
 |---|---|---|
 | Freedom from prejudice | **The Prestige Test** — rate sixteen short music clips blind, then rate the same clips again: fourteen carry artist names, and two clips carry no label in either pass, as drift controls. Two of the fourteen labels are deliberately false. Your number is the gap. | **live** |
-| Delicacy | **The Delicacy Trials** — eighteen pairs of clips, one of each quietly damaged (pitch drift, timing smear, or lossy artifacts) at calibrated intensities. Find the original, then name the flaw: three practice trials with the answer shown, then fifteen scored pairs. | **live** |
+| Delicacy | **The Delicacy Trials** — eighteen pairs of clips, one of each quietly damaged (pitch drift, timing smear, or compression damage) at calibrated intensities. Find the original, then name the flaw: three practice trials with the answer shown, then fifteen scored pairs. | **live** |
 | Delicacy, measured | **The Threshold Test** — an adaptive staircase that hunts the smallest damage of one family you can still reliably hear, and reports it in physical units: cents of detune, milliseconds of drift, kbps. Not a score. | **live** |
 | Good sense | **Confidence calibration** — every answer carries a claimed confidence; scored by Brier score and over/under-confidence gap. | computed |
 | Comparison | Placement trials | not built |
 | Practice | Retest arc | not built |
 
 Every live instrument runs on **public-domain and Creative Commons audio**, damaged by our own DSP. No licensed music, no copyrighted audio, no album art.
+
+## What it tells you
+
+A threshold in cents is not an answer to *"why does my render sound wrong"*. So every result ends in **plain-language sentences, generated from deterministic templates** — never from a model — built on a **within-person contrast**: your sharpest flaw family against your dullest. That contrast is ground truth from known stimulus parameters, so it needs no cohort and no norms. It is the one comparative thing that can honestly be said at n = 0.
+
+Verbatim from a Delicacy result:
+
+> Naming is the half that transfers.
+
+And from the Prestige Test:
+
+> In your own work the label is rarely a composer's name. It is which model made it, how long you spent on the prompt, and whether this is the take you already told someone was the good one.
+
+It also refuses. Where a session cannot support a per-family split, it says so and shows the arithmetic instead of inventing a breakdown — a sentence about noise is worse than no sentence.
+
+**The expert view.** Every result carries a verdict-free panel underneath it: the session's own numbers and every trial inside it, with no interpretation attached.
+
+> Every number behind the result, and the answers. No verdict, no interpretation — read from this browser, so a link you share shows nobody else this.
 
 ## The part that matters: it refuses to make things up
 
