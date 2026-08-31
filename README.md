@@ -14,13 +14,14 @@ That's the project. Each criterion becomes a **performance task where you can be
 
 | Hume's criterion | Instrument | Status |
 |---|---|---|
-| Freedom from prejudice | **The Prestige Test** — rate 10 clips blind, rate them again with artist names attached. Two carry no label at all, as drift controls; some labels are deliberately false. Your number is the gap. | **live** |
-| Delicacy | **The Delicacy Trials** — 18 pairs of clips, one of each quietly damaged (pitch drift, timing smear, or lossy artifacts) at calibrated intensities. Find the original, then name the flaw. 3 practice with answers shown, 15 scored. | **live** |
+| Freedom from prejudice | **The Prestige Test** — rate sixteen short music clips blind, then rate the same clips again: fourteen carry artist names, and two clips carry no label in either pass, as drift controls. Two of the fourteen labels are deliberately false. Your number is the gap. | **live** |
+| Delicacy | **The Delicacy Trials** — eighteen pairs of clips, one of each quietly damaged (pitch drift, timing smear, or lossy artifacts) at calibrated intensities. Find the original, then name the flaw: three practice trials with the answer shown, then fifteen scored pairs. | **live** |
+| Delicacy, measured | **The Threshold Test** — an adaptive staircase that hunts the smallest damage of one family you can still reliably hear, and reports it in physical units: cents of detune, milliseconds of drift, kbps. Not a score. | **live** |
 | Good sense | **Confidence calibration** — every answer carries a claimed confidence; scored by Brier score and over/under-confidence gap. | computed |
 | Comparison | Placement trials | not built |
 | Practice | Retest arc | not built |
 
-Both live instruments run on **public-domain and Creative Commons audio**, damaged by our own DSP. No licensed music, no copyrighted audio, no album art.
+Every live instrument runs on **public-domain and Creative Commons audio**, damaged by our own DSP. No licensed music, no copyrighted audio, no album art.
 
 ## The part that matters: it refuses to make things up
 
@@ -67,7 +68,7 @@ npm run dev
 ```
 
 ```bash
-npm test                                        # the suite (1,200+ tests)
+npm test                                        # the whole suite; the pre-push hook runs it too
 node scripts/clip-pipeline/index.mjs validate    # Layer A over every shipped pair
 ```
 
@@ -77,9 +78,9 @@ Audio rendering needs `ffmpeg` (vendored via `ffmpeg-static`). Nothing requires 
 
 ## State of play
 
-Deployed, and **never fielded**. Both live instruments work end to end; the analytics pipeline is validated against simulated data and waiting for real responses, which will flow through the identical code with only the data-source badge changing.
+Deployed, and **never fielded**. Every live instrument works end to end; the analytics pipeline is validated against simulated data and waiting for real responses, which will flow through the identical code with only the data-source badge changing.
 
-In progress: a per-flaw **sensitivity threshold in physical units** — cents of detune, % tempo deviation, kbps — via a deeper damage ladder and an adaptive staircase. That's the real deliverable. A score out of 15 tells you very little; *"you reliably hear pitch drift at 40 cents and miss it at 25"* tells you where your ear actually stops.
+The deliverable is the Threshold Test's output, and it has shipped: a per-flaw **sensitivity threshold in physical units** — cents of detune, % tempo deviation, kbps — found by an adaptive staircase over a calibrated damage ladder. A score out of fifteen tells you very little; *"you reliably hear pitch drift at 40 cents and miss it at 25"* tells you where your ear actually stops.
 
 ## Licensing
 

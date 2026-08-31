@@ -6,6 +6,7 @@ import { minToClearChance } from "./delicacy/copy";
 import { STAIRCASE_FAMILIES } from "@/engine/staircase-manifest";
 import { LEARN_PAGES } from "./learn";
 import { flawFamilies } from "./flaw-families";
+import { MACHINES } from "@/components/OtherMachines";
 
 /**
  * THE PUBLISHED TEXT FILES MUST DESCRIBE THE PRODUCT THAT SHIPPED (E9/S1b).
@@ -46,7 +47,53 @@ import { flawFamilies } from "./flaw-families";
  *    any good. This checks quantities against the code, and nothing else.
  */
 
-const FILES = ["public/llms.txt", "public/llms-full.txt"] as const;
+/**
+ * README.md JOINS THE CORPUS (E12/S1, Track L1).
+ *
+ * The repository went public on 2026-08-28, which turned `README.md` from an
+ * internal note into the first page a stranger reads — and it was carrying
+ * exactly the rot this file was built to stop. Measured 2026-09-01:
+ *
+ *   "rate 10 clips blind"          the pool has shipped SIXTEEN since RT-103a
+ *   the instruments table          had no row for the Threshold Test at all
+ *   "In progress: a per-flaw
+ *    sensitivity threshold"        that instrument is live and `MACHINES` says so
+ *   "Both live instruments"        counts to two while three are live
+ *
+ * The last two are the worse pair: a portfolio README describing a finished
+ * instrument as unbuilt work understates the product to the one audience it
+ * exists for, and "both" is the arity defect that put "Two machines" over
+ * three cards on the front door (E11/S2).
+ *
+ * WHAT WAS *NOT* WRONG, recorded because the blueprint asserts otherwise.
+ * `docs/blueprint-phase-2.md` L1 justifies this track by saying the README
+ * "describes 18 delicacy pairs". It does, and eighteen is correct —
+ * `DELICACY_TRIALS` is 18, split 3 practice / 15 scored, exactly as written.
+ * The stale claim was somewhere else entirely. A defect asserted in a plan is
+ * still a claim, not evidence.
+ */
+const FILES = ["public/llms.txt", "public/llms-full.txt", "README.md"] as const;
+
+/**
+ * FACTS THE README MUST STATE IN ITS OWN TEXT, by `what`.
+ *
+ * The corpus-wide checks below are deliberately corpus-wide: llms.txt is a
+ * summary and llms-full.txt is the long form, and demanding both state
+ * everything would force padding. But that tolerance is a hole for a third
+ * file — a README could drop every quantity it has and the pattern checks
+ * would simply stop matching there, silently, because nothing scans a file
+ * for a fact it no longer states. That is the "narrow needle proving an
+ * absence" trap this repository keeps stepping in. So the README's own
+ * numbers are required PER FILE.
+ */
+const REQUIRED_IN_README = [
+  "clips in the Prestige Test",
+  "Prestige clips that carry a label",
+  "Prestige drift controls",
+  "swapped labels, and the labelled count they are drawn from",
+  "scored Delicacy pairs",
+  "Delicacy practice trials",
+] as const;
 
 /** The published files spell quantities; the code counts them. */
 const WORD: Record<number, string> = {
@@ -230,6 +277,135 @@ describe("the published text files describe the product that shipped", () => {
       expect(full.includes(unit), `threshold unit "${unit}" not published`).toBe(true);
     }
     expect(/millisecond|\bms\b/i.test(full), "threshold timing unit not published").toBe(true);
+  });
+
+  /**
+   * THE README STATES ITS OWN NUMBERS (E12/S1).
+   *
+   * See `REQUIRED_IN_README`. The corpus-wide presence check above is
+   * satisfied by llms-full.txt alone, so without this a README could quietly
+   * lose every quantity it has and stay green.
+   */
+  it("the README states the numbers a reader needs, in its own text", () => {
+    const readme = corpus.find((c) => c.path === "README.md")!.text;
+    const missing = REQUIRED_IN_README.filter((what) => {
+      const f = FACTS.find((f) => f.what === what);
+      if (!f) throw new Error(`REQUIRED_IN_README names an unknown fact: ${what}`);
+      return !new RegExp(f.pattern.source, "i").test(readme);
+    });
+    expect(
+      missing,
+      "README.md no longer states these, so the quantity check above has gone blind on it:" +
+        String.fromCharCode(10) +
+        missing.join(String.fromCharCode(10)),
+    ).toEqual([]);
+  });
+
+  /**
+   * A LIVE INSTRUMENT DESCRIBED AS UNBUILT (E12/S1, Track L1).
+   *
+   * The Delicacy check above is one instrument hardcoded; this is the same
+   * defect generalised over `MACHINES`, which is the registry the product
+   * actually renders its cards from. The README called the Threshold Test
+   * "In progress" while `MACHINES` had it `live: true` — the identical shape
+   * of error as the reading room advertising an open machine as locked for
+   * twenty days, on a more public surface.
+   *
+   * NO REGEX. Two false-positive traps make a pattern the wrong instrument
+   * here: the README's own table legitimately says "not built" for Comparison
+   * and Practice, which are criteria with no machine, and a regex spanning
+   * lines would join a live machine's row to theirs. Matching is per line, by
+   * `includes`, which cannot span a row boundary and needs no escape.
+   */
+  it("describes no live instrument as unbuilt", () => {
+    const UNBUILT = [
+      "in progress",
+      "not built",
+      "not yet",
+      "planned",
+      "coming soon",
+      "but locked",
+      "visible but locked",
+    ];
+    const live = MACHINES.filter((m) => m.live).map((m) => m.title.toLowerCase());
+    expect(live.length, "no live machines — this guard would pass vacuously").toBeGreaterThan(0);
+
+    const offences: string[] = [];
+    for (const { path, text } of corpus) {
+      for (const raw of text.split(String.fromCharCode(10))) {
+        const line = raw.toLowerCase();
+        for (const name of live) {
+          if (!line.includes(name)) continue;
+          for (const phrase of UNBUILT) {
+            if (line.includes(phrase)) {
+              offences.push(`${path}  "${name}" called "${phrase}": ${raw.trim()}`);
+            }
+          }
+        }
+      }
+    }
+    expect(offences, "These instruments ship. The text says otherwise:").toEqual([]);
+  });
+
+  /**
+   * AND "IN PROGRESS" IS BANNED OUTRIGHT — because the check above did not
+   * catch the defect it was written for (E12/S1, reverse-testing my own guard).
+   *
+   * Run against the pre-fix README, the per-line name match above PASSED. The
+   * offending sentence was:
+   *
+   *   "In progress: a per-flaw sensitivity threshold in physical units —
+   *    cents of detune, % tempo deviation, kbps — via a deeper damage ladder
+   *    and an adaptive staircase. That's the real deliverable."
+   *
+   * That is the Threshold Test described in full, and it never says
+   * "Threshold Test", so a guard keyed on the machine's NAME is blind to it.
+   * Which is the whole finding: a guard proves what its needle describes, not
+   * what its name says.
+   *
+   * The repair is not a cleverer proximity rule — the sentence shares no token
+   * with the registry. It is to ban the phrase. Every machine in `MACHINES` is
+   * live, so nothing published here is in progress; the two criteria that are
+   * genuinely unbuilt are marked "not built" in the README's own table, which
+   * this permits. If a future instrument really is under way, this test is the
+   * deliberate confrontation that makes someone say which one, by name, in the
+   * table where a reader will find it.
+   */
+  it("publishes no work-in-progress claim while every instrument is live", () => {
+    if (MACHINES.some((m) => !m.live)) return;
+    const offences = corpus.flatMap(({ path, text }) =>
+      text
+        .split(String.fromCharCode(10))
+        .filter((l) => l.toLowerCase().includes("in progress"))
+        .map((l) => `${path}  ${l.trim()}`),
+    );
+    expect(
+      offences,
+      "Every instrument in MACHINES is live, so nothing here is in progress:",
+    ).toEqual([]);
+  });
+
+  /**
+   * AND THE COUNT OF THEM MAY NOT BE A WORD EITHER (E12/S1).
+   *
+   * "Both live instruments work end to end" was true when three were two.
+   * `NOTHING MAY COUNT` — the arity defect that printed "Two machines" over
+   * three cards, and "pick either" under three, neither of which contains a
+   * numeral for a numeric sweep to find. "Both" is the same failure with a
+   * different part of speech, so it is checked as a word, not as a number.
+   */
+  it("never says 'both' of a set that is not two", () => {
+    if (MACHINES.filter((m) => m.live).length === 2) return;
+    const offences = corpus.flatMap(({ path, text }) =>
+      text
+        .split(String.fromCharCode(10))
+        .filter((l) => l.toLowerCase().includes("both live instrument"))
+        .map((l) => `${path}  ${l.trim()}`),
+    );
+    expect(
+      offences,
+      `"both" counts to two; ${MACHINES.filter((m) => m.live).length} instruments are live:`,
+    ).toEqual([]);
   });
 });
 
