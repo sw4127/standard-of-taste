@@ -34,7 +34,15 @@ import { describe, expect, it } from "vitest";
  */
 
 /** Gates abolished by the artifact pivot, 2026-08-07 / 2026-08-08. */
-const RETIRED_GATE = /\b(?:pm\s+)?(?:ear[\s-]pass|voice[\s-]pass|ear[\s-]passes)\b/i;
+/*
+ * E12/S4 added the ear-CHECK spelling, and the owner- prefix beside the pm- one.
+ * ARCHITECTURE.md called the abolished gate "window ear-checks", which no
+ * spelling here matched — so the pattern was blind to the very sentence that
+ * kept the gate alive in the most public technical document in the project.
+ * A gate is not renamed out of existence.
+ */
+const RETIRED_GATE =
+  /\b(?:pm\s+|owner\s+)?(?:ear[\s-]pass(?:es)?|voice[\s-]pass(?:es)?|ear[\s-]check(?:s)?)\b/i;
 
 /** Language that makes something an outstanding obligation. */
 const OUTSTANDING =
@@ -61,6 +69,22 @@ const HISTORICAL =
 const CONTEXT_LINES = 4;
 
 const ROOTS = ["docs", "src", "scripts"];
+
+/**
+ * THE REPOSITORY ROOT WAS NEVER WALKED (E12/S4, Track L1).
+ *
+ * `ROOTS` covers three directories, and the two most public files in the
+ * project — `README.md` and `ARCHITECTURE.md` — sit above all of them. So this
+ * guard, whose entire subject is documents that lie about their own gates,
+ * could not see the two documents a stranger reads first. ARCHITECTURE.md
+ * described the owner ear-check as live machinery for a month after it was
+ * abolished, and nothing here was looking at it.
+ *
+ * Root files are listed rather than globbed: the root also holds config and
+ * the decision memo, and walking it wholesale would pull in files this rule
+ * was never scoped to.
+ */
+const ROOT_FILES = ["README.md", "ARCHITECTURE.md"];
 const EXTENSIONS = [".md", ".ts", ".tsx", ".mjs"];
 /**
  * Handoffs are dated records of what was true that day; they are not claims
@@ -100,7 +124,7 @@ export function findStaleGateClaims(text: string, path = "<inline>"): Offence[] 
 }
 
 describe("no retired gate is described as outstanding", () => {
-  const files = ROOTS.flatMap((r) => walk(r));
+  const files = [...ROOTS.flatMap((r) => walk(r)), ...ROOT_FILES];
 
   it("scans a real corpus, not an empty one", () => {
     expect(files.length).toBeGreaterThan(100);
@@ -109,7 +133,7 @@ describe("no retired gate is described as outstanding", () => {
     expect(mentions.length).toBeGreaterThan(3);
   });
 
-  it("finds none anywhere in docs, src or scripts", () => {
+  it("finds none anywhere in docs, src, scripts or the repository root", () => {
     const offences = files.flatMap((f) => findStaleGateClaims(readFileSync(f, "utf8"), f));
     expect(
       offences.map((o) => `${o.path}:${o.line}  ${o.text}`),

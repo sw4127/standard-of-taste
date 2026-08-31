@@ -74,7 +74,13 @@ import { expertStrings, EXPERT_SECTIONS } from "./vocabulary/expert";
  * The stale claim was somewhere else entirely. A defect asserted in a plan is
  * still a claim, not evidence.
  */
-const FILES = ["public/llms.txt", "public/llms-full.txt", "README.md", "docs/index.html"] as const;
+const FILES = [
+  "public/llms.txt",
+  "public/llms-full.txt",
+  "README.md",
+  "docs/index.html",
+  "ARCHITECTURE.md",
+] as const;
 
 /**
  * FACTS THE README MUST STATE IN ITS OWN TEXT, by `what`.
@@ -109,6 +115,25 @@ const REQUIRED_PER_FILE: Record<string, string[]> = {
    * and demanding every quantity would force a table onto it.
    */
   "docs/index.html": ["clips in the Prestige Test"],
+  /*
+   * ARCHITECTURE.md IS LINKED FROM THE README (E12/S4, RT-L5:a), and was the
+   * stalest public file in the repository: last touched at pool v4 on
+   * 2026-07-19, it described ten clips, "8 labeled clips + 2 unlabeled
+   * controls", 465 tests, the Delicacy Trials as "visible-locked", a
+   * progression TIER the D4 amendment abolished, an engine package "pending
+   * owner approval" after RT-F ruled everything public, and an owner
+   * ear-check as live machinery a month after it was replaced by Layer A.
+   *
+   * It is a technical document, so it is required to state the pool shapes it
+   * describes. Prose about the architecture is not checkable; the counts are.
+   */
+  "ARCHITECTURE.md": [
+    "clips in the Prestige Test",
+    "Prestige clips that carry a label",
+    "Prestige drift controls",
+    "scored Delicacy pairs",
+    "Delicacy practice trials",
+  ],
 };
 
 /** The published files spell quantities; the code counts them. */
