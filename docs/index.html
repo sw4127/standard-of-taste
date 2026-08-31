@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Taste Gym — a measurement instrument for aesthetic judgment</title>
+<meta name="description" content="A web instrument measuring which categories of audio flaw a listener can detect, reported in cents, milliseconds and kbps. Hume's five criteria for a qualified critic, operationalized as performance tasks with objectively verifiable answers.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#F7F5FB;--paper:#FDFCFE;--panel:#F1EEF8;--ink:#191527;--ink-soft:#565070;
+  --ink-faint:#8A83A3;--rule:#DFDAEC;--rule-soft:#EBE7F4;--accent:#5A2FD0;--accent-hot:#6D3BEA;
+  --accent-wash:#EDE7FD;--built:#0C6E60;--built-wash:#DFF1ED;--plan:#9E5A06;--plan-wash:#FBF0DE;
+  --shadow:0 1px 2px rgba(25,21,39,.05),0 10px 30px -20px rgba(25,21,39,.3);
+}
+@media (prefers-color-scheme:dark){:root{
+  --ground:#100E16;--paper:#1A1723;--panel:#232030;--ink:#EEEBF6;--ink-soft:#A79FC0;
+  --ink-faint:#7C7495;--rule:#332E45;--rule-soft:#282438;--accent:#AE92FF;--accent-hot:#BFA7FF;
+  --accent-wash:#241D3D;--built:#5CCDB6;--built-wash:#122E29;--plan:#E5A44A;--plan-wash:#2E2415;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -20px rgba(0,0,0,.85);
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px 90px}
+header{padding:70px 0 0;margin-bottom:40px}
+.kicker{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.17em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 22px}
+h1{font-family:"Instrument Serif",Georgia,serif;font-weight:400;
+  font-size:clamp(44px,8.5vw,76px);line-height:1;letter-spacing:-.02em;margin:0 0 20px}
+h1 em{font-style:italic;color:var(--accent)}
+.standfirst{font-size:20px;line-height:1.5;color:var(--ink-soft);margin:0 0 26px;max-width:54ch}
+h2{font-family:"Instrument Serif",Georgia,serif;font-weight:400;
+  font-size:clamp(29px,4.4vw,38px);line-height:1.12;margin:0 0 12px}
+h3{font-size:17px;font-weight:600;margin:0 0 6px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--ink-faint);margin:0 0 12px}
+p{margin:0 0 15px}
+section{margin-bottom:56px}
+strong{font-weight:600}
+a{color:var(--accent);text-underline-offset:3px}
+hr{border:none;border-top:1px solid var(--rule);margin:0 0 44px}
+ul{margin:0 0 15px;padding-left:0;list-style:none}
+li{position:relative;padding-left:24px;margin-bottom:10px}
+li::before{content:"";position:absolute;left:5px;top:.72em;width:5px;height:5px;
+  border-radius:50%;background:var(--accent);opacity:.6}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 14px}
+.btn{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:12.5px;
+  letter-spacing:.04em;text-decoration:none;padding:11px 18px;border-radius:3px;
+  border:1px solid var(--accent);color:var(--accent);background:transparent}
+.btn.solid{background:var(--accent);color:var(--ground);border-color:var(--accent)}
+.btn:hover{background:var(--accent-wash)}
+.btn.solid:hover{background:var(--accent-hot);color:var(--ground)}
+.card{background:var(--paper);border:1px solid var(--rule);border-radius:4px;
+  padding:20px 22px;margin:0 0 14px;box-shadow:var(--shadow)}
+.card>:last-child{margin-bottom:0}
+.card .u{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);display:block;margin-bottom:8px}
+.lane{background:var(--paper);border:1px solid var(--rule);border-radius:4px;
+  margin:0 0 14px;box-shadow:var(--shadow);overflow:hidden}
+.lane-head{padding:13px 20px;background:var(--rule-soft);border-bottom:1px solid var(--rule);
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--accent);font-weight:600}
+.lane-body{padding:18px 22px 8px}
+.lane-body>:last-child{margin-bottom:0}
+.tag{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:10px;
+  font-weight:600;letter-spacing:.09em;text-transform:uppercase;padding:2px 7px;
+  border-radius:2px;margin-right:7px;vertical-align:2px}
+.tag.b{background:var(--built-wash);color:var(--built)}
+.tag.p{background:var(--plan-wash);color:var(--plan)}
+.note{background:var(--plan-wash);border-left:3px solid var(--plan);
+  border-radius:0 4px 4px 0;padding:18px 22px;margin:0 0 18px}
+.note .eyebrow{color:var(--plan)}
+.note>:last-child{margin-bottom:0}
+.sample{background:var(--paper);border:1px solid var(--rule);border-left:4px solid var(--accent);
+  border-radius:0 4px 4px 0;padding:20px 22px;margin:0 0 14px;box-shadow:var(--shadow)}
+.sample .lbl{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--plan);margin:0 0 10px}
+.sample q{display:block;font-family:"Instrument Serif",Georgia,serif;font-size:19.5px;
+  line-height:1.48;font-style:italic;quotes:"“" "”"}
+.tw{overflow-x:auto;margin:0 0 18px}
+table{border-collapse:collapse;width:100%;min-width:480px;font-size:14.5px}
+th,td{text-align:left;padding:10px 14px 10px 0;border-bottom:1px solid var(--rule-soft);vertical-align:top}
+th{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-faint);font-weight:500;border-bottom:1px solid var(--rule)}
+td.m{font-family:"IBM Plex Mono",monospace;color:var(--accent);white-space:nowrap;font-size:12.5px}
+footer{border-top:1px solid var(--rule);padding-top:20px;font-size:14px;color:var(--ink-faint)}
+:focus-visible{outline:2px solid var(--accent-hot);outline-offset:3px}
+@media (max-width:520px){.wrap{padding:0 17px 70px}.card,.note,.sample,.lane-body{padding-left:17px;padding-right:17px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="kicker">Standard of Taste · an instrument, not a quiz</p>
+  <h1>What your ear <em>lets through</em></h1>
+  <p class="standfirst">A web instrument that measures which categories of audio flaw you catch and which get past you — in cents of pitch drift, milliseconds of timing error, kilobits per second. A number about your own taste that you can be wrong about.</p>
+  <div class="cta">
+    <a class="btn solid" href="https://vibe-check-app-sepia.vercel.app/">Take a test</a>
+    <a class="btn" href="https://vibe-check-app-sepia.vercel.app/lab">The analytics lab</a>
+    <a class="btn" href="https://vibe-check-app-sepia.vercel.app/method">Method</a>
+    <a class="btn" href="https://github.com/sw4127/standard-of-taste">Source</a>
+  </div>
+</header>
+
+<hr>
+
+<section>
+  <p class="eyebrow">Why it exists</p>
+  <h2>Two findings the incumbents cannot serve</h2>
+  <p>The project began with user interviews conducted for a Columbia Business School product engagement with Tidal. Two of them did not fit the product being built, and became this one instead.</p>
+  <ul>
+    <li><strong>Past listening predicts less than present and forming taste.</strong> Recommendation systems are built almost entirely on play history — a record of who you were.</li>
+    <li><strong>Almost nobody can describe their own taste in words.</strong> Nearest-neighbour and embedding models encode taste as coordinates. Those coordinates are machine-readable and not human-readable, so the system can act on your taste while you still cannot articulate it.</li>
+  </ul>
+  <p>Both point at the same gap: <strong>measure what a listener can currently discriminate, and return it in language.</strong></p>
+</section>
+
+<hr>
+
+<section>
+  <p class="eyebrow">Method</p>
+  <h2>Hume, operationalized</h2>
+  <p>David Hume's <em>Of the Standard of Taste</em> (1757) argues, against the relativist position, that aesthetic judgment admits of a standard — one located in the qualified observer, whom Hume characterises by five discriminable qualifications: delicacy, practice, comparison, freedom from prejudice, and good sense.</p>
+  <p>The engineering move is to treat those five as <strong>operational constructs</strong> and build a performance task for each — tasks with objectively verifiable answers, where the respondent can be demonstrably wrong. That replaces self-report, which measures self-image, with measurement against ground truth. Three of the five have working instruments.</p>
+
+  <div class="card">
+    <span class="u">Freedom from prejudice · built</span>
+    <h3>The Prestige Test</h3>
+    <p>Rate clips blind, then rate the same clips with artist names and acclaim attached. Movement between passes is prestige bias, corrected by each respondent's own drift on unlabelled control items — a within-subject design requiring no external ground truth. Some labels are deliberately false; every deception is disclosed on a mandatory debrief screen.</p>
+  </div>
+  <div class="card">
+    <span class="u">Delicacy of taste · built</span>
+    <h3>The Delicacy Trials</h3>
+    <p>Two recordings of one passage; one carries a defect applied at a controlled magnitude. Forced choice, objectively scoreable. Confidence is captured per trial, which yields a calibration curve — Hume's "good sense" as arithmetic rather than assertion.</p>
+  </div>
+  <div class="card">
+    <span class="u">Delicacy, measured · built</span>
+    <h3>The Threshold Test</h3>
+    <p>An adaptive staircase converging on the smallest defect you can reliably detect, reported in physical units. Not a rank — <em>you caught a 12-cent detune and missed a 40-millisecond smear.</em></p>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <p class="eyebrow">Depending on why you are here</p>
+  <h2>Four ways in</h2>
+
+  <div class="lane">
+    <div class="lane-head">If you have thirty seconds</div>
+    <div class="lane-body">
+      <p>Open the Prestige Test and rate sixteen short music clips. The debrief at the end tells you which of the names you were shown were invented, and by how many points your own rating moved toward them. That moment is the product.</p>
+    </div>
+  </div>
+
+  <div class="lane">
+    <div class="lane-head">If you assess products</div>
+    <div class="lane-body">
+      <p>The interesting decisions are the deletions. A six-tier ranking was removed after it classified respondents correctly only <strong>30.5%</strong> of the time, replaced by an interval wide enough to be true. A priced tier was removed because charging for the training loop would have put the honest deliverable behind a wall. A predecessor product was discontinued on measured demand of <strong>29 visitors</strong>.</p>
+      <p>Every open decision was classified by severity and reversibility: reversible choices advanced on a stated default, while one-way doors — pricing, data schema, deletions — halted for explicit sign-off.</p>
+    </div>
+  </div>
+
+  <div class="lane">
+    <div class="lane-head">If you assess analysis</div>
+    <div class="lane-body">
+      <p>The <a href="https://vibe-check-app-sepia.vercel.app/lab">Lab</a> is the honest part. It carries a metric dictionary that prints <em>"no defensible target yet"</em> where a target cannot be justified, an instrument-health panel, and a parameter-recovery page validating the psychometric pipeline against simulated responses with known parameters.</p>
+      <p><strong>There are no respondents yet, so every figure derived from simulation is badged <span class="tag b">SIMULATED</span> in the product itself.</strong> The pipeline — item response theory, signal detection, calibration and reliability — is real and tested; the normative data is not there, and the site says so rather than implying otherwise.</p>
+    </div>
+  </div>
+
+  <div class="lane">
+    <div class="lane-head">If you assess engineering</div>
+    <div class="lane-body">
+      <p><strong>No language model touches a verdict.</strong> A fixed-weight scoring engine and an authored, version-controlled knowledge base compute every result in code; where a model is used at all it is confined to prose, enum-locked, at low temperature on a pinned snapshot, cached by input hash. Roughly 250 cached generations cover 3,456 result permutations, bounding worst-case lifetime inference cost near one dollar, with transient failures excluded from the cache so a fallback can never be pinned.</p>
+      <p>Share links carry the respondent's raw answers and every surface recomputes from them, so an edited URL can only display what the engine would genuinely conclude. All audio is public-domain or Creative Commons, each item carrying a captured licence proof and a SHA-256 of its source file; continuous integration fails if either is missing.</p>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <p class="eyebrow">Where it went, and where it is going</p>
+  <h2>The blueprint</h2>
+  <p>The instruments measure well and report in units. Units are not a description of anybody — so the measurement was turned into language, by comparing a respondent <em>to themselves</em> across fault families rather than to a population that does not exist yet. Since each defect was applied at a known magnitude, that contrast is ground truth and requires no cohort. That layer has shipped; the two rows still marked planned below are the two of Hume's five criteria that have no instrument.</p>
+
+  <div class="sample">
+    <p class="lbl">Shipped output — a sentence the product renders, verbatim</p>
+    <q>In a render this is the lead that turns faintly sour on a long note — most often a vocal, a bowed string or a synth lead, where a slow slide reads as bad singing rather than bad audio.</q>
+  </div>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Element</th><th>State</th><th>What changes</th></tr></thead>
+      <tbody>
+        <tr><td>Three instruments</td><td class="m"><span class="tag b">built</span></td><td>Live now</td></tr>
+        <tr><td>Plain-language readout</td><td class="m"><span class="tag b">built</span></td><td>Every result ends in sentences instead of a unit</td></tr>
+        <tr><td>Expert view</td><td class="m"><span class="tag b">built</span></td><td>Per-family thresholds, trial record and calibration curve, with no verdict attached</td></tr>
+        <tr><td>Calibration surfaced</td><td class="m"><span class="tag b">built</span></td><td>Computed all along; now a named line a person will read</td></tr>
+        <tr><td>Retest arc — Hume's <em>practice</em></td><td class="m"><span class="tag p">planned</span></td><td>Whether your ear moved between sessions, in the same sentences</td></tr>
+        <tr><td>Comparison — Hume's fifth</td><td class="m"><span class="tag p">planned</span></td><td>Breadth of what a listener has actually heard</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <p class="eyebrow">Stated plainly</p>
+    <p><strong>Nobody has used this yet, and distribution was deliberately out of scope.</strong> The project was built to test whether a rule set could hold an AI engineering agent to production quality across three months, more than 340 commits and more than 2,000 automated tests — not to find an audience. Two of Hume's five criteria still have no instrument, and their pages say so rather than implying a door that is not there.</p>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <p class="eyebrow">Constraints</p>
+  <h2>What it refuses to do</h2>
+  <ul>
+    <li><strong>No personality inference.</strong> It measures a performance and makes no claim about the person.</li>
+    <li><strong>No percentiles.</strong> There is no cohort, so there is no honest rank to report.</li>
+    <li><strong>No language model in the scoring path.</strong> Two respondents with the same answers get the same result, always.</li>
+    <li><strong>No points, streaks or leaderboards.</strong> Refused by standing rule, not by oversight.</li>
+    <li><strong>No number the data cannot support.</strong> This rule has deleted shipped work, which is the only evidence that a rule of this kind is real.</li>
+  </ul>
+  <div class="cta">
+    <a class="btn solid" href="https://vibe-check-app-sepia.vercel.app/">Take a test</a>
+    <a class="btn" href="https://github.com/sw4127/standard-of-taste">Read the method</a>
+  </div>
+</section>
+
+<footer>
+  <p>Built by Siqi (Bob) Wang. Every figure on this page traces to a file in the repository, and anything marked <span class="tag p">planned</span> is not built. Where this page and the repository disagree, the repository is the truth.</p>
+</footer>
+
+</div>
+</body>
+</html>

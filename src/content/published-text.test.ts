@@ -8,7 +8,7 @@ import { LEARN_PAGES } from "./learn";
 import { flawFamilies } from "./flaw-families";
 import { MACHINES } from "@/components/OtherMachines";
 import { vocabularyStrings } from "./vocabulary/fixtures";
-import { expertStrings } from "./vocabulary/expert";
+import { expertStrings, EXPERT_SECTIONS } from "./vocabulary/expert";
 
 /**
  * THE PUBLISHED TEXT FILES MUST DESCRIBE THE PRODUCT THAT SHIPPED (E9/S1b).
@@ -74,7 +74,7 @@ import { expertStrings } from "./vocabulary/expert";
  * The stale claim was somewhere else entirely. A defect asserted in a plan is
  * still a claim, not evidence.
  */
-const FILES = ["public/llms.txt", "public/llms-full.txt", "README.md"] as const;
+const FILES = ["public/llms.txt", "public/llms-full.txt", "README.md", "docs/index.html"] as const;
 
 /**
  * FACTS THE README MUST STATE IN ITS OWN TEXT, by `what`.
@@ -88,14 +88,28 @@ const FILES = ["public/llms.txt", "public/llms-full.txt", "README.md"] as const;
  * absence" trap this repository keeps stepping in. So the README's own
  * numbers are required PER FILE.
  */
-const REQUIRED_IN_README = [
-  "clips in the Prestige Test",
-  "Prestige clips that carry a label",
-  "Prestige drift controls",
-  "swapped labels, and the labelled count they are drawn from",
-  "scored Delicacy pairs",
-  "Delicacy practice trials",
-] as const;
+const REQUIRED_PER_FILE: Record<string, string[]> = {
+  "README.md": [
+    "clips in the Prestige Test",
+    "Prestige clips that carry a label",
+    "Prestige drift controls",
+    "swapped labels, and the labelled count they are drawn from",
+    "scored Delicacy pairs",
+    "Delicacy practice trials",
+  ],
+  /*
+   * docs/index.html IS THE RECRUITER-FACING PAGE, and it needed this for the
+   * same reason (E12/S3). Adding it to the corpus alone bought nothing: it
+   * said "rate ten clips", which no pattern matches, so the quantity check
+   * had nothing to compare and passed in silence. Reverse-testing the corpus
+   * against the pre-fix page is what exposed that — a file joining a guarded
+   * set is not the same as a file being guarded.
+   *
+   * Only the clip count is required. This page is a narrative, not a spec,
+   * and demanding every quantity would force a table onto it.
+   */
+  "docs/index.html": ["clips in the Prestige Test"],
+};
 
 /** The published files spell quantities; the code counts them. */
 const WORD: Record<number, string> = {
@@ -288,16 +302,20 @@ describe("the published text files describe the product that shipped", () => {
    * satisfied by llms-full.txt alone, so without this a README could quietly
    * lose every quantity it has and stay green.
    */
-  it("the README states the numbers a reader needs, in its own text", () => {
-    const readme = corpus.find((c) => c.path === "README.md")!.text;
-    const missing = REQUIRED_IN_README.filter((what) => {
-      const f = FACTS.find((f) => f.what === what);
-      if (!f) throw new Error(`REQUIRED_IN_README names an unknown fact: ${what}`);
-      return !new RegExp(f.pattern.source, "i").test(readme);
-    });
+  it("each public surface states the numbers a reader needs, in its own text", () => {
+    const missing: string[] = [];
+    for (const [path, required] of Object.entries(REQUIRED_PER_FILE)) {
+      const entry = corpus.find((c) => c.path === path);
+      if (!entry) throw new Error(`REQUIRED_PER_FILE names a file not in the corpus: ${path}`);
+      for (const what of required) {
+        const f = FACTS.find((f) => f.what === what);
+        if (!f) throw new Error(`REQUIRED_PER_FILE names an unknown fact: ${what}`);
+        if (!new RegExp(f.pattern.source, "i").test(entry.text)) missing.push(`${path}: ${what}`);
+      }
+    }
     expect(
       missing,
-      "README.md no longer states these, so the quantity check above has gone blind on it:" +
+      "These files no longer state these facts, so the quantity check above has gone blind on them:" +
         String.fromCharCode(10) +
         missing.join(String.fromCharCode(10)),
     ).toEqual([]);
@@ -475,18 +493,39 @@ describe("the README links to routes that exist", () => {
   const readme = readFileSync("README.md", "utf8");
   const HOST = "vibe-check-app-sepia.vercel.app";
 
-  /** Paths this README points at on the live host, deduplicated, in order. */
+  /**
+   * Paths the public surfaces point at on the live host, deduplicated.
+   *
+   * `docs/index.html` joined this in E12/S3 for the same reason the README
+   * did: it is served by GitHub Pages to the same reader, its call-to-action
+   * buttons are links like any other, and a renamed route leaves a dead
+   * button on the project page with nothing to catch it.
+   */
   const paths = [
     ...new Set(
-      readme
+      [readme, readFileSync("docs/index.html", "utf8")]
+        .join(String.fromCharCode(10))
         .split(HOST)
         .slice(1)
         .map((after) => {
-          // Everything up to the closing paren of the markdown link.
-          const end = after.indexOf(")");
-          return end === -1 ? "" : after.slice(0, end);
+          /*
+           * TWO LINK SYNTAXES, TWO TERMINATORS (E12/S3). This first cut at
+           * the closing paren of a markdown link, which is correct for
+           * README.md and wrong for docs/index.html, where the href ends at
+           * a quote — it produced the path `/method">Method</a>` and the
+           * route check failed on a link that was perfectly fine. Cut at
+           * whichever terminator comes first instead of assuming a syntax.
+           */
+          let end = after.length;
+          for (const stop of [")", String.fromCharCode(34), "'", "<", " "]) {
+            const at = after.indexOf(stop);
+            if (at !== -1 && at < end) end = at;
+          }
+          return after.slice(0, end);
         })
-        .filter((p) => p.startsWith("/")),
+        .filter((p) => p.startsWith("/"))
+        // The root path is served by src/app/page.tsx, not src/app//page.tsx.
+        .map((p) => (p === "/" ? "" : p.replace(/\/$/, ""))),
     ),
   ];
 
@@ -575,6 +614,95 @@ describe("the README links to routes that exist", () => {
       "README.md links to paths with no page.tsx under src/app:" +
         String.fromCharCode(10) +
         dead.join(String.fromCharCode(10)),
+    ).toEqual([]);
+  });
+});
+
+/**
+ * THE PROJECT PAGE'S ROADMAP MAY NOT CALL A SHIPPED THING PLANNED (E12/S3).
+ *
+ * `docs/index.html` is the recruiter-facing page, and its footer makes an
+ * explicit promise: "anything marked planned is not built". Measured
+ * 2026-09-01, that promise was false three times over — the plain-language
+ * readout, the expert view and the surfaced calibration all shipped in
+ * Phase 1 and all still carried a `planned` tag. The page was understating
+ * the work to the exact audience it was written for, which is the same defect
+ * as the README calling the Threshold Test "in progress", on the same day.
+ *
+ * SO THE TAG IS DERIVED, NOT TYPED. Each row below carries a predicate over
+ * the code, and the assertion is a biconditional: the tag reads "built" if
+ * and only if the predicate holds. A row that ships later fails this until
+ * the page is updated, and a row marked built that regresses fails it too.
+ *
+ * TWO ROWS ARE DELIBERATELY UNGUARDED, and saying so is the point:
+ *
+ *  - RETEST ARC. Nothing in the code answers "does history exist" yet.
+ *    RT-G was ruled (b) device-local on 2026-09-01, so Track G will create
+ *    that artifact; keying on a path that does not exist would be a guard
+ *    asserting its own assumption.
+ *  - COMPARISON. Same shape: the instrument does not exist, and the only
+ *    honest predicate — "a fourth machine appears in MACHINES" — is a guess
+ *    about how it will be built.
+ *
+ * Both are genuinely planned today, so the page is correct about them; when
+ * either ships, this comment is the instruction to add its predicate.
+ */
+describe("the project page's roadmap agrees with the code", () => {
+  const page = readFileSync("docs/index.html", "utf8");
+  const BUILT = 'tag b">built';
+  const PLANNED = 'tag p">planned';
+
+  const everyLiveMachineHasAPanel = MACHINES.filter((m) => m.live).every((m) => {
+    const dir = `src/app${m.href}`;
+    if (!existsSync(dir)) return false;
+    return readdirSync(dir, { recursive: true, encoding: "utf8" }).some(
+      (f) =>
+        typeof f === "string" &&
+        f.endsWith(".tsx") &&
+        readFileSync(`${dir}/${f}`, "utf8").includes(String.fromCharCode(60) + "ExpertPanel"),
+    );
+  });
+
+  /** Row label as printed, and what the code says about it. */
+  const ROWS: Array<{ label: string; shipped: boolean }> = [
+    { label: "Three instruments", shipped: MACHINES.filter((m) => m.live).length >= 3 },
+    { label: "Plain-language readout", shipped: vocabularyStrings().length > 0 },
+    { label: "Expert view", shipped: everyLiveMachineHasAPanel },
+    {
+      label: "Calibration surfaced",
+      shipped: EXPERT_SECTIONS.delicacyCalibration.length > 0,
+    },
+  ];
+
+  it("finds every row it claims to check", () => {
+    for (const { label } of ROWS) {
+      expect(page.includes(`<td>${label}</td>`), `no roadmap row labelled "${label}"`).toBe(true);
+    }
+  });
+
+  it("marks a row built if and only if the code ships it", () => {
+    const wrong: string[] = [];
+    for (const { label, shipped } of ROWS) {
+      const at = page.indexOf(`<td>${label}</td>`);
+      // The state cell is the next cell; read to the end of the row.
+      const rowEnd = page.indexOf("</tr>", at);
+      const row = page.slice(at, rowEnd);
+      const saysBuilt = row.includes(BUILT);
+      const saysPlanned = row.includes(PLANNED);
+      if (saysBuilt === saysPlanned) {
+        wrong.push(`${label}: row carries ${saysBuilt ? "both tags" : "neither tag"}`);
+      } else if (saysBuilt !== shipped) {
+        wrong.push(
+          `${label}: page says "${saysBuilt ? "built" : "planned"}", the code ships ` +
+            `"${shipped ? "built" : "planned"}"`,
+        );
+      }
+    }
+    expect(
+      wrong,
+      'docs/index.html promises "anything marked planned is not built". These break it:' +
+        String.fromCharCode(10) +
+        wrong.join(String.fromCharCode(10)),
     ).toEqual([]);
   });
 });
