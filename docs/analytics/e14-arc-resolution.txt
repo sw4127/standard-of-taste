@@ -1,0 +1,71 @@
+
+=== E14/S1 THE RETEST ARC — WHAT IT CAN RESOLVE [SIMULATED, zero real responses] ===
+Track H. Derived BEFORE the comparison engine or any sentence was written.
+
+Staircase ladders at the SHIPPED session budget. 1200 calibration pairs and
+1200 held-out pairs per ladder. sigma and floor in ladder steps; the factor is
+what the physical quantity (cents, ms, kbps) must change by before the arc may speak.
+
+ladder       sigma  floor  param  false+  param+  pow 2x  pow80  stat  point 
+pitch          1.14   3.60   3.17    2.7%    4.3%   98.7%  72.9%  100%    79%
+timing         1.28   3.94   3.53    2.9%    5.4%   99.2%  77.3%  100%    27%
+lossy/pb1      1.20   3.54   3.32    4.0%    4.5%   98.9%  85.6%  100%    23%
+lossy/pb4      1.13   3.57   3.12    3.8%    4.9%   99.2%  77.0%  100%    29%
+
+WHAT A PERSON MUST DO BEFORE THE ARC MAY SPEAK:
+  pitch        the physical quantity must change by x3.49 to be seen at all, x4.83 to be seen reliably
+  timing       the physical quantity must change by x2.48 to be seen at all, x3.21 to be seen reliably
+  lossy/pb1    the physical quantity must change by x2.04 to be seen at all, x2.59 to be seen reliably
+  lossy/pb4    the physical quantity must change by x2.22 to be seen at all, x2.71 to be seen reliably
+
+'param' is the textbook floor and 'param+' the rate it would really have fired at: 5.4% at worst, over the advertised 5% on 1 of 4 ladders
+and on the prestige test below. A floor that only sometimes keeps its promise is not a
+floor, which is why the shipped one is read off the null distribution instead.
+'stat' is how often the posterior median existed; 'point' how often the result screen
+would have printed a threshold. The gap is the selection the arc avoids by comparing
+the median rather than the printed number.
+
+=== THE SHRINKAGE, STATED [SIMULATED] ===
+R2 measured that a listener who IMPROVES moves toward the ladder floor and picks up its
+truncation, so improvement is understated. This is that effect on the arc's own statistic:
+ladder       true change    observed       shortfall
+pitch           -7.19 steps    -6.92 steps -3.7%
+timing          -7.88 steps    -7.87 steps -0.0%
+lossy/pb1       -7.08 steps    -7.04 steps -0.6%
+lossy/pb4       -7.13 steps    -7.44 steps +4.3%
+A negative shortfall means the arc UNDERSTATES a real improvement. No estimator fixes
+this; only a longer ladder does. It is a limit the copy must carry, not a bug to file.
+
+=== WHAT ANOTHER SESSION BUYS [SIMULATED] — RT-H3(a) ===
+k sessions averaged per side. This is the only way to sharpen the arc without making a
+sitting longer, and it is what makes coming back a real return rather than a badge.
+ladder       k=1      k=2      k=3      k=4       floor, in ladder steps
+pitch            3.37     2.14     1.87     1.63  k=4 is 0.48x of k=1 (arithmetic says 0.50)
+timing           3.68     2.63     2.36     1.90  k=4 is 0.52x of k=1 (arithmetic says 0.50)
+lossy/pb1        3.54     2.45     2.18     1.84  k=4 is 0.52x of k=1 (arithmetic says 0.50)
+lossy/pb4        3.82     2.29     1.95     1.72  k=4 is 0.45x of k=1 (arithmetic says 0.50)
+
+=== PRESTIGE TEST — RETEST ON THE SAME CLIPS [SIMULATED] — 6000 persons ===
+sigma 2.44 points of scale (e6's across-item figure was 2.58 — an upper bound)
+floor 8.0 points of sway before the arc may speak (textbook MDC80 9.7)
+held-out false positive 3.4% · power at twice the floor 98.3%
+A sway that moves from +18% to +14% is INSIDE this floor and must read as no change.
+
+=== DELICACY TRIALS — RETEST ON THE SAME PAIRS [SIMULATED] — 6000 persons ===
+whole session (15 trials): sigma 11.2% of share · floor 40.0% = 6.0 of 15 items before the arc may speak
+held-out false positive 2.2%
+
+family           trials  sigma    floor, in items
+pitch-drift           5    19.4%  4.0 of 5 — expressible, and far too coarse to be worth showing
+timing-smear          5    19.3%  4.0 of 5 — expressible, and far too coarse to be worth showing
+lossy-artifact        5    19.6%  4.0 of 5 — expressible, and far too coarse to be worth showing
+
+ASKING THREE TIMES: a person who did not change sees at least one family called "moved"
+2.5% of the time — BELOW a single family's 5%, because the floor derived here
+is conservative enough to absorb it. The multiplicity objection does not hold.
+
+WHAT THIS DOES AND DOES NOT LICENSE. Both reasons the Track H plan gave the PM for
+RT-H2(a) are dead: the per-family arc is not impossible, and asking three times is not
+what makes it unsafe. The surviving objection is coarseness — four of a family's five
+items, 6 of 15 for the whole session — so the only movement it can ever
+report is a near-total swing. RT-H2 goes back to the PM on the corrected numbers.
