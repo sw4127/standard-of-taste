@@ -168,12 +168,19 @@ export function thresholdArc(entries: readonly ThresholdArcEntry[]): Claim<ArcRe
   const latest = entries[entries.length - 1];
 
   /*
-   * HALF OF ALL LOSSY RETESTS LAND ON A DIFFERENT RECORDING, and comparing them
-   * would be the headline error this instrument already knows about: a fixed
-   * bitrate does up to 1.999x different damage across windows, so "64 kbps on
-   * pb1" and "64 kbps on pb4" are not the same demand on an ear. The staircase
-   * picks its recording from the session seed, so this is not a rare edge — it
-   * is the ordinary outcome, and it has to be refused rather than averaged.
+   * COMPARING TWO RECORDINGS WOULD BE THE HEADLINE ERROR THIS INSTRUMENT
+   * ALREADY KNOWS ABOUT: a fixed bitrate does up to 1.999x different damage
+   * across windows, so "64 kbps on pb1" and "64 kbps on pb4" are not the same
+   * demand on an ear. It has to be refused rather than averaged.
+   *
+   * THIS WAS THE ORDINARY OUTCOME AND IS NOW THE EXCEPTION — a claim written in
+   * this comment one slice before E14/S4 made it false, corrected here rather
+   * than left to age. The staircase picked its recording from the session seed,
+   * so two sittings matched by coin flip and 55% of pairs were refused,
+   * measured end to end. `materialForSession` now reuses whatever this browser
+   * was last measured on (RT-H4 a), and the same measurement reports 0%. The
+   * refusal stays because it is still reachable: history recorded before the
+   * pin shipped, and a browser whose stored session names a retired recording.
    *
    * A family mismatch cannot happen through the store, which keys threshold
    * slots by ladder slug. It is defended anyway: the alternative is a timing

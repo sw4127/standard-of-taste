@@ -53,6 +53,7 @@ import {
   cooldownBody,
   COOLDOWN_ALTERNATIVE,
   COOLDOWN_DEVICE_NOTE,
+  MATERIAL_REUSE_NOTE,
   SNACK_LEAD,
   SNACK_LINE,
   SNACK_CTA,
@@ -62,6 +63,7 @@ import { recordResult } from "@/lib/result-store";
 import { POOL_VERSIONS } from "@/lib/result-recall";
 import ThresholdResult from "./ThresholdResult";
 import { SLUG_BY_FAMILY } from "./families";
+import { materialForSession } from "@/lib/session-material";
 
 const ICE = THRESHOLD_VIOLET;
 const ICE_GLOW = THRESHOLD_VIOLET_GLOW;
@@ -316,12 +318,23 @@ export default function ThresholdFlow({ family }: { family: string }) {
               without the material it was measured on.
             </p>
           ) : null}
+          {/* E14/S4 (RT-H4 a): the retest reuses the recording, and says so. */}
+          {isSourceLocked(family) ? (
+            <p className="mt-3 text-sm text-muted">{MATERIAL_REUSE_NOTE}</p>
+          ) : null}
           <button
             type="button"
             disabled={!cooldownKnown}
             onClick={() => {
               const seed = newSeed();
-              const started = startSession(family, seed);
+              /*
+               * THE RECORDING COMES FROM THE STORE FIRST, THE SEED SECOND
+               * (E14/S4, RT-H4 a). Read in the click handler for the same
+               * reason the seed is: a `localStorage` read during render gives
+               * the server one answer and the browser another, and here the two
+               * would describe sessions on DIFFERENT MUSIC.
+               */
+              const started = startSession(family, seed, materialForSession(family, seed));
               /*
                * A SESSION'S DATA BEGINS WHEN THE SESSION DOES, NOT WHEN THE
                * COMPONENT MOUNTS (E10/S3, Track F3).

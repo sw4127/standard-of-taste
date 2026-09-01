@@ -25,6 +25,12 @@ floor, which is why the shipped one is read off the null distribution instead.
 would have printed a threshold. The gap is the selection the arc avoids by comparing
 the median rather than the printed number.
 
+THE FLOORS THIS DERIVATION LICENSES, at the precision `arc.ts` ships them:
+  pitch        3.5963 ladder steps
+  timing       3.9375 ladder steps
+  lossy/pb1    3.5395 ladder steps
+  lossy/pb4    3.5664 ladder steps
+
 === THE SHRINKAGE, STATED [SIMULATED] ===
 R2 measured that a listener who IMPROVES moves toward the ladder floor and picks up its
 truncation, so improvement is understated. This is that effect on the arc's own statistic:

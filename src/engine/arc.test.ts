@@ -247,12 +247,18 @@ describe("E14/S2 — what the arc refuses", () => {
   });
 
   /**
-   * HOW OFTEN THE LOSSY ARC IS REFUSED IN ORDINARY USE, reported rather than
-   * assumed. The staircase picks its recording from the session seed, so two
-   * lossy sittings land on the same material only by luck — this is the share
-   * of people who will be told the comparison cannot be made.
+   * WHAT THE SEED ALONE WOULD HAVE DONE — and this test's NAME used to claim
+   * more than it measures.
+   *
+   * It was called "how often a lossy retest lands on a different recording",
+   * which was true when written and false one slice later: E14/S4 stopped
+   * retests going through `pickSourceForSeed` at all. The measurement below
+   * never changed — it always described the SEED — so the test would have gone
+   * on passing while its name asserted something about retests that is no
+   * longer so. Renamed rather than deleted, because it is still the number that
+   * justifies the pin; `session-material.test.ts` measures what retests do now.
    */
-  it("reports how often a lossy retest lands on a different recording", () => {
+  it("measures the coin flip the seed alone would have left in place", () => {
     /*
      * SEEDED THE WAY THE PRODUCT SEEDS, and asked through the product's own
      * function. The first version of this test did neither: it reimplemented
@@ -275,13 +281,15 @@ describe("E14/S2 — what the arc refuses", () => {
     }
     const rate = same / N;
     console.log(
-      `[E14/S2] ${sources.length} shipping recordings · a lossy retest lands on the SAME one ` +
-        `${(100 * rate).toFixed(0)}% of the time; the rest are refused as different material`,
+      `[E14/S2] ${sources.length} shipping recordings · picking from the seed alone would land on ` +
+        `the SAME one ${(100 * rate).toFixed(0)}% of the time — the coin flip E14/S4 removed`,
     );
-    // The claim in `arc.ts` is that this is an ORDINARY outcome, not an edge
-    // case. Both bounds, so the test notices either kind of drift.
-    expect(rate, "a lossy retest almost always matches — arc.ts overstates the refusal").toBeLessThan(0.75);
-    expect(rate, "a lossy retest almost never matches — the arc is useless there").toBeGreaterThan(0.25);
+    // Both bounds, so drift in either direction is noticed. If this ever
+    // approaches 1, the pin has stopped being what makes a lossy retest
+    // comparable, and `session-material.ts`'s reasoning needs revisiting rather
+    // than inheriting.
+    expect(rate, "the seed now nearly always matches — the pin's justification has moved").toBeLessThan(0.75);
+    expect(rate, "the seed almost never matches — expected about one in the number of recordings").toBeGreaterThan(0.25);
   });
 
   it("refuses a ladder it has no derived floor for", () => {

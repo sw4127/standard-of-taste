@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { EXPERT_PANEL } from "./vocabulary/expert";
-import { COOLDOWN_DEVICE_NOTE } from "./staircase/copy";
+import { COOLDOWN_DEVICE_NOTE, MATERIAL_REUSE_NOTE } from "./staircase/copy";
 import { FORGET } from "./forget";
 
 /**
@@ -73,6 +73,19 @@ const SURFACES: Surface[] = [
     rendersConstant: "{COOLDOWN_DEVICE_NOTE}",
   },
   {
+    /*
+     * E14/S4 (RT-H4 a). A SECOND ENTRY FOR THE SAME FILE, because the flow now
+     * remembers a second, different thing: not only that you sat a session this
+     * week, but WHICH RECORDING you were measured on. One disclosure covering
+     * both would have let either fact lose its sentence without failing.
+     */
+    file: "src/app/threshold/ThresholdFlow.tsx",
+    claims: "which recording this browser was last measured on, and reuses it",
+    disclosure: () => MATERIAL_REUSE_NOTE,
+    mustSay: [["this browser"], ["no account", "no accounts"], ["clearing", "cleared"]],
+    rendersConstant: "{MATERIAL_REUSE_NOTE}",
+  },
+  {
     // E13/S4. It reads nothing, so the discovery scan below cannot see it —
     // and it is the surface whose whole subject is what we remember about you.
     // Listed by hand precisely because the automatic half would miss it.
@@ -100,6 +113,16 @@ const READ_ACCESSORS = [
   "cooldownDaysLeft",
   "cooldownFor",
   "readLastCompleted",
+  /*
+   * E14/S4. `pinnedMaterial` reads the stored session to decide which recording
+   * a retest runs on, and `materialForSession` is the door every surface goes
+   * through. Listed so a FUTURE component reaching for either is caught by the
+   * scan — the flow that uses them today is already a disclosure site, so this
+   * line protects the case nobody has written yet, which is the only case a
+   * discovery scan is for.
+   */
+  "pinnedMaterial",
+  "materialForSession",
 ];
 
 /**

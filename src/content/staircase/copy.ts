@@ -314,6 +314,31 @@ export const COOLDOWN_DEVICE_NOTE =
   "browsing data, and the gym has never met you.";
 
 /**
+ * WHY A RETEST HEARS THE SAME MUSIC (E14/S4, PM ruling RT-H4 a).
+ *
+ * The machine used to pick its recording from the session seed, so coming back
+ * a week later landed on the same music about half the time — and two sittings
+ * on different recordings cannot be compared, because a fixed bitrate does up
+ * to twice as much damage to one as to another. It now reuses whatever this
+ * browser was measured on before.
+ *
+ * THAT IS A THING THE PRODUCT REMEMBERS ABOUT YOU, so it says so here, on the
+ * screen where the choice is being made rather than in a footnote afterwards.
+ * The disclosure guard holds this constant to naming the browser, the absence
+ * of an account, and what clearing does — the same three facts the cooldown
+ * note carries, because it is the same store and the same honest limit.
+ *
+ * It states the RULE rather than the current state, which is why it needs no
+ * storage read during render. Reading `localStorage` while rendering is what
+ * put a hydration mismatch in this flow's console once already (see `newSeed`),
+ * and the conditional version of this sentence would have needed one.
+ */
+export const MATERIAL_REUSE_NOTE =
+  "If you have measured this in this browser before, the retest reuses the same recording, so the " +
+  "two sittings can be compared — no account, nothing on a server. Clearing your browsing data " +
+  "starts you on a fresh one.";
+
+/**
  * THE THRESHOLD SHARE CARD (E6/S15, PM ruling RT-108a a).
  *
  * The Gym's flagship instrument had no share affordance at all, while the two
