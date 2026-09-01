@@ -293,6 +293,34 @@ describe("a slot keeps a chronological history", () => {
     expect(slotSignature("bias")).not.toBe("-");
   });
 
+  /**
+   * THE EXPORT LIST IS A LOAD-BEARING FACT, so it is pinned (E13/S5).
+   *
+   * `published-text.test.ts` holds the project page's "retest arc" row to
+   * `planned` with the predicate "something outside this module calls
+   * `readHistory`". That is only sound while `readHistory` is the ONLY way to
+   * reach more than the latest session — add a second one and an arc could
+   * ship while a public page still called it planned, with every test green.
+   *
+   * Adding an export here is fine. Doing it silently is not: this fails, and
+   * the failure points at the roadmap guard.
+   */
+  it("keeps readHistory the only door to more than the latest session", () => {
+    expect(Object.keys(resultStore).sort()).toEqual(
+      [
+        "HISTORY_CAP",
+        "STORE_VERSION",
+        "forgetResult",
+        "lastRecordedAt",
+        "readHistory",
+        "readResult",
+        "recordResult",
+        "slotSignature",
+        "subscribeResults",
+      ].sort(),
+    );
+  });
+
   it("exposes no way to ask for a best, a maximum or a personal record", () => {
     /*
      * WORD MEMBERSHIP, NOT SUBSTRING. A substring test flagged `recordResult`

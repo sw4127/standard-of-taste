@@ -659,18 +659,27 @@ describe("the README links to routes that exist", () => {
  * and only if the predicate holds. A row that ships later fails this until
  * the page is updated, and a row marked built that regresses fails it too.
  *
- * TWO ROWS ARE DELIBERATELY UNGUARDED, and saying so is the point:
+ * ONE ROW IS STILL DELIBERATELY UNGUARDED, and saying so is the point:
  *
- *  - RETEST ARC. Nothing in the code answers "does history exist" yet.
- *    RT-G was ruled (b) device-local on 2026-09-01, so Track G will create
- *    that artifact; keying on a path that does not exist would be a guard
- *    asserting its own assumption.
- *  - COMPARISON. Same shape: the instrument does not exist, and the only
- *    honest predicate — "a fourth machine appears in MACHINES" — is a guess
- *    about how it will be built.
+ *  - COMPARISON. The instrument does not exist, and the only honest predicate
+ *    — "a fourth machine appears in MACHINES" — is a guess about how it will
+ *    be built. It is genuinely planned today, so the page is correct about it;
+ *    when it ships, this comment is the instruction to add its predicate.
  *
- * Both are genuinely planned today, so the page is correct about them; when
- * either ships, this comment is the instruction to add its predicate.
+ * THE RETEST ARC ROW IS NOW GUARDED (E13/S5), and it is worth being exact
+ * about what changed, because Track G did NOT ship the arc.
+ *
+ * E13/S1 gave the store a chronological history, so the artifact this comment
+ * was waiting for exists. But history existing is not the arc: nothing yet
+ * READS more than the latest session, so the row must still say "planned", and
+ * a predicate keyed on "does a history store exist" would have flipped it to
+ * "built" and made the page claim a feature nobody can use.
+ *
+ * So the predicate is "something outside the store reads the history". That is
+ * false today and is necessarily true the moment an arc ships, because
+ * `readHistory` is the ONLY exported way to reach more than the latest
+ * session — which is itself asserted below, so a new accessor cannot quietly
+ * become a way around this guard.
  */
 describe("the project page's roadmap agrees with the code", () => {
   const page = readFileSync("docs/index.html", "utf8");
@@ -688,6 +697,25 @@ describe("the project page's roadmap agrees with the code", () => {
     );
   });
 
+  /**
+   * Files that read the session history, other than the store that owns it.
+   * Tests are excluded: a suite proving `readHistory` works is not the product
+   * using it, and counting them would mark the arc shipped on the day S1
+   * landed.
+   */
+  const historyReaders = (): string[] => {
+    const found: string[] = [];
+    for (const entry of readdirSync("src", { recursive: true, encoding: "utf8" })) {
+      if (typeof entry !== "string") continue;
+      if (!entry.endsWith(".ts") && !entry.endsWith(".tsx")) continue;
+      if (entry.includes(".test.")) continue;
+      const file = "src/" + entry.split(String.fromCharCode(92)).join("/");
+      if (file === "src/lib/result-store.ts") continue;
+      if (readFileSync(file, "utf8").includes("readHistory(")) found.push(file);
+    }
+    return found;
+  };
+
   /** Row label as printed, and what the code says about it. */
   const ROWS: Array<{ label: string; shipped: boolean }> = [
     { label: "Three instruments", shipped: MACHINES.filter((m) => m.live).length >= 3 },
@@ -696,6 +724,13 @@ describe("the project page's roadmap agrees with the code", () => {
     {
       label: "Calibration surfaced",
       shipped: EXPERT_SECTIONS.delicacyCalibration.length > 0,
+    },
+    {
+      // The label carries markup, so it is written exactly as the page prints
+      // it — my own sweep pattern once skipped this row for that reason and I
+      // briefly believed it was missing.
+      label: "Retest arc — Hume's <em>practice</em>",
+      shipped: historyReaders().length > 0,
     },
   ];
 

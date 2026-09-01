@@ -33,11 +33,16 @@ the refusals and what they cost, is at `/method`.
 4. **No human gate that one person has to perform.** Item quality is decided by measurement
    (Layer A) and by item parameters (Layer B), both below. A gate only the owner can discharge is
    debt: it blocks the work and cannot be run by anyone else.
-5. **State: none yet, and device-local when it arrives.** Results live in URLs; sessions are
-   self-contained. Persistence was ruled on 2026-09-01 (RT-G) to be **device-local history — no
-   accounts, no database, no recurring bill** — and it is *not built*. The 7-day cooldown already
-   uses that mechanism. History that lives in one browser can vanish, and the product must say so
-   wherever an arc is shown.
+5. **State: device-local, and nowhere else.** Results live in URLs; sessions are self-contained;
+   and since 2026-09-01 (RT-G) a browser also keeps a **chronological history of the sessions
+   finished on it — no accounts, no database, no recurring bill, no signup wall.** What is stored
+   is the raw answers, never a computed score, so a stored session and a shared link are the same
+   bytes through the same engine and nothing here can be edited into a better result. There is no
+   way to ask the store for a *best* session, only for the latest or for all of them in time
+   order: choosing which of your own measurements to report is selection on the answer. The 7-day
+   retest gate reads that history rather than keeping a timestamp of its own. History that lives
+   in one browser can vanish, and the product says so on every surface that shows it — with a
+   control on those same surfaces, and on the privacy page, that ends it.
 
 ## System map
 
@@ -67,6 +72,19 @@ src/content/delicacy/  Eighteen pairs: three practice trials with the answer
 src/content/staircase/ Ladder rungs, families and their units
 src/content/vocabulary/  The plain-language layer — templates only
 src/content/flaw-families.ts  The three families, named for a creator
+
+src/lib/               Device-local state, and nothing else persists anywhere
+  result-store.ts      The ONLY thing that writes to localStorage. One slot per
+                       instrument (per ladder for the staircase), each a
+                       chronological list of raw answers, capped at 24, oldest
+                       evicted. No accessor can return a "best" session
+  result-recall.ts     Those answers back through the same engines the share
+                       pages use, so a recalled session and a shared link
+                       cannot disagree
+  retest-cooldown.ts   The 7-day per-family gate. Reads the history; writes
+                       nothing
+  forget-device.ts     Sweeps the whole `gym.` namespace and the in-flight
+                       session state — the clear control's engine
 
 src/app/bias/          Hume frame → blind → bridge → labeled → reveal →
                        MANDATORY debrief (swap disclosure + attributions)
@@ -159,7 +177,8 @@ contracts, license gates, the voice checks, and a set of guards that hold the pu
 
 ## Roadmap
 
-1. **The retest arc** — Hume's *practice*. Needs the device-local store ruled in RT-G; compares a
+1. **The retest arc** — Hume's *practice*. The store it needs now exists and is keeping history;
+   what does not exist is anything that READS more than the latest session. It will compare a
    session against the same person's earlier sessions per family, in comparative sentences, with a
    movement smaller than measurement noise reported as *no change you could hear*.
 2. **The Comparison instrument** — Hume's fifth. Needs "breadth" defined in units the product can
