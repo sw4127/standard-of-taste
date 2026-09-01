@@ -233,13 +233,45 @@ export function materialLine(result: StaircaseResult): string | null {
   );
 }
 
-/** What a person can do next. Never a promise about what it will do to them. */
+/**
+ * What a person can do next. Never a promise about what it will do to them.
+ *
+ * BOTH BRANCHES WERE FALSE BY E14/S6, AND ONE OF THEM CONTRADICTED THE PANEL
+ * DIRECTLY UNDERNEATH IT (PM ruling RT-H5 a).
+ *
+ * They read "if the rung you catch moves, that is your ear moving" and "a
+ * second session narrows the range". Both were written before anything
+ * compared two sittings, and the arc has since measured what is actually true:
+ * a rung moving is NOT your ear moving — on this ladder the threshold has to
+ * change by about three and a half times before the difference can be told
+ * from ordinary run-to-run wobble, and the arc refuses to call anything
+ * smaller. The first sentence therefore told a returning reader to draw
+ * exactly the conclusion the panel below it exists to prevent.
+ *
+ * The second was false in a quieter way. Pooling sharpens the ARC; the band on
+ * this screen is still computed from the one session in front of you, so a
+ * second sitting does not narrow it. What another sitting narrows is what the
+ * comparison can see — which is worth saying, because it is the only return
+ * this product offers for coming back.
+ */
 export function nextStepLine(result: StaircaseResult): string {
-  const unit = shortUnit(result.unit);
+  /*
+   * NEITHER BRANCH MAY COUNT. This line is chosen by the shape of the BAND, and
+   * knows nothing about how many sittings are stored — so "the two sittings"
+   * printed above a panel reading "This rests on 4 sittings" was the first
+   * draft's own contradiction, caught by rendering it. Both are written to be
+   * true at one sitting and at four.
+   */
   if (result.band.heardAt !== null && result.band.missedAt !== null) {
-    return `Come back in a week and run it again. If the rung you catch moves, that is your ear moving, in ${unit}.`;
+    return (
+      `Come back in a week and run it again. This screen compares your sittings against each other ` +
+      `— and only calls it a change when the gap clears what this ladder can tell from noise.`
+    );
   }
-  return `Come back in a week and run it again — a second session narrows the range, because it is more trials on the same ear.`;
+  return (
+    `Come back in a week and run it again. A single session cannot say whether your ear has moved: ` +
+    `the comparison needs at least two, and every one after that lets it see a smaller change.`
+  );
 }
 
 /** Everything the result screen says, assembled in reading order. */
