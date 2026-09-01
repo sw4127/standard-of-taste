@@ -37,7 +37,20 @@ export type EvidenceGap =
   /** The comparison needs more trials per family than the pool presents. */
   | "contrast-below-noise"
   /** The two instruments do not measure this family in the same quantity. */
-  | "no-shared-axis";
+  | "no-shared-axis"
+  /* --- the retest arc (E14/S2, Track H). Same vocabulary on purpose: a new
+     surface must not be able to invent a laxer refusal of its own. --- */
+  /** Fewer than two comparable sessions on this device. */
+  | "too-few-sessions"
+  /** Two sessions that are not measuring the same thing — usually a lossy
+      retest that landed on a different recording, which is the ORDINARY
+      outcome there rather than an edge case. */
+  | "different-material"
+  /** No floor has been derived for this ladder, so no change may be called. */
+  | "no-arc-floor"
+  /** This instrument is too coarse to show change at the shipped length
+      (delicacy, PM ruling RT-H2b a). */
+  | "arc-instrument-unsupported";
 
 export type Claim<T> = { ok: true; value: T } | { ok: false; gap: EvidenceGap };
 

@@ -100,6 +100,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { observer as obs, pCorrect, rng, type Observer } from "@/analytics/observer";
 import { fitPosterior, fitThreshold } from "@/engine/threshold-fit";
+import { ARC_FLOORS, floorKey } from "@/engine/arc";
 import { eligibleSources } from "@/engine/staircase-pool";
 import {
   answer,
@@ -241,6 +242,9 @@ const moved = (o: Observer, steps: number, unitLog: number): Observer => ({
 
 interface Cell {
   name: string;
+  /** Carried so the shipped-floor pin can build the same key `arc.ts` uses. */
+  family: string;
+  sourceId?: string;
   unitLog: number;
   /** Run-to-run SD of one session's estimate, in ladder steps. */
   sigma: number;
@@ -331,6 +335,8 @@ function measureLadder(name: string, family: string, sourceId: string | undefine
 
   return {
     name,
+    family,
+    sourceId,
     unitLog,
     sigma,
     mdcParametric,
@@ -401,6 +407,31 @@ describe("E14/S1 — what a retest can resolve on the staircase ladders [SIMULAT
       say("'stat' is how often the posterior median existed; 'point' how often the result screen");
       say("would have printed a threshold. The gap is the selection the arc avoids by comparing");
       say("the median rather than the printed number.");
+
+      say("");
+      say("THE FLOORS THIS DERIVATION LICENSES, at the precision `arc.ts` ships them:");
+      for (const c of cells) say(`  ${pad(c.name, 12)} ${c.floor.toFixed(4)} ladder steps`);
+
+      /*
+       * THE LOOP IS CLOSED HERE (E14/S2). `arc.ts` ships these numbers as
+       * constants, and a constant copied out of a simulation is a fact stored
+       * twice — the defect this repo has hit at the rung table, the window plan
+       * and the damage field. This is the second copy checking itself against
+       * the first, so a change to the ladder, the estimator or the session
+       * budget fails HERE, pointing at the constant, instead of quietly
+       * shipping a floor that no longer describes the instrument.
+       *
+       * The derivation is fully seeded, so equality to four decimals is
+       * reproducible rather than lucky.
+       */
+      for (const c of cells) {
+        const shipped = ARC_FLOORS[floorKey(c.family, c.sourceId)];
+        expect(shipped, `arc.ts ships no floor for ${c.name}`).toBeDefined();
+        expect(
+          shipped,
+          `arc.ts ships ${shipped} for ${c.name}; this derivation now says ${c.floor.toFixed(4)}`,
+        ).toBeCloseTo(c.floor, 4);
+      }
 
       for (const c of cells) {
         // (i) the parametric formula is the right ORDER for this distribution
@@ -536,6 +567,12 @@ describe("E14/S1 — what a retest can resolve on the fixed-pool instruments [SI
 
     expect(floor).toBeGreaterThan(MDC_FACTOR * sigma * 0.8);
     expect(floor).toBeLessThan(MDC_FACTOR * sigma * 1.2);
+    // The same loop closure as the ladders: `arc.ts` ships this number, and the
+    // ladder pin above cannot see it because the prestige test has no ladder.
+    expect(
+      ARC_FLOORS.bias,
+      `arc.ts ships ${ARC_FLOORS.bias} points of sway; this derivation now says ${floor}`,
+    ).toBeCloseTo(floor, 4);
     expect(falsePositive, "prestige: fires on a person who did not change").toBeLessThanOrEqual(
       ADVERTISED_FALSE_POSITIVE,
     );
