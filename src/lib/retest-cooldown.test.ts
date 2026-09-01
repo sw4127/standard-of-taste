@@ -225,9 +225,17 @@ describe("the cooldown is derived from the session history, not a key of its own
    * is no other way to prove a module does NOT do something: a behavioural test
    * can only show that the writes it looked for are absent.
    */
-  it("writes nothing at all — the module has no setItem", () => {
+  it("writes nothing at all — no form of storage mutation appears in the module", () => {
     const source = readFileSync("src/lib/retest-cooldown.ts", "utf8");
-    expect(source.includes("setItem")).toBe(false);
+    /*
+     * EVERY SPELLING, not just the obvious one. The first version of this
+     * checked for `setItem` alone, which a write done as `localStorage[k] = v`
+     * walks straight past — a needle narrower than the rule it claims to
+     * enforce is the failure this repository keeps finding in its own guards.
+     */
+    const mutations = ["setItem", "removeItem", ".clear()", "localStorage["];
+    const found = mutations.filter((m) => source.includes(m));
+    expect(found, `retest-cooldown.ts must not write storage; found: ${found.join(", ")}`).toEqual([]);
   });
 
   it("is the only thing the threshold flow records on completion", () => {
