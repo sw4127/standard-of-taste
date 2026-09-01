@@ -25,7 +25,7 @@
  */
 
 import { useMemo, useSyncExternalStore } from "react";
-import { readResult, subscribeResults, type StoredPayload } from "@/lib/result-store";
+import { readResult, slotSignature, subscribeResults, type StoredPayload } from "@/lib/result-store";
 import { POOL_VERSIONS, recallBias, recallDelicacy, recallThreshold } from "@/lib/result-recall";
 import { replicationCheck } from "@/engine/replication";
 import type { ReplicationCheck } from "@/engine/replication";
@@ -36,17 +36,19 @@ import { THRESHOLD_SLUGS, familyForSlug } from "@/app/threshold/families";
 
 /**
  * A cheap, stable description of what is stored. Recomputing the whole dossier
- * on every snapshot call would be both slow and unstable; this touches the same
- * keys and returns a primitive.
+ * on every snapshot call would be both slow and unstable; this asks the store
+ * for a primitive per slot.
+ *
+ * IT USED TO SPELL THE KEYS OUT HERE and compare byte lengths, which was a
+ * fourth copy of the key format and stopped being a sound change signal when a
+ * slot became a capped list (see `slotSignature`).
  */
 function signature(): string {
-  try {
-    if (typeof localStorage === "undefined") return "";
-    const keys = ["gym.result.bias", "gym.result.delicacy", ...THRESHOLD_SLUGS.map((s) => `gym.result.threshold.${s}`)];
-    return keys.map((k) => localStorage.getItem(k)?.length ?? 0).join(".");
-  } catch {
-    return "";
-  }
+  return [
+    slotSignature("bias"),
+    slotSignature("delicacy"),
+    ...THRESHOLD_SLUGS.map((s) => slotSignature("threshold", s)),
+  ].join(".");
 }
 
 /** The server has no storage, and says so rather than guessing. */

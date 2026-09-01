@@ -5,6 +5,7 @@ import {
   forgetResult,
   readHistory,
   readResult,
+  slotSignature,
   recordResult,
   type StoredPayload,
 } from "./result-store";
@@ -261,6 +262,37 @@ describe("a slot keeps a chronological history", () => {
    * It cannot stop someone writing `Math.max` over `readHistory` elsewhere —
    * it stops the store itself from offering it as a convenience.
    */
+  /**
+   * THE CROSS-TAB SIGNAL, PINNED AT THE EXACT POINT IT USED TO GO SILENT.
+   *
+   * `AcrossSessions` compared byte lengths. At the cap, appending a session
+   * evicts the oldest, and for the prestige test — whose payloads are all
+   * sixteen single digits and whose timestamps are all thirteen digits — the
+   * envelope is the same size afterwards. 3716 bytes before, 3716 after. A tab
+   * open in another window would have kept rendering evicted sessions.
+   */
+  it("changes its signature when a session is appended AT the cap", () => {
+    for (let i = 1; i <= HISTORY_CAP; i += 1) {
+      recordResult("bias", POOL_VERSIONS.bias, biasSession(2).payload, 1756000000000 + i);
+    }
+    const before = slotSignature("bias");
+    const bytesBefore = localStorage.getItem("gym.result.bias")!.length;
+
+    recordResult("bias", POOL_VERSIONS.bias, biasSession(2).payload, 1756000000000 + HISTORY_CAP + 1);
+    const after = slotSignature("bias");
+    const bytesAfter = localStorage.getItem("gym.result.bias")!.length;
+
+    // The trap: the raw size genuinely does not move.
+    expect(bytesAfter).toBe(bytesBefore);
+    expect(after).not.toBe(before);
+  });
+
+  it("signs an absent slot differently from an empty one", () => {
+    expect(slotSignature("bias")).toBe("-");
+    localStorage.setItem("gym.result.bias", JSON.stringify({ v: STORE_VERSION, sessions: [] }));
+    expect(slotSignature("bias")).not.toBe("-");
+  });
+
   it("exposes no way to ask for a best, a maximum or a personal record", () => {
     /*
      * WORD MEMBERSHIP, NOT SUBSTRING. A substring test flagged `recordResult`

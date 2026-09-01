@@ -267,6 +267,35 @@ export function forgetResult(instrument: StoredInstrument, slug?: string): void 
 }
 
 /**
+ * A CHEAP, STABLE DESCRIPTION OF ONE SLOT, for `useSyncExternalStore`.
+ *
+ * The hook re-renders forever unless the snapshot is referentially stable, so
+ * this must return a primitive rather than the sessions themselves. It lived in
+ * `AcrossSessions` as `localStorage.getItem(key).length` and MOVED HERE IN
+ * E13/S1 because a byte length stopped being a sound change signal the moment a
+ * slot became a capped list: at the cap, appending a 25th session evicts the
+ * first, and for an instrument whose payloads are all the same width — the
+ * prestige test, sixteen single digits — the envelope comes back the SAME
+ * NUMBER OF BYTES. Measured: 3716 before and 3716 after. The other tab would
+ * have gone on showing sessions that had already been evicted.
+ *
+ * Count and newest timestamp both move when a session is recorded, and neither
+ * can be silently cancelled out by the other.
+ */
+export function slotSignature(instrument: StoredInstrument, slug?: string): string {
+  try {
+    if (typeof localStorage === "undefined") return "";
+    const raw = localStorage.getItem(keyFor(instrument, slug));
+    if (raw === null) return "-";
+    const all = parseEnvelope(raw);
+    const newest = all.length === 0 ? 0 : all[all.length - 1].savedAt;
+    return `${all.length}@${newest}#${raw.length}`;
+  } catch {
+    return "";
+  }
+}
+
+/**
  * Fires when ANOTHER tab writes — the person who finished the prestige test in
  * one window while a result page sits open in another. Same reason and same
  * shape as `subscribeCooldown`.
