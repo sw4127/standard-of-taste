@@ -188,6 +188,66 @@ describe("E14/S3 — what the sentences may not do", () => {
     expect(counting.test("Both sittings were read from this browser only")).toBe(true);
   });
 
+  /**
+   * A READING MAY NOT SAY HOW MANY SITTINGS IT RESTS ON — only `pooledLine` may,
+   * because it is the only sentence that is given the count.
+   *
+   * THIS FILE HAS SHIPPED THE SAME DEFECT TWICE. E14/S3 wrote "Between these two
+   * sittings" when a reading compared exactly two; E14/S6 pooled up to four and
+   * every one of those sentences silently became false. Nothing failed — it was
+   * found by reading the printed deck, again. The `refuse-different-material`
+   * sentence is exempt: two sessions on two recordings is precisely what it is
+   * about, and there is nothing to pool.
+   */
+  it("lets no reading state a number of sittings it does not know", () => {
+    /*
+     * NO BACKSLASH ESCAPES IN THIS PATTERN, AND THAT IS NOT A STYLE CHOICE.
+     * The first version was scripted through a shell as a word-boundary regex
+     * and the transport ate one level of escaping, writing literal 0x08
+     * BACKSPACE bytes into the file. The regex then matched nothing, its own
+     * self-check failed, and the guard would otherwise have shipped blind.
+     * These phrases need no boundaries, so the pattern has none.
+     *
+     * AND A BARE "both" WAS TOO BLUNT. It flagged "Both directions count:
+     * marking a labelled clip down is still the name deciding" — a sentence
+     * about the two DIRECTIONS of sway, not about how many sittings there
+     * were. Same trap `voice.ts` documents one rule over, where a norm guard
+     * flagged the badge that exists to deny a norm: a substring cannot tell the
+     * claim from its denial, so the needle names what it actually forbids.
+     */
+    const counting = /these two|your two|the two|last time|this time|both sittings|both sessions/i;
+    for (const [name, claim] of Object.entries(claims)) {
+      if (!claim.ok) continue;
+      for (const line of arcLines(claim)) {
+        // The pooled line is handed the counts and is the one place they belong.
+        if (line.startsWith("This rests on")) continue;
+        expect(counting.test(line), `${name} states a count it cannot know: ${line}`).toBe(false);
+      }
+    }
+    // The needle must see the sentence it was written for.
+    expect(counting.test("Between these two pitch drift sittings, you now catch")).toBe(true);
+    expect(counting.test("The label moved you +20% last time and +15% this time")).toBe(true);
+    expect(counting.test("Across your pitch drift sittings, you now catch")).toBe(false);
+  });
+
+  /** The pooled line is the one sentence that may — and must — state the count. */
+  it("names the sittings behind a pooled reading, and what they bought", () => {
+    const pooled = claims["threshold-pooled"];
+    expect(pooled.ok).toBe(true);
+    if (!pooled.ok) return;
+    const line = arcLines(pooled).find((l) => l.startsWith("This rests on"));
+    expect(line, "a four-sitting reading does not say what pooling bought").toBeTruthy();
+    const total = pooled.value.pooled.older + pooled.value.pooled.newer;
+    expect(line).toContain(`${total} sittings`);
+    // It must show the floor MOVING, in both numbers, or the reader is told a
+    // benefit they cannot check.
+    const solo = pooled.value.soloFloorFactor ?? 0;
+    const now = pooled.value.floorFactor ?? 0;
+    expect(solo, "pooling did not lower the floor").toBeGreaterThan(now);
+    expect(line).toContain(`${solo.toFixed(1)}x`);
+    expect(line).toContain(`${now.toFixed(1)}x`);
+  });
+
   it("the two prose guards above actually fire", () => {
     const units = /\d+(\.\d+)?\s*(cents?|ms|milliseconds?|kbps)\b/i;
     expect(units.test("your threshold went from 34 cents to 12 cents")).toBe(true);

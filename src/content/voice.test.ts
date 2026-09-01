@@ -673,6 +673,7 @@ describe("hazard gate — the vocabulary layer is reached, not merely clean", ()
       "threshold-closer",
       "threshold-further",
       "threshold-off-ladder",
+      "threshold-pooled",
       "bias-no-change",
       "bias-closer",
       "bias-further",

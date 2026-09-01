@@ -35,7 +35,15 @@
  * there the compared statistic IS the printed headline, so the two surfaces
  * cannot disagree.
  *
- * D1 / N3. Every sentence is about two of this person's own sessions. There is
+ * NOTHING MAY COUNT, AND THIS FILE HAS NOW BROKEN THAT RULE TWICE. E14/S3
+ * wrote "Between these two sittings" when the arc compared exactly two; E14/S6
+ * made a reading rest on up to four and every one of those sentences became
+ * false, while the tests stayed green. Both were found by reading the rendered
+ * deck. The readings are now arity-free — "across your sittings", "before" and
+ * "since" — and `arc.test.ts` refuses a counting word in any of them. Only the
+ * pooled line may state a number, because it is the one that knows.
+ *
+ * D1 / N3. Every sentence is about this person's own sessions. There is
  * no cohort, no percentile, and no comparison with anybody else — an arc
  * compares one person to themselves, which is the only comparison this product
  * may make. Nothing here promises that practice will work.
@@ -52,8 +60,7 @@ import { familyLabel } from "@/content/staircase/copy";
  * ago, and here is how it compares". So the limit is stated in the same block,
  * and it has to name all three facts the disclosure guard requires — the
  * browser, the absence of an account, and what a second device sees.
- */
-/*
+ *
  * IT MAY NOT COUNT, AND THE FIRST DRAFT DID. It opened "Both sittings were read
  * from this browser only" — true under a reading, and false under the refusal
  * that renders in the SAME BLOCK when there is exactly one session, which is
@@ -132,6 +139,36 @@ function offLadder(reading: ArcReading): boolean {
   return !reading.earlier.withinRange || !reading.latest.withinRange;
 }
 
+/**
+ * WHAT COMING BACK BOUGHT (E14/S6, RT-H3 a) — appended when anything pooled.
+ *
+ * This is the only reward this product offers for returning, and it is the only
+ * one the anti-clone clause permits: not a badge, not a streak, not points, but
+ * the line above being able to see a smaller change than it could before. The
+ * mechanism is arithmetic and the sentence says so, because a floor that
+ * silently moved is a number a reader cannot check.
+ *
+ * SILENT WHEN NOTHING WAS POOLED. On one sitting a side there is nothing to
+ * report and a sentence explaining a benefit the reader has not received would
+ * be an advert for a second session dressed as a finding.
+ */
+function pooledLine(reading: ArcReading): string | null {
+  const { pooled } = reading;
+  const total = pooled.older + pooled.newer;
+  if (total <= 2) return null;
+  const solo = reading.soloFloorFactor;
+  const now = reading.floorFactor;
+  const gain =
+    solo && now
+      ? ` That is what pulled the line above down from ${times(solo)} to ${times(now)}:`
+      : " That is what pulls the line above down:";
+  return (
+    `This rests on ${total} sittings — ${pooled.older} before and ${pooled.newer} since.${gain} the ` +
+    `wobble of an average falls as the square root of how many sittings are in it, so each time you ` +
+    `come back, a smaller real change becomes visible.`
+  );
+}
+
 function thresholdLines(reading: ArcReading): string[] {
   const label = familyLabel(reading.family ?? "").toLowerCase();
   const floor = times(reading.floorFactor ?? 1);
@@ -139,7 +176,7 @@ function thresholdLines(reading: ArcReading): string[] {
 
   if (reading.direction === null) {
     return [
-      `Your two ${label} sittings are ${moved} apart, and that is inside what this ladder cannot ` +
+      `Your ${label} sittings are ${moved} apart, and that is inside what this ladder cannot ` +
         `tell from noise. It would take about ${floor} before a change here meant anything. This is ` +
         `not a report that you stood still — it is the instrument saying it cannot see a move this small.`,
     ];
@@ -152,14 +189,14 @@ function thresholdLines(reading: ArcReading): string[] {
 
   if (offLadder(reading)) {
     return [
-      `Between these two ${label} sittings, ${way}. One of the two put you past the end of what this ` +
+      `Across your ${label} sittings, ${way}. One of them put you past the end of what this ` +
         `ladder can render, so the direction is solid and the size is not — it is at least ${floor}, ` +
         `which is the smallest move this machine can distinguish from noise.`,
     ];
   }
 
   return [
-    `Between these two ${label} sittings, ${way} — a change of about ${moved}. This ladder cannot ` +
+    `Across your ${label} sittings, ${way} — a change of about ${moved}. This ladder cannot ` +
       `distinguish anything under ${floor} from ordinary run-to-run wobble, so a move this size is ` +
       `the instrument speaking rather than the dice.`,
   ];
@@ -172,7 +209,7 @@ function biasLines(reading: ArcReading): string[] {
 
   if (reading.direction === null) {
     return [
-      `The label moved you ${before} last time and ${after} this time. That gap is inside the ` +
+      `The label moved you ${before} before and ${after} since. That gap is inside the ` +
         `${floor} points this test wanders by on its own, so it is not a change anybody could stand ` +
         `behind — the same person, retested, moves this much without anything about them changing.`,
     ];
@@ -182,14 +219,14 @@ function biasLines(reading: ArcReading): string[] {
 
   if (reading.direction === "closer") {
     return [
-      `The label moved you ${before} last time and ${after} this time — ${moved} points closer to ` +
+      `The label moved you ${before} before and ${after} since — ${moved} points closer to ` +
         `zero, where zero means the name changed nothing. That is more than the ${floor} points ` +
         `this test wanders by on its own, so a name is doing less to what you hear than it was.`,
     ];
   }
 
   return [
-    `The label moved you ${before} last time and ${after} this time — ${moved} points further from ` +
+    `The label moved you ${before} before and ${after} since — ${moved} points further from ` +
       `zero, and more than the ${floor} points this test wanders by on its own. A name is doing more ` +
       `to what you hear than it was. Both directions count: marking a labelled clip down is still ` +
       `the name deciding, not your ears.`,
@@ -206,5 +243,8 @@ function biasLines(reading: ArcReading): string[] {
  */
 export function arcLines(claim: Claim<ArcReading>): string[] {
   if (!claim.ok) return [arcRefusal(claim.gap)];
-  return claim.value.instrument === "bias" ? biasLines(claim.value) : thresholdLines(claim.value);
+  const reading = claim.value;
+  const lines = reading.instrument === "bias" ? biasLines(reading) : thresholdLines(reading);
+  const pooled = pooledLine(reading);
+  return pooled ? [...lines, pooled] : lines;
 }

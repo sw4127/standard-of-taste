@@ -178,6 +178,18 @@ export function arcClaims(): Record<string, Claim<ArcReading>> {
      */
     "threshold-closer": thresholdArc(pair(sharpBefore, sharpAfter)),
     /*
+     * FOUR SITTINGS, so the pooled sentence is reached (E14/S6). Without a
+     * fixture at this length the only sentence describing what coming back buys
+     * would never be rendered by anything — unvoiced, unread and unchecked,
+     * which is the hole this file exists to close.
+     */
+    "threshold-pooled": thresholdArc([
+      { at: 1_000, session: arcSession(PITCH, 0.65, 3001) },
+      { at: 2_000, session: sharpBefore },
+      { at: 3_000, session: arcSession(PITCH, 0.35, 4001) },
+      { at: 4_000, session: sharpAfter },
+    ]),
+    /*
      * THE SAME TWO SESSIONS, THE OTHER WAY ROUND. Not a second pair of
      * placements: the first attempt used (0.35, 0.65) against (0.65, 0.35) with
      * the seeds held in place, which pairs each observer with a DIFFERENT
