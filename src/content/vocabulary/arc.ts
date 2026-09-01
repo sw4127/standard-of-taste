@@ -51,6 +51,8 @@
 import type { ArcReading } from "@/engine/arc";
 import type { Claim } from "@/engine/evidence";
 import { familyLabel } from "@/content/staircase/copy";
+import { DELICACY_ARC_FLOOR, type DelicacyArcFloor } from "@/content/delicacy/arc-floor";
+import { numberWord } from "./numbers";
 
 /**
  * WHERE THE MEMORY BEHIND THIS PANEL LIVES (E14/S5).
@@ -90,6 +92,36 @@ function sway(pct: number): string {
  * ------------------------------------------------------------------ */
 
 /**
+ * WHY THE DELICACY REFUSAL IS BUILT RATHER THAN WRITTEN (E15/S1).
+ *
+ * It is the one refusal that states counts, and it stated them as typed words —
+ * "six of the fifteen pairs — or four of a single flaw's five" — with nothing
+ * relating either number to the item pool. `DELICACY_ARC_FLOOR` derives both
+ * from the pool and the measured shares; this function only phrases them.
+ *
+ * It takes its numbers as ARGUMENTS instead of reading the module directly, so
+ * a test can hand it a pool that does not exist and check the sentence follows.
+ * A guard that can only ever see today's fifteen items cannot tell a derived
+ * sentence from a hardcoded one.
+ */
+export function delicacyArcRefusal(floor: DelicacyArcFloor): string {
+  const clause =
+    floor.perFamilyItemsToMove !== null && floor.perFamilyTrials !== null
+      ? // The dash is PAIRED, and the first draft of this builder dropped the
+        // closing one — the sentence rendered "a single flaw's five before it
+        // meant anything" and every test stayed green. Found by reading the
+        // printed deck, which is the third time on this file.
+        ` — or ${numberWord(floor.perFamilyItemsToMove)} of a single flaw's ${numberWord(floor.perFamilyTrials)} —`
+      : "";
+  return (
+    "These trials are too short to show change over time. Your score would have to move by " +
+    `${numberWord(floor.itemsToMove)} of the ${numberWord(floor.trials)} pairs${clause} before it ` +
+    "meant anything, so this machine reports where you are and leaves the question of movement " +
+    "to the threshold ladders."
+  );
+}
+
+/**
  * WHY THERE IS NO ARC HERE, said in the reader's terms.
  *
  * `too-few-sessions` is the one every first-time reader gets, and it is written
@@ -106,10 +138,7 @@ export const ARC_REFUSAL: Record<string, string> = {
     "These two compression sessions ran on different recordings, so they are not comparable. A " +
     "fixed bitrate does up to twice as much damage to one recording as to another, which means " +
     "the difference between these two sittings would be a fact about the music rather than about you.",
-  "arc-instrument-unsupported":
-    "These trials are too short to show change over time. Your score would have to move by six of " +
-    "the fifteen pairs — or four of a single flaw's five — before it meant anything, so this " +
-    "machine reports where you are and leaves the question of movement to the threshold ladders.",
+  "arc-instrument-unsupported": delicacyArcRefusal(DELICACY_ARC_FLOOR),
   "no-arc-floor":
     "Nobody has measured how much this machine's numbers wander between sittings, so there is no " +
     "honest line between a change and a coin flip here. Until there is, it says nothing.",

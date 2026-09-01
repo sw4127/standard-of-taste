@@ -76,8 +76,10 @@ export default function AcrossTime({ accent, own }: { accent: string; own: Store
   /*
    * THE DELICACY TRIALS GET A LINE, NOT A PANEL (PM ruling RT-H2b a).
    *
-   * The ruling was specific: this instrument is too coarse to show change — six
-   * of fifteen pairs would have to change hands — so it says so and points at
+   * The ruling was specific: this instrument is too coarse to show change — a
+   * near-total swing within a flaw, or four in ten of the whole sitting, the
+   * counts themselves derived in `src/content/delicacy/arc-floor.ts` rather
+   * than repeated here — so it says so and points at
    * the ladders, rather than shipping a panel whose only possible output is a
    * refusal. A panel that never says anything else trains people to skip
    * refusals everywhere else in the product, which is the opposite of what the

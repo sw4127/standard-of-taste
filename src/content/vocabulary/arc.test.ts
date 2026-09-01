@@ -21,9 +21,13 @@
  *       lines can be read as a person meets them.
  */
 import { describe, expect, it } from "vitest";
-import { arcLines, ARC_DEVICE_NOTE, ARC_REFUSAL, arcRefusal } from "./arc";
+import { arcLines, ARC_DEVICE_NOTE, ARC_REFUSAL, arcRefusal, delicacyArcRefusal } from "./arc";
 import { arcClaims } from "./fixtures";
 import { checkVoice } from "../voice";
+import { DELICACY_ARC_FLOOR } from "@/content/delicacy/arc-floor";
+import { DELICACY_ARC_FLOOR_SHARE } from "@/engine/arc";
+import { DEGRADATION_FAMILIES } from "@/engine/delicacy";
+import { MEASURED_TRIALS } from "@/content/delicacy/items";
 
 const claims = arcClaims();
 
@@ -246,6 +250,78 @@ describe("E14/S3 — what the sentences may not do", () => {
     expect(solo, "pooling did not lower the floor").toBeGreaterThan(now);
     expect(line).toContain(`${solo.toFixed(1)}x`);
     expect(line).toContain(`${now.toFixed(1)}x`);
+  });
+
+  /**
+   * NOTHING MAY COUNT — INCLUDING ABOUT THE ITEM POOL (E15/S1).
+   *
+   * The delicacy refusal shipped "six of the fifteen pairs — or four of a
+   * single flaw's five" as typed words, and the same two counts were typed
+   * again on `/method` and `/learn/practice`. Nothing related any of them to
+   * the pool, so growing it would have made three live sentences false with the
+   * suite green — the fourth instance of this defect in this file's subject
+   * area, and the first on public pages.
+   *
+   * THE GUARD HANDS THE SENTENCE A POOL THAT DOES NOT EXIST. Asserting that
+   * today's sentence contains "fifteen" would pass just as well against the
+   * hardcoded version, which is exactly the guard-weaker-than-its-name failure
+   * E11 spent a session removing. So the builder is called with several
+   * arities, and what is checked is that the words FOLLOW.
+   */
+  it("states the delicacy floor from the pool it is given, not from a literal", () => {
+    const twenty = delicacyArcRefusal({
+      trials: 20,
+      itemsToMove: 8,
+      perFamilyTrials: 7,
+      perFamilyItemsToMove: 6,
+    });
+    expect(twenty).toContain("eight of the twenty pairs");
+    expect(twenty).toContain("six of a single flaw's seven");
+    // The number the SHIPPED sentence carries must be absent, or the builder is
+    // interpolating nothing and the assertion above proves only that a literal
+    // happens to match.
+    expect(twenty).not.toContain("fifteen");
+
+    // A pool whose families differ in size cannot be described by one number,
+    // so the clause that would have to pick one is dropped entirely.
+    const ragged = delicacyArcRefusal({
+      trials: 17,
+      itemsToMove: 7,
+      perFamilyTrials: null,
+      perFamilyItemsToMove: null,
+    });
+    expect(ragged).toContain("seven of the seventeen pairs");
+    expect(ragged).not.toContain("single flaw");
+
+    /*
+     * THE DASH IS PAIRED, AND THE FIRST BUILD OF THIS DROPPED THE CLOSING ONE.
+     * Every test above passed while the shipped sentence read "a single flaw's
+     * five before it meant anything". Only printing it showed the break, so the
+     * shape of the punctuation is now asserted rather than trusted.
+     */
+    const dash = String.fromCharCode(0x2014);
+    expect(twenty.split(dash)).toHaveLength(3);
+    expect(twenty).toContain(`seven ${dash} before it meant anything`);
+    expect(ragged.includes(dash), "no clause means no dangling dash").toBe(false);
+
+    // And the shipped string must be that builder's output over the live pool —
+    // not a copy of it that can drift.
+    expect(ARC_REFUSAL["arc-instrument-unsupported"]).toBe(delicacyArcRefusal(DELICACY_ARC_FLOOR));
+  });
+
+  /**
+   * The floor is derived from the pool, so a bigger pool must move it. If this
+   * ever fails, something upstream has gone back to a constant.
+   */
+  it("derives the live floor from the live pool, in both directions", () => {
+    expect(DELICACY_ARC_FLOOR.trials).toBe(MEASURED_TRIALS.length);
+    expect(DELICACY_ARC_FLOOR.itemsToMove).toBe(
+      Math.round(DELICACY_ARC_FLOOR_SHARE * MEASURED_TRIALS.length),
+    );
+    expect(DELICACY_ARC_FLOOR.itemsToMove).toBeLessThan(DELICACY_ARC_FLOOR.trials);
+    expect(DELICACY_ARC_FLOOR.perFamilyTrials).toBe(
+      MEASURED_TRIALS.filter((t) => t.family === DEGRADATION_FAMILIES[0]).length,
+    );
   });
 
   it("the two prose guards above actually fire", () => {

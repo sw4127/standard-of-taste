@@ -100,7 +100,12 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { observer as obs, pCorrect, rng, type Observer } from "@/analytics/observer";
 import { fitPosterior, fitThreshold } from "@/engine/threshold-fit";
-import { ARC_FLOORS, floorKey } from "@/engine/arc";
+import {
+  ARC_FLOORS,
+  DELICACY_ARC_FAMILY_FLOOR_SHARE,
+  DELICACY_ARC_FLOOR_SHARE,
+  floorKey,
+} from "@/engine/arc";
 import { eligibleSources } from "@/engine/staircase-pool";
 import {
   answer,
@@ -640,8 +645,13 @@ describe("E14/S1 — what a retest can resolve on the fixed-pool instruments [SI
 
     /** Per person, which families the rule would have called moved. */
     const firedPerPerson = persons.map(() => 0);
-    /** The per-family floor, in items — the coarseness that is the real finding. */
-    const floorItems: number[] = [];
+    /**
+     * The per-family floor, in items — the coarseness that is the real finding.
+     * Carries its family and item count, because the loop below SKIPS a family
+     * with no items and a bare array would then be silently misaligned with
+     * `DEGRADATION_FAMILIES` for every family after the gap.
+     */
+    const floorItems: { family: string; f: number; n: number }[] = [];
     for (const family of DEGRADATION_FAMILIES) {
       const n = first[0].byFamily[family]?.n ?? 0;
       if (n === 0) continue;
@@ -654,7 +664,7 @@ describe("E14/S1 — what a retest can resolve on the fixed-pool instruments [SI
       heldF.forEach((v, i) => {
         if (Math.abs(v) >= fF) firedPerPerson[offset + i]++;
       });
-      floorItems.push(fF * n);
+      floorItems.push({ family, f: fF * n, n });
       say(
         `${pad(family, 16)} ${num(n, 0, 6)}  ${pct(sF).padStart(7)}  ` +
           `${(fF * n).toFixed(1)} of ${n} — expressible, and far too coarse to be worth showing`,
@@ -688,11 +698,46 @@ describe("E14/S1 — what a retest can resolve on the fixed-pool instruments [SI
      * a per-family delicacy arc becomes worth showing and the ruling should be
      * revisited rather than inherited.
      */
-    for (const f of floorItems) {
+    for (const { f } of floorItems) {
       expect(f, "a delicacy family can now register a partial change — revisit RT-H2").toBeGreaterThanOrEqual(3.5);
     }
     // Recorded so the number cannot silently drift out of the prose above.
     expect(anyFired).toBeLessThan(3 * ADVERTISED_FALSE_POSITIVE);
+
+    /*
+     * THE SHIPPED SHARES MUST BE THE ONES THIS SIMULATION JUST MEASURED (E15/S1).
+     *
+     * Three public surfaces print how many pairs would have to change hands,
+     * and every one of them now computes it as `share x pool`. That makes the
+     * two shares in `arc.ts` load-bearing published numbers rather than
+     * documentation — so they are checked here, against the run that derived
+     * them, and not merely cited in a comment.
+     *
+     * TWO ASSERTIONS, BECAUSE EITHER ALONE IS BLIND. The share tolerance
+     * catches drift that has not yet crossed a rounding boundary; the rendered
+     * count catches drift that has, even when it is small. A wrong constant has
+     * to survive both, and no value does.
+     */
+    expect(
+      Math.abs(DELICACY_ARC_FLOOR_SHARE - floorW),
+      `whole-session floor share shipped as ${DELICACY_ARC_FLOOR_SHARE}, measured ${floorW.toFixed(4)}`,
+    ).toBeLessThan(0.05);
+    expect(
+      Math.round(DELICACY_ARC_FLOOR_SHARE * nTrials),
+      "the shipped share and the measured floor must print the same number of pairs",
+    ).toBe(Math.round(floorW * nTrials));
+
+    for (const { family, f, n } of floorItems) {
+      expect(
+        Math.abs(DELICACY_ARC_FAMILY_FLOOR_SHARE - f / n),
+        `${family}: family floor share shipped as ` +
+          `${DELICACY_ARC_FAMILY_FLOOR_SHARE}, measured ${(f / n).toFixed(4)}`,
+      ).toBeLessThan(0.05);
+      expect(
+        Math.round(DELICACY_ARC_FAMILY_FLOOR_SHARE * n),
+        `${family}: shipped share and measured floor disagree on the item count`,
+      ).toBe(Math.round(f));
+    }
   });
 
   it("writes the derivation where a reader can find it", () => {

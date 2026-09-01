@@ -26,7 +26,16 @@
  * repository name is a claim, not evidence". A method page is the most
  * tempting place in the product to cite something, so it is the one surface
  * where citations are machine-checked.
+ *
+ * AND A COUNT ON THIS PAGE IS A CITATION TOO (E15/S1). The arc finding stated
+ * how many delicacy pairs would have to change hands as two typed words. The
+ * anchors underneath it were machine-checked and the numbers in front of them
+ * were not, which is the same class of unchecked claim this page exists to
+ * refuse. They are now derived from the item pool.
  */
+
+import { DELICACY_ARC_FLOOR } from "@/content/delicacy/arc-floor";
+import { numberWord } from "@/content/vocabulary/numbers";
 
 export type ClaimKind =
   /** The record says this. The page may show the passage. */
@@ -419,7 +428,7 @@ export const METHOD_FINDINGS: MethodFinding[] = [
     rule: "N3 — nothing the data cannot support",
     kind: "quoted",
     finding:
-      "Before the retest arc was allowed to tell anyone their ear had moved, the size of change it can resolve was measured: the whole hazard here is that subtracting two noisy numbers manufactures progress. Simulating the same unchanged person through two sessions at the shipped length puts the floor on the pitch ladder at roughly three and a half times — the threshold has to more than halve before the difference can be told from ordinary run-to-run wobble. On the prestige test it is eight points of the scale. The delicacy trials cannot support an arc at all: six of their fifteen pairs would have to change hands.",
+      `Before the retest arc was allowed to tell anyone their ear had moved, the size of change it can resolve was measured: the whole hazard here is that subtracting two noisy numbers manufactures progress. Simulating the same unchanged person through two sessions at the shipped length puts the floor on the pitch ladder at roughly three and a half times — the threshold has to more than halve before the difference can be told from ordinary run-to-run wobble. On the prestige test it is eight points of the scale. The delicacy trials cannot support an arc at all: ${numberWord(DELICACY_ARC_FLOOR.itemsToMove)} of their ${numberWord(DELICACY_ARC_FLOOR.trials)} pairs would have to change hands.`,
     consequence:
       "Most retests are therefore told, in as many words, that nothing changed the instrument could hear. That refusal is the ordinary output of this feature rather than its edge case, and the sentence names the floor in the reader's own units so it reads as a fact about the instrument rather than a verdict on them. The only thing that lowers the floor is returning: pooled across four sittings it falls to about two and a half times, which is the entire reward this product offers for coming back.",
     sources: [

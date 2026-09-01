@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Explainer, { explainerMetadata } from "../Explainer";
 import { learnPage } from "@/content/learn";
+import { DELICACY_ARC_FLOOR } from "@/content/delicacy/arc-floor";
+import { numberWord } from "@/content/vocabulary/numbers";
 
 const page = learnPage("practice")!;
 export const metadata = explainerMetadata(page);
@@ -39,8 +41,10 @@ export default function Page() {
         movement; on the prestige test the label&apos;s pull has to shift by eight points of the
         scale. Most retests are therefore told that nothing changed the instrument could hear —
         which is the honest answer, and the reason the sentence names what it would have taken
-        instead of leaving you to guess. The delicacy trials get no arc at all: fifteen pairs
-        cannot resolve a change smaller than six of them, so that screen says so and points here.
+        instead of leaving you to guess. The delicacy trials get no arc at all:{" "}
+        {numberWord(DELICACY_ARC_FLOOR.trials)} pairs cannot resolve a change smaller than{" "}
+        {numberWord(DELICACY_ARC_FLOOR.itemsToMove)} of them, so that screen says so and points
+        here.
       </p>
       <p>
         What a second sitting genuinely buys is <strong>precision</strong>. The wobble of an

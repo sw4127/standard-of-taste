@@ -493,8 +493,8 @@ export function biasArc(entries: readonly BiasArcEntry[]): Claim<ArcReading> {
  * E14/S1 falsified BOTH: a per-family arc is expressible, and asking about
  * three families at once produces a false movement 2.5% of the time — under
  * one family's own 5%, not over it. What survived measurement is coarseness.
- * Four of a family's five items must change hands before anything may be said,
- * six of fifteen for the whole session, so the only movement this instrument
+ * Four fifths of a family's items must change hands before anything may be
+ * said, two fifths of the whole session, so the only movement this instrument
  * can ever report is a near-total swing.
  *
  * It is written as a refusing function rather than as an omission so that the
@@ -503,7 +503,42 @@ export function biasArc(entries: readonly BiasArcEntry[]): Claim<ArcReading> {
  * carries the tripwire: if a longer pool ever brings a family under three of
  * five items, that test fails and the ruling gets revisited rather than
  * inherited.
+ *
+ * THE ITEM COUNTS IN THE PARAGRAPH ABOVE ARE NO LONGER TYPED ANYWHERE A READER
+ * CAN SEE THEM (E15/S1). They were, in five places including two live pages,
+ * with nothing relating them to the fifteen-item pool that produced them. The
+ * two shares below are the derived quantities; the counts are the shares times
+ * whatever the pool currently holds, computed in
+ * `src/content/delicacy/arc-floor.ts` and spelled by the deck.
  */
+
+/**
+ * WHAT SHARE OF A WHOLE DELICACY SITTING MUST CHANGE HANDS before the arc
+ * would be allowed to speak — 40% of the scored trials.
+ *
+ * Read off the null distribution of the retest difference in
+ * `docs/analytics/e14-arc-resolution.txt` ("whole session (15 trials): sigma
+ * 11.2% of share · floor 40.0%"), the same way every other floor in this file
+ * is derived, and NOT fitted to the batch it is checked against.
+ *
+ * IT IS A SHARE, NOT A COUNT, AND THAT IS THE ENTIRE POINT. A count is a fact
+ * about today's pool; a share survives the pool changing. The pinned value is
+ * re-measured on every test run by `arc-resolution.test.ts`, which fails if the
+ * simulation and this constant would print a different number of items — so
+ * this is a claim under guard rather than a number in a comment.
+ */
+export const DELICACY_ARC_FLOOR_SHARE = 0.4;
+
+/**
+ * The same floor for ONE flaw family on its own — 80% of that family's trials.
+ *
+ * Higher than the whole-session share because a family carries a third of the
+ * items and the noise falls with the square root of them. This is the number
+ * that killed the per-family arc: at five items it demands four, which is a
+ * near-total swing or nothing (PM ruling RT-H2b a).
+ */
+export const DELICACY_ARC_FAMILY_FLOOR_SHARE = 0.8;
+
 export function delicacyArc(): Claim<never> {
   return refuse("arc-instrument-unsupported");
 }
