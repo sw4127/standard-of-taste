@@ -1,6 +1,6 @@
 
 === E14/S1 THE RETEST ARC — WHAT IT CAN RESOLVE [SIMULATED, zero real responses] ===
-Track H. Derived BEFORE the comparison engine or any sentence was written.
+Track H, derived 2026-09-02, BEFORE the comparison engine or any sentence was written.
 
 Staircase ladders at the SHIPPED session budget. 1200 calibration pairs and
 1200 held-out pairs per ladder. sigma and floor in ladder steps; the factor is

@@ -409,6 +409,25 @@ export interface MethodFinding {
 
 export const METHOD_FINDINGS: MethodFinding[] = [
   {
+    /*
+     * E14 (Track H). The arc is the product's headline promise — did your ear
+     * move — and what the measurement says about it is unflattering enough that
+     * it belongs on this page rather than only in a docstring.
+     */
+    id: "finding-arc-mostly-refuses",
+    date: "2026-09-02",
+    rule: "N3 — nothing the data cannot support",
+    kind: "quoted",
+    finding:
+      "Before the retest arc was allowed to tell anyone their ear had moved, the size of change it can resolve was measured: the whole hazard here is that subtracting two noisy numbers manufactures progress. Simulating the same unchanged person through two sessions at the shipped length puts the floor on the pitch ladder at roughly three and a half times — the threshold has to more than halve before the difference can be told from ordinary run-to-run wobble. On the prestige test it is eight points of the scale. The delicacy trials cannot support an arc at all: six of their fifteen pairs would have to change hands.",
+    consequence:
+      "Most retests are therefore told, in as many words, that nothing changed the instrument could hear. That refusal is the ordinary output of this feature rather than its edge case, and the sentence names the floor in the reader's own units so it reads as a fact about the instrument rather than a verdict on them. The only thing that lowers the floor is returning: pooled across four sittings it falls to about two and a half times, which is the entire reward this product offers for coming back.",
+    sources: [
+      { path: "src/engine/arc.ts", anchor: "subtracting two noisy numbers manufactures" },
+      { path: "docs/analytics/e14-arc-resolution.txt", anchor: "WHAT A PERSON MUST DO BEFORE THE ARC MAY SPEAK" },
+    ],
+  },
+  {
     id: "finding-launch-avoidance",
     date: "2026-08-07",
     rule: "N2 — the anti-theater guardrail",

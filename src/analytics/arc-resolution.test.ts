@@ -361,7 +361,7 @@ describe("E14/S1 — what a retest can resolve on the staircase ladders [SIMULAT
     () => {
       say("");
       say("=== E14/S1 THE RETEST ARC — WHAT IT CAN RESOLVE [SIMULATED, zero real responses] ===");
-      say("Track H. Derived BEFORE the comparison engine or any sentence was written.");
+      say("Track H, derived 2026-09-02, BEFORE the comparison engine or any sentence was written.");
       say("");
       say(`Staircase ladders at the SHIPPED session budget. ${CALIBRATION} calibration pairs and`);
       say(`${HELD_OUT} held-out pairs per ladder. sigma and floor in ladder steps; the factor is`);

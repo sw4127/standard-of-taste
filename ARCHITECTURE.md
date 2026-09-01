@@ -43,6 +43,16 @@ the refusals and what they cost, is at `/method`.
    retest gate reads that history rather than keeping a timestamp of its own. History that lives
    in one browser can vanish, and the product says so on every surface that shows it — with a
    control on those same surfaces, and on the privacy page, that ends it.
+6. **A change smaller than the noise is not a change (N3).** Since 2026-09-02 the result screens
+   compare a person against their own earlier sittings — Hume's *practice*, the promise the product
+   has made since the D4 amendment. The floor it judges against was **measured before the feature
+   was written**, by simulating the same unchanged person twice through the real session API: about
+   **3.5x on the pitch ladder**, 8 points of sway on the prestige test. Below that the arc says so
+   in the reader's own units rather than reporting progress, and it does so far more often than it
+   reports movement. The delicacy trials get no arc at all, because fifteen pairs cannot resolve a
+   change smaller than six of them. Pooling recent sittings is the only thing that lowers the floor
+   — four of them bring it to about 2.5x — and that is the entire reward for coming back. There is
+   no streak, no XP, no points and no leaderboard anywhere near it (the anti-clone clause).
 
 ## System map
 
@@ -55,6 +65,11 @@ src/engine/            Pure deterministic instruments (no content, no I/O)
   staircase*.ts        The adaptive staircase, its manifest, replay and fit
   calibration.ts       Brier score and the over/under-confidence gap
   expert.ts            The verdict-free record behind every result
+  arc.ts               Whether an ear MOVED between sittings, against a floor
+                       measured from the instrument's own run-to-run wobble.
+                       Pools recent sittings, weighted toward the newest, so
+                       returning buys precision rather than a badge. It decides;
+                       it never phrases
 
 src/analytics/         Simulation → CTT estimators → 2PL IRT → parameter
                        recovery → automatic item flags. Validated against
@@ -85,6 +100,15 @@ src/lib/               Device-local state, and nothing else persists anywhere
                        nothing
   forget-device.ts     Sweeps the whole `gym.` namespace and the in-flight
                        session state — the clear control's engine
+  arc-recall.ts        The retest arc's bridge: history back through the same
+                       replay the share pages use. The ONLY caller of
+                       `readHistory` outside the store, which is what the
+                       project page's "retest arc" row is guarded on
+  own-result.ts        Whether the result on screen is the one this device
+                       recorded. Every result route is a share target, so a
+                       personal panel must not appear under a stranger's number
+  session-material.ts  Which recording a compression retest runs on — the one
+                       this browser used before, so two sittings are comparable
 
 src/app/bias/          Hume frame → blind → bridge → labeled → reveal →
                        MANDATORY debrief (swap disclosure + attributions)
