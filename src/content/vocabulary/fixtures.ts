@@ -21,8 +21,10 @@ import { creatorLines as thresholdLines } from "./threshold";
 import { creatorLines as delicacyLines } from "./delicacy";
 import { creatorLines as biasLines } from "./bias";
 import { acrossLines, thresholdRoster, type AcrossInput } from "./across";
+import { arcLines } from "./arc";
+import { biasArc, delicacyArc, thresholdArc, type ArcReading } from "@/engine/arc";
 import { brierNote, expertStrings } from "./expert";
-import { thresholdClaim } from "@/engine/evidence";
+import { thresholdClaim, type Claim } from "@/engine/evidence";
 import { replicationCheck } from "@/engine/replication";
 import type { ReplicationCheck } from "@/engine/replication";
 import type { DegradationFamily } from "@/engine/delicacy";
@@ -95,20 +97,132 @@ export function delicacyResults() {
   };
 }
 
-function biasResult(shift: number) {
+/**
+ * A prestige session where each scored clip moves by its own whole number of
+ * rating points. Whole numbers because the engine rejects anything else, which
+ * is the mechanism behind the lattice E14/S1 found in the headline.
+ */
+function biasResultBy(shiftFor: (index: number) => number) {
   const blind: Record<string, number> = {};
   const labeled: Record<string, number> = {};
+  let scored = 0;
   for (const item of BIAS_CLIPS) {
     blind[item.id] = 5;
-    const toward = item.isControl ? 0 : item.labelDirection === "up" ? shift : -shift;
+    const shift = item.isControl ? 0 : shiftFor(scored++);
+    const toward = item.labelDirection === "up" ? shift : -shift;
     labeled[item.id] = Math.max(BIAS_SCALE_MIN, Math.min(BIAS_SCALE_MAX, 5 + toward));
   }
   return computeBiasResult(BIAS_INSTRUMENT_ID, BIAS_CLIPS, blind, labeled);
 }
 
+function biasResult(shift: number) {
+  return biasResultBy(() => shift);
+}
+
 /** One session per verdict — the only axis the prestige copy branches on. */
 export function biasResults() {
   return { swayed: biasResult(2), steady: biasResult(0), contrarian: biasResult(-2) };
+}
+
+/**
+ * EVERY ARC BRANCH, DRIVEN THROUGH THE REAL COMPARISON (E14/S3).
+ *
+ * The arc has more shapes than any other module here — three directions, an
+ * off-ladder case, and five refusals — and a hand-written list of readings
+ * would freeze whatever set I thought of, which is the argument this file
+ * already makes at the top. So the readings come out of `thresholdArc` and
+ * `biasArc` on real sessions, and the refusals come out of the real refusal
+ * paths rather than being typed as gap strings.
+ *
+ * The listener placements are chosen so each branch is REACHED, and
+ * `arc.test.ts` asserts that they still are — a silent placement drift would
+ * leave a branch unvoiced, which is exactly where an off-voice line survives.
+ */
+function arcSession(family: string, place: number, seed: number, sourceId?: string) {
+  const mags = axisFor(family, sourceId).magnitudes;
+  const lo = Math.log(mags[0] / 4);
+  const hi = Math.log(mags[mags.length - 1] * 4);
+  const o = observer(Math.exp(lo + (hi - lo) * place), 0.35, 0.02);
+  let s = startSession(family, seed, sourceId);
+  const rand = rng(seed ^ 0x5bf03635);
+  while (!isFinished(s)) {
+    const t = nextTrial(s);
+    s = answer(s, rand() < pCorrect(s.axis.magnitudes[t.levelIndex], o));
+  }
+  return s;
+}
+
+const pair = (a: ReturnType<typeof arcSession>, b: ReturnType<typeof arcSession>) => [
+  { at: 1_000, session: a },
+  { at: 2_000, session: b },
+];
+
+export function arcClaims(): Record<string, Claim<ArcReading>> {
+  const PITCH = "pitch-drift";
+  const lossy = eligibleSources("lossy-artifact");
+  // Two sittings by the same person, well apart and both inside the ladder.
+  const sharpBefore = arcSession(PITCH, 0.65, 7919);
+  const sharpAfter = arcSession(PITCH, 0.35, 15838);
+  return {
+    // Same listener twice: the ordinary outcome, and the one most readers see.
+    "threshold-no-change": thresholdArc(pair(arcSession(PITCH, 0.5, 7919), arcSession(PITCH, 0.5, 15838))),
+    /*
+     * A listener who genuinely sharpened, and one who genuinely dulled — BOTH
+     * SITTINGS INSIDE THE LADDER. The first version used 0.75 and 0.2, which
+     * `session`'s placement scale puts past the rungs (it spans a quarter of
+     * the floor to four times the ceiling), so both fixtures rendered the
+     * OFF-LADDER sentence and the ordinary one was never voiced at all. Nothing
+     * failed: the directions were right and the deck was clean. It was found by
+     * reading the printed sentences, and `arc.test.ts` now asserts the range as
+     * well as the direction.
+     */
+    "threshold-closer": thresholdArc(pair(sharpBefore, sharpAfter)),
+    /*
+     * THE SAME TWO SESSIONS, THE OTHER WAY ROUND. Not a second pair of
+     * placements: the first attempt used (0.35, 0.65) against (0.65, 0.35) with
+     * the seeds held in place, which pairs each observer with a DIFFERENT
+     * session, and one of those pairs came out 3.0x apart — under the 3.5x
+     * floor — so the "further" branch silently stopped being reached. Reversing
+     * one pair makes the distance identical by construction and leaves only the
+     * thing being tested, which is that order decides the sign.
+     */
+    "threshold-further": thresholdArc(pair(sharpAfter, sharpBefore)),
+    // One sitting off the end of what the ladder can render.
+    "threshold-off-ladder": thresholdArc(pair(arcSession(PITCH, 0.55, 7919), arcSession(PITCH, 0.0, 15838))),
+    /*
+     * A REAL gap that is still under the floor, not two identical sessions. The
+     * first version compared a session with itself, so the sentence rendered
+     * "+20% last time and +20% this time" — technically the null branch, and a
+     * fixture that could never have caught the sentence saying something wrong
+     * about a gap, because it had no gap.
+     */
+    "bias-no-change": biasArc([
+      { at: 1_000, result: biasResult(2) },
+      { at: 2_000, result: biasResultBy((i) => (i % 2 === 0 ? 2 : 1)) },
+    ]),
+    "bias-closer": biasArc([
+      { at: 1_000, result: biasResult(2) },
+      { at: 2_000, result: biasResult(0) },
+    ]),
+    "bias-further": biasArc([
+      { at: 1_000, result: biasResult(0) },
+      { at: 2_000, result: biasResult(2) },
+    ]),
+    "refuse-too-few": thresholdArc([{ at: 1_000, session: arcSession(PITCH, 0.5, 7919) }]),
+    "refuse-different-material": thresholdArc(
+      pair(
+        arcSession("lossy-artifact", 0.5, 7919, lossy[0]),
+        arcSession("lossy-artifact", 0.5, 15838, lossy[1]),
+      ),
+    ),
+    "refuse-delicacy": delicacyArc(),
+    "refuse-no-floor": thresholdArc(
+      pair(arcSession(PITCH, 0.5, 7919), arcSession(PITCH, 0.5, 15838)).map((e) => ({
+        ...e,
+        session: { ...e.session, family: "invented-family" },
+      })),
+    ),
+  };
 }
 
 function acrossInput(thresholds: StaircaseResult[], withBias: boolean, withDelicacy: boolean): AcrossInput {
@@ -178,6 +292,12 @@ export function vocabularyStrings(): VoiceString[] {
     });
     thresholdRoster(input).forEach((text, i) => {
       out.push({ surface: `vocabulary/across/${name}/roster/${i}`, text, intensity: "calm" });
+    });
+  }
+
+  for (const [name, claim] of Object.entries(arcClaims())) {
+    arcLines(claim).forEach((text, i) => {
+      out.push({ surface: `vocabulary/arc/${name}/${i}`, text, intensity: "pointed" });
     });
   }
 

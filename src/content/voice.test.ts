@@ -662,6 +662,27 @@ describe("hazard gate — the vocabulary layer is reached, not merely clean", ()
     for (const across of ["bias-delicacy", "delicacy-threshold", "all-three", "full-coverage"]) {
       expect(surfaces.some((s) => s.startsWith(`vocabulary/across/${across}/`)), across).toBe(true);
     }
+    /*
+     * E14/S3. The arc's shapes join the same enumeration as everything else in
+     * the vocabulary layer: a refusal that stops being reachable is a sentence
+     * nobody reads and nothing checks, which is the hole this whole block
+     * exists to close.
+     */
+    for (const arc of [
+      "threshold-no-change",
+      "threshold-closer",
+      "threshold-further",
+      "threshold-off-ladder",
+      "bias-no-change",
+      "bias-closer",
+      "bias-further",
+      "refuse-too-few",
+      "refuse-different-material",
+      "refuse-delicacy",
+      "refuse-no-floor",
+    ]) {
+      expect(surfaces.some((s) => s.startsWith(`vocabulary/arc/${arc}/`)), arc).toBe(true);
+    }
   });
 
   /**

@@ -108,6 +108,21 @@ export interface ArcReading {
   /** The measured floor this was judged against. */
   floor: number;
   /**
+   * THE SAME TWO NUMBERS AS A MULTIPLE, for the copy layer — and the conversion
+   * lives here because this module owns the axis.
+   *
+   * Ladder steps are the units the floor was derived in and they mean nothing
+   * to a reader; "the flaw you can catch got four times smaller" does. Doing
+   * that arithmetic in the copy layer would put a second copy of the ladder
+   * geometry there, which is how this repo got "Measured in kbps (kbps)" and a
+   * rung table that disagreed with itself.
+   *
+   * ABSENT ON THE PRESTIGE TEST, whose scale is additive: a sway of 0 has no
+   * meaningful multiple, and offering one would invite "twice as biased".
+   */
+  distanceFactor?: number;
+  floorFactor?: number;
+  /**
    * WHICH WAY, RELATIVE TO THE INSTRUMENT'S IDEAL — and `null` far more often
    * than not.
    *
@@ -222,6 +237,8 @@ export function thresholdArc(entries: readonly ThresholdArcEntry[]): Claim<ArcRe
       latest: b.point,
       distance,
       floor,
+      distanceFactor: Math.exp(distance * unit),
+      floorFactor: Math.exp(floor * unit),
       // A SMALLER MAGNITUDE IS A SHARPER EAR on every ladder, including the
       // inverted one: less magnitude is less damage needed, which on lossy is a
       // HIGHER bitrate. That is exactly why the comparison is done here rather
