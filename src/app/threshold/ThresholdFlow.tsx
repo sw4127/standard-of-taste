@@ -52,6 +52,7 @@ import {
   cooldownTitle,
   cooldownBody,
   COOLDOWN_ALTERNATIVE,
+  COOLDOWN_DEVICE_NOTE,
   SNACK_LEAD,
   SNACK_LINE,
   SNACK_CTA,
@@ -252,6 +253,11 @@ export default function ThresholdFlow({ family }: { family: string }) {
             {cooldownTitle(family)}
           </h1>
           <p className="mt-5 text-base leading-relaxed text-muted">{cooldownBody(daysLeft)}</p>
+          {/* WHERE THE GATE'S MEMORY LIVES (E13/S3, Track G2). The line above
+              claims to remember this person; this one says where that memory is
+              and that it is not on a server. Quieter than the refusal, because
+              it is a disclosure and not the reason to wait. */}
+          <p className="mt-3 text-xs leading-relaxed text-muted">{COOLDOWN_DEVICE_NOTE}</p>
           <Link
             href="/threshold"
             className="mt-8 inline-flex min-h-[44px] items-center self-start rounded-full px-7 py-3.5 text-base font-bold transition active:scale-[0.98]"

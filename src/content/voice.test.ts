@@ -32,6 +32,7 @@ import {
   cooldownTitle,
   cooldownBody,
   COOLDOWN_ALTERNATIVE,
+  COOLDOWN_DEVICE_NOTE,
   SNACK_LEAD,
   SNACK_LINE,
   SNACK_CTA,
@@ -290,6 +291,7 @@ function shippingStrings(): VoiceString[] {
     out.push({ surface: `staircase/cooldown/body/${days}`, text: cooldownBody(days), intensity: "calm" });
   }
   out.push({ surface: "staircase/cooldown/alternative", text: COOLDOWN_ALTERNATIVE, intensity: "calm" });
+  out.push({ surface: "staircase/cooldown/device-note", text: COOLDOWN_DEVICE_NOTE, intensity: "calm" });
   // The snack that sits beside the instrument (PM direction 2026-08-22). It is
   // cohort-facing copy on the Gym's own screen, so it is gated with the rest.
   out.push({ surface: "staircase/snack/lead", text: SNACK_LEAD, intensity: "calm" });

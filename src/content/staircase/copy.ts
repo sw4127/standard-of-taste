@@ -294,6 +294,26 @@ export function cooldownBody(daysLeft: number): string {
 export const COOLDOWN_ALTERNATIVE = "Measure a different flaw instead";
 
 /**
+ * WHERE THE GATE'S MEMORY LIVES, SAID ON THE SCREEN THAT USES IT (E13/S3,
+ * Track G2, RT-G b).
+ *
+ * The refusal above opens with "You measured your pitch drift this week" — the
+ * product asserting it remembers this person — and until now nothing on that
+ * screen said WHERE that memory is kept or that it dies with the browser. Two
+ * people are wronged by the silence in opposite directions: the one who
+ * measured on their phone and is now refused on their laptop for no stated
+ * reason, and the one who assumes we have a file on them. Neither is true, and
+ * both are answered by one sentence.
+ *
+ * It also has to say this WITHOUT reading as an invitation to clear storage and
+ * dodge the wait. So it states the fact and not the workaround: the reason to
+ * wait is in `cooldownBody` and it is about the number, not about us.
+ */
+export const COOLDOWN_DEVICE_NOTE =
+  "Remembered in this browser only — no account, nothing on a server. Another device, or cleared " +
+  "browsing data, and the gym has never met you.";
+
+/**
  * THE THRESHOLD SHARE CARD (E6/S15, PM ruling RT-108a a).
  *
  * The Gym's flagship instrument had no share affordance at all, while the two
