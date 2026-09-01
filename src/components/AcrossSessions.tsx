@@ -25,9 +25,10 @@
  */
 
 import { useMemo, useSyncExternalStore } from "react";
-import { readResult, slotSignature, subscribeResults, type StoredPayload } from "@/lib/result-store";
+import { slotSignature, subscribeResults, type StoredPayload } from "@/lib/result-store";
+import { isOwnResult } from "@/lib/own-result";
 import ForgetThisBrowser from "./ForgetThisBrowser";
-import { POOL_VERSIONS, recallBias, recallDelicacy, recallThreshold } from "@/lib/result-recall";
+import { recallBias, recallDelicacy, recallThreshold } from "@/lib/result-recall";
 import { replicationCheck } from "@/engine/replication";
 import type { ReplicationCheck } from "@/engine/replication";
 import type { DegradationFamily } from "@/engine/delicacy";
@@ -88,34 +89,11 @@ function buildInput(): AcrossInput {
   return { bias, delicacy, thresholds, replications, unmeasured };
 }
 
-/**
- * ONLY ON YOUR OWN RESULT, NEVER ON SOMEBODY ELSE'S (E8/S8, found by rendering).
- *
- * All three result routes are SHARE TARGETS: `/bias/result`, `/delicacy/result`
- * and `/threshold/[slug]/result` recompute from a payload in the URL, and that
- * payload belongs to whoever posted the link. Without this check the page put
- * the VIEWER's stored sessions under the SHARER's number — and on the threshold
- * screen it rendered the contradiction in plain sight: a wide band reading "no
- * reading · somewhere between 8.8 and 100 cents" at the top, and "Pitch drift:
- * caught at 3.1 cents" in the roster underneath. Same family, two numbers, no
- * explanation, because they were two different people's sessions.
- *
- * So the block appears only when the result being displayed IS the one this
- * device recorded. The comparison is on the raw payload — the same bytes the
- * store holds and the URL carries — so it cannot be fooled by a recomputation
- * that happens to agree.
+/*
+ * `isOwnResult` MOVED TO `src/lib/own-result.ts` IN E14/S5, with its full
+ * reasoning, because a second panel now carries the same obligation and a
+ * second copy of this rule is how one of them ends up subtly wrong.
  */
-function isOwnResult(own: StoredPayload): boolean {
-  const stored =
-    own.kind === "bias"
-      ? readResult("bias", POOL_VERSIONS.bias)
-      : own.kind === "delicacy"
-        ? readResult("delicacy", POOL_VERSIONS.delicacy)
-        : readResult("threshold", POOL_VERSIONS.threshold, own.slug);
-  if (!stored) return false;
-  return JSON.stringify(stored.payload) === JSON.stringify(own);
-}
-
 export default function AcrossSessions({ accent, own }: { accent: string; own: StoredPayload }) {
   const sig = useSyncExternalStore(subscribeResults, signature, serverSignature);
   // Keyed on the signature so it recomputes when — and only when — a session is

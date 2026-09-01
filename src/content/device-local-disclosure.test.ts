@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { EXPERT_PANEL } from "./vocabulary/expert";
 import { COOLDOWN_DEVICE_NOTE, MATERIAL_REUSE_NOTE } from "./staircase/copy";
 import { FORGET } from "./forget";
+import { ARC_DEVICE_NOTE } from "./vocabulary/arc";
 
 /**
  * E13/S3 (Track G2, RT-G b) — WHEREVER THE PRODUCT CLAIMS TO REMEMBER YOU, IT
@@ -74,6 +75,18 @@ const SURFACES: Surface[] = [
   },
   {
     /*
+     * E14/S5 (Track H). The strongest claim to remembering anywhere in the
+     * product: not "you finished something this week" but "here is a session
+     * you took a month ago, and here is how it compares to this one".
+     */
+    file: "src/components/AcrossTime.tsx",
+    claims: "a session from weeks ago, and whether this one differs from it",
+    disclosure: () => ARC_DEVICE_NOTE,
+    mustSay: [["this browser"], ["no account", "no accounts"], ["another device"]],
+    rendersConstant: "{ARC_DEVICE_NOTE}",
+  },
+  {
+    /*
      * E14/S4 (RT-H4 a). A SECOND ENTRY FOR THE SAME FILE, because the flow now
      * remembers a second, different thing: not only that you sat a session this
      * week, but WHICH RECORDING you were measured on. One disclosure covering
@@ -123,6 +136,16 @@ const READ_ACCESSORS = [
    */
   "pinnedMaterial",
   "materialForSession",
+  /*
+   * E14/S5. `AcrossTime` is caught by `slotSignature` today, but a panel that
+   * only asked for the reading — and did not subscribe — would read a month-old
+   * session and be invisible to this scan. These are the doors the arc goes
+   * through, so the scan covers the case nobody has written yet.
+   */
+  "isOwnResult",
+  "recallThresholdArc",
+  "recallBiasArc",
+  "recallDelicacyArc",
 ];
 
 /**

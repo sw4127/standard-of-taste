@@ -44,6 +44,29 @@ import type { ArcReading } from "@/engine/arc";
 import type { Claim } from "@/engine/evidence";
 import { familyLabel } from "@/content/staircase/copy";
 
+/**
+ * WHERE THE MEMORY BEHIND THIS PANEL LIVES (E14/S5).
+ *
+ * The arc is the strongest claim to remembering anywhere in the product: not
+ * "you finished something this week" but "here is a session you took a month
+ * ago, and here is how it compares". So the limit is stated in the same block,
+ * and it has to name all three facts the disclosure guard requires — the
+ * browser, the absence of an account, and what a second device sees.
+ */
+/*
+ * IT MAY NOT COUNT, AND THE FIRST DRAFT DID. It opened "Both sittings were read
+ * from this browser only" — true under a reading, and false under the refusal
+ * that renders in the SAME BLOCK when there is exactly one session, which is
+ * the most common state there is. Found on screen, in the rendered page, not by
+ * any test: a person on their first result read "One session cannot say whether
+ * your ear moved" and then, one line down, "Both sittings". `arc.test.ts` now
+ * refuses a quantity word in this constant, because the block it sits in has
+ * states with one session, two, and none that can be compared at all.
+ */
+export const ARC_DEVICE_NOTE =
+  "Read from this browser only — there are no accounts and nothing on a server, so another " +
+  "device has no history to compare and starts over.";
+
 /** "3.5x", "12x" — a multiple a reader can hold, never four decimal places. */
 function times(factor: number): string {
   return factor >= 10 ? `${Math.round(factor)}x` : `${factor.toFixed(1)}x`;

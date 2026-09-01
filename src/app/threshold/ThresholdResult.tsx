@@ -46,6 +46,7 @@ import { creatorLines } from "@/content/vocabulary/threshold";
 import Jump from "@/components/Jump";
 import { FLAWS_HREF, FLAWS_INVITE } from "@/content/flaw-families";
 import AcrossSessions from "@/components/AcrossSessions";
+import AcrossTime from "@/components/AcrossTime";
 import ExpertPanel from "@/components/ExpertPanel";
 import type { StoredPayload } from "@/lib/result-store";
 
@@ -184,6 +185,7 @@ export default function ThresholdResult({
         {/* Only when this page is showing THIS device's own session — see
             AcrossSessions. Without `share` there is no payload to compare, so
             there is nothing to claim ownership of. */}
+        {own ? <AcrossTime accent={ICE} own={own} /> : null}
         {own ? <AcrossSessions accent={ICE} own={own} /> : null}
 
         {own && own.kind === "threshold" ? (

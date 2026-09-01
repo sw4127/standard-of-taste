@@ -28,6 +28,7 @@ import Track from "@/components/Track";
 import ShareButton from "@/app/result/ShareButton";
 import { CalibrationBlock, FlawLine, InYourWork } from "../RevealBlocks";
 import AcrossSessions from "@/components/AcrossSessions";
+import AcrossTime from "@/components/AcrossTime";
 import ExpertPanel from "@/components/ExpertPanel";
 import { computeCalibration } from "@/engine/calibration";
 import DownloadButton from "@/app/result/DownloadButton";
@@ -118,6 +119,7 @@ export default async function DelicacyResultPage({ searchParams }: { searchParam
         <FlawLine result={result} />
         <InYourWork result={result} />
         <CalibrationBlock cal={calibration} />
+        <AcrossTime accent={ICE} own={{ kind: "delicacy", picks: p }} />
         <AcrossSessions accent={ICE} own={{ kind: "delicacy", picks: p }} />
         <ExpertPanel accent={ICE} instrument={{ kind: "delicacy" }} own={{ kind: "delicacy", picks: p }} />
 

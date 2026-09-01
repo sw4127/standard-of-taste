@@ -169,7 +169,7 @@ export const LEARN_PAGES: LearnPage[] = [
       },
       {
         q: "How does the Taste Gym use practice?",
-        a: "It does not yet, and this page says so above rather than implying a door that is not there. The training arc is designed as practice made measurable: retests over time on the same instruments, and a before-and-after number rather than a claim that you feel more refined. It will be free, because charging for the training loop would put the one honest question — did your ear actually move — behind a wall. What it waits on is the product remembering you between sessions, which it does not do today.",
+        a: "Sit a threshold ladder twice in the same browser and the result screen compares the two sittings. It is free, because charging for the training loop would put the one honest question — did your ear actually move — behind a wall. The comparison is judged against a noise floor measured first, so a difference smaller than the instrument's own run-to-run wobble is reported as no change rather than as progress: on the pitch ladder two sittings must differ by roughly three and a half times before it will call it movement. Most retests are therefore told that nothing changed the instrument could hear, which is the honest answer.",
       },
     ],
   },

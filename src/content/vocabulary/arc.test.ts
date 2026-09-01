@@ -21,7 +21,7 @@
  *       lines can be read as a person meets them.
  */
 import { describe, expect, it } from "vitest";
-import { arcLines, ARC_REFUSAL, arcRefusal } from "./arc";
+import { arcLines, ARC_DEVICE_NOTE, ARC_REFUSAL, arcRefusal } from "./arc";
 import { arcClaims } from "./fixtures";
 import { checkVoice } from "../voice";
 
@@ -168,6 +168,26 @@ describe("E14/S3 — what the sentences may not do", () => {
    * indistinguishable from a pattern that is broken. These are the same checks
    * pointed at sentences that SHOULD fail them.
    */
+  /**
+   * NOTHING MAY COUNT IN A SENTENCE SHOWN IN EVERY STATE.
+   *
+   * `ARC_DEVICE_NOTE` renders in the same block as the reading AND as every
+   * refusal, so it is on screen when there are two sittings, when there is one,
+   * and when there are none that can be compared. It opened "Both sittings were
+   * read from this browser only" and shipped that line directly underneath "One
+   * session cannot say whether your ear moved". Nothing failed; it was found by
+   * reading the rendered page.
+   */
+  it("says nothing about how many sittings there are, because it does not know", () => {
+    const counting = /\bboth\b|\btwo\b|\bthese\b|\bpair\b|\beach\b|\bsittings\b|\bsessions\b/i;
+    expect(
+      counting.test(ARC_DEVICE_NOTE),
+      `the device note is shown in every arc state and may not imply a count: "${ARC_DEVICE_NOTE}"`,
+    ).toBe(false);
+    // The needle is worthless if it cannot see the line it was written for.
+    expect(counting.test("Both sittings were read from this browser only")).toBe(true);
+  });
+
   it("the two prose guards above actually fire", () => {
     const units = /\d+(\.\d+)?\s*(cents?|ms|milliseconds?|kbps)\b/i;
     expect(units.test("your threshold went from 34 cents to 12 cents")).toBe(true);
