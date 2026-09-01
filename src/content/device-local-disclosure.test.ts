@@ -2,6 +2,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { EXPERT_PANEL } from "./vocabulary/expert";
 import { COOLDOWN_DEVICE_NOTE } from "./staircase/copy";
+import { FORGET } from "./forget";
 
 /**
  * E13/S3 (Track G2, RT-G b) — WHEREVER THE PRODUCT CLAIMS TO REMEMBER YOU, IT
@@ -70,6 +71,16 @@ const SURFACES: Surface[] = [
     disclosure: () => COOLDOWN_DEVICE_NOTE,
     mustSay: [["this browser"], ["no account", "no accounts"], ["cleared", "clearing"]],
     rendersConstant: "{COOLDOWN_DEVICE_NOTE}",
+  },
+  {
+    // E13/S4. It reads nothing, so the discovery scan below cannot see it —
+    // and it is the surface whose whole subject is what we remember about you.
+    // Listed by hand precisely because the automatic half would miss it.
+    file: "src/components/ForgetThisBrowser.tsx",
+    claims: "that there is something kept about you here, and offers to end it",
+    disclosure: () => FORGET.body + " " + FORGET.limit,
+    mustSay: [["this browser"], ["other browser", "another browser"], ["account", "accounts"]],
+    rendersConstant: "{FORGET.limit}",
   },
 ];
 

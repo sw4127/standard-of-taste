@@ -50,6 +50,7 @@ import { staircaseCopyFixtures, staircaseCardFixtures } from "./staircase/fixtur
 import { vocabularyStrings } from "./vocabulary/fixtures";
 import { LIMIT_KIND_COPY, RETIRED_SOURCE_NOTE } from "./staircase/limits";
 import { LEARN_PAGES } from "./learn";
+import { FORGET } from "./forget";
 import {
   METHOD_CLAIMS,
   METHOD_FINDINGS,
@@ -292,6 +293,10 @@ function shippingStrings(): VoiceString[] {
   }
   out.push({ surface: "staircase/cooldown/alternative", text: COOLDOWN_ALTERNATIVE, intensity: "calm" });
   out.push({ surface: "staircase/cooldown/device-note", text: COOLDOWN_DEVICE_NOTE, intensity: "calm" });
+  // E13/S4 — the clear control. Destructive, so every word of it is deck copy.
+  for (const [k, text] of Object.entries(FORGET)) {
+    out.push({ surface: "forget/" + k, text, intensity: "calm" });
+  }
   // The snack that sits beside the instrument (PM direction 2026-08-22). It is
   // cohort-facing copy on the Gym's own screen, so it is gated with the rest.
   out.push({ surface: "staircase/snack/lead", text: SNACK_LEAD, intensity: "calm" });
@@ -369,7 +374,9 @@ function shippingStrings(): VoiceString[] {
 // "vocabulary" joined in E8/S9: the creator-translation and combined-view
 // sentences sit on the Gym's own result screens, so the no-paid-tier ruling
 // governs them exactly as it governs the rest of the deck.
-const GYM_SURFACE_PREFIXES = ["bias", "delicacy", "staircase", "learn", "vocabulary"] as const;
+// "forget" joined in E13/S4: the clear control sits on the Gym result screens
+// and on the privacy page, and the no-paid-tier ruling governs it like the rest.
+const GYM_SURFACE_PREFIXES = ["bias", "delicacy", "staircase", "learn", "vocabulary", "forget"] as const;
 
 /**
  * Surfaces where a price is LEGITIMATE — the legacy music/world-cup funnel,

@@ -26,6 +26,7 @@
 
 import { useMemo, useSyncExternalStore } from "react";
 import { readResult, slotSignature, subscribeResults, type StoredPayload } from "@/lib/result-store";
+import ForgetThisBrowser from "./ForgetThisBrowser";
 import { POOL_VERSIONS, recallBias, recallDelicacy, recallThreshold } from "@/lib/result-recall";
 import { replicationCheck } from "@/engine/replication";
 import type { ReplicationCheck } from "@/engine/replication";
@@ -156,6 +157,11 @@ export default function AcrossSessions({ accent, own }: { accent: string; own: S
       <p className="mt-4 text-[0.65rem] leading-relaxed text-muted">
         Read from this browser only — there are no accounts, so another device starts empty.
       </p>
+      {/* AND A WAY OUT, IN THE SAME PLACE AS THE ADMISSION (E13/S4, Track G3).
+          This block is where the product shows what it remembers about you, so
+          it is where ending that is offered. The privacy page carries the same
+          control for anyone who has not got two instruments on file yet. */}
+      <ForgetThisBrowser accent={accent} />
     </section>
   );
 }
