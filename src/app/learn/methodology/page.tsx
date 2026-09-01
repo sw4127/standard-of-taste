@@ -10,7 +10,7 @@ export default function Page() {
     <Explainer page={page} kicker="THE HOUSE RULES · METHODOLOGY">
       <p>
         Hume closed his essay with a job description: strong sense, delicate sentiment, improved by
-        practice, perfected by comparison, cleared of prejudice — <em>that</em> is a true judge.
+        practice, perfected by comparison, cleared of prejudice — <em>that</em>{" "}is a true judge.
         The Taste Gym&apos;s methodology is that sentence turned into engineering constraints. Four
         of them.
       </p>
@@ -23,7 +23,7 @@ export default function Page() {
       </p>
       <p>
         <strong>2. The user is their own control.</strong> Wherever possible the design is
-        within-subject: your labeled ratings are compared to <em>your</em> blind ratings, your
+        within-subject: your labeled ratings are compared to <em>your</em>{" "}blind ratings, your
         retest to your baseline. This removes the need for an external ground truth about which
         music is good — the instrument never has to take a side in that argument to measure your
         movement within it. The Prestige Test additionally carries unlabeled control clips, rated

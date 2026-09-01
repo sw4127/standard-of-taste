@@ -10,7 +10,7 @@ export default function Page() {
     <Explainer page={page} kicker="HUME'S CRITERIA · FREEDOM FROM PREJUDICE">
       <p>
         Of Hume&apos;s five criteria, this is the one about contamination. A judge, he argued, must
-        keep the mind <em>&quot;free from all prejudice&quot;</em> and let nothing into the verdict
+        keep the mind <em>&quot;free from all prejudice&quot;</em>{" "}and let nothing into the verdict
         except the object itself — not the author&apos;s reputation, not the fashion of the moment,
         not loyalty, not rivalry. The judgment should belong to the work, and works don&apos;t have
         names until someone attaches one.

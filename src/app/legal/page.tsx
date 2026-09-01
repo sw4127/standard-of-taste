@@ -25,7 +25,7 @@ export default function LegalPage() {
       <section className="mt-8">
         <h2 className="font-display text-xl font-semibold">What this is</h2>
         <p className="mt-2 text-sm leading-relaxed text-slate-300">
-          Vibe Check is an <strong>entertainment</strong> product. It reads your quiz answers with a
+          Vibe Check is an <strong>entertainment</strong>{" "}product. It reads your quiz answers with a
           deterministic scoring engine and writes a playful, personality-style reading. It is not a
           psychological assessment, not medical or mental-health advice, and not a diagnosis of
           anything. Trait language (like &ldquo;Big Five&rdquo; or attachment styles) is used as a
@@ -54,7 +54,7 @@ export default function LegalPage() {
       <section className="mt-7">
         <h2 className="font-display text-xl font-semibold">All sales are final</h2>
         <p className="mt-2 text-sm leading-relaxed text-slate-300">
-          The full read is a digital product delivered <strong>instantly</strong> — the moment you
+          The full read is a digital product delivered <strong>instantly</strong>{" "}— the moment you
           pay, it&apos;s unlocked and yours to keep. For that reason, all sales are final and we
           don&apos;t offer refunds. If something technically went wrong — you paid but couldn&apos;t
           see your read —{" "}
@@ -90,7 +90,7 @@ export default function LegalPage() {
             reading this in.
           </li>
           <li>
-            <strong>Your sessions are stored on your device.</strong> When you finish an instrument
+            <strong>Your sessions are stored on your device.</strong>{" "}When you finish an instrument
             we keep your raw answers in this browser&apos;s local storage — never a computed score,
             so nothing here can be edited into a better result. It is what lets a later session say
             whether your ear moved, and it is why the seven-day retest gate knows you. Switch

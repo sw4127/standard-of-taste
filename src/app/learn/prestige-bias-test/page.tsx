@@ -22,7 +22,7 @@ export default function Page() {
       </p>
       <p>
         Here is the part that makes it an instrument instead of a party trick:{" "}
-        <strong>two of the fourteen labels are deliberately false.</strong> A modest work arrives
+        <strong>two of the fourteen labels are deliberately false.</strong>{" "}A modest work arrives
         wearing borrowed acclaim; a distinguished one arrives dressed down. If your ratings follow
         the labels even when the labels lie, the movement can&apos;t be explained by the music —
         only by the prestige. You serve as your own control, which is why the test needs no
@@ -43,7 +43,7 @@ export default function Page() {
       </p>
       <p>
         Your result is a measured number, not a diagnosis. And until enough real sessions exist to
-        compute honest norms, it is labeled <strong>provisional</strong> — no invented percentiles,
+        compute honest norms, it is labeled <strong>provisional</strong>{" "}— no invented percentiles,
         no &quot;better than 73% of listeners.&quot; The philosophy behind the design is Hume&apos;s
         criterion of{" "}
         <Link href="/learn/freedom-from-prejudice">freedom from prejudice</Link>; the measurement
