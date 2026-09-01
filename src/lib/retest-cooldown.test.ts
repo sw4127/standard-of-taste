@@ -1,19 +1,49 @@
+import { readFileSync } from "node:fs";
 import { describe, it, expect, afterEach } from "vitest";
 import {
   COOLDOWN_DAYS,
   COOLDOWN_MS,
   COOLDOWN_UNKNOWN,
+  LEGACY_KEY_PREFIX,
   cooldownDaysLeft,
   cooldownFrom,
   cooldownFor,
   readLastCompleted,
-  recordCompletion,
   serverSnapshot,
   subscribeCooldown,
 } from "./retest-cooldown";
+import { recordResult } from "./result-store";
+import { POOL_VERSIONS } from "./result-recall";
 
 const DAY = 24 * 60 * 60 * 1000;
 const NOW = Date.UTC(2026, 7, 21, 12, 0, 0);
+
+/**
+ * E13/S2 — THE GATE NO LONGER HAS A WRITER OF ITS OWN, so these helpers finish
+ * a session the way the flow does: one call, to the session store. If the
+ * cooldown could still be set independently of a recorded session, the two
+ * records could disagree, which is the defect this slice removes.
+ */
+const g0 = globalThis as { localStorage?: unknown };
+
+function mountStore(seed?: Record<string, string>): Map<string, string> {
+  const map = new Map<string, string>(Object.entries(seed ?? {}));
+  g0.localStorage = {
+    getItem: (k: string) => map.get(k) ?? null,
+    setItem: (k: string, v: string) => void map.set(k, v),
+    removeItem: (k: string) => void map.delete(k),
+  };
+  return map;
+}
+
+function finishPitch(at: number, poolVersion = POOL_VERSIONS.threshold): void {
+  recordResult(
+    "threshold",
+    poolVersion,
+    { kind: "threshold", slug: "pitch", seed: 1, answers: "1010" },
+    at,
+  );
+}
 
 describe("RT-89a — the retest cooldown decides", () => {
   it("lets a first-ever session through", () => {
@@ -75,7 +105,7 @@ describe("RT-89a — storage never takes the page down with it", () => {
   it("reads null and records silently when there is no localStorage at all", () => {
     expect(typeof localStorage).toBe("undefined");
     expect(readLastCompleted("pitch-drift")).toBeNull();
-    expect(() => recordCompletion("pitch-drift", NOW)).not.toThrow();
+    expect(() => finishPitch(NOW)).not.toThrow();
     expect(cooldownFor("pitch-drift", NOW).blocked).toBe(false);
   });
 
@@ -89,17 +119,13 @@ describe("RT-89a — storage never takes the page down with it", () => {
       },
     };
     expect(readLastCompleted("pitch-drift")).toBeNull();
-    expect(() => recordCompletion("pitch-drift", NOW)).not.toThrow();
+    expect(() => finishPitch(NOW)).not.toThrow();
     expect(cooldownFor("pitch-drift", NOW).blocked).toBe(false);
   });
 
   it("round-trips a completion, and keeps families separate", () => {
-    const store = new Map<string, string>();
-    g.localStorage = {
-      getItem: (k: string) => store.get(k) ?? null,
-      setItem: (k: string, v: string) => void store.set(k, v),
-    };
-    recordCompletion("pitch-drift", NOW);
+    mountStore();
+    finishPitch(NOW);
     expect(readLastCompleted("pitch-drift")).toBe(NOW);
 
     // The D4 amendment says PER FAMILY: finishing pitch must not cost the user
@@ -118,6 +144,99 @@ describe("RT-89a — storage never takes the page down with it", () => {
     };
     expect(readLastCompleted("pitch-drift")).toBeNull();
     expect(cooldownFor("pitch-drift", NOW).blocked).toBe(false);
+  });
+});
+
+/* ------------------------------------------------------------------ *
+ * E13/S2 — the gate reads the session store
+ * ------------------------------------------------------------------ */
+
+describe("the cooldown is derived from the session history, not a key of its own", () => {
+  const g = globalThis as { localStorage?: unknown };
+  afterEach(() => {
+    delete g.localStorage;
+  });
+
+  it("blocks on a session finished two days ago and opens after eight", () => {
+    mountStore();
+    finishPitch(NOW - 2 * DAY);
+    expect(cooldownFor("pitch-drift", NOW).blocked).toBe(true);
+    expect(cooldownFor("pitch-drift", NOW).daysLeft).toBe(5);
+
+    mountStore();
+    finishPitch(NOW - 8 * DAY);
+    expect(cooldownFor("pitch-drift", NOW).blocked).toBe(false);
+  });
+
+  it("takes the most recent session when several are on file", () => {
+    mountStore();
+    finishPitch(NOW - 30 * DAY);
+    finishPitch(NOW - 20 * DAY);
+    finishPitch(NOW - DAY);
+    expect(readLastCompleted("pitch-drift")).toBe(NOW - DAY);
+    expect(cooldownFor("pitch-drift", NOW).blocked).toBe(true);
+  });
+
+  /**
+   * THE REGRESSION THIS SLICE EXISTS TO AVOID, WRITTEN BEFORE THE CODE.
+   *
+   * Every other read of the session store drops sessions recorded against a
+   * different pool version, and rightly: positional answer tokens scored
+   * against a reordered pool answer different questions. Reuse that gated read
+   * here and a routine re-render of the clips unblocks EVERY cooldown on the
+   * planet the moment it deploys — a validity gate failing open because an
+   * unrelated number moved, silently, with nothing on screen to notice.
+   *
+   * The answers stop being scoreable. The fact that this person sat through a
+   * session two days ago does not.
+   */
+  it("still blocks when the session was answered against a different pool", () => {
+    mountStore();
+    finishPitch(NOW - 2 * DAY, POOL_VERSIONS.threshold + 1);
+    expect(readLastCompleted("pitch-drift")).toBe(NOW - 2 * DAY);
+    expect(cooldownFor("pitch-drift", NOW).blocked).toBe(true);
+  });
+
+  it("still honours the retired key on a browser that predates the store", () => {
+    // E5/S5 shipped this gate; E8/S7 shipped the store. A session finished in
+    // between left a cooldown with no session behind it.
+    mountStore({ [LEGACY_KEY_PREFIX + "pitch-drift"]: String(NOW - DAY) });
+    expect(readLastCompleted("pitch-drift")).toBe(NOW - DAY);
+    expect(cooldownFor("pitch-drift", NOW).blocked).toBe(true);
+  });
+
+  it("prefers the session store when both records exist", () => {
+    mountStore({ [LEGACY_KEY_PREFIX + "pitch-drift"]: String(NOW - 300 * DAY) });
+    finishPitch(NOW - DAY);
+    expect(readLastCompleted("pitch-drift")).toBe(NOW - DAY);
+    expect(cooldownFor("pitch-drift", NOW).blocked).toBe(true);
+  });
+
+  it("keeps the ladders apart when reading from the store", () => {
+    mountStore();
+    finishPitch(NOW - DAY);
+    expect(cooldownFor("pitch-drift", NOW).blocked).toBe(true);
+    expect(cooldownFor("timing-smear", NOW).blocked).toBe(false);
+    expect(cooldownFor("lossy-artifact", NOW).blocked).toBe(false);
+  });
+
+  /**
+   * ONE MECHANISM MEANS ONE WRITER. Asserted against the source because there
+   * is no other way to prove a module does NOT do something: a behavioural test
+   * can only show that the writes it looked for are absent.
+   */
+  it("writes nothing at all — the module has no setItem", () => {
+    const source = readFileSync("src/lib/retest-cooldown.ts", "utf8");
+    expect(source.includes("setItem")).toBe(false);
+  });
+
+  it("is the only thing the threshold flow records on completion", () => {
+    const flow = readFileSync("src/app/threshold/ThresholdFlow.tsx", "utf8");
+    expect(flow.includes("recordCompletion")).toBe(false);
+    // Braced form, not the bare identifier: `recordResult` is a substring of
+    // any longer name built from it.
+    const calls = flow.split("recordResult(").length - 1;
+    expect(calls, "the flow should record exactly one session per completion").toBe(1);
   });
 });
 

@@ -56,12 +56,7 @@ import {
   SNACK_LINE,
   SNACK_CTA,
 } from "@/content/staircase/copy";
-import {
-  cooldownDaysLeft,
-  recordCompletion,
-  serverSnapshot,
-  subscribeCooldown,
-} from "@/lib/retest-cooldown";
+import { cooldownDaysLeft, serverSnapshot, subscribeCooldown } from "@/lib/retest-cooldown";
 import { recordResult } from "@/lib/result-store";
 import { POOL_VERSIONS } from "@/lib/result-recall";
 import ThresholdResult from "./ThresholdResult";
@@ -182,11 +177,12 @@ export default function ThresholdFlow({ family }: { family: string }) {
       log.bank();
       if (isFinished(next)) {
         const result = sessionResult(next);
-        // Stamped on COMPLETION, never on start: a session abandoned at trial
-        // three measured nothing, and charging someone a week for it would be
-        // the gate punishing them instead of protecting the number.
-        recordCompletion(family, Date.now());
-        // Same moment, same reason: only a FINISHED session is worth recalling.
+        // ONE WRITE, and it is the session (E13/S2). Stamped on COMPLETION,
+        // never on start: a session abandoned at trial three measured nothing,
+        // and charging someone a week for it would be the gate punishing them
+        // instead of protecting the number. The retest cooldown now READS this
+        // timestamp rather than keeping a second one of its own, so there is no
+        // longer a way for the two to disagree.
         // Raw answers, never the computed threshold — see result-store.ts.
         recordResult(
           "threshold",

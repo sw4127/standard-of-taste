@@ -267,6 +267,37 @@ export function forgetResult(instrument: StoredInstrument, slug?: string): void 
 }
 
 /**
+ * WHEN THIS SLOT WAS LAST WRITTEN — AND DELIBERATELY NOT POOL-VERSION GATED
+ * (E13/S2).
+ *
+ * Every other read here drops sessions answered against a different pool,
+ * because scoring last month's answers against a reordered item list would
+ * answer different questions without erroring. This one must NOT, and the
+ * reason is the whole point of the slice: the retest cooldown asks "when did
+ * this person last finish a session", not "what did they score". Gate that on
+ * the pool version and a routine re-render of the clips silently unblocks
+ * everybody's cooldown on deploy day — a validity gate failing open because an
+ * unrelated number moved. The answers become unscoreable; the fact that a
+ * person sat through the session an hour ago does not.
+ *
+ * THE LAST ELEMENT, NOT THE LARGEST TIMESTAMP. They differ only when the list
+ * is out of order, which takes a corrected clock or a hand edit — and taking
+ * the largest would let one future-dated entry disable the gate for as long as
+ * it survived in the list, because `cooldownFrom` fails open on a future time
+ * to avoid locking somebody out permanently. Append order is what actually
+ * happened.
+ */
+export function lastRecordedAt(instrument: StoredInstrument, slug?: string): number | null {
+  try {
+    if (typeof localStorage === "undefined") return null;
+    const all = parseEnvelope(localStorage.getItem(keyFor(instrument, slug)));
+    return all.length === 0 ? null : all[all.length - 1].savedAt;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * A CHEAP, STABLE DESCRIPTION OF ONE SLOT, for `useSyncExternalStore`.
  *
  * The hook re-renders forever unless the snapshot is referentially stable, so

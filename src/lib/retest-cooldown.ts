@@ -23,10 +23,31 @@
  * be worse. The gate catches the person who forgot, which is everyone.
  */
 
+/**
+ * IT NO LONGER OWNS A KEY (E13/S2, Track G1, RT-G b).
+ *
+ * The gate used to keep its own `gym.lastCompleted.<family>` timestamp beside
+ * the session store, so finishing a threshold session wrote to storage twice,
+ * in two formats, with two chances to disagree — and the record of a completed
+ * session lived in a place that knew nothing about the session itself. The
+ * timestamp is now READ FROM THE SESSION STORE: the gate asks the history when
+ * this family was last measured, and nothing writes a cooldown at all.
+ *
+ * THE OLD KEY IS STILL READ, and that is not tidiness. This gate shipped in
+ * E5/S5 and the session store only in E8/S7, so a browser that finished a
+ * session in between holds a cooldown with no session behind it. Dropping the
+ * fallback would hand those people an early retest and a number we already know
+ * is contaminated. Nothing writes the old key any more, so it drains on its own.
+ */
+
+import { lastRecordedAt } from "./result-store";
+import { SLUG_BY_FAMILY } from "@/app/threshold/families";
+
 export const COOLDOWN_DAYS = 7;
 export const COOLDOWN_MS = COOLDOWN_DAYS * 24 * 60 * 60 * 1000;
 
-const KEY_PREFIX = "gym.lastCompleted.";
+/** Read-only from E13/S2 onward. Kept so pre-store browsers keep their gate. */
+export const LEGACY_KEY_PREFIX = "gym.lastCompleted.";
 
 export interface CooldownState {
   /** Whether a fresh session should be refused right now. */
@@ -74,10 +95,10 @@ export function cooldownFrom(lastCompletedAt: number | null, now: number): Coold
  * white-screens the Gym. Failing open is the deliberate choice (see above); a
  * crash is not a choice at all.
  */
-export function readLastCompleted(family: string): number | null {
+function readLegacyCompleted(family: string): number | null {
   try {
     if (typeof localStorage === "undefined") return null;
-    const raw = localStorage.getItem(KEY_PREFIX + family);
+    const raw = localStorage.getItem(LEGACY_KEY_PREFIX + family);
     if (raw === null) return null;
     const n = Number(raw);
     return Number.isFinite(n) ? n : null;
@@ -86,15 +107,18 @@ export function readLastCompleted(family: string): number | null {
   }
 }
 
-export function recordCompletion(family: string, now: number): void {
-  try {
-    if (typeof localStorage === "undefined") return;
-    localStorage.setItem(KEY_PREFIX + family, String(now));
-  } catch {
-    // Nothing to do and nothing to tell the user: they finished the session,
-    // they got their number, and the only casualty is that we will not
-    // recognise them in a week.
-  }
+/**
+ * When this family was last measured on this device.
+ *
+ * The session store first, because it is the record of the thing that actually
+ * happened; the retired key only when the store has nothing, which is the
+ * pre-E8/S7 browser described above. There is no path where the old key should
+ * win: after this slice nothing writes it, and before this slice both were
+ * written in the same breath.
+ */
+export function readLastCompleted(family: string): number | null {
+  const fromSessions = lastRecordedAt("threshold", SLUG_BY_FAMILY[family]);
+  return fromSessions !== null ? fromSessions : readLegacyCompleted(family);
 }
 
 /** The state for one family, read from this device. */
