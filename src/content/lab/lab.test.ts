@@ -17,7 +17,7 @@ import { DELICACY_METRICS } from "@/engine/delicacy";
 import { ESTIMATE_METRICS } from "@/analytics/estimate";
 import { RECOVERY_METRICS } from "@/analytics/recovery";
 import { METRICS, metric, metricIds } from "./metrics";
-import { LAB_PANELS, LIVE_PANELS, PENDING_PANELS } from "./panels";
+import { LAB_PANELS, LIVE_PANELS, PENDING_PANELS, validatePanel, type LabPanel } from "./panels";
 
 const SOURCES = ["SIMULATED", "REAL", "MIXED"];
 
@@ -178,10 +178,53 @@ describe("lab — panel contract", () => {
     }
   });
 
-  it("pending panels name the slice that builds them; live panels do not pretend", () => {
-    for (const p of PENDING_PANELS) expect(p.plannedIn, p.id).toMatch(/^S\d+$/);
+  /**
+   * E15/S2 — THIS RULE REPLACED ONE THAT ASKED THE WRONG QUESTION.
+   *
+   * It used to require every pending panel to name a slice, `/^S\d+$/`. Three
+   * of them named S10, S11 and S12 — artifact-pivot slices that had not been a
+   * live plan for weeks — and the test passed on all three, because it checked
+   * the SHAPE of a schedule and never whether the schedule existed. A reader
+   * saw a date where there was no plan and no reason.
+   *
+   * What a reader is owed on this list is why the thing is absent. That is
+   * something this product can always answer; a delivery date is something it
+   * usually cannot. So the reason is required, the schedule is optional, and a
+   * schedule that IS given must point at a real named slice.
+   */
+  it("every unbuilt panel says why it is absent, in a reader's words", () => {
+    expect(PENDING_PANELS.length).toBeGreaterThan(0);
+    for (const p of PENDING_PANELS) {
+      expect(p.absent, `${p.id} is on the roadmap with no reason`).toBeTruthy();
+      // Long enough to be a reason rather than a label. "Soon" would pass a
+      // truthiness check and tell a reader nothing.
+      expect(p.absent!.length, `${p.id}'s reason is too short to be one`).toBeGreaterThan(20);
+    }
     expect(LIVE_PANELS.length).toBeGreaterThan(0);
-    expect(LIVE_PANELS.every((p) => p.plannedIn === undefined)).toBe(true);
+    for (const p of LIVE_PANELS) {
+      expect(p.absent, `${p.id} is live but still explains its own absence`).toBeUndefined();
+      expect(p.plannedIn, p.id).toBeUndefined();
+    }
+  });
+
+  /**
+   * REGRESSION — ONE PANEL, ONE SUBJECT (E15/S2).
+   *
+   * `funnel-experiments` carried both "entry through completion by channel" and
+   * "every experiment with its hypothesis". The blueprint rules OPPOSITE things
+   * about those two halves — build the registry (J2), never build the funnel
+   * (J3) — so the bundled entry could only ever be half right, and whichever
+   * half shipped would have dragged the other onto the page with it.
+   */
+  it("no panel bundles the funnel and the experiment registry again", () => {
+    for (const p of LAB_PANELS) {
+      const subject = `${p.id} ${p.title} ${p.blurb}`.toLowerCase();
+      const bundled = subject.includes("funnel") && subject.includes("experiment");
+      expect(bundled, `${p.id} covers both the funnel and experiments in one panel`).toBe(false);
+    }
+    // The needle must see the entry it was written for.
+    const old = "funnel-experiments funnel, cohorts & experiment registry".toLowerCase();
+    expect(old.includes("funnel") && old.includes("experiment")).toBe(true);
   });
 
   it("no panel is silently dropped from the registry", () => {
@@ -201,5 +244,31 @@ describe("lab — panel contract", () => {
   it("no panel is both live and roadmapped", () => {
     for (const p of LIVE_PANELS) expect(p.plannedIn, p.id).toBeUndefined();
     for (const p of PENDING_PANELS) expect(p.href, p.id).toBeUndefined();
+  });
+
+  /**
+   * The module-load throws are the real enforcement; these prove they fire,
+   * because a throw nobody has triggered is a comment with a keyword in it.
+   */
+  it("refuses, at module load, a pending panel with no reason and a live one with one", () => {
+    const base = {
+      id: "x",
+      title: "X",
+      blurb: "b",
+      dataSource: null,
+      metricIds: [],
+    } satisfies Omit<LabPanel, "status">;
+
+    expect(() => validatePanel({ ...base, status: "pending" })).toThrow(
+      /does not say why it is absent/,
+    );
+    // Whitespace is not a reason.
+    expect(() => validatePanel({ ...base, status: "pending", absent: "   " })).toThrow(/absent/);
+    expect(() =>
+      validatePanel({ ...base, status: "live", href: "/lab/x", absent: "why" }),
+    ).toThrow(/still carries an absence reason/);
+    // And the shapes that are legal must pass, or the guard is just a wall.
+    expect(() => validatePanel({ ...base, status: "pending", absent: "a real reason" })).not.toThrow();
+    expect(() => validatePanel({ ...base, status: "live", href: "/lab/x" })).not.toThrow();
   });
 });

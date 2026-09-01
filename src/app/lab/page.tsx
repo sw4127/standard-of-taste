@@ -219,17 +219,31 @@ export default function LabIndex() {
           Not built yet
         </h2>
         <p className="mt-2 max-w-2xl text-sm text-muted">
-          Listed rather than mocked up. An empty panel is not a panel.
+          Listed rather than mocked up. An empty panel is not a panel — and a date is not a
+          reason, so each of these says what is actually in the way.
         </p>
-        <ul className="mt-5 flex flex-col gap-2">
+        <ul className="mt-5 flex flex-col gap-3">
           {PENDING_PANELS.map((p) => (
             <li
               key={p.id}
-              className="flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-xl border border-dashed border-white/10 px-4 py-3"
+              className="rounded-xl border border-dashed border-white/10 px-4 py-3"
             >
-              <span className="font-display text-base font-semibold text-neutral-300">{p.title}</span>
-              <span className="font-mono text-[0.6rem] tracking-[0.18em] text-muted">{p.plannedIn}</span>
-              <span className="w-full text-xs text-muted sm:w-auto sm:flex-1">{p.blurb}</span>
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span className="font-display text-base font-semibold text-neutral-300">
+                  {p.title}
+                </span>
+                {p.plannedIn && (
+                  <span className="font-mono text-[0.6rem] tracking-[0.18em] text-muted">
+                    {p.plannedIn}
+                  </span>
+                )}
+              </div>
+              <p className="mt-1 text-xs leading-relaxed text-muted">{p.blurb}</p>
+              {/* The reason is the point of this list, so it is set apart from
+                  the description rather than trailing it as an aside. */}
+              <p className="mt-2 border-l-2 border-white/15 pl-3 text-xs leading-relaxed text-neutral-300">
+                {p.absent}
+              </p>
             </li>
           ))}
         </ul>

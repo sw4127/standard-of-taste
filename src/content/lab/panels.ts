@@ -32,7 +32,24 @@ export interface LabPanel {
   /** Dictionary ids this panel surfaces. Validated at module load. */
   metricIds: string[];
   status: "live" | "pending";
-  /** For pending panels: which slice builds it. Keeps the roadmap checkable. */
+  /**
+   * FOR A PENDING PANEL: WHY IT IS NOT BUILT. Required, enforced at module load.
+   *
+   * The roadmap used to carry `plannedIn` alone — a slice name — and nothing
+   * else. That reads as "coming soon", which is a promise, and three of the
+   * slice names it carried ("S10", "S11", "S12") belonged to the artifact-pivot
+   * plan and had not existed for weeks. A reader was being shown a schedule
+   * that was not real, in place of a reason that was.
+   *
+   * So the reason is mandatory and the schedule is optional, which is the
+   * correct way round: this product can always say why something is absent, and
+   * can rarely say when it will arrive.
+   */
+  absent?: string;
+  /**
+   * Which slice builds it — ONLY where a live plan names one. Absent is the
+   * normal case and means nobody has scheduled it, not that it is forgotten.
+   */
   plannedIn?: string;
   /** Route, for panels that have their own page. Required once status is live. */
   href?: string;
@@ -92,17 +109,60 @@ export const LAB_PANELS: LabPanel[] = [
     dataSource: "SIMULATED",
     metricIds: ["brier", "calibration_gap_pts", "sway_pct", "sway_raw_pct", "control_drift_pts", "sway_share"],
     status: "pending",
-    plannedIn: "S10",
+    absent:
+      "A distribution is a fact about a group of people, and no group has been through this yet. " +
+      "Simulating one would draw the model we assumed rather than anything measured — a shape " +
+      "with no information in it, wearing the badge of a finding.",
   },
   {
-    id: "funnel-experiments",
-    title: "Funnel, cohorts & experiment registry",
+    /**
+     * SPLIT FROM `funnel-experiments` (E15/S2).
+     *
+     * One entry used to carry both subjects: "Entry through completion by
+     * channel, AND every experiment with its hypothesis". That made the panel
+     * unanswerable, because the blueprint rules opposite things about its two
+     * halves — build the registry, never build the funnel. A panel that bundles
+     * two decisions can only be half right.
+     */
+    id: "experiment-registry",
+    title: "Falsified hypotheses",
     blurb:
-      "Entry through completion by channel, and every experiment with its hypothesis, stopping rule, and decision recorded before it ran.",
+      "Everything this project believed, tested, and had to abandon — with the measurement that killed it and where the derivation lives.",
+    /**
+     * NO BADGE. These are decisions and the evidence behind them, not
+     * measurements of respondents — same reasoning as the instrument-limits
+     * page. The individual findings carry their own provenance.
+     */
+    dataSource: null,
+    metricIds: [],
+    status: "pending",
+    absent: "Being assembled from the record now.",
+    plannedIn: "E15/S6–S7",
+  },
+  {
+    id: "funnel-cohort",
+    title: "Funnel & cohorts",
+    blurb:
+      "Entry through completion by channel, and what each cohort did after arriving.",
     dataSource: "SIMULATED",
     metricIds: ["sessions_completed"],
     status: "pending",
-    plannedIn: "S11",
+    /**
+     * PM ruling RT-J, re-framed: he rejected "we have no data" as a poor
+     * demonstration. So this reason states the ARITHMETIC of the absence rather
+     * than apologising for it.
+     *
+     * IT DOES NOT POINT AT THE SPECIFICATION, THOUGH E15/S3 ADDS ONE. The first
+     * draft ended "the specification it would implement is below", which was
+     * written while that specification was still a slice away — a page claiming
+     * something it did not have, on the surface whose entire argument is that it
+     * does not do that. Caught by reading the built page. Whatever cites the
+     * specification must ship in the same slice as the specification.
+     */
+    absent:
+      "A funnel is a set of ratios, and a ratio needs a denominator. This one has none: nobody " +
+      "has been through the instrument, so every rate it could print would be zero divided by " +
+      "zero. Showing that as a chart would be a drawing, not a measurement.",
   },
   {
     id: "data-model",
@@ -111,18 +171,42 @@ export const LAB_PANELS: LabPanel[] = [
     dataSource: null,
     metricIds: [],
     status: "pending",
-    plannedIn: "S12",
+    absent: "Being written from the code that persists it now.",
+    plannedIn: "E15/S4–S5",
   },
 ];
 
-// Fail at module load, not at render: a bad reference should break the build
-// and the test run, not produce a page with a hole in it.
-for (const panel of LAB_PANELS) {
+/**
+ * The panel contract, as ONE function rather than a loop body.
+ *
+ * Exported so the test can call THIS, on panels that do not exist. A test that
+ * re-implements the predicate proves only that the test's copy works — the
+ * guard-weaker-than-its-name failure, which this repo has paid for repeatedly.
+ */
+export function validatePanel(panel: LabPanel): void {
   for (const id of panel.metricIds) metric(id);
   if (panel.status === "live" && panel.id !== "metric-dictionary" && !panel.href) {
     throw new Error(`lab: live panel "${panel.id}" has no href — it would be unreachable`);
   }
+  /*
+   * AN UNBUILT PANEL MUST SAY WHY, HERE, WHERE IT CANNOT BE FORGOTTEN.
+   *
+   * The roadmap is a list of things this product does not have, published on
+   * the page that argues it is honest about what it has. A row with no reason
+   * beside it reads as "coming soon", which is a promise nobody made, and it is
+   * the one thing on the Lab that could quietly become untrue by doing nothing.
+   */
+  if (panel.status === "pending" && !panel.absent?.trim()) {
+    throw new Error(`lab: pending panel "${panel.id}" does not say why it is absent`);
+  }
+  if (panel.status === "live" && panel.absent) {
+    throw new Error(`lab: live panel "${panel.id}" still carries an absence reason`);
+  }
 }
+
+// Fail at module load, not at render: a bad reference should break the build
+// and the test run, not produce a page with a hole in it.
+for (const panel of LAB_PANELS) validatePanel(panel);
 
 export const LIVE_PANELS = LAB_PANELS.filter((p) => p.status === "live");
 export const PENDING_PANELS = LAB_PANELS.filter((p) => p.status === "pending");
