@@ -23,6 +23,18 @@
  * and the engine will score those answers honestly (N3) — the same property
  * `/bias/result` and `/threshold/[slug]/result` already have.
  *
+ * IT IS A HISTORY NOW, AND IT CANNOT BE CHERRY-PICKED (E13/S1, RT-G b).
+ *
+ * Until now each slot held exactly one session and the second one destroyed the
+ * first. The reason was good and it still binds: a history invites "your best
+ * result", which is selection on the answer — the same bias E5/S2 measured and
+ * RT-90a(b) removed from the product. So the history is kept in TIME ORDER and
+ * the module exposes no way to ask for a best, a maximum, or a personal record.
+ * `readResult` still answers "the latest", which is what every shipped surface
+ * asks; `readHistory` answers "all of them, oldest first", which is what an arc
+ * needs. Neither can rank. That is the whole safety property, and there is a
+ * test that fails if a member named for a superlative ever appears here.
+ *
  * POOL VERSIONS ARE GATED ON READ, NOT ON WRITE. Payload tokens are positional:
  * their meaning is the item order of the pool that produced them, and decoding
  * last month's answers against a reordered pool would score different questions
@@ -39,8 +51,27 @@
 
 const KEY_PREFIX = "gym.result.";
 
-/** Bumped only if the ENVELOPE changes. Pool versions live inside `poolVersion`. */
-export const STORE_VERSION = 1;
+/**
+ * Bumped only if the ENVELOPE changes. Pool versions live inside `poolVersion`.
+ *
+ * 2 (E13/S1, RT-G b) — one slot per instrument became a chronological LIST.
+ * A v1 envelope is still read, as a history of one; nobody loses the session
+ * they already have.
+ */
+export const STORE_VERSION = 2;
+
+/**
+ * HOW MANY SESSIONS ONE SLOT KEEPS, newest wins, oldest evicted.
+ *
+ * With a 7-day cooldown per family, 24 threshold sessions is about six months
+ * of coming back. The entries are tens of bytes each, so the cap is not about
+ * space; it is about a list that grows without limit having no defined
+ * behaviour at all. Eviction is plain FIFO and drops the OLDEST — the tempting
+ * alternative, keeping the very first session as a permanent baseline and
+ * evicting the second, would leave a hole in the middle of a time series that
+ * any arc display would then draw as though the sessions were evenly spaced.
+ */
+export const HISTORY_CAP = 24;
 
 export type StoredInstrument = "bias" | "delicacy" | "threshold";
 
@@ -79,18 +110,10 @@ function keyFor(instrument: StoredInstrument, slug?: string): string {
  * A malformed entry returns null rather than throwing, and rather than reaching
  * a decoder that would throw further away from the cause.
  */
-function parse(raw: string | null, poolVersion: number): StoredEntry | null {
-  if (raw === null) return null;
-  let data: unknown;
-  try {
-    data = JSON.parse(raw);
-  } catch {
-    return null;
-  }
+function parseSession(data: unknown, envelopeVersion: number): StoredEntry | null {
   if (typeof data !== "object" || data === null) return null;
   const e = data as Partial<StoredEntry>;
-  if (e.v !== STORE_VERSION) return null;
-  if (e.poolVersion !== poolVersion) return null;
+  if (typeof e.poolVersion !== "number" || !Number.isFinite(e.poolVersion)) return null;
   if (typeof e.savedAt !== "number" || !Number.isFinite(e.savedAt)) return null;
 
   const p = e.payload as Partial<StoredPayload> | undefined;
@@ -110,30 +133,99 @@ function parse(raw: string | null, poolVersion: number): StoredEntry | null {
     default:
       return null;
   }
-  return e as StoredEntry;
+  // `v` is the ENVELOPE's, carried onto every session so callers keep the shape
+  // they had before the slot became a list.
+  return { v: envelopeVersion, poolVersion: e.poolVersion, savedAt: e.savedAt, payload: p as StoredPayload };
 }
 
-/** One stored session, or null. Never throws. */
+/**
+ * The whole slot, oldest first, with anything malformed dropped rather than
+ * throwing — one corrupt session must not cost a person the other twenty-three.
+ * No pool-version filtering happens here; that is the caller's gate.
+ *
+ * A v1 ENVELOPE IS MIGRATED ON READ, not rewritten on disk. Someone who
+ * measured their pitch drift last month has exactly one session, and dropping
+ * it because the envelope grew a list would be this module deleting the record
+ * it exists to keep. It becomes a history of one, and the next write persists
+ * it in the new shape.
+ */
+function parseEnvelope(raw: string | null): StoredEntry[] {
+  if (raw === null) return [];
+  let data: unknown;
+  try {
+    data = JSON.parse(raw);
+  } catch {
+    return [];
+  }
+  if (typeof data !== "object" || data === null) return [];
+  const env = data as { v?: unknown; sessions?: unknown; payload?: unknown };
+
+  if (env.v === 1) {
+    const one = parseSession(env, 1);
+    return one ? [one] : [];
+  }
+  if (env.v !== STORE_VERSION) return [];
+  if (!Array.isArray(env.sessions)) return [];
+
+  const out: StoredEntry[] = [];
+  for (const s of env.sessions) {
+    const parsed = parseSession(s, STORE_VERSION);
+    if (parsed) out.push(parsed);
+  }
+  return out;
+}
+
+/**
+ * Every session in this slot that was answered against `poolVersion`, OLDEST
+ * FIRST. Sessions recorded against another pool are left on disk but not
+ * returned: their answer tokens are positional, so scoring them against today's
+ * item order would answer different questions without erroring.
+ */
+export function readHistory(
+  instrument: StoredInstrument,
+  poolVersion: number,
+  slug?: string,
+): StoredEntry[] {
+  try {
+    if (typeof localStorage === "undefined") return [];
+    return parseEnvelope(localStorage.getItem(keyFor(instrument, slug))).filter(
+      (e) => e.poolVersion === poolVersion,
+    );
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * The LATEST stored session, or null. Never throws.
+ *
+ * Signature unchanged since E8/S7 on purpose: every shipped surface that reads
+ * this store — the combined view, the expert panel, all three recall helpers —
+ * wants the session the person just finished, and none of them had to learn
+ * about a list.
+ */
 export function readResult(
   instrument: StoredInstrument,
   poolVersion: number,
   slug?: string,
 ): StoredEntry | null {
-  try {
-    if (typeof localStorage === "undefined") return null;
-    return parse(localStorage.getItem(keyFor(instrument, slug)), poolVersion);
-  } catch {
-    return null;
-  }
+  const all = readHistory(instrument, poolVersion, slug);
+  return all.length === 0 ? null : all[all.length - 1];
 }
 
 /**
- * Record a finished session. Overwrites the previous one for that instrument.
+ * Record a finished session. APPENDS to the slot's history (E13/S1, RT-G b).
  *
- * LAST SESSION WINS, deliberately. The alternative is a history, and a history
- * invites "your best result" — which would be selection on the answer, the
- * exact bias E5/S2 measured and RT-90a(b) removed. One slot per instrument
- * cannot be cherry-picked.
+ * It used to overwrite, and the reason given was that a history invites "your
+ * best result". That risk is real and it is now handled where it belongs — in
+ * the read API, which cannot express a ranking — rather than by throwing the
+ * evidence away. Overwriting also made the product's headline promise
+ * impossible to keep: "did your ear move" needs the session before this one.
+ *
+ * READ-MODIFY-WRITE, and the read is the tolerant one. If the existing slot is
+ * unparseable garbage, this appends to an empty list rather than refusing to
+ * record — the person finished a session, and a corrupt neighbour is not their
+ * problem.
  */
 export function recordResult(
   instrument: StoredInstrument,
@@ -143,16 +235,28 @@ export function recordResult(
 ): void {
   try {
     if (typeof localStorage === "undefined") return;
-    const entry: StoredEntry = { v: STORE_VERSION, poolVersion, savedAt: now, payload };
     const slug = payload.kind === "threshold" ? payload.slug : undefined;
-    localStorage.setItem(keyFor(instrument, slug), JSON.stringify(entry));
+    const key = keyFor(instrument, slug);
+    const kept = parseEnvelope(localStorage.getItem(key));
+    kept.push({ v: STORE_VERSION, poolVersion, savedAt: now, payload });
+    // Oldest out first, and only ever from the front, so what remains is still
+    // a contiguous run of the most recent sessions.
+    const sessions = kept.slice(Math.max(0, kept.length - HISTORY_CAP)).map((e) => ({
+      poolVersion: e.poolVersion,
+      savedAt: e.savedAt,
+      payload: e.payload,
+    }));
+    localStorage.setItem(key, JSON.stringify({ v: STORE_VERSION, sessions }));
   } catch {
     // The person finished their session and got their number. The only casualty
     // is that the combined view will not know about it.
   }
 }
 
-/** Forget one stored session. Used by tests and by any future "clear" control. */
+/**
+ * Forget one slot ENTIRELY — every session in it, not just the latest. Used by
+ * tests and, from E13/S4, by the clear control.
+ */
 export function forgetResult(instrument: StoredInstrument, slug?: string): void {
   try {
     if (typeof localStorage === "undefined") return;
