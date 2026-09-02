@@ -48,6 +48,19 @@
  * not kept them apart either, and a statistic that silently folded ties into
  * "kept" would report a total collapse as perfect stability.
  *
+ * TIES DO SIT IN THE DENOMINATOR, AND THAT BIASES THE SHARE DOWNWARD. A pair
+ * that became equal is counted as asserted but can never be a reversal, so a
+ * listener who collapses pairs reads as steadier than one who flips them. The
+ * alternative — dividing by keeps plus reversals — would hide the collapse
+ * entirely. Both denominators mislead in some direction; this one misleads
+ * toward calling people steady, which is the direction that does not flatter
+ * the instrument, and `tied` is carried so a surface can show it.
+ *
+ * AND THE HEADLINE NEEDS A NULL MODEL. Eleven of eleven degrees is reachable by
+ * accident: rating sixteen clips at random would land on about nine distinct
+ * values. `degreesIfIndifferent` carries that figure so no surface invites a
+ * reader to measure themselves against a ceiling indifference already clears.
+ *
  * ---------------------------------------------------------------------------
  * WHAT THIS MODULE MAY NEVER BE USED TO SAY (N3, and RT-H2's trap)
  *
@@ -94,6 +107,19 @@ export interface ComparisonResult {
   degreesAvailable: number;
   /** Distinct blind rating values used. */
   degreesUsed: number;
+  /**
+   * THE NULL MODEL, AND THE REASON THE HEADLINE IS UNREADABLE WITHOUT IT.
+   *
+   * Distinct values you would expect from someone rating every clip at random —
+   * D·(1 − ((D−1)/D)^n) for n clips on a D-point scale. At the shipped pool
+   * that is about 8.6 of 11, NOT 11, so a reader comparing their count against
+   * the ceiling is comparing it against a bar indifference already clears.
+   *
+   * It is arithmetic, not a norm: no cohort, no percentile, nobody's data (N3).
+   * It says what an indifferent rater would produce, which is the only
+   * reference point available when nobody has sat this instrument.
+   */
+  degreesIfIndifferent: number;
   lowestUsed: number;
   highestUsed: number;
   /** highestUsed − lowestUsed, in points. */
@@ -175,6 +201,8 @@ export function computeComparisonResult(
     itemCount: items.length,
     degreesAvailable: DEGREES_AVAILABLE,
     degreesUsed: used.size,
+    degreesIfIndifferent:
+      DEGREES_AVAILABLE * (1 - Math.pow((DEGREES_AVAILABLE - 1) / DEGREES_AVAILABLE, items.length)),
     lowestUsed: Math.min(...blindValues),
     highestUsed: Math.max(...blindValues),
     span: Math.max(...blindValues) - Math.min(...blindValues),
@@ -198,7 +226,19 @@ export const COMPARISON_METRICS: MetricSpec[] = [
     owner: "instrument",
     target: null,
     caveat:
-      "Bounded by the number of clips as well as by the scale, and a narrow spread may simply be the correct answer if the clips really are close in quality. The instrument cannot tell those two cases apart.",
+      "Bounded by the number of clips as well as by the scale, and a narrow spread may simply be the correct answer if the clips really are close in quality. The instrument cannot tell those two cases apart. Read it against the indifferent-rater figure, never against the ceiling.",
+  },
+  {
+    id: "degrees_if_indifferent",
+    label: "Degrees an indifferent rater would use",
+    definition:
+      "How many distinct scale points somebody rating every clip at random would be expected to land on. The reference point for the degrees-used count, because the top of the scale is reachable by accident.",
+    formula: "D · (1 − ((D−1)/D)^n) for n clips on a D-point scale",
+    unit: "count",
+    owner: "instrument",
+    target: null,
+    caveat:
+      "Arithmetic, not a norm. It is what chance produces, not what anybody scored — there is no cohort and this is not a percentile.",
   },
   {
     id: "rating_span",
@@ -221,6 +261,6 @@ export const COMPARISON_METRICS: MetricSpec[] = [
     owner: "instrument",
     target: null,
     caveat:
-      "Two labels pushing the same way need not push equally hard, so this removes the first-order reason for a reversal rather than every reason. Null when no pair was separated far enough to count.",
+      "Two labels pushing the same way need not push equally hard, so this removes the first-order reason for a reversal rather than every reason. Pairs that became equal stay in the denominator and can never be reversals, which biases the figure toward calling a listener steady. Null when no pair was separated far enough to count.",
   },
 ];

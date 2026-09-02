@@ -198,6 +198,37 @@ describe("comparison — against the pool that actually ships", () => {
     expect(result.pairs.eligible).toBe(expected);
   });
 
+  it("puts the indifferent-rater figure well below the ceiling, by simulation", () => {
+    /*
+     * The engine computes the null model in closed form. This checks it against
+     * a different method entirely — actually drawing random ratings — so a
+     * mistake in the formula cannot be confirmed by restating the formula.
+     */
+    const flat: BiasRatings = Object.fromEntries(BIAS_CLIPS.map((c, i) => [c.id, i % 11]));
+    const closedForm = computeComparisonResult(BIAS_CLIPS, flat, flat).degreesIfIndifferent;
+
+    let seed = 20260902;
+    const next = () => {
+      // Deterministic LCG: the assertion must not depend on the day it runs.
+      seed = (seed * 1103515245 + 12345) % 2147483648;
+      return seed / 2147483648;
+    };
+    let total = 0;
+    const runs = 4000;
+    for (let r = 0; r < runs; r++) {
+      const drawn = new Set<number>();
+      for (let i = 0; i < BIAS_CLIPS.length; i++) drawn.add(Math.floor(next() * DEGREES_AVAILABLE));
+      total += drawn.size;
+    }
+    const simulated = total / runs;
+
+    expect(closedForm).toBeCloseTo(simulated, 1);
+    // And the point of it: the ceiling is reachable by accident, so it is not
+    // the reference point a reader should be handed.
+    expect(closedForm).toBeLessThan(DEGREES_AVAILABLE);
+    expect(closedForm).toBeGreaterThan(DEGREES_AVAILABLE * 0.7);
+  });
+
   it("can never report more degrees than the scale offers or the clips allow", () => {
     const flat: BiasRatings = Object.fromEntries(BIAS_CLIPS.map((c, i) => [c.id, i % 11]));
     const result = computeComparisonResult(BIAS_CLIPS, flat, flat);
