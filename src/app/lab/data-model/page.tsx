@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Jump from "@/components/Jump";
 import {
   DEVICE_ENTITIES,
   PERSISTENT_NAMESPACE,
   TAB_ENTITIES,
   type DataEntity,
 } from "@/content/lab/data-model";
+import {
+  ANSWER_CARRYING_EVENTS,
+  EVENT_COUNT,
+  EVENT_SURFACES,
+  LINEAGE,
+  carriesAnswers,
+  eventTrigger,
+  eventsFor,
+} from "@/content/lab/event-schema";
 import { GYM_INK } from "@/content/instrument-accents";
 
 /**
@@ -121,9 +130,7 @@ export default function DataModel() {
           namespace, which is what lets{" "}
           {/* The control lives on /legal, NOT at a /forget route — I wrote
               href="/forget" first and it does not exist. A link is a claim. */}
-          <Link href="/legal" className="underline underline-offset-4 hover:text-white">
-            forgetting this browser
-          </Link>{" "}
+          <Jump href="/legal" accent={INK}>forgetting this browser</Jump>{" "}
           be one sweep rather than a list of keys somebody has to remember to update.
         </p>
         <div className="mt-5 flex flex-col gap-3">
@@ -148,10 +155,147 @@ export default function DataModel() {
         </div>
       </section>
 
+      {/* ------------------------------------------------- the event schema */}
+      <section className="mt-16" aria-labelledby="events">
+        <div className="flex flex-wrap items-baseline justify-between gap-3">
+          <h2 id="events" className="font-display text-2xl font-semibold tracking-tight">
+            What gets sent away
+          </h2>
+          <p className="font-mono text-[0.6rem] tracking-[0.18em] text-muted">
+            {EVENT_COUNT} EVENTS · {EVENT_SURFACES.length} SURFACES
+          </p>
+        </div>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+          Usage events — the one thing here that does leave your browser. Most carry only the fact
+          that something happened. {ANSWER_CARRYING_EVENTS.length} of them carry your actual
+          answers too, and those are marked{" "}
+          <span
+            className="rounded border border-white/20 px-1 font-mono text-[0.55rem] tracking-[0.1em]"
+            style={{ color: INK }}
+          >
+            ANSWERS
+          </span>{" "}
+          below. That is deliberate rather than accidental: a set of real responses is the thing
+          this project is trying to build, and it does not have one yet. Every event the code emits
+          is listed here, because the page is built from the same registry the code is held to — an
+          event that fires without appearing here breaks the build.
+        </p>
+
+        <div className="mt-6 flex flex-col gap-3">
+          {EVENT_SURFACES.map((surface) => (
+            <div
+              key={surface.id}
+              className="rounded-2xl border border-white/10 bg-white/[0.03] p-5"
+            >
+              <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                <h3 className="font-display text-lg font-semibold">{surface.title}</h3>
+                <span className="font-mono text-[0.6rem] tracking-[0.15em] text-muted">
+                  {eventsFor(surface).length}
+                </span>
+              </div>
+              <p className="mt-1.5 text-xs leading-relaxed text-muted">{surface.blurb}</p>
+              <dl className="mt-4 flex flex-col gap-2">
+                {eventsFor(surface).map((event) => (
+                  <div key={event} className="flex flex-col gap-0.5 sm:flex-row sm:gap-3">
+                    <dt
+                      className="shrink-0 font-mono text-[0.7rem] sm:w-52"
+                      style={{ color: INK }}
+                    >
+                      {event}
+                    </dt>
+                    <dd className="text-xs leading-relaxed text-muted sm:flex-1">
+                      {carriesAnswers(event) && (
+                        <>
+                          <span
+                            className="mr-1.5 rounded border border-white/20 px-1 font-mono text-[0.55rem] tracking-[0.1em]"
+                            style={{ color: INK }}
+                          >
+                            ANSWERS
+                          </span>
+                        </>
+                      )}
+                      {eventTrigger(event)}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* --------------------------------------- from a tap to a statistic */}
+      <section className="mt-16" aria-labelledby="lineage">
+        <h2 id="lineage" className="font-display text-2xl font-semibold tracking-tight">
+          From a tap to a statistic
+        </h2>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+          A list of events says what is recorded. It does not say how something you did becomes a
+          number you read. Each row follows one action the whole way — and every step of it is
+          checked against the module that owns it.
+        </p>
+
+        <div className="mt-6 flex flex-col gap-3">
+          {LINEAGE.map((row, i) => (
+            <article
+              key={`${row.event}-${i}`}
+              className="rounded-2xl border border-white/10 bg-white/[0.03] p-5"
+            >
+              <p className="font-display text-base font-semibold text-neutral-100">{row.action}</p>
+              <dl className="mt-3 flex flex-col gap-2">
+                <div className="flex flex-col gap-0.5 sm:flex-row sm:gap-3">
+                  <dt className="shrink-0 text-[0.6rem] font-bold tracking-[0.2em] text-muted sm:w-32">
+                    RECORDED AS
+                  </dt>
+                  <dd className="font-mono text-xs sm:flex-1" style={{ color: INK }}>
+                    {row.event}
+                  </dd>
+                </div>
+                <div className="flex flex-col gap-0.5 sm:flex-row sm:gap-3">
+                  <dt className="shrink-0 text-[0.6rem] font-bold tracking-[0.2em] text-muted sm:w-32">
+                    ANSWER KEPT IN
+                  </dt>
+                  <dd className="min-w-0 break-words font-mono text-xs text-neutral-300 sm:flex-1">
+                    {row.storedAs}
+                  </dd>
+                </div>
+                <div className="flex flex-col gap-0.5 sm:flex-row sm:gap-3">
+                  <dt className="shrink-0 text-[0.6rem] font-bold tracking-[0.2em] text-muted sm:w-32">
+                    SCORED BY
+                  </dt>
+                  <dd className="min-w-0 break-words font-mono text-xs text-neutral-300 sm:flex-1">
+                    {row.computedIn}
+                  </dd>
+                </div>
+                <div className="flex flex-col gap-0.5 sm:flex-row sm:gap-3">
+                  <dt className="shrink-0 text-[0.6rem] font-bold tracking-[0.2em] text-muted sm:w-32">
+                    ENDS UP AS
+                  </dt>
+                  <dd className="min-w-0 sm:flex-1">
+                    {row.metricId ? (
+                      <Jump href={`/lab#metric-${row.metricId}`} accent={INK}>
+                        {row.metricId}
+                      </Jump>
+                    ) : (
+                      <span className="font-mono text-xs italic text-muted">
+                        nothing in the dictionary
+                      </span>
+                    )}
+                  </dd>
+                </div>
+              </dl>
+              {row.terminalNote && (
+                <p className="mt-3 border-l-2 border-white/15 pl-3 text-xs leading-relaxed text-neutral-300">
+                  {row.terminalNote}
+                </p>
+              )}
+            </article>
+          ))}
+        </div>
+      </section>
+
       <p className="mt-14 text-sm text-muted">
-        <Link href="/lab" className="underline underline-offset-4 hover:text-white">
-          Back to the Lab
-        </Link>
+        <Jump href="/lab" accent={INK}>Back to the Lab</Jump>
       </p>
     </div>
   );

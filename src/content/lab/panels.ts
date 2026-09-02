@@ -170,7 +170,7 @@ export const LAB_PANELS: LabPanel[] = [
     id: "data-model",
     title: "Data model",
     blurb:
-      "Everything this product stores about a person, where it lives, and what it cannot do — with every key, cap and version read from the code that owns it.",
+      "Everything this product stores about a person, every event it sends away, and the path from one tap to one statistic — with every key, cap and event read from the code that owns it.",
     /**
      * NO BADGE. A schema, not a measurement: no respondents are involved, so
      * SIMULATED would be wrong and REAL would imply a cohort that does not
