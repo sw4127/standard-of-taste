@@ -9,9 +9,15 @@ export type PriorBelief = "totally" | "kind_of" | "not_really";
 /** §26 — free-read voice A/B (transparent, equal, no segmentation). */
 export type VoiceArm = "classic" | "online";
 
-const ARM_KEY = "vc_arm";
-const PB_KEY = "vc_pb";
-const VOICE_KEY = "vc_voice";
+/**
+ * Exported since E15/S4. `/lab/data-model` publishes exactly what this product
+ * keeps and where, and the per-tab keys are half of that answer — naming them
+ * on the page from a second list would let the page and the code disagree
+ * about what is being stored, which is the one thing that page may not do.
+ */
+export const ARM_KEY = "vc_arm";
+export const PB_KEY = "vc_pb";
+export const VOICE_KEY = "vc_voice";
 
 /**
  * Stable 50/50 arm for this session. Coin-flipped once on first read and cached,

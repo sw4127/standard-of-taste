@@ -309,6 +309,10 @@ describe("a slot keeps a chronological history", () => {
     expect(Object.keys(resultStore).sort()).toEqual(
       [
         "HISTORY_CAP",
+        // E15/S4: `/lab/data-model` prints the key shape, and a public page
+        // that retypes a storage key is a second copy free to drift. Data, not
+        // a door — it reaches no session the list below does not already.
+        "KEY_PREFIX",
         "STORE_VERSION",
         "forgetResult",
         "lastRecordedAt",

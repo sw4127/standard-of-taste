@@ -169,12 +169,17 @@ export const LAB_PANELS: LabPanel[] = [
   {
     id: "data-model",
     title: "Data model",
-    blurb: "Entity relationships, the event schema, and the pipeline from a tap to a statistic.",
+    blurb:
+      "Everything this product stores about a person, where it lives, and what it cannot do — with every key, cap and version read from the code that owns it.",
+    /**
+     * NO BADGE. A schema, not a measurement: no respondents are involved, so
+     * SIMULATED would be wrong and REAL would imply a cohort that does not
+     * exist. Same reasoning as the metric dictionary and instrument-limits.
+     */
     dataSource: null,
     metricIds: [],
-    status: "pending",
-    absent: "Being written from the code that persists it now.",
-    plannedIn: "E15/S4–S5",
+    status: "live",
+    href: "/lab/data-model",
   },
 ];
 

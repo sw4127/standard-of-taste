@@ -49,7 +49,12 @@
  * unguarded read there would white-screen a result page over a convenience.
  */
 
-const KEY_PREFIX = "gym.result.";
+/**
+ * Exported since E15/S4 so `/lab/data-model` can PRINT the key shape rather
+ * than describe it. A public page that retypes a storage key is a second copy
+ * free to drift from the one the code writes.
+ */
+export const KEY_PREFIX = "gym.result.";
 
 /**
  * Bumped only if the ENVELOPE changes. Pool versions live inside `poolVersion`.

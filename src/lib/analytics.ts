@@ -10,7 +10,8 @@ import { experimentProps } from "./experiment";
 
 export type TrackProps = Record<string, string | number | boolean | null>;
 
-const ATTR_KEY = "vc_attr";
+/** Exported since E15/S4, so `/lab/data-model` names it from here. */
+export const ATTR_KEY = "vc_attr";
 
 /**
  * Capture referral attribution ONCE per session from the entry URL's params
