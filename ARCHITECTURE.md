@@ -49,8 +49,10 @@ the refusals and what they cost, is at `/method`.
    was written**, by simulating the same unchanged person twice through the real session API: about
    **3.5x on the pitch ladder**, 8 points of sway on the prestige test. Below that the arc says so
    in the reader's own units rather than reporting progress, and it does so far more often than it
-   reports movement. The delicacy trials get no arc at all, because fifteen pairs cannot resolve a
-   change smaller than six of them. Pooling recent sittings is the only thing that lowers the floor
+   reports movement. The delicacy trials get no arc at all, because they cannot resolve anything
+   short of a near-total swing — two fifths of a whole sitting changing hands, or four fifths within
+   one flaw (the counts themselves are derived from the pool in `src/content/delicacy/arc-floor.ts`,
+   not written down here). Pooling recent sittings is the only thing that lowers the floor
    — four of them bring it to about 2.5x — and that is the entire reward for coming back. There is
    no streak, no XP, no points and no leaderboard anywhere near it (the anti-clone clause).
 
@@ -117,7 +119,8 @@ src/app/bias/          Hume frame → blind → bridge → labeled → reveal �
 src/app/delicacy/      A/B comparison, two-tap machine choice, confidence
 src/app/threshold/     The staircase, one family per session
 src/app/learn/         The reading room, including /learn/flaws
-src/app/lab/           Metric dictionary, instrument health, parameter recovery
+src/app/lab/           Metric dictionary, instrument health, parameter recovery,
+                       measured limits, the data model, and the falsified registry
 src/app/method/        How it was decided, and what was killed
 
 scripts/clip-pipeline/ Content ops: download (SHA-256) → license snapshot →
@@ -183,6 +186,34 @@ pool id + POOL_VERSION, result hash — to the analytics sink. Raw-first means e
 (IRT calibration, reliability, norms) is retroactively computable. **There are no real responses
 yet.**
 
+## The Lab, and what it refuses to draw
+
+Six panels, and the interesting ones are the two that exist *because* there is no data.
+
+**The data model** (`/lab/data-model`) states everything the product keeps — the session store, the
+history behind an arc, the retest gate, the per-tab variant state — plus every event it sends and the
+path from one tap to one published statistic. Every key, cap, version and event name is **imported
+from the module that owns it**, never retyped, so the page cannot fall behind the code. Two events
+carry a person's raw answers, and they are marked as such; the marking is verified against the actual
+`track()` call sites in both directions, because the first draft of that page claimed no event
+carried answers and was wrong.
+
+**The falsified registry** (`/lab/falsified`) is the experiment registry, redefined. There are no
+running experiments — there is no traffic to run them on — so instead it publishes every hypothesis
+this project believed, tested and had to abandon, with the measurement that killed it and a citation
+that is machine-opened. **The completeness is the point:** a test parses the `FALSIFIED` sections out
+of `docs/` and fails the build if the registry is missing one, so a future session cannot quietly
+drop an embarrassing entry. A self-reported list of failures you were free to edit is worth nothing.
+
+**The funnel is not built, and its absence is a specification rather than an apology.** Entry through
+completion needs a denominator and there is none, so the Lab index publishes the eight steps it would
+count — each resolved against the live event registry — and the arithmetic that gates it: 385 sessions
+must reach a step before its rate is known to five percentage points. The first step carries a caveat
+saying it is not a clean denominator, because a shared link reaches the instrument without ever
+touching the homepage.
+
+Every unbuilt panel must state **why**, enforced at module load. A slice name is not a reason.
+
 ## Content pipeline & licensing
 
 Audio is public-domain / Creative Commons only, with a paper trail per item: source URL + SHA-256, a
@@ -201,11 +232,7 @@ contracts, license gates, the voice checks, and a set of guards that hold the pu
 
 ## Roadmap
 
-1. **The retest arc** — Hume's *practice*. The store it needs now exists and is keeping history;
-   what does not exist is anything that READS more than the latest session. It will compare a
-   session against the same person's earlier sessions per family, in comparative sentences, with a
-   movement smaller than measurement noise reported as *no change you could hear*.
-2. **The Comparison instrument** — Hume's fifth. Needs "breadth" defined in units the product can
-   defend before anything is built.
-3. **Psychometrics against real responses** — the pipeline is written and validated by recovery; it
+1. **The Comparison instrument** — Hume's fifth, and the last one missing. Needs "breadth" defined
+   in units the product can defend before anything is built.
+2. **Psychometrics against real responses** — the pipeline is written and validated by recovery; it
    waits on data, and every figure stays badged until that data exists.
