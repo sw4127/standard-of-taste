@@ -20,6 +20,7 @@
  * docblock for the measurement. A floor that only ever says yes is not a floor.
  */
 import type { BiasResult } from "./bias";
+import type { ComparisonResult } from "./comparison";
 import type { DegradationFamily, DelicacyResult } from "./delicacy";
 import { DEGRADATION_FAMILIES } from "./delicacy";
 import type { StaircaseResult } from "./staircase-session";
@@ -50,7 +51,12 @@ export type EvidenceGap =
   | "no-arc-floor"
   /** This instrument is too coarse to show change at the shipped length
       (delicacy, PM ruling RT-H2b a). */
-  | "arc-instrument-unsupported";
+  | "arc-instrument-unsupported"
+  /* --- comparison, Hume's fifth criterion (E16/S3, Track I). --- */
+  /** Fewer clips than the scale has degrees, so "n of eleven" would be false. */
+  | "too-few-clips-for-degrees"
+  /** Too few pairs were separated far enough for a share to mean anything. */
+  | "too-few-asserted-pairs";
 
 export type Claim<T> = { ok: true; value: T } | { ok: false; gap: EvidenceGap };
 
@@ -313,4 +319,82 @@ export const SHARED_AXIS_FAMILIES: readonly DegradationFamily[] = ["pitch-drift"
 export function sharedAxisClaim(family: DegradationFamily): Claim<{ family: DegradationFamily }> {
   if (!SHARED_AXIS_FAMILIES.includes(family)) return refuse("no-shared-axis");
   return { ok: true, value: { family } };
+}
+
+/* ------------------------------------------------------------------ *
+ * Comparison — Hume's fifth criterion (E16/S3, Track I)
+ * ------------------------------------------------------------------ */
+
+export interface ComparisonDegreesSay {
+  degreesUsed: number;
+  degreesAvailable: number;
+  /** What an indifferent rater would produce. The reference point (E16/S2). */
+  degreesIfIndifferent: number;
+  lowestUsed: number;
+  highestUsed: number;
+  span: number;
+  itemCount: number;
+}
+
+/**
+ * A degrees claim needs at least as many clips as the scale has degrees.
+ *
+ * Below that the ceiling is the CLIP COUNT rather than the scale, so "you used
+ * five of eleven" is simply false — five of eight was the most that was ever
+ * on offer. The honest alternative would be to report a ceiling that changes
+ * with the pool, which makes the same sentence mean different things in
+ * different sessions. Refusing is the smaller lie.
+ */
+export function comparisonDegreesClaim(result: ComparisonResult): Claim<ComparisonDegreesSay> {
+  if (result.itemCount < result.degreesAvailable) return refuse("too-few-clips-for-degrees");
+  return {
+    ok: true,
+    value: {
+      degreesUsed: result.degreesUsed,
+      degreesAvailable: result.degreesAvailable,
+      degreesIfIndifferent: result.degreesIfIndifferent,
+      lowestUsed: result.lowestUsed,
+      highestUsed: result.highestUsed,
+      span: result.span,
+      itemCount: result.itemCount,
+    },
+  };
+}
+
+/**
+ * How many asserted pairs a stability share needs before it means anything.
+ *
+ * PROVISIONAL (N3), but not a bare constant: the rule is that ONE pair must not
+ * be able to move the reported figure by more than ten percentage points, and
+ * ten pairs is what that requires. With three asserted pairs a share of 0.33 and
+ * a share of 0.67 differ by a single clip's wobble, and no sentence should rest
+ * on that.
+ */
+export const MIN_ASSERTED_PAIRS = 10;
+
+export interface ComparisonStabilitySay {
+  asserted: number;
+  kept: number;
+  tied: number;
+  reversed: number;
+  reversedShare: number;
+}
+
+/**
+ * THE REFUSAL THAT FIRES FOR THE MOST INTERESTING READER, AND MUST.
+ *
+ * A listener who put every clip within a point of every other asserts almost no
+ * orders, so there is nothing to be stable about. That reader is exactly the one
+ * whose degrees count is most striking — and the temptation is to say something
+ * about their consistency anyway. There is nothing there to say. The degrees
+ * claim above still speaks; this one does not.
+ */
+export function comparisonStabilityClaim(
+  result: ComparisonResult,
+): Claim<ComparisonStabilitySay> {
+  const { asserted, kept, tied, reversed } = result.pairs;
+  if (asserted < MIN_ASSERTED_PAIRS || result.reversedShare === null) {
+    return refuse("too-few-asserted-pairs");
+  }
+  return { ok: true, value: { asserted, kept, tied, reversed, reversedShare: result.reversedShare } };
 }

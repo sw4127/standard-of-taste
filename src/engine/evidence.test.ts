@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
+  MIN_ASSERTED_PAIRS,
   MIN_TRIALS_PER_FAMILY_FOR_CONTRAST,
   SHARED_AXIS_FAMILIES,
   biasClaim,
+  comparisonDegreesClaim,
+  comparisonStabilityClaim,
   delicacyClaim,
   delicacyFamilyClaim,
   familyContrastClaim,
@@ -11,7 +14,9 @@ import {
 } from "./evidence";
 import { DEGRADATION_FAMILIES, computeDelicacyResult, type DelicacyItemSpec } from "./delicacy";
 import { MEASURED_TRIALS } from "@/content/delicacy/items";
-import type { BiasResult } from "./bias";
+import type { BiasItemSpec, BiasRatings, BiasResult } from "./bias";
+import { BIAS_CLIPS } from "@/content/bias/items";
+import { computeComparisonResult } from "./comparison";
 import {
   answer,
   axisFor,
@@ -410,5 +415,79 @@ describe("sharedAxisClaim", () => {
 
   it("never admits a family the delicacy pool does not contain", () => {
     for (const f of SHARED_AXIS_FAMILIES) expect(DEGRADATION_FAMILIES).toContain(f);
+  });
+});
+
+describe("comparison — the floors under Hume's fifth criterion", () => {
+  const wide: BiasRatings = Object.fromEntries(
+    BIAS_CLIPS.map((c, i) => [c.id, [1, 8, 3, 10, 5, 0, 7, 2, 9, 4, 6, 1, 8, 3, 10, 5][i]]),
+  );
+  const compressed: BiasRatings = Object.fromEntries(
+    BIAS_CLIPS.map((c, i) => [c.id, i % 2 === 0 ? 6 : 7]),
+  );
+
+  it("lets the degrees claim speak on the pool that actually ships", () => {
+    const claim = comparisonDegreesClaim(computeComparisonResult(BIAS_CLIPS, wide, wide));
+    expect(claim.ok).toBe(true);
+    if (!claim.ok) return;
+    expect(claim.value.degreesUsed).toBe(11);
+    expect(claim.value.degreesIfIndifferent).toBeLessThan(claim.value.degreesAvailable);
+  });
+
+  it("refuses the degrees claim when there are fewer clips than degrees", () => {
+    /* Eight clips on an eleven-point scale: "five of eleven" was never on offer. */
+    const few = BIAS_CLIPS.slice(0, 8);
+    expect(few.length).toBeLessThan(11);
+    const ratings: BiasRatings = Object.fromEntries(few.map((c, i) => [c.id, i]));
+    const claim = comparisonDegreesClaim(computeComparisonResult(few, ratings, ratings));
+    expect(claim.ok).toBe(false);
+    if (claim.ok) return;
+    expect(claim.gap).toBe("too-few-clips-for-degrees");
+  });
+
+  it("REFUSES the stability claim for the compressed rater — on the real pool", () => {
+    const result = computeComparisonResult(BIAS_CLIPS, compressed, compressed);
+    // The reader whose degrees count is most striking is the one this refuses.
+    expect(comparisonDegreesClaim(result).ok).toBe(true);
+    expect(result.pairs.asserted).toBe(0);
+    const claim = comparisonStabilityClaim(result);
+    expect(claim.ok).toBe(false);
+    if (claim.ok) return;
+    expect(claim.gap).toBe("too-few-asserted-pairs");
+  });
+
+  it("lets the stability claim speak for a rater who separated things", () => {
+    const claim = comparisonStabilityClaim(computeComparisonResult(BIAS_CLIPS, wide, wide));
+    expect(claim.ok).toBe(true);
+    if (!claim.ok) return;
+    expect(claim.value.asserted).toBeGreaterThanOrEqual(MIN_ASSERTED_PAIRS);
+    expect(claim.value.reversedShare).toBe(0);
+  });
+
+  it("sits exactly on the boundary: nine asserted pairs refused, ten allowed", () => {
+    /*
+     * Five items whose labels all push the same way, so every pair is eligible.
+     * Ratings 0,2,4,6,8 separate all ten pairs; 0,1,4,6,8 leaves the first pair
+     * one point apart, which the assertion floor drops, giving nine.
+     */
+    const five: BiasItemSpec[] = ["p1", "p2", "p3", "p4", "p5"].map((id) => ({
+      id,
+      labelDirection: "up",
+      labelIsTrue: true,
+    }));
+    const rate = (v: number[]): BiasRatings =>
+      Object.fromEntries(five.map((item, i) => [item.id, v[i]]));
+
+    const ten = computeComparisonResult(five, rate([0, 2, 4, 6, 8]), rate([0, 2, 4, 6, 8]));
+    const nine = computeComparisonResult(five, rate([0, 1, 4, 6, 8]), rate([0, 1, 4, 6, 8]));
+    expect(ten.pairs.asserted).toBe(10);
+    expect(nine.pairs.asserted).toBe(9);
+    expect(MIN_ASSERTED_PAIRS).toBe(10);
+
+    expect(comparisonStabilityClaim(ten).ok).toBe(true);
+    const refused = comparisonStabilityClaim(nine);
+    expect(refused.ok).toBe(false);
+    if (refused.ok) return;
+    expect(refused.gap).toBe("too-few-asserted-pairs");
   });
 });
