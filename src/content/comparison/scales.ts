@@ -12,9 +12,18 @@
  * public-domain and Creative-Commons audio only — so the instrument borrows
  * their SCALE rather than their records. That turns out to be the more
  * interesting half: the most numerically ambitious critical institution in
- * music gives itself a hundred and one degrees and behaves as though it has
- * about fifteen, and the critic who ran the longest-lived grading column in
- * American rock criticism retired the bottom of his own ladder.
+ * music gives itself a hundred and one places to put a record, and most of its
+ * reviews land in a band a point and a bit wide — while the critic who ran the
+ * longest-lived grading column in American rock criticism retired the bottom of
+ * his own ladder.
+ *
+ * AN EARLIER DRAFT OF THIS PARAGRAPH PUT A NUMBER ON THAT SECOND CLAUSE, saying
+ * Pitchfork behaves as though it had roughly a certain count of degrees. No
+ * source says any such thing; it was arithmetic on a band width, performed
+ * three lines above a comment refusing to do arithmetic on Christgau's ladder
+ * for precisely that reason. Two standards in one file, in the file whose
+ * subject is unsourced figures. The prose now carries only what the sources
+ * carry, and the reader can do their own arithmetic if they want to.
  *
  * WHAT THIS IS FOR, AND WHAT IT IS NOT FOR (RT-H2 a, and the trap that shapes
  * this whole track). It is a REFERENCE POINT, never a target. The product
@@ -115,6 +124,10 @@ export const CRITIC_SCALES: CriticScale[] = [
         citationId: "conaway",
       },
       {
+        // "Most" is the source's own word and the source does not define it —
+        // no percentile is attached to this band anywhere on the page. Kept
+        // because it is what the analysis says, phrased so it cannot be read as
+        // an interquartile range or any other statistic it is not.
         statement: "Most of those scores lie between 6.4 and 7.8.",
         citationId: "conaway",
       },
