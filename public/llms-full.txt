@@ -71,14 +71,19 @@ The instrument publishes what it cannot do. Ladder rungs that are not acoustical
 levels whose damage varies by passage, and the floor of what the rulers can report are measured by
 the clip pipeline and listed at /lab/instrument-limits in the pipeline's own words.
 
-## Comparison (no instrument yet)
+## Comparison
 
-Hume's "comparison" criterion is breadth of exposure — a fact about listening history rather than
-a testable skill. It is in the plan and not in the product. What it waits on is a decision about
-what breadth means in units the product can defend, not an audio build; the reading-room page for
-comparison says this plainly rather than implying a door that is not there. The same is true of
-practice, which waits on the product remembering a person between sessions, which it does not
-do today.
+Hume's "comparison" criterion is the ability to assign DEGREES of praise, and it is measured from
+ratings the Prestige Test already collects rather than from an import of anybody's listening
+history. Two numbers come out of one sitting: how many of the eleven points on the rating scale a
+listener actually landed on, and how many pairs they ordered one way blind and the opposite way on
+the labelled pass — counting only pairs whose labels pushed both clips the same direction, so a
+prestige label cannot explain the reversal. The count is read against what an indifferent rater
+would produce (about nine of eleven at sixteen clips), never against the top of the scale.
+
+Published critic scales are quoted as a reference point and never as a target: agreement with a
+prestigious critic is never scored, because the Prestige Test measures being moved by a prestigious
+name and rewarding that agreement would contradict it on the same screen.
 
 ## The flaw families (what the two delicacy instruments manipulate)
 

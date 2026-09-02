@@ -20,8 +20,8 @@ That's the project. Each criterion becomes a **performance task where you can be
 | Delicacy | **The Delicacy Trials** — eighteen pairs of clips, one of each quietly damaged (pitch drift, timing smear, or compression damage) at calibrated intensities. Find the original, then name the flaw: three practice trials with the answer shown, then fifteen scored pairs. | **live** |
 | Delicacy, measured | **The Threshold Test** — an adaptive staircase that hunts the smallest damage of one family you can still reliably hear, and reports it in physical units: cents of detune, milliseconds of drift, kbps. Not a score. | **live** |
 | Good sense | **Confidence calibration** — every answer carries a claimed confidence; scored by Brier score and over/under-confidence gap. | computed |
-| Comparison | Placement trials | not built |
-| Practice | Retest arc | not built |
+| Comparison | **Degrees used** — how many of the eleven points on the rating scale you landed on, and how many pairs you ordered one way blind and the other way round with the names attached. Computed from the Prestige Test's own ratings; no new clip, no new tap. | **live** |
+| Practice | **The retest arc** — a second sitting on the same device is compared against the first, against a noise floor measured beforehand, so a change smaller than the instrument's own wobble is reported as no change. | **live** |
 
 Every live instrument runs on **public-domain and Creative Commons audio**, damaged by our own DSP. No licensed music, no copyrighted audio, no album art.
 

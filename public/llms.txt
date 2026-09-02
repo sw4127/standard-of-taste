@@ -30,8 +30,8 @@ user.
 ## Hume's five criteria (one explainer each)
 
 - [Delicacy](https://vibe-check-app-sepia.vercel.app/learn/delicacy): the key-in-the-wine story; the Delicacy Trials and the Threshold Test both measure it
-- [Practice](https://vibe-check-app-sepia.vercel.app/learn/practice): why taste is trainable; no instrument yet, and the page says so
-- [Comparison](https://vibe-check-app-sepia.vercel.app/learn/comparison): Ogilby vs. Milton; breadth as measurable exposure; no instrument yet, and the page says so
+- [Practice](https://vibe-check-app-sepia.vercel.app/learn/practice): why taste is trainable; measured by the retest arc, which compares a device against its own earlier sittings; live
+- [Comparison](https://vibe-check-app-sepia.vercel.app/learn/comparison): Ogilby vs. Milton; breadth as degrees used, measured from the Prestige Test's own ratings; live
 - [Freedom from prejudice](https://vibe-check-app-sepia.vercel.app/learn/freedom-from-prejudice): the criterion the Prestige Test measures
 - [Good sense](https://vibe-check-app-sepia.vercel.app/learn/good-sense): calibration — confidence vs. accuracy, Brier scores
 

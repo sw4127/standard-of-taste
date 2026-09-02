@@ -176,18 +176,26 @@ export const LEARN_PAGES: LearnPage[] = [
   {
     slug: "comparison",
     title: "Comparison",
-    metaTitle: "Comparison — Ogilby, Milton, and Breadth",
+    metaTitle: "Comparison — Ogilby, Milton, and Degrees of Praise",
     description:
-      "Whoever has seen only one kind of beauty, Hume argued, cannot rank any. Comparison is breadth of exposure — and it can be mapped rather than claimed.",
-    teaser: "You can't rank what you've never heard against anything.",
+      "Whoever has seen only one kind of beauty, Hume argued, cannot rank any. Comparison is the ability to assign degrees — and the Prestige Test's own ratings already measure how many you used.",
+    teaser: "Eleven degrees are on offer. How many did you actually use?",
     faq: [
       {
         q: "Why did Hume compare Ogilby and Milton?",
         a: "Hume's point was that only someone who has weighed many works against each other can assign degrees of merit — a person acquainted with nothing else might genuinely prefer Ogilby, and only breadth of comparison exposes the mistake. The pairing stands for the criterion: ranking requires range.",
       },
       {
-        q: "How would comparison be measured?",
-        a: "As exposure, not judgment: a planned instrument maps the breadth of what you have actually listened to (via optional listening-history import — data only, no audio). Breadth is a fact about your history; the instrument reports it rather than scoring it.",
+        q: "How is comparison measured?",
+        a: "From the ratings the Prestige Test already collects. It reports how many of the eleven points on the rating scale you actually landed on, and how many pairs of clips you ordered one way blind and the other way round on the second pass — counting only pairs where the labels pushed both clips the same way, so a prestige label cannot explain the change. Both numbers are about one sitting, and neither is compared against anybody else.",
+      },
+      {
+        q: "Is a narrow spread a bad result?",
+        a: "No, and the instrument is built so it can never say otherwise. The clips were chosen for licence clarity and genre spread, never for being equally good, so nobody knows how far apart they truly are — a listener who heard them as close together and rated them that way did the task correctly. The count is also read against what an indifferent rater would produce rather than against the top of the scale, because rating sixteen clips at random already lands on about nine distinct values.",
+      },
+      {
+        q: "Why does it quote Pitchfork and Robert Christgau?",
+        a: "As a reference point for what assigning degrees looks like in practice, never as an answer to agree with. Pitchfork's scale offers a hundred and one places to put a record, yet across more than 18,000 reviews the mean was 7.0 and most scores sat between 6.4 and 7.8. Christgau graded from A+ down to E− and, from 1990, stopped using most of the letters below B+. Scoring your agreement with a prestigious critic would contradict the Prestige Test on the same screen, so this product does not do it.",
       },
     ],
   },
