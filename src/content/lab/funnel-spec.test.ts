@@ -56,6 +56,23 @@ describe("E15/S3 — the funnel specification", () => {
     expect(at("bias_result")).toBeLessThan(at("bias_debrief_view"));
   });
 
+  /**
+   * RT-J5(b). The first step is not a superset of the second — a shared link
+   * reaches the instrument without touching the homepage — so the descent it
+   * is drawn as is not true of it, and it has to say so where it sits.
+   */
+  it("marks the step that is not a clean denominator", () => {
+    const first = FUNNEL_SPEC[0];
+    expect(first.event).toBe("landing_view");
+    expect(first.caveat, "the entry step is drawn as a denominator it is not").toBeTruthy();
+    expect(first.caveat!.length).toBeGreaterThan(40);
+    // The rest ARE a descent: each is only reachable through the one above it,
+    // so a caveat there would be noise that trains readers to skip caveats.
+    for (const step of FUNNEL_SPEC.slice(1)) {
+      expect(step.caveat, `${step.event} carries a caveat it does not need`).toBeUndefined();
+    }
+  });
+
   it("returns the textbook sample size for a proportion at 95%", () => {
     // The canonical survey figure: n = 385 for ±5 points at 95% confidence,
     // worst case p = 0.5. If this ever stops being 385 the formula changed.

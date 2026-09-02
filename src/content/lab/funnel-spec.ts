@@ -34,6 +34,19 @@ export interface FunnelStep {
   event: string;
   /** What the step means to a reader, in the product's own terms. */
   label: string;
+  /**
+   * WHY THIS STEP IS NOT A CLEAN DENOMINATOR (PM ruling RT-J5 b).
+   *
+   * A funnel is drawn as a descent, which asserts that everyone at step k
+   * passed through step k−1. That is false for the first step here — a shared
+   * link opens the instrument directly — so the ratio could exceed 100% and a
+   * reader would be looking at a chart that lies about its own shape.
+   *
+   * The ruled fix keeps the step, because the homepage-to-instrument drop is
+   * a real thing worth having, and states the limit beside it. That is the
+   * job of this page rather than a blemish on it.
+   */
+  caveat?: string;
 }
 
 /**
@@ -41,7 +54,14 @@ export interface FunnelStep {
  * only path through the product that has all of its events already emitting.
  */
 export const FUNNEL_SPEC: FunnelStep[] = [
-  { event: "landing_view", label: "Arrives" },
+  {
+    event: "landing_view",
+    label: "Arrives",
+    caveat:
+      "Not a denominator. A shared link opens the instrument directly, so someone can reach the " +
+      "next step without ever passing through this one — which means this ratio can exceed one. " +
+      "The descent proper begins below it.",
+  },
   { event: "bias_frame_view", label: "Reaches the instrument" },
   { event: "bias_start", label: "Begins rating" },
   { event: "bias_blind_complete", label: "Finishes the blind pass" },

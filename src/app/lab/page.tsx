@@ -299,6 +299,13 @@ export default function LabIndex() {
               <span className="w-full text-xs leading-relaxed text-muted sm:w-auto sm:flex-1">
                 {stepTrigger(step)}
               </span>
+              {/* RT-J5(b): a step that is not a clean denominator says so
+                  where it sits, not in a footnote nobody reaches. */}
+              {step.caveat && (
+                <p className="w-full border-l-2 border-white/15 pl-3 text-xs leading-relaxed text-neutral-300">
+                  {step.caveat}
+                </p>
+              )}
             </li>
           ))}
         </ol>
