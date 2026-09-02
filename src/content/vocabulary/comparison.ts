@@ -54,6 +54,23 @@ export const COMPARISON_BOUNDARY =
   "really do sit close together, hearing them that way is the right answer, and this instrument " +
   "cannot tell that apart from a listener who hears everything as much the same.";
 
+/**
+ * The section's chrome, in the copy layer rather than in JSX.
+ *
+ * Everything a reader sees goes through the deck, so the voice gate can see it
+ * and the PM's writing pass has one place to work on. A label typed straight
+ * into a component is copy nobody is checking.
+ */
+export const COMPARISON_PANEL = {
+  eyebrow: "COMPARISON · HUME'S FIFTH CRITERION",
+  statLabel: "degrees of praise you used",
+  criticsEyebrow: "WHAT THE PROFESSIONALS DO WITH THEIR OWN SCALES",
+  show: "(read it)",
+  hide: "(close)",
+  criticsBlurb:
+    "Not a target, and not a score you are being given. Two published scales, and what their owners actually did with them.",
+} as const;
+
 /** The degrees count, with the figure that makes it readable attached. */
 export function degreesLine(say: {
   degreesUsed: number;

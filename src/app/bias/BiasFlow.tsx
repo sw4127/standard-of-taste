@@ -32,6 +32,7 @@ import { BIAS_CLIPS, BIAS_INSTRUMENT_ID, BIAS_POOL_VERSION, type BiasClip } from
 import { DELICACY_LIVE } from "@/content/delicacy/items";
 import { VERDICT_COPY, shareText } from "@/content/bias/copy";
 import { creatorLines as biasCreatorLines } from "@/content/vocabulary/bias";
+import ComparisonReading from "@/components/ComparisonReading";
 import AcrossSessions from "@/components/AcrossSessions";
 import ExpertPanel from "@/components/ExpertPanel";
 import { recordResult } from "@/lib/result-store";
@@ -593,6 +594,12 @@ export default function BiasFlow() {
             on /bias/result in E8/S8 and missed on the screen a person actually
             finishes on. `own` is the pair of raw passes this session recorded.
           */}
+          {/*
+            Mounted here AND on /bias/result from the same component, so the
+            E8/S12 omission cannot repeat: the creator block was written for the
+            share page and missed on the screen people actually finish on.
+          */}
+          <ComparisonReading accent={GOLD} blind={blind} labeled={labeled} />
           <AcrossSessions
             accent={GOLD}
             own={{

@@ -12,11 +12,12 @@ import { readableOn } from "@/lib/readable-on";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { computeBiasResult, decodeBiasRatings, type BiasResult } from "@/engine/bias";
+import { computeBiasResult, decodeBiasRatings, type BiasRatings, type BiasResult } from "@/engine/bias";
 import { BIAS_CLIPS, BIAS_INSTRUMENT_ID, BIAS_POOL_VERSION } from "@/content/bias/items";
 import { VERDICT_COPY, shareText, resultTitleFragment } from "@/content/bias/copy";
 import { creatorLines } from "@/content/vocabulary/bias";
 import AcrossSessions from "@/components/AcrossSessions";
+import ComparisonReading from "@/components/ComparisonReading";
 import AcrossTime from "@/components/AcrossTime";
 import ExpertPanel from "@/components/ExpertPanel";
 import { baseUrl } from "@/lib/site";
@@ -36,6 +37,8 @@ function resultFrom(sp: Record<string, string | string[] | undefined>): {
   result: BiasResult;
   b: string;
   l: string;
+  blind: BiasRatings;
+  labeled: BiasRatings;
 } | null {
   // RT-7b: links minted against an older pool die gracefully (redirect to
   // /bias) rather than rendering ratings against items they never measured.
@@ -45,7 +48,7 @@ function resultFrom(sp: Record<string, string | string[] | undefined>): {
   const blind = decodeBiasRatings(BIAS_CLIPS, b);
   const labeled = decodeBiasRatings(BIAS_CLIPS, l);
   if (!blind || !labeled || !b || !l) return null;
-  return { result: computeBiasResult(BIAS_INSTRUMENT_ID, BIAS_CLIPS, blind, labeled), b, l };
+  return { result: computeBiasResult(BIAS_INSTRUMENT_ID, BIAS_CLIPS, blind, labeled), b, l, blind, labeled };
 }
 
 function cardUrl(format: "story" | "square" | "og", b: string, l: string): string {
@@ -69,7 +72,7 @@ export async function generateMetadata({ searchParams }: { searchParams: SearchP
 export default async function BiasResultPage({ searchParams }: { searchParams: SearchParams }) {
   const data = resultFrom(await searchParams);
   if (!data) redirect("/bias");
-  const { result, b, l } = data;
+  const { result, b, l, blind, labeled } = data;
   const v = VERDICT_COPY[result.verdict];
   const permalink = `${baseUrl()}/bias/result?pv=${BIAS_POOL_VERSION}&b=${encodeURIComponent(b)}&l=${encodeURIComponent(l)}`;
 
@@ -93,6 +96,8 @@ export default async function BiasResultPage({ searchParams }: { searchParams: S
         <p className="mt-2 max-w-sm text-base leading-relaxed text-muted">{v.sub}</p>
 
         <InYourWork result={result} />
+
+        <ComparisonReading accent={GOLD} blind={blind} labeled={labeled} />
 
         <AcrossTime accent={GOLD} own={{ kind: "bias", blind: b, labeled: l }} />
         <AcrossSessions accent={GOLD} own={{ kind: "bias", blind: b, labeled: l }} />
