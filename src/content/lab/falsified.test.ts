@@ -52,7 +52,84 @@ function recordedBeliefs(): { file: string; belief: string }[] {
   return out;
 }
 
+/**
+ * FALSIFICATIONS RECORDED INLINE, NOT AS A LIST ITEM (E15/S7).
+ *
+ * S6 shipped a completeness guard that read only the numbered sections and
+ * pronounced the registry complete. It was not: `handoff-2026-08-15b.md`
+ * records two falsifications as bold markers mid-paragraph, and the parser
+ * could not see either. Found by reading the document, not by the guard —
+ * which is the recurring lesson of this project pointed at its own tooling.
+ *
+ * These cannot be matched by belief text: the hypothesis and the finding run
+ * together in one wrapped sentence with no markup between them. So the check is
+ * at the file level — a document containing N inline markers must be cited by
+ * at least N entries — which is weaker than the quoted-belief rule and is
+ * stated as such rather than presented as equivalent.
+ */
+function inlineFalsifications(): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (const file of readdirSync("docs").filter((f) => /^handoff-.*\.md$/.test(f))) {
+    for (const line of readFileSync(`docs/${file}`, "utf8").split("\n")) {
+      if (/^\*\*(ALSO )?FALSIFIED/.test(line)) counts[file] = (counts[file] ?? 0) + 1;
+    }
+  }
+  return counts;
+}
+
 describe("E15/S6 — the registry is complete against the record", () => {
+  it("covers falsifications recorded inline, not only those in numbered lists", () => {
+    const inline = inlineFalsifications();
+    expect(Object.keys(inline).length, "no inline markers found — the parser sees nothing").toBeGreaterThan(0);
+    for (const [file, count] of Object.entries(inline)) {
+      const citing = FALSIFIED.filter((e) => e.sources.some((s) => s.path === `docs/${file}`));
+      expect(
+        citing.length,
+        `${file} records ${count} falsification(s) inline and only ${citing.length} entries cite it`,
+      ).toBeGreaterThanOrEqual(count);
+    }
+  });
+
+  /**
+   * COUNTING CITATIONS IS NOT ENOUGH, AND I PROVED IT ON MYSELF.
+   *
+   * The check above was the whole inline rule for one slice. Breaking it
+   * deliberately — replacing an inline-recorded belief with "Something else
+   * entirely." — did NOT fail: the file was still cited the right number of
+   * times, so the count was satisfied while the sentence on the page had become
+   * fiction. A guard that cannot notice that is a guard in name.
+   *
+   * So an inline-grounded entry must carry an anchor that its own belief text
+   * matches — the anchor is verified against the source document, which ties
+   * the visible sentence to a passage a reader can go and read.
+   */
+  it("ties an inline-recorded belief to a passage that really says it", () => {
+    const inline = inlineFalsifications();
+    const recorded = new Set(recordedBeliefs().map((r) => plain(r.belief)));
+    let checked = 0;
+    for (const entry of FALSIFIED) {
+      if (entry.beliefs.some((b) => recorded.has(plain(b)))) continue;
+      const groundedInline = entry.sources.some(
+        (s) => inline[s.path.replace(/^docs\//, "")] !== undefined,
+      );
+      if (!groundedInline) continue;
+      checked += 1;
+      const tied = entry.sources.some((s) =>
+        entry.beliefs.some((b) => {
+          const anchor = plain(s.anchor);
+          const belief = plain(b).replace(/\.$/, "");
+          return anchor.includes(belief) || belief.includes(anchor);
+        }),
+      );
+      expect(
+        tied,
+        `${entry.id}: no cited passage matches the belief this page prints — the sentence could ` +
+          "be rewritten into fiction and nothing would notice",
+      ).toBe(true);
+    }
+    expect(checked, "no inline-grounded entries were checked — this test is vacuous").toBeGreaterThan(0);
+  });
+
   it("finds the record at all, or every assertion below is vacuous", () => {
     const recorded = recordedBeliefs();
     expect(recorded.length, "no FALSIFIED sections found in docs/").toBeGreaterThan(20);
@@ -86,11 +163,18 @@ describe("E15/S6 — the registry is complete against the record", () => {
    */
   it("rests anything not in the handoff record on a derivation instead", () => {
     const recorded = new Set(recordedBeliefs().map((r) => plain(r.belief)));
+    const inline = inlineFalsifications();
     for (const entry of FALSIFIED) {
       if (entry.beliefs.some((b) => recorded.has(plain(b)))) continue;
-      const derived = entry.sources.some((s) => s.path.startsWith("docs/analytics/"));
+      const grounded = entry.sources.some(
+        (s) =>
+          s.path.startsWith("docs/analytics/") ||
+          // …or a handoff that records its falsifications inline rather than as
+          // a numbered list, which the belief matcher above cannot read.
+          inline[s.path.replace(/^docs\//, "")] !== undefined,
+      );
       expect(
-        derived,
+        grounded,
         `${entry.id} is in no handoff's FALSIFIED list and cites no derivation — where did ` +
           "this belief come from?",
       ).toBe(true);

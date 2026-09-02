@@ -126,7 +126,15 @@ export const FALSIFIED: FalsifiedEntry[] = [
     date: "2026-08-18",
     kind: "measured",
     killedBy:
-      "Both measure dead air 0.00s and quiet fraction 0.0% across their reference and all 21 clips. One does end at 86% of its recording and is still clean; the other sits at 43% and was never near the end.",
+      // NO BARE COUNT OF CLIPS HERE. An existing guard caught the first draft,
+      // which named a number of them: on this page that is a frozen historical
+      // figure nothing can recompute, and a reader cannot tell it apart from a
+      // claim about today's pool. It adds nothing the measurement does not.
+      //
+      // The guard reads the FILE, not the rendered strings, so quoting the
+      // offending phrase in this comment tripped it a second time. Correctly:
+      // it cannot tell a comment from content, and it should not have to.
+      "Both measure dead air 0.00s and quiet fraction 0.0%, across their reference and every clip rendered from them. One does end at 86% of its recording and is still clean; the other sits at 43% and was never near the end.",
     consequence: "The suspicion was wrong; the real fault was in the correlator.",
     sources: [
       {
@@ -205,6 +213,44 @@ export const FALSIFIED: FalsifiedEntry[] = [
   },
 
   /* ------------------------------------------------- the staircase */
+  {
+    /*
+     * RECORDED INLINE RATHER THAN AS A LIST ITEM, which is exactly why this
+     * entry nearly did not exist: E15/S6's parser only saw the numbered
+     * sections and reported the registry complete without it. Found by reading
+     * the source document rather than by trusting the guard, and the guard was
+     * widened in S7 rather than the omission being left as a known edge.
+     */
+    id: "step-size-over-slope",
+    beliefs: ["The bias tracks step-size-over-slope."],
+    date: "2026-08-15",
+    kind: "derived",
+    killedBy:
+      "It was pattern-matching: two terms happened to move while a third held still. A fine ladder is still biased, so the ratio explains nothing.",
+    consequence: "The bias was decomposed properly instead, which is what found the real term.",
+    sources: [
+      {
+        path: "docs/handoff-2026-08-15b.md",
+        anchor: "the hypothesis that the bias tracks step-size-over-slope",
+      },
+    ],
+  },
+  {
+    id: "ladder-end-censoring",
+    beliefs: ["The N3 ladder-end guard's censoring caused the timing bias."],
+    date: "2026-08-15",
+    kind: "measured",
+    killedBy:
+      "The guard is innocent — its contribution is at most 0.021. The cause is a different term worth +0.499: a listener sitting near the ladder's 12.5 ms floor, where truncation shoves the reversal mean up.",
+    consequence:
+      "The guard was kept. Blaming it would have removed a protection and left the bias in place.",
+    sources: [
+      {
+        path: "docs/handoff-2026-08-15b.md",
+        anchor: "the N3 ladder-end guard's censoring caused",
+      },
+    ],
+  },
   {
     id: "width-stopping-rule",
     beliefs: ["A width-based stopping rule is the principled version of a session budget."],

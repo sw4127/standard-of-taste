@@ -135,9 +135,8 @@ export const LAB_PANELS: LabPanel[] = [
      */
     dataSource: null,
     metricIds: [],
-    status: "pending",
-    absent: "Being assembled from the record now.",
-    plannedIn: "E15/S6–S7",
+    status: "live",
+    href: "/lab/falsified",
   },
   {
     id: "funnel-cohort",
