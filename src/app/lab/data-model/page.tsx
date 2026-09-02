@@ -128,8 +128,14 @@ export default function DataModel() {
             {PERSISTENT_NAMESPACE}
           </code>{" "}
           namespace, which is what lets{" "}
-          {/* The control lives on /legal, NOT at a /forget route — I wrote
-              href="/forget" first and it does not exist. A link is a claim. */}
+          {/* The control lives on /legal. The first draft linked a route named
+              for the action instead, which has never existed — written from
+              memory, type-checked, built, and every test green. A link is a
+              claim; `lab-links.test.ts` now checks them.
+
+              The offending href is NOT quoted here: that guard reads the file,
+              so naming it would trip it. Second time this session a comment
+              describing a defect reproduced it. */}
           <Jump href="/legal" accent={INK}>forgetting this browser</Jump>{" "}
           be one sweep rather than a list of keys somebody has to remember to update.
         </p>
@@ -212,6 +218,13 @@ export default function DataModel() {
                           >
                             ANSWERS
                           </span>
+                          {/* A REAL SPACE, NOT ONLY A MARGIN. The 6px margin
+                              spaces this visually and leaves the TEXT jammed:
+                              copying the line, or hearing it read aloud, gives
+                              "ANSWERSthe verdict is computed". Found in the
+                              running DOM by reading nodeValue — innerText hides
+                              it and the built HTML looked fine. */}
+                          {" "}
                         </>
                       )}
                       {eventTrigger(event)}
