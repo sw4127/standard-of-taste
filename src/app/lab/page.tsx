@@ -3,6 +3,7 @@ import Link from "next/link";
 import SourceBadge from "@/components/lab/SourceBadge";
 import { METRICS, type MetricDefinition } from "@/content/lab/metrics";
 import { LAB_PANELS, LIVE_PANELS, PENDING_PANELS } from "@/content/lab/panels";
+import { FUNNEL_SPEC, sessionsForPrecision, stepTrigger } from "@/content/lab/funnel-spec";
 import { GYM_INK } from "@/content/instrument-accents";
 
 /**
@@ -29,6 +30,15 @@ export const metadata: Metadata = {
 
 /* The Lab belongs to no instrument (RT-AG, RT-AR:a). */
 const INK = GYM_INK;
+
+/**
+ * DERIVED, NOT TYPED. The funnel specification wants to say that nothing here
+ * rests on real responses, and a hand-written "0" would be a claim nobody
+ * checks — the exact defect E15/S1 removed from three other pages. This counts
+ * the page's own badges instead, so the sentence disappears by itself on the
+ * day a panel is fielded.
+ */
+const REAL_PANELS = LAB_PANELS.filter((p) => p.dataSource === "REAL").length;
 
 const OWNER_LABEL: Record<MetricDefinition["owner"], string> = {
   instrument: "Instrument",
@@ -247,6 +257,72 @@ export default function LabIndex() {
             </li>
           ))}
         </ul>
+      </section>
+
+      {/* ------------------------------------------- the funnel, specified */}
+      {/*
+        PM ruling RT-J, re-framed. He rejected both offered options — an empty
+        panel and a plain "it waits on traffic" — the first because it claims
+        data exists, the second because it demonstrates nothing. This is the
+        third thing: the specification, which needs no respondents and is the
+        part of the work a reader of this page is actually assessing.
+
+        NOTHING HERE IS A RATE. No counts, no percentages, no chart. The panel
+        stays unbuilt; this is what it would be.
+      */}
+      <section className="mt-16" aria-labelledby="funnel-spec">
+        <h2 id="funnel-spec" className="font-display text-2xl font-semibold tracking-tight">
+          The funnel, specified
+        </h2>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
+          The panel above is not built, so here is what it would be. Every step names the event it
+          would be counted from, and each description is the one the code&apos;s own event registry
+          carries — not a second copy written here, which would be free to drift from what actually
+          fires.
+        </p>
+
+        <ol className="mt-6 flex flex-col gap-px overflow-hidden rounded-2xl border border-white/10">
+          {FUNNEL_SPEC.map((step, i) => (
+            <li
+              key={step.event}
+              className="flex flex-wrap items-baseline gap-x-3 gap-y-1 bg-white/[0.03] px-4 py-3"
+            >
+              <span className="font-mono text-[0.6rem] text-muted">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span className="font-display text-sm font-semibold text-neutral-200">
+                {step.label}
+              </span>
+              <code className="font-mono text-[0.65rem]" style={{ color: INK }}>
+                {step.event}
+              </code>
+              <span className="w-full text-xs leading-relaxed text-muted sm:w-auto sm:flex-1">
+                {stepTrigger(step)}
+              </span>
+            </li>
+          ))}
+        </ol>
+
+        <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+          <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: INK }}>
+            WHAT IT WOULD TAKE
+          </p>
+          <p className="mt-3 text-sm leading-relaxed text-neutral-300">
+            A step&apos;s rate cannot be published until it can be estimated. At the worst case for
+            a proportion — a rate near half, where the uncertainty is largest — one step needs{" "}
+            <strong className="font-semibold text-white">
+              {sessionsForPrecision(5)} sessions reaching it
+            </strong>{" "}
+            before its rate is known to within five percentage points, and{" "}
+            {sessionsForPrecision(10)} to within ten. Those are requirements per step, not for the
+            funnel: the last step is the expensive one.
+          </p>
+          <p className="mt-3 text-sm leading-relaxed text-neutral-300">
+            How many arrivals it takes to put {sessionsForPrecision(5)} people at the bottom depends
+            on the pass-through between steps, which has never been measured here — so this page
+            does not estimate it. {REAL_PANELS === 0 ? "No panel on this page carries a REAL badge." : null}
+          </p>
+        </div>
       </section>
     </div>
   );

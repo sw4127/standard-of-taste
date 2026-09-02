@@ -152,17 +152,19 @@ export const LAB_PANELS: LabPanel[] = [
      * demonstration. So this reason states the ARITHMETIC of the absence rather
      * than apologising for it.
      *
-     * IT DOES NOT POINT AT THE SPECIFICATION, THOUGH E15/S3 ADDS ONE. The first
-     * draft ended "the specification it would implement is below", which was
-     * written while that specification was still a slice away — a page claiming
-     * something it did not have, on the surface whose entire argument is that it
-     * does not do that. Caught by reading the built page. Whatever cites the
-     * specification must ship in the same slice as the specification.
+     * IT POINTS AT THE SPECIFICATION, AND ONLY SINCE E15/S3 BUILT ONE. The S2
+     * draft of this sentence already said "the specification it would implement
+     * is below" — while that specification was still a slice away. A page
+     * claiming something it did not have, on the surface whose entire argument
+     * is that it does not do that. Caught by reading the built page, and the
+     * rule it cost: a sentence citing something ships in the same slice as the
+     * thing it cites, never one earlier.
      */
     absent:
       "A funnel is a set of ratios, and a ratio needs a denominator. This one has none: nobody " +
       "has been through the instrument, so every rate it could print would be zero divided by " +
-      "zero. Showing that as a chart would be a drawing, not a measurement.",
+      "zero. What it would measure, and how much traffic each step would need before its rate " +
+      "could be published at all, is specified below.",
   },
   {
     id: "data-model",
