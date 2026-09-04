@@ -1,0 +1,219 @@
+{
+  "$comment": "Track N pool-of-record manifest. Provenance only — what the instrument computes over lives in ranking.ts. Every `license.expected` was read on the page captured in ./licenses, not taken from a search summary: during sourcing a page summary reported NO qualifying recording for sp3 while the page itself listed one, and a licence read as 'Creative Commons Zero' turned out to be 'Creative Commons Zero 1.0 - Non-PD US' once the full value was read. Both failures are why `license.readLine` records the exact string and the guard rejects territorial qualifiers.",
+  "instrument": "spread-v1",
+  "poolVersionTarget": 1,
+  "lufsTarget": -16,
+  "clipSeconds": 40,
+  "clipSecondsNote": "40s, not the 20s the other pools use. A 20-second excerpt cannot carry a critic's verdict on a 40-minute work; 40 is a mitigation, not a solution, and the limit ships as disclosure.",
+  "ranking": {
+    "author": "Michael Tanner",
+    "title": "Beethoven! His 21 essential masterpieces, ranked",
+    "publication": "BBC Music Magazine / classical-music.com",
+    "date": "2026-01-20",
+    "url": "https://www.classical-music.com/features/works/beethoven-best-works",
+    "orderingNote": "The article states that it counts down, and ends on the C sharp minor Quartet. Only the DISTANCE between positions is used, which is unaffected by which end the countdown runs from.",
+    "arityNote": "The article's headline says twenty-one and its own prose says 'twenty'. Recorded because the discrepancy is in the source, not introduced here."
+  },
+  "items": [
+    {
+      "id": "sp1",
+      "position": 4,
+      "work": "Eroica Variations, Op. 35",
+      "composer": "Ludwig van Beethoven",
+      "performer": "Ivan Ilić (piano)",
+      "forces": "solo-piano",
+      "license": {
+        "expected": "CC-BY-3.0",
+        "readLine": "Creative Commons Attribution 3.0",
+        "proofPageUrl": "https://imslp.org/wiki/Eroica_Variations,_Op.35_(Beethoven,_Ludwig_van)",
+        "confirmedAt": "2026-09-04",
+        "snapshotFile": "sp1.html",
+        "note": "Self-published by the performer: 'Paris: Ivan Ilić'. Recorded by Judith Carpentier-Dupont, Paris, July 2005. The upload is a group of five files sharing one licence table — verified by parsing the upload block rather than by proximity, because proximity attributed this table to a neighbouring upload on the first attempt.",
+        "proofTokens": [
+          "Carpentier-Dupont",
+          "Creative Commons Attribution 3.0"
+        ]
+      },
+      "source": {
+        "pageUrl": "https://imslp.org/wiki/Eroica_Variations,_Op.35_(Beethoven,_Ludwig_van)",
+        "downloadUrl": "https://ks15.imslp.org/files/imglnks/usimg/2/28/IMSLP110179-PMLP05827-beethoven_35.2.mp3",
+        "imslpFileId": 110179,
+        "durationNote": "11:11",
+        "sha256": null,
+        "fetched": {
+          "contentType": "audio/mpeg",
+          "bytes": 10736561,
+          "magic": "ID3"
+        }
+      },
+      "attribution": "\"Eroica Variations, Op. 35\" · Ludwig van Beethoven, perf. Ivan Ilić · https://imslp.org/wiki/Eroica_Variations,_Op.35_(Beethoven,_Ludwig_van) · CC BY 3.0 · excerpt (trimmed + loudness-normalised)"
+    },
+    {
+      "id": "sp2",
+      "position": 9,
+      "work": "Piano Concerto No. 5, 'Emperor'",
+      "composer": "Ludwig van Beethoven",
+      "performer": "Ursula Oppens (piano) · DuPage Symphony Orchestra · Barbara Schubert (conductor)",
+      "forces": "concerto",
+      "license": {
+        "expected": "PD-dedicated",
+        "readLine": "http://creativecommons.org/licenses/publicdomain/",
+        "proofPageUrl": "https://archive.org/details/dso20061007old",
+        "confirmedAt": "2026-09-04",
+        "snapshotFile": "sp2.html",
+        "note": "Dedicated at source by the orchestra's own upload, not by a third party. The DSO licenses its concerts individually — other dso* items on the same account carry BY-NC-ND, BY-NC and BY-SA — which is evidence of a deliberate choice rather than a blanket tag. IMSLP mirrors this performance as CC-BY-3.0; both clear the rule. Track durations on the archive item (1143.5 / 419.98 / 557.82 s) match IMSLP's three movements (19:03 / 7:00 / 9:17).",
+        "proofTokens": [
+          "dso20061007old",
+          "Oppens"
+        ]
+      },
+      "source": {
+        "pageUrl": "https://archive.org/details/dso20061007old",
+        "downloadUrl": "https://archive.org/download/dso20061007old/dso2006100702.flac",
+        "durationNote": "19:03 (movement 1)",
+        "sha256": null,
+        "fetched": {
+          "contentType": "audio/flac",
+          "bytes": 74258416,
+          "magic": "fLaC"
+        }
+      },
+      "attribution": "\"Piano Concerto No. 5, 'Emperor'\" · Ludwig van Beethoven, perf. Ursula Oppens with the DuPage Symphony Orchestra, cond. Barbara Schubert · https://archive.org/details/dso20061007old · public domain (dedicated) · excerpt (trimmed + loudness-normalised)"
+    },
+    {
+      "id": "sp3",
+      "position": 12,
+      "work": "Violin Concerto",
+      "composer": "Ludwig van Beethoven",
+      "performer": "US Marine Chamber Orchestra (uncredited violinist)",
+      "forces": "concerto",
+      "license": {
+        "expected": "PD-dedicated",
+        "readLine": "Public Domain (dedicated)",
+        "proofPageUrl": "https://imslp.org/wiki/Violin_Concerto,_Op.61_(Beethoven,_Ludwig_van)",
+        "confirmedAt": "2026-09-04",
+        "snapshotFile": "sp3.html",
+        "note": "A United States Marine Band recording — a work of the US Government, so public domain by origin rather than by dedication of a private right. Nearly lost: a summary of this page reported no qualifying recording while listing this one.",
+        "proofTokens": [
+          "Marine Chamber Orchestra",
+          "Op61m3mbco"
+        ]
+      },
+      "source": {
+        "pageUrl": "https://imslp.org/wiki/Violin_Concerto,_Op.61_(Beethoven,_Ludwig_van)",
+        "downloadUrl": "https://s9.imslp.org/files/imglnks/usimg/2/20/IMSLP77613-PMLP01796-Beethoven-Op61m3mbco.mp3",
+        "imslpFileId": 77613,
+        "durationNote": "15:04 (movement 3)",
+        "sha256": null,
+        "fetched": {
+          "contentType": "audio/mpeg",
+          "bytes": 14468066,
+          "magic": "ID3"
+        }
+      },
+      "attribution": "\"Violin Concerto, Op. 61\" · Ludwig van Beethoven, perf. US Marine Chamber Orchestra · https://imslp.org/wiki/Violin_Concerto,_Op.61_(Beethoven,_Ludwig_van) · public domain · excerpt (trimmed + loudness-normalised)"
+    },
+    {
+      "id": "sp4",
+      "position": 14,
+      "work": "Piano Sonata No. 29, 'Hammerklavier'",
+      "composer": "Ludwig van Beethoven",
+      "performer": "Eric Xi Xin Liang (piano)",
+      "forces": "solo-piano",
+      "license": {
+        "expected": "CC-BY-4.0",
+        "readLine": "Creative Commons Attribution 4.0",
+        "proofPageUrl": "https://imslp.org/wiki/Piano_Sonata_No.29,_Op.106_(Beethoven,_Ludwig_van)",
+        "confirmedAt": "2026-09-04",
+        "snapshotFile": "sp4.html",
+        "note": "Third movement (Adagio sostenuto) only; the rest of this sonata on IMSLP is NC or ND. Self-published: 'Eric Xi Xin Liang, 2023'. An M4A with no duration listed, which is why a structural parse of the page missed it and a hand read found it — the other three uploads of this sonata are all restricted, so a false negative here would have taken the pool below its floor.",
+        "proofTokens": [
+          "Liang",
+          "851326"
+        ]
+      },
+      "source": {
+        "pageUrl": "https://imslp.org/wiki/Piano_Sonata_No.29,_Op.106_(Beethoven,_Ludwig_van)",
+        "downloadUrl": "https://ks15.imslp.org/files/imglnks/usimg/5/55/IMSLP851326-PMLP01486-Beethoven_-_Piano_Sonata_No29_-_Movement_3_(Liang).m4a",
+        "imslpFileId": 851326,
+        "durationNote": "size 15.84MB; IMSLP lists no duration",
+        "sha256": null,
+        "downloadUrlNote": "The IMSLP Special:ImagefromIndex link recorded here first is a JavaScript redirect page, not audio: dereferencing it returned 1797 bytes of text/html. Caught by fetching every URL in this manifest rather than trusting that a link on a file's own page points at the file.",
+        "fetched": {
+          "contentType": "audio/x-m4a",
+          "bytes": 16608678,
+          "magic": "ftyp"
+        }
+      },
+      "attribution": "\"Piano Sonata No. 29, 'Hammerklavier' — III. Adagio sostenuto\" · Ludwig van Beethoven, perf. Eric Xi Xin Liang · https://imslp.org/wiki/Piano_Sonata_No.29,_Op.106_(Beethoven,_Ludwig_van) · CC BY 4.0 · excerpt (trimmed + loudness-normalised)"
+    },
+    {
+      "id": "sp5",
+      "position": 15,
+      "work": "Diabelli Variations",
+      "composer": "Ludwig van Beethoven",
+      "performer": "Marvin Wolfthal (piano)",
+      "forces": "solo-piano",
+      "license": {
+        "expected": "CC0-1.0",
+        "readLine": "Creative Commons Zero 1.0",
+        "proofPageUrl": "https://imslp.org/wiki/Diabelli_Variations,_Op.120_(Beethoven,_Ludwig_van)",
+        "confirmedAt": "2026-09-04",
+        "snapshotFile": "sp5.html",
+        "note": "Self-published: 'Marvin Wolfthal, 2022', recorded at WGBH Boston. The full value carries no territorial qualifier — checked, because the Op. 96 candidate read 'Creative Commons Zero 1.0 - Non-PD US' and was dropped for it.",
+        "proofTokens": [
+          "Wolfthal",
+          "WGBH"
+        ]
+      },
+      "source": {
+        "pageUrl": "https://imslp.org/wiki/Diabelli_Variations,_Op.120_(Beethoven,_Ludwig_van)",
+        "downloadUrl": "https://vmirror.imslp.org/files/imglnks/usimg/3/33/IMSLP899360-PMLP4426-DiabelliVariations_2022.mp3",
+        "imslpFileId": 899360,
+        "durationNote": "55:31 (complete)",
+        "sha256": null,
+        "fetched": {
+          "contentType": "audio/mpeg",
+          "bytes": 79939517,
+          "magic": "ID3"
+        }
+      },
+      "attribution": "\"Diabelli Variations, Op. 120\" · Ludwig van Beethoven, perf. Marvin Wolfthal · https://imslp.org/wiki/Diabelli_Variations,_Op.120_(Beethoven,_Ludwig_van) · CC0 1.0 · excerpt (trimmed + loudness-normalised)"
+    },
+    {
+      "id": "sp6",
+      "position": 19,
+      "work": "Symphony No. 3, 'Eroica'",
+      "composer": "Ludwig van Beethoven",
+      "performer": "Czech National Symphony Orchestra",
+      "forces": "orchestra",
+      "license": {
+        "expected": "PD-mark",
+        "readLine": "http://creativecommons.org/publicdomain/mark/1.0/",
+        "proofPageUrl": "https://archive.org/details/MusopenCollectionAsFlac",
+        "confirmedAt": "2026-09-04",
+        "snapshotFile": "sp6.html",
+        "note": "The Musopen commissioned-PD recordings — the same collection this repository already draws pb4 from, so the licence is not newly trusted here. Musopen's Beethoven in that collection is only this symphony plus two overtures and one quartet, and this is the sole one on the ranking.",
+        "proofTokens": [
+          "SymphonyNo.3Eroica",
+          "MusopenCollectionAsFlac"
+        ]
+      },
+      "source": {
+        "pageUrl": "https://archive.org/details/MusopenCollectionAsFlac",
+        "downloadUrl": "https://archive.org/download/MusopenCollectionAsFlac/Beethoven_SymphonyNo.3Eroica/LudwigVanBeethoven-SymphonyNo.3InEFlatMajorEroicaOp.55-01-AllegroConBrio.flac",
+        "durationNote": "15:11 (movement 1)",
+        "sha256": null,
+        "fetched": {
+          "contentType": "audio/flac",
+          "bytes": 159115806,
+          "magic": "fLaC"
+        }
+      },
+      "attribution": "\"Symphony No. 3, 'Eroica', Op. 55\" · Ludwig van Beethoven, perf. Czech National Symphony Orchestra (Musopen) · https://archive.org/details/MusopenCollectionAsFlac · public domain · excerpt (trimmed + loudness-normalised)"
+    }
+  ],
+  "sha256Note": "Every `source.sha256` is null until the bytes are fetched. The fetch step fills them, exactly as scripts/clip-pipeline does for the bias pool — a hash written before the file is downloaded would be a hash of nothing.",
+  "proofTokensNote": "Distinctive strings that must appear in the captured licence page. They replaced a check that derived a performer surname by taking the last word of the performer field: for two ensemble items that word was 'Orchestra', so the guard was asserting that a megabyte of HTML contains a common noun.",
+  "fetchedNote": "What each downloadUrl actually returned on 2026-09-04 — content type, length and the first bytes. Recorded because five of these six URLs were audio and one was not, and nothing in the pool would have revealed that until the render step failed."
+}
