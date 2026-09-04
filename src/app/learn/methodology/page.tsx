@@ -1,6 +1,11 @@
 import Link from "next/link";
 import Explainer, { explainerMetadata } from "../Explainer";
 import { learnPage } from "@/content/learn";
+import {
+  apparatusLines,
+  citationStrengthLine,
+  degreesConvergenceLine,
+} from "@/content/vocabulary/apparatus";
 
 const page = learnPage("methodology")!;
 export const metadata = explainerMetadata(page);
@@ -11,8 +16,7 @@ export default function Page() {
       <p>
         Hume closed his essay with a job description: strong sense, delicate sentiment, improved by
         practice, perfected by comparison, cleared of prejudice — <em>that</em>{" "}is a true judge.
-        The Taste Gym&apos;s methodology is that sentence turned into engineering constraints. Four
-        of them.
+        The Taste Gym&apos;s methodology is that sentence turned into engineering constraints.
       </p>
       <p>
         <strong>1. Performance over self-report.</strong> Every instrument is a task where you can
@@ -45,6 +49,28 @@ export default function Page() {
         analysis for the trials, calibration curves and Brier scores for confidence, reliability
         checks before any norm is published — always with its N attached.
       </p>
+      <p>
+        <strong>5. The rulers were not invented here.</strong>{" "}Every figure above is simulated
+        and the cohort is zero, so this product cannot argue from data about people. What it can
+        show is where its measuring apparatus came from — and it was already standing on published
+        practice without telling anyone.
+      </p>
+      {apparatusLines().map((line) => (
+        <p key={line} className="text-[14px] text-neutral-400">
+          {line}
+        </p>
+      ))}
+      <p className="text-[14px] text-neutral-400">{citationStrengthLine()}</p>
+      {degreesConvergenceLine() ? (
+        <p>
+          <strong>{degreesConvergenceLine()}</strong>{" "}That last number is the{" "}
+          <Link href="/learn/comparison">comparison</Link>{" "}reading, and it is the only place in
+          this product where a professional&apos;s scale appears beside your own. It is a reference
+          point and never a target: agreement with a critic is not scored here, because the{" "}
+          <Link href="/learn/freedom-from-prejudice">Prestige Test</Link>{" "}measures being moved by
+          a prestigious name and rewarding that agreement would contradict it on the same screen.
+        </p>
+      ) : null}
       <p>
         The dataset behind this is self-generated and boring by design: anonymized response
         vectors — ratings, listen times, item-pool version, computed scores — under a random
