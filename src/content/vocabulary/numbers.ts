@@ -76,3 +76,20 @@ export function numberWord(n: number): string {
   const ones = n % 10;
   return ones === 0 ? TENS[tens] : `${TENS[tens]}-${ONES[ones]}`;
 }
+
+/**
+ * THE SPELLED COUNT, CAPITALISED FOR THE START OF A SENTENCE.
+ *
+ * `numberWord` returns lowercase, which is correct mid-sentence and wrong at
+ * the head of one — and a sentence opening with a lowercase word is a defect
+ * this project has now written THREE times: the delicacy tie clause, the
+ * comparison tie clause, and the apparatus citation-strength line, which a
+ * guard caught before it ever rendered.
+ *
+ * The remedy belongs beside the hazard rather than in each caller, because the
+ * fourth caller will not remember either.
+ */
+export function numberWordLeading(n: number): string {
+  const word = numberWord(n);
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}

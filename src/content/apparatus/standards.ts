@@ -63,6 +63,15 @@ export interface BorrowedStandard {
   /** What THIS product actually does with it. */
   howWeUseIt: string;
   /**
+   * HOW MANY PLACES ITS SCALE OFFERS, in the standard's own terms.
+   *
+   * A phrase rather than a number, because MUSHRA's is CONTINUOUS and writing
+   * "101" for it would convert a line into a hundred and one boxes — the same
+   * false precision this product is arguing about. Present only where the
+   * standard fixes a scale at all.
+   */
+  scaleLabel?: string;
+  /**
    * Where we depart from it, or what it does NOT cover here. Optional, and the
    * absence of a departure is a claim in itself, so it is written only when
    * there is a real one.
@@ -108,6 +117,7 @@ export const BORROWED_STANDARDS: BorrowedStandard[] = [
       "The international recommendation for subjective listening tests, using a hidden reference and anchors, with each sample rated on a continuous scale from 0 to 100. The same document places BS.1116 over small impairments and itself over intermediate quality.",
     howWeUseIt:
       "It is the tradition our trials sit in rather than a specification we claim to meet: a forced choice between two samples with a required listen, scored against chance.",
+    scaleLabel: "a continuous scale from 0 to 100",
     departure:
       "Our pairs carry near-transparent damage, which by that document's own division is BS.1116's regime rather than MUSHRA's — so the familiar 0-to-100 scale is the wrong one to picture here, and we do not use it.",
     binding: {
