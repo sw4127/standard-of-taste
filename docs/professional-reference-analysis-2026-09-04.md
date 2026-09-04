@@ -53,16 +53,24 @@ lying around**, and it is a fact about the apparatus, so it passes §1 cleanly.
 ### 2b. The Delicacy Trials — a real standard, and a real difference from it
 
 **ITU-R BS.1534 (MUSHRA)** and **ITU-R BS.1116** are the recommendations governing subjective
-listening tests. Verified by opening the ITU's own published recommendation. The useful part is not
-that we match them — it is that we *differ*, in a way we can defend:
+listening tests.
+
+> **Correction, 2026-09-04, made the same day.** This paragraph first said the recommendation had
+> been verified by opening it. It had not: a web search had returned a summary and a URL, and the
+> document itself was opened only when Track P began. Recording it because a sentence claiming a
+> citation was checked, which was itself unchecked, is the exact failure this project keeps
+> finding. **The opened document also corrected a figure below** — the search summary said the
+> MUSHRA scale runs 1 to 100; the recommendation says **0 to 100, continuous**.
+
+The useful part is not that we match them — it is that we *differ*, in a way we can defend:
 
 - **BS.1534 (MUSHRA) is for intermediate quality; BS.1116 is for very small impairments.** Our
   delicacy pairs sit at near-transparent damage, so the applicable regime is BS.1116, not the
   MUSHRA scale most people have heard of. Saying so is a sharper credential than claiming
   compliance with either.
-- **MUSHRA rates each sample on a 1–100 scale.** Pitchfork offers 101 places. The professional
-  audio standard and the professional music critic independently chose about a hundred degrees, and
-  this product offers eleven and asks only how many you used. **That is the Track I argument
+- **MUSHRA rates each sample on a continuous 0–100 scale.** Pitchfork offers 101 discrete places.
+  The professional audio standard and the professional music critic independently reached for about
+  a hundred degrees, and this product offers eleven and asks only how many you used. **That is the Track I argument
   arriving from a completely different discipline**, and it is the single most interesting sentence
   in this analysis.
 - Our `AbCompare` presents a forced choice between two samples with a required listen. Where that
