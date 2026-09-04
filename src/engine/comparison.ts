@@ -88,6 +88,17 @@ export const DEGREES_AVAILABLE = BIAS_SCALE_MAX - BIAS_SCALE_MIN + 1;
  */
 export const ASSERTION_FLOOR = 2;
 
+/**
+ * Distinct values expected from someone rating `itemCount` clips at random.
+ *
+ * Exported as a function because a second surface needed it — the reading-room
+ * page states the figure in prose — and the alternative was that page carrying
+ * its own copy of the formula. One implementation, two callers.
+ */
+export function degreesIfIndifferent(itemCount: number): number {
+  return DEGREES_AVAILABLE * (1 - Math.pow((DEGREES_AVAILABLE - 1) / DEGREES_AVAILABLE, itemCount));
+}
+
 export interface ComparisonPairCounts {
   /** Pairs whose labels offer no differential reason to reorder them. */
   eligible: number;
@@ -201,8 +212,7 @@ export function computeComparisonResult(
     itemCount: items.length,
     degreesAvailable: DEGREES_AVAILABLE,
     degreesUsed: used.size,
-    degreesIfIndifferent:
-      DEGREES_AVAILABLE * (1 - Math.pow((DEGREES_AVAILABLE - 1) / DEGREES_AVAILABLE, items.length)),
+    degreesIfIndifferent: degreesIfIndifferent(items.length),
     lowestUsed: Math.min(...blindValues),
     highestUsed: Math.max(...blindValues),
     span: Math.max(...blindValues) - Math.min(...blindValues),

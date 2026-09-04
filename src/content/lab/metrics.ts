@@ -27,6 +27,7 @@
 
 import { BIAS_METRICS } from "@/engine/bias";
 import { CALIBRATION_METRICS } from "@/engine/calibration";
+import { COMPARISON_METRICS } from "@/engine/comparison";
 import { DELICACY_METRICS } from "@/engine/delicacy";
 import { fromModule, type MetricSpec } from "@/engine/metricMeta";
 import { ESTIMATE_METRICS } from "@/analytics/estimate";
@@ -56,6 +57,7 @@ const OPS_METRICS: MetricSpec[] = [
 
 export const METRICS = [
   ...fromModule("src/engine/bias.ts", BIAS_METRICS),
+  ...fromModule("src/engine/comparison.ts", COMPARISON_METRICS),
   ...fromModule("src/engine/delicacy.ts", DELICACY_METRICS),
   ...fromModule("src/engine/calibration.ts", CALIBRATION_METRICS),
   ...fromModule("src/analytics/estimate.ts", ESTIMATE_METRICS),

@@ -318,7 +318,20 @@ describe("E6/S12 — hardcoded Prestige Test claims still match the pool", () =>
       // should be checked rather than trusted.
       "docs/ANALYTICS.md",
     ];
-    const found = filesContaining(/\b(ten|\d+) clips\b/i).sort();
+    /*
+     * THE NEEDLE WAS BLIND TO ITS OWN SUBJECT (E16/S7).
+     *
+     * It matched a digit, or the single number word the pool happened to be
+     * when this guard was written. RT-103a then grew the pool, the copy began
+     * spelling the new count instead, and the guard went on passing while
+     * eight surfaces stated a size it could not see — including a page added in
+     * the same session that found this, which is how it surfaced at all.
+     * Number words are enumerated to twenty, past any pool this product would
+     * ship without a much larger decision behind it.
+     */
+    const COUNT_WORD =
+      "ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty";
+    const found = filesContaining(new RegExp(`\\b(${COUNT_WORD}|\\d+) clips\\b`, "i")).sort();
     const unexpected = found.filter((f) => !known.includes(f));
     expect(
       unexpected,

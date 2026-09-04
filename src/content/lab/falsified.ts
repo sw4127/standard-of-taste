@@ -533,4 +533,61 @@ export const FALSIFIED: FalsifiedEntry[] = [
     ],
     guard: "src/analytics/arc-resolution.test.ts",
   },
+  /* --------------------------------------------- Track I, the comparison reading */
+  {
+    id: "critic-ranking-over-our-clips",
+    beliefs: [
+      "A published critics' ranking can set the spread over the clips the Prestige Test already plays.",
+    ],
+    date: "2026-09-04",
+    kind: "measured",
+    killedBy:
+      "Checked against the sources rather than from memory. Michael Tanner's ranked 21 Beethoven works for BBC Music Magazine contains 0 of this pool's works, and 4 of the 14 scored clips are Creative Commons artists no critic has ever ranked — so no enumerated critic ranking covers the repertoire at all.",
+    consequence:
+      "Critics supply the reference SCALE and never the spread over our items: the reading quotes what professionals do with their own degrees, and scores nobody against them.",
+    sources: [
+      {
+        path: "docs/handoff-2026-09-04.md",
+        anchor: "no enumerated critic ranking covers it",
+      },
+    ],
+    guard: "src/content/comparison/scales.test.ts",
+  },
+  {
+    id: "chopin-fifteen-is-a-ranking",
+    beliefs: [
+      "The BBC Music Magazine list of fifteen Chopin works is a ranking we can use for spread.",
+    ],
+    date: "2026-09-04",
+    kind: "derived",
+    killedBy:
+      "It would have been the ideal source — 15 short piano works, all available from one CC0 complete-works set already licensed here, one performer throughout. Opening the article's own framing killed it: the works are numbered but not ordered by merit, with no countdown and no statement of greatness anywhere in it.",
+    consequence:
+      "Dropped rather than used. Reading rank order into a numbered list that does not claim one would have been inventing the ranking, which is the failure this page catalogues.",
+    sources: [
+      {
+        path: "docs/handoff-2026-09-04.md",
+        anchor: "it is numbered but not ordered by merit",
+      },
+    ],
+  },
+  {
+    id: "degrees-ceiling-is-meaningful",
+    beliefs: [
+      "Eleven of eleven degrees is a meaningful ceiling for the degrees-used count.",
+    ],
+    date: "2026-09-04",
+    kind: "measured",
+    killedBy:
+      "Rating a pool of this size at random lands on 8.606 distinct values of 11, cross-checked against a Monte Carlo draw rather than by restating the formula. Two simulated listeners with entirely different order stability both scored 11 of 11.",
+    consequence:
+      "The engine carries the null model and no surface prints the count without it, so a reader is never handed a bar that indifference already clears.",
+    sources: [
+      {
+        path: "docs/handoff-2026-09-04.md",
+        anchor: "the top of the scale is reachable by indifference",
+      },
+    ],
+    guard: "src/engine/comparison.test.ts",
+  },
 ];

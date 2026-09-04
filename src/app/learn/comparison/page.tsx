@@ -3,8 +3,12 @@ import Explainer, { explainerMetadata } from "../Explainer";
 import { learnPage } from "@/content/learn";
 import { OUR_SCALE } from "@/content/comparison/scales";
 import { criticReferenceLines } from "@/content/vocabulary/comparison";
-import { DEGREES_AVAILABLE } from "@/engine/comparison";
+import { DEGREES_AVAILABLE, degreesIfIndifferent } from "@/engine/comparison";
+import { BIAS_CLIPS } from "@/content/bias/items";
 import { numberWord } from "@/content/vocabulary/numbers";
+
+const CLIPS = BIAS_CLIPS.length;
+const BY_CHANCE = Math.round(degreesIfIndifferent(CLIPS));
 
 const page = learnPage("comparison")!;
 export const metadata = explainerMetadata(page);
@@ -54,8 +58,8 @@ export default function Page() {
       </p>
       <p>
         <strong>It reuses a test you have already taken.</strong> The{" "}
-        <Link href="/learn/prestige-bias-test">Prestige Test</Link>{" "}asks you to rate sixteen clips
-        blind on a scale of {numberWord(DEGREES_AVAILABLE)} whole numbers, then rate them again with names attached. Those ratings
+        <Link href="/learn/prestige-bias-test">Prestige Test</Link>{" "}asks you to rate{" "}
+        {numberWord(CLIPS)} clips blind on a scale of {numberWord(DEGREES_AVAILABLE)} whole numbers, then rate them again with names attached. Those ratings
         are already on your device, so comparison costs no new clip and no new tap. Two things come
         out of them: <strong>how many of the {numberWord(DEGREES_AVAILABLE)} degrees you actually landed on</strong>,
         and <strong>how many pairs you ordered one way blind and the other way round the second
@@ -65,7 +69,8 @@ export default function Page() {
       <p>
         Neither number is a mark out of anything. The count is read against what an{" "}
         <em>indifferent</em> rater would produce rather than against the top of the scale, because
-        rating sixteen clips at random already lands on about nine distinct values — the ceiling is
+        rating {numberWord(CLIPS)} clips at random already lands on about {numberWord(BY_CHANCE)}{" "}
+        distinct values — the ceiling is
         reachable by accident, and a reader measuring themselves against it is measuring themselves
         against nothing.
       </p>
