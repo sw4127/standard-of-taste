@@ -303,8 +303,21 @@ describe("the published text files describe the product that shipped", () => {
      * site-map list at the bottom. A line in a link list is not a description
      * of an instrument, so the long-form file must carry a heading for each.
      */
+    /**
+     * DERIVED FROM THE ROSTER, NOT TYPED OUT (E17/S7).
+     *
+     * This read `["Prestige Test", "Delicacy Trials", "Threshold Test"]` — a
+     * list somebody wrote when there were three. A fourth machine shipped and
+     * every assertion here stayed green while `llms-full.txt` described a
+     * product with one fewer instrument than the product has. The guard whose
+     * whole purpose is to keep these files true could not see the thing that
+     * made them false, because it was checking a constant rather than the
+     * roster. Now a fifth machine fails this the day it ships.
+     */
     const headings = [...full.matchAll(/^##+ (.+)$/gm)].map((m) => m[1]);
-    for (const name of ["Prestige Test", "Delicacy Trials", "Threshold Test"]) {
+    const liveNames = MACHINES.filter((m) => m.live).map((m) => m.title.replace(/^The /, ""));
+    expect(liveNames.length).toBeGreaterThan(0);
+    for (const name of liveNames) {
       expect(
         headings.some((h) => h.includes(name)),
         `llms-full.txt has no section for the ${name}. Headings found:\n${headings.join("\n")}`,

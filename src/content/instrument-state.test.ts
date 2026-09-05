@@ -166,6 +166,33 @@ describe("the front door counts the machines it is rendering", () => {
    * and names the file to go and write in, rather than letting a fourth machine
    * ship under a sentence that describes three.
    */
+  /**
+   * THE FRONT DOOR KEEPS ITS OWN LIST, AND IT WENT STALE (E17/S7).
+   *
+   * `src/app/page.tsx` declares a richer `Machine[]` than the shared roster —
+   * it carries an ambient field, a page surface, a criterion and a duration
+   * that `MACHINES` does not. That is a fair reason for a second shape and no
+   * reason at all for a second ROSTER: for two commits the most-visited page in
+   * the product offered three machines while four were live. Read as source
+   * because the array is not exported.
+   */
+  it("the front door offers every machine the roster says is live", () => {
+    const page = readFileSync("src/app/page.tsx", "utf8");
+    /*
+     * ANY INDENTATION, NOT FOUR SPACES. The first needle pinned the depth and
+     * reported `delicacy` missing — its entry is nested inside a
+     * `DELICACY_LIVE ? [...] : []` spread and sits six spaces deeper. A guard
+     * that accuses correct code is a guard the next person deletes.
+     */
+    const declared = [...page.matchAll(/^\s+id: "([a-z-]+)",$/gm)].map((m) => m[1]);
+    expect(declared.length, "found no machine ids in page.tsx").toBeGreaterThan(0);
+    const live = MACHINES.filter((m) => m.live).map((m) => m.id);
+    expect(
+      live.filter((id) => !declared.includes(id)),
+      "live machines the front door does not offer",
+    ).toEqual([]);
+  });
+
   it("still describes exactly the machines that exist", () => {
     const live = MACHINES.filter((m) => m.live).length;
     expect(

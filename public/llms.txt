@@ -6,21 +6,25 @@
 > tier. Scores are honest: results are labeled provisional until real cohort norms exist, and no
 > percentile is ever fabricated.
 
-Three instruments are live. The flagship is the Prestige Test: rate sixteen short music clips
+Four instruments are live. The flagship is the Prestige Test: rate sixteen short music clips
 blind, then rate the same clips again with artist names attached — fourteen carry artist names,
 two of the fourteen labels are deliberately false, and every swap is disclosed in a mandatory
 debrief. The blind-vs-labeled rating gap is a measured prestige-bias number; the user serves as
 their own control. The Delicacy Trials play damaged and undamaged pairs and ask which is which.
 The Threshold Test adapts until it finds the smallest flaw a listener can still hear, and reports
-that size in cents, milliseconds or kbps. All scoring is deterministic code — no AI classifies the
-user.
+that size in cents, milliseconds or kbps. The Ranking Test plays six works a published critic
+ranked against each other and reports how far apart a listener's ratings fell on the pairs he
+separated, beside the same figure on the pairs he bracketed together — agreement with the critic is
+never scored and cannot be computed, because only the distance between his positions is used and
+never their order. All scoring is deterministic code — no AI classifies the user.
 
 ## Core pages
 
-- [The Taste Gym (home)](https://vibe-check-app-sepia.vercel.app/): what the gym is; the three machines
+- [The Taste Gym (home)](https://vibe-check-app-sepia.vercel.app/): what the gym is; the four machines
 - [The Prestige Test](https://vibe-check-app-sepia.vercel.app/bias): the flagship instrument — about eight minutes, free, no sign-up
 - [The Delicacy Trials](https://vibe-check-app-sepia.vercel.app/delicacy): three practice trials with answers shown, then fifteen scored pairs
 - [The Threshold Test](https://vibe-check-app-sepia.vercel.app/threshold): an adaptive staircase reporting a sensitivity threshold in physical units
+- [The Ranking Test](https://vibe-check-app-sepia.vercel.app/spread): six critic-ranked works, forty seconds each — whether your rating gaps vary where a critic's rankings vary
 - [Reading room](https://vibe-check-app-sepia.vercel.app/learn): all explainers — the five criteria, the instruments, the methodology
 - [Naming what went wrong](https://vibe-check-app-sepia.vercel.app/learn/flaws): the three flaw families the instruments measure — what each sounds like in a render, the unit it is measured in, and which machine measures it
 - [What is the Prestige Test?](https://vibe-check-app-sepia.vercel.app/learn/prestige-bias-test): the design, the sanctioned deception, the debrief

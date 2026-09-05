@@ -71,6 +71,31 @@ The instrument publishes what it cannot do. Ladder rungs that are not acoustical
 levels whose damage varies by passage, and the floor of what the rulers can report are measured by
 the clip pipeline and listed at /lab/instrument-limits in the pipeline's own words.
 
+## The Ranking Test (fourth instrument, live)
+
+Six Beethoven works from Michael Tanner's ranked twenty-one for BBC Music Magazine, played as
+forty-second excerpts and rated blind. Two numbers come out: the mean gap between the listener's
+two ratings across pairs the critic placed ten or more positions apart, and the same figure across
+pairs he placed within three. Both are read against what an indifferent rater produces, which is
+the same figure on both kinds of pair because chance does not know which works a critic separated.
+
+AGREEMENT WITH THE CRITIC IS NEVER SCORED AND CANNOT BE COMPUTED. The instrument imports only the
+DISTANCE between two positions in the ranking, never their order, so nothing it stores can say
+which work the critic placed higher. Preferring the work he ranked lower costs a listener nothing.
+The difference between the two numbers is not reported either: four pairs against four, drawn from
+clips that appear in several pairs each, and nobody has sat the instrument twice, so there is no
+measured wobble against which a difference could be called real.
+
+Before rating, a listener says which clips they had heard before, and those clips are removed. It
+is self-report, disclosed as such, and it only ever subtracts — recognising too many produces no
+number and a statement of why, never a smaller one. The clips differ in bandwidth by up to ten
+kilohertz for reasons no ranking caused; that difference is larger across the close pairs than the
+far ones, so it works against finding a difference rather than for it.
+
+Clip length is forty seconds here rather than the twenty used elsewhere, and that is a mitigation
+rather than a solution: a forty-second excerpt cannot carry a critic's verdict on a forty-minute
+work.
+
 ## Comparison
 
 Hume's "comparison" criterion is the ability to assign DEGREES of praise, and it is measured from
@@ -124,6 +149,7 @@ ad-tech cookies.
 - The Prestige Test (take it): https://vibe-check-app-sepia.vercel.app/bias
 - The Delicacy Trials (take it): https://vibe-check-app-sepia.vercel.app/delicacy
 - The Threshold Test (take it): https://vibe-check-app-sepia.vercel.app/threshold
+- The Ranking Test (take it): https://vibe-check-app-sepia.vercel.app/spread
 - The Lab (analytics surface): https://vibe-check-app-sepia.vercel.app/lab
 - Parameter recovery: https://vibe-check-app-sepia.vercel.app/lab/recovery
 - Instrument health: https://vibe-check-app-sepia.vercel.app/lab/instrument-health

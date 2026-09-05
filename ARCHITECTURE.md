@@ -155,6 +155,12 @@ trial, which yields a calibration curve — Hume's "good sense" as arithmetic ra
 person still reliably detects, reported in physical units. Not a score. This is the deliverable of
 record.
 
+**The Ranking Test.** Six works a published critic ranked against each other, played as
+forty-second excerpts and rated blind. Reports the mean gap between a listener's two ratings across
+pairs the critic placed far apart, beside the same figure across pairs he bracketed together, both
+read against what an indifferent rater produces. Agreement with the critic is never scored and
+cannot be computed: the engine imports the distance between two positions and never their order.
+
 ## Two-layer item validation, and no ear gate
 
 Both layers replaced human judgment calls that one person had to make by ear and could not make

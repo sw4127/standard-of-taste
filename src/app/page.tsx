@@ -6,7 +6,7 @@ import Track from "@/components/Track";
 import { worldCup } from "@/content/world-cup";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
 import { landingLead, SECONDARY_DOORS } from "@/content/landing";
-import { PRESTIGE_GOLD, PRESTIGE_FIELD, DELICACY_ICE, DELICACY_FIELD, THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE, GYM_INK } from "@/content/instrument-accents";
+import { PRESTIGE_GOLD, PRESTIGE_FIELD, DELICACY_ICE, DELICACY_FIELD, THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE, SPREAD_ROSE, SPREAD_FIELD, SPREAD_BASE, GYM_INK } from "@/content/instrument-accents";
 
 /**
  * The taste-gym landing (RT-3c, memo §9.7 RESOLVED 2026-07-11): /bias is the
@@ -119,6 +119,29 @@ const MACHINES: Machine[] = [
     blurb:
       "The damage gets smaller every time you catch it, and bigger every time you miss. It stops at the size where you stop being sure — and that size is your number.",
     meta: "14-26 min · a number in cents, ms or kbps",
+  },
+  /**
+   * MACHINE 04 — the Ranking Test (E17, Track N).
+   *
+   * THIS LIST IS NOT `MACHINES` FROM THE REGISTRY, and that is why it went
+   * stale. The floor needs an ambient field, a page surface, a criterion and a
+   * duration that the shared roster does not carry, so it keeps its own richer
+   * shape — but for two commits the front door offered three machines while
+   * four were live, on the most-visited page in the product.
+   * `instrument-state.test.ts` now checks these ids against the roster.
+   */
+  {
+    id: "spread",
+    href: "/spread",
+    n: "04",
+    accent: SPREAD_ROSE,
+    field: SPREAD_FIELD,
+    surface: SPREAD_BASE,
+    title: "The Ranking Test",
+    criterion: "Comparison · heard",
+    blurb:
+      "A critic ranked six works against each other. Rate them with your ears alone and find out whether your gaps fall where his did — agreeing with him is not the point, and is not measured.",
+    meta: "~6 min · 6 works, 40 seconds each",
   },
 ];
 

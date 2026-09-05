@@ -21,6 +21,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page("/bias", 0.9, "weekly"),
     // The second machine enters the map only when its pool of record is live.
     ...(DELICACY_LIVE ? [page("/delicacy", 0.9, "weekly")] : []),
+    /**
+     * THE THRESHOLD TEST WAS NEVER IN THIS MAP (found E17/S7, while adding the
+     * Ranking Test). Two of the four live machines were unlisted — one of them
+     * since it shipped — so a crawler was told about half the product. Each
+     * machine is now added by hand and `sitemap.test.ts` checks the list
+     * against the roster, because a hand-maintained list is exactly what let
+     * one fall out unnoticed.
+     */
+    page("/threshold", 0.9, "weekly"),
+    page("/spread", 0.9, "weekly"),
     page("/learn", 0.8),
     ...LEARN_PAGES.map((p) => page(`/learn/${p.slug}`, 0.7)),
     // The Lab is a public artifact surface, not an admin console — it is meant

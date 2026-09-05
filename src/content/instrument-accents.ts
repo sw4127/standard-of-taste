@@ -213,8 +213,20 @@ export const THRESHOLD_FIELD = [
   "hsl(300 35% 38%)",
 ];
 
+/**
+ * The Ranking Test's field — analogous neighbours of rose, same construction as
+ * the other three (E17/S7).
+ */
+export const SPREAD_FIELD = [
+  "hsl(339 45% 45%)",
+  "hsl(352 40% 42%)",
+  "hsl(326 40% 42%)",
+  "hsl(310 35% 38%)",
+];
+
 /** The near-black each instrument sits on, tinted a hair toward its own accent. */
 export const THRESHOLD_BASE = "#0A070C";
+export const SPREAD_BASE = "#0C0709";
 
 /* ------------------------------------------------------------------ tint */
 /**
