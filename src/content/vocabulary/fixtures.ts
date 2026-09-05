@@ -22,6 +22,9 @@ import { creatorLines as delicacyLines } from "./delicacy";
 import { creatorLines as biasLines } from "./bias";
 import { acrossLines, thresholdRoster, type AcrossInput } from "./across";
 import { arcLines } from "./arc";
+import { recognitionLines, SPREAD_BOUNDARY } from "./spread";
+import { computeSpreadResult } from "@/engine/spread";
+import { SPREAD_POOL } from "@/content/spread/ranking";
 import { biasArc, delicacyArc, thresholdArc, type ArcReading } from "@/engine/arc";
 import { brierNote, expertStrings } from "./expert";
 import { thresholdClaim, type Claim } from "@/engine/evidence";
@@ -274,6 +277,28 @@ export function acrossInputs(): Record<string, AcrossInput> {
 }
 
 /** The whole deck, ready for `checkVoice`. */
+
+/**
+ * A rating for every clip in the critic-ranked pool. Values chosen to be
+ * uneven rather than realistic: the copy branches on COUNTS, never on the
+ * ratings themselves, so what matters is that every clip carries one.
+ */
+export function spreadRatings(): Record<string, number> {
+  const values = [9, 2, 7, 1, 8, 3];
+  return Object.fromEntries(SPREAD_POOL.map((item, n) => [item.id, values[n % values.length]]));
+}
+
+/** Every state the recognition filter can reach, by which clips were set aside. */
+export function spreadRecognitionCases(): Record<string, string[]> {
+  return {
+    none: [],
+    "one-still-readable": ["sp2"],
+    "far-pairs-collapse": ["sp1"],
+    "close-pairs-collapse": ["sp2", "sp3"],
+    all: SPREAD_POOL.map((i) => i.id),
+  };
+}
+
 export function vocabularyStrings(): VoiceString[] {
   const out: VoiceString[] = [];
 
@@ -312,6 +337,21 @@ export function vocabularyStrings(): VoiceString[] {
       out.push({ surface: `vocabulary/arc/${name}/${i}`, text, intensity: "pointed" });
     });
   }
+
+  /**
+   * TRACK N's recognition filter (E17/S4). Every reachable state of the
+   * filter, driven through the real engine: nothing recognised, some
+   * recognised with a reading still possible, and each way the evidence can
+   * run out. The refusals are why `intensity` is "pointed" here too — a
+   * refusal carries no datum and the "full" tier would wrongly demand one.
+   */
+  for (const [name, recognised] of Object.entries(spreadRecognitionCases())) {
+    const result = computeSpreadResult(spreadRatings(), recognised);
+    recognitionLines(result).forEach((text, i) => {
+      out.push({ surface: `vocabulary/spread/${name}/${i}`, text, intensity: "pointed" });
+    });
+  }
+  out.push({ surface: "vocabulary/spread/boundary", text: SPREAD_BOUNDARY, intensity: "pointed" });
 
   /**
    * THE EXPERT PANEL (E8/C4). Every fixed string on the verdict-free surface,
