@@ -31,11 +31,7 @@ import { SPREAD_PALETTE } from "@/content/instrument-accents";
 import { SPREAD_POOL } from "@/content/spread/ranking";
 import { BIAS_SCALE_MAX } from "@/engine/bias";
 import { computeSpreadResult, type SpreadResult } from "@/engine/spread";
-import {
-  RECOGNITION_DISCLOSURE,
-  SPREAD_BOUNDARY,
-  recognitionLines,
-} from "@/content/vocabulary/spread";
+import { RECOGNITION_DISCLOSURE, spreadLines } from "@/content/vocabulary/spread";
 
 const { accent, soft, glow } = SPREAD_PALETTE;
 
@@ -235,11 +231,16 @@ export default function SpreadFlow() {
         </div>
       ) : null}
 
+      {/*
+        ONE COMPOSER FOR THE WHOLE READING (E17/S6). The reveal used to append
+        the boundary itself, beside the recognition lines — the deck's own
+        ordering reproduced by hand on the page, which is how a fix that lives
+        in a function stops reaching its callers.
+      */}
       <div className="mt-8 space-y-4 text-sm leading-relaxed text-muted">
-        {recognitionLines(result).map((line) => (
+        {spreadLines(result).map((line) => (
           <p key={line.slice(0, 32)}>{line}</p>
         ))}
-        <p>{SPREAD_BOUNDARY}</p>
       </div>
 
       <div className="mt-10">

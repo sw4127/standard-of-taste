@@ -71,7 +71,9 @@ export const RECOGNITION_DISCLOSURE =
 export const SPREAD_BOUNDARY =
   "Neither number says you agreed with him, and neither could: this only ever looks at how far " +
   "apart your two ratings fell, never at which one you put higher. Preferring the work he ranked " +
-  "lower costs you nothing here, because nothing here is checking.";
+  "lower costs you nothing here, because nothing here is checking. Small numbers are not a poor " +
+  "result either — six recordings of six different works are not spaced out by quality, and if " +
+  "they genuinely sounded close to you then rating them close was the accurate thing to do.";
 
 /** How many clips the listener set aside, as self-report rather than a score. */
 export function recognitionLine(result: SpreadResult): string {
@@ -144,5 +146,98 @@ export function spreadRefusal(result: SpreadResult): string {
 export function recognitionLines(result: SpreadResult): string[] {
   const lines = [recognitionLine(result)];
   if (result.refusal) lines.push(spreadRefusal(result));
+  return lines;
+}
+
+/** One decimal, which is all the resolution four pairs can carry. */
+const points = (n: number) => n.toFixed(1);
+
+/**
+ * THE TWO NUMBERS, SAID PLAINLY, AND ALWAYS AGAINST THE CHANCE FIGURE.
+ *
+ * A reader handed "4.0 and 4.8" has no idea whether either is large. The
+ * indifferent-rater figure is not decoration here, it is the only reference
+ * point that exists: chance does not know which works a critic separated, so it
+ * produces the SAME expected gap on both kinds of pair.
+ */
+export function figuresLine(result: SpreadResult): string {
+  const far = result.far.meanGap;
+  const close = result.close.meanGap;
+  if (far === null || close === null) {
+    throw new Error("figuresLine: called on a refused reading");
+  }
+  return (
+    `Across the ${numberWord(result.far.count)} pairs he placed far apart, your two ratings differed ` +
+    `by ${points(far)} points on average. Across the ${numberWord(result.close.count)} pairs he bracketed ` +
+    `together, ${points(close)}. Rating at random produces ${points(result.spreadIfIndifferent)} on both, ` +
+    `because chance does not know which works a critic separated.`
+  );
+}
+
+/**
+ * WHICH NUMBER IS LARGER IS A FACT ABOUT THE SITTING. WHETHER IT MEANS ANYTHING
+ * IS NOT KNOWN, AND THIS SENTENCE SAYS SO IN THE SAME BREATH.
+ *
+ * The reading has to survive the way people actually read: a reader who sees
+ * two numbers will decide which is bigger whether or not the copy names it, and
+ * will take the bigger one as a result. Saying nothing does not prevent that
+ * inference, it just leaves it unchallenged. So the direction is stated — and
+ * the refusal is attached to it, unconditionally, rather than left as a caveat
+ * further down where it can be skipped.
+ *
+ * THE REFUSAL IS NOT MODESTY, IT IS ARITHMETIC. Four pairs against four, drawn
+ * from six clips that appear in several pairs each, so the gaps are not even
+ * independent of one another. Nobody has sat this instrument twice, so how much
+ * a second attempt would move these numbers has never been measured. Under
+ * those conditions there is no honest threshold at which a difference becomes a
+ * finding, and inventing one would be the manufactured norm this product spends
+ * its whole existence refusing.
+ */
+export function directionLine(result: SpreadResult): string {
+  const far = result.far.meanGap;
+  const close = result.close.meanGap;
+  if (far === null || close === null) {
+    throw new Error("directionLine: called on a refused reading");
+  }
+  /**
+   * THE FLAT RATER NEEDS HIS OWN SENTENCE, and the general one was wrong for
+   * him. Someone who gave every clip the same number produces 0.0 and 0.0, and
+   * the even-handed template said "your ratings moved the same amount either
+   * way" — technically true, and it describes a symmetry where the real fact is
+   * that nothing moved at all. Found by printing the copy for a flat rater.
+   */
+  if (far === 0 && close === 0) {
+    return (
+      `You gave every one of these the same rating, so there are no gaps to compare and nothing ` +
+      `for this to work on. That is a real answer rather than a failed attempt — if the six ` +
+      `genuinely sounded alike to you, saying so was the accurate thing to do.`
+    );
+  }
+  const shape =
+    far > close
+      ? "Your ratings moved further apart where his judgment did"
+      : far < close
+        ? "Your ratings moved further apart where his judgment did not"
+        : "Your ratings moved the same amount either way";
+  return (
+    `${shape}. Whether that means anything is a question this cannot answer: ` +
+    `${numberWord(result.far.count)} pairs against ${numberWord(result.close.count)}, built from clips that ` +
+    `each appear in several of them, and nobody has sat this twice to find out how far the numbers wander ` +
+    `on their own. There is no honest size at which the gap between them becomes a result, so none is offered.`
+  );
+}
+
+/**
+ * The reading, in order: what was set aside, the two numbers, what the
+ * difference between them is not, and the limit. A refused reading stops after
+ * the refusal — there is nothing to compose.
+ */
+export function spreadLines(result: SpreadResult): string[] {
+  const lines = recognitionLines(result);
+  if (!result.refusal) {
+    lines.push(figuresLine(result));
+    lines.push(directionLine(result));
+  }
+  lines.push(SPREAD_BOUNDARY);
   return lines;
 }

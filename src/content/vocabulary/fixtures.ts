@@ -22,7 +22,7 @@ import { creatorLines as delicacyLines } from "./delicacy";
 import { creatorLines as biasLines } from "./bias";
 import { acrossLines, thresholdRoster, type AcrossInput } from "./across";
 import { arcLines } from "./arc";
-import { recognitionLines, SPREAD_BOUNDARY } from "./spread";
+import { spreadLines } from "./spread";
 import { computeSpreadResult } from "@/engine/spread";
 import { SPREAD_POOL } from "@/content/spread/ranking";
 import { biasArc, delicacyArc, thresholdArc, type ArcReading } from "@/engine/arc";
@@ -283,20 +283,34 @@ export function acrossInputs(): Record<string, AcrossInput> {
  * uneven rather than realistic: the copy branches on COUNTS, never on the
  * ratings themselves, so what matters is that every clip carries one.
  */
-export function spreadRatings(): Record<string, number> {
-  const values = [9, 2, 7, 1, 8, 3];
-  return Object.fromEntries(SPREAD_POOL.map((item, n) => [item.id, values[n % values.length]]));
+/**
+ * Each case carries its OWN ratings, keyed by name rather than derived from how
+ * many clips were recognised (E17/S6). The first version chose the rating shape
+ * from `recognised.length`, which silently paired the flat-rater ratings with a
+ * case that REFUSES — so the flat-rater sentence was never reachable and the
+ * voice gate never saw it. Found by counting the shapes the gate covers rather
+ * than by the gate passing.
+ */
+export interface SpreadCase {
+  recognised: string[];
+  ratings: number[];
 }
 
-/** Every state the recognition filter can reach, by which clips were set aside. */
-export function spreadRecognitionCases(): Record<string, string[]> {
+export function spreadCases(): Record<string, SpreadCase> {
+  const ids = SPREAD_POOL.map((i) => i.id);
   return {
-    none: [],
-    "one-still-readable": ["sp2"],
-    "far-pairs-collapse": ["sp1"],
-    "close-pairs-collapse": ["sp2", "sp3"],
-    all: SPREAD_POOL.map((i) => i.id),
+    none: { recognised: [], ratings: [9, 2, 7, 1, 8, 3] },
+    "gaps-the-other-way": { recognised: [], ratings: [7, 7, 0, 7, 7, 7] },
+    flat: { recognised: [], ratings: [6, 6, 6, 6, 6, 6] },
+    "one-still-readable": { recognised: ["sp2"], ratings: [9, 2, 7, 1, 8, 3] },
+    "far-pairs-collapse": { recognised: ["sp1"], ratings: [9, 2, 7, 1, 8, 3] },
+    "close-pairs-collapse": { recognised: ["sp2", "sp3"], ratings: [9, 2, 7, 1, 8, 3] },
+    all: { recognised: ids, ratings: [9, 2, 7, 1, 8, 3] },
   };
+}
+
+export function spreadRatings(values: number[]): Record<string, number> {
+  return Object.fromEntries(SPREAD_POOL.map((item, n) => [item.id, values[n % values.length]]));
 }
 
 export function vocabularyStrings(): VoiceString[] {
@@ -345,13 +359,12 @@ export function vocabularyStrings(): VoiceString[] {
    * run out. The refusals are why `intensity` is "pointed" here too — a
    * refusal carries no datum and the "full" tier would wrongly demand one.
    */
-  for (const [name, recognised] of Object.entries(spreadRecognitionCases())) {
-    const result = computeSpreadResult(spreadRatings(), recognised);
-    recognitionLines(result).forEach((text, i) => {
+  for (const [name, c] of Object.entries(spreadCases())) {
+    const result = computeSpreadResult(spreadRatings(c.ratings), c.recognised);
+    spreadLines(result).forEach((text, i) => {
       out.push({ surface: `vocabulary/spread/${name}/${i}`, text, intensity: "pointed" });
     });
   }
-  out.push({ surface: "vocabulary/spread/boundary", text: SPREAD_BOUNDARY, intensity: "pointed" });
 
   /**
    * THE EXPERT PANEL (E8/C4). Every fixed string on the verdict-free surface,

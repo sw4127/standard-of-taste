@@ -19,8 +19,11 @@ import { computeSpreadResult, type SpreadResult } from "@/engine/spread";
 import {
   RECOGNITION_DISCLOSURE,
   SPREAD_BOUNDARY,
+  directionLine,
+  figuresLine,
   recognitionLine,
   recognitionLines,
+  spreadLines,
   spreadRefusal,
 } from "./spread";
 
@@ -121,6 +124,97 @@ describe("(d) no refusal carries a number that could read as a score", () => {
       if (!r.refusal) continue;
       expect(r.far.meanGap, name).toBeNull();
       expect(r.close.meanGap, name).toBeNull();
+    }
+  });
+});
+
+describe("(f) the reading states two numbers and refuses their difference", () => {
+  const readable = computeSpreadResult(VALUES);
+
+  it("prints both figures and the chance baseline", () => {
+    const text = figuresLine(readable);
+    expect(text).toContain(readable.far.meanGap!.toFixed(1));
+    expect(text).toContain(readable.close.meanGap!.toFixed(1));
+    expect(text).toContain(readable.spreadIfIndifferent.toFixed(1));
+  });
+
+  it("never prints the difference between the two numbers", () => {
+    // 4.0 and 4.8 on this input; 0.8 must appear nowhere.
+    const far = readable.far.meanGap!;
+    const close = readable.close.meanGap!;
+    const gap = Math.abs(far - close).toFixed(1);
+    for (const line of spreadLines(readable)) {
+      expect(line.includes(` ${gap} `), `line prints the difference: ${line}`).toBe(false);
+    }
+  });
+
+  it("attaches the refusal to the direction, in the same sentence", () => {
+    // Not a caveat further down that a reader can skip: the sentence that
+    // names which number is larger has to carry the limit itself.
+    const text = directionLine(readable);
+    expect(text).toMatch(/moved further apart|moved the same amount/);
+    expect(text).toMatch(/cannot answer|no honest size/i);
+  });
+
+  it("offers no threshold at which the difference becomes a result", () => {
+    const banned =
+      /significant|meaningful difference|clearly better|you discriminate|proves|demonstrates|strong evidence/i;
+    for (const line of spreadLines(readable)) {
+      expect(banned.test(line), line).toBe(false);
+    }
+  });
+
+  it("names the direction correctly for a reader whose gaps fall the other way", () => {
+    // sp3 alone at the bottom sits in three of the four CLOSE pairs.
+    const other = computeSpreadResult(rate([7, 7, 0, 7, 7, 7]));
+    expect(other.close.meanGap!).toBeGreaterThan(other.far.meanGap!);
+    expect(directionLine(other)).toContain("where his judgment did not");
+  });
+
+  it("gives the flat rater a sentence about what actually happened", () => {
+    // The even-handed template said "moved the same amount either way" for
+    // someone who moved nothing — a symmetry where the fact is a standstill.
+    const flat = computeSpreadResult(rate([6, 6, 6, 6, 6, 6]));
+    expect(flat.far.meanGap).toBe(0);
+    expect(flat.close.meanGap).toBe(0);
+    const text = directionLine(flat);
+    expect(text).toContain("same rating");
+    expect(text).not.toContain("the same amount either way");
+    expect(text).toMatch(/real answer rather than a failed attempt/);
+  });
+
+  it("keeps the even-handed sentence for a reader who moved but moved equally", () => {
+    // sp1 and sp3 both at 0 makes both means equal and non-zero, so the
+    // flat-rater branch must NOT swallow this case.
+    const even = computeSpreadResult(rate([0, 5, 0, 5, 5, 5]));
+    expect(even.far.meanGap).toBe(even.close.meanGap);
+    expect(even.far.meanGap).toBeGreaterThan(0);
+    expect(directionLine(even)).toContain("the same amount either way");
+  });
+
+  it("says a small number is not a poor result, every time", () => {
+    // The likeliest misreading of any figure this product prints.
+    expect(SPREAD_BOUNDARY).toMatch(/not a poor result/i);
+    expect(SPREAD_BOUNDARY).toMatch(/not spaced out by quality/i);
+    for (const [name, r] of Object.entries(states)) {
+      expect(spreadLines(r).some((l) => /not a poor result/i.test(l)), name).toBe(true);
+    }
+  });
+
+  it("composes nothing numeric on a refused reading", () => {
+    const refused = computeSpreadResult(VALUES, ids);
+    expect(() => figuresLine(refused)).toThrow(/refused reading/);
+    expect(() => directionLine(refused)).toThrow(/refused reading/);
+    expect(spreadLines(refused)).toEqual([
+      ...recognitionLines(refused),
+      SPREAD_BOUNDARY,
+    ]);
+  });
+
+  it("always ends with the limit, readable or not", () => {
+    for (const [name, r] of Object.entries(states)) {
+      const lines = spreadLines(r);
+      expect(lines[lines.length - 1], name).toBe(SPREAD_BOUNDARY);
     }
   });
 });
