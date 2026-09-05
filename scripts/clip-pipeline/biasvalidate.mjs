@@ -120,7 +120,15 @@ export function measureBiasClip(item, fileOverride = null) {
   };
 }
 
-export function gradeBiasClip(m) {
+/**
+ * `targetSec` is a parameter rather than the constant it used to read, because
+ * Track N's pool renders 40s clips and needed EXACTLY these gates (E17/S2).
+ * Copying this function to change one number would have duplicated eight gates
+ * so that a later fix to any of them reached only one pool — the failure mode
+ * this repository has already paid for twice. Defaulted, so every existing
+ * caller behaves identically.
+ */
+export function gradeBiasClip(m, targetSec = TARGET_SEC) {
   if (m.fileMissing) return { ...m, verdict: "ERROR", reasons: ["audio missing from public/audio/bias"] };
   const reasons = [];
   const need = (value, label) => {
@@ -131,8 +139,8 @@ export function gradeBiasClip(m) {
     return true;
   };
 
-  if (need(m.durationSec, "duration") && Math.abs(m.durationSec - TARGET_SEC) > DURATION_TOLERANCE_SEC) {
-    reasons.push(`duration ${m.durationSec.toFixed(2)}s is not ${TARGET_SEC}s +/- ${DURATION_TOLERANCE_SEC}`);
+  if (need(m.durationSec, "duration") && Math.abs(m.durationSec - targetSec) > DURATION_TOLERANCE_SEC) {
+    reasons.push(`duration ${m.durationSec.toFixed(2)}s is not ${targetSec}s +/- ${DURATION_TOLERANCE_SEC}`);
   }
   if (need(m.lufs, "loudness") && Math.abs(m.lufs - TARGET_LUFS) > LUFS_TOLERANCE) {
     reasons.push(`${m.lufs.toFixed(2)} LUFS is outside ${TARGET_LUFS} +/- ${LUFS_TOLERANCE} — louder reads as better`);

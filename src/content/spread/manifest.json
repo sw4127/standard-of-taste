@@ -39,14 +39,108 @@
         "downloadUrl": "https://ks15.imslp.org/files/imglnks/usimg/2/28/IMSLP110179-PMLP05827-beethoven_35.2.mp3",
         "imslpFileId": 110179,
         "durationNote": "11:11",
-        "sha256": null,
+        "sha256": "176b3ce6a9b7337d3a83503c13332bef378d522fa7c27c14eeb00414a6adda2c",
         "fetched": {
           "contentType": "audio/mpeg",
           "bytes": 10736561,
           "magic": "ID3"
-        }
+        },
+        "cachedFile": "sp1.mp3"
       },
-      "attribution": "\"Eroica Variations, Op. 35\" · Ludwig van Beethoven, perf. Ivan Ilić · https://imslp.org/wiki/Eroica_Variations,_Op.35_(Beethoven,_Ludwig_van) · CC BY 3.0 · excerpt (trimmed + loudness-normalised)"
+      "attribution": "\"Eroica Variations, Op. 35\" · Ludwig van Beethoven, perf. Ivan Ilić · https://imslp.org/wiki/Eroica_Variations,_Op.35_(Beethoven,_Ludwig_van) · CC BY 3.0 · excerpt (trimmed + loudness-normalised)",
+      "window": {
+        "suggestions": [
+          {
+            "startSec": 462.5,
+            "endSec": 502.5,
+            "score": 68.4,
+            "onsets": 10
+          },
+          {
+            "startSec": 20.5,
+            "endSec": 60.5,
+            "score": 64.9,
+            "onsets": 10
+          },
+          {
+            "startSec": 442,
+            "endSec": 482,
+            "score": 62.7,
+            "onsets": 7
+          },
+          {
+            "startSec": 269.5,
+            "endSec": 309.5,
+            "score": 61.7,
+            "onsets": 7
+          },
+          {
+            "startSec": 317,
+            "endSec": 357,
+            "score": 61.6,
+            "onsets": 8
+          },
+          {
+            "startSec": 295.5,
+            "endSec": 335.5,
+            "score": 60.2,
+            "onsets": 9
+          },
+          {
+            "startSec": 525.5,
+            "endSec": 565.5,
+            "score": 59.8,
+            "onsets": 8
+          },
+          {
+            "startSec": 249.5,
+            "endSec": 289.5,
+            "score": 58.3,
+            "onsets": 7
+          },
+          {
+            "startSec": 499,
+            "endSec": 539,
+            "score": 58,
+            "onsets": 10
+          },
+          {
+            "startSec": 193.5,
+            "endSec": 233.5,
+            "score": 53.3,
+            "onsets": 5
+          },
+          {
+            "startSec": 550,
+            "endSec": 590,
+            "score": 52.9,
+            "onsets": 6
+          },
+          {
+            "startSec": 42,
+            "endSec": 82,
+            "score": 52.5,
+            "onsets": 8
+          }
+        ],
+        "chosen": {
+          "startSec": 462.5,
+          "by": "Layer A accepted after 1 candidate(s)"
+        },
+        "tried": [
+          {
+            "startSec": 462.5,
+            "verdict": "PASS",
+            "reasons": []
+          }
+        ]
+      },
+      "render": {
+        "mp3": "sp1.mp3",
+        "durationSec": 40.045714,
+        "renderedAt": "2026-09-05",
+        "attribution": "\"Eroica Variations, Op. 35\" · Ludwig van Beethoven, perf. Ivan Ilić · https://imslp.org/wiki/Eroica_Variations,_Op.35_(Beethoven,_Ludwig_van) · CC BY 3.0 · excerpt (trimmed + loudness-normalised)"
+      }
     },
     {
       "id": "sp2",
@@ -71,14 +165,108 @@
         "pageUrl": "https://archive.org/details/dso20061007old",
         "downloadUrl": "https://archive.org/download/dso20061007old/dso2006100702.flac",
         "durationNote": "19:03 (movement 1)",
-        "sha256": null,
+        "sha256": "5a1eefa03aafbf1ddae31d08ff148f7b8b762b2fe09687fa215011d26d07e68c",
         "fetched": {
           "contentType": "audio/flac",
           "bytes": 74258416,
           "magic": "fLaC"
-        }
+        },
+        "cachedFile": "sp2.flac"
       },
-      "attribution": "\"Piano Concerto No. 5, 'Emperor'\" · Ludwig van Beethoven, perf. Ursula Oppens with the DuPage Symphony Orchestra, cond. Barbara Schubert · https://archive.org/details/dso20061007old · public domain (dedicated) · excerpt (trimmed + loudness-normalised)"
+      "attribution": "\"Piano Concerto No. 5, 'Emperor'\" · Ludwig van Beethoven, perf. Ursula Oppens with the DuPage Symphony Orchestra, cond. Barbara Schubert · https://archive.org/details/dso20061007old · public domain (dedicated) · excerpt (trimmed + loudness-normalised)",
+      "window": {
+        "suggestions": [
+          {
+            "startSec": 697,
+            "endSec": 737,
+            "score": 21.9,
+            "onsets": 0
+          },
+          {
+            "startSec": 976,
+            "endSec": 1016,
+            "score": 18.3,
+            "onsets": 2
+          },
+          {
+            "startSec": 608.5,
+            "endSec": 648.5,
+            "score": 17.1,
+            "onsets": 2
+          },
+          {
+            "startSec": 309.5,
+            "endSec": 349.5,
+            "score": 14.6,
+            "onsets": 1
+          },
+          {
+            "startSec": 945,
+            "endSec": 985,
+            "score": 14,
+            "onsets": 2
+          },
+          {
+            "startSec": 573.5,
+            "endSec": 613.5,
+            "score": 13.9,
+            "onsets": 2
+          },
+          {
+            "startSec": 844.5,
+            "endSec": 884.5,
+            "score": 13.9,
+            "onsets": 1
+          },
+          {
+            "startSec": 285.5,
+            "endSec": 325.5,
+            "score": 13.7,
+            "onsets": 1
+          },
+          {
+            "startSec": 720,
+            "endSec": 760,
+            "score": 13.7,
+            "onsets": 0
+          },
+          {
+            "startSec": 23.5,
+            "endSec": 63.5,
+            "score": 12,
+            "onsets": 1
+          },
+          {
+            "startSec": 200.5,
+            "endSec": 240.5,
+            "score": 12,
+            "onsets": 0
+          },
+          {
+            "startSec": 824.5,
+            "endSec": 864.5,
+            "score": 11.4,
+            "onsets": 0
+          }
+        ],
+        "chosen": {
+          "startSec": 697,
+          "by": "Layer A accepted after 1 candidate(s)"
+        },
+        "tried": [
+          {
+            "startSec": 697,
+            "verdict": "PASS",
+            "reasons": []
+          }
+        ]
+      },
+      "render": {
+        "mp3": "sp2.mp3",
+        "durationSec": 40.045714,
+        "renderedAt": "2026-09-05",
+        "attribution": "\"Piano Concerto No. 5, 'Emperor'\" · Ludwig van Beethoven, perf. Ursula Oppens with the DuPage Symphony Orchestra, cond. Barbara Schubert · https://archive.org/details/dso20061007old · public domain (dedicated) · excerpt (trimmed + loudness-normalised)"
+      }
     },
     {
       "id": "sp3",
@@ -104,14 +292,129 @@
         "downloadUrl": "https://s9.imslp.org/files/imglnks/usimg/2/20/IMSLP77613-PMLP01796-Beethoven-Op61m3mbco.mp3",
         "imslpFileId": 77613,
         "durationNote": "15:04 (movement 3)",
-        "sha256": null,
+        "sha256": "c743c3d92e5d940b311c7b78c4f7cd3675de206935cbc13783481192e791ef09",
         "fetched": {
           "contentType": "audio/mpeg",
           "bytes": 14468066,
           "magic": "ID3"
-        }
+        },
+        "cachedFile": "sp3.mp3"
       },
-      "attribution": "\"Violin Concerto, Op. 61\" · Ludwig van Beethoven, perf. US Marine Chamber Orchestra · https://imslp.org/wiki/Violin_Concerto,_Op.61_(Beethoven,_Ludwig_van) · public domain · excerpt (trimmed + loudness-normalised)"
+      "attribution": "\"Violin Concerto, Op. 61\" · Ludwig van Beethoven, perf. US Marine Chamber Orchestra · https://imslp.org/wiki/Violin_Concerto,_Op.61_(Beethoven,_Ludwig_van) · public domain · excerpt (trimmed + loudness-normalised)",
+      "window": {
+        "suggestions": [
+          {
+            "startSec": 510.5,
+            "endSec": 550.5,
+            "score": 69.3,
+            "onsets": 9
+          },
+          {
+            "startSec": 14.5,
+            "endSec": 54.5,
+            "score": 67.8,
+            "onsets": 7
+          },
+          {
+            "startSec": 264.5,
+            "endSec": 304.5,
+            "score": 62.9,
+            "onsets": 6
+          },
+          {
+            "startSec": 298,
+            "endSec": 338,
+            "score": 56.7,
+            "onsets": 8
+          },
+          {
+            "startSec": 141.5,
+            "endSec": 181.5,
+            "score": 56.3,
+            "onsets": 5
+          },
+          {
+            "startSec": 34.5,
+            "endSec": 74.5,
+            "score": 49,
+            "onsets": 3
+          },
+          {
+            "startSec": 244.5,
+            "endSec": 284.5,
+            "score": 48.9,
+            "onsets": 5
+          },
+          {
+            "startSec": 454,
+            "endSec": 494,
+            "score": 44.5,
+            "onsets": 7
+          },
+          {
+            "startSec": 54.5,
+            "endSec": 94.5,
+            "score": 37.6,
+            "onsets": 3
+          },
+          {
+            "startSec": 163,
+            "endSec": 203,
+            "score": 36.5,
+            "onsets": 2
+          },
+          {
+            "startSec": 385,
+            "endSec": 425,
+            "score": 35.8,
+            "onsets": 1
+          },
+          {
+            "startSec": 361.5,
+            "endSec": 401.5,
+            "score": 35.2,
+            "onsets": 2
+          }
+        ],
+        "chosen": {
+          "startSec": 298,
+          "by": "Layer A accepted after 4 candidate(s)"
+        },
+        "tried": [
+          {
+            "startSec": 510.5,
+            "verdict": "FLAG",
+            "reasons": [
+              "32% of the clip is near-silent (max 20%)"
+            ]
+          },
+          {
+            "startSec": 14.5,
+            "verdict": "FLAG",
+            "reasons": [
+              "33% of the clip is near-silent (max 20%)"
+            ]
+          },
+          {
+            "startSec": 264.5,
+            "verdict": "FLAG",
+            "reasons": [
+              "25% of the clip is near-silent (max 20%)"
+            ]
+          },
+          {
+            "startSec": 298,
+            "verdict": "PASS",
+            "reasons": []
+          }
+        ]
+      },
+      "render": {
+        "mp3": "sp3.mp3",
+        "durationSec": 40.045714,
+        "renderedAt": "2026-09-05",
+        "attribution": "\"Violin Concerto, Op. 61\" · Ludwig van Beethoven, perf. US Marine Chamber Orchestra · https://imslp.org/wiki/Violin_Concerto,_Op.61_(Beethoven,_Ludwig_van) · public domain · excerpt (trimmed + loudness-normalised)"
+      }
     },
     {
       "id": "sp4",
@@ -137,15 +440,109 @@
         "downloadUrl": "https://ks15.imslp.org/files/imglnks/usimg/5/55/IMSLP851326-PMLP01486-Beethoven_-_Piano_Sonata_No29_-_Movement_3_(Liang).m4a",
         "imslpFileId": 851326,
         "durationNote": "size 15.84MB; IMSLP lists no duration",
-        "sha256": null,
+        "sha256": "1136b86952cfaae94d79def2f548a3167963e7f00763e6c734f2a49abd9ccc1c",
         "downloadUrlNote": "The IMSLP Special:ImagefromIndex link recorded here first is a JavaScript redirect page, not audio: dereferencing it returned 1797 bytes of text/html. Caught by fetching every URL in this manifest rather than trusting that a link on a file's own page points at the file.",
         "fetched": {
           "contentType": "audio/x-m4a",
           "bytes": 16608678,
           "magic": "ftyp"
-        }
+        },
+        "cachedFile": "sp4.m4a"
       },
-      "attribution": "\"Piano Sonata No. 29, 'Hammerklavier' — III. Adagio sostenuto\" · Ludwig van Beethoven, perf. Eric Xi Xin Liang · https://imslp.org/wiki/Piano_Sonata_No.29,_Op.106_(Beethoven,_Ludwig_van) · CC BY 4.0 · excerpt (trimmed + loudness-normalised)"
+      "attribution": "\"Piano Sonata No. 29, 'Hammerklavier' — III. Adagio sostenuto\" · Ludwig van Beethoven, perf. Eric Xi Xin Liang · https://imslp.org/wiki/Piano_Sonata_No.29,_Op.106_(Beethoven,_Ludwig_van) · CC BY 4.0 · excerpt (trimmed + loudness-normalised)",
+      "window": {
+        "suggestions": [
+          {
+            "startSec": 807.5,
+            "endSec": 847.5,
+            "score": 87.8,
+            "onsets": 14
+          },
+          {
+            "startSec": 133.5,
+            "endSec": 173.5,
+            "score": 75.5,
+            "onsets": 12
+          },
+          {
+            "startSec": 756.5,
+            "endSec": 796.5,
+            "score": 74.2,
+            "onsets": 9
+          },
+          {
+            "startSec": 827.5,
+            "endSec": 867.5,
+            "score": 71.8,
+            "onsets": 8
+          },
+          {
+            "startSec": 299.5,
+            "endSec": 339.5,
+            "score": 68.9,
+            "onsets": 7
+          },
+          {
+            "startSec": 112.5,
+            "endSec": 152.5,
+            "score": 64.5,
+            "onsets": 12
+          },
+          {
+            "startSec": 602.5,
+            "endSec": 642.5,
+            "score": 64.5,
+            "onsets": 4
+          },
+          {
+            "startSec": 82.5,
+            "endSec": 122.5,
+            "score": 64.4,
+            "onsets": 13
+          },
+          {
+            "startSec": 17.5,
+            "endSec": 57.5,
+            "score": 63.8,
+            "onsets": 15
+          },
+          {
+            "startSec": 780.5,
+            "endSec": 820.5,
+            "score": 61.5,
+            "onsets": 11
+          },
+          {
+            "startSec": 875,
+            "endSec": 915,
+            "score": 58.2,
+            "onsets": 8
+          },
+          {
+            "startSec": 582.5,
+            "endSec": 622.5,
+            "score": 56.5,
+            "onsets": 6
+          }
+        ],
+        "chosen": {
+          "startSec": 807.5,
+          "by": "Layer A accepted after 1 candidate(s)"
+        },
+        "tried": [
+          {
+            "startSec": 807.5,
+            "verdict": "PASS",
+            "reasons": []
+          }
+        ]
+      },
+      "render": {
+        "mp3": "sp4.mp3",
+        "durationSec": 40.045714,
+        "renderedAt": "2026-09-05",
+        "attribution": "\"Piano Sonata No. 29, 'Hammerklavier' — III. Adagio sostenuto\" · Ludwig van Beethoven, perf. Eric Xi Xin Liang · https://imslp.org/wiki/Piano_Sonata_No.29,_Op.106_(Beethoven,_Ludwig_van) · CC BY 4.0 · excerpt (trimmed + loudness-normalised)"
+      }
     },
     {
       "id": "sp5",
@@ -171,14 +568,557 @@
         "downloadUrl": "https://vmirror.imslp.org/files/imglnks/usimg/3/33/IMSLP899360-PMLP4426-DiabelliVariations_2022.mp3",
         "imslpFileId": 899360,
         "durationNote": "55:31 (complete)",
-        "sha256": null,
+        "sha256": "2229ca05d458b1f4e2ffece197d3ffa3d5c9071a0f70f1fcdfe0f333fa10c3e0",
         "fetched": {
           "contentType": "audio/mpeg",
           "bytes": 79939517,
           "magic": "ID3"
-        }
+        },
+        "cachedFile": "sp5.mp3"
       },
-      "attribution": "\"Diabelli Variations, Op. 120\" · Ludwig van Beethoven, perf. Marvin Wolfthal · https://imslp.org/wiki/Diabelli_Variations,_Op.120_(Beethoven,_Ludwig_van) · CC0 1.0 · excerpt (trimmed + loudness-normalised)"
+      "attribution": "\"Diabelli Variations, Op. 120\" · Ludwig van Beethoven, perf. Marvin Wolfthal · https://imslp.org/wiki/Diabelli_Variations,_Op.120_(Beethoven,_Ludwig_van) · CC0 1.0 · excerpt (trimmed + loudness-normalised)",
+      "window": {
+        "suggestions": [
+          {
+            "startSec": 1267,
+            "endSec": 1307,
+            "score": 226.1,
+            "onsets": 15
+          },
+          {
+            "startSec": 1287.5,
+            "endSec": 1327.5,
+            "score": 205.2,
+            "onsets": 9
+          },
+          {
+            "startSec": 1089,
+            "endSec": 1129,
+            "score": 195.6,
+            "onsets": 19
+          },
+          {
+            "startSec": 1109,
+            "endSec": 1149,
+            "score": 179.3,
+            "onsets": 16
+          },
+          {
+            "startSec": 2425,
+            "endSec": 2465,
+            "score": 174.8,
+            "onsets": 16
+          },
+          {
+            "startSec": 2618,
+            "endSec": 2658,
+            "score": 169.5,
+            "onsets": 11
+          },
+          {
+            "startSec": 1750,
+            "endSec": 1790,
+            "score": 165.1,
+            "onsets": 12
+          },
+          {
+            "startSec": 2470.5,
+            "endSec": 2510.5,
+            "score": 161.6,
+            "onsets": 14
+          },
+          {
+            "startSec": 2591.5,
+            "endSec": 2631.5,
+            "score": 160.5,
+            "onsets": 10
+          },
+          {
+            "startSec": 2403.5,
+            "endSec": 2443.5,
+            "score": 154.8,
+            "onsets": 6
+          },
+          {
+            "startSec": 1772,
+            "endSec": 1812,
+            "score": 154.7,
+            "onsets": 3
+          },
+          {
+            "startSec": 117.5,
+            "endSec": 157.5,
+            "score": 151.6,
+            "onsets": 5
+          },
+          {
+            "startSec": 1055.5,
+            "endSec": 1095.5,
+            "score": 151.3,
+            "onsets": 15
+          },
+          {
+            "startSec": 137.5,
+            "endSec": 177.5,
+            "score": 146.2,
+            "onsets": 5
+          },
+          {
+            "startSec": 2490.5,
+            "endSec": 2530.5,
+            "score": 133.6,
+            "onsets": 5
+          },
+          {
+            "startSec": 1035.5,
+            "endSec": 1075.5,
+            "score": 130.6,
+            "onsets": 10
+          },
+          {
+            "startSec": 287.5,
+            "endSec": 327.5,
+            "score": 126.8,
+            "onsets": 7
+          },
+          {
+            "startSec": 307.5,
+            "endSec": 347.5,
+            "score": 125.6,
+            "onsets": 5
+          },
+          {
+            "startSec": 1459,
+            "endSec": 1499,
+            "score": 113.7,
+            "onsets": 7
+          },
+          {
+            "startSec": 921,
+            "endSec": 961,
+            "score": 110.5,
+            "onsets": 18
+          },
+          {
+            "startSec": 1479,
+            "endSec": 1519,
+            "score": 109.3,
+            "onsets": 9
+          },
+          {
+            "startSec": 955.5,
+            "endSec": 995.5,
+            "score": 103.9,
+            "onsets": 16
+          },
+          {
+            "startSec": 2300.5,
+            "endSec": 2340.5,
+            "score": 97.4,
+            "onsets": 4
+          },
+          {
+            "startSec": 1636.5,
+            "endSec": 1676.5,
+            "score": 94,
+            "onsets": 10
+          },
+          {
+            "startSec": 2148.5,
+            "endSec": 2188.5,
+            "score": 94,
+            "onsets": 2
+          },
+          {
+            "startSec": 2128.5,
+            "endSec": 2168.5,
+            "score": 93.7,
+            "onsets": 2
+          },
+          {
+            "startSec": 2269,
+            "endSec": 2309,
+            "score": 92.9,
+            "onsets": 3
+          },
+          {
+            "startSec": 898.5,
+            "endSec": 938.5,
+            "score": 91.5,
+            "onsets": 8
+          },
+          {
+            "startSec": 751,
+            "endSec": 791,
+            "score": 83.8,
+            "onsets": 4
+          },
+          {
+            "startSec": 1953,
+            "endSec": 1993,
+            "score": 83.7,
+            "onsets": 7
+          },
+          {
+            "startSec": 444,
+            "endSec": 484,
+            "score": 82.7,
+            "onsets": 12
+          },
+          {
+            "startSec": 976,
+            "endSec": 1016,
+            "score": 82,
+            "onsets": 7
+          },
+          {
+            "startSec": 2446,
+            "endSec": 2486,
+            "score": 77.8,
+            "onsets": 18
+          },
+          {
+            "startSec": 1218.5,
+            "endSec": 1258.5,
+            "score": 77.2,
+            "onsets": 19
+          },
+          {
+            "startSec": 724,
+            "endSec": 764,
+            "score": 76.9,
+            "onsets": 5
+          },
+          {
+            "startSec": 1713,
+            "endSec": 1753,
+            "score": 73.2,
+            "onsets": 20
+          },
+          {
+            "startSec": 1692.5,
+            "endSec": 1732.5,
+            "score": 72.5,
+            "onsets": 19
+          },
+          {
+            "startSec": 1973,
+            "endSec": 2013,
+            "score": 72,
+            "onsets": 5
+          },
+          {
+            "startSec": 421,
+            "endSec": 461,
+            "score": 71.8,
+            "onsets": 7
+          },
+          {
+            "startSec": 1616.5,
+            "endSec": 1656.5,
+            "score": 71.8,
+            "onsets": 2
+          },
+          {
+            "startSec": 1238.5,
+            "endSec": 1278.5,
+            "score": 71.6,
+            "onsets": 17
+          },
+          {
+            "startSec": 1871,
+            "endSec": 1911,
+            "score": 69.5,
+            "onsets": 8
+          },
+          {
+            "startSec": 633,
+            "endSec": 673,
+            "score": 69.4,
+            "onsets": 5
+          },
+          {
+            "startSec": 1135.5,
+            "endSec": 1175.5,
+            "score": 65,
+            "onsets": 16
+          },
+          {
+            "startSec": 1198.5,
+            "endSec": 1238.5,
+            "score": 64,
+            "onsets": 14
+          },
+          {
+            "startSec": 1660.5,
+            "endSec": 1700.5,
+            "score": 63.4,
+            "onsets": 17
+          },
+          {
+            "startSec": 1559.5,
+            "endSec": 1599.5,
+            "score": 63.2,
+            "onsets": 10
+          },
+          {
+            "startSec": 373,
+            "endSec": 413,
+            "score": 60.8,
+            "onsets": 9
+          },
+          {
+            "startSec": 175,
+            "endSec": 215,
+            "score": 58.4,
+            "onsets": 4
+          },
+          {
+            "startSec": 43.5,
+            "endSec": 83.5,
+            "score": 58.1,
+            "onsets": 7
+          },
+          {
+            "startSec": 1851,
+            "endSec": 1891,
+            "score": 57.8,
+            "onsets": 4
+          },
+          {
+            "startSec": 541,
+            "endSec": 581,
+            "score": 56.1,
+            "onsets": 5
+          },
+          {
+            "startSec": 1155.5,
+            "endSec": 1195.5,
+            "score": 55.4,
+            "onsets": 14
+          },
+          {
+            "startSec": 2866.5,
+            "endSec": 2906.5,
+            "score": 53.3,
+            "onsets": 5
+          },
+          {
+            "startSec": 653,
+            "endSec": 693,
+            "score": 53.1,
+            "onsets": 4
+          },
+          {
+            "startSec": 195,
+            "endSec": 235,
+            "score": 52.2,
+            "onsets": 3
+          },
+          {
+            "startSec": 1533,
+            "endSec": 1573,
+            "score": 49.6,
+            "onsets": 10
+          },
+          {
+            "startSec": 1175.5,
+            "endSec": 1215.5,
+            "score": 49.3,
+            "onsets": 11
+          },
+          {
+            "startSec": 563,
+            "endSec": 603,
+            "score": 48.6,
+            "onsets": 2
+          },
+          {
+            "startSec": 2192.5,
+            "endSec": 2232.5,
+            "score": 47.8,
+            "onsets": 3
+          }
+        ],
+        "chosen": {
+          "startSec": 2300.5,
+          "by": "Layer A accepted after 23 candidate(s)"
+        },
+        "tried": [
+          {
+            "startSec": 1267,
+            "verdict": "FLAG",
+            "reasons": [
+              "4.30s of dead air (max 1.5s)"
+            ]
+          },
+          {
+            "startSec": 1287.5,
+            "verdict": "FLAG",
+            "reasons": [
+              "4.15s of dead air (max 1.5s)"
+            ]
+          },
+          {
+            "startSec": 1089,
+            "verdict": "FLAG",
+            "reasons": [
+              "37% of the clip is near-silent (max 20%)",
+              "2.70s of dead air (max 1.5s)"
+            ]
+          },
+          {
+            "startSec": 1109,
+            "verdict": "FLAG",
+            "reasons": [
+              "2.70s of dead air (max 1.5s)"
+            ]
+          },
+          {
+            "startSec": 2425,
+            "verdict": "FLAG",
+            "reasons": [
+              "2.70s of dead air (max 1.5s)"
+            ]
+          },
+          {
+            "startSec": 2618,
+            "verdict": "FLAG",
+            "reasons": [
+              "-14.00 LUFS is outside -16 +/- 1 — louder reads as better",
+              "38% of the clip is near-silent (max 20%)",
+              "4.95s of dead air (max 1.5s)"
+            ]
+          },
+          {
+            "startSec": 1750,
+            "verdict": "FLAG",
+            "reasons": [
+              "52% of the clip is near-silent (max 20%)",
+              "3.30s of dead air (max 1.5s)"
+            ]
+          },
+          {
+            "startSec": 2470.5,
+            "verdict": "FLAG",
+            "reasons": [
+              "21% of the clip is near-silent (max 20%)",
+              "1.70s of dead air (max 1.5s)"
+            ]
+          },
+          {
+            "startSec": 2591.5,
+            "verdict": "FLAG",
+            "reasons": [
+              "4.25s of dead air (max 1.5s)"
+            ]
+          },
+          {
+            "startSec": 2403.5,
+            "verdict": "FLAG",
+            "reasons": [
+              "2.65s of dead air (max 1.5s)"
+            ]
+          },
+          {
+            "startSec": 1772,
+            "verdict": "FLAG",
+            "reasons": [
+              "24% of the clip is near-silent (max 20%)",
+              "4.00s of dead air (max 1.5s)"
+            ]
+          },
+          {
+            "startSec": 117.5,
+            "verdict": "FLAG",
+            "reasons": [
+              "1.95s of dead air (max 1.5s)"
+            ]
+          },
+          {
+            "startSec": 1055.5,
+            "verdict": "FLAG",
+            "reasons": [
+              "43% of the clip is near-silent (max 20%)"
+            ]
+          },
+          {
+            "startSec": 137.5,
+            "verdict": "FLAG",
+            "reasons": [
+              "1.90s of dead air (max 1.5s)"
+            ]
+          },
+          {
+            "startSec": 2490.5,
+            "verdict": "FLAG",
+            "reasons": [
+              "1.60s of dead air (max 1.5s)"
+            ]
+          },
+          {
+            "startSec": 1035.5,
+            "verdict": "FLAG",
+            "reasons": [
+              "24% of the clip is near-silent (max 20%)"
+            ]
+          },
+          {
+            "startSec": 287.5,
+            "verdict": "FLAG",
+            "reasons": [
+              "2.30s of dead air (max 1.5s)"
+            ]
+          },
+          {
+            "startSec": 307.5,
+            "verdict": "FLAG",
+            "reasons": [
+              "2.55s of dead air (max 1.5s)"
+            ]
+          },
+          {
+            "startSec": 1459,
+            "verdict": "FLAG",
+            "reasons": [
+              "4.25s of dead air (max 1.5s)"
+            ]
+          },
+          {
+            "startSec": 921,
+            "verdict": "FLAG",
+            "reasons": [
+              "1.55s of dead air (max 1.5s)"
+            ]
+          },
+          {
+            "startSec": 1479,
+            "verdict": "FLAG",
+            "reasons": [
+              "35% of the clip is near-silent (max 20%)",
+              "3.95s of dead air (max 1.5s)"
+            ]
+          },
+          {
+            "startSec": 955.5,
+            "verdict": "FLAG",
+            "reasons": [
+              "1.75s of dead air (max 1.5s)"
+            ]
+          },
+          {
+            "startSec": 2300.5,
+            "verdict": "PASS",
+            "reasons": []
+          }
+        ]
+      },
+      "render": {
+        "mp3": "sp5.mp3",
+        "durationSec": 40.045714,
+        "renderedAt": "2026-09-05",
+        "attribution": "\"Diabelli Variations, Op. 120\" · Ludwig van Beethoven, perf. Marvin Wolfthal · https://imslp.org/wiki/Diabelli_Variations,_Op.120_(Beethoven,_Ludwig_van) · CC0 1.0 · excerpt (trimmed + loudness-normalised)"
+      }
     },
     {
       "id": "sp6",
@@ -203,14 +1143,108 @@
         "pageUrl": "https://archive.org/details/MusopenCollectionAsFlac",
         "downloadUrl": "https://archive.org/download/MusopenCollectionAsFlac/Beethoven_SymphonyNo.3Eroica/LudwigVanBeethoven-SymphonyNo.3InEFlatMajorEroicaOp.55-01-AllegroConBrio.flac",
         "durationNote": "15:11 (movement 1)",
-        "sha256": null,
+        "sha256": "7a4b4d89c3107d2e57964879f2ff75ed2a36a88ea758f12f584ac9a35430f24a",
         "fetched": {
           "contentType": "audio/flac",
           "bytes": 159115806,
           "magic": "fLaC"
-        }
+        },
+        "cachedFile": "sp6.flac"
       },
-      "attribution": "\"Symphony No. 3, 'Eroica', Op. 55\" · Ludwig van Beethoven, perf. Czech National Symphony Orchestra (Musopen) · https://archive.org/details/MusopenCollectionAsFlac · public domain · excerpt (trimmed + loudness-normalised)"
+      "attribution": "\"Symphony No. 3, 'Eroica', Op. 55\" · Ludwig van Beethoven, perf. Czech National Symphony Orchestra (Musopen) · https://archive.org/details/MusopenCollectionAsFlac · public domain · excerpt (trimmed + loudness-normalised)",
+      "window": {
+        "suggestions": [
+          {
+            "startSec": 468,
+            "endSec": 508,
+            "score": 56.4,
+            "onsets": 4
+          },
+          {
+            "startSec": 120.5,
+            "endSec": 160.5,
+            "score": 56.3,
+            "onsets": 5
+          },
+          {
+            "startSec": 693,
+            "endSec": 733,
+            "score": 54.4,
+            "onsets": 9
+          },
+          {
+            "startSec": 91.5,
+            "endSec": 131.5,
+            "score": 53.6,
+            "onsets": 6
+          },
+          {
+            "startSec": 660,
+            "endSec": 700,
+            "score": 53.5,
+            "onsets": 6
+          },
+          {
+            "startSec": 159.5,
+            "endSec": 199.5,
+            "score": 53.4,
+            "onsets": 9
+          },
+          {
+            "startSec": 500,
+            "endSec": 540,
+            "score": 49.1,
+            "onsets": 5
+          },
+          {
+            "startSec": 640,
+            "endSec": 680,
+            "score": 47.5,
+            "onsets": 4
+          },
+          {
+            "startSec": 713.5,
+            "endSec": 753.5,
+            "score": 46.6,
+            "onsets": 4
+          },
+          {
+            "startSec": 179.5,
+            "endSec": 219.5,
+            "score": 44.8,
+            "onsets": 7
+          },
+          {
+            "startSec": 207.5,
+            "endSec": 247.5,
+            "score": 41.8,
+            "onsets": 5
+          },
+          {
+            "startSec": 243.5,
+            "endSec": 283.5,
+            "score": 39.4,
+            "onsets": 2
+          }
+        ],
+        "chosen": {
+          "startSec": 468,
+          "by": "Layer A accepted after 1 candidate(s)"
+        },
+        "tried": [
+          {
+            "startSec": 468,
+            "verdict": "PASS",
+            "reasons": []
+          }
+        ]
+      },
+      "render": {
+        "mp3": "sp6.mp3",
+        "durationSec": 40.045714,
+        "renderedAt": "2026-09-05",
+        "attribution": "\"Symphony No. 3, 'Eroica', Op. 55\" · Ludwig van Beethoven, perf. Czech National Symphony Orchestra (Musopen) · https://archive.org/details/MusopenCollectionAsFlac · public domain · excerpt (trimmed + loudness-normalised)"
+      }
     }
   ],
   "sha256Note": "Every `source.sha256` is null until the bytes are fetched. The fetch step fills them, exactly as scripts/clip-pipeline does for the bias pool — a hash written before the file is downloaded would be a hash of nothing.",

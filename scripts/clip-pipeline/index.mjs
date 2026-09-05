@@ -18,23 +18,20 @@
  */
 
 import { createHash } from "node:crypto";
-import { execFileSync, spawnSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { createRequire } from "node:module";
+import { renderClip } from "./renderclip.mjs";
+import { decodePcm, suggestWindows } from "./windows.mjs";
 
-const require = createRequire(import.meta.url);
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const MANIFEST = join(ROOT, "src", "content", "bias", "manifest.json");
 const CACHE = join(dirname(fileURLToPath(import.meta.url)), ".cache");
 const LICENSES = join(ROOT, "src", "content", "bias", "licenses");
 const AUDIO_OUT = join(ROOT, "public", "audio", "bias");
 
-const FFMPEG = process.env.FFMPEG_PATH || require("ffmpeg-static");
-const FFPROBE = process.env.FFPROBE_PATH || require("@ffprobe-installer/ffprobe").path;
 
-const SR = 22050; // analysis sample rate (mono s16le)
 
 function loadManifest() {
   return JSON.parse(readFileSync(MANIFEST, "utf8"));
@@ -125,62 +122,6 @@ async function snapshot(args = []) {
 }
 
 /* ------------------------------------------------------------- analyze */
-function decodePcm(file) {
-  // Decode to mono s16le PCM for pure-Node analysis (no stderr parsing).
-  const out = spawnSync(FFMPEG, ["-i", file, "-ac", "1", "-ar", String(SR), "-f", "s16le", "-v", "error", "pipe:1"], {
-    maxBuffer: 1 << 30,
-  });
-  if (out.status !== 0) throw new Error(`ffmpeg decode failed: ${out.stderr}`);
-  const raw = out.stdout;
-  const n = Math.floor(raw.length / 2);
-  const samples = new Float32Array(n);
-  for (let i = 0; i < n; i++) samples[i] = raw.readInt16LE(i * 2) / 32768;
-  return samples;
-}
-
-/**
- * Window scoring: 0.5s frames -> RMS series. A candidate window must start
- * after the lead-in silence and end before the final 10% (no fades), and is
- * scored by mean energy + RMS variance + onset density (jumps > 6dB between
- * frames ~ phrase onsets). Top-2 non-overlapping windows win.
- */
-function suggestWindows(samples, clipSec) {
-  const frame = Math.floor(SR * 0.5);
-  const frames = Math.floor(samples.length / frame);
-  const rms = [];
-  for (let f = 0; f < frames; f++) {
-    let acc = 0;
-    for (let i = f * frame; i < (f + 1) * frame; i++) acc += samples[i] * samples[i];
-    rms.push(Math.sqrt(acc / frame));
-  }
-  const db = rms.map((v) => 20 * Math.log10(v + 1e-9));
-  const totalSec = frames * 0.5;
-  // Lead-in silence: first frame above -35 dBFS.
-  let startFrame = db.findIndex((v) => v > -35);
-  if (startFrame < 0) startFrame = 0;
-  const lastAllowedSec = totalSec * 0.9 - clipSec;
-  const winFrames = clipSec * 2;
-  const candidates = [];
-  for (let s = startFrame; s * 0.5 <= lastAllowedSec; s++) {
-    const seg = db.slice(s, s + winFrames);
-    if (seg.length < winFrames) break;
-    const mean = seg.reduce((a, b) => a + b, 0) / seg.length;
-    const variance = seg.reduce((a, b) => a + (b - mean) ** 2, 0) / seg.length;
-    let onsets = 0;
-    for (let i = 1; i < seg.length; i++) if (seg[i] - seg[i - 1] > 6) onsets++;
-    // Weighted score: audible (mean), dynamic (variance), phrase-y (onsets).
-    const score = mean * 0.4 + Math.sqrt(variance) * 6 + onsets * 3;
-    candidates.push({ startSec: s * 0.5, score: Math.round(score * 10) / 10, onsets });
-  }
-  candidates.sort((a, b) => b.score - a.score);
-  const picked = [];
-  for (const c of candidates) {
-    if (picked.every((p) => Math.abs(p.startSec - c.startSec) >= clipSec / 2)) picked.push(c);
-    if (picked.length === 2) break;
-  }
-  return picked.map((p) => ({ startSec: p.startSec, endSec: p.startSec + clipSec, score: p.score, onsets: p.onsets }));
-}
-
 function analyze(args) {
   const localIdx = args.indexOf("--local");
   const lenIdx = args.indexOf("--len");
@@ -218,42 +159,13 @@ function tasl(item) {
   return `"${item.title}" — ${item.composerOrArtist}${item.performer && item.performer !== item.composerOrArtist ? `, perf. ${item.performer}` : ""} · ${src} · ${item.license.expected} · excerpt (trimmed + loudness-normalized)`;
 }
 
-function renderOne(input, startSec, lenSec, outBase, lufs) {
-  mkdirSync(AUDIO_OUT, { recursive: true });
-  // TWO-PASS loudnorm: single-pass drops to linear fallback on short dynamic
-  // excerpts (classical!) and missed target by up to 2.6 LU. Pass 1 measures,
-  // pass 2 applies with measured_* + linear=true → accurate integrated target.
-  const cut = ["-ss", String(startSec), "-t", String(lenSec), "-i", input, "-vn"];
-  const probeOut = spawnSync(FFMPEG, [...cut, "-af", `loudnorm=I=${lufs}:TP=-1.5:LRA=11:print_format=json`, "-f", "null", "-"], { encoding: "utf8" });
-  // ANCHOR ON THE LAST OBJECT, NOT THE FIRST BRACE (E7/S4). This used to match
-  // /\{[\s\S]*\}/ — first "{" to last "}" — which works only while no source
-  // has a brace in its metadata. pb14 (Audionautix) does: ffmpeg prints its ID3
-  // tags, and `id3v2_priv.AverageLevel` contains a literal "{" byte. The match
-  // then spanned from that tag all the way to the real JSON's close and parsed
-  // as garbage. loudnorm prints its object last and it has no nested objects,
-  // so the last brace pair IS the measurement — and it is verified to carry
-  // input_i rather than trusted to be the right object.
-  const stderr = probeOut.stderr || "";
-  const open = stderr.lastIndexOf("{");
-  const close = stderr.lastIndexOf("}");
-  let mm = null;
-  if (open >= 0 && close > open) {
-    try {
-      mm = JSON.parse(stderr.slice(open, close + 1));
-    } catch {
-      mm = null;
-    }
-  }
-  if (!mm || mm.input_i === undefined) throw new Error(`loudnorm measure failed for ${outBase}`);
-  const ln = `loudnorm=I=${lufs}:TP=-1.5:LRA=11:measured_I=${mm.input_i}:measured_TP=${mm.input_tp}:measured_LRA=${mm.input_lra}:measured_thresh=${mm.input_thresh}:offset=${mm.target_offset}:linear=true`;
-  // -vn: sources often embed cover art as a video stream, which containers
-  // reject — we render audio only.
-  // MP3 ONLY since RT-67: the m4a beside every mp3 was referenced by no code
-  // path (see normRender in degrade.mjs for the full reasoning).
-  const common = [...cut, "-af", ln, "-ar", "44100", "-v", "error", "-y"];
-  execFileSync(FFMPEG, [...common, "-codec:a", "libmp3lame", "-q:a", "3", join(AUDIO_OUT, `${outBase}.mp3`)]);
-  const probe = execFileSync(FFPROBE, ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", join(AUDIO_OUT, `${outBase}.mp3`)]).toString().trim();
-  return { mp3: `${outBase}.mp3`, durationSec: Number(probe) };
+/**
+ * The encoder now lives in `renderclip.mjs` so Track N can render through it
+ * without importing this CLI, which would run its argument dispatch (E17/S2).
+ * This wrapper keeps the bias pool's output directory as the default.
+ */
+function renderOne(input, startSec, lenSec, outBase, lufs, outDir = AUDIO_OUT) {
+  return renderClip(input, startSec, lenSec, outBase, lufs, outDir);
 }
 
 function render(args) {
@@ -305,6 +217,12 @@ try {
   else if (stage === "degrade") await (await import("./degrade.mjs")).degrade(args);
   else if (stage === "validate") await (await import("./validate.mjs")).validate(args);
   else if (stage === "bias-validate") (await import("./biasvalidate.mjs")).biasValidate(args);
+  else if (stage === "spread-download") await (await import("./spreadpool.mjs")).spreadDownload(args);
+  else if (stage === "spread-analyze") (await import("./spreadpool.mjs")).spreadAnalyze(args);
+  else if (stage === "spread-fit") (await import("./spreadpool.mjs")).spreadFit(args);
+  else if (stage === "spread-render") (await import("./spreadpool.mjs")).spreadRender(args);
+  else if (stage === "spread-validate") (await import("./spreadpool.mjs")).spreadValidate(args);
+  else if (stage === "spread-bandwidth") (await import("./spreadbandwidth.mjs")).spreadBandwidth(args);
   else if (stage === "expand") await (await import("./expand.mjs")).expand(args);
   else if (stage === "ladder") await (await import("./ladder.mjs")).ladder(args);
   else if (stage === "sweep") await (await import("./sweep.mjs")).sweep(args);
