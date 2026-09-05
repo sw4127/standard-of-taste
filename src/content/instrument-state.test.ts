@@ -173,7 +173,7 @@ describe("the front door counts the machines it is rendering", () => {
       "The machine count changed. `landingLead` in src/content/landing.ts names " +
         "one clause per machine by hand; go and write the missing clause, then " +
         "update this number.",
-    ).toBe(3);
+    ).toBe(4);
   });
 });
 

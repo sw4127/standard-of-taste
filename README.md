@@ -39,7 +39,7 @@ And from the Prestige Test:
 
 It also refuses. Where a session cannot support a per-family split, it says so and shows the arithmetic instead of inventing a breakdown — a sentence about noise is worse than no sentence.
 
-**The expert view.** Every result carries a verdict-free panel underneath it: the session's own numbers and every trial inside it, with no interpretation attached.
+**The expert view.** The three instruments that store a result carry a verdict-free panel underneath it: the session's own numbers and every trial inside it, with no interpretation attached. The Ranking Test does not, because it stores nothing — whether this product remembers you is an open decision, and the panel reads from the store that decision would create.
 
 > Every number behind the result, and the answers. No verdict, no interpretation — read from this browser, so a link you share shows nobody else this.
 

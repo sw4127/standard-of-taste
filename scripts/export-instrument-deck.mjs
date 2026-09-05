@@ -29,6 +29,7 @@ import { resultTitleFragment } from "@/content/bias/copy";
 import { FLAW_LINE_PREFIX, flawLineText, flawTimesLabel } from "@/content/delicacy/copy";
 import { flawFamilies, FLAWS_INTRO, FLAWS_LIMITS, FLAWS_INVITE } from "@/content/flaw-families";
 import { landingLead, landingHint, SECONDARY_DOORS } from "@/content/landing";
+import { MACHINES } from "@/components/OtherMachines";
 import { learnPage } from "@/content/learn";
 import { describe, it } from "vitest";
 
@@ -60,7 +61,10 @@ describe("export", () => {
       flawsFaq: learnPage("flaws").faq,
       delicacyFaq: learnPage("delicacy").faq,
       delicacyTeaser: learnPage("delicacy").teaser,
-      landingLead: landingLead(3),
+      // COUNTED, NOT PINNED (E17/S5). This read landingLead(3) and rendered
+      // "Three machines" into the deck the day a fourth shipped — the deck
+      // the writing pass reads, describing a product that no longer exists.
+      landingLead: landingLead(MACHINES.filter((m) => m.live).length),
       landingHint: landingHint(),
       doors: SECONDARY_DOORS,
     };

@@ -1,5 +1,10 @@
 import { DELICACY_LIVE } from "@/content/delicacy/items";
-import { PRESTIGE_GOLD, DELICACY_ICE, THRESHOLD_VIOLET } from "@/content/instrument-accents";
+import {
+  PRESTIGE_GOLD,
+  DELICACY_ICE,
+  THRESHOLD_VIOLET,
+  SPREAD_ROSE,
+} from "@/content/instrument-accents";
 import MachineCard, { type MachineRef } from "./MachineCard";
 
 export type { MachineRef };
@@ -51,6 +56,14 @@ export const MACHINES: MachineRef[] = [
     title: "The Threshold Test",
     accent: THRESHOLD_VIOLET,
     line: "The smallest flaw you can still hear, in cents, milliseconds or kilobits.",
+    live: true,
+  },
+  {
+    id: "spread",
+    href: "/spread",
+    title: "The Ranking Test",
+    accent: SPREAD_ROSE,
+    line: "Six works a critic ranked. Whether your gaps fall where his did — never whether you agree.",
     live: true,
   },
 ];

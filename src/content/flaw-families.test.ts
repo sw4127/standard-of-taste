@@ -449,7 +449,17 @@ describe("the writing pass can see every string this session shipped", () => {
       ["FLAWS_INTRO", FLAWS_INTRO],
       ["FLAWS_LIMITS", FLAWS_LIMITS],
       ["FLAWS_INVITE", FLAWS_INVITE],
-      ["landingLead(3)", landingLead(3)],
+      /*
+       * COUNTED, NOT PINNED (E17/S5). This read `landingLead(3)`, so the day a
+       * fourth machine shipped it demanded the deck contain a sentence the
+       * product had stopped rendering — a guard checking the deck against a
+       * count that no longer existed anywhere else. Both this and the exporter
+       * now ask MACHINES.
+       */
+      [
+        `landingLead(${MACHINES.filter((m) => m.live).length})`,
+        landingLead(MACHINES.filter((m) => m.live).length),
+      ],
       ["landingHint", landingHint()],
       ...flawFamilies().flatMap(
         (f) => [[`${f.family} symptom`, f.symptom], [`${f.family} mechanism`, f.mechanism]] as [string, string][],

@@ -331,7 +331,7 @@ A: Unmeasured, so it is not claimed. The instruments report what you caught in t
 The lead is shown with the machine count interpolated; three is what ships. The hint sits under the cards, and the three doors are the quiet rows beneath it.
 
 ```
-lead:  Not a personality. Not a vibe. Three machines, each measuring one thing Hume said a real judge needs — whether a famous name can move your ratings, whether your ears can catch damage when nobody tells you where it is, and how small that damage can get before you lose it.
+lead:  Not a personality. Not a vibe. Four machines, each measuring one thing Hume said a real judge needs — whether a famous name can move your ratings, whether your ears can catch damage when nobody tells you where it is, how small that damage can get before you lose it, and whether your ratings move at all where a critic's judgment moved.
 
 hint:  Free · no sign-up · headphones help · pick one, the room follows
 ```

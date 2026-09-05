@@ -21,6 +21,7 @@ import {
   THRESHOLD_FIELD,
   THRESHOLD_VIOLET,
   THRESHOLD_VIOLET_GLOW,
+  SPREAD_ROSE,
   GYM_INK,
   GYM_INK_BRIGHT,
   tint,
@@ -116,7 +117,7 @@ describe("tint survives everything that actually reaches it", () => {
    * the leak this registry exists to prevent (E7/S18, E7/S21).
    */
   it("every machine accent IS one of the registry's named accents", () => {
-    const named = new Set([PRESTIGE_GOLD, DELICACY_ICE, THRESHOLD_VIOLET]);
+    const named = new Set([PRESTIGE_GOLD, DELICACY_ICE, THRESHOLD_VIOLET, SPREAD_ROSE]);
     for (const m of MACHINES) {
       expect(
         named.has(m.accent),

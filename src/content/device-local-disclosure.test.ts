@@ -199,7 +199,18 @@ describe("no surface reads remembered state without appearing on that list", () 
 
     for (const file of componentFiles()) {
       const source = readFileSync(file, "utf8");
-      const reads = READ_ACCESSORS.filter((fn) => source.includes(`${fn}(`));
+      /**
+       * MATCHED AS A CALL, NOT AS A SUBSTRING (E17/S5).
+       *
+       * `source.includes("readResult(")` flagged `computeSpreadResult(` — the
+       * letters of `readResult(` fall inside `...SpreadResult(` — and reported
+       * a Track N surface as reading remembered state when it reads nothing at
+       * all. A guard that fires on innocent code gets deleted by whoever trips
+       * over it, so the needle now requires the accessor to START a name.
+       */
+      const reads = READ_ACCESSORS.filter((fn) =>
+        new RegExp(`(?<![A-Za-z0-9_$])${fn}\\s*\\(`).test(source),
+      );
       if (reads.length === 0) continue;
       if (known.has(file)) continue;
       undisclosed.push(`${file} — reads ${reads.join(", ")}`);

@@ -27,7 +27,15 @@
  * separable from Prestige's gold.
  *
  * Hue separation, which is the property that actually does the work:
- * gold 42° · ice 190° · violet 276°. Nearest neighbours are 86° apart.
+ * gold 42° · ice 190° · violet 276° · rose 339°. Nearest neighbours are 63°
+ * apart.
+ *
+ * THAT FIGURE USED TO READ 86°, and it was true of three instruments. Rose
+ * joined in E17/S5 and the sentence became false the same day — corrected here
+ * rather than left to contradict the registry three lines below it, because a
+ * value pinned in prose expires silently when the value changes. See
+ * `SPREAD_ROSE` for why 63° was the best number available and what was refused
+ * to get it.
  */
 
 /** Freedom from prejudice — the Prestige Test. */
@@ -38,6 +46,29 @@ export const DELICACY_ICE = "hsl(190 75% 62%)";
 
 /** Delicacy of taste, adaptive — the Threshold Test. */
 export const THRESHOLD_VIOLET = "hsl(276 70% 70%)";
+
+/**
+ * Comparison against a critic's ranking — the Ranking Test (E17/S5).
+ *
+ * WHY ROSE, AND WHY THE SEPARATION GOT WORSE. Three hues at 42°, 190° and 276°
+ * leave two gaps: 148° between gold and ice, and 126° between violet and gold.
+ * The wider gap's midpoint is about 116° — green — which is the best available
+ * number and is refused for the reason the Threshold Test already refused it:
+ * GREEN READS AS PASS. This instrument issues no verdict either. It reports how
+ * far apart a listener's ratings fell and says in the same breath that neither
+ * number means agreement, so colouring it green would tell half its users they
+ * did well at something nothing here is scoring.
+ *
+ * That leaves the violet-to-gold gap, midpoint about 339°. Rose asserts
+ * nothing — it is not a pass, not a warning, not an error.
+ *
+ * THE HONEST COST, STATED RATHER THAN ROUNDED AWAY: nearest-neighbour
+ * separation drops from 86° to 63° (violet 276 -> rose 339 -> gold 42). Four
+ * distinguishable hues do not fit in the space three were given, and the docs
+ * above claim 86° as the property that does the work. It no longer holds, and
+ * `instrument-accents.test.ts` asserts the real figure rather than the old one.
+ */
+export const SPREAD_ROSE = "hsl(339 70% 68%)";
 
 /**
  * Glow variants, for the soft halo behind a hero figure.
@@ -58,6 +89,7 @@ export const THRESHOLD_VIOLET = "hsl(276 70% 70%)";
 export const PRESTIGE_GOLD_GLOW = "hsl(42 80% 60% / 0.45)";
 export const DELICACY_ICE_GLOW = "hsl(190 80% 60% / 0.4)";
 export const THRESHOLD_VIOLET_GLOW = "hsl(276 75% 68% / 0.4)";
+export const SPREAD_ROSE_GLOW = "hsl(339 75% 66% / 0.4)";
 
 /**
  * The soft fill behind a selected control — the instrument's hue at 14%.
@@ -76,6 +108,7 @@ export const THRESHOLD_VIOLET_GLOW = "hsl(276 75% 68% / 0.4)";
 export const PRESTIGE_GOLD_SOFT = "hsl(42 70% 55% / 0.14)";
 export const DELICACY_ICE_SOFT = "hsl(190 70% 55% / 0.14)";
 export const THRESHOLD_VIOLET_SOFT = "hsl(276 70% 55% / 0.14)";
+export const SPREAD_ROSE_SOFT = "hsl(339 70% 55% / 0.14)";
 
 /**
  * AN INSTRUMENT'S THREE-COLOUR KIT, PASSED AS ONE THING (E10/S5, RT-AE:a).
@@ -120,6 +153,12 @@ export const THRESHOLD_PALETTE: InstrumentPalette = {
   accent: THRESHOLD_VIOLET,
   soft: THRESHOLD_VIOLET_SOFT,
   glow: THRESHOLD_VIOLET_GLOW,
+};
+
+export const SPREAD_PALETTE: InstrumentPalette = {
+  accent: SPREAD_ROSE,
+  soft: SPREAD_ROSE_SOFT,
+  glow: SPREAD_ROSE_GLOW,
 };
 
 /**
