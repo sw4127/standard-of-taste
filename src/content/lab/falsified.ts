@@ -590,4 +590,81 @@ export const FALSIFIED: FalsifiedEntry[] = [
     ],
     guard: "src/engine/comparison.test.ts",
   },
+  /* ------------------------------------- Track N, the critic-ranked pool */
+  {
+    id: "pd-tagged-historical-recordings",
+    beliefs: [
+      "Public-domain tags on historical recordings can supply a pool of critic-ranked works.",
+    ],
+    date: "2026-09-04",
+    kind: "derived",
+    killedBy:
+      "Almost every freely tagged recording of these works is a transfer from 1927 to 1941 — Stokowski, Schnabel, Serkin, Toscanini. US sound recordings published from 1926 onward get 100 years from publication, so as of 2026 only recordings published before 1926 are public domain there. The earliest candidate misses by a single year, and one item states a rationale that applies to printed works rather than to recordings.",
+    consequence:
+      "Every historical transfer was refused and the pool was built from recordings somebody deliberately gave away instead — four self-published by the performer, one a US Government work, one a commissioned public-domain recording. A tag is not a licence.",
+    sources: [
+      {
+        path: "docs/analytics/e17-spread.txt",
+        anchor: "only recordings published BEFORE 1926 are public domain there",
+      },
+    ],
+    guard: "src/content/spread/ranking.test.ts",
+  },
+  {
+    id: "codec-generation-explains-bandwidth",
+    beliefs: [
+      "The pool's bandwidth differences are explained by how many times its audio has been encoded.",
+    ],
+    date: "2026-09-04",
+    kind: "measured",
+    killedBy:
+      "Four of six sources were already lossy, so the clips were checked for codec damage — and the narrow clips are not the lossy-sourced ones. Three of the six end in an encoder-shaped cliff, at 8624, 15967 and 17786 Hz, and one of those three came from FLAC while the widest of all came from an mp3. The spread across the pool is 10002 Hz and source format does not predict it.",
+    consequence:
+      "The measurement stopped reporting a cutoff beside a lossy-generation count, which invited a causal reading the numbers do not support, and reports how abruptly each spectrum ends instead — the figure that separates an encoder from a room.",
+    sources: [
+      {
+        path: "docs/analytics/e17-spread.txt",
+        anchor: "source format does not explain which clips are narrow",
+      },
+    ],
+    guard: "scripts/clip-pipeline/spreadvalidate.test.ts",
+  },
+  {
+    id: "brightness-inflates-the-far-pairs",
+    beliefs: [
+      "The pool's brightness differences inflate the spread on the pairs the critic separated.",
+    ],
+    date: "2026-09-04",
+    kind: "measured",
+    killedBy:
+      "Expected, because the narrowest clip in the pool sits in three of the four critic-far pairs. Measured the other way: the mean bandwidth gap is 3758 Hz across the far pairs and 6498 Hz across the close ones, so the confound is concentrated where it makes a difference HARDER to find rather than easier.",
+    consequence:
+      "The confound is disclosed rather than removed — it cannot be removed without destroying the recordings — and its DIRECTION is guarded. If the gaps ever concentrate on the far pairs the pool would inflate its own answer, and the build stops.",
+    sources: [
+      {
+        path: "docs/analytics/e17-spread.txt",
+        anchor: "the confound points TOWARD THE NULL",
+      },
+    ],
+    guard: "scripts/clip-pipeline/spreadvalidate.test.ts",
+  },
+  {
+    id: "top-scoring-window-is-fit-to-rate",
+    beliefs: [
+      "The top-scoring window of a recording is fit to put in front of a listener.",
+    ],
+    date: "2026-09-04",
+    kind: "measured",
+    killedBy:
+      "The scorer ranks windows by energy, dynamics and onset density, which says something is happening and nothing about whether it can be rated. Its first pick was 32% near-silent for the Violin Concerto and sat across a 4.30s gap between two Diabelli variations. The Diabelli then failed all twelve of its candidates, and passed at the twenty-third.",
+    consequence:
+      "The window is chosen by measurement rather than by score: the fitter renders down the ranked list until Layer A accepts one, and the search was widened to sixty candidates rather than the dead-air gate relaxed. Every rejection is kept, so a hard source is visible as one.",
+    sources: [
+      {
+        path: "docs/analytics/e17-spread.txt",
+        anchor: "candidates tried before Layer A accepted one",
+      },
+    ],
+    guard: "scripts/clip-pipeline/spreadvalidate.test.ts",
+  },
 ];

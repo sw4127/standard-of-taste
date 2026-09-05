@@ -207,7 +207,7 @@ export const SPREAD_METRICS: MetricSpec[] = [
     owner: "instrument",
     target: null,
     caveat:
-      "Read it beside the close-pairs figure and beside the indifferent-rater figure; alone it says nothing. It measures whether your ratings moved, never whether they moved the same way the critic's did — agreement is not scored and cannot be computed from what this instrument stores.",
+      "Read it beside the close-pairs figure and beside the indifferent-rater figure; alone it says nothing. It measures whether your ratings moved, never whether they moved the same way the critic's did — agreement is not scored and cannot be computed from what this instrument stores. Three further limits travel with it: a forty-second excerpt cannot carry a critic's verdict on a work up to forty minutes long, so the clip is longer than this product's others and that is a mitigation rather than a fix; clips the listener says they already knew are removed on their word alone, unverified; and the difference between the two figures is never reported, because four pairs against four drawn from clips that appear in several pairs each, with nobody having sat the instrument twice, leaves no measured wobble against which a difference could be called real.",
   },
   {
     id: "spread_close_pairs",
@@ -219,7 +219,7 @@ export const SPREAD_METRICS: MetricSpec[] = [
     owner: "instrument",
     target: null,
     caveat:
-      "The recordings in this pool differ in brightness by up to ten kilohertz for reasons no ranking caused, and that difference is larger across these pairs than across the separated ones — so it works against finding a difference rather than for it.",
+      "The recordings in this pool differ in where their spectrum ends by 10,002 Hz, for reasons no ranking caused — one source is a 128 kbps mp3 that stops at 8,624 Hz. Measured, that difference is larger across these pairs (6,498 Hz mean) than across the separated ones (3,758 Hz), so the confound works against finding a difference rather than for it. It cannot be removed without destroying the recordings; its direction is guarded instead.",
   },
   {
     id: "spread_if_indifferent",

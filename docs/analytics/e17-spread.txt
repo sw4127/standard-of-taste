@@ -1,0 +1,95 @@
+E17 RANKING TEST (Track N) — measured records
+Generated 2026-09-04 from the shipped pool. Commands are reproducible:
+  node scripts/clip-pipeline/index.mjs spread-validate
+  node scripts/clip-pipeline/index.mjs spread-bandwidth
+
+--- 1. LAYER A over the six shipped clips ---
+    id    sec    LUFS    dBTP   LRA   clip%  quiet%   dead  speech  verdict
+   sp1  40.05  -15.75   -1.38  10.8   0.000    15.9   0.00   0.382     PASS
+   sp2  40.05  -15.91   -1.50  21.0   0.000     0.0   0.00   0.723     PASS
+   sp3  40.05  -16.02   -1.20  10.4   0.000     6.5   0.00   0.594     PASS
+   sp4  40.05  -15.45   -1.47  13.8   0.000    17.8   0.00   0.406     PASS
+   sp5  40.05  -15.97   -1.44   9.2   0.000     3.1   0.75   0.351     PASS
+   sp6  40.05  -16.08   -1.43  17.6   0.000    14.8   0.00   0.397     PASS
+
+6 clips measured, 0 flagged.
+
+--- 2. WHERE EACH CLIP'S SPECTRUM ENDS, AND WHETHER AN ENCODER ENDED IT ---
+    id  source     cutoff   drop-before   drop-after   ends in a cliff
+   sp1     mp3    8624 Hz       13.5 dB      26.5 dB                yes
+   sp2    flac   11800 Hz       -2.8 dB      10.9 dB                 no
+   sp3     mp3   17786 Hz        0.8 dB      36.2 dB                yes
+   sp4     m4a    7784 Hz       26.8 dB      11.2 dB                 no
+   sp5     mp3   11305 Hz        7.7 dB      10.2 dB                 no
+   sp6    flac   15967 Hz        7.2 dB      35.9 dB                yes
+
+3 of 6 clips end in an encoder-shaped cliff (sp1, sp3, sp6).
+2 of those 4 came from a lossy source, so source format does not explain which clips are narrow.
+
+mean bandwidth gap: 3758 Hz across 4 critic-far pairs, 6498 Hz across 4 critic-close pairs
+the confound points TOWARD THE NULL — it makes a difference harder to find, not easier.
+
+--- 3. SOURCE FORMATS AS FETCHED ---
+  sp1  pos  4     sp1.mp3    audio/mpeg    10736561 bytes  magic ID3
+  sp2  pos  9    sp2.flac    audio/flac    74258416 bytes  magic fLaC
+  sp3  pos 12     sp3.mp3    audio/mpeg    14468066 bytes  magic ID3
+  sp4  pos 14     sp4.m4a   audio/x-m4a    16608678 bytes  magic ftyp
+  sp5  pos 15     sp5.mp3    audio/mpeg    79939517 bytes  magic ID3
+  sp6  pos 19    sp6.flac    audio/flac   159115806 bytes  magic fLaC
+
+--- 4. WINDOW FITTING: candidates tried before Layer A accepted one ---
+  sp1  tried  1  accepted at 462.5s
+  sp2  tried  1  accepted at 697s
+  sp3  tried  4  accepted at 298s
+        rejected 510.5s — 32% of the clip is near-silent (max 20%)
+        rejected 14.5s — 33% of the clip is near-silent (max 20%)
+        rejected 264.5s — 25% of the clip is near-silent (max 20%)
+  sp4  tried  1  accepted at 807.5s
+  sp5  tried 23  accepted at 2300.5s
+        rejected 1267s — 4.30s of dead air (max 1.5s)
+        rejected 1287.5s — 4.15s of dead air (max 1.5s)
+        rejected 1089s — 37% of the clip is near-silent (max 20%)
+        rejected 1109s — 2.70s of dead air (max 1.5s)
+        rejected 2425s — 2.70s of dead air (max 1.5s)
+        rejected 2618s — -14.00 LUFS is outside -16 +/- 1 — louder reads as better
+        rejected 1750s — 52% of the clip is near-silent (max 20%)
+        rejected 2470.5s — 21% of the clip is near-silent (max 20%)
+        rejected 2591.5s — 4.25s of dead air (max 1.5s)
+        rejected 2403.5s — 2.65s of dead air (max 1.5s)
+        rejected 1772s — 24% of the clip is near-silent (max 20%)
+        rejected 117.5s — 1.95s of dead air (max 1.5s)
+        rejected 1055.5s — 43% of the clip is near-silent (max 20%)
+        rejected 137.5s — 1.90s of dead air (max 1.5s)
+        rejected 2490.5s — 1.60s of dead air (max 1.5s)
+        rejected 1035.5s — 24% of the clip is near-silent (max 20%)
+        rejected 287.5s — 2.30s of dead air (max 1.5s)
+        rejected 307.5s — 2.55s of dead air (max 1.5s)
+        rejected 1459s — 4.25s of dead air (max 1.5s)
+        rejected 921s — 1.55s of dead air (max 1.5s)
+        rejected 1479s — 35% of the clip is near-silent (max 20%)
+        rejected 955.5s — 1.75s of dead air (max 1.5s)
+  sp6  tried  1  accepted at 468s
+
+--- 5. WHY EVERY HISTORICAL TRANSFER WAS REFUSED (derivation, not a measurement) ---
+US sound recordings published from 1926 onward are protected for 100 years from publication
+(Cornell's public-domain chart, "Sound Recordings Published in the United States", checked
+2026-09-04). As of 2026 only recordings published BEFORE 1926 are public domain there.
+
+Candidates found for works on the ranking, with a public-domain tag on archive.org or Commons,
+and the year each was published:
+
+  Symphony No. 7      Stokowski / Philadelphia          1927   PD in 2028
+  Missa solemnis      Toscanini                         1934   PD in 2035
+  Hammerklavier       Schnabel                       c. 1935   PD in 2036
+  An die ferne Gel.   Raucheisen edition                1937   PD in 2038
+  Emperor Concerto    Serkin / Walter / NY Phil         1941   PD in 2042
+
+Every one is still in copyright; the earliest misses by a single year. One archive.org item
+states its reasoning outright -- that works published before 1978 got 75 years -- which is a rule
+about printed works and not about sound recordings.
+
+Separately, IMSLP marks a large body of recordings "Public Domain - Non-PD US": free where the
+site is hosted, restricted in the United States. A licence read as "Creative Commons Zero" was in
+full "Creative Commons Zero 1.0 - Non-PD US", on a 1953 Deutsche Grammophon recording. That is why
+the pool's licence guard matches exact allowed values rather than blocking known-bad substrings:
+the failure mode was a good prefix with a bad suffix.
