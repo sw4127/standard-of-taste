@@ -240,7 +240,12 @@ export function arcClaims(): Record<string, Claim<ArcReading>> {
   };
 }
 
-function acrossInput(thresholds: StaircaseResult[], withBias: boolean, withDelicacy: boolean): AcrossInput {
+function acrossInput(
+  thresholds: StaircaseResult[],
+  withBias: boolean,
+  withDelicacy: boolean,
+  withSpread = false,
+): AcrossInput {
   const delicacy = withDelicacy ? delicacyResult(() => true) : null;
   const replications: ReplicationCheck[] = [];
   if (delicacy) {
@@ -253,6 +258,11 @@ function acrossInput(thresholds: StaircaseResult[], withBias: boolean, withDelic
   return {
     bias: withBias ? biasResult(2) : null,
     delicacy,
+    spread: withSpread
+      ? computeSpreadResult(
+          Object.fromEntries(SPREAD_POOL.map((item, i) => [item.id, [9, 2, 7, 1, 8, 3][i]])),
+        )
+      : null,
     thresholds,
     replications,
     unmeasured: ["pitch-drift", "timing-smear", "lossy-artifact"].filter((f) => !measured.has(f)),
@@ -273,6 +283,14 @@ export function acrossInputs(): Record<string, AcrossInput> {
     "no-replication": acrossInput([timing], false, true),
     "all-three": acrossInput([pitch, timing, lossy], true, true),
     "full-coverage": acrossInput([pitch, timing, lossy], true, false),
+    /*
+     * E18/S4. The dossier counts the questions this device has answered, and
+     * the four-instrument sentence had no fixture until the Ranking Test
+     * started storing — so the deck's largest case was three, and the voice
+     * gate had never read the sentence a person with all four sees.
+     */
+    "bias-spread": acrossInput([], true, false, true),
+    "all-four": acrossInput([pitch, timing, lossy], true, true, true),
   };
 }
 

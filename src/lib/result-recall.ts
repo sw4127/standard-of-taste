@@ -134,6 +134,16 @@ export function recallThreshold(slug: string): { result: StaircaseResult; entry:
  * The recognition mask is decoded to ids and passed back through the same
  * filter the sitting used, so a recalled reading and the reveal that produced
  * it cannot disagree about which clips counted.
+ *
+ * A NOTE FOR WHOEVER BUILDS AN ARC OVER THIS SLOT: DO NOT. The store keeps a
+ * history for every instrument, and the retest arc exists because a staircase
+ * sitting a week later measures the same ear again. This instrument is not like
+ * that. It only works on music that is NEW to the listener, so a second sitting
+ * is contaminated permanently rather than for seven days — there is no waiting
+ * period that restores it, which is also why a cooldown would be the wrong tool
+ * and none is applied. Comparing two Ranking Test sittings would report a
+ * movement in the ear that is a movement in familiarity. `readResult` — the
+ * latest, which is what the panel asks for — is the only sound read here.
  */
 export function recallSpread(): { result: SpreadResult; entry: StoredEntry } | null {
   const entry = readResult("spread", POOL_VERSIONS.spread);

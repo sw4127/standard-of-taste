@@ -166,9 +166,9 @@ export const EXPERT_NOTES = {
    * blind again. Said here rather than left for them to discover.
    */
   spreadNowKnown:
-    "Reading this list is the end of your blind sitting. These six were rated before you knew " +
-    "what they were, and they cannot be again — a second attempt at this instrument would be " +
-    "rating music you have now been told about.",
+    "What follows is the end of your blind sitting. These six were rated before you knew what " +
+    "they were, and they cannot be again — a second attempt at this instrument would be rating " +
+    "music you have now been told about.",
 } as const;
 
 /** The Brier line, which needs both numbers and therefore cannot be a constant. */

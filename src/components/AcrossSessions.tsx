@@ -28,7 +28,7 @@ import { useMemo, useSyncExternalStore } from "react";
 import { slotSignature, subscribeResults, type StoredPayload } from "@/lib/result-store";
 import { isOwnResult } from "@/lib/own-result";
 import ForgetThisBrowser from "./ForgetThisBrowser";
-import { recallBias, recallDelicacy, recallThreshold } from "@/lib/result-recall";
+import { recallBias, recallDelicacy, recallSpread, recallThreshold } from "@/lib/result-recall";
 import { replicationCheck } from "@/engine/replication";
 import type { ReplicationCheck } from "@/engine/replication";
 import type { DegradationFamily } from "@/engine/delicacy";
@@ -49,6 +49,9 @@ function signature(): string {
   return [
     slotSignature("bias"),
     slotSignature("delicacy"),
+    // E18/S4. Without this slot the dossier would not re-render when a Ranking
+    // Test sitting is recorded in another tab — it would go on counting three.
+    slotSignature("spread"),
     ...THRESHOLD_SLUGS.map((s) => slotSignature("threshold", s)),
   ].join(".");
 }
@@ -60,6 +63,7 @@ function serverSignature(): string {
 
 function buildInput(): AcrossInput {
   const bias = recallBias()?.result ?? null;
+  const spread = recallSpread()?.result ?? null;
   const delicacy = recallDelicacy()?.result ?? null;
 
   const thresholds = THRESHOLD_SLUGS.map((slug) => recallThreshold(slug)?.result ?? null).filter(
@@ -86,7 +90,7 @@ function buildInput(): AcrossInput {
     .filter((f): f is string => f !== null)
     .filter((f) => !measured.has(f));
 
-  return { bias, delicacy, thresholds, replications, unmeasured };
+  return { bias, delicacy, spread, thresholds, replications, unmeasured };
 }
 
 /*

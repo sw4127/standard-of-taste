@@ -6,9 +6,11 @@
  * only true once more than one instrument has been run, and are therefore
  * unsayable on any single result screen:
  *
- *   1. THE DOSSIER. Three instruments, three DIFFERENT questions — not three
+ *   1. THE DOSSIER. Each instrument asked a DIFFERENT question — not several
  *      scores of one thing. Nothing is ranked against anything, because nothing
- *      here shares a scale.
+ *      here shares a scale. It said "three" until E18/S4, when a fourth
+ *      instrument started storing results and the count had to stop being a
+ *      word in a docblock.
  *   2. THE REPLICATION. Where two instruments measured the same family in the
  *      same physical unit, do they agree? See `src/engine/replication.ts` for
  *      why this is the only honest cross-instrument comparison available.
@@ -25,6 +27,7 @@
  */
 import type { BiasResult } from "@/engine/bias";
 import type { DelicacyResult } from "@/engine/delicacy";
+import type { SpreadResult } from "@/engine/spread";
 import type { StaircaseResult } from "@/engine/staircase-session";
 import type { ReplicationCheck } from "@/engine/replication";
 import { familyLabel, onSource, quantity, shortUnit } from "@/content/staircase/copy";
@@ -33,6 +36,13 @@ import { thresholdClaim } from "@/engine/evidence";
 export interface AcrossInput {
   bias: BiasResult | null;
   delicacy: DelicacyResult | null;
+  /**
+   * THE RANKING TEST (E18/S4). It joined this input the slice after it started
+   * storing, and it had to: the dossier counts the questions this device has
+   * answered, so a fourth stored instrument that was not in the count made the
+   * sentence say three when the answer was four.
+   */
+  spread: SpreadResult | null;
   thresholds: StaircaseResult[];
   replications: ReplicationCheck[];
   /** Ladders the Gym offers that this device has no session for. */
@@ -41,7 +51,12 @@ export interface AcrossInput {
 
 /** How many distinct instruments have produced a stored result. */
 export function instrumentCount(input: AcrossInput): number {
-  return (input.bias ? 1 : 0) + (input.delicacy ? 1 : 0) + (input.thresholds.length > 0 ? 1 : 0);
+  return (
+    (input.bias ? 1 : 0) +
+    (input.delicacy ? 1 : 0) +
+    (input.spread ? 1 : 0) +
+    (input.thresholds.length > 0 ? 1 : 0)
+  );
 }
 
 /**
@@ -57,6 +72,17 @@ export function dossierLine(input: AcrossInput): string | null {
   if (input.bias) parts.push("whether a name changes what you hear");
   if (input.delicacy) parts.push("whether you can tell damage from clean and say what it is");
   if (input.thresholds.length > 0) parts.push("how small a flaw has to get before you lose it");
+  /*
+   * PHRASED AS A QUESTION ABOUT THE LISTENER'S GAPS, NEVER ABOUT AGREEMENT. The
+   * obvious clause here — "whether you agree with a critic" — would describe an
+   * instrument that does not exist and could not be built from what this one
+   * stores.
+   *
+   * LAST IN THE LIST BECAUSE IT IS LAST IN THE PRODUCT, and because a refused
+   * Ranking Test still counts as a question answered: the person sat it, and
+   * the count is of questions asked of them, not of numbers produced.
+   */
+  if (input.spread) parts.push("whether your ratings move where a critic's judgment moved");
   if (parts.length < 2) return null;
 
   /*

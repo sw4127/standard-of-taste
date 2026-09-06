@@ -14,6 +14,7 @@ import { creatorLines as biasCreatorLines } from "./bias";
 import { replicationCheck } from "@/engine/replication";
 import { thresholdClaim } from "@/engine/evidence";
 import { DELICACY_INSTRUMENT_ID, MEASURED_TRIALS } from "@/content/delicacy/items";
+import { acrossInputs } from "./fixtures";
 import { computeDelicacyResult, type DelicacyResponses } from "@/engine/delicacy";
 import { BIAS_CLIPS, BIAS_INSTRUMENT_ID } from "@/content/bias/items";
 import { BIAS_SCALE_MAX, BIAS_SCALE_MIN, computeBiasResult } from "@/engine/bias";
@@ -75,6 +76,7 @@ function biasFor(shift: number) {
 const EMPTY: AcrossInput = {
   bias: null,
   delicacy: null,
+  spread: null,
   thresholds: [],
   replications: [],
   unmeasured: ["pitch-drift", "timing-smear", "lossy-artifact"],
@@ -314,5 +316,49 @@ describe("D1 / N3 / voice", () => {
 
   it("is deterministic", () => {
     for (const input of Object.values(SCENARIOS)) expect(acrossLines(input)).toEqual(acrossLines(input));
+  });
+});
+
+/* ------------------------------------------------------------------ *
+ * The count (E18/S4)
+ * ------------------------------------------------------------------ */
+
+describe("the dossier counts every stored instrument, not a fixed three", () => {
+  /**
+   * THE SENTENCE SAYS A NUMBER, so the number has to come from the input, and
+   * this asserts it against what is in the input rather than against a literal.
+   * It said "three" for as long as three instruments stored results; the day a
+   * fourth started, a person who had sat all four was told they had answered
+   * three questions about their ears, on a live page.
+   */
+  it("agrees with instrumentCount on every reachable case", () => {
+    const cases = acrossInputs();
+    expect(Object.keys(cases).length).toBeGreaterThan(4);
+    let sawFour = false;
+    for (const [name, input] of Object.entries(cases)) {
+      const n = instrumentCount(input);
+      const line = dossierLine(input);
+      if (n < 2) {
+        expect(line, name).toBeNull();
+        continue;
+      }
+      expect(line, name).not.toBeNull();
+      expect(line!, name).toContain("answered " + n + " different questions");
+      if (n === 4) sawFour = true;
+    }
+    expect(sawFour, "no four-instrument case in the deck").toBe(true);
+  });
+
+  it("names the ranking test's question without naming agreement", () => {
+    const line = dossierLine(acrossInputs()["all-four"])!;
+    expect(line).toContain("whether your ratings move where a critic's judgment moved");
+    expect(line.toLowerCase().includes("agree")).toBe(false);
+  });
+
+  it("prints the four-instrument dossier for reading", () => {
+    console.log("=== DOSSIER, FOUR INSTRUMENTS");
+    console.log(dossierLine(acrossInputs()["all-four"]));
+    console.log("=== DOSSIER, PRESTIGE + RANKING");
+    console.log(dossierLine(acrossInputs()["bias-spread"]));
   });
 });

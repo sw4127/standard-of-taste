@@ -411,6 +411,15 @@ function SpreadBody({ s }: { s: SpreadExpert }) {
         ) : null}
       </Section>
       <Section title={SEC.spreadClips}>
+        {/*
+          THE WARNING GOES ABOVE THE TABLE, NOT UNDER IT (E18/S4, found by
+          reading the rendered panel). It said "reading this list is the end of
+          your blind sitting" BELOW the list — a consent notice printed after
+          the disclosure it is about, which is the same ordering mistake the
+          flow itself refuses when it asks "heard this before?" before the
+          rating rather than after. A reader meets the cost before they pay it.
+        */}
+        <p className="mt-3 text-[0.65rem] leading-relaxed text-muted">{NOTE.spreadNowKnown}</p>
         <Table
           head={[COL.index, COL.work, COL.yourRating, COL.counted]}
           rows={s.clips.map((c, i) => [
@@ -420,7 +429,6 @@ function SpreadBody({ s }: { s: SpreadExpert }) {
             c.setAside ? VAL.setAside : VAL.countedIn,
           ])}
         />
-        <p className="mt-2 text-[0.65rem] leading-relaxed text-muted">{NOTE.spreadNowKnown}</p>
       </Section>
       <Section title={SEC.spreadPairs}>
         <Table
