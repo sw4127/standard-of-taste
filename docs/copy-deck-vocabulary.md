@@ -128,11 +128,127 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 ---
 
-## 4. Combined view — “ACROSS YOUR SESSIONS”
+## 4. The Ranking Test — “WHERE YOUR GAPS FELL”
+
+**Where it renders.** The whole reading on `/spread`, below the two figures. There is no share page for this instrument, so this is the only place these sentences are ever seen.
+
+**What the screen has already said.** The screen has already shown the two numbers themselves, each with the chance figure beside it (“Rating at random gives 3.6 on both”). On a refused reading it has shown no number at all.
+
+**This layer's job.** Say what was set aside and why, read both figures against chance, name which way they fell without claiming the gap between them means anything, and mark the boundary.
+
+**Rules this copy must keep:**
+
+- AGREEMENT WITH THE CRITIC IS NEVER SCORED AND CANNOT BE COMPUTED. Only the DISTANCE between two of his positions was ever imported, never which he ranked higher. No sentence may imply the reader agreed or disagreed with him, or that agreeing would be better.
+- The difference between the two figures is never reported (RT-N2 a). Both numbers, side by side, against chance — never their gap, because nobody has sat this twice and there is no measured wobble against which a difference could be called real.
+- The recognition filter is SELF-REPORT and that is disclosed every time it is described (N3). Nothing checks; it only ever removes evidence, and what was recognised is never a score.
+- A REFUSAL MUST NOT FLATTER. “You know your Beethoven!” converts a failure to measure into a compliment about the person — a verdict smuggled in where the instrument just said it had nothing. Every refusal names what was set aside and invites the reader back.
+- Small numbers are not a poor result. Six recordings of six different works are not spaced out by quality; if they genuinely sounded close, rating them close was accurate.
+- Nothing may count. Every number in a sentence is derived from the result, never written in.
+
+**13 sentences to review** — 15 concrete variants, 25 reachable renderings. Braces mark values the engine fills in; leave them as slots.
+
+> Across the four pairs he placed far apart, your two ratings differed by {n}.{n} points on average. Across the four pairs he bracketed together, {n}.{n}. Rating at random produces {n}.{n} on both, because chance does not know which works a critic separated.
+
+  *As rendered:* “Across the four pairs he placed far apart, your two ratings differed by 0.0 points on average. Across the four pairs he bracketed together, 0.0. Rating at random produces 3.6 on both, because chance does not know which works a critic separated.”  ·  “Across the four pairs he placed far apart, your two ratings differed by 0.0 points on average. Across the four pairs he bracketed together, 5.3. Rating at random produces 3.6 on both, because chance does not know which works a critic separated.”  · …and 1 more
+
+> Across the three pairs he placed far apart, your two ratings differed by {n}.{n} points on average. Across the three pairs he bracketed together, {n}.{n}. Rating at random produces {n}.{n} on both, because chance does not know which works a critic separated.
+
+  *As rendered:* “Across the three pairs he placed far apart, your two ratings differed by 5.0 points on average. Across the three pairs he bracketed together, 4.7. Rating at random produces 3.6 on both, because chance does not know which works a critic separated.”
+
+> Every clip here was one you had heard before, so all six were set aside. You told us which of these you had heard before, and we took your word for it — nothing here checks. It only ever leaves clips out; what you recognised is not part of any result.
+
+> Neither number says you agreed with him, and neither could: this only ever looks at how far apart your two ratings fell, never at which one you put higher. Preferring the work he ranked lower costs you nothing here, because nothing here is checking. Small numbers are not a poor result either — six recordings of six different works are not spaced out by quality, and if they genuinely sounded close to you then rating them close was the accurate thing to do.
+
+> No number this time. Setting aside the one you had heard before left five clips, and that makes only one usable widely-spaced pair where this needs three. Below that, one clip's wobble moves the answer further than the answer moves. Come back and try it with fewer set aside.
+
+> No number this time. Setting aside the two you had heard before left four clips, and that makes only one usable closely-spaced pair where this needs three. Below that, one clip's wobble moves the answer further than the answer moves. Come back and try it with fewer set aside.
+
+> One clip you had heard before was set aside before anything was worked out, so what follows rests on the five that were new to you. You told us which of these you had heard before, and we took your word for it — nothing here checks. It only ever leaves clips out; what you recognised is not part of any result.
+
+> Two clips you had heard before were set aside before anything was worked out, so what follows rests on the four that were new to you. You told us which of these you had heard before, and we took your word for it — nothing here checks. It only ever leaves clips out; what you recognised is not part of any result.
+
+> You gave every one of these the same rating, so there are no gaps to compare and nothing for this to work on. That is a real answer rather than a failed attempt — if the six genuinely sounded alike to you, saying so was the accurate thing to do.
+
+> You had heard all six of these before, so there is nothing here to read. This one only works on music that is new to you — on anything you already know, a rating is partly memory, and no instrument can separate the two afterwards. There is no second attempt that would fix that: it needs more music than this pool currently holds. Come back if it grows.
+
+> You said none of these were familiar, so all of them counted. You told us which of these you had heard before, and we took your word for it — nothing here checks. It only ever leaves clips out; what you recognised is not part of any result.
+
+> Your ratings moved further apart where his judgment did not. Whether that means anything is a question this cannot answer: four pairs against four, built from clips that each appear in several of them, and nobody has sat this twice to find out how far the numbers wander on their own. There is no honest size at which the gap between them becomes a result, so none is offered.
+
+> Your ratings moved further apart where his judgment did. Whether that means anything is a question this cannot answer: three pairs against three, built from clips that each appear in several of them, and nobody has sat this twice to find out how far the numbers wander on their own. There is no honest size at which the gap between them becomes a result, so none is offered.
+
+---
+
+## 5. The retest arc — “DID YOUR EAR MOVE”
+
+**Where it renders.** Renders under a result when this device holds an EARLIER sitting of the same instrument, and only when the result on screen is this device's own — never on somebody else's link.
+
+**What the screen has already said.** The screen has already given this sitting's own reading in full. This layer adds the only thing a single sitting cannot say: what happened between then and now.
+
+**This layer's job.** Say whether the change is bigger than what the instrument can resolve, and when it is not, name the floor in the reader's own units so a refusal is not read as a shrug.
+
+**Rules this copy must keep:**
+
+- THE REFUSAL IS THE MAIN CASE, NOT THE EDGE CASE. A pitch threshold has to change by about three and a half times before anything may be said, so “no change you could hear” is what most readers get most of the time. It is a statement about the INSTRUMENT — “smaller than this ladder can see” — never “you did not improve”, which is a claim about a person the data does not support (D1).
+- It NAMES THE FLOOR in the reader's own units (PM ruling RT-H1 a). A bare “no change” invites the reader to conclude they failed; “it would take about a 3.5x change” tells them what would have had to happen.
+- The staircase sentences report the size of a change as a MULTIPLE and never an endpoint as a number. Printing “34 cents” beside a result screen that reads “no reading — somewhere between 8.8 and 100 cents” makes the page contradict itself, and that defect shipped once.
+- NOTHING MAY COUNT, and this layer has broken that rule twice. The readings are arity-free — “across your sittings”, “before”, “since” — because a reading that said “between these two sittings” went false the day it rested on four. Only the pooled line may state a number.
+- An arc compares one person to themselves. That is the only comparison this product may make: no cohort, no percentile, and no promise that practice will work (N3).
+- It says where the memory lives. This is the strongest claim to remembering anywhere in the product, and it is one browser's localStorage.
+
+**13 sentences to review** — 13 concrete variants, 13 reachable renderings. Braces mark values the engine fills in; leave them as slots.
+
+> Across your pitch drift sittings, it now takes a larger flaw to reach you than it did — a change of about 11x. This ladder cannot distinguish anything under {n}.5x from ordinary run-to-run wobble, so a move this size is the instrument speaking rather than the dice.
+
+  *As rendered:* “Across your pitch drift sittings, it now takes a larger flaw to reach you than it did — a change of about 11x. This ladder cannot distinguish anything under 3.5x from ordinary run-to-run wobble, so a move this size is the instrument speaking rather than the dice.”
+
+> Across your pitch drift sittings, you now catch a smaller flaw than you did — a change of about 11x. This ladder cannot distinguish anything under {n}.5x from ordinary run-to-run wobble, so a move this size is the instrument speaking rather than the dice.
+
+  *As rendered:* “Across your pitch drift sittings, you now catch a smaller flaw than you did — a change of about 11x. This ladder cannot distinguish anything under 3.5x from ordinary run-to-run wobble, so a move this size is the instrument speaking rather than the dice.”
+
+> Across your pitch drift sittings, you now catch a smaller flaw than you did — a change of about {n}.9x. This ladder cannot distinguish anything under {n}.5x from ordinary run-to-run wobble, so a move this size is the instrument speaking rather than the dice.
+
+  *As rendered:* “Across your pitch drift sittings, you now catch a smaller flaw than you did — a change of about 8.9x. This ladder cannot distinguish anything under 2.5x from ordinary run-to-run wobble, so a move this size is the instrument speaking rather than the dice.”
+
+> Across your pitch drift sittings, you now catch a smaller flaw than you did. One of them put you past the end of what this ladder can render, so the direction is solid and the size is not — it is at least {n}.5x, which is the smallest move this machine can distinguish from noise.
+
+  *As rendered:* “Across your pitch drift sittings, you now catch a smaller flaw than you did. One of them put you past the end of what this ladder can render, so the direction is solid and the size is not — it is at least 3.5x, which is the smallest move this machine can distinguish from noise.”
+
+> Nobody has measured how much this machine's numbers wander between sittings, so there is no honest line between a change and a coin flip here. Until there is, it says nothing.
+
+> One session cannot say whether your ear moved — there is nothing to compare it against. A second sitting on this machine is what makes that sentence possible at all.
+
+> The label moved you +{n}% before and +{n}% since. That gap is inside the {n} points this test wanders by on its own, so it is not a change anybody could stand behind — the same person, retested, moves this much without anything about them changing.
+
+  *As rendered:* “The label moved you +20% before and +15% since. That gap is inside the 8 points this test wanders by on its own, so it is not a change anybody could stand behind — the same person, retested, moves this much without anything about them changing.”
+
+> The label moved you +{n}% before and {n}% since — {n} points closer to zero, where zero means the name changed nothing. That is more than the {n} points this test wanders by on its own, so a name is doing less to what you hear than it was.
+
+  *As rendered:* “The label moved you +20% before and 0% since — 20 points closer to zero, where zero means the name changed nothing. That is more than the 8 points this test wanders by on its own, so a name is doing less to what you hear than it was.”
+
+> The label moved you {n}% before and +{n}% since — {n} points further from zero, and more than the {n} points this test wanders by on its own. A name is doing more to what you hear than it was. Both directions count: marking a labelled clip down is still the name deciding, not your ears.
+
+  *As rendered:* “The label moved you 0% before and +20% since — 20 points further from zero, and more than the 8 points this test wanders by on its own. A name is doing more to what you hear than it was. Both directions count: marking a labelled clip down is still the name deciding, not your ears.”
+
+> These trials are too short to show change over time. Your score would have to move by six of the fifteen pairs — or four of a single flaw's five — before it meant anything, so this machine reports where you are and leaves the question of movement to the threshold ladders.
+
+> These two compression sessions ran on different recordings, so they are not comparable. A fixed bitrate does up to twice as much damage to one recording as to another, which means the difference between these two sittings would be a fact about the music rather than about you.
+
+> This rests on {n} sittings — {n} before and {n} since. That is what pulled the line above down from {n}.5x to {n}.5x: the wobble of an average falls as the square root of how many sittings are in it, so each time you come back, a smaller real change becomes visible.
+
+  *As rendered:* “This rests on 4 sittings — 2 before and 2 since. That is what pulled the line above down from 3.5x to 2.5x: the wobble of an average falls as the square root of how many sittings are in it, so each time you come back, a smaller real change becomes visible.”
+
+> Your pitch drift sittings are {n}.9x apart, and that is inside what this ladder cannot tell from noise. It would take about {n}.5x before a change here meant anything. This is not a report that you stood still — it is the instrument saying it cannot see a move this small.
+
+  *As rendered:* “Your pitch drift sittings are 1.9x apart, and that is inside what this ladder cannot tell from noise. It would take about 3.5x before a change here meant anything. This is not a report that you stood still — it is the instrument saying it cannot see a move this small.”
+
+---
+
+## 6. Combined view — “ACROSS YOUR SESSIONS”
 
 **Where it renders.** Renders on all three result screens, but ONLY when two or more instruments have been run on this device AND the result on screen is this device's own (never on somebody else's shared link).
 
-**What the screen has already said.** Everything in sections 1–3, plus each instrument's own measurement copy.
+**What the screen has already said.** Every instrument section above, plus each instrument's own measurement copy.
 
 **This layer's job.** Say the three things that are only true once more than one instrument has run: the dossier, the replication, the coverage.
 
@@ -142,9 +258,9 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 - No leaderboard, streak, XP, points, rank or badge (the anti-clone clause).
 - A band that predicted nothing must not earn agreement by staying silent.
 - The roster lists thresholds in different units side by side — a LIST, never a ranking.
-- No sentence here may also appear in sections 1–3; a test enforces it.
+- No sentence here may also appear in an instrument section above; a test enforces it.
 
-**13 sentences to review** — 13 concrete variants, 21 reachable renderings. Braces mark values the engine fills in; leave them as slots.
+**15 sentences to review** — 15 concrete variants, 30 reachable renderings. Braces mark values the engine fills in; leave them as slots.
 
 > Compression damage: caught at {kbps} on pb1
 
@@ -182,6 +298,10 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
   *As rendered:* “You have answered 2 different questions about your ears: whether a name changes what you hear; whether you can tell damage from clean and say what it is. They are not 2 scores of one thing and they do not add up — each is measured in its own terms.”
 
+> You have answered {n} different questions about your ears: whether a name changes what you hear; whether your ratings move where a critic's judgment moved. They are not {n} scores of one thing and they do not add up — each is measured in its own terms.
+
+  *As rendered:* “You have answered 2 different questions about your ears: whether a name changes what you hear; whether your ratings move where a critic's judgment moved. They are not 2 scores of one thing and they do not add up — each is measured in its own terms.”
+
 > You have answered {n} different questions about your ears: whether you can tell damage from clean and say what it is; how small a flaw has to get before you lose it. They are not {n} scores of one thing and they do not add up — each is measured in its own terms.
 
   *As rendered:* “You have answered 2 different questions about your ears: whether you can tell damage from clean and say what it is; how small a flaw has to get before you lose it. They are not 2 scores of one thing and they do not add up — each is measured in its own terms.”
@@ -190,13 +310,17 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
   *As rendered:* “You have answered 3 different questions about your ears: whether a name changes what you hear; whether you can tell damage from clean and say what it is; how small a flaw has to get before you lose it. They are not 3 scores of one thing and they do not add up — each is measured in its own terms.”
 
+> You have answered {n} different questions about your ears: whether a name changes what you hear; whether you can tell damage from clean and say what it is; how small a flaw has to get before you lose it; whether your ratings move where a critic's judgment moved. They are not {n} scores of one thing and they do not add up — each is measured in its own terms.
+
+  *As rendered:* “You have answered 4 different questions about your ears: whether a name changes what you hear; whether you can tell damage from clean and say what it is; how small a flaw has to get before you lose it; whether your ratings move where a critic's judgment moved. They are not 4 scores of one thing and they do not add up — each is measured in its own terms.”
+
 ---
 
-## 5. The expert panel — “THE RAW RECORD”
+## 7. The expert panel — “THE RAW RECORD”
 
-**Where it renders.** A collapsed panel on all five result surfaces, open only when the result on screen is the one this device recorded — on a link you share with someone else it renders nothing at all.
+**Where it renders.** A collapsed panel under every result that this device stored, open only when the result on screen is the one this device recorded — on a link you share with someone else it renders nothing at all.
 
-**What the screen has already said.** Everything in sections 1–4. This panel repeats none of it: it shows the numbers underneath — per-family and per-rung tallies, every trial with the answer key, the staircase's rung visits and measured limits, the calibration curve, the prestige test's per-clip ratings.
+**What the screen has already said.** Every section above. This panel repeats none of it: it shows the numbers underneath — per-family and per-rung tallies, every trial with the answer key, the staircase's rung visits and measured limits, the calibration curve, the prestige test's per-clip ratings.
 
 **This layer's job.** Label measurements and state limits. Never judge them — this is the verdict-free surface.
 
@@ -207,9 +331,9 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 - The notes state LIMITS, not findings. A limit stated loosely is the shape an unmeasured claim takes.
 - The blurb must warn that this is device-local, or a reader assumes a shared link carries it.
 
-**9 sentences to review**, plus 51 short labels — 60 concrete variants, 61 reachable renderings. Braces mark values the engine fills in; leave them as slots.
+**14 sentences to review**, plus 69 short labels — 83 concrete variants, 85 reachable renderings. Braces mark values the engine fills in; leave them as slots.
 
-*Labels:* `#` · `{n}% interval` · `After correction` · `At the scale edge` · `Before correction` · `Blind` · `By flaw family` · `By rung` · `Caught` · `Caught at` · `Clip` · `Control drift` · `Delivered` · `Drift` · `Every clip` · `Family` · `First` · `Fitted point` · `Flaw named` · `Label` · `Labelled` · `Missed at` · `Moved with label` · `Of` · `Original` · `Outcome` · `Right` · `Room to move` · `Rung` · `Said` · `Second` · `Shown` · `Swapped items only` · `THE RAW RECORD` · `The session` · `Toward label` · `Trials` · `Versus claim` · `Where` · `You picked` · `You said` · `caught` · `fictional` · `guessed` · `hide` · `in band` · `not earned` · `show` · `too few to say` · `true` · `—`
+*Labels:* `#` · `{n}% interval` · `After correction` · `At the scale edge` · `Before correction` · `Blind` · `By flaw family` · `By rung` · `Caught` · `Caught at` · `Clip` · `Clips counted` · `Closely-spaced pairs` · `Control drift` · `Delivered` · `Drift` · `Every clip` · `Family` · `First` · `Fitted point` · `Flaw named` · `In his ranking` · `In the result` · `Label` · `Labelled` · `Mean gap · closely spaced` · `Mean gap · widely spaced` · `Missed at` · `Moved with label` · `Of` · `Original` · `Outcome` · `Pair` · `Positions apart` · `Rating at random` · `Right` · `Room to move` · `Rung` · `Said` · `Second` · `Set aside` · `Shown` · `Swapped items only` · `THE RAW RECORD` · `The session` · `Toward label` · `Trials` · `Versus claim` · `Where` · `Widely-spaced pairs` · `Work` · `You picked` · `You said` · `Your gap` · `Your rating` · `bracketed` · `caught` · `counted` · `far apart` · `fictional` · `guessed` · `hide` · `in band` · `not earned` · `set aside` · `show` · `too few to say` · `true` · `—`
 
 > Brier score {n}.{n} over {n} answers — always saying {n}% on a two-way choice scores {n}.{n}. Lower is better, and it only means something next to the distance from the line above.
 
@@ -219,20 +343,30 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 > Did you know when you knew?
 
+> Every clip, in the order you heard them
+
 > Every number behind the result, and the answers. No verdict, no interpretation — read from this browser, so a link you share shows nobody else this.
+
+> Every pair that counted · by the numbers above
 
 > Every pair, in the order you met them
 
 > Every rung · gentlest first
 
+> The distance column is every single thing taken from the critic's list. Which of two works he put higher was never read in, so no table here can be sorted into his order and no agreement figure can be worked out from this — by us, or by you, or later.
+
+> The pairs below are what you did; the averages are missing because too few pairs survived for either one to mean anything. Nothing has been hidden from you — the figure was never worked out.
+
 > The two percentages agree because the pool carries as many acclaimed labels as dismissive ones, and a balanced set cancels re-listen drift outright. The correction is shown anyway: it is what would move if that balance ever changed.
 
 > Timing rungs are shown by number: the pool stores them as a tempo fraction and the staircase measures milliseconds of drift, so quoting one as the other would be a guess.
+
+> What follows is the end of your blind sitting. These six were rated before you knew what they were, and they cannot be again — a second attempt at this instrument would be rating music you have now been told about.
 
 > What the pipeline measured and could not fix
 
 ---
 
-**106 concrete sentences across 5 surfaces.**
+**159 concrete sentences across 7 surfaces.**
 
 Anything rewritten here must still pass `src/content/voice.test.ts`, which screens five named hazards — motive attribution, person-verdicts, beige chrome, fabricated norms, unmeasured audibility claims. A green run there does **not** mean the prose is good; it means no named hazard is present. Judging whether it is good is the point of this document.

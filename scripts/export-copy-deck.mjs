@@ -62,7 +62,7 @@ const { strings } = JSON.parse(match[1]);
 const SECTIONS = [
   {
     key: "threshold",
-    title: "1. Threshold result — “WHAT THIS MEANS IN A RENDER”",
+    title: "Threshold result — “WHAT THIS MEANS IN A RENDER”",
     where:
       "Renders on `/threshold/[slug]/result` and at the end of a Gym session, in a bordered panel " +
       "BELOW the measurement paragraphs and ABOVE the no-cohort footnote.",
@@ -80,7 +80,7 @@ const SECTIONS = [
   },
   {
     key: "delicacy",
-    title: "2. Delicacy result — “WHAT THIS MEANS IN YOUR WORK”",
+    title: "Delicacy result — “WHAT THIS MEANS IN YOUR WORK”",
     where:
       "Renders on `/delicacy/result` and in the flow's reveal, between the flaw line it interprets " +
       "and the “DID YOU KNOW WHEN YOU KNEW?” calibration block.",
@@ -98,7 +98,7 @@ const SECTIONS = [
   },
   {
     key: "bias",
-    title: "3. Prestige result — “WHAT THIS MEANS IN YOUR WORK”",
+    title: "Prestige result — “WHAT THIS MEANS IN YOUR WORK”",
     where: "Renders on `/bias/result` and in the flow's debrief, under the verdict and above the share card.",
     already:
       "The screen has already said: the signed percentage, “how far these ratings moved toward the labels”, " +
@@ -113,29 +113,91 @@ const SECTIONS = [
     ],
   },
   {
+    key: "spread",
+    title: "The Ranking Test — “WHERE YOUR GAPS FELL”",
+    where:
+      "The whole reading on `/spread`, below the two figures. There is no share page for this " +
+      "instrument, so this is the only place these sentences are ever seen.",
+    already:
+      "The screen has already shown the two numbers themselves, each with the chance figure beside " +
+      "it (“Rating at random gives 3.6 on both”). On a refused reading it has shown no number at all.",
+    job:
+      "Say what was set aside and why, read both figures against chance, name which way they fell " +
+      "without claiming the gap between them means anything, and mark the boundary.",
+    rules: [
+      "AGREEMENT WITH THE CRITIC IS NEVER SCORED AND CANNOT BE COMPUTED. Only the DISTANCE between " +
+        "two of his positions was ever imported, never which he ranked higher. No sentence may " +
+        "imply the reader agreed or disagreed with him, or that agreeing would be better.",
+      "The difference between the two figures is never reported (RT-N2 a). Both numbers, side by " +
+        "side, against chance — never their gap, because nobody has sat this twice and there is no " +
+        "measured wobble against which a difference could be called real.",
+      "The recognition filter is SELF-REPORT and that is disclosed every time it is described (N3). " +
+        "Nothing checks; it only ever removes evidence, and what was recognised is never a score.",
+      "A REFUSAL MUST NOT FLATTER. “You know your Beethoven!” converts a failure to measure into a " +
+        "compliment about the person — a verdict smuggled in where the instrument just said it had " +
+        "nothing. Every refusal names what was set aside and invites the reader back.",
+      "Small numbers are not a poor result. Six recordings of six different works are not spaced " +
+        "out by quality; if they genuinely sounded close, rating them close was accurate.",
+      "Nothing may count. Every number in a sentence is derived from the result, never written in.",
+    ],
+  },
+  {
+    key: "arc",
+    title: "The retest arc — “DID YOUR EAR MOVE”",
+    where:
+      "Renders under a result when this device holds an EARLIER sitting of the same instrument, " +
+      "and only when the result on screen is this device's own — never on somebody else's link.",
+    already:
+      "The screen has already given this sitting's own reading in full. This layer adds the only " +
+      "thing a single sitting cannot say: what happened between then and now.",
+    job:
+      "Say whether the change is bigger than what the instrument can resolve, and when it is not, " +
+      "name the floor in the reader's own units so a refusal is not read as a shrug.",
+    rules: [
+      "THE REFUSAL IS THE MAIN CASE, NOT THE EDGE CASE. A pitch threshold has to change by about " +
+        "three and a half times before anything may be said, so “no change you could hear” is what " +
+        "most readers get most of the time. It is a statement about the INSTRUMENT — “smaller than " +
+        "this ladder can see” — never “you did not improve”, which is a claim about a person the " +
+        "data does not support (D1).",
+      "It NAMES THE FLOOR in the reader's own units (PM ruling RT-H1 a). A bare “no change” invites " +
+        "the reader to conclude they failed; “it would take about a 3.5x change” tells them what " +
+        "would have had to happen.",
+      "The staircase sentences report the size of a change as a MULTIPLE and never an endpoint as a " +
+        "number. Printing “34 cents” beside a result screen that reads “no reading — somewhere " +
+        "between 8.8 and 100 cents” makes the page contradict itself, and that defect shipped once.",
+      "NOTHING MAY COUNT, and this layer has broken that rule twice. The readings are arity-free — " +
+        "“across your sittings”, “before”, “since” — because a reading that said “between these two " +
+        "sittings” went false the day it rested on four. Only the pooled line may state a number.",
+      "An arc compares one person to themselves. That is the only comparison this product may make: " +
+        "no cohort, no percentile, and no promise that practice will work (N3).",
+      "It says where the memory lives. This is the strongest claim to remembering anywhere in the " +
+        "product, and it is one browser's localStorage.",
+    ],
+  },
+  {
     key: "across",
-    title: "4. Combined view — “ACROSS YOUR SESSIONS”",
+    title: "Combined view — “ACROSS YOUR SESSIONS”",
     where:
       "Renders on all three result screens, but ONLY when two or more instruments have been run on this " +
       "device AND the result on screen is this device's own (never on somebody else's shared link).",
-    already: "Everything in sections 1–3, plus each instrument's own measurement copy.",
+    already: "Every instrument section above, plus each instrument's own measurement copy.",
     job: "Say the three things that are only true once more than one instrument has run: the dossier, the replication, the coverage.",
     rules: [
       "Never ranks one family against another — no “strength”, “blind spot”, “sharpest”, “best”, “worst”.",
       "No leaderboard, streak, XP, points, rank or badge (the anti-clone clause).",
       "A band that predicted nothing must not earn agreement by staying silent.",
       "The roster lists thresholds in different units side by side — a LIST, never a ranking.",
-      "No sentence here may also appear in sections 1–3; a test enforces it.",
+      "No sentence here may also appear in an instrument section above; a test enforces it.",
     ],
   },
   {
     key: "expert",
-    title: "5. The expert panel — “THE RAW RECORD”",
+    title: "The expert panel — “THE RAW RECORD”",
     where:
-      "A collapsed panel on all five result surfaces, open only when the result on screen is the " +
+      "A collapsed panel under every result that this device stored, open only when the result on screen is the " +
       "one this device recorded — on a link you share with someone else it renders nothing at all.",
     already:
-      "Everything in sections 1–4. This panel repeats none of it: it shows the numbers underneath " +
+      "Every section above. This panel repeats none of it: it shows the numbers underneath " +
       "— per-family and per-rung tallies, every trial with the answer key, the staircase's rung " +
       "visits and measured limits, the calibration curve, the prestige test's per-clip ratings.",
     job: "Label measurements and state limits. Never judge them — this is the verdict-free surface.",
@@ -180,14 +242,14 @@ lines.push(
 lines.push("");
 
 let total = 0;
-for (const section of SECTIONS) {
+for (const [index, section] of SECTIONS.entries()) {
   const mine = strings.filter((s) => s.surface.startsWith(`vocabulary/${section.key}/`));
   const unique = [...new Set(mine.map((s) => s.text))].sort();
   total += unique.length;
 
   lines.push("---");
   lines.push("");
-  lines.push(`## ${section.title}`);
+  lines.push(`## ${index + 1}. ${section.title}`);
   lines.push("");
   lines.push(`**Where it renders.** ${section.where}`);
   lines.push("");

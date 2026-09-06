@@ -395,7 +395,27 @@ Quality control was a person listening to each clip and approving it. It was abo
 
 Two blocks. The first is the record's own account; the second is my reading of what happened next, and renders under the inference label. **The distinction between them is the single most consequential thing on this page** — if a rewrite blurs which is which, it breaks the condition the page was approved under.
 
-### 18. `finding-launch-avoidance`
+### 18. `finding-arc-mostly-refuses`
+
+**Kind:** QUOTED — the page presents this as the record speaking
+
+**Cites:** src/engine/arc.ts · docs/analytics/e14-arc-resolution.txt
+
+**Date line on screen (free prose):** 2026-09-02 · broke N3 — nothing the data cannot support
+
+**Second paragraph opens:** “Since then. …”
+
+**LOAD-BEARING — these exact words are verified against the cited file and a test fails if they change:**
+
+- “subtracting two noisy numbers manufactures”
+
+Everything else in the block is the engineer's own connective prose and is free.
+
+```
+Before the retest arc was allowed to tell anyone their ear had moved, the size of change it can resolve was measured: the whole hazard here is that subtracting two noisy numbers manufactures progress. Simulating the same unchanged person through two sessions at the shipped length puts the floor on the pitch ladder at roughly three and a half times — the threshold has to more than halve before the difference can be told from ordinary run-to-run wobble. On the prestige test it is eight points of the scale. The delicacy trials cannot support an arc at all: six of their fifteen pairs would have to change hands. Most retests are therefore told, in as many words, that nothing changed the instrument could hear. That refusal is the ordinary output of this feature rather than its edge case, and the sentence names the floor in the reader's own units so it reads as a fact about the instrument rather than a verdict on them. The only thing that lowers the floor is returning: pooled across four sittings it falls to about two and a half times, which is the entire reward this product offers for coming back.
+```
+
+### 19. `finding-launch-avoidance`
 
 **Kind:** QUOTED — the page presents this as the record speaking
 
@@ -418,7 +438,7 @@ Everything else in the block is the engineer's own connective prose and is free.
 A ruling had already been made: post the flagship instrument on its own, within one to two weeks, and do not let the second instrument gate it. The second instrument got built instead. The plan written that day says it without softening: Delicacy got built instead. That is the N2 launch-avoidance pattern, on the record. And directly above it, the diagnosis: Nothing is blocked by engineering. Everything is blocked by the launch not having happened. As of the revision date at the foot of this page, it still has not been posted. The product has had 29 real visitors, ever. There are Zero real responses, which is why every psychometric figure in the Lab is generated from a known model and badged as simulated — the dataset that was named as the project's proprietary asset does not exist. Building is the part that feels like progress, and it is the part that was never the constraint.
 ```
 
-### 19. `finding-avoidance-then-ratified`
+### 20. `finding-avoidance-then-ratified`
 
 **Kind:** INFERRED — renders under a visible “Inference — the engineer’s reading, not a recorded ruling” label
 
@@ -441,4 +461,4 @@ What happened next is the part that is harder to read, and this reading is mine 
 
 ---
 
-**19 numbered blocks.** Regenerate with `node scripts/export-method-deck.mjs > docs/copy-deck-method.md` after any ledger change.
+**20 numbered blocks.** Regenerate with `node scripts/export-method-deck.mjs > docs/copy-deck-method.md` after any ledger change.
