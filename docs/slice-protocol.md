@@ -42,9 +42,14 @@ failure whose mechanism is that the writing went unread.
 
 So it is enforced by `.claude/hooks/slice-latch.py` rather than by memory:
 
-- A `git commit` **arms a latch**. File-modifying tools are then denied until the PM replies — Edit,
+- **HEAD moving arms a latch.** File-modifying tools are then denied until the PM replies — Edit,
   Write, a Bash heredoc, `git add`, a second commit. Read-only verification and `git push` still
   pass, because proving and pushing the slice you just committed is not advancing to the next one.
+  It watches HEAD rather than the command text, and that is not a detail: the first version armed
+  when a command *contained* the words naming a commit, so a test script holding those words in a
+  list armed it with nothing committed — and then denied the edit that would have fixed it, because
+  the fix's own explanation has to name the phrase it triggers on. A guard that matches text cannot
+  be repaired through itself.
 - The PM replying **clears it**. That is the stop in §2, enforced instead of remembered.
 - The **auto-advance grant in §3 is honoured**: a message granting it disarms the latch until the
   next message.
