@@ -28,3 +28,31 @@ against sunk work — where it is weakest. The loop now runs per SLICE.
 Self-review honesty is inversely proportional to the amount of sunk work under review (N2's
 mechanism applied to code review). Small slices keep the hostile reviewer hostile. The overhead is
 the point: it buys review quality with round-trips, which the PM has explicitly chosen to spend.
+
+## Machine enforcement (owner-approved 2026-09-06, PM ruling RT-O5 a — appended, nothing above is amended)
+
+This protocol was broken on 2026-09-05 (session E18): five slices shipped in one reply with the
+red-team batched at the end, which is the exact failure the document was written to kill.
+
+**The cause was not judgment. It was that this file is optional to read.** CLAUDE.md's RT-1a loop is
+in the system prompt for free and says the 7-step loop runs per *task*; the amendment making it run
+per *slice* lives here, in a file the session was told to read fourth and never opened. A rule that
+can be skipped will eventually be skipped, and writing it down in one more place cannot fix a
+failure whose mechanism is that the writing went unread.
+
+So it is enforced by `.claude/hooks/slice-latch.py` rather than by memory:
+
+- A `git commit` **arms a latch**. File-modifying tools are then denied until the PM replies — Edit,
+  Write, a Bash heredoc, `git add`, a second commit. Read-only verification and `git push` still
+  pass, because proving and pushing the slice you just committed is not advancing to the next one.
+- The PM replying **clears it**. That is the stop in §2, enforced instead of remembered.
+- The **auto-advance grant in §3 is honoured**: a message granting it disarms the latch until the
+  next message.
+- Every message puts §Session rhythm — **read from this file, never a copy** — into the session's
+  context, so the rule cannot go unread again. If this file moves or its heading changes, the hook
+  says loudly that the guard is degraded rather than quietly quoting nothing.
+
+The hook is untracked (`.claude/` is not published) and wired in `.claude/settings.local.json`,
+which is gitignored. **It therefore protects this machine only.** A session on another machine has
+this paragraph and nothing else — which is the situation that produced the violation, so treat the
+paragraph as the weaker half.
