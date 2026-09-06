@@ -102,8 +102,14 @@ describe("the copy deck covers every surface the product renders", () => {
    * is enough to catch a file that predates a surface's copy — which is the
    * failure that actually happened.
    */
-  it("the committed deck contains sentences the product renders now", () => {
-    const deck = readFileSync("docs/copy-deck-vocabulary.md", "utf8");
+  it.each([
+    ["docs/copy-deck-vocabulary.md", "node scripts/export-copy-deck.mjs > docs/copy-deck-vocabulary.md"],
+    // THE ASSEMBLED DOCUMENT IS THE READING SURFACE (E18/S9), so it can go
+    // stale in exactly the same way and for the same cost. Both are checked,
+    // and one command regenerates both.
+    ["docs/copy-deck.md", "node scripts/export-copy-decks.mjs"],
+  ])("%s contains sentences the product renders now", (file, command) => {
+    const deck = readFileSync(file, "utf8");
     const bySurface = new Map<string, string[]>();
     for (const entry of vocabularyStrings()) {
       if (!entry.surface.startsWith(PREFIX)) continue;
@@ -126,8 +132,7 @@ describe("the copy deck covers every surface the product renders", () => {
     }
     expect(
       absent,
-      "docs/copy-deck-vocabulary.md is stale — these surfaces render sentences it does not contain. " +
-        "Regenerate it: node scripts/export-copy-deck.mjs > docs/copy-deck-vocabulary.md",
+      file + " is stale — these surfaces render sentences it does not contain. Regenerate it: " + command,
     ).toEqual([]);
   });
 });
