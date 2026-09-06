@@ -44,6 +44,9 @@ export const EXPERT_SECTIONS = {
   biasSession: "The session",
   biasItems: "Every clip",
   biasControls: "Controls · rated twice, labelled neither time",
+  spreadSession: "The session",
+  spreadClips: "Every clip, in the order you heard them",
+  spreadPairs: "Every pair that counted · by the numbers above",
 } as const;
 
 export const EXPERT_COLUMNS = {
@@ -71,6 +74,13 @@ export const EXPERT_COLUMNS = {
   of: "Of",
   delivered: "Delivered",
   versusClaim: "Versus claim",
+  work: "Work",
+  yourRating: "Your rating",
+  counted: "In the result",
+  pair: "Pair",
+  inHisRanking: "In his ranking",
+  positionsApart: "Positions apart",
+  yourGap: "Your gap",
 } as const;
 
 export const EXPERT_STATS = {
@@ -86,6 +96,13 @@ export const EXPERT_STATS = {
   movedWithLabel: "Moved with label",
   atScaleEdge: "At the scale edge",
   swappedOnly: "Swapped items only",
+  clipsCounted: "Clips counted",
+  clipsSetAside: "Set aside",
+  widelySpacedPairs: "Widely-spaced pairs",
+  closelySpacedPairs: "Closely-spaced pairs",
+  meanGapWide: "Mean gap · widely spaced",
+  meanGapClose: "Mean gap · closely spaced",
+  atRandom: "Rating at random",
 } as const;
 
 /** Cell values that are words rather than numbers. */
@@ -98,6 +115,10 @@ export const EXPERT_VALUES = {
   trueLabel: "true",
   fictionalLabel: "fictional",
   none: "—",
+  setAside: "set aside",
+  countedIn: "counted",
+  farSpacing: "far apart",
+  closeSpacing: "bracketed",
 } as const;
 
 /**
@@ -119,6 +140,35 @@ export const EXPERT_NOTES = {
     "The two percentages agree because the pool carries as many acclaimed labels as dismissive " +
     "ones, and a balanced set cancels re-listen drift outright. The correction is shown anyway: " +
     "it is what would move if that balance ever changed.",
+  /**
+   * WHY THE PAIRS ARE HERE WHEN THE MEANS ARE NOT. Shown only on a refused
+   * reading, where the panel is otherwise the only place a person can see what
+   * happened at all. It has to be clear that the observations are theirs and
+   * the average is the thing being withheld — not the other way round.
+   */
+  spreadNoMean:
+    "The pairs below are what you did; the averages are missing because too few pairs survived " +
+    "for either one to mean anything. Nothing has been hidden from you — the figure was never " +
+    "worked out.",
+  /**
+   * THE DISTANCE COLUMN, AND WHY IT IS THE ONLY THING THE RANKING CONTRIBUTES.
+   * A reader looking at a table headed "In his ranking" will assume the order
+   * is in here somewhere. It is not, and this says so where they are looking.
+   */
+  spreadDistanceOnly:
+    "The distance column is every single thing taken from the critic's list. Which of two works " +
+    "he put higher was never read in, so no table here can be sorted into his order and no " +
+    "agreement figure can be worked out from this — by us, or by you, or later.",
+  /**
+   * A LIMIT THE PANEL ITSELF CREATES. Naming the six works is the useful half of
+   * this view and it costs something real: the instrument only works on music
+   * that is new to you, so a reader who now knows the list can never sit it
+   * blind again. Said here rather than left for them to discover.
+   */
+  spreadNowKnown:
+    "Reading this list is the end of your blind sitting. These six were rated before you knew " +
+    "what they were, and they cannot be again — a second attempt at this instrument would be " +
+    "rating music you have now been told about.",
 } as const;
 
 /** The Brier line, which needs both numbers and therefore cannot be a constant. */

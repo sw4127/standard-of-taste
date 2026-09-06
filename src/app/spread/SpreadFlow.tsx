@@ -39,6 +39,7 @@ import { track } from "@/lib/analytics";
 import Link from "next/link";
 import ClipPlayer from "../bias/ClipPlayer";
 import OtherMachines from "@/components/OtherMachines";
+import ExpertPanel from "@/components/ExpertPanel";
 import { SPREAD_PALETTE } from "@/content/instrument-accents";
 
 import { BIAS_SCALE_MAX } from "@/engine/bias";
@@ -315,6 +316,25 @@ export default function SpreadFlow() {
           <p key={line.slice(0, 32)}>{line}</p>
         ))}
       </div>
+
+      {/*
+        THE RAW RECORD, UNDER THE READING AND ABOVE THE EXITS (E18/S3). It reads
+        the store rather than this component's state, and renders only when what
+        it finds there is the sitting on screen — the same ownership rule the
+        other three use, through the same function. Here that gate is nearly
+        always satisfied, because there is no share link that could put somebody
+        else's sitting on this page; it costs nothing to keep the rule uniform,
+        and a share link is the kind of thing that gets added later.
+      */}
+      <ExpertPanel
+        accent={accent}
+        instrument={{ kind: "spread" }}
+        own={{
+          kind: "spread",
+          ratings: encodeSpreadRatings(ratings),
+          recognised: encodeSpreadRecognised(recognised),
+        }}
+      />
 
       <div className="mt-10">
         <OtherMachines from="spread" />

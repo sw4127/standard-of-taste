@@ -336,6 +336,31 @@ describe("the ranking test's raw record cannot leak the critic's order", () => {
     expect(e.clips).toHaveLength(SPREAD_POOL.length);
   });
 
+  /**
+   * THE PANEL RESOLVES AN ID TO A WORK TITLE, AND ITS LOOKUP FALLS BACK TO THE
+   * ID. That fallback is correct defensive code and a silent failure if it ever
+   * fires: a reader would see "sp3" in a table headed Work and have no idea
+   * anything was wrong. The condition for it never firing is that every id in
+   * the payload names a pool item, which is checked here rather than trusted —
+   * the payload's ids come from the pool, but through two different maps.
+   */
+  it("names only clips the pool can resolve to a work", () => {
+    const known = new Set(SPREAD_POOL.map((i) => i.id));
+    expect(known.size).toBe(6);
+    for (const r of [SPREAD, SPREAD_REFUSED]) {
+      const e = spreadExpert(r);
+      expect(e.clips.length).toBeGreaterThan(0);
+      for (const c of e.clips) expect(known.has(c.id), c.id).toBe(true);
+      expect(e.pairs.length).toBeGreaterThan(0);
+      for (const p of e.pairs) {
+        expect(known.has(p.a), p.a).toBe(true);
+        expect(known.has(p.b), p.b).toBe(true);
+      }
+      // And every pool item has a title to resolve TO.
+      for (const item of SPREAD_POOL) expect(item.work.length).toBeGreaterThan(3);
+    }
+  });
+
   it("prints a ranking-test payload for reading", () => {
     for (const [name, r] of [["FULL", SPREAD], ["REFUSED", SPREAD_REFUSED]] as const) {
       const e = spreadExpert(r);

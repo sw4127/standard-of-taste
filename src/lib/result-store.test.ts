@@ -12,6 +12,7 @@ import {
 import * as resultStore from "./result-store";
 import { recallBias, recallDelicacy, recallSpread, recallThreshold, POOL_VERSIONS } from "./result-recall";
 import { SPREAD_POOL } from "@/content/spread/ranking";
+import { isOwnResult } from "./own-result";
 import {
   computeSpreadResult,
   encodeSpreadRatings,
@@ -601,6 +602,47 @@ describe("storage that is absent or hostile", () => {
     expect(() => recordResult("bias", 7, { kind: "delicacy", picks: "x" }, 1)).not.toThrow();
     expect(() => forgetResult("bias")).not.toThrow();
     expect(() => recallBias()).not.toThrow();
+  });
+});
+
+/**
+ * THE SEAM THE PANEL HANGS ON (E18/S3).
+ *
+ * `ExpertPanel` renders nothing unless the result on screen is the one this
+ * device recorded, and it decides that by comparing the raw payload it is given
+ * against the raw payload in the store. On the Ranking Test's reveal those two
+ * are built by two different code paths from the same state — the write in
+ * `remember()` and the `own` prop on the mount — so if their encodings ever
+ * drifted the panel would silently render NOTHING and look like a styling bug.
+ *
+ * There is no DOM in this suite, so the component cannot be driven. This tests
+ * the comparison itself, which is the part that can be wrong.
+ */
+describe("a ranking-test sitting recognises itself", () => {
+  it("matches the payload the reveal builds from the same answers", () => {
+    const { payload } = spreadSession([9, 2, 7, 1, 8, 3], ["sp1"]);
+    recordResult("spread", POOL_VERSIONS.spread, payload, 5000);
+    // Re-encoded from the state a reveal holds, not the object that was stored.
+    const ratings = Object.fromEntries(SPREAD_POOL.map((item, i) => [item.id, [9, 2, 7, 1, 8, 3][i]]));
+    expect(
+      isOwnResult({
+        kind: "spread",
+        ratings: encodeSpreadRatings(ratings),
+        recognised: encodeSpreadRecognised(["sp1"]),
+      }),
+    ).toBe(true);
+  });
+
+  it("does not recognise a different sitting, or one with different exclusions", () => {
+    const { payload } = spreadSession([9, 2, 7, 1, 8, 3], ["sp1"]);
+    recordResult("spread", POOL_VERSIONS.spread, payload, 5000);
+    expect(isOwnResult({ kind: "spread", ratings: "1,1,1,1,1,1", recognised: "100000" })).toBe(false);
+    // Same ratings, different recognition answers: a different reading entirely.
+    expect(isOwnResult({ kind: "spread", ratings: "9,2,7,1,8,3", recognised: "000000" })).toBe(false);
+  });
+
+  it("recognises nothing when the slot is empty", () => {
+    expect(isOwnResult({ kind: "spread", ratings: "9,2,7,1,8,3", recognised: "000000" })).toBe(false);
   });
 });
 

@@ -700,17 +700,18 @@ describe("the project page's roadmap agrees with the code", () => {
   const PLANNED = 'tag p">planned';
 
   /**
-   * WHY THIS ASKS "ANY" AND NOT "EVERY" (E17/S5).
+   * BACK TO "EVERY" (E18/S3), WHICH IS WHAT IT ASKED BEFORE E17.
    *
-   * It read `.every(...)`, which was a fair proxy for "the expert view is
-   * built" while every machine had one. A fourth machine that deliberately
-   * stores nothing made the two questions come apart, and the proxy started
-   * demanding the roadmap mark a shipped feature "planned" — which would have
-   * been a worse falsehood than the one it was catching. The README's separate
-   * guard still holds the word "every" to the code; this one asks whether the
-   * feature exists at all, which is what a roadmap row means.
+   * E17 weakened this to `.some(...)` because a fourth machine had shipped
+   * without a panel, and under `.every` the guard demanded the roadmap mark a
+   * shipped feature "planned" — a worse falsehood than the one it was catching.
+   * That was the right call at the time and the wrong thing to leave standing:
+   * the weakened form goes green on a roadmap row claiming a universal feature
+   * that three machines out of five have. The fourth machine has its panel now,
+   * so the stronger question is answerable again, and the README's separate
+   * guard holds the same word to the same code.
    */
-  const someLiveMachineHasAPanel = MACHINES.filter((m) => m.live).some((m) => {
+  const everyLiveMachineHasAPanel = MACHINES.filter((m) => m.live).every((m) => {
     const dir = `src/app${m.href}`;
     if (!existsSync(dir)) return false;
     return readdirSync(dir, { recursive: true, encoding: "utf8" }).some(
@@ -744,7 +745,7 @@ describe("the project page's roadmap agrees with the code", () => {
   const ROWS: Array<{ label: string; shipped: boolean }> = [
     { label: "Four instruments", shipped: MACHINES.filter((m) => m.live).length >= 4 },
     { label: "Plain-language readout", shipped: vocabularyStrings().length > 0 },
-    { label: "Expert view", shipped: someLiveMachineHasAPanel },
+    { label: "Expert view", shipped: everyLiveMachineHasAPanel },
     {
       label: "Calibration surfaced",
       shipped: EXPERT_SECTIONS.delicacyCalibration.length > 0,

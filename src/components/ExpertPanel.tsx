@@ -38,11 +38,18 @@
 import { useMemo, useSyncExternalStore } from "react";
 import { subscribeResults, type StoredPayload } from "@/lib/result-store";
 import { isOwnResult } from "@/lib/own-result";
-import { recallBias, recallDelicacy, recallThreshold } from "@/lib/result-recall";
-import { biasExpert, delicacyExpert, thresholdExpert } from "@/engine/expert";
-import type { BiasExpert, CalibrationCurve, DelicacyExpert, ThresholdExpert } from "@/engine/expert";
+import { recallBias, recallDelicacy, recallSpread, recallThreshold } from "@/lib/result-recall";
+import { biasExpert, delicacyExpert, spreadExpert, thresholdExpert } from "@/engine/expert";
+import type {
+  BiasExpert,
+  CalibrationCurve,
+  DelicacyExpert,
+  SpreadExpert,
+  ThresholdExpert,
+} from "@/engine/expert";
 import { quantity, shortUnit } from "@/content/staircase/copy";
 import { FLAW_LABELS } from "@/content/delicacy/items";
+import { SPREAD_POOL } from "@/content/spread/ranking";
 import {
   EXPERT_COLUMNS as COL,
   EXPERT_NOTES as NOTE,
@@ -56,6 +63,7 @@ import {
 type Instrument =
   | { kind: "delicacy" }
   | { kind: "bias" }
+  | { kind: "spread" }
   | { kind: "threshold"; slug: string };
 
 function signature(): string {
@@ -348,6 +356,88 @@ function BiasBody({ b }: { b: BiasExpert }) {
   );
 }
 
+/**
+ * THE RANKING TEST'S BODY (E18/S3).
+ *
+ * IT IS THE FIRST AND ONLY PLACE THE SIX WORKS ARE NAMED. The sitting is blind
+ * by construction and the reveal names nothing, so a person finishes it having
+ * heard six pieces of music and been told what none of them were. That is the
+ * gap this closes, and it is why the clip table leads with the work rather than
+ * the clip id the way the prestige table does.
+ *
+ * NAMING THEM COSTS SOMETHING, AND THE COST IS STATED ON THE PANEL. This
+ * instrument only works on music that is new to the listener, so a reader who
+ * now knows the list cannot sit it blind again. `spreadNowKnown` says so here
+ * rather than leaving them to work it out on a second attempt that refuses.
+ *
+ * THE TITLES ARE LOOKED UP HERE, NOT CARRIED IN THE PAYLOAD. `expert.ts` may
+ * hold ids, enums and numbers only — a rule its own test enforces against the
+ * serialised payload, and one "Piano Sonata No. 23" would break outright.
+ *
+ * A REFUSED READING SHOWS THE PAIRS AND SAYS WHY THERE IS NO AVERAGE. The means
+ * arrive as null from the engine and there is no branch here that could print
+ * one; what the branch decides is whether to explain their absence.
+ */
+function SpreadBody({ s }: { s: SpreadExpert }) {
+  const work = (id: string) => SPREAD_POOL.find((item) => item.id === id)?.work ?? id;
+  const gap = (v: number | null) => (v === null ? VAL.tooFewToSay : v.toFixed(2));
+  /*
+   * PAIRS ARE LABELLED BY THE CLIP NUMBER FROM THE TABLE ABOVE, NOT BY TITLE.
+   * Spelled out, one pair cell reads "Eroica Variations, Op. 35 · Piano Sonata
+   * No. 29, 'Hammerklavier'" — 63 characters in a nowrap monospace cell, wider
+   * on its own than a 375px phone, with three more columns after it. The table
+   * scrolls inside its own box so nothing breaks, but a reader would be dragging
+   * two screens sideways to see a number. The clip table directly above numbers
+   * all six, so the digits are a lookup rather than a loss.
+   */
+  const number = (id: string) => String(s.clips.findIndex((c) => c.id === id) + 1);
+
+  return (
+    <>
+      <Section title={SEC.spreadSession}>
+        <Stats
+          items={[
+            [STAT.clipsCounted, String(s.ratedCount)],
+            [STAT.clipsSetAside, String(s.setAsideCount)],
+            [STAT.widelySpacedPairs, String(s.farCount)],
+            [STAT.closelySpacedPairs, String(s.closeCount)],
+            [STAT.meanGapWide, gap(s.farMeanGap)],
+            [STAT.meanGapClose, gap(s.closeMeanGap)],
+            [STAT.atRandom, s.ifIndifferent.toFixed(2)],
+          ]}
+        />
+        {s.refusal !== null ? (
+          <p className="mt-2 text-[0.65rem] leading-relaxed text-muted">{NOTE.spreadNoMean}</p>
+        ) : null}
+      </Section>
+      <Section title={SEC.spreadClips}>
+        <Table
+          head={[COL.index, COL.work, COL.yourRating, COL.counted]}
+          rows={s.clips.map((c, i) => [
+            String(i + 1),
+            work(c.id),
+            c.rating === null ? VAL.none : String(c.rating),
+            c.setAside ? VAL.setAside : VAL.countedIn,
+          ])}
+        />
+        <p className="mt-2 text-[0.65rem] leading-relaxed text-muted">{NOTE.spreadNowKnown}</p>
+      </Section>
+      <Section title={SEC.spreadPairs}>
+        <Table
+          head={[COL.pair, COL.inHisRanking, COL.positionsApart, COL.yourGap]}
+          rows={s.pairs.map((p) => [
+            `${number(p.a)} · ${number(p.b)}`,
+            p.kind === "far" ? VAL.farSpacing : VAL.closeSpacing,
+            String(p.distance),
+            String(p.gap),
+          ])}
+        />
+        <p className="mt-2 text-[0.65rem] leading-relaxed text-muted">{NOTE.spreadDistanceOnly}</p>
+      </Section>
+    </>
+  );
+}
+
 /* ------------------------------------------------------------------ *
  * The panel
  * ------------------------------------------------------------------ */
@@ -372,6 +462,10 @@ export default function ExpertPanel({
     if (instrument.kind === "bias") {
       const r = recallBias();
       return r ? <BiasBody b={biasExpert(r.result)} /> : null;
+    }
+    if (instrument.kind === "spread") {
+      const r = recallSpread();
+      return r ? <SpreadBody s={spreadExpert(r.result)} /> : null;
     }
     const r = recallThreshold(instrument.slug);
     return r ? <ThresholdBody t={thresholdExpert(r.result)} /> : null;

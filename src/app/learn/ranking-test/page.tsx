@@ -24,11 +24,12 @@ export const metadata = explainerMetadata(page);
  * this page cannot drift away from the instrument the way the pages describing
  * the pool's size did before RT-136.
  *
- * THE EXPERT PANEL IS ABSENT AND THE PAGE SAYS SO — but not for the reason it
- * gave when it shipped. It said the panel reads a store RT-G would create and
- * that RT-G was unruled. RT-G had been ruled (b) on 2026-09-01 and the store
- * had been built; the sentence was a false claim on a published page. E18/S2
- * gave the instrument its store, so what is left is the panel itself.
+ * THE EXPERT PANEL EXISTS NOW (E18/S3). This page shipped saying it did not,
+ * because the panel reads a store RT-G would create and RT-G was unruled — a
+ * sentence that was false when it was written, RT-G having been ruled (b) on
+ * 2026-09-01 with the store built four days earlier. S2 gave the instrument the
+ * store and S3 the panel, so the paragraph describes what is under the result
+ * rather than what is missing from it.
  */
 export default function Page() {
   return (
@@ -95,8 +96,10 @@ export default function Page() {
       <p>
         Your answers stay in the browser you gave them in, like every other result here — the
         ratings and which clips you said you already knew, never the two figures, which are worked
-        out again each time they are read. There is no expert panel underneath this result yet,
-        unlike the other three; it is being built.
+        out again each time they are read. Underneath the result is the raw record: what you gave
+        each of the six, which works they actually were, and the gap you left on every pair that
+        counted. It is the only place the six are named, and reading it is the end of your blind
+        sitting.
       </p>
     </Explainer>
   );

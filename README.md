@@ -21,6 +21,7 @@ That's the project. Each criterion becomes a **performance task where you can be
 | Delicacy, measured | **The Threshold Test** — an adaptive staircase that hunts the smallest damage of one family you can still reliably hear, and reports it in physical units: cents of detune, milliseconds of drift, kbps. Not a score. | **live** |
 | Good sense | **Confidence calibration** — every answer carries a claimed confidence; scored by Brier score and over/under-confidence gap. | computed |
 | Comparison | **Degrees used** — how many of the eleven points on the rating scale you landed on, and how many pairs you ordered one way blind and the other way round with the names attached. Computed from the Prestige Test's own ratings; no new clip, no new tap. | **live** |
+| Comparison, heard | **The Ranking Test** — six works from a published critic's ranked twenty-one, forty seconds each, rated blind. It reports how far apart your ratings fell on the pairs he separated beside the same figure on the pairs he bracketed together. Agreement is never scored and cannot be computed: only the distance between his positions was ever imported, never their order. | **live** |
 | Practice | **The retest arc** — a second sitting on the same device is compared against the first, against a noise floor measured beforehand, so a change smaller than the instrument's own wobble is reported as no change. | **live** |
 
 Every live instrument runs on **public-domain and Creative Commons audio**, damaged by our own DSP. No licensed music, no copyrighted audio, no album art.
@@ -39,7 +40,7 @@ And from the Prestige Test:
 
 It also refuses. Where a session cannot support a per-family split, it says so and shows the arithmetic instead of inventing a breakdown — a sentence about noise is worse than no sentence.
 
-**The expert view.** The first three instruments carry a verdict-free panel underneath the result: the session's own numbers and every trial inside it, with no interpretation attached. The Ranking Test keeps its answers in the browser now too, and its panel is next.
+**The expert view.** Every result carries a verdict-free panel underneath it: the session's own numbers and every trial, pair or rung inside it, with no interpretation attached. It is read from the browser that recorded the sitting, so a shared link shows nobody else this.
 
 > Every number behind the result, and the answers. No verdict, no interpretation — read from this browser, so a link you share shows nobody else this.
 
