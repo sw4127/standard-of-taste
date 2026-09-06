@@ -26,7 +26,21 @@ import { writeFileSync, unlinkSync } from "node:fs";
 const script = `
 import { BIAS_CLIPS, BIAS_POOL_VERSION } from "@/content/bias/items";
 import { resultTitleFragment } from "@/content/bias/copy";
-import { FLAW_LINE_PREFIX, flawLineText, flawTimesLabel } from "@/content/delicacy/copy";
+import {
+  CALIBRATION_PHASE_LINE,
+  FLAW_LINE_PREFIX,
+  PROVISIONAL_FOOTNOTE,
+  chanceCall,
+  delicacyResultSummary,
+  detectionBody,
+  detectionTitle,
+  flawLineText,
+  flawTimesLabel,
+  minToClearChance,
+  shareText,
+} from "@/content/delicacy/copy";
+import { delicacyResults } from "@/content/vocabulary/fixtures";
+import { detectionBand } from "@/engine/delicacy";
 import { flawFamilies, FLAWS_INTRO, FLAWS_LIMITS, FLAWS_INVITE } from "@/content/flaw-families";
 import { landingLead, landingHint, SECONDARY_DOORS } from "@/content/landing";
 import { MACHINES } from "@/components/OtherMachines";
@@ -55,6 +69,28 @@ describe("export", () => {
         symptom: f.symptom,
         mechanism: f.mechanism,
       })),
+      /*
+       * THE ONE BATCH THAT HAS BEEN THROUGH A WRITER (E18/S12, RT-Q5 a).
+       * Cowork returned it under RT-107a and it shipped 2026-08-22 -- and it
+       * was enumerated by nothing, so the decks described the unreviewed copy
+       * and omitted the reviewed copy. Rendered across the branches a reader
+       * can actually reach.
+       */
+      readout: {
+        phase: CALIBRATION_PHASE_LINE,
+        footnote: PROVISIONAL_FOOTNOTE,
+        chance: chanceCall(15),
+        need: minToClearChance(15),
+        bands: [15, 13, 11, 8, 4, 0].map((n) => {
+          const band = detectionBand(n, 15);
+          return { n, title: detectionTitle(band), body: detectionBody(band) };
+        }),
+        summaries: Object.entries(delicacyResults()).map(([name, r]) => [
+          name,
+          delicacyResultSummary(r),
+        ]),
+        shares: [13, 8].map((n) => [n, shareText(n, 15)]),
+      },
       flawsIntro: FLAWS_INTRO,
       flawsLimits: FLAWS_LIMITS,
       flawsInvite: FLAWS_INVITE,
@@ -400,6 +436,74 @@ for (const f of d.delicacyFaq) {
   w("```");
   w(`Q: ${f.q}`);
   w(`A: ${f.a}`);
+  w("```");
+  w();
+}
+w("---");
+w();
+w("## 6. The Delicacy detection readout — THE ONE BATCH A WRITER HAS ALREADY SEEN");
+w();
+w(
+  "**Where it renders.** The Delicacy Trials result screen and the flow's reveal: the heading, " +
+    "the body beneath it, the provisional footnote, and the share line.",
+);
+w();
+w(
+  "**This section is not like the others.** Cowork rewrote this copy under PM ruling RT-107a and " +
+    "it shipped on 2026-08-22, wired verbatim but for one factual fix at the 12-of-15 boundary. " +
+    "The brief is at `docs/copy-brief-delicacy-readout.md`. It is printed here because it was " +
+    "enumerated by NO deck until E18/S12 — so the decks described every unreviewed surface and " +
+    "omitted the one reviewed one, and a later edit to it would have gone unnoticed.",
+);
+w();
+w("**Rules this copy must keep:**");
+w();
+w(
+  "- The one thing a reader must leave understanding: a two-way choice hands out half the score " +
+    "for free. Correct and detected are different percentages and confusing them is the whole " +
+    "problem.",
+);
+w(
+  "- `chance` is a fraction and may be fractional on screen. A coin over fifteen trials averages " +
+    `${d.readout.chance}, and it cannot CALL that — "a coin flip calls 7.5" is nonsense and shipped once.`,
+);
+w("- Report the band, never the point (RT-90a). Six ranked tiers were retired at 30.5% accuracy.");
+w("- Session length is a variable. Never write the number of trials as a word.");
+w(
+  "- No paid tier may be promised anywhere in it. The D4 amendment names this batch's phase line " +
+    "as its first casualty; the live line now refuses the claim outright.",
+);
+w();
+w("**The constants, verbatim:**");
+w();
+w("```");
+w(`phase line: ${d.readout.phase}`);
+w("```");
+w();
+w("```");
+w(`provisional footnote (the whole assembled paragraph): ${d.readout.footnote}`);
+w("```");
+w();
+w(`**The band, at every branch a reader can reach** — ${d.readout.need} of 15 is the smallest score that clears chance.`);
+w();
+for (const b of d.readout.bands) {
+  w("```");
+  w(`${b.n} of 15 — ${b.title}`);
+  w(b.body);
+  w("```");
+  w();
+}
+w("**The summary line, and the share line:**");
+w();
+for (const [name, text] of d.readout.summaries) {
+  w("```");
+  w(`${name}: ${text}`);
+  w("```");
+  w();
+}
+for (const [score, text] of d.readout.shares) {
+  w("```");
+  w(`share at ${score}/15: ${text}`);
   w("```");
   w();
 }

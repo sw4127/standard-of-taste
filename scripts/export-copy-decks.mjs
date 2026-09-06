@@ -92,6 +92,56 @@ const DECKS = [
  * Found by counting what the predicate had actually matched instead of trusting
  * the number it produced.
  */
+/** Short, stable part codes for the sentence ids. */
+const PART_CODES = ["VOC", "INS", "PAGE", "MET"];
+
+/**
+ * A SURFACE HEADING BECOMES A SLUG FOR THE ID.
+ *
+ * Derived from the heading rather than typed, so a new surface gets an id
+ * without anyone maintaining a table. Leading numbers go -- they renumber when a
+ * section is inserted and an id that moves is not an id.
+ */
+function slugOf(heading) {
+  let text = heading.split("`").join(" ").split("/").join(" ");
+  const cut = text.indexOf("—");
+  if (cut > 0) text = text.slice(0, cut);
+  const words = [];
+  for (const word of text.split(" ")) {
+    let clean = "";
+    for (const ch of word.toUpperCase()) {
+      if ((ch >= "A" && ch <= "Z") || (ch >= "0" && ch <= "9")) clean += ch;
+    }
+    if (clean.length === 0) continue;
+    if (clean.length < 3 && words.length === 0) continue;
+    if (["THE", "AND", "FOR", "ITS", "A"].indexOf(clean) !== -1) continue;
+    words.push(clean);
+    if (words.length === 2) break;
+  }
+  return words.join("-") || "X";
+}
+
+/**
+ * CAN THIS SURFACE'S SENTENCES BE REWRITTEN FREELY?
+ *
+ * Three states, and the middle one is the reason this exists at all. A writer
+ * handed 235 sentences will edit the clip blurbs, which are not copy: they are
+ * the Prestige Test's INDEPENDENT VARIABLE, and changing one is a pool change
+ * that invalidates every stored response and every share link keyed to the pool
+ * version. The /method blocks carry quoted spans that a test verifies word for
+ * word against the cited document; the prose around them is free and the
+ * quotation is not.
+ *
+ * Said per sentence rather than once per section, because a rule in a preamble
+ * is a rule somebody skims past on their way to the sentences.
+ */
+function lockOf(partCode, heading, sectionText) {
+  if (heading.toLowerCase().indexOf("clip blurbs") !== -1) return "LOCKED";
+  if (heading.toLowerCase().indexOf("already seen") !== -1) return "PASSED";
+  if (partCode === "MET" && sectionText.indexOf("LOAD-BEARING") !== -1) return "PART-LOCKED";
+  return "OPEN";
+}
+
 function reviewable(line, insideFence) {
   const t = line.trim();
   if (t.length < 40) return false;
@@ -101,6 +151,18 @@ function reviewable(line, insideFence) {
 
 const out = [];
 let considered = 0;
+const ids = [];
+
+/**
+ * THE EXAMPLE ID IN THE HEADER IS A TOKEN, REPLACED WITH A REAL ONE.
+ *
+ * It was typed, and it was wrong: the header taught `VOC-SPREAD-04` while the
+ * generator emits `VOC-RANKING-TEST-04`, because the slug comes from the deck's
+ * section HEADING and the section is called The Ranking Test. A document whose
+ * only worked example is an id that does not exist teaches the reader a format
+ * that will not match anything they send back.
+ */
+const EXAMPLE = "{{EXAMPLE_ID}}";
 
 /**
  * PARAGRAPHS THE ASSEMBLED DOCUMENT HAS ALREADY SAID.
@@ -146,6 +208,15 @@ out.push(
 );
 out.push("");
 out.push(
+  "**Every sentence carries an id and a state.** Return edits keyed on the id — " + EXAMPLE +
+    " — and nothing has to be matched by eye. The state says what may be changed: **OPEN** is free " +
+    "within the section rules; **LOCKED** must not be touched at all; **PART-LOCKED** means the " +
+    "prose is free but the quoted words listed in that section must survive verbatim, because a " +
+    "test verifies them against the document they came from; **PASSED** has already been through " +
+    "a writer and is here for context rather than for rewriting.",
+);
+out.push("");
+out.push(
   "**Which of these surfaces has ever been through a writer is in " +
     "`docs/copy-review-ledger.md`.** Read that first: it is the only honest answer to \"what is " +
     "left to do\", and today it says none of them.",
@@ -174,15 +245,48 @@ DECKS.forEach((deck, i) => {
   out.push("*Also written to `" + deck.file + "` by this same command.*");
   out.push("");
 
+  /*
+   * Sections are cut up front so a sentence's lock can depend on what else
+   * is in its section -- a /method block is part-locked because the section
+   * around it carries the quoted spans a test verifies word for word.
+   */
+  const partCode = PART_CODES[i];
+  const sectionText = new Map();
+  {
+    let heading = "";
+    let buffer = [];
+    for (const line of generated.split(NL)) {
+      if (line.startsWith("## ")) {
+        if (heading) sectionText.set(heading, buffer.join(NL));
+        heading = line.slice(3).trim();
+        buffer = [];
+      } else buffer.push(line);
+    }
+    if (heading) sectionText.set(heading, buffer.join(NL));
+  }
+
   const part = [];
   let fenced = false;
+  let slug = "X";
+  let lock = "OPEN";
+  let counter = 0;
   for (const line of generated.split(NL)) {
     if (line.trim().startsWith("```")) fenced = !fenced;
     // The per-deck file's own title; the part heading above replaces it.
     if (line.startsWith("# ")) continue;
     if (said.has(line.trim())) continue;
+    if (line.startsWith("## ")) {
+      const heading = line.slice(3).trim();
+      slug = slugOf(heading);
+      lock = lockOf(partCode, heading, sectionText.get(heading) || "");
+      counter = 0;
+    }
     if (reviewable(line, fenced)) {
       considered += 1;
+      counter += 1;
+      const id = partCode + "-" + slug + "-" + String(counter).padStart(2, "0");
+      ids.push(id);
+      part.push("`" + id + "` · " + lock);
     }
     // Demote the per-deck headings so the assembled document nests correctly.
     part.push(line.startsWith("#") ? "#" + line : line);
@@ -215,13 +319,24 @@ DECKS.forEach((deck, i) => {
 out.push("");
 out.push("---");
 out.push("");
+/*
+ * IDS MUST BE UNIQUE OR THEY ARE NOT IDS. Two surfaces can slug the same way,
+ * and a returned pass keyed on a duplicate would land on the wrong sentence
+ * silently. The generator refuses rather than emitting them.
+ */
+const duplicates = ids.filter((id, at) => ids.indexOf(id) !== at);
+if (duplicates.length > 0) {
+  throw new Error("export-copy-decks: duplicate sentence ids: " + [...new Set(duplicates)].join(", "));
+}
+
 out.push(
-  "**" + considered + " sentences.** Which surfaces have ever been through a writer is in " +
-    "`docs/copy-review-ledger.md`; today, none of them have.",
+  "**" + considered + " sentences, each with an id.** Which surfaces have ever been through a " +
+    "writer is in `docs/copy-review-ledger.md`.",
 );
 out.push("");
 
-writeFileSync("docs/copy-deck.md", out.join(NL) + NL);
+const document = out.join(NL).split(EXAMPLE).join("`" + (ids[0] || "none") + "`");
+writeFileSync("docs/copy-deck.md", document + NL);
 
 /*
  * `--reviewed` STAMPS THE PASS AS DONE, and it is the only thing that moves the

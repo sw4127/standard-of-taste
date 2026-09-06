@@ -327,3 +327,88 @@ describe("the review ledger accounts for every surface", () => {
     expect(readFileSync("scripts/export-copy-decks.mjs", "utf8").includes("copy-deck-reviewed")).toBe(false);
   });
 });
+
+/**
+ * EVERY SENTENCE HAS AN ID AND A STATE (E18/S12, PM ruling RT-Q6 a).
+ *
+ * The deck exists to be handed to Cowork and to have edits handed back. Without
+ * an id per sentence, 235 returned lines have to be matched to their originals
+ * by eye, which is where errors enter. Without a state per sentence, a writer
+ * edits the clip blurbs — which are not copy at all but the Prestige Test's
+ * INDEPENDENT VARIABLE, where a changed word is a pool change that invalidates
+ * every stored response.
+ */
+describe("the deck is commissionable", () => {
+  const deck = readFileSync("docs/copy-deck.md", "utf8");
+  const lines = deck.split(String.fromCharCode(10));
+  const TAG = "` · ";
+
+  const tags = lines
+    .map((line, at) => ({ line, at }))
+    .filter((row) => row.line.startsWith("`") && row.line.indexOf(TAG) !== -1)
+    .map((row) => ({
+      at: row.at,
+      id: row.line.slice(1, row.line.indexOf(TAG)),
+      state: row.line.slice(row.line.indexOf(TAG) + TAG.length).trim(),
+    }));
+
+  it("found tags, so nothing below passes vacuously", () => {
+    expect(tags.length).toBeGreaterThan(200);
+  });
+
+  it("gives every id exactly once", () => {
+    const seen = tags.map((t) => t.id);
+    const duplicates = seen.filter((id, at) => seen.indexOf(id) !== at);
+    expect([...new Set(duplicates)], "two sentences share an id, so a returned edit is ambiguous:").toEqual([]);
+  });
+
+  it("uses only the four declared states", () => {
+    const allowed = ["OPEN", "LOCKED", "PART-LOCKED", "PASSED"];
+    const strange = [...new Set(tags.map((t) => t.state))].filter((s) => allowed.indexOf(s) === -1);
+    expect(strange, "undeclared sentence states:").toEqual([]);
+  });
+
+  it("tags a sentence, not a blank line", () => {
+    const orphans = tags.filter((t) => {
+      let next = t.at + 1;
+      while (next < lines.length && lines[next].trim() === "") next += 1;
+      const target = lines[next] || "";
+      return !target.startsWith(">") && target.trim().length < 40;
+    });
+    expect(orphans.map((t) => t.id), "these ids label nothing:").toEqual([]);
+  });
+
+  /**
+   * THE LOCK THAT MATTERS MOST, CHECKED AGAINST THE POOL RATHER THAN A NUMBER.
+   * Every scored clip blurb must be LOCKED; if the pool grows and a blurb
+   * arrives unlocked, a writer is invited to edit the instrument.
+   */
+  it("locks every clip blurb", () => {
+    const locked = tags.filter((t) => t.id.startsWith("INS-CLIP-BLURBS-"));
+    expect(locked.length).toBeGreaterThan(10);
+    const unlocked = locked.filter((t) => t.state !== "LOCKED");
+    expect(unlocked.map((t) => t.id), "a clip blurb is editable; it is the independent variable:").toEqual([]);
+  });
+
+  it("marks the one passed batch as passed, not as work", () => {
+    const passed = tags.filter((t) => t.state === "PASSED");
+    expect(passed.length).toBeGreaterThan(0);
+    for (const t of passed) expect(t.id.startsWith("INS-DELICACY-DETECTION-"), t.id).toBe(true);
+  });
+
+  /** A quoted /method span is verified word for word by a test elsewhere. */
+  it("part-locks the /method blocks that carry quotations", () => {
+    const method = tags.filter((t) => t.id.startsWith("MET-"));
+    expect(method.length).toBeGreaterThan(10);
+    expect(method.some((t) => t.state === "PART-LOCKED")).toBe(true);
+  });
+
+  /** The worked example in the header must be an id the document contains. */
+  it("cites a real id in its own instructions", () => {
+    const header = deck.slice(0, deck.indexOf("## Contents"));
+    const cited = header.split("Return edits keyed on the id — `")[1];
+    expect(cited, "the header no longer shows a worked example").toBeTruthy();
+    const example = cited.split("`")[0];
+    expect(tags.map((t) => t.id), "the header teaches an id that does not exist").toContain(example);
+  });
+});

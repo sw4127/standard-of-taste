@@ -384,4 +384,84 @@ A: They are machine 02, and they are open. The battery was built after the Prest
 
 ---
 
+## 6. The Delicacy detection readout — THE ONE BATCH A WRITER HAS ALREADY SEEN
+
+**Where it renders.** The Delicacy Trials result screen and the flow's reveal: the heading, the body beneath it, the provisional footnote, and the share line.
+
+**This section is not like the others.** Cowork rewrote this copy under PM ruling RT-107a and it shipped on 2026-08-22, wired verbatim but for one factual fix at the 12-of-15 boundary. The brief is at `docs/copy-brief-delicacy-readout.md`. It is printed here because it was enumerated by NO deck until E18/S12 — so the decks described every unreviewed surface and omitted the one reviewed one, and a later edit to it would have gone unnoticed.
+
+**Rules this copy must keep:**
+
+- The one thing a reader must leave understanding: a two-way choice hands out half the score for free. Correct and detected are different percentages and confusing them is the whole problem.
+- `chance` is a fraction and may be fractional on screen. A coin over fifteen trials averages 7.5, and it cannot CALL that — "a coin flip calls 7.5" is nonsense and shipped once.
+- Report the band, never the point (RT-90a). Six ranked tiers were retired at 30.5% accuracy.
+- Session length is a variable. Never write the number of trials as a word.
+- No paid tier may be promised anywhere in it. The D4 amendment names this batch's phase line as its first casualty; the live line now refuses the claim outright.
+
+**The constants, verbatim:**
+
+```
+phase line: Nothing here costs money, and no paid tier is coming. The training arc will gate on a seven-day gap between retests, because a retake the same day measures your memory, not your ears.
+```
+
+```
+provisional footnote (the whole assembled paragraph): Provisional read — you're early. Nothing here costs money, and no paid tier is coming. The training arc will gate on a seven-day gap between retests, because a retake the same day measures your memory, not your ears. Difficulty labels are authored, not yet norm-calibrated.
+```
+
+**The band, at every branch a reader can reach** — 12 of 15 is the smallest score that clears chance.
+
+```
+15 of 15 — 15 of 15. Now subtract the guessing.
+A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 15 — 7.5 beyond what that generosity covers, and past the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 59% and 100%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+```
+
+```
+13 of 15 — 13 of 15. Now subtract the guessing.
+A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 13 — 5.5 beyond what that generosity covers, and past the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 24% and 93%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
+```
+
+```
+11 of 15 — 11 of 15. Now subtract the guessing.
+A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 11 — 3.5 beyond what that generosity covers, and 3.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 78% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+```
+
+```
+8 of 15 — 8 of 15. Now subtract the guessing.
+A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 8 — 0.5 beyond what that generosity covers, and 0.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 50% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
+```
+
+```
+4 of 15 — 4 of 15. Now subtract the guessing.
+A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 4, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 4% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+```
+
+```
+0 of 15 — 0 of 15. Now subtract the guessing.
+A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 0, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
+```
+
+**The summary line, and the share line:**
+
+```
+all: 15 of 15 originals — a coin flip averages 7.5
+```
+
+```
+some: 10 of 15 originals — a coin flip averages 7.5
+```
+
+```
+none: 0 of 15 originals — a coin flip averages 7.5
+```
+
+```
+share at 13/15: I called 13 of 15 originals in the Delicacy Trials — a coin flip averages 7.5. Think your ears are better?
+```
+
+```
+share at 8/15: I called 8 of 15 originals in the Delicacy Trials — a coin flip averages 7.5. Think your ears are better?
+```
+
+---
+
 **16 clips listed, of which 6 are the ones the standing note names.** Regenerate with `node scripts/export-instrument-deck.mjs > docs/copy-deck-instruments.md` after any change.

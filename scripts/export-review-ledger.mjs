@@ -42,34 +42,30 @@ const DECKS = [
 /**
  * EVERY PASS THAT HAS ACTUALLY HAPPENED. One, at the time of writing.
  *
- * `surface` is matched against the deck headings. The delicacy readout has no
- * heading to match, because it is not enumerated by any deck -- see UNDECKED.
+ * `surface` is matched against the deck headings, so a heading that is reworded
+ * without updating this drops the row back to "never" -- loudly wrong rather
+ * than quietly wrong, and the guard on the other side catches it.
  */
-const PASSES = [];
+const PASSES = [
+  {
+    surface: "6. The Delicacy detection readout — THE ONE BATCH A WRITER HAS ALREADY SEEN",
+    pass: "Cowork, PM ruling RT-107a, returned 2026-08-22",
+    brief: "docs/copy-brief-delicacy-readout.md",
+  },
+];
 
 /**
  * COPY THAT HAS BEEN PASSED BUT APPEARS IN NO DECK.
  *
- * The gap runs both ways and this half is the more surprising one. The only
- * body of copy in this product that has ever been through a writer --
- * `src/content/delicacy/copy.ts`, the Delicacy result's detection readout -- is
- * enumerated by nothing. `FLAW_LINE_PREFIX` reaches the instrument deck; the
- * band lines, the calibration line, the provisional footnote and the summary do
- * not. So the decks describe the unreviewed copy and omit the reviewed copy,
- * which is exactly backwards, and it was found while building this ledger.
+ * EMPTY SINCE E18/S12, AND IT WAS NOT EMPTY WHEN THIS FILE WAS WRITTEN. The
+ * Delicacy detection readout -- the only copy in this product that had ever been
+ * through a writer -- was enumerated by nothing, so the decks described every
+ * unreviewed surface and omitted the one reviewed one. RT-Q5(a) closed it by
+ * giving `src/content/delicacy/copy.ts` a section in the instrument deck, which
+ * is why the list below is empty rather than absent: the category is real and a
+ * future batch can fall into it again.
  */
-const UNDECKED = [
-  {
-    what: "The Delicacy result's detection readout",
-    where: "src/content/delicacy/copy.ts",
-    pass: "Cowork, PM ruling RT-107a, returned 2026-08-22",
-    brief: "docs/copy-brief-delicacy-readout.md",
-    note:
-      "Wired verbatim but for one factual fix at the 12-of-15 boundary. The module cites the " +
-      "pass by name where it omits `margin`. Not enumerated by any deck, so a later edit to it " +
-      "would go unreviewed and unnoticed.",
-  },
-];
+const UNDECKED = [];
 
 /** Surface headings, read out of each generated deck. */
 function surfacesOf(file) {
@@ -128,9 +124,12 @@ lines.push("");
 lines.push("## Passed, but in no deck");
 lines.push("");
 lines.push(
-  "The gap runs both ways, and this half is the more surprising one: the only copy in this " +
-    "product that has been through a writer is enumerated by nothing, so a later edit to it would " +
-    "go unreviewed and unnoticed.",
+  UNDECKED.length === 0
+    ? "None. Every surface that has been through a writer is enumerated by a deck, so a later " +
+        "edit to it will be visible. That was not true until E18/S12: the Delicacy detection " +
+        "readout had been passed in August and appeared in no deck at all."
+    : "The gap runs both ways, and this half is the more surprising one: copy that has been " +
+        "through a writer but is enumerated by nothing, so a later edit to it goes unnoticed.",
 );
 lines.push("");
 for (const item of UNDECKED) {

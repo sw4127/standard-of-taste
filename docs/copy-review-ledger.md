@@ -6,7 +6,7 @@ The writing pass is **Cowork's**, not the PM's and not engineering's. The decks 
 
 ## The state of it
 
-**0 of 27 surfaces in the decks have been through a pass.** Everything else below is the engineer's first draft, shipped and live.
+**1 of 28 surfaces in the decks have been through a pass.** Everything else below is the engineer's first draft, shipped and live.
 
 | Part | Surface | Pass |
 |---|---|---|
@@ -22,6 +22,7 @@ The writing pass is **Cowork's**, not the PM's and not engineering's. The decks 
 | 2 · The instrument copy | 3. The flaw line — the Delicacy result's second number | **never** |
 | 2 · The instrument copy | 4. `NotBuiltYet` — the product admitting a door is not there | **never** |
 | 2 · The instrument copy | 5. The creator vocabulary — added in E11 (Track B), never written by a writer | **never** |
+| 2 · The instrument copy | 6. The Delicacy detection readout — THE ONE BATCH A WRITER HAS ALREADY SEEN | Cowork, PM ruling RT-107a, returned 2026-08-22 (`docs/copy-brief-delicacy-readout.md`) |
 | 3 · The page copy | `/learn/comparison` | **never** |
 | 3 · The page copy | `/learn/delicacy` | **never** |
 | 3 · The page copy | `/learn/flaws` | **never** |
@@ -40,11 +41,5 @@ The writing pass is **Cowork's**, not the PM's and not engineering's. The decks 
 
 ## Passed, but in no deck
 
-The gap runs both ways, and this half is the more surprising one: the only copy in this product that has been through a writer is enumerated by nothing, so a later edit to it would go unreviewed and unnoticed.
-
-### The Delicacy result's detection readout
-
-- **Lives in** `src/content/delicacy/copy.ts`
-- **Pass** — Cowork, PM ruling RT-107a, returned 2026-08-22, brief at `docs/copy-brief-delicacy-readout.md`
-- Wired verbatim but for one factual fix at the 12-of-15 boundary. The module cites the pass by name where it omits `margin`. Not enumerated by any deck, so a later edit to it would go unreviewed and unnoticed.
+None. Every surface that has been through a writer is enumerated by a deck, so a later edit to it will be visible. That was not true until E18/S12: the Delicacy detection readout had been passed in August and appeared in no deck at all.
 
