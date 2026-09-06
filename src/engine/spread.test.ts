@@ -26,6 +26,10 @@ import {
   SPREAD_DEGREES,
   SPREAD_METRICS,
   computeSpreadResult,
+  decodeSpreadRatings,
+  decodeSpreadRecognised,
+  encodeSpreadRatings,
+  encodeSpreadRecognised,
   spreadIfIndifferent,
 } from "./spread";
 
@@ -320,5 +324,76 @@ describe("(f) the receipts show what the two numbers were averaged over", () => 
       expect(p.distance).toBeGreaterThan(0);
       expect(p.gap).toBeGreaterThanOrEqual(0);
     }
+  });
+});
+
+/* ------------------------------------------------------------------ *
+ * (g) The stored form (E18/S2)
+ * ------------------------------------------------------------------ */
+
+describe("(g) answers survive a round trip, and malformation yields nothing", () => {
+  const values = [9, 2, 7, 1, 8, 3];
+  const ratings = rate(values);
+
+  it("round-trips the ratings exactly", () => {
+    const encoded = encodeSpreadRatings(ratings);
+    expect(encoded).toBe("9,2,7,1,8,3");
+    expect(decodeSpreadRatings(encoded)).toEqual(ratings);
+  });
+
+  it("round-trips the recognition answers as a flag per clip", () => {
+    expect(encodeSpreadRecognised(["sp1", "sp4"])).toBe("100100");
+    expect(decodeSpreadRecognised("100100")).toEqual(["sp1", "sp4"]);
+    expect(encodeSpreadRecognised([])).toBe("000000");
+    expect(decodeSpreadRecognised("000000")).toEqual([]);
+  });
+
+  /**
+   * A ZERO IS A RATING AND MUST NOT DECODE TO NOTHING. The bottom of this scale
+   * means "nothing there", which is a thing a person can say; a codec that
+   * treated it as falsy would quietly drop the strongest opinion on the scale.
+   */
+  it("keeps a zero rating and a ten apart from an absence", () => {
+    const edges = rate([0, 10, 0, 10, 0, 10]);
+    expect(encodeSpreadRatings(edges)).toBe("0,10,0,10,0,10");
+    expect(decodeSpreadRatings("0,10,0,10,0,10")).toEqual(edges);
+  });
+
+  it("refuses anything malformed rather than half-decoding it", () => {
+    for (const bad of [
+      undefined,
+      "",
+      "9,2,7,1,8",           // too few
+      "9,2,7,1,8,3,4",       // too many
+      "9,2,7,1,8,11",        // off the top of the scale
+      "9,2,7,1,8,-1",        // off the bottom
+      "9,2,7,1,8,x",         // not a number
+      "9,2,7,1,8,03",        // a leading zero is not a rating this pool wrote
+      "9, 2, 7, 1, 8, 3",    // whitespace
+    ]) {
+      expect(decodeSpreadRatings(bad), String(bad)).toBeNull();
+    }
+    for (const bad of [undefined, "", "10010", "1001000", "10012", "abcdef"]) {
+      expect(decodeSpreadRecognised(bad), String(bad)).toBeNull();
+    }
+  });
+
+  /**
+   * THE MASK IS FIXED-WIDTH FOR A REASON. A list of ids could name a clip that
+   * is not in the pool and the engine would happily filter on nothing; a mask
+   * of the wrong length cannot describe this pool at all and decodes to null.
+   */
+  it("cannot express a clip the pool does not have", () => {
+    expect(encodeSpreadRecognised(["sp1", "not-a-clip"])).toBe("100000");
+    expect(decodeSpreadRecognised("1000000")).toBeNull();
+  });
+
+  it("decodes to the same reading the live sitting produced", () => {
+    const live = computeSpreadResult(ratings, ["sp1"]);
+    const decoded = computeSpreadResult(
+      decodeSpreadRatings(encodeSpreadRatings(ratings))!,
+      decodeSpreadRecognised(encodeSpreadRecognised(["sp1"]))!,
+    );
+    expect(decoded).toEqual(live);
   });
 });

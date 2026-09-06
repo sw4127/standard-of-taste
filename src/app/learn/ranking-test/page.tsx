@@ -24,9 +24,11 @@ export const metadata = explainerMetadata(page);
  * this page cannot drift away from the instrument the way the pages describing
  * the pool's size did before RT-136.
  *
- * The expert panel is deliberately absent and the page says so. It reads the
- * stored-result store that RT-G would create, and RT-G has never been ruled —
- * building one here would answer an open product question by accident.
+ * THE EXPERT PANEL IS ABSENT AND THE PAGE SAYS SO — but not for the reason it
+ * gave when it shipped. It said the panel reads a store RT-G would create and
+ * that RT-G was unruled. RT-G had been ruled (b) on 2026-09-01 and the store
+ * had been built; the sentence was a false claim on a published page. E18/S2
+ * gave the instrument its store, so what is left is the panel itself.
  */
 export default function Page() {
   return (
@@ -91,9 +93,10 @@ export default function Page() {
         <Link href="/lab">the Lab</Link>.
       </p>
       <p>
-        This instrument stores nothing. There is no expert panel underneath its result, unlike the
-        other three, because that panel reads a record of past sessions and whether this product
-        keeps one is a question nobody has answered yet.
+        Your answers stay in the browser you gave them in, like every other result here — the
+        ratings and which clips you said you already knew, never the two figures, which are worked
+        out again each time they are read. There is no expert panel underneath this result yet,
+        unlike the other three; it is being built.
       </p>
     </Explainer>
   );

@@ -83,12 +83,27 @@ function finish(slug: string, at: number) {
 describe("forgetting this browser", () => {
   it("removes the measured sessions", () => {
     recordResult("bias", POOL_VERSIONS.bias, { kind: "bias", blind: "5", labeled: "5" }, NOW);
+    /*
+     * THE RANKING TEST IS IN HERE BECAUSE IT IS NOW STORED (E18/S2). The sweep
+     * is by namespace rather than by a list of keys, so it covers a fourth
+     * instrument the day it arrives — but "covers it in principle" and "was
+     * checked" are different claims, and a control that promises to forget
+     * EVERYTHING only earns the word by being asked about each thing.
+     */
+    recordResult(
+      "spread",
+      POOL_VERSIONS.spread,
+      { kind: "spread", ratings: "5,5,5,5,5,5", recognised: "000000" },
+      NOW,
+    );
     finish("pitch", NOW);
     expect(readResult("bias", POOL_VERSIONS.bias)).not.toBeNull();
+    expect(readResult("spread", POOL_VERSIONS.spread)).not.toBeNull();
 
     forgetThisBrowser();
 
     expect(readResult("bias", POOL_VERSIONS.bias)).toBeNull();
+    expect(readResult("spread", POOL_VERSIONS.spread)).toBeNull();
     expect(readHistory("threshold", POOL_VERSIONS.threshold, "pitch")).toEqual([]);
   });
 

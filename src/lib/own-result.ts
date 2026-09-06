@@ -23,13 +23,27 @@
 import { readResult, type StoredPayload } from "./result-store";
 import { POOL_VERSIONS } from "./result-recall";
 
+/**
+ * A SWITCH RATHER THAN A TERNARY CHAIN (E18/S2). The chain ended in a bare
+ * `else` that assumed threshold, so adding a fourth instrument would have
+ * silently looked its payload up in the threshold slot under `own.slug` —
+ * `undefined` — and compared a Ranking Test sitting against nothing. `tsc`
+ * caught it here because the property does not exist on the new member, which
+ * is luck rather than design; an exhaustive switch does not need the luck.
+ */
 export function isOwnResult(own: StoredPayload): boolean {
-  const stored =
-    own.kind === "bias"
-      ? readResult("bias", POOL_VERSIONS.bias)
-      : own.kind === "delicacy"
-        ? readResult("delicacy", POOL_VERSIONS.delicacy)
-        : readResult("threshold", POOL_VERSIONS.threshold, own.slug);
+  const stored = (() => {
+    switch (own.kind) {
+      case "bias":
+        return readResult("bias", POOL_VERSIONS.bias);
+      case "delicacy":
+        return readResult("delicacy", POOL_VERSIONS.delicacy);
+      case "spread":
+        return readResult("spread", POOL_VERSIONS.spread);
+      case "threshold":
+        return readResult("threshold", POOL_VERSIONS.threshold, own.slug);
+    }
+  })();
   if (!stored) return false;
   return JSON.stringify(stored.payload) === JSON.stringify(own);
 }

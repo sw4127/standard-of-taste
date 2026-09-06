@@ -17,10 +17,21 @@
  * contaminated by the rating it is supposed to filter. Asked first, it is a
  * question about the clip rather than about the number.
  *
- * NOTHING IS STORED AND NOTHING IS SHARED YET. The result lives in component
- * state for the length of the sitting. That is a deliberate stopping point for
- * this slice, not an oversight: persistence is RT-G, which has never been
- * ruled, and inventing a store here would be answering it by accident.
+ * THIS BROWSER REMEMBERS THE SITTING, AND NOTHING IS SHARED (E18/S2, PM ruling
+ * RT-O2 a). What is written is the ANSWERS — the ratings and the recognition
+ * flags — through the same store the other three instruments use, and every
+ * figure is recomputed from them on read. No result is stored, so this device
+ * cannot start reporting a number the current engine would not produce.
+ *
+ * IT SHIPPED STORING NOTHING, AND THE REASON GIVEN WAS FALSE. The docblock here
+ * said persistence was RT-G and unruled. RT-G had been ruled (b) four days
+ * earlier and Track G had built the store; the gap was real and its stated
+ * reason was not. Recorded rather than quietly replaced, because a comment that
+ * silently corrects itself teaches nobody what went wrong.
+ *
+ * THERE IS STILL NO SHARE URL, and that is not an oversight either. The other
+ * three result screens are share targets, which is why they need an ownership
+ * gate at all; this reveal is reached only by finishing the sitting.
  */
 
 import { useState } from "react";
@@ -29,9 +40,16 @@ import Link from "next/link";
 import ClipPlayer from "../bias/ClipPlayer";
 import OtherMachines from "@/components/OtherMachines";
 import { SPREAD_PALETTE } from "@/content/instrument-accents";
-import { SPREAD_POOL } from "@/content/spread/ranking";
+
 import { BIAS_SCALE_MAX } from "@/engine/bias";
-import { computeSpreadResult, type SpreadResult } from "@/engine/spread";
+import {
+  computeSpreadResult,
+  encodeSpreadRatings,
+  encodeSpreadRecognised,
+  type SpreadResult,
+} from "@/engine/spread";
+import { recordResult } from "@/lib/result-store";
+import { SPREAD_POOL, SPREAD_POOL_VERSION } from "@/content/spread/ranking";
 import { RECOGNITION_DISCLOSURE, spreadLines } from "@/content/vocabulary/spread";
 
 const { accent, soft, glow } = SPREAD_PALETTE;
@@ -40,6 +58,39 @@ const { accent, soft, glow } = SPREAD_PALETTE;
 const MIN_LISTEN_MS = 12_000;
 
 type Phase = "frame" | "rate" | "reveal";
+
+/**
+ * THE SITTING, ONTO THIS DEVICE (E18/S2, PM ruling RT-O2 a).
+ *
+ * CALLED BEFORE THE REVEAL RENDERS, and that ordering is load-bearing: the
+ * expert panel reads the store rather than its props, and asks whether what it
+ * finds there is the sitting on screen. Recording after the phase change would
+ * leave the panel looking at an empty slot on the render that matters.
+ *
+ * ANSWERS ONLY. `recordResult` is the single `localStorage` write in this
+ * codebase, and what goes into it is the ratings and the recognition flags.
+ * Nothing computed goes near it, so this device can never report a figure the
+ * current engine would not produce.
+ *
+ * AT MODULE SCOPE BECAUSE `Date.now()` IS IMPURE. Inside the component the
+ * React compiler rejects the call outright — it cannot see that `rate` only
+ * ever runs from a tap — and the alternatives were to thread a clock through
+ * the component or to bury the write in a `setTimeout` the way the prestige
+ * flow happens to. Hoisting it is the one that does not make the write
+ * conditional on a timer nobody needs.
+ */
+function remember(ratings: Record<string, number>, recognised: readonly string[]): void {
+  recordResult(
+    "spread",
+    SPREAD_POOL_VERSION,
+    {
+      kind: "spread",
+      ratings: encodeSpreadRatings(ratings),
+      recognised: encodeSpreadRecognised(recognised),
+    },
+    Date.now(),
+  );
+}
 
 export default function SpreadFlow() {
   const [phase, setPhase] = useState<Phase>("frame");
@@ -59,13 +110,15 @@ export default function SpreadFlow() {
     if (last) {
       const done = computeSpreadResult(next, recognised);
       setResult(done);
+      // Before the reveal renders — see `remember` below.
+      remember(next, recognised);
       /*
-       * THE ONLY RECORD THAT A SITTING HAPPENED. This instrument writes nothing
-       * to the device, so without these two events it is invisible in the
-       * funnel — an analyst would see people leave the gym floor and never
-       * arrive anywhere. No rating and no clip id is sent: the counts and the
-       * refusal reason are what make the funnel readable, and they say nothing
-       * about which works anyone preferred.
+       * THE ONLY RECORD ANYONE BUT THIS BROWSER HAS. The write above stays on
+       * the device and reaches nobody, so without these two events the
+       * instrument is invisible in the funnel — an analyst would see people
+       * leave the gym floor and never arrive anywhere. No rating and no clip id
+       * is sent: the counts and the refusal reason are what make the funnel
+       * readable, and they say nothing about which works anyone preferred.
        */
       track("spread_complete", {
         rated: done.usedClipIds.length,

@@ -34,6 +34,13 @@ import { replaySession } from "@/engine/staircase-replay";
 import { STAIRCASE_POOL_VERSION } from "@/engine/staircase-manifest";
 import { sessionResult, type StaircaseResult } from "@/engine/staircase-session";
 import { familyForSlug } from "@/app/threshold/families";
+import { SPREAD_POOL_VERSION } from "@/content/spread/ranking";
+import {
+  computeSpreadResult,
+  decodeSpreadRatings,
+  decodeSpreadRecognised,
+  type SpreadResult,
+} from "@/engine/spread";
 import { readResult, type StoredEntry } from "./result-store";
 
 /** The pool version each instrument's stored answers must match. */
@@ -56,6 +63,12 @@ export const POOL_VERSIONS = {
    * happens.
    */
   threshold: STAIRCASE_POOL_VERSION,
+  /**
+   * The Ranking Test's pool version, which the pool's own docblock already
+   * required to ride on every stored response — it was written that way in E17
+   * against a store the instrument was not yet allowed to use.
+   */
+  spread: SPREAD_POOL_VERSION,
 } as const;
 
 export function recallBias(): { result: BiasResult; entry: StoredEntry } | null {
@@ -102,6 +115,34 @@ export function recallThreshold(slug: string): { result: StaircaseResult; entry:
   try {
     const session = replaySession(family, entry.payload.seed, entry.payload.answers, entry.payload.sourceId);
     return { result: sessionResult(session), entry };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * BOTH STRINGS MUST DECODE, AND A HALF-DECODED SITTING IS NO SITTING (E18/S2).
+ *
+ * `computeSpreadResult` THROWS on a missing or out-of-range rating, by design —
+ * a bad rating reaching the engine is a bug upstream, not a user error. That
+ * contract is right for a live flow and wrong for a value read out of
+ * localStorage, where a truncated string is an ordinary thing to find. So the
+ * decoders reject first and the recompute is wrapped, and every failure is the
+ * same null the other three recalls return: no result, never an error thrown at
+ * a result screen over something in storage.
+ *
+ * The recognition mask is decoded to ids and passed back through the same
+ * filter the sitting used, so a recalled reading and the reveal that produced
+ * it cannot disagree about which clips counted.
+ */
+export function recallSpread(): { result: SpreadResult; entry: StoredEntry } | null {
+  const entry = readResult("spread", POOL_VERSIONS.spread);
+  if (!entry || entry.payload.kind !== "spread") return null;
+  try {
+    const ratings = decodeSpreadRatings(entry.payload.ratings);
+    const recognised = decodeSpreadRecognised(entry.payload.recognised);
+    if (!ratings || !recognised) return null;
+    return { result: computeSpreadResult(ratings, recognised), entry };
   } catch {
     return null;
   }

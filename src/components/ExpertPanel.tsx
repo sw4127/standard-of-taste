@@ -36,8 +36,9 @@
  */
 
 import { useMemo, useSyncExternalStore } from "react";
-import { readResult, subscribeResults, type StoredPayload } from "@/lib/result-store";
-import { POOL_VERSIONS, recallBias, recallDelicacy, recallThreshold } from "@/lib/result-recall";
+import { subscribeResults, type StoredPayload } from "@/lib/result-store";
+import { isOwnResult } from "@/lib/own-result";
+import { recallBias, recallDelicacy, recallThreshold } from "@/lib/result-recall";
 import { biasExpert, delicacyExpert, thresholdExpert } from "@/engine/expert";
 import type { BiasExpert, CalibrationCurve, DelicacyExpert, ThresholdExpert } from "@/engine/expert";
 import { quantity, shortUnit } from "@/content/staircase/copy";
@@ -66,17 +67,6 @@ function signature(): string {
   }
 }
 const serverSignature = () => "";
-
-function isOwn(own: StoredPayload): boolean {
-  const stored =
-    own.kind === "bias"
-      ? readResult("bias", POOL_VERSIONS.bias)
-      : own.kind === "delicacy"
-        ? readResult("delicacy", POOL_VERSIONS.delicacy)
-        : readResult("threshold", POOL_VERSIONS.threshold, own.slug);
-  if (!stored) return false;
-  return JSON.stringify(stored.payload) === JSON.stringify(own);
-}
 
 /* ------------------------------------------------------------------ *
  * Shared primitives
@@ -374,7 +364,7 @@ export default function ExpertPanel({
   const sig = useSyncExternalStore(subscribeResults, signature, serverSignature);
 
   const body = useMemo(() => {
-    if (sig === "" || !isOwn(own)) return null;
+    if (sig === "" || !isOwnResult(own)) return null;
     if (instrument.kind === "delicacy") {
       const r = recallDelicacy();
       return r ? <DelicacyBody d={delicacyExpert(r.result)} accent={accent} /> : null;

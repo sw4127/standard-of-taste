@@ -172,6 +172,69 @@ export interface SpreadResult {
   pairReceipts: SpreadPairReceipt[];
 }
 
+/**
+ * THE STORED FORM (E18/S2, RT-O2 a).
+ *
+ * Two positional strings, one for the ratings and one for the recognition
+ * answers, in POOL ORDER. Positional and not keyed by id on purpose: it is the
+ * shape the prestige test's stored pass already uses, and it makes the pool
+ * version load-bearing rather than decorative — a reordered pool decodes to
+ * different questions, which is exactly why every stored entry carries the
+ * version it was answered against and is dropped on a mismatch.
+ *
+ * RECOGNITION TRAVELS AS A FLAG PER CLIP, NOT AS A LIST OF IDS. A list would be
+ * shorter and would let a hand-edited entry name a clip that is not in the
+ * pool; a fixed-width mask cannot say anything about a clip that does not
+ * exist, and it decodes to nothing at all if its length is wrong.
+ *
+ * NOTHING COMPUTED IS STORED, which is the store's whole design and not a
+ * detail: what is written is the ANSWERS, and every number is recomputed
+ * through this engine on read. Editing the store by hand can only change which
+ * ratings you claim to have given, and they will be scored honestly (N3).
+ */
+export function encodeSpreadRatings(
+  ratings: SpreadRatings,
+  pool: readonly SpreadItem[] = SPREAD_POOL,
+): string {
+  return pool.map((item) => ratings[item.id]).join(",");
+}
+
+/** Strict inverse. Returns null on ANY malformation, never a partial answer. */
+export function decodeSpreadRatings(
+  csv: string | undefined,
+  pool: readonly SpreadItem[] = SPREAD_POOL,
+): SpreadRatings | null {
+  if (typeof csv !== "string") return null;
+  const parts = csv.split(",");
+  if (parts.length !== pool.length) return null;
+  const out: SpreadRatings = {};
+  for (let i = 0; i < pool.length; i += 1) {
+    if (!/^(?:10|[0-9])$/.test(parts[i])) return null;
+    out[pool[i].id] = Number(parts[i]);
+  }
+  return out;
+}
+
+/** One character per pool item: "1" said heard before, "0" said new. */
+export function encodeSpreadRecognised(
+  recognised: readonly string[],
+  pool: readonly SpreadItem[] = SPREAD_POOL,
+): string {
+  const set = new Set(recognised);
+  return pool.map((item) => (set.has(item.id) ? "1" : "0")).join("");
+}
+
+/** Strict inverse. Returns null on ANY malformation. */
+export function decodeSpreadRecognised(
+  mask: string | undefined,
+  pool: readonly SpreadItem[] = SPREAD_POOL,
+): string[] | null {
+  if (typeof mask !== "string") return null;
+  if (mask.length !== pool.length) return null;
+  if (!/^[01]*$/.test(mask)) return null;
+  return pool.filter((_, i) => mask[i] === "1").map((item) => item.id);
+}
+
 function assertRating(id: string, value: number | undefined): asserts value is number {
   if (value === undefined) throw new Error(`spread: missing rating for "${id}"`);
   if (!Number.isInteger(value) || value < BIAS_SCALE_MIN || value > BIAS_SCALE_MAX) {

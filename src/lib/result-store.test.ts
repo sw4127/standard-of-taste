@@ -10,7 +10,13 @@ import {
   type StoredPayload,
 } from "./result-store";
 import * as resultStore from "./result-store";
-import { recallBias, recallDelicacy, recallThreshold, POOL_VERSIONS } from "./result-recall";
+import { recallBias, recallDelicacy, recallSpread, recallThreshold, POOL_VERSIONS } from "./result-recall";
+import { SPREAD_POOL } from "@/content/spread/ranking";
+import {
+  computeSpreadResult,
+  encodeSpreadRatings,
+  encodeSpreadRecognised,
+} from "@/engine/spread";
 import { BIAS_CLIPS, BIAS_INSTRUMENT_ID } from "@/content/bias/items";
 import {
   BIAS_SCALE_MAX,
@@ -130,6 +136,23 @@ function thresholdSession(slug: string, family: string, seed: number, alpha: num
  * The round trip
  * ------------------------------------------------------------------ */
 
+/**
+ * A RANKING TEST SITTING (E18/S2). `flat` gives every clip the same rating,
+ * which produces gaps of zero and is the case the vocabulary layer needed its
+ * own sentence for — a useful thing for a round trip to survive.
+ */
+function spreadSession(values: number[], recognised: string[] = []) {
+  const ratings = Object.fromEntries(SPREAD_POOL.map((item, i) => [item.id, values[i]]));
+  return {
+    payload: {
+      kind: "spread" as const,
+      ratings: encodeSpreadRatings(ratings),
+      recognised: encodeSpreadRecognised(recognised),
+    },
+    live: computeSpreadResult(ratings, recognised),
+  };
+}
+
 describe("store -> read -> recompute", () => {
   it("recalls a prestige session identical to the live one", () => {
     const { payload, live } = biasSession(2);
@@ -144,6 +167,40 @@ describe("store -> read -> recompute", () => {
     const { payload, live } = delicacySession(3);
     recordResult("delicacy", POOL_VERSIONS.delicacy, payload, 2000);
     expect(recallDelicacy()!.result).toEqual(live);
+  });
+
+  it("recalls a ranking-test session identical to the live one", () => {
+    const { payload, live } = spreadSession([9, 2, 7, 1, 8, 3]);
+    recordResult("spread", POOL_VERSIONS.spread, payload, 4000);
+    const recalled = recallSpread();
+    expect(recalled).not.toBeNull();
+    expect(recalled!.result).toEqual(live);
+    expect(recalled!.entry.savedAt).toBe(4000);
+  });
+
+  /**
+   * THE RECOGNITION ANSWERS HAVE TO SURVIVE, NOT JUST THE RATINGS. Storing the
+   * ratings alone would recompute a reading over clips the person had asked to
+   * have set aside — the same six ratings, a different question answered, and
+   * nothing on screen to show that it had happened.
+   */
+  it("recalls which clips were set aside, not only what was rated", () => {
+    const { payload, live } = spreadSession([9, 2, 7, 1, 8, 3], ["sp1", "sp4"]);
+    recordResult("spread", POOL_VERSIONS.spread, payload, 4100);
+    const recalled = recallSpread()!;
+    expect(recalled.result.excludedClipIds).toEqual(["sp1", "sp4"]);
+    expect(recalled.result).toEqual(live);
+    // And a refusal recalls AS a refusal rather than as a reading.
+    expect(recalled.result.refusal).toBe(live.refusal);
+  });
+
+  it("recalls a flat sitting without turning its zeros into nulls", () => {
+    const { payload, live } = spreadSession([5, 5, 5, 5, 5, 5]);
+    recordResult("spread", POOL_VERSIONS.spread, payload, 4200);
+    const recalled = recallSpread()!;
+    expect(recalled.result.far.meanGap).toBe(0);
+    expect(recalled.result).toEqual(live);
+    expect(recalled.result.clipReceipts.every((c) => c.rating === 5)).toBe(true);
   });
 
   it("recalls a threshold session identical to the live one", () => {

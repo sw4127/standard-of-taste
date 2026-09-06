@@ -217,16 +217,18 @@ describe("E15/S5 — from a tap to a statistic", () => {
       expect(existsSync(row.computedIn), `${row.action} → ${row.computedIn}`).toBe(true);
       expect(row.action.length).toBeGreaterThan(20);
       /*
-       * A ROW MAY DECLARE THAT IT STORES NOTHING (E17). The check read
-       * `toContain("gym.")`, which assumes every instrument writes to the
-       * device store. The Ranking Test does not — persistence is RT-G and
-       * unruled — and "stores nothing" is a fact the lineage should be able to
-       * publish rather than a reason to leave a live instrument off it.
-       * Narrowed to an exact sentinel rather than relaxed: any OTHER value
-       * still has to name a real key.
+       * EVERY ROW NAMES A REAL KEY AGAIN (E18/S2).
+       *
+       * E17 relaxed this to allow one sentinel value, "nothing — this
+       * instrument keeps no record of you", because the Ranking Test stored
+       * nothing and the reason recorded was that persistence was unruled. It
+       * had been ruled four days earlier. The escape hatch is removed rather
+       * than left standing for a future row to reach for: a lineage row whose
+       * storage column does not name a key is now a failure, which is what it
+       * was before an instrument shipped with a false reason for needing the
+       * exception.
        */
-      const STORES_NOTHING = "nothing — this instrument keeps no record of you";
-      if (row.storedAs !== STORES_NOTHING) expect(row.storedAs).toContain("gym.");
+      expect(row.storedAs, `${row.action} names no storage key`).toContain("gym.");
     }
   });
 

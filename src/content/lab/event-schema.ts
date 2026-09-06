@@ -76,7 +76,7 @@ export const EVENT_SURFACES: EventSurface[] = [
     id: "spread",
     title: "The Ranking Test",
     blurb:
-      "The critic-ranked listening set. It stores nothing on the device, so these two events are the only record that a sitting happened at all.",
+      "The critic-ranked listening set. These two events are the only record of a sitting that leaves the device; the answers themselves stay in the browser that gave them.",
     prefixes: ["spread_"],
   },
   {
@@ -257,7 +257,7 @@ export const LINEAGE: LineageRow[] = [
   {
     action: "You rate six works a critic ranked, having been told nothing about them.",
     event: "spread_complete",
-    storedAs: "nothing — this instrument keeps no record of you",
+    storedAs: "gym.result.spread → payload.ratings, payload.recognised",
     computedIn: "src/engine/spread.ts",
     metricId: "spread_far_pairs",
   },

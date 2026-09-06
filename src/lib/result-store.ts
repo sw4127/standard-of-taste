@@ -78,7 +78,13 @@ export const STORE_VERSION = 2;
  */
 export const HISTORY_CAP = 24;
 
-export type StoredInstrument = "bias" | "delicacy" | "threshold";
+/**
+ * "spread" JOINED IN E18/S2 (PM ruling RT-O2 a). The Ranking Test shipped
+ * storing nothing, on the stated grounds that persistence was an open decision
+ * — which it had not been since RT-G(b) was ruled and Track G built this store
+ * four days earlier. The gap was real; the reason given for it was not.
+ */
+export type StoredInstrument = "bias" | "delicacy" | "threshold" | "spread";
 
 /**
  * The raw payload for one finished session, in the same shape its share URL
@@ -88,7 +94,13 @@ export type StoredInstrument = "bias" | "delicacy" | "threshold";
 export type StoredPayload =
   | { kind: "bias"; blind: string; labeled: string }
   | { kind: "delicacy"; picks: string }
-  | { kind: "threshold"; slug: string; seed: number; answers: string; sourceId?: string };
+  | { kind: "threshold"; slug: string; seed: number; answers: string; sourceId?: string }
+  /**
+   * `ratings` is one rating per pool clip in pool order; `recognised` is one
+   * "0"/"1" flag per clip, in the same order. Both are answers. Which clips
+   * counted, how many pairs survived and both figures are recomputed on read.
+   */
+  | { kind: "spread"; ratings: string; recognised: string };
 
 export interface StoredEntry {
   v: number;
@@ -129,6 +141,9 @@ function parseSession(data: unknown, envelopeVersion: number): StoredEntry | nul
       break;
     case "delicacy":
       if (typeof p.picks !== "string") return null;
+      break;
+    case "spread":
+      if (typeof p.ratings !== "string" || typeof p.recognised !== "string") return null;
       break;
     case "threshold":
       if (typeof p.slug !== "string" || typeof p.answers !== "string") return null;
