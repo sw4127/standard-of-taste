@@ -27,7 +27,7 @@
  * export. The scan asserts it FOUND keys before comparing, because a regex that
  * matches nothing would pass this test while checking nothing at all.
  */
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { vocabularyStrings } from "./fixtures";
 
@@ -133,6 +133,125 @@ describe("the copy deck covers every surface the product renders", () => {
     expect(
       absent,
       file + " is stale — these surfaces render sentences it does not contain. Regenerate it: " + command,
+    ).toEqual([]);
+  });
+});
+
+/**
+ * EVERY PAGE IN THE READING ROOM APPEARS IN THE PAGE DECK (E18/S10, RT-P9 a).
+ *
+ * The page deck is the only one built from components rather than from content
+ * modules, so its completeness cannot be checked against a corpus function.
+ * It is checked against the FILESYSTEM instead, which is the same principle:
+ * the side that says what exists is derived, and the deck is what has to keep
+ * up. A new reading-room page fails this the day it ships.
+ */
+describe("the page deck covers every page in the reading room", () => {
+  const deck = readFileSync("docs/copy-deck-pages.md", "utf8");
+
+  const learnRoutes = readdirSync("src/app/learn", { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => "/learn/" + entry.name);
+
+  it("found pages on disk, so this cannot pass vacuously", () => {
+    expect(learnRoutes.length).toBeGreaterThan(6);
+    expect(deck.length).toBeGreaterThan(5000);
+  });
+
+  it("has a section for every reading-room page, plus /legal and the flow", () => {
+    const missing = learnRoutes.filter((route) => !deck.includes("## `" + route + "`"));
+    expect(
+      missing,
+      "docs/copy-deck-pages.md has no section for these pages. Regenerate it: " +
+        "node scripts/export-copy-decks.mjs",
+    ).toEqual([]);
+    expect(deck.includes("## `/legal`")).toBe(true);
+    expect(deck.includes("src/app/spread/SpreadFlow.tsx")).toBe(true);
+  });
+
+  /**
+   * THE EXTRACTOR CAN SILENTLY YIELD NOTHING. A page whose markup changes shape
+   * -- a paragraph rendered by a helper rather than a `<p>` -- would produce an
+   * empty section and the deck would still look complete. Every section has to
+   * carry either a quoted line or the note saying its words come from a module.
+   */
+  it("no section is empty", () => {
+    const sections = deck.split("## `").slice(1);
+    const hollow = sections
+      .filter((s) => !s.includes(String.fromCharCode(10) + ">") && !s.includes("filled entirely from content modules"))
+      .map((s) => s.split("`")[0]);
+    expect(hollow, "these page-deck sections extracted no copy at all:").toEqual([]);
+  });
+
+  /** A sentence that is on the page today must be in the deck today. */
+  it("is not stale", () => {
+    const onScreen = "A critic ranked these works";
+    expect(readFileSync("src/app/spread/SpreadFlow.tsx", "utf8").includes(onScreen)).toBe(true);
+    expect(deck.includes(onScreen), "docs/copy-deck-pages.md is stale").toBe(true);
+    expect(readFileSync("docs/copy-deck.md", "utf8").includes(onScreen)).toBe(true);
+  });
+});
+
+/**
+ * THE EXTRACTOR CAN GO PARTIALLY BLIND, AND "NO SECTION IS EMPTY" WOULD NOT SEE
+ * IT (E18/S10).
+ *
+ * That guard catches a page that yields nothing. It does not catch a page that
+ * used to yield eight paragraphs and now yields three -- markup rearranged, a
+ * paragraph moved into a helper component, a tag this scanner does not know.
+ * The deck would still look complete and the PM would review two thirds of a
+ * page believing it was the whole one.
+ *
+ * SO THE COUNT IS COMPARED TO THE SOURCE. Blocks in the deck plus blocks
+ * declared as module-filled must account for most of the block-level tags in
+ * the component. The threshold is deliberately loose -- a page can legitimately
+ * hold a tag this scanner skips -- because the failure being caught is a large
+ * silent loss, not an off-by-one.
+ */
+describe("the page extractor has not gone partially blind", () => {
+  const deck = readFileSync("docs/copy-deck-pages.md", "utf8");
+
+  const surfaceFiles = readdirSync("src/app/learn", { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => ({ route: "/learn/" + entry.name, file: "src/app/learn/" + entry.name + "/page.tsx" }))
+    .concat([{ route: "/legal", file: "src/app/legal/page.tsx" }]);
+
+  it("accounts for most of each page's block tags", () => {
+    expect(surfaceFiles.length).toBeGreaterThan(6);
+    const thin: string[] = [];
+    for (const surface of surfaceFiles) {
+      const source = readFileSync(surface.file, "utf8");
+      const opens =
+        source.split(String.fromCharCode(60) + "p").length - 1 +
+        (source.split(String.fromCharCode(60) + "li").length - 1);
+      if (opens < 3) continue;
+      const start = deck.indexOf("## `" + surface.route + "`");
+      expect(start, surface.route + " has no section").toBeGreaterThan(-1);
+      const rest = deck.slice(start + 4);
+      const nextAt = rest.indexOf("## `");
+      const section = nextAt === -1 ? rest : rest.slice(0, nextAt);
+      const quoted = section.split(String.fromCharCode(10) + "> ").length - 1;
+      /*
+       * READ THE NUMBER BACKWARDS FROM THE PHRASE, not by splitting on "*".
+       * The first version split the section on asterisks and took the second
+       * field, which is `Edits land in` — every section carries bold markers
+       * before the note. It scored /learn/flaws at 2 of 5 and reported the
+       * extractor blind on a page it had handled correctly.
+       */
+      const noteAt = section.indexOf(" further block");
+      let digits = "";
+      for (let k = noteAt - 1; k >= 0 && section[k] >= "0" && section[k] <= "9"; k -= 1) {
+        digits = section[k] + digits;
+      }
+      const fromModules = noteAt === -1 ? 0 : Number(digits) || 0;
+      if (quoted + fromModules < Math.ceil(opens / 2)) {
+        thin.push(surface.route + ": " + (quoted + fromModules) + " accounted for, " + opens + " in the source");
+      }
+    }
+    expect(
+      thin,
+      "the page extractor is missing most of these pages' copy — its scanner has gone stale " +
+        "against the markup. Check scripts/export-page-deck.mjs:",
     ).toEqual([]);
   });
 });

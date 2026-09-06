@@ -32,7 +32,7 @@
  *   node scripts/export-copy-decks.mjs
  */
 import { execSync } from "node:child_process";
-import { writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 
 const NL = String.fromCharCode(10);
 
@@ -54,6 +54,15 @@ const DECKS = [
       "flaw line, the not-built-yet notice, and the creator vocabulary.",
   },
   {
+    file: "docs/copy-deck-pages.md",
+    script: "scripts/export-page-deck.mjs",
+    title: "The page copy",
+    blurb:
+      "Every paragraph a reader meets in the reading room, on /legal, and in the Ranking Test's " +
+      "frame. This copy lives inline in the components, so it is a reading surface here and edits " +
+      "land in the .tsx files named under each section.",
+  },
+  {
     file: "docs/copy-deck-method.md",
     script: "scripts/export-method-deck.mjs",
     title: "The /method page",
@@ -63,7 +72,29 @@ const DECKS = [
   },
 ];
 
-/** The previously committed text a sentence is judged NEW against. */
+/** The sentences the PM has said they finished reviewing. */
+const REVIEWED = "docs/copy-deck-reviewed.txt";
+
+/**
+ * THE ANCHOR IS "WHAT HAS BEEN REVIEWED", NOT "WHAT WAS LAST COMMITTED".
+ *
+ * The first version compared against the previously committed
+ * `docs/copy-deck.md`. That was wrong the moment the document was committed:
+ * the next run reported 0 of 216 sentences new, because committing the
+ * document is not the same as reading it. A marker that resets when an engineer
+ * commits tells the reader nothing about what the reader has seen.
+ *
+ * So the baseline is a stamp that only moves when somebody says the pass is
+ * done -- `node scripts/export-copy-decks.mjs --reviewed`. That is a gate a
+ * person can actually discharge, which is the difference between a useful gate
+ * and the kind this project deletes: it needs one sentence from the PM, not a
+ * judgment he has no way to make.
+ *
+ * Falling back, in order: the stamp, then the previously committed document,
+ * then the per-deck files one commit back. Whichever was used is named in the
+ * generated header, because a marker whose meaning is undocumented is worse
+ * than no marker.
+ */
 function baseline() {
   const show = (ref, file) => {
     try {
@@ -72,6 +103,15 @@ function baseline() {
       return "";
     }
   };
+  let stamp = "";
+  try {
+    stamp = readFileSync(REVIEWED, "utf8");
+  } catch {
+    stamp = "";
+  }
+  if (stamp.trim().length > 0) {
+    return { text: stamp, describes: "the copy you last marked reviewed (`" + REVIEWED + "`)" };
+  }
   const combined = show("HEAD", "docs/copy-deck.md");
   if (combined.trim().length > 0) {
     return { text: combined, describes: "the previously committed docs/copy-deck.md" };
@@ -190,6 +230,8 @@ DECKS.forEach((deck, i) => {
   out.push("");
 
   const part = [];
+  const marks = [];
+  let partConsidered = 0;
   let fenced = false;
   for (const line of generated.split(NL)) {
     if (line.trim().startsWith("```")) fenced = !fenced;
@@ -198,8 +240,9 @@ DECKS.forEach((deck, i) => {
     if (said.has(line.trim())) continue;
     if (reviewable(line, fenced)) {
       considered += 1;
+      partConsidered += 1;
       if (base.text.length > 0 && !base.text.includes(line.trim())) {
-        marked += 1;
+        marks.push(part.length);
         part.push("**NEW**");
       }
     }
@@ -228,6 +271,21 @@ DECKS.forEach((deck, i) => {
       i -= 1;
     }
   }
+  /*
+   * A PART THAT IS NEW IN ITS ENTIRETY GETS ONE SENTENCE, NOT NINETY MARKERS.
+   *
+   * The page deck arrived as a whole part, so every line in it is absent from
+   * the baseline and every line would carry NEW -- ninety-odd markers that say
+   * nothing except "this part is new", drowning the thirty-odd in the earlier
+   * parts that point at genuinely new sentences. The marker is only useful
+   * where it discriminates.
+   */
+  if (marks.length === partConsidered && partConsidered > 5) {
+    for (let i = marks.length - 1; i >= 0; i -= 1) part.splice(marks[i], 1);
+    part.splice(2, 0, "**Every sentence in this part is new — this deck did not exist before.**", "");
+  } else {
+    marked += marks.length;
+  }
   out.push(...part);
 });
 
@@ -241,6 +299,17 @@ out.push(
 out.push("");
 
 writeFileSync("docs/copy-deck.md", out.join(NL) + NL);
+
+/*
+ * `--reviewed` STAMPS THE PASS AS DONE, and it is the only thing that moves the
+ * baseline. It records the sentences as they stand now, so the next run marks
+ * exactly what arrived afterwards.
+ */
+if (process.argv.includes("--reviewed")) {
+  writeFileSync(REVIEWED, out.join(NL) + NL);
+  process.stderr.write("stamped " + REVIEWED + " as reviewed; nothing is new until copy changes" + NL);
+}
+
 process.stderr.write(
   "wrote docs/copy-deck.md and " + DECKS.length + " per-deck files; " +
     marked + " of " + considered + " sentences marked NEW" + NL,
