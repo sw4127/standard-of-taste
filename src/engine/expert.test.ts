@@ -352,9 +352,20 @@ describe("the ranking test's raw record cannot leak the critic's order", () => {
       expect(e.clips.length).toBeGreaterThan(0);
       for (const c of e.clips) expect(known.has(c.id), c.id).toBe(true);
       expect(e.pairs.length).toBeGreaterThan(0);
+      /*
+       * PAIRS MUST BE A SUBSET OF THE CLIPS, not merely of the pool. The panel
+       * labels a pair by each clip's ROW NUMBER in the table above it, via
+       * findIndex — and findIndex returns -1 for a stranger, which renders as
+       * "0 · 4". A wrong row number is a silent failure: it points the reader
+       * at a work they did not rate in that pair, and nothing on screen looks
+       * broken. Pool membership does not rule it out; this does.
+       */
+      const listed = e.clips.map((c) => c.id);
       for (const p of e.pairs) {
         expect(known.has(p.a), p.a).toBe(true);
         expect(known.has(p.b), p.b).toBe(true);
+        expect(listed.indexOf(p.a), `${p.a} is not a row in the clip table`).toBeGreaterThan(-1);
+        expect(listed.indexOf(p.b), `${p.b} is not a row in the clip table`).toBeGreaterThan(-1);
       }
       // And every pool item has a title to resolve TO.
       for (const item of SPREAD_POOL) expect(item.work.length).toBeGreaterThan(3);
