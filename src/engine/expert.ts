@@ -42,6 +42,12 @@ import type {
   DelicacyResult,
   PairSide,
 } from "./delicacy";
+import type {
+  SpreadClipReceipt,
+  SpreadPairReceipt,
+  SpreadRefusal,
+  SpreadResult,
+} from "./spread";
 import type { StaircaseResult } from "./staircase-session";
 import type { KnownLimit } from "./staircase-manifest";
 import { RUNG_VALUE } from "./replication";
@@ -303,6 +309,74 @@ export function biasExpert(result: BiasResult): BiasExpert {
       second: c.second,
       drift: c.drift,
     })),
+    cohortN: 0,
+  };
+}
+
+/* ------------------------------------------------------------------ *
+ * Spread
+ * ------------------------------------------------------------------ */
+
+/**
+ * THE RANKING TEST'S RAW RECORD (E18/S1).
+ *
+ * The reveal shows two averages and never says what they were averaged OVER.
+ * Six clips went past the listener, up to eight pairs were formed from them,
+ * and a person who wants to know why their far figure came out at 4.5 has
+ * nothing to look at. That is the gap this closes, and it is the same gap the
+ * other three panels close.
+ *
+ * IT CARRIES NO WORK TITLES, AND THAT IS THE MODULE CONTRACT RATHER THAN AN
+ * OVERSIGHT. This file may hold ids, enums and numbers only, so the component
+ * owns every word on the screen — and `expert.test.ts` enforces it against the
+ * serialised payload with a rule that "Piano Sonata No. 23" would break on the
+ * abbreviation alone. The component resolves an id to a work through
+ * `SPREAD_POOL`, exactly as the delicacy body resolves a family key to a label.
+ *
+ * IT CARRIES NO POSITION, WHICH MATTERS MORE. The instrument's central
+ * guarantee is that agreement with the critic is UNCOMPUTABLE rather than
+ * merely unreported: only |Δposition| was ever imported, so nothing downstream
+ * can say which of two works he ranked higher. An expert view is precisely
+ * where that would leak — it is the surface whose whole job is to show more —
+ * so the receipts carry `distance` and stop there.
+ *
+ * THE MEANS COME STRAIGHT OFF THE RESULT, INCLUDING THEIR NULLS. On a refused
+ * reading the engine makes the mean structurally absent rather than merely
+ * flagged, and this passes that through untouched. What it does NOT suppress is
+ * the per-pair gaps: those are observations, not a statistic, and withholding
+ * them would leave the panel with nothing to show in exactly the case a reader
+ * most wants to know what happened.
+ */
+export interface SpreadExpert {
+  /** Clips that counted, after the recognition filter. */
+  ratedCount: number;
+  /** Clips the listener said they already knew. Self-report, never a score. */
+  setAsideCount: number;
+  farCount: number;
+  closeCount: number;
+  /** Null on a refused reading, exactly as the engine returns it. */
+  farMeanGap: number | null;
+  closeMeanGap: number | null;
+  /** The chance figure both means are read against. */
+  ifIndifferent: number;
+  refusal: SpreadRefusal | null;
+  clips: SpreadClipReceipt[];
+  pairs: SpreadPairReceipt[];
+  cohortN: 0;
+}
+
+export function spreadExpert(result: SpreadResult): SpreadExpert {
+  return {
+    ratedCount: result.usedClipIds.length,
+    setAsideCount: result.excludedClipIds.length,
+    farCount: result.far.count,
+    closeCount: result.close.count,
+    farMeanGap: result.far.meanGap,
+    closeMeanGap: result.close.meanGap,
+    ifIndifferent: result.spreadIfIndifferent,
+    refusal: result.refusal,
+    clips: result.clipReceipts,
+    pairs: result.pairReceipts,
     cohortN: 0,
   };
 }

@@ -13,6 +13,12 @@
  *   (d) THE RECOGNITION FILTER ONLY SUBTRACTS, and when it leaves too little
  *       the engine REFUSES rather than reporting a flattering number (RT-N1 a).
  *   (e) THE DIFFERENCE IS NOT EXPORTED (RT-N2 a).
+ *
+ * (f) was added in E18/S1, when the result grew per-clip and per-pair receipts
+ * so an expert view could show what the two numbers were averaged over. Its
+ * load-bearing assertions are that a receipt carries a DISTANCE and never a
+ * position — the leak that would make agreement computable after all — and that
+ * the observations survive a refusal while the MEAN does not.
  */
 import { describe, expect, it } from "vitest";
 import { MIN_PAIRS_PER_KIND, SPREAD_POOL, closePairs, farPairs } from "@/content/spread/ranking";
@@ -192,8 +198,36 @@ describe("(e) the difference between the two numbers is not exported", () => {
     // 5.25 − 0 = 5.25; the two numbers are present, their difference is not.
     expect(r.far.meanGap).toBe(5.25);
     expect(r.close.meanGap).toBe(0);
-    const values = Object.values(r as unknown as Record<string, unknown>);
-    expect(values).not.toContain(5.25 - 0);
+    /*
+     * WALKED, NOT READ OFF THE TOP LEVEL (E18/S1). This read
+     * `Object.values(r)`, which sees six fields and stops. The result grew
+     * nested receipt arrays in E18, so a difference parked one level down —
+     * inside a pair, or in a summary object beside them — would have sat in
+     * plain sight under a guard whose name says it cannot.
+     *
+     * THE FIXTURE HAD TO CHANGE TOO, AND THAT IS THE MORE INTERESTING HALF.
+     * The old ratings gave 5.25 and 0, so the forbidden difference was 5.25 —
+     * the SAME NUMBER as the far mean. The moment the walk descended it found
+     * that legitimate mean and failed, which is the guard telling the truth
+     * about a fixture that could never have distinguished a difference from a
+     * mean in the first place. These ratings give 4 and 4.75: the difference is
+     * 0.75, a value nothing else in the payload holds.
+     */
+    const r2 = computeSpreadResult(rate([9, 2, 7, 1, 8, 3]));
+    expect(r2.far.meanGap).toBe(4);
+    expect(r2.close.meanGap).toBe(4.75);
+    const nested: unknown[] = [];
+    const walk = (v: unknown) => {
+      if (Array.isArray(v)) v.forEach(walk);
+      else if (v && typeof v === "object") Object.values(v).forEach(walk);
+      else nested.push(v);
+    };
+    walk(r2);
+    // The walk must actually have descended; an empty scan proves nothing.
+    expect(nested.length).toBeGreaterThan(30);
+    expect(nested).toContain(4.75);
+    expect(nested).not.toContain(4.75 - 4);
+    expect(nested).not.toContain(4 - 4.75);
     expect(flat.includes('"difference"')).toBe(false);
     expect(flat.includes('"delta"')).toBe(false);
   });
@@ -222,5 +256,69 @@ describe("malformed input is a bug upstream, not a user error", () => {
 
   it("throws on a non-integer rating", () => {
     expect(() => computeSpreadResult(rate([9, 2, 7, 1, 8, 3.5]))).toThrow(/must be an integer/);
+  });
+});
+
+/* ------------------------------------------------------------------ *
+ * (f) The receipts (E18/S1)
+ * ------------------------------------------------------------------ */
+
+describe("(f) the receipts show what the two numbers were averaged over", () => {
+  it("keeps one clip receipt per pool item, set-aside ones included", () => {
+    const r = computeSpreadResult(rate([9, 2, 7, 1, 8, 3]), ["sp1"]);
+    expect(r.clipReceipts.map((c) => c.id)).toEqual(ids);
+    expect(r.clipReceipts.filter((c) => c.setAside).map((c) => c.id)).toEqual(["sp1"]);
+    // The set-aside clip keeps the rating it was given; it just stops counting.
+    expect(r.clipReceipts.find((c) => c.id === "sp1")!.rating).toBe(9);
+  });
+
+  it("reports a missing rating as null rather than as a zero", () => {
+    // 0 is the bottom of the scale and means "nothing there" — a real answer.
+    // An absence printed as 0 would be this instrument inventing one.
+    const partial: Record<string, number> = {};
+    for (const item of SPREAD_POOL) if (item.id !== "sp1") partial[item.id] = 5;
+    const r = computeSpreadResult(partial, ["sp1"]);
+    expect(r.clipReceipts.find((c) => c.id === "sp1")!.rating).toBeNull();
+    expect(r.clipReceipts.find((c) => c.id === "sp2")!.rating).toBe(5);
+  });
+
+  it("lists exactly the pairs the means were computed over", () => {
+    const r = computeSpreadResult(rate([9, 2, 7, 1, 8, 3]));
+    const far = r.pairReceipts.filter((p) => p.kind === "far").map((p) => p.gap);
+    const close = r.pairReceipts.filter((p) => p.kind === "close").map((p) => p.gap);
+    expect(far).toHaveLength(r.far.count);
+    expect(close).toHaveLength(r.close.count);
+    const mean = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length;
+    expect(mean(far)).toBeCloseTo(r.far.meanGap!, 10);
+    expect(mean(close)).toBeCloseTo(r.close.meanGap!, 10);
+  });
+
+  it("drops every pair a set-aside clip belonged to", () => {
+    const r = computeSpreadResult(rate([9, 2, 7, 1, 8, 3]), ["sp1"]);
+    expect(r.pairReceipts.some((p) => p.a === "sp1" || p.b === "sp1")).toBe(false);
+    expect(r.pairReceipts.length).toBeGreaterThan(0);
+  });
+
+  /**
+   * THE OBSERVATIONS SURVIVE A REFUSAL AND THE MEAN DOES NOT. The engine's
+   * whole argument for making a refused mean structurally absent is that a
+   * caller would otherwise print a figure it cannot support. A per-pair gap is
+   * not that figure — it is one thing the person did — so it stays.
+   */
+  it("keeps the pairs on a refused reading while the means stay null", () => {
+    const r = computeSpreadResult(rate([9, 2, 7, 1, 8, 3]), ["sp1"]);
+    expect(r.refusal).toBe("too-few-far-pairs");
+    expect(r.far.meanGap).toBeNull();
+    expect(r.pairReceipts.length).toBeGreaterThan(0);
+  });
+
+  it("carries a distance and never a position", () => {
+    const flat = JSON.stringify(computeSpreadResult(rate([9, 2, 7, 1, 8, 3])));
+    expect(flat.includes('"distance"')).toBe(true);
+    expect(flat.includes('"position"')).toBe(false);
+    for (const p of computeSpreadResult(rate([9, 2, 7, 1, 8, 3])).pairReceipts) {
+      expect(p.distance).toBeGreaterThan(0);
+      expect(p.gap).toBeGreaterThanOrEqual(0);
+    }
   });
 });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { biasExpert, delicacyExpert, thresholdExpert } from "./expert";
+import { biasExpert, delicacyExpert, spreadExpert, thresholdExpert } from "./expert";
 import { SHARED_AXIS_FAMILIES } from "./evidence";
 import { RUNG_VALUE } from "./replication";
 import { DELICACY_INSTRUMENT_ID, MEASURED_TRIALS } from "@/content/delicacy/items";
@@ -22,6 +22,8 @@ import {
   type StaircaseResult,
 } from "./staircase-session";
 import { eligibleSources } from "./staircase-pool";
+import { computeSpreadResult } from "./spread";
+import { SPREAD_POOL, TANNER_RANKING } from "@/content/spread/ranking";
 import { observer, pCorrect, rng } from "@/analytics/observer";
 
 /* ------------------------------------------------------------------ *
@@ -92,6 +94,20 @@ const THRESHOLDS = [
   thresholdFor("timing-smear", 0.6),
   thresholdFor("lossy-artifact", 0.3, 7919, eligibleSources("lossy-artifact")[0]),
 ];
+
+/**
+ * TWO RANKING-TEST SITTINGS, AND THE SECOND ONE IS THE INTERESTING ONE.
+ *
+ * `SPREAD` is a full sitting with nothing set aside. `SPREAD_REFUSED` sets
+ * aside `sp1`, which sits in three of the four widely-spaced pairs, so the
+ * reading is refused for want of them — the case where both means are null and
+ * the per-pair observations are the only thing the panel has to show.
+ */
+const spreadRatings = (values: number[]): Record<string, number> =>
+  Object.fromEntries(SPREAD_POOL.map((item, i) => [item.id, values[i]]));
+
+const SPREAD = computeSpreadResult(spreadRatings([9, 2, 7, 1, 8, 3]));
+const SPREAD_REFUSED = computeSpreadResult(spreadRatings([9, 2, 7, 1, 8, 3]), ["sp1"]);
 
 describe("the fixtures are not degenerate", () => {
   /**
@@ -175,6 +191,8 @@ describe("no verdict can travel in this payload", () => {
   const payloads = () => [
     JSON.stringify(delicacyExpert(DELICACY)),
     JSON.stringify(biasExpert(BIAS)),
+    JSON.stringify(spreadExpert(SPREAD)),
+    JSON.stringify(spreadExpert(SPREAD_REFUSED)),
     ...THRESHOLDS.map((t) => JSON.stringify(thresholdExpert(t))),
   ];
 
@@ -203,6 +221,7 @@ describe("no verdict can travel in this payload", () => {
     };
     walk(delicacyExpert(DELICACY));
     walk(biasExpert(BIAS));
+    walk(spreadExpert(SPREAD));
     expect(strings.length).toBeGreaterThan(10);
     for (const s of strings) {
       expect(s, s).not.toMatch(/\s(is|are|was|were|you|your)\s/i);
@@ -234,7 +253,104 @@ describe("no verdict can travel in this payload", () => {
   it("badges the absent cohort on every instrument (N3)", () => {
     expect(delicacyExpert(DELICACY).cohortN).toBe(0);
     expect(biasExpert(BIAS).cohortN).toBe(0);
+    expect(spreadExpert(SPREAD).cohortN).toBe(0);
     for (const t of THRESHOLDS) expect(thresholdExpert(t).cohortN).toBe(0);
+  });
+});
+
+/* ------------------------------------------------------------------ *
+ * The Ranking Test (E18/S1)
+ * ------------------------------------------------------------------ */
+
+describe("the ranking test's raw record cannot leak the critic's order", () => {
+  /**
+   * THE INSTRUMENT'S CENTRAL GUARANTEE, CHECKED AT THE SURFACE MOST LIKELY TO
+   * BREAK IT. `spread.ts` argues that agreement is uncomputable because only
+   * |Δposition| was ever imported. An expert view is where that argument gets
+   * tested for real: it is the one surface whose whole job is to show MORE, and
+   * a `position` field added to a receipt "so the table can sort" would hand
+   * back the ordering the engine spent a docblock refusing to import.
+   *
+   * ASSERTED ON THE SERIALISED PAYLOAD rather than on a field list, so it also
+   * catches a position arriving inside something not thought of as a position.
+   * The scan is proven to have found something first: a run that matched
+   * nothing would pass this test while checking nothing at all.
+   */
+  it("carries distances and no positions", () => {
+    const flat = JSON.stringify(spreadExpert(SPREAD));
+    expect(flat.includes('"distance"')).toBe(true);
+    expect(flat.includes('"position"')).toBe(false);
+    expect(flat.includes('"rank"')).toBe(false);
+
+    // Every position in the pool, as a bare number, must be absent from the
+    // payload's own numeric fields. Ratings and gaps share that value space, so
+    // this checks the FIELDS rather than the bytes.
+    const e = spreadExpert(SPREAD);
+    const positions = SPREAD_POOL.map((i) => i.position);
+    expect(positions.length).toBe(6);
+    for (const p of e.pairs) {
+      expect(Object.keys(p).sort()).toEqual(["a", "b", "distance", "gap", "kind"]);
+    }
+    for (const c of e.clips) {
+      expect(Object.keys(c).sort()).toEqual(["id", "rating", "setAside"]);
+    }
+    // And the ranking itself never travels.
+    expect(TANNER_RANKING.length).toBe(21);
+    for (const w of TANNER_RANKING) expect(flat.includes(w.work)).toBe(false);
+  });
+
+  /**
+   * A DISTANCE IS SYMMETRIC AND THE GAPS AGREE WITH THE MEANS. If the receipts
+   * were built in a second pass over the pairs they could drift from the figure
+   * on screen; they are built from the same array, and this is what says so.
+   */
+  it("averages to exactly the means the reveal prints", () => {
+    const e = spreadExpert(SPREAD);
+    const mean = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length;
+    const far = e.pairs.filter((p) => p.kind === "far").map((p) => p.gap);
+    const close = e.pairs.filter((p) => p.kind === "close").map((p) => p.gap);
+    expect(far).toHaveLength(e.farCount);
+    expect(close).toHaveLength(e.closeCount);
+    expect(mean(far)).toBeCloseTo(e.farMeanGap!, 10);
+    expect(mean(close)).toBeCloseTo(e.closeMeanGap!, 10);
+    for (const p of e.pairs) expect(p.distance).toBeGreaterThan(0);
+  });
+
+  /**
+   * THE REFUSAL WITHHOLDS THE STATISTIC AND KEEPS THE OBSERVATIONS. Suppressing
+   * the pairs as well would leave the panel blank in exactly the case a reader
+   * most wants to see what happened, and a per-pair gap is not a statistic — it
+   * is one thing the person did.
+   */
+  it("keeps the pairs when it refuses the means", () => {
+    const e = spreadExpert(SPREAD_REFUSED);
+    expect(e.refusal).toBe("too-few-far-pairs");
+    expect(e.farMeanGap).toBeNull();
+    expect(e.closeMeanGap).toBeNull();
+    expect(e.pairs.length).toBeGreaterThan(0);
+    // The set-aside clip is shown, with its rating, and belongs to no pair.
+    const aside = e.clips.filter((c) => c.setAside);
+    expect(aside.map((c) => c.id)).toEqual(["sp1"]);
+    expect(aside[0].rating).toBe(9);
+    expect(e.pairs.some((p) => p.a === "sp1" || p.b === "sp1")).toBe(false);
+    expect(e.clips).toHaveLength(SPREAD_POOL.length);
+  });
+
+  it("prints a ranking-test payload for reading", () => {
+    for (const [name, r] of [["FULL", SPREAD], ["REFUSED", SPREAD_REFUSED]] as const) {
+      const e = spreadExpert(r);
+      console.log(`
+=== RANKING TEST · ${name}`);
+      console.log(
+        `  rated=${e.ratedCount} setAside=${e.setAsideCount} far=${e.farCount} close=${e.closeCount} ` +
+          `refusal=${e.refusal} chance=${e.ifIndifferent.toFixed(2)}`,
+      );
+      console.log(`  farMean=${e.farMeanGap} closeMean=${e.closeMeanGap}`);
+      console.log(`  clips: ${e.clips.map((c) => `${c.id}=${c.rating}${c.setAside ? "*" : ""}`).join(" ")}`);
+      for (const p of e.pairs) {
+        console.log(`   ${p.a}-${p.b} ${p.kind} distance=${p.distance} gap=${p.gap}`);
+      }
+    }
   });
 });
 

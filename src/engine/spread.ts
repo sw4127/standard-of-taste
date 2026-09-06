@@ -98,6 +98,55 @@ export interface SpreadPairStat {
   meanGap: number | null;
 }
 
+/**
+ * ONE CLIP, AND WHAT THE LISTENER GAVE IT.
+ *
+ * Every clip in the pool appears here, INCLUDING the ones set aside, because
+ * the receipt's job is to show what happened rather than what counted. A clip
+ * whose rating was never collected carries null rather than a zero — a zero is
+ * the bottom of this scale and means "nothing there", which is a thing a person
+ * can say and not a thing an absence may be printed as.
+ *
+ * NO POSITION FIELD, AND THAT IS THE LOAD-BEARING OMISSION. The ranking's
+ * direction is deliberately absent from this whole instrument: everything
+ * downstream sees |Δposition| and nothing else, so agreement is uncomputable
+ * rather than merely unreported. A receipt that carried each work's place in
+ * the critic's list would hand that back, and the first thing a later caller
+ * would do is sort by it.
+ */
+export interface SpreadClipReceipt {
+  id: string;
+  /** The integer the listener gave, or null if it was never collected. */
+  rating: number | null;
+  /** Said to have been heard before, so every pair it belonged to was dropped. */
+  setAside: boolean;
+}
+
+/**
+ * ONE USABLE PAIR, AND THE GAP THAT WENT INTO THE AVERAGE.
+ *
+ * Only pairs that survived the recognition filter appear — the same pairs the
+ * two means are computed over, so a reader adding these up by hand arrives at
+ * the figure on screen rather than at a different one.
+ *
+ * THEY SURVIVE A REFUSAL, AND THE MEANS DO NOT. That asymmetry is the point.
+ * A refused reading withholds the MEAN, which is a statistic this instrument
+ * has just declared it cannot support; it does not withhold the OBSERVATIONS,
+ * which are simply what the person did. It is the same rule the delicacy
+ * calibration bins already follow: a bin under the minimum shows its count and
+ * withholds its rate.
+ */
+export interface SpreadPairReceipt {
+  /** Clip ids. Which is `a` is pool order, and carries no ranking meaning. */
+  a: string;
+  b: string;
+  kind: "far" | "close";
+  /** |Δposition| — a DISTANCE. It cannot say which work the critic ranked higher. */
+  distance: number;
+  /** |rating(a) − rating(b)|, the quantity averaged into `far` or `close`. */
+  gap: number;
+}
+
 export interface SpreadResult {
   /** Clips rated and kept — recognised ones are excluded before anything. */
   usedClipIds: string[];
@@ -117,6 +166,10 @@ export interface SpreadResult {
    * say what happened instead of printing a figure it cannot support.
    */
   refusal: SpreadRefusal | null;
+  /** Every clip and its rating, set-aside ones included. */
+  clipReceipts: SpreadClipReceipt[];
+  /** Every counted pair and its gap. Present even when the means are not. */
+  pairReceipts: SpreadPairReceipt[];
 }
 
 function assertRating(id: string, value: number | undefined): asserts value is number {
@@ -182,6 +235,29 @@ export function computeSpreadResult(
     meanGap: refusal ? null : mean(closeGaps),
   };
 
+  /*
+   * THE RECEIPTS ARE BUILT FROM THE SAME `usable` LIST THE MEANS CAME FROM, not
+   * recomputed beside it. Two passes over the pairs is how the rung table and
+   * the window plan each ended up with a second copy free to disagree with the
+   * first; here `gaps()` and this loop read one array, so a pair that was
+   * counted and a pair that is shown cannot come apart.
+   */
+  const pairReceipts: SpreadPairReceipt[] = usable.map((p) => ({
+    a: p.a.id,
+    b: p.b.id,
+    kind: p.kind,
+    distance: p.distance,
+    gap: Math.abs(ratings[p.a.id] - ratings[p.b.id]),
+  }));
+
+  const clipReceipts: SpreadClipReceipt[] = pool.map((item) => ({
+    id: item.id,
+    // Set-aside clips are never asserted, so their rating may legitimately be
+    // absent; `?? null` rather than `|| null`, because 0 is a real rating.
+    rating: ratings[item.id] ?? null,
+    setAside: excluded.has(item.id),
+  }));
+
   return {
     usedClipIds: kept.map((i) => i.id),
     excludedClipIds: pool.filter((i) => excluded.has(i.id)).map((i) => i.id),
@@ -189,6 +265,8 @@ export function computeSpreadResult(
     close,
     spreadIfIndifferent: spreadIfIndifferent(),
     refusal,
+    clipReceipts,
+    pairReceipts,
   };
 }
 
