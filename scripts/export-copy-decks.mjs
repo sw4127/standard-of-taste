@@ -19,11 +19,14 @@
  * name; what must not happen is the combined document drifting from them, and
  * regenerating everything together is what prevents that.
  *
- * WHAT "NEW" MEANS, AND IT IS NOT A GUESS. A sentence is marked NEW when it does
- * not appear in the BASELINE: the previously committed `docs/copy-deck.md` if
- * there is one, and otherwise the three per-deck files as they stood one commit
- * earlier. The header of the generated document states which baseline was used,
- * because a marker whose meaning is undocumented is worse than no marker.
+ * THE PER-SENTENCE "NEW" MARKER WAS REMOVED IN E18/S11, and it deserves a
+ * paragraph because it was wrong rather than merely unnecessary. It compared
+ * each sentence against the previously committed document, which made 182 of
+ * 216 render as "not new" -- read by anyone as "reviewed". Almost none of it is.
+ * The error underneath was about people: the writing pass is COWORK'S, not the
+ * PM's, and Cowork has seen none of this, so "new since you last saw it" was a
+ * question about a reader who does not exist. `docs/copy-review-ledger.md`
+ * answers the real one, per surface, and today it reads none.
  *
  * NO BACKSLASH ESCAPES IN THIS FILE. The transport these scripts are written
  * through eats one level of escaping, which has produced a real newline inside a
@@ -32,7 +35,7 @@
  *   node scripts/export-copy-decks.mjs
  */
 import { execSync } from "node:child_process";
-import { readFileSync, writeFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
 
 const NL = String.fromCharCode(10);
 
@@ -72,62 +75,6 @@ const DECKS = [
   },
 ];
 
-/** The sentences the PM has said they finished reviewing. */
-const REVIEWED = "docs/copy-deck-reviewed.txt";
-
-/**
- * THE ANCHOR IS "WHAT HAS BEEN REVIEWED", NOT "WHAT WAS LAST COMMITTED".
- *
- * The first version compared against the previously committed
- * `docs/copy-deck.md`. That was wrong the moment the document was committed:
- * the next run reported 0 of 216 sentences new, because committing the
- * document is not the same as reading it. A marker that resets when an engineer
- * commits tells the reader nothing about what the reader has seen.
- *
- * So the baseline is a stamp that only moves when somebody says the pass is
- * done -- `node scripts/export-copy-decks.mjs --reviewed`. That is a gate a
- * person can actually discharge, which is the difference between a useful gate
- * and the kind this project deletes: it needs one sentence from the PM, not a
- * judgment he has no way to make.
- *
- * Falling back, in order: the stamp, then the previously committed document,
- * then the per-deck files one commit back. Whichever was used is named in the
- * generated header, because a marker whose meaning is undocumented is worse
- * than no marker.
- */
-function baseline() {
-  const show = (ref, file) => {
-    try {
-      return execSync("git show " + ref + ":" + file, { encoding: "utf8", stdio: ["pipe", "pipe", "ignore"] });
-    } catch {
-      return "";
-    }
-  };
-  let stamp = "";
-  try {
-    stamp = readFileSync(REVIEWED, "utf8");
-  } catch {
-    stamp = "";
-  }
-  if (stamp.trim().length > 0) {
-    return { text: stamp, describes: "the copy you last marked reviewed (`" + REVIEWED + "`)" };
-  }
-  const combined = show("HEAD", "docs/copy-deck.md");
-  if (combined.trim().length > 0) {
-    return { text: combined, describes: "the previously committed docs/copy-deck.md" };
-  }
-  const parts = DECKS.map((d) => show("HEAD~1", d.file)).join(NL);
-  if (parts.trim().length > 0) {
-    return {
-      text: parts,
-      describes:
-        "the three per-deck files as they stood at HEAD~1, because this is the first assembly " +
-        "and there was no combined document to compare against",
-    };
-  }
-  return { text: "", describes: "nothing -- no baseline was found, so nothing is marked" };
-}
-
 /**
  * IS THIS LINE COPY SOMEBODY WOULD REWRITE?
  *
@@ -153,7 +100,6 @@ function reviewable(line, insideFence) {
 }
 
 const out = [];
-let marked = 0;
 let considered = 0;
 
 /**
@@ -170,8 +116,6 @@ let considered = 0;
  * editing a clip blurb is a pool change.
  */
 const said = new Set();
-
-const base = baseline();
 
 out.push("# The copy deck — everything a reader sees, for a writing pass");
 out.push("");
@@ -202,8 +146,9 @@ out.push(
 );
 out.push("");
 out.push(
-  "A sentence carries **NEW** when it does not appear in " + base.describes + ". Everything else " +
-    "has been in a deck through at least one earlier pass.",
+  "**Which of these surfaces has ever been through a writer is in " +
+    "`docs/copy-review-ledger.md`.** Read that first: it is the only honest answer to \"what is " +
+    "left to do\", and today it says none of them.",
 );
 out.push("");
 for (const line of out) {
@@ -230,8 +175,6 @@ DECKS.forEach((deck, i) => {
   out.push("");
 
   const part = [];
-  const marks = [];
-  let partConsidered = 0;
   let fenced = false;
   for (const line of generated.split(NL)) {
     if (line.trim().startsWith("```")) fenced = !fenced;
@@ -240,11 +183,6 @@ DECKS.forEach((deck, i) => {
     if (said.has(line.trim())) continue;
     if (reviewable(line, fenced)) {
       considered += 1;
-      partConsidered += 1;
-      if (base.text.length > 0 && !base.text.includes(line.trim())) {
-        marks.push(part.length);
-        part.push("**NEW**");
-      }
     }
     // Demote the per-deck headings so the assembled document nests correctly.
     part.push(line.startsWith("#") ? "#" + line : line);
@@ -271,21 +209,6 @@ DECKS.forEach((deck, i) => {
       i -= 1;
     }
   }
-  /*
-   * A PART THAT IS NEW IN ITS ENTIRETY GETS ONE SENTENCE, NOT NINETY MARKERS.
-   *
-   * The page deck arrived as a whole part, so every line in it is absent from
-   * the baseline and every line would carry NEW -- ninety-odd markers that say
-   * nothing except "this part is new", drowning the thirty-odd in the earlier
-   * parts that point at genuinely new sentences. The marker is only useful
-   * where it discriminates.
-   */
-  if (marks.length === partConsidered && partConsidered > 5) {
-    for (let i = marks.length - 1; i >= 0; i -= 1) part.splice(marks[i], 1);
-    part.splice(2, 0, "**Every sentence in this part is new — this deck did not exist before.**", "");
-  } else {
-    marked += marks.length;
-  }
   out.push(...part);
 });
 
@@ -293,8 +216,8 @@ out.push("");
 out.push("---");
 out.push("");
 out.push(
-  "**" + marked + " of the " + considered + " sentences here are new.** They are the ones that do " +
-    "not appear in " + base.describes + ".",
+  "**" + considered + " sentences.** Which surfaces have ever been through a writer is in " +
+    "`docs/copy-review-ledger.md`; today, none of them have.",
 );
 out.push("");
 
@@ -305,12 +228,17 @@ writeFileSync("docs/copy-deck.md", out.join(NL) + NL);
  * baseline. It records the sentences as they stand now, so the next run marks
  * exactly what arrived afterwards.
  */
-if (process.argv.includes("--reviewed")) {
-  writeFileSync(REVIEWED, out.join(NL) + NL);
-  process.stderr.write("stamped " + REVIEWED + " as reviewed; nothing is new until copy changes" + NL);
-}
+/*
+ * THE LEDGER IS WRITTEN LAST, because it reads the decks this run just wrote.
+ * Generated by the same command so it cannot describe a set of surfaces that no
+ * longer exists.
+ */
+writeFileSync("docs/copy-review-ledger.md", execSync("node scripts/export-review-ledger.mjs", {
+  encoding: "utf8",
+  maxBuffer: 8 * 1024 * 1024,
+}));
 
 process.stderr.write(
-  "wrote docs/copy-deck.md and " + DECKS.length + " per-deck files; " +
-    marked + " of " + considered + " sentences marked NEW" + NL,
+  "wrote docs/copy-deck.md, " + DECKS.length + " per-deck files and the review ledger; " +
+    considered + " sentences" + NL,
 );

@@ -27,7 +27,7 @@
  * export. The scan asserts it FOUND keys before comparing, because a regex that
  * matches nothing would pass this test while checking nothing at all.
  */
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { vocabularyStrings } from "./fixtures";
 
@@ -253,5 +253,77 @@ describe("the page extractor has not gone partially blind", () => {
       "the page extractor is missing most of these pages' copy — its scanner has gone stale " +
         "against the markup. Check scripts/export-page-deck.mjs:",
     ).toEqual([]);
+  });
+});
+
+/**
+ * THE LEDGER KNOWS ABOUT EVERY SURFACE THE DECKS ENUMERATE (E18/S11, RT-Q3 a).
+ *
+ * `docs/copy-review-ledger.md` answers "has anyone ever written this" per
+ * surface. It replaces a per-sentence NEW marker whose baseline made 182 of 216
+ * sentences render as reviewed when almost none are — an error that came from
+ * assuming the PM performs the pass. It is Cowork's, and Cowork has seen none
+ * of this.
+ *
+ * A LEDGER IS ONLY WORTH ANYTHING IF IT CANNOT MISS A SURFACE. Both sides are
+ * derived from the generated decks, so a new surface arrives in the table marked
+ * "never" rather than silently absent, and a row for a surface that no longer
+ * exists fails too.
+ */
+describe("the review ledger accounts for every surface", () => {
+  const DECK_FILES = [
+    "docs/copy-deck-vocabulary.md",
+    "docs/copy-deck-instruments.md",
+    "docs/copy-deck-pages.md",
+    "docs/copy-deck-method.md",
+  ];
+
+  const surfaces = DECK_FILES.flatMap((file) =>
+    readFileSync(file, "utf8")
+      .split(String.fromCharCode(10))
+      .filter((line) => line.startsWith("## ") && line.indexOf("How to use") === -1)
+      .map((line) => line.slice(3).trim()),
+  );
+
+  const ledger = readFileSync("docs/copy-review-ledger.md", "utf8");
+
+  it("found surfaces to check, so this cannot pass vacuously", () => {
+    expect(surfaces.length).toBeGreaterThan(20);
+    expect(ledger.length).toBeGreaterThan(1000);
+  });
+
+  it("has a row for every surface in every deck", () => {
+    const missing = surfaces.filter((s) => !ledger.includes("| " + s + " |"));
+    expect(
+      missing,
+      "docs/copy-review-ledger.md has no row for these surfaces, so they would be commissioned " +
+        "blind. Regenerate it: node scripts/export-copy-decks.mjs",
+    ).toEqual([]);
+  });
+
+  it("has no row for a surface that no longer exists", () => {
+    const rows = ledger
+      .split(String.fromCharCode(10))
+      .filter((line) => line.startsWith("| ") && line.indexOf("---") === -1 && line.indexOf("| Part |") === -1)
+      .map((line) => line.split(" | ")[1])
+      .filter((name) => typeof name === "string" && name.length > 0);
+    expect(rows.length).toBe(surfaces.length);
+    const orphans = rows.filter((name) => !surfaces.includes(name));
+    expect(orphans, "the ledger lists surfaces the decks no longer enumerate:").toEqual([]);
+  });
+
+  /**
+   * THE HEADLINE IS A COUNT AND COUNTS GO STALE. It is derived in the generator,
+   * but a stale committed file would still show the old one, and "0 of 27" is
+   * the sentence a reader acts on.
+   */
+  it("states a total that matches the decks", () => {
+    expect(ledger.includes("of " + surfaces.length + " surfaces in the decks")).toBe(true);
+  });
+
+  /** The stamp that made unreviewed copy look reviewed is gone for good. */
+  it("carries no reviewed-stamp file", () => {
+    expect(existsSync("docs/copy-deck-reviewed.txt")).toBe(false);
+    expect(readFileSync("scripts/export-copy-decks.mjs", "utf8").includes("copy-deck-reviewed")).toBe(false);
   });
 });

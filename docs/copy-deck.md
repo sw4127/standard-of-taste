@@ -10,7 +10,7 @@ The engineer who wrote these is the weaker writer of the two on this project; th
 
 Two constraints apply everywhere. **D1:** every sentence is about the performance, never about the person. **N3:** no percentile, no cohort, no comparison to other people — there are zero real respondents, so any such claim is about people who do not exist.
 
-A sentence carries **NEW** when it does not appear in the copy you last marked reviewed (`docs/copy-deck-reviewed.txt`). Everything else has been in a deck through at least one earlier pass.
+**Which of these surfaces has ever been through a writer is in `docs/copy-review-ledger.md`.** Read that first: it is the only honest answer to "what is left to do", and today it says none of them.
 
 ## Contents
 
@@ -168,47 +168,34 @@ Every sentence the vocabulary layer can render, enumerated from the same fixture
 
 **13 sentences to review** — 15 concrete variants, 25 reachable renderings. Braces mark values the engine fills in; leave them as slots.
 
-**NEW**
 > Across the four pairs he placed far apart, your two ratings differed by {n}.{n} points on average. Across the four pairs he bracketed together, {n}.{n}. Rating at random produces {n}.{n} on both, because chance does not know which works a critic separated.
 
   *As rendered:* “Across the four pairs he placed far apart, your two ratings differed by 0.0 points on average. Across the four pairs he bracketed together, 0.0. Rating at random produces 3.6 on both, because chance does not know which works a critic separated.”  ·  “Across the four pairs he placed far apart, your two ratings differed by 0.0 points on average. Across the four pairs he bracketed together, 5.3. Rating at random produces 3.6 on both, because chance does not know which works a critic separated.”  · …and 1 more
 
-**NEW**
 > Across the three pairs he placed far apart, your two ratings differed by {n}.{n} points on average. Across the three pairs he bracketed together, {n}.{n}. Rating at random produces {n}.{n} on both, because chance does not know which works a critic separated.
 
   *As rendered:* “Across the three pairs he placed far apart, your two ratings differed by 5.0 points on average. Across the three pairs he bracketed together, 4.7. Rating at random produces 3.6 on both, because chance does not know which works a critic separated.”
 
-**NEW**
 > Every clip here was one you had heard before, so all six were set aside. You told us which of these you had heard before, and we took your word for it — nothing here checks. It only ever leaves clips out; what you recognised is not part of any result.
 
-**NEW**
 > Neither number says you agreed with him, and neither could: this only ever looks at how far apart your two ratings fell, never at which one you put higher. Preferring the work he ranked lower costs you nothing here, because nothing here is checking. Small numbers are not a poor result either — six recordings of six different works are not spaced out by quality, and if they genuinely sounded close to you then rating them close was the accurate thing to do.
 
-**NEW**
 > No number this time. Setting aside the one you had heard before left five clips, and that makes only one usable widely-spaced pair where this needs three. Below that, one clip's wobble moves the answer further than the answer moves. Come back and try it with fewer set aside.
 
-**NEW**
 > No number this time. Setting aside the two you had heard before left four clips, and that makes only one usable closely-spaced pair where this needs three. Below that, one clip's wobble moves the answer further than the answer moves. Come back and try it with fewer set aside.
 
-**NEW**
 > One clip you had heard before was set aside before anything was worked out, so what follows rests on the five that were new to you. You told us which of these you had heard before, and we took your word for it — nothing here checks. It only ever leaves clips out; what you recognised is not part of any result.
 
-**NEW**
 > Two clips you had heard before were set aside before anything was worked out, so what follows rests on the four that were new to you. You told us which of these you had heard before, and we took your word for it — nothing here checks. It only ever leaves clips out; what you recognised is not part of any result.
 
-**NEW**
 > You gave every one of these the same rating, so there are no gaps to compare and nothing for this to work on. That is a real answer rather than a failed attempt — if the six genuinely sounded alike to you, saying so was the accurate thing to do.
 
-**NEW**
 > You had heard all six of these before, so there is nothing here to read. This one only works on music that is new to you — on anything you already know, a rating is partly memory, and no instrument can separate the two afterwards. There is no second attempt that would fix that: it needs more music than this pool currently holds. Come back if it grows.
 
-**NEW**
 > You said none of these were familiar, so all of them counted. You told us which of these you had heard before, and we took your word for it — nothing here checks. It only ever leaves clips out; what you recognised is not part of any result.
 
-**NEW**
 > Your ratings moved further apart where his judgment did not. Whether that means anything is a question this cannot answer: four pairs against four, built from clips that each appear in several of them, and nobody has sat this twice to find out how far the numbers wander on their own. There is no honest size at which the gap between them becomes a result, so none is offered.
 
-**NEW**
 > Your ratings moved further apart where his judgment did. Whether that means anything is a question this cannot answer: three pairs against three, built from clips that each appear in several of them, and nobody has sat this twice to find out how far the numbers wander on their own. There is no honest size at which the gap between them becomes a result, so none is offered.
 
 ---
@@ -232,59 +219,46 @@ Every sentence the vocabulary layer can render, enumerated from the same fixture
 
 **13 sentences to review** — 13 concrete variants, 13 reachable renderings. Braces mark values the engine fills in; leave them as slots.
 
-**NEW**
 > Across your pitch drift sittings, it now takes a larger flaw to reach you than it did — a change of about 11x. This ladder cannot distinguish anything under {n}.5x from ordinary run-to-run wobble, so a move this size is the instrument speaking rather than the dice.
 
   *As rendered:* “Across your pitch drift sittings, it now takes a larger flaw to reach you than it did — a change of about 11x. This ladder cannot distinguish anything under 3.5x from ordinary run-to-run wobble, so a move this size is the instrument speaking rather than the dice.”
 
-**NEW**
 > Across your pitch drift sittings, you now catch a smaller flaw than you did — a change of about 11x. This ladder cannot distinguish anything under {n}.5x from ordinary run-to-run wobble, so a move this size is the instrument speaking rather than the dice.
 
   *As rendered:* “Across your pitch drift sittings, you now catch a smaller flaw than you did — a change of about 11x. This ladder cannot distinguish anything under 3.5x from ordinary run-to-run wobble, so a move this size is the instrument speaking rather than the dice.”
 
-**NEW**
 > Across your pitch drift sittings, you now catch a smaller flaw than you did — a change of about {n}.9x. This ladder cannot distinguish anything under {n}.5x from ordinary run-to-run wobble, so a move this size is the instrument speaking rather than the dice.
 
   *As rendered:* “Across your pitch drift sittings, you now catch a smaller flaw than you did — a change of about 8.9x. This ladder cannot distinguish anything under 2.5x from ordinary run-to-run wobble, so a move this size is the instrument speaking rather than the dice.”
 
-**NEW**
 > Across your pitch drift sittings, you now catch a smaller flaw than you did. One of them put you past the end of what this ladder can render, so the direction is solid and the size is not — it is at least {n}.5x, which is the smallest move this machine can distinguish from noise.
 
   *As rendered:* “Across your pitch drift sittings, you now catch a smaller flaw than you did. One of them put you past the end of what this ladder can render, so the direction is solid and the size is not — it is at least 3.5x, which is the smallest move this machine can distinguish from noise.”
 
-**NEW**
 > Nobody has measured how much this machine's numbers wander between sittings, so there is no honest line between a change and a coin flip here. Until there is, it says nothing.
 
-**NEW**
 > One session cannot say whether your ear moved — there is nothing to compare it against. A second sitting on this machine is what makes that sentence possible at all.
 
-**NEW**
 > The label moved you +{n}% before and +{n}% since. That gap is inside the {n} points this test wanders by on its own, so it is not a change anybody could stand behind — the same person, retested, moves this much without anything about them changing.
 
   *As rendered:* “The label moved you +20% before and +15% since. That gap is inside the 8 points this test wanders by on its own, so it is not a change anybody could stand behind — the same person, retested, moves this much without anything about them changing.”
 
-**NEW**
 > The label moved you +{n}% before and {n}% since — {n} points closer to zero, where zero means the name changed nothing. That is more than the {n} points this test wanders by on its own, so a name is doing less to what you hear than it was.
 
   *As rendered:* “The label moved you +20% before and 0% since — 20 points closer to zero, where zero means the name changed nothing. That is more than the 8 points this test wanders by on its own, so a name is doing less to what you hear than it was.”
 
-**NEW**
 > The label moved you {n}% before and +{n}% since — {n} points further from zero, and more than the {n} points this test wanders by on its own. A name is doing more to what you hear than it was. Both directions count: marking a labelled clip down is still the name deciding, not your ears.
 
   *As rendered:* “The label moved you 0% before and +20% since — 20 points further from zero, and more than the 8 points this test wanders by on its own. A name is doing more to what you hear than it was. Both directions count: marking a labelled clip down is still the name deciding, not your ears.”
 
-**NEW**
 > These trials are too short to show change over time. Your score would have to move by six of the fifteen pairs — or four of a single flaw's five — before it meant anything, so this machine reports where you are and leaves the question of movement to the threshold ladders.
 
-**NEW**
 > These two compression sessions ran on different recordings, so they are not comparable. A fixed bitrate does up to twice as much damage to one recording as to another, which means the difference between these two sittings would be a fact about the music rather than about you.
 
-**NEW**
 > This rests on {n} sittings — {n} before and {n} since. That is what pulled the line above down from {n}.5x to {n}.5x: the wobble of an average falls as the square root of how many sittings are in it, so each time you come back, a smaller real change becomes visible.
 
   *As rendered:* “This rests on 4 sittings — 2 before and 2 since. That is what pulled the line above down from 3.5x to 2.5x: the wobble of an average falls as the square root of how many sittings are in it, so each time you come back, a smaller real change becomes visible.”
 
-**NEW**
 > Your pitch drift sittings are {n}.9x apart, and that is inside what this ladder cannot tell from noise. It would take about {n}.5x before a change here meant anything. This is not a report that you stood still — it is the instrument saying it cannot see a move this small.
 
   *As rendered:* “Your pitch drift sittings are 1.9x apart, and that is inside what this ladder cannot tell from noise. It would take about 3.5x before a change here meant anything. This is not a report that you stood still — it is the instrument saying it cannot see a move this small.”
@@ -345,7 +319,6 @@ Every sentence the vocabulary layer can render, enumerated from the same fixture
 
   *As rendered:* “You have answered 2 different questions about your ears: whether a name changes what you hear; whether you can tell damage from clean and say what it is. They are not 2 scores of one thing and they do not add up — each is measured in its own terms.”
 
-**NEW**
 > You have answered {n} different questions about your ears: whether a name changes what you hear; whether your ratings move where a critic's judgment moved. They are not {n} scores of one thing and they do not add up — each is measured in its own terms.
 
   *As rendered:* “You have answered 2 different questions about your ears: whether a name changes what you hear; whether your ratings move where a critic's judgment moved. They are not 2 scores of one thing and they do not add up — each is measured in its own terms.”
@@ -358,7 +331,6 @@ Every sentence the vocabulary layer can render, enumerated from the same fixture
 
   *As rendered:* “You have answered 3 different questions about your ears: whether a name changes what you hear; whether you can tell damage from clean and say what it is; how small a flaw has to get before you lose it. They are not 3 scores of one thing and they do not add up — each is measured in its own terms.”
 
-**NEW**
 > You have answered {n} different questions about your ears: whether a name changes what you hear; whether you can tell damage from clean and say what it is; how small a flaw has to get before you lose it; whether your ratings move where a critic's judgment moved. They are not {n} scores of one thing and they do not add up — each is measured in its own terms.
 
   *As rendered:* “You have answered 4 different questions about your ears: whether a name changes what you hear; whether you can tell damage from clean and say what it is; how small a flaw has to get before you lose it; whether your ratings move where a critic's judgment moved. They are not 4 scores of one thing and they do not add up — each is measured in its own terms.”
@@ -392,29 +364,24 @@ Every sentence the vocabulary layer can render, enumerated from the same fixture
 
 > Did you know when you knew?
 
-**NEW**
 > Every clip, in the order you heard them
 
 > Every number behind the result, and the answers. No verdict, no interpretation — read from this browser, so a link you share shows nobody else this.
 
-**NEW**
 > Every pair that counted · by the numbers above
 
 > Every pair, in the order you met them
 
 > Every rung · gentlest first
 
-**NEW**
 > The distance column is every single thing taken from the critic's list. Which of two works he put higher was never read in, so no table here can be sorted into his order and no agreement figure can be worked out from this — by us, or by you, or later.
 
-**NEW**
 > The pairs below are what you did; the averages are missing because too few pairs survived for either one to mean anything. Nothing has been hidden from you — the figure was never worked out.
 
 > The two percentages agree because the pool carries as many acclaimed labels as dismissive ones, and a balanced set cancels re-listen drift outright. The correction is shown anyway: it is what would move if that balance ever changed.
 
 > Timing rungs are shown by number: the pool stores them as a tempo fraction and the staircase measures milliseconds of drift, so quoting one as the other would be a guess.
 
-**NEW**
 > What follows is the end of your blind sitting. These six were rated before you knew what they were, and they cannot be again — a second attempt at this instrument would be rating music you have now been told about.
 
 > What the pipeline measured and could not fix
@@ -828,8 +795,6 @@ A: They are machine 02, and they are open. The battery was built after the Prest
 
 
 **Generated, do not edit by hand.** `node scripts/export-page-deck.mjs > docs/copy-deck-pages.md`
-**Every sentence in this part is new — this deck did not exist before.**
-
 
 Every paragraph, heading and caption a reader meets on these pages, pulled from the components that render them. Surfaces are found on disk, so a new page appears here the day it ships.
 
@@ -1529,7 +1494,6 @@ Two blocks. The first is the record's own account; the second is my reading of w
 Everything else in the block is the engineer's own connective prose and is free.
 
 ```
-**NEW**
 Before the retest arc was allowed to tell anyone their ear had moved, the size of change it can resolve was measured: the whole hazard here is that subtracting two noisy numbers manufactures progress. Simulating the same unchanged person through two sessions at the shipped length puts the floor on the pitch ladder at roughly three and a half times — the threshold has to more than halve before the difference can be told from ordinary run-to-run wobble. On the prestige test it is eight points of the scale. The delicacy trials cannot support an arc at all: six of their fifteen pairs would have to change hands. Most retests are therefore told, in as many words, that nothing changed the instrument could hear. That refusal is the ordinary output of this feature rather than its edge case, and the sentence names the floor in the reader's own units so it reads as a fact about the instrument rather than a verdict on them. The only thing that lowers the floor is returning: pooled across four sittings it falls to about two and a half times, which is the entire reward this product offers for coming back.
 ```
 
@@ -1584,5 +1548,5 @@ What happened next is the part that is harder to read, and this reading is mine 
 
 ---
 
-**34 of the 216 sentences here are new.** They are the ones that do not appear in the copy you last marked reviewed (`docs/copy-deck-reviewed.txt`).
+**216 sentences.** Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`; today, none of them have.
 
