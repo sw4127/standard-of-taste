@@ -353,7 +353,17 @@ writeFileSync("docs/copy-review-ledger.md", execSync("node scripts/export-review
   maxBuffer: 8 * 1024 * 1024,
 }));
 
+/*
+ * THE BRIEF IS WRITTEN AFTER THE DECK, because it counts the deck's own tags.
+ * A brief whose batch sizes disagree with the document it describes is the
+ * stale-document defect this session has now fixed four times.
+ */
+writeFileSync("docs/copy-commission.md", execSync("node scripts/export-commission.mjs", {
+  encoding: "utf8",
+  maxBuffer: 8 * 1024 * 1024,
+}));
+
 process.stderr.write(
-  "wrote docs/copy-deck.md, " + DECKS.length + " per-deck files and the review ledger; " +
+  "wrote docs/copy-deck.md, " + DECKS.length + " per-deck files, the ledger and the brief; " +
     considered + " sentences" + NL,
 );

@@ -412,3 +412,89 @@ describe("the deck is commissionable", () => {
     expect(tags.map((t) => t.id), "the header teaches an id that does not exist").toContain(example);
   });
 });
+
+/**
+ * THE BRIEF'S NUMBERS MATCH THE DECK IT DESCRIBES (E18/S13, RT-Q3 a).
+ *
+ * `docs/copy-commission.md` is the artefact handed to a writer, and it tells
+ * them how much work each batch is. A brief whose batch sizes disagree with the
+ * document it describes is the stale-document defect this session has now fixed
+ * four times, and here it would be discovered by the writer rather than by us.
+ */
+describe("the commission brief agrees with the deck", () => {
+  const deck = readFileSync("docs/copy-deck.md", "utf8");
+  const brief = readFileSync("docs/copy-commission.md", "utf8");
+  const TAG = "` · ";
+
+  const tags = deck
+    .split(String.fromCharCode(10))
+    .filter((line) => line.startsWith("`") && line.indexOf(TAG) !== -1)
+    .map((line) => ({
+      id: line.slice(1, line.indexOf(TAG)),
+      state: line.slice(line.indexOf(TAG) + TAG.length).trim(),
+    }));
+
+  it("found a brief and a deck to compare", () => {
+    expect(tags.length).toBeGreaterThan(200);
+    expect(brief.length).toBeGreaterThan(3000);
+  });
+
+  /*
+   * THE ROWS ARE PARSED AND COMPARED IN ORDER, not searched for as substrings.
+   * The first version asked whether " | 69 | " appeared anywhere in the brief.
+   * It always does: the row is "| 1 | The reading layer | 69 | 69 | 0 |", so the
+   * Open column answers for the Sentences column and changing one of them left
+   * the guard green. Reverse-testing found that, not review.
+   */
+  it("states each batch's size as the deck actually has it", () => {
+    const PREFIXES = ["VOC-", "PAGE-", "INS-", "MET-"];
+    const rows = brief
+      .split(String.fromCharCode(10))
+      .filter((line) => line.startsWith("| ") && line.indexOf("---") === -1)
+      .map((line) => line.split("|").map((cell) => cell.trim()))
+      .filter((cells) => /^[0-9]+$/.test(cells[1] || ""));
+    expect(rows.length, "the brief has no batch table").toBe(PREFIXES.length);
+    const wrong: string[] = [];
+    PREFIXES.forEach((prefix, at) => {
+      const n = tags.filter((t) => t.id.startsWith(prefix)).length;
+      const open = tags.filter(
+        (t) => t.id.startsWith(prefix) && (t.state === "OPEN" || t.state === "PART-LOCKED"),
+      ).length;
+      expect(n, prefix + " has no sentences").toBeGreaterThan(0);
+      if (rows[at][3] !== String(n)) wrong.push(prefix + " sentences: says " + rows[at][3] + ", deck has " + n);
+      if (rows[at][4] !== String(open)) wrong.push(prefix + " open: says " + rows[at][4] + ", deck has " + open);
+    });
+    expect(wrong, "the brief's batch table disagrees with the deck:").toEqual([]);
+  });
+
+  it("states each state's count as the deck actually has it", () => {
+    for (const state of ["OPEN", "LOCKED", "PART-LOCKED", "PASSED"]) {
+      const n = tags.filter((t) => t.state === state).length;
+      expect(
+        brief.includes("**" + state + "** (" + n + ")"),
+        "the brief says the wrong number of " + state + " sentences; the deck has " + n,
+      ).toBe(true);
+    }
+  });
+
+  /**
+   * The return-format worked examples must be ids the deck contains.
+   *
+   * LINE ENDINGS ARE NORMALISED FIRST. The generator writes LF and git hands
+   * this repository CRLF on checkout, so matching on a bare newline made this
+   * pass or fail depending on how the file had been written last -- which it
+   * did, in the middle of reverse-testing something else.
+   */
+  it("shows a return format keyed on real ids", () => {
+    const flat = brief.split(String.fromCharCode(13)).join("");
+    const NEWLINE = String.fromCharCode(10);
+    const shown = tags.map((t) => t.id).filter((id) => flat.includes(NEWLINE + id + NEWLINE));
+    expect(shown.length, "the brief's return-format examples are not real ids").toBeGreaterThan(1);
+  });
+
+  it("names the rules that are not style, and the anti-clone clause", () => {
+    for (const needle of ["D1 —", "N3 —", "no leaderboard", "independent variable"]) {
+      expect(brief.toLowerCase().includes(needle.toLowerCase()), "the brief omits: " + needle).toBe(true);
+    }
+  });
+});
