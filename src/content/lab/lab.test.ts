@@ -14,6 +14,7 @@ import { describe, expect, it } from "vitest";
 import { BIAS_METRICS } from "@/engine/bias";
 import { COMPARISON_METRICS } from "@/engine/comparison";
 import { SPREAD_METRICS } from "@/engine/spread";
+import { THRESHOLD_METRICS } from "@/engine/threshold-fit";
 import { CALIBRATION_METRICS } from "@/engine/calibration";
 import { DELICACY_METRICS } from "@/engine/delicacy";
 import { ESTIMATE_METRICS } from "@/analytics/estimate";
@@ -102,6 +103,7 @@ describe("lab — metrics are SOURCED from the modules that compute them (RT-9c)
       ...COMPARISON_METRICS,
       ...DELICACY_METRICS,
       ...SPREAD_METRICS,
+      ...THRESHOLD_METRICS,
       ...CALIBRATION_METRICS,
       ...ESTIMATE_METRICS,
       ...RECOVERY_METRICS,

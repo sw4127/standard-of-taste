@@ -170,6 +170,45 @@ describe("E15/S5 — what the events actually carry", () => {
   });
 });
 
+/**
+ * THE LINEAGE'S COMPLETENESS WAS UNGUARDED (E17), and it had gone stale twice.
+ *
+ * Every row was checked end to end — event registered, module on disk, metric
+ * in the dictionary — and NOTHING checked that the rows covered the product.
+ * Comparison shipped in E16 and the Ranking Test in E17, and neither appeared:
+ * the page answering "how does a tap become a number" silently described three
+ * instruments out of five criteria.
+ *
+ * The rule is by INSTRUMENT MODULE rather than by machine, because one
+ * instrument can own several rows (delicacy feeds both an accuracy figure and a
+ * calibration one) and one machine's tap can feed another instrument entirely
+ * (comparison is computed from the Prestige Test's ratings and has no machine
+ * of its own). What must not happen is an engine that publishes metrics to the
+ * dictionary and appears nowhere in the lineage.
+ */
+describe("E17 — the lineage covers every instrument that publishes a metric", () => {
+  it("finds rows and metrics before asserting anything about them", () => {
+    expect(LINEAGE.length).toBeGreaterThan(5);
+    expect(METRICS.length).toBeGreaterThan(10);
+  });
+
+  it("traces every instrument engine that owns a published metric", () => {
+    const traced = new Set(LINEAGE.map((r) => r.computedIn));
+    const owed = [
+      ...new Set(
+        METRICS.filter((m) => m.computedIn.startsWith("src/engine/")).map((m) => m.computedIn),
+      ),
+    ];
+    expect(owed.length).toBeGreaterThan(3);
+    const missing = owed.filter((mod) => !traced.has(mod));
+    expect(
+      missing,
+      "these engines publish metrics to the dictionary and appear in no lineage row, so the " +
+        "page that explains how a tap becomes a number does not mention them",
+    ).toEqual([]);
+  });
+});
+
 describe("E15/S5 — from a tap to a statistic", () => {
   it("resolves every row end to end", () => {
     expect(LINEAGE.length).toBeGreaterThan(3);
@@ -177,7 +216,17 @@ describe("E15/S5 — from a tap to a statistic", () => {
       expect(row.event in KNOWN_EVENTS, `${row.action} → ${row.event}`).toBe(true);
       expect(existsSync(row.computedIn), `${row.action} → ${row.computedIn}`).toBe(true);
       expect(row.action.length).toBeGreaterThan(20);
-      expect(row.storedAs).toContain("gym.");
+      /*
+       * A ROW MAY DECLARE THAT IT STORES NOTHING (E17). The check read
+       * `toContain("gym.")`, which assumes every instrument writes to the
+       * device store. The Ranking Test does not — persistence is RT-G and
+       * unruled — and "stores nothing" is a fact the lineage should be able to
+       * publish rather than a reason to leave a live instrument off it.
+       * Narrowed to an exact sentinel rather than relaxed: any OTHER value
+       * still has to name a real key.
+       */
+      const STORES_NOTHING = "nothing — this instrument keeps no record of you";
+      if (row.storedAs !== STORES_NOTHING) expect(row.storedAs).toContain("gym.");
     }
   });
 

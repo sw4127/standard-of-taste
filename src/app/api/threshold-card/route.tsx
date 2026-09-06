@@ -39,7 +39,15 @@ const SIZES = {
 } as const;
 type Format = keyof typeof SIZES;
 
-const ICE = THRESHOLD_VIOLET;
+/*
+ * NAMED FOR THE COLOUR IT IS (E17). This constant was `ICE` holding
+ * THRESHOLD_VIOLET — a leftover from when the Threshold Test shared Delicacy's
+ * blue, correct on screen and wrong in every line that read it. Carried as
+ * deferred debt through five handoffs on the grounds that the rendered colour
+ * was right, which is true and is exactly how the next person reading this file
+ * concludes the card is blue.
+ */
+const VIOLET = THRESHOLD_VIOLET;
 const BASE = THRESHOLD_BASE;
 const MUTED = "rgba(255,255,255,0.55)";
 
@@ -106,7 +114,7 @@ export async function GET(request: Request) {
             display: "flex",
             fontSize: px(26),
             letterSpacing: px(8),
-            color: ICE,
+            color: VIOLET,
             fontWeight: 600,
           }}
         >
@@ -125,7 +133,7 @@ export async function GET(request: Request) {
             fontSize: px(thresholdFigureFontSize(figure, 920, 150)),
             lineHeight: 1,
             fontWeight: 900,
-            color: ICE,
+            color: VIOLET,
           }}
         >
           {figure}
@@ -172,7 +180,7 @@ export async function GET(request: Request) {
             display: "flex",
             marginTop: px(isOg ? 26 : 70),
             fontSize: px(26),
-            color: ICE,
+            color: VIOLET,
             fontWeight: 600,
           }}
         >

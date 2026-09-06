@@ -26,7 +26,20 @@ export type MetricUnit =
   | "points"
   | "logits"
   | "correlation"
-  | "count";
+  | "count"
+  /**
+   * A QUANTITY IN THE WORLD, whose unit depends on which family is being
+   * measured — cents of detune, milliseconds of drift, kilobits per second.
+   *
+   * Added E17, and its absence is why the Threshold Test's deliverable spent
+   * five handoffs outside the dictionary as deferred debt: every existing
+   * variant is a statistical scale, the staircase reports a physical one, and
+   * the honest options were to mislabel it as "points" or to leave the
+   * product's headline number undescribed. Both were worse than a seventh
+   * variant. The specific unit belongs in the metric's own `unit`-adjacent
+   * prose, because it is not fixed — it is a property of the flaw family.
+   */
+  | "physical";
 
 /**
  * Who is accountable for the number moving — the BI ownership column.

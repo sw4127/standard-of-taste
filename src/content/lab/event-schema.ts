@@ -73,6 +73,13 @@ export const EVENT_SURFACES: EventSurface[] = [
     prefixes: ["threshold_"],
   },
   {
+    id: "spread",
+    title: "The Ranking Test",
+    blurb:
+      "The critic-ranked listening set. It stores nothing on the device, so these two events are the only record that a sitting happened at all.",
+    prefixes: ["spread_"],
+  },
+  {
     id: "legacy",
     title: "The legacy funnel",
     blurb:
@@ -233,6 +240,26 @@ export const LINEAGE: LineageRow[] = [
     storedAs: "gym.result.delicacy → payload.picks",
     computedIn: "src/engine/calibration.ts",
     metricId: "brier",
+  },
+  {
+    /*
+     * A THIRD STATISTIC FROM THE SAME TAP. Comparison shipped in E16 measured
+     * entirely from ratings the Prestige Test already collects — no clip, no
+     * extra question — and the lineage never said so, which made the cheapest
+     * instrument in the product look like it came from nowhere.
+     */
+    action: "…and, across all of them, how many different scores you were willing to give.",
+    event: "bias_blind_complete",
+    storedAs: "gym.result.bias → payload.blind",
+    computedIn: "src/engine/comparison.ts",
+    metricId: "degrees_used",
+  },
+  {
+    action: "You rate six works a critic ranked, having been told nothing about them.",
+    event: "spread_complete",
+    storedAs: "nothing — this instrument keeps no record of you",
+    computedIn: "src/engine/spread.ts",
+    metricId: "spread_far_pairs",
   },
   {
     action: "You say whether you could hear the flaw, forty to eighty times.",

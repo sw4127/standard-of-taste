@@ -30,6 +30,7 @@ import { CALIBRATION_METRICS } from "@/engine/calibration";
 import { COMPARISON_METRICS } from "@/engine/comparison";
 import { DELICACY_METRICS } from "@/engine/delicacy";
 import { SPREAD_METRICS } from "@/engine/spread";
+import { THRESHOLD_METRICS } from "@/engine/threshold-fit";
 import { fromModule, type MetricSpec } from "@/engine/metricMeta";
 import { ESTIMATE_METRICS } from "@/analytics/estimate";
 import { RECOVERY_METRICS } from "@/analytics/recovery";
@@ -61,6 +62,7 @@ export const METRICS = [
   ...fromModule("src/engine/comparison.ts", COMPARISON_METRICS),
   ...fromModule("src/engine/delicacy.ts", DELICACY_METRICS),
   ...fromModule("src/engine/spread.ts", SPREAD_METRICS),
+  ...fromModule("src/engine/threshold-fit.ts", THRESHOLD_METRICS),
   ...fromModule("src/engine/calibration.ts", CALIBRATION_METRICS),
   ...fromModule("src/analytics/estimate.ts", ESTIMATE_METRICS),
   ...fromModule("src/analytics/recovery.ts", RECOVERY_METRICS),

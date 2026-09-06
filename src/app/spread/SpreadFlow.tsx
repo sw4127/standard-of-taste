@@ -24,6 +24,7 @@
  */
 
 import { useState } from "react";
+import { track } from "@/lib/analytics";
 import Link from "next/link";
 import ClipPlayer from "../bias/ClipPlayer";
 import OtherMachines from "@/components/OtherMachines";
@@ -56,7 +57,23 @@ export default function SpreadFlow() {
     const next = { ...ratings, [clip.id]: value };
     setRatings(next);
     if (last) {
-      setResult(computeSpreadResult(next, recognised));
+      const done = computeSpreadResult(next, recognised);
+      setResult(done);
+      /*
+       * THE ONLY RECORD THAT A SITTING HAPPENED. This instrument writes nothing
+       * to the device, so without these two events it is invisible in the
+       * funnel — an analyst would see people leave the gym floor and never
+       * arrive anywhere. No rating and no clip id is sent: the counts and the
+       * refusal reason are what make the funnel readable, and they say nothing
+       * about which works anyone preferred.
+       */
+      track("spread_complete", {
+        rated: done.usedClipIds.length,
+        recognised: done.excludedClipIds.length,
+        farPairs: done.far.count,
+        closePairs: done.close.count,
+        refusal: done.refusal,
+      });
       setPhase("reveal");
       return;
     }
@@ -98,7 +115,10 @@ export default function SpreadFlow() {
         </div>
         <button
           type="button"
-          onClick={() => setPhase("rate")}
+          onClick={() => {
+            track("spread_start", { works: SPREAD_POOL.length });
+            setPhase("rate");
+          }}
           className="mt-8 w-full rounded-2xl py-4 text-sm font-bold transition active:scale-[0.98]"
           style={{ background: soft, color: accent, boxShadow: `0 0 0 1.5px ${accent}` }}
         >

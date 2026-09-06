@@ -29,10 +29,34 @@ const plain = (s: string) =>
  * the record rather than from a list maintained beside it, because a list I
  * maintain is a list I can quietly shorten.
  */
+/**
+ * EVERY MARKDOWN FILE UNDER `docs/`, NOT JUST THE HANDOFFS (widened E17).
+ *
+ * The docblock above has always said "in `docs/`" and the code read
+ * `handoff-*.md` only — a needle narrower than its own description, which is
+ * the failure this repository keeps finding in itself. A falsification recorded
+ * in an analysis or a sourcing document sat outside the ledger entirely, so the
+ * registry could be complete against the handoffs and still miss a belief the
+ * project had written down and killed.
+ */
+function docMarkdown(): string[] {
+  const out: string[] = [];
+  const walk = (dir: string) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = `${dir}/${entry.name}`;
+      if (entry.isDirectory()) walk(full);
+      else if (entry.name.endsWith(".md")) out.push(full);
+    }
+  };
+  walk("docs");
+  return out;
+}
+
 function recordedBeliefs(): { file: string; belief: string }[] {
   const out: { file: string; belief: string }[] = [];
-  for (const file of readdirSync("docs").filter((f) => /^handoff-.*\.md$/.test(f))) {
-    const lines = readFileSync(`docs/${file}`, "utf8").split("\n");
+  for (const path of docMarkdown()) {
+    const file = path.slice("docs/".length);
+    const lines = readFileSync(path, "utf8").split("\n");
     let inSection = false;
     for (const line of lines) {
       if (/^#{2,3} +(FALSIFIED|Falsified)/.test(line)) {

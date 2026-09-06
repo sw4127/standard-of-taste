@@ -94,11 +94,40 @@ export interface FlawFamily {
   unit: string;
   /** "cents of peak detune" — the unit as the pipeline recorded it. */
   fullUnit: string;
+  /**
+   * The same unit said to somebody who has never met it (E17).
+   *
+   * `/learn/flaws` is the page for a person who does not yet have a word for
+   * what they heard, and it rendered "Measured in ms (ms of drift IQR)" — an
+   * interquartile range, unexpanded, on the page whose entire purpose is to
+   * supply vocabulary. The pipeline's name is correct and stays, on the Lab
+   * where a technical reader wants exactly that string; this is what the
+   * reading room says instead. Declared rather than derived because there is
+   * nothing to derive a plain-language gloss FROM.
+   *
+   * A WHOLE SENTENCE, not a phrase. The first version was a fragment spliced
+   * into the existing line, which rendered "...the step from one key to the
+   * next by The Delicacy Trials and The Threshold Test" — the gloss ran
+   * straight into the machines clause and read as though the machines
+   * performed the semitone. Found by reading the page, not by the guard that
+   * had just been rewritten to cover this very field.
+   */
+  plainUnit: string;
   symptom: string;
   mechanism: string;
   /** Machines whose SHIPPED pool contains this family, in gym order. */
   machines: MachineId[];
 }
+
+/** The unit, for the reading room. See `plainUnit` on the interface. */
+const PLAIN_UNIT: Record<string, string> = {
+  "pitch-drift":
+    "A cent is a hundredth of a semitone, so a hundred of them is the step from one key to the next.",
+  "timing-smear":
+    "A millisecond is a thousandth of a second; the figure is how far a typical beat has wandered off the grid.",
+  "lossy-artifact":
+    "Kbps is how much data each second of audio was allowed, so a lower number means more damage.",
+};
 
 /**
  * Which machines actually test a family, read off what shipped.
@@ -135,6 +164,7 @@ export function flawFamilies(): FlawFamily[] {
       label: FAMILY_LABEL[family],
       unit: shortUnit(fullUnit),
       fullUnit,
+      plainUnit: PLAIN_UNIT[family],
       symptom: CREATOR_COPY[family].symptom,
       mechanism: CREATOR_COPY[family].mechanism,
       machines: machinesFor(family),

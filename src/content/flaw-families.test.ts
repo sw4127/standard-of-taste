@@ -283,25 +283,32 @@ describe("the reference page is built from the registry, not typed", () => {
 
   it("shows the unit and the machines from the registry, not from prose", () => {
     const src = readFileSync(SRC, "utf8");
-    expect(src).toContain("{f.unit}");
-    expect(src).toContain("{f.fullUnit}");
+    /*
+     * THE PAGE NOW RENDERS `plainUnit`, NOT `unit` + `fullUnit` (E17).
+     *
+     * It read "Measured in ms (ms of drift IQR)" — an interquartile range,
+     * unexpanded, on the page whose whole purpose is to give a reader the words
+     * for what they heard. The pipeline's own name is still correct and still
+     * shown on the Lab, where a technical reader wants exactly that string.
+     *
+     * The equal-unit branch went with it: it existed because the expansion
+     * repeated itself for kbps, and there is no expansion any more. The check
+     * that replaced it is stronger — the plain gloss must not merely restate
+     * the short unit, for ANY family, which is the defect that branch was
+     * patching rather than the shape of the patch.
+     */
+    expect(src).toContain("{f.plainUnit}");
     expect(src).toContain("machineLinks(f.machines)");
     for (const f of flawFamilies()) {
       expect(src, `${f.unit} is hand-typed into the page`).not.toContain(`>${f.unit}<`);
+      expect(
+        f.plainUnit.trim().toLowerCase() === f.unit.trim().toLowerCase(),
+        `${f.family}'s plain unit only restates "${f.unit}" and explains nothing`,
+      ).toBe(false);
+      expect(f.plainUnit.length, `${f.family} has no plain-language unit`).toBeGreaterThan(
+        f.unit.length + 12,
+      );
     }
-    /*
-     * The unit expansion must not repeat the unit. `lossy-artifact` has
-     * fullUnit === unit ("kbps"), and the first version of this page shipped
-     * "Measured in kbps (kbps)" — found by reading the built HTML, not by any
-     * test. This asserts the branch that stops it exists at all.
-     */
-    expect(src, "the unit expansion is unconditional and will repeat itself").toContain(
-      "f.fullUnit === f.unit",
-    );
-    expect(
-      flawFamilies().some((f) => f.fullUnit === f.unit),
-      "no family exercises the equal-unit branch any more; if that is deliberate, delete the branch",
-    ).toBe(true);
   });
 
   /**

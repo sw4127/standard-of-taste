@@ -41,6 +41,7 @@
  * which is both more principled and easier to state: if the fit's best guess
  * lies outside the range we can render, we say so.
  */
+import type { MetricSpec } from "@/content/lab/metrics";
 import type { StaircaseConfig, StaircaseState, ThresholdOutcome } from "./staircase";
 
 /** Chance performance on a two-alternative forced choice. Not a parameter. */
@@ -354,3 +355,36 @@ function fitInternal(
     posterior,
   };
 }
+
+/**
+ * THE THRESHOLD TEST'S DELIVERABLE, IN THE DICTIONARY AT LAST (E17).
+ *
+ * The D4 amendment names this the deliverable of record — "a per-flaw
+ * sensitivity threshold in physical units (cents of detune, % tempo deviation,
+ * kbps) ... Not a score" — and it was the only instrument output the metric
+ * dictionary did not describe. Carried as deferred debt through five handoffs.
+ *
+ * IT IS THE ODD ONE OUT AND THAT IS WHY IT WAS SKIPPED. Every other entry in
+ * the dictionary is a statistic ABOUT the instrument, computed across items or
+ * respondents; this is a fact about one person on one evening, in a different
+ * unit per family. `event-schema.ts` records the same tension in its lineage
+ * row and resolves it the other way, by declining to name a metric. Both cannot
+ * be right, and the dictionary is where a reader goes to ask what a number
+ * means — so it belongs here, with the difference stated rather than used as a
+ * reason to leave it out.
+ */
+export const THRESHOLD_METRICS: MetricSpec[] = [
+  {
+    id: "sensitivity_threshold",
+    label: "Sensitivity threshold",
+    definition:
+      "The smallest amount of one kind of damage a listener still reliably detects, in that damage's own physical unit — cents of peak detune, milliseconds of drift, or kbps. Fitted from every answer in the session rather than averaged from the levels the staircase happened to visit.",
+    formula:
+      "the magnitude at which the fitted psychometric curve crosses the target detection rate, from all (magnitude, correct) observations in the run — reported in cents, milliseconds or kbps depending on the family",
+    unit: "physical",
+    owner: "instrument",
+    target: null,
+    caveat:
+      "A fact about one person on one sitting, not a statistic describing the instrument, and not comparable across families because the units differ. Most sittings report a BAND rather than a single number, because a point estimate from a noisy measurement is a claim the measurement cannot support. The estimator that averaged reversal levels was retired for printing a 95% interval that covered the truth 49-72% of the time; this one was measured at 94-100%, and 94-98% even when the psychometric model is wrong.",
+  },
+];

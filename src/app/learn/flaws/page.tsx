@@ -68,8 +68,8 @@ export default function Page() {
               "Measured in kbps (kbps)". Pitch and timing carry a real
               expansion ("cents of peak detune"); lossy does not. */}
           <p className="mt-3 text-sm text-muted">
-            Measured in <strong>{f.unit}</strong>
-            {f.fullUnit === f.unit ? "" : ` (${f.fullUnit})`} by {machineLinks(f.machines)}.
+            Measured in <strong>{f.unit}</strong> by {machineLinks(f.machines)}.{" "}
+            {f.plainUnit}
           </p>
         </section>
       ))}

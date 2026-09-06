@@ -51,6 +51,10 @@ export const KNOWN_EVENTS: Readonly<Record<string, string>> = {
   threshold_complete: "the staircase converges and reports a threshold",
   threshold_share: "the share control is used on the threshold result",
 
+  // --- Ranking Test (Track N) -----------------------------------------------
+  spread_start: "the Ranking Test's frame is dismissed and listening begins",
+  spread_complete: "all six works are rated and the two spreads are computed",
+
   // --- legacy music / World Cup funnel (RT-125a keeps this alive) -----------
   quiz_start: "the legacy quiz begins",
   quiz_complete: "the legacy quiz is finished",
