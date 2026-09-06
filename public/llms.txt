@@ -28,6 +28,7 @@ never their order. All scoring is deterministic code — no AI classifies the us
 - [Reading room](https://vibe-check-app-sepia.vercel.app/learn): all explainers — the five criteria, the instruments, the methodology
 - [Naming what went wrong](https://vibe-check-app-sepia.vercel.app/learn/flaws): the three flaw families the instruments measure — what each sounds like in a render, the unit it is measured in, and which machine measures it
 - [What is the Prestige Test?](https://vibe-check-app-sepia.vercel.app/learn/prestige-bias-test): the design, the sanctioned deception, the debrief
+- [The Ranking Test explained](https://vibe-check-app-sepia.vercel.app/learn/ranking-test): what the two numbers are, why agreement is never scored, and why the clips are forty seconds
 - [Methodology](https://vibe-check-app-sepia.vercel.app/learn/methodology): performance tasks, within-subject control, deterministic scoring, honest-norms policy
 - [The Lab](https://vibe-check-app-sepia.vercel.app/lab): the analytics surface — metric dictionary, instrument health, parameter recovery, measured limits
 

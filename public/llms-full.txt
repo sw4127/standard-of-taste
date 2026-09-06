@@ -162,4 +162,5 @@ ad-tech cookies.
 - Comparison: https://vibe-check-app-sepia.vercel.app/learn/comparison
 - Freedom from prejudice: https://vibe-check-app-sepia.vercel.app/learn/freedom-from-prejudice
 - Good sense: https://vibe-check-app-sepia.vercel.app/learn/good-sense
+- The Ranking Test explained: https://vibe-check-app-sepia.vercel.app/learn/ranking-test
 - Methodology: https://vibe-check-app-sepia.vercel.app/learn/methodology

@@ -200,6 +200,40 @@ export const LEARN_PAGES: LearnPage[] = [
     ],
   },
   {
+    slug: "ranking-test",
+    title: "The Ranking Test",
+    metaTitle: "The Ranking Test — Do Your Gaps Fall Where a Critic's Did?",
+    description:
+      "Six works a published critic ranked against each other, rated blind. It reports how far apart your ratings fell on the pairs he separated, beside the same figure on the pairs he bracketed together. Agreeing with him is never scored.",
+    teaser: "A critic ranked six works. Do your gaps fall where his did?",
+    faq: [
+      {
+        q: "What does the Ranking Test actually measure?",
+        a: "Whether your ratings move where a critic's judgment moved. Michael Tanner ranked twenty-one Beethoven works against each other for BBC Music Magazine; six of them are played here as forty-second excerpts and you rate what you hear. The result is two numbers: the average distance between your two ratings across pairs he placed at least ten positions apart, and the same figure across pairs he placed within three. It is a question about whether you discriminate at all, not about whether you discriminate correctly.",
+      },
+      {
+        q: "Am I being scored on agreeing with the critic?",
+        a: "No, and the instrument could not do it if it tried. The only thing it takes from the ranking is the DISTANCE between two positions — never which of the two he placed higher. That sign was never imported, so there is no stored number from which agreement could be worked out afterwards. Preferring the work he ranked lower costs you nothing here. Scoring your agreement with a prestigious critic would also contradict the Prestige Test, which measures being moved by prestige, on the same product.",
+      },
+      {
+        q: "Why are the two numbers not combined into one?",
+        a: "Because nobody can say yet how much of a difference between them is real. The two figures rest on four pairs each, drawn from six clips that appear in several pairs apiece, and nobody has sat this instrument twice, so its wobble has never been measured. There is no honest size at which the gap between the numbers becomes a result, so none is offered — you get both figures and the number an indifferent rater would produce, which is the same on both kinds of pair because chance does not know which works a critic separated.",
+      },
+      {
+        q: "What happens if I already know the music?",
+        a: "You say so, before you rate it, and the clip is removed. Recognising a famous work means part of your rating is memory of a reputation rather than what you just heard — which is the thing the Prestige Test measures on purpose and this one must not measure by accident. It is taken on your word alone: nothing checks, and what you recognised is never reported as a fact about you. If too little is left, you get no number and a plain statement of why, rather than a smaller one.",
+      },
+      {
+        q: "Is a small number a poor result?",
+        a: "No. Six recordings of six different works were never spaced out by quality, and if they genuinely sounded close to you then rating them close was the accurate thing to do. The recordings also differ in brightness by about ten kilohertz for reasons no ranking caused — one source is a 128 kbps mp3 that stops at 8,624 Hz. That difference is measurably larger across the pairs the critic bracketed together than across the ones he separated, which means it works against the instrument finding anything rather than for it.",
+      },
+      {
+        q: "Why forty seconds, when the other instruments use twenty?",
+        a: "Because a critic's verdict is on a whole work, and some of these run forty minutes. A twenty-second excerpt could not carry that at all; forty seconds is a mitigation rather than a fix, and the limit is published rather than hidden. The window itself is chosen by measurement — the pipeline renders candidates and keeps the first one that passes its fitness gates, which on one source took twenty-three attempts because the work is short variations separated by pauses.",
+      },
+    ],
+  },
+  {
     slug: "good-sense",
     title: "Good sense",
     metaTitle: "Good Sense — Calibration as a Number",
