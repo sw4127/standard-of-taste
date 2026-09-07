@@ -29,6 +29,7 @@ import { allChains, matchesFor } from "./template-match.mjs";
 const script = `
 import { vocabularyStrings } from "@/content/vocabulary/fixtures";
 import { EMISSION_SPECS } from "@/content/vocabulary/emission-registry";
+import { LAYOUT_ORDERS } from "@/content/vocabulary/layout-order";
 import { orderLine } from "@/content/vocabulary/emission";
 import { describe, it } from "vitest";
 
@@ -36,7 +37,7 @@ describe("export", () => {
   it("emits the deck", () => {
     const order = {};
     for (const [key, spec] of Object.entries(EMISSION_SPECS)) order[key] = orderLine(spec);
-    const out = { strings: vocabularyStrings(), order };
+    const out = { strings: vocabularyStrings(), order, pinned: Object.keys(LAYOUT_ORDERS) };
     console.log("DECK_START" + JSON.stringify(out) + "DECK_END");
   });
 });
@@ -61,7 +62,7 @@ if (!match) {
   console.error(raw.slice(-4000));
   throw new Error("export-copy-deck: fixtures produced no deck");
 }
-const { strings, order } = JSON.parse(match[1]);
+const { strings, order, pinned } = JSON.parse(match[1]);
 
 /** surface prefix -> where it renders and what governs it. */
 const SECTIONS = [
@@ -240,12 +241,15 @@ const SECTIONS = [
     key: "apparatus",
     alongside:
       "`apparatusLines` emits one entry per borrowed standard, then the citation-strength line, " +
-      "then the degrees-convergence line where it applies. They sit inside `/method`, beneath the " +
-      "page prose that describes the instruments themselves.",
+      "then the degrees-convergence line where it applies. They sit inside `/learn/methodology`, " +
+      "beneath the page prose that describes the instruments themselves. This order is laid out in " +
+      "the page rather than emitted as an array, so it is pinned by a test rather than composed " +
+      "from one.",
     title: "The borrowed apparatus — WHERE THE RULERS CAME FROM",
     where:
-      "Renders on `/method`, as the section explaining which published standards this product's " +
-      "measurements are built on.",
+      "Renders on `/learn/methodology`, as the section explaining which published standards this " +
+      "product's measurements are built on. NOT on `/method`, which is a different page about how " +
+      "the project is run — the deck said `/method` until E19/S4 and it was simply wrong.",
     already:
       "The page has already described what each instrument does. This layer says whose rulers it " +
       "borrowed to do it.",
@@ -285,10 +289,15 @@ const SECTIONS = [
   {
     key: "expert",
     alongside:
-      "The panel emits its blurb, then a section per instrument. The Brier sentence renders " +
-      "directly beneath the calibration chart it refers to.",
+      "The panel emits its blurb in the collapsed summary, then the body of the ONE instrument " +
+      "whose result is on screen — not a section per instrument, which is what this line said " +
+      "until E19/S4. Inside the calibration block the order is chart, then the " +
+      "claimed-versus-delivered table, then the Brier sentence: the table sits between the " +
+      "sentence and the chart it refers to. Laid out in the component, so it is pinned by a test " +
+      "rather than composed from an array.",
     nonText:
-      "An SVG CALIBRATION CHART renders immediately above the Brier sentence: claimed confidence " +
+      "An SVG CALIBRATION CHART renders above the Brier sentence, with a table between them: " +
+      "claimed confidence " +
       "on the x axis, delivered accuracy on the y, with a DASHED DIAGONAL for perfect " +
       "calibration. \"The line above\" is that diagonal, and a reader of this deck cannot see it. " +
       "Every result surface also carries tables of numbers this deck does not reproduce.",
@@ -385,6 +394,20 @@ for (const [index, section] of SECTIONS.entries()) {
    * is reduced to the reason the order is that way. The label is unchanged, so
    * a writer reads one kind of paragraph and the coverage guard still counts.
    */
+  /*
+   * THREE WAYS A SECTION MAY CARRY AN ORDER, AND THERE IS NO FOURTH (E19/S4).
+   * It composes one from an emission spec; or its prose describes an order
+   * pinned in a component by `layout-order.ts`; or it says plainly that the
+   * order is unbound and why. A section with none of those is a hand-written
+   * claim nothing checks, which is what this whole track set out to remove, so
+   * the export refuses rather than shipping one.
+   */
+  if (!order[section.key] && !pinned.includes(section.key) && !section.orderUnbound) {
+    throw new Error(
+      `export-copy-deck: ${section.key} describes an order that nothing checks. Give it an ` +
+        "emission spec, pin it in layout-order.ts, or set orderUnbound with a reason.",
+    );
+  }
   const declared = order[section.key];
   if (declared !== undefined && declared.length === 0) {
     throw new Error(`export-copy-deck: ${section.key} has an empty emission spec`);
@@ -395,7 +418,12 @@ for (const [index, section] of SECTIONS.entries()) {
         "the hand-written one is the stale half by construction",
     );
   }
-  const adjacency = declared ? [declared, section.note].filter(Boolean).join(" ") : section.alongside;
+  const unbound = section.orderUnbound
+    ? ` **This order is not checked by anything:** ${section.orderUnbound}`
+    : "";
+  const adjacency = declared
+    ? [declared, section.note].filter(Boolean).join(" ")
+    : section.alongside + unbound;
   if (adjacency) {
     lines.push(`**What renders with it, in order.** ${adjacency}`);
     lines.push("");

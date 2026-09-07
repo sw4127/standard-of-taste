@@ -300,13 +300,13 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 ## 7. The borrowed apparatus — WHERE THE RULERS CAME FROM
 
-**Where it renders.** Renders on `/method`, as the section explaining which published standards this product's measurements are built on.
+**Where it renders.** Renders on `/learn/methodology`, as the section explaining which published standards this product's measurements are built on. NOT on `/method`, which is a different page about how the project is run — the deck said `/method` until E19/S4 and it was simply wrong.
 
 **What the screen has already said.** The page has already described what each instrument does. This layer says whose rulers it borrowed to do it.
 
 **This layer's job.** Show that the loudness normalisation, the transparency anchor and the listening-test design sit in a tradition with published standards — and say where this product departs from them.
 
-**What renders with it, in order.** `apparatusLines` emits one entry per borrowed standard, then the citation-strength line, then the degrees-convergence line where it applies. They sit inside `/method`, beneath the page prose that describes the instruments themselves.
+**What renders with it, in order.** `apparatusLines` emits one entry per borrowed standard, then the citation-strength line, then the degrees-convergence line where it applies. They sit inside `/learn/methodology`, beneath the page prose that describes the instruments themselves. This order is laid out in the page rather than emitted as an array, so it is pinned by a test rather than composed from one.
 
 **Rules this copy must keep:**
 
@@ -389,9 +389,9 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 **This layer's job.** Label measurements and state limits. Never judge them — this is the verdict-free surface.
 
-**What renders with it, in order.** The panel emits its blurb, then a section per instrument. The Brier sentence renders directly beneath the calibration chart it refers to.
+**What renders with it, in order.** The panel emits its blurb in the collapsed summary, then the body of the ONE instrument whose result is on screen — not a section per instrument, which is what this line said until E19/S4. Inside the calibration block the order is chart, then the claimed-versus-delivered table, then the Brier sentence: the table sits between the sentence and the chart it refers to. Laid out in the component, so it is pinned by a test rather than composed from an array.
 
-**Not text, and not in this deck.** An SVG CALIBRATION CHART renders immediately above the Brier sentence: claimed confidence on the x axis, delivered accuracy on the y, with a DASHED DIAGONAL for perfect calibration. "The line above" is that diagonal, and a reader of this deck cannot see it. Every result surface also carries tables of numbers this deck does not reproduce.
+**Not text, and not in this deck.** An SVG CALIBRATION CHART renders above the Brier sentence, with a table between them: claimed confidence on the x axis, delivered accuracy on the y, with a DASHED DIAGONAL for perfect calibration. "The line above" is that diagonal, and a reader of this deck cannot see it. Every result surface also carries tables of numbers this deck does not reproduce.
 
 **Rules this copy must keep:**
 

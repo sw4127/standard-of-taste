@@ -26,6 +26,7 @@ import { vocabularyStrings } from "./fixtures";
 import { flawFamilies } from "@/content/flaw-families";
 import { allChains, matcherFor, matchesFor } from "../../../scripts/template-match.mjs";
 import { EMISSION_SPECS } from "./emission-registry";
+import { LAYOUT_ORDERS } from "./layout-order";
 
 /** The rendered sentences the deck enumerates, deduplicated as the deck does. */
 function renderings(): Map<string, string> {
@@ -266,6 +267,16 @@ describe("every prose template is reachable, or listed as not", () => {
         out.add(part.says.trim());
         if (part.when) out.add(part.when.trim());
       }
+    }
+    /*
+     * THE SAME DEFECT, THE SECOND TIME (E19/S4). `layout-order.ts` describes
+     * what a component renders and in what order, in prose, inside a scanned
+     * module — so the census reported three layout claims as unrendered product
+     * copy. It was right again. Derived from the registry, like the specs
+     * above: a description is excluded because a registry says it is one.
+     */
+    for (const entries of Object.values(LAYOUT_ORDERS)) {
+      for (const entry of entries) out.add(entry.claim.trim());
     }
     return out;
   };
