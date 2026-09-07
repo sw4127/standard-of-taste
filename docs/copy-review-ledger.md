@@ -6,7 +6,7 @@ The writing pass is **Cowork's**, not the PM's and not engineering's. The decks 
 
 ## The state of it
 
-**8 of 30 surfaces in the decks have been through a pass.** Everything else below is the engineer's first draft, shipped and live.
+**8 of 31 surfaces in the decks have been through a pass.** Everything else below is the engineer's first draft, shipped and live.
 
 | Part | Surface | Pass |
 |---|---|---|
@@ -25,6 +25,7 @@ The writing pass is **Cowork's**, not the PM's and not engineering's. The decks 
 | 2 · The instrument copy | 4. `NotBuiltYet` — the product admitting a door is not there | **never** |
 | 2 · The instrument copy | 5. The creator vocabulary — added in E11 (Track B), never written by a writer | **never** |
 | 2 · The instrument copy | 6. The Delicacy detection readout — THE ONE BATCH A WRITER HAS ALREADY SEEN | Cowork, PM ruling RT-107a, returned 2026-08-22 (`docs/copy-brief-delicacy-readout.md`) |
+| 2 · The instrument copy | 7. `CRITIC_CONTRADICTION` — why no instrument scores you against a critic | **never** |
 | 3 · The page copy | `/learn/comparison` | **never** |
 | 3 · The page copy | `/learn/delicacy` | **never** |
 | 3 · The page copy | `/learn/flaws` | **never** |

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Explainer, { explainerMetadata } from "../Explainer";
 import { learnPage } from "@/content/learn";
+import { CRITIC_CONTRADICTION } from "@/content/critic-refusal";
 import {
   apparatusLines,
   citationStrengthLine,
@@ -68,7 +69,7 @@ export default function Page() {
           this product where a professional&apos;s scale appears beside your own. It is a reference
           point and never a target: agreement with a critic is not scored here, because the{" "}
           <Link href="/learn/freedom-from-prejudice">Prestige Test</Link>{" "}measures being moved by
-          a prestigious name and rewarding that agreement would contradict it on the same screen.
+          a prestigious name. {CRITIC_CONTRADICTION}
         </p>
       ) : null}
       <p>

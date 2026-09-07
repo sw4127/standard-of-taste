@@ -474,4 +474,25 @@ share at 8/15: I called 8 of 15 originals in the Delicacy Trials — a coin flip
 
 ---
 
+## 7. `CRITIC_CONTRADICTION` — why no instrument scores you against a critic
+
+**Where it renders.** Three pages: `/learn/comparison`, which is its home; `/learn/methodology`, beside the degrees-convergence line; and `/learn/ranking-test`, after the mechanism paragraph. The `/spread` frame states the refusal without the reason and does not render this.
+
+**What the screen has already said.** On each page, that agreement with the critic is not scored. This is the sentence that says WHY.
+
+**Its job.** Carry a constitutional refusal in one wording. The Prestige Test measures how far a famous name moves a listener; a second instrument rewarding agreement with a famous critic would contradict it on the same site.
+
+**Rules this copy must keep:**
+
+- It renders on three pages, so it may not depend on any one page's surrounding sentence.
+- It is the reason, not the mechanism. Each page keeps its own prose about what was imported.
+- No second wording may be introduced anywhere; `critic-refusal.test.ts` refuses one.
+- This was FOUR wordings until E19/S14, found by a writing pass reading all four at once.
+
+```
+Rewarding you for agreeing with a prestigious critic would have this product contradict itself on the same screen.
+```
+
+---
+
 **16 clips listed, of which 6 are the ones the standing note names.** Regenerate with `node scripts/export-instrument-deck.mjs > docs/copy-deck-instruments.md` after any change.

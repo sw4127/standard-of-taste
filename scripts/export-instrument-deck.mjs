@@ -42,6 +42,7 @@ import {
 import { delicacyResults } from "@/content/vocabulary/fixtures";
 import { detectionBand } from "@/engine/delicacy";
 import { flawFamilies, FLAWS_INTRO, FLAWS_LIMITS, FLAWS_INVITE } from "@/content/flaw-families";
+import { CRITIC_CONTRADICTION } from "@/content/critic-refusal";
 import { landingLead, landingHint, SECONDARY_DOORS } from "@/content/landing";
 import { MACHINES } from "@/components/OtherMachines";
 import { learnPage } from "@/content/learn";
@@ -91,6 +92,7 @@ describe("export", () => {
         ]),
         shares: [13, 8].map((n) => [n, shareText(n, 15)]),
       },
+      criticContradiction: CRITIC_CONTRADICTION,
       flawsIntro: FLAWS_INTRO,
       flawsLimits: FLAWS_LIMITS,
       flawsInvite: FLAWS_INVITE,
@@ -533,6 +535,40 @@ for (const [score, text] of d.readout.shares) {
   w("```");
   w();
 }
+w("---");
+w();
+
+/* ------------------------------------------------------------------ CRITIC */
+w("## 7. `CRITIC_CONTRADICTION` — why no instrument scores you against a critic");
+w();
+w(
+  "**Where it renders.** Three pages: `/learn/comparison`, which is its home; `/learn/methodology`, " +
+    "beside the degrees-convergence line; and `/learn/ranking-test`, after the mechanism paragraph. " +
+    "The `/spread` frame states the refusal without the reason and does not render this.",
+);
+w();
+w(
+  "**What the screen has already said.** On each page, that agreement with the critic is not " +
+    "scored. This is the sentence that says WHY.",
+);
+w();
+w(
+  "**Its job.** Carry a constitutional refusal in one wording. The Prestige Test measures how far " +
+    "a famous name moves a listener; a second instrument rewarding agreement with a famous critic " +
+    "would contradict it on the same site.",
+);
+w();
+w("**Rules this copy must keep:**");
+w();
+w("- It renders on three pages, so it may not depend on any one page's surrounding sentence.");
+w("- It is the reason, not the mechanism. Each page keeps its own prose about what was imported.");
+w("- No second wording may be introduced anywhere; `critic-refusal.test.ts` refuses one.");
+w("- This was FOUR wordings until E19/S14, found by a writing pass reading all four at once.");
+w();
+w("```");
+w(d.criticContradiction);
+w("```");
+w();
 w("---");
 w();
 w(

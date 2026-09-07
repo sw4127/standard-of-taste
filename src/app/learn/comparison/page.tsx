@@ -6,6 +6,7 @@ import { criticReferenceLines } from "@/content/vocabulary/comparison";
 import { DEGREES_AVAILABLE, degreesIfIndifferent } from "@/engine/comparison";
 import { BIAS_CLIPS } from "@/content/bias/items";
 import { numberWord } from "@/content/vocabulary/numbers";
+import { CRITIC_CONTRADICTION } from "@/content/critic-refusal";
 
 const CLIPS = BIAS_CLIPS.length;
 const BY_CHANCE = Math.round(degreesIfIndifferent(CLIPS));
@@ -107,9 +108,8 @@ export default function Page() {
         The obvious version of this instrument compares your ranking with a famous reviewer&apos;s
         and tells you how close you got. It is not built, and it is not going to be. The{" "}
         <Link href="/learn/freedom-from-prejudice">Prestige Test</Link>{" "}exists to measure how far a
-        prestigious name moves your judgment. <strong>Rewarding you for agreeing with a prestigious
-        critic would have this product contradict itself on the same screen</strong> — so critics
-        here set the spread and never the answer, and the instrument never says a reader is wrong.
+        prestigious name moves your judgment. <strong>{CRITIC_CONTRADICTION}</strong>{" "}So critics here set the spread and never the
+        answer, and the instrument never says a reader is wrong.
       </p>
       <p>
         The honest limit, last, because it matters more than anything above it: these clips were

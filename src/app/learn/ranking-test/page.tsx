@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Explainer, { explainerMetadata } from "../Explainer";
 import { learnPage } from "@/content/learn";
+import { CRITIC_CONTRADICTION } from "@/content/critic-refusal";
 import { MIN_PAIRS_PER_KIND, SPREAD_POOL, closePairs, farPairs } from "@/content/spread/ranking";
 import { spreadIfIndifferent } from "@/engine/spread";
 import { numberWord, numberWordLeading } from "@/content/vocabulary/numbers";
@@ -55,10 +56,8 @@ export default function Page() {
         tried.</strong>{" "}The only thing taken from the ranking is the <em>distance</em> between
         two positions. Which of the two he put higher was never imported, so there is no stored
         number from which your agreement could be worked out afterwards — not by us, not later, not
-        by accident. Preferring the work he ranked lower costs you nothing. It would also
-        contradict the{" "}
-        <Link href="/learn/prestige-bias-test">Prestige Test</Link>, which measures being moved by
-        an authority, to reward being moved by one on the same product.
+        by accident. Preferring the work he ranked lower costs you nothing.{" "}
+        {CRITIC_CONTRADICTION}
       </p>
       <p>
         Both numbers are read against <strong>{BY_CHANCE} points</strong>, which is what rating at

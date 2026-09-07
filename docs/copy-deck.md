@@ -1076,6 +1076,28 @@ share at 8/15: I called 8 of 15 originals in the Delicacy Trials — a coin flip
 
 ---
 
+### 7. `CRITIC_CONTRADICTION` — why no instrument scores you against a critic
+
+**Where it renders.** Three pages: `/learn/comparison`, which is its home; `/learn/methodology`, beside the degrees-convergence line; and `/learn/ranking-test`, after the mechanism paragraph. The `/spread` frame states the refusal without the reason and does not render this.
+
+**What the screen has already said.** On each page, that agreement with the critic is not scored. This is the sentence that says WHY.
+
+**Its job.** Carry a constitutional refusal in one wording. The Prestige Test measures how far a famous name moves a listener; a second instrument rewarding agreement with a famous critic would contradict it on the same site.
+
+**Rules this copy must keep:**
+
+- It renders on three pages, so it may not depend on any one page's surrounding sentence.
+- It is the reason, not the mechanism. Each page keeps its own prose about what was imported.
+- No second wording may be introduced anywhere; `critic-refusal.test.ts` refuses one.
+- This was FOUR wordings until E19/S14, found by a writing pass reading all four at once.
+
+```
+`INS-CRITICCONTRADICTION-01` · OPEN
+Rewarding you for agreeing with a prestigious critic would have this product contradict itself on the same screen.
+```
+
+---
+
 **16 clips listed, of which 6 are the ones the standing note names.** Regenerate with `node scripts/export-instrument-deck.mjs > docs/copy-deck-instruments.md` after any change.
 
 
@@ -1134,7 +1156,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > Why it never scores you against a critic
 
 `PAGE-LEARN-COMPARISON-10` · OPEN
-> The obvious version of this instrument compares your ranking with a famous reviewer's and tells you how close you got. It is not built, and it is not going to be. The Prestige Test exists to measure how far a prestigious name moves your judgment. Rewarding you for agreeing with a prestigious critic would have this product contradict itself on the same screen — so critics here set the spread and never the answer, and the instrument never says a reader is wrong.
+> The obvious version of this instrument compares your ranking with a famous reviewer's and tells you how close you got. It is not built, and it is not going to be. The Prestige Test exists to measure how far a prestigious name moves your judgment. {CRITIC_CONTRADICTION} So critics here set the spread and never the answer, and the instrument never says a reader is wrong.
 
 `PAGE-LEARN-COMPARISON-11` · OPEN
 > The honest limit, last, because it matters more than anything above it: these clips were never spaced out by quality. They were chosen for licence clarity and for genre spread, so nobody knows how far apart they truly sit. If they really are close together, hearing them that way is the correct answer — and this instrument cannot tell that apart from a listener who hears everything as much the same. It reports what you did with the scale. It does not grade your ear.
@@ -1248,7 +1270,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > 5. The rulers were not invented here. Every figure above is simulated and the cohort is zero, so this product cannot argue from data about people. What it can show is where its measuring apparatus came from — which was published practice all along, uncredited until now.
 
 `PAGE-LEARN-METHODOLOGY-07` · OPEN
-> {degreesConvergenceLine()} That last number is the comparison reading, and it is the only place in this product where a professional's scale appears beside your own. It is a reference point and never a target: agreement with a critic is not scored here, because the Prestige Test measures being moved by a prestigious name and rewarding that agreement would contradict it on the same screen.
+> {degreesConvergenceLine()} That last number is the comparison reading, and it is the only place in this product where a professional's scale appears beside your own. It is a reference point and never a target: agreement with a critic is not scored here, because the Prestige Test measures being moved by a prestigious name. {CRITIC_CONTRADICTION}
 
 `PAGE-LEARN-METHODOLOGY-08` · OPEN
 > The analytics dataset behind this — a different store from the one on your device — is self-generated and boring by design: anonymized response vectors under a random session id, carrying ratings, listen times, item-pool version and the scores computed from them. No accounts, no names, no ad-tech. Your browser keeps only your raw answers, never a score; the two are separate on purpose, and the terms say which is which. It exists so the instruments can be calibrated honestly, and that's the whole job. The criteria these rules serve are in the reading room — start with freedom from prejudice — or skip the theory and take the Prestige Test.
@@ -1322,7 +1344,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > {numberWordLeading(WORKS)} of those works are played here, {numberWord(SPREAD_CLIP_SECONDS)} seconds each, with nothing attached: no composer date, no movement title, no hint of where he placed them. You rate what you hear. Afterwards the instrument reports how far apart your two ratings fell across the {numberWord(FAR)} pairs he separated by ten positions or more, and the same figure across the {numberWord(CLOSE)} pairs he placed within three of each other.
 
 `PAGE-LEARN-RANKINGTEST-03` · OPEN
-> Agreeing with him is not measured, and the instrument could not measure it if it tried. The only thing taken from the ranking is the distance between two positions. Which of the two he put higher was never imported, so there is no stored number from which your agreement could be worked out afterwards — not by us, not later, not by accident. Preferring the work he ranked lower costs you nothing. It would also contradict the Prestige Test, which measures being moved by an authority, to reward being moved by one on the same product.
+> Agreeing with him is not measured, and the instrument could not measure it if it tried. The only thing taken from the ranking is the distance between two positions. Which of the two he put higher was never imported, so there is no stored number from which your agreement could be worked out afterwards — not by us, not later, not by accident. Preferring the work he ranked lower costs you nothing. {CRITIC_CONTRADICTION}
 
 `PAGE-LEARN-RANKINGTEST-04` · OPEN
 > Both numbers are read against {BY_CHANCE} points, which is what rating at random produces — and it produces the same figure on both kinds of pair, because chance does not know which works a critic separated. That is the whole reference point. Two figures sitting together near it show no discrimination in this sitting; two that differ show some, on these clips.
@@ -1438,7 +1460,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 ---
 
-**94 blocks, roughly 4295 words, across 11 surfaces.**
+**94 blocks, roughly 4244 words, across 11 surfaces.**
 
 
 ---
@@ -1943,5 +1965,5 @@ What happened next is the part that is harder to read, and this reading is mine 
 
 ---
 
-**223 sentences, each with an id.** 11 further lines are additional RENDERINGS of sentences already listed — they carry the id they belong to and are not separate strings to edit. Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.
+**224 sentences, each with an id.** 11 further lines are additional RENDERINGS of sentences already listed — they carry the id they belong to and are not separate strings to edit. Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.
 
