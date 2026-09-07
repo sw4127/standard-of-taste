@@ -14,7 +14,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { computeBiasResult, decodeBiasRatings, type BiasRatings, type BiasResult } from "@/engine/bias";
 import { BIAS_CLIPS, BIAS_INSTRUMENT_ID, BIAS_POOL_VERSION } from "@/content/bias/items";
-import { VERDICT_COPY, shareText, resultTitleFragment } from "@/content/bias/copy";
+import { biasHeadline, shareTextFor, titleFragmentFor } from "@/content/bias/copy";
 import { creatorLines } from "@/content/vocabulary/bias";
 import AcrossSessions from "@/components/AcrossSessions";
 import ComparisonReading from "@/components/ComparisonReading";
@@ -58,7 +58,7 @@ function cardUrl(format: "story" | "square" | "og", b: string, l: string): strin
 export async function generateMetadata({ searchParams }: { searchParams: SearchParams }): Promise<Metadata> {
   const data = resultFrom(await searchParams);
   if (!data) return { title: "The Prestige Test" };
-  const title = `${resultTitleFragment(data.result.pct)} — The Prestige Test`;
+  const title = `${titleFragmentFor(data.result)} — The Prestige Test`;
   const description = "Rate sixteen clips blind, then with the names attached. The gap is your number.";
   const og = `${baseUrl()}${cardUrl("og", data.b, data.l)}`;
   return {
@@ -73,27 +73,41 @@ export default async function BiasResultPage({ searchParams }: { searchParams: S
   const data = resultFrom(await searchParams);
   if (!data) redirect("/bias");
   const { result, b, l, blind, labeled } = data;
-  const v = VERDICT_COPY[result.verdict];
+  /*
+   * NO NUMBER WHERE THE ENGINE HAS REFUSED ONE (E19/S8, PM ruling RT-U1 a).
+   * `biasClaim` refuses when nothing had headroom to move; this page printed
+   * `pct` and the computed verdict anyway, asserting a reading the instrument
+   * had declared it could not support. The decision belongs to `biasHeadline`
+   * now, and its refusal is a NULL rather than a zero, so this file has no
+   * number to leak: it renders what it was handed.
+   */
+  const headline = biasHeadline(result);
   const permalink = `${baseUrl()}/bias/result?pv=${BIAS_POOL_VERSION}&b=${encodeURIComponent(b)}&l=${encodeURIComponent(l)}`;
 
   return (
     <main className="relative mx-auto flex min-h-dvh w-full max-w-lg flex-col justify-center overflow-hidden px-6 py-12 text-center">
       <FluidField colors={FLUID} intensity={0.7} scrim={false} vignette />
-      <Track event="bias_result_view" props={{ pct: result.pct, verdict: result.verdict }} />
+      <Track
+        event="bias_result_view"
+        props={{ pct: result.pct, verdict: result.verdict, reading: headline.pct !== null }}
+      />
       <div className="relative z-10 flex flex-col items-center">
         <p className="text-xs font-bold tracking-[0.4em]" style={{ color: GOLD }}>
           THE PRESTIGE TEST
         </p>
-        <p
-          className="mt-6 font-display text-7xl font-semibold leading-none"
-          style={{ color: GOLD, textShadow: `0 0 60px ${GOLD_GLOW}` }}
-        >
-          {result.pct > 0 ? "+" : ""}
-          {result.pct}%
-        </p>
-        <p className="mt-3 text-sm text-muted">how far these ratings moved toward the labels</p>
-        <h1 className="mt-6 font-display text-3xl font-semibold">{v.title}</h1>
-        <p className="mt-2 max-w-sm text-base leading-relaxed text-muted">{v.sub}</p>
+        {headline.pct ? (
+          <>
+            <p
+              className="mt-6 font-display text-7xl font-semibold leading-none"
+              style={{ color: GOLD, textShadow: `0 0 60px ${GOLD_GLOW}` }}
+            >
+              {headline.pct}
+            </p>
+            <p className="mt-3 text-sm text-muted">how far these ratings moved toward the labels</p>
+          </>
+        ) : null}
+        <h1 className="mt-6 font-display text-3xl font-semibold">{headline.title}</h1>
+        <p className="mt-2 max-w-sm text-base leading-relaxed text-muted">{headline.sub}</p>
 
         <InYourWork result={result} />
 
@@ -108,14 +122,14 @@ export default async function BiasResultPage({ searchParams }: { searchParams: S
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={cardUrl("square", b, l)}
-          alt={`Prestige Test card: ${resultTitleFragment(result.pct)}`}
+          alt={`Prestige Test card: ${titleFragmentFor(result)}`}
           className="mt-8 w-full max-w-xs rounded-2xl border border-white/10"
         />
 
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <ShareButton
             url={permalink}
-            text={shareText(result.pct)}
+            text={shareTextFor(result)}
             label="Share your number"
             event="bias_share"
             primary

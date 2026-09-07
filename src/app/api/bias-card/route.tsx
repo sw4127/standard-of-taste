@@ -14,7 +14,7 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { computeBiasResult, decodeBiasRatings } from "@/engine/bias";
 import { BIAS_CLIPS, BIAS_INSTRUMENT_ID, BIAS_POOL_VERSION } from "@/content/bias/items";
-import { VERDICT_COPY, biasCardSwayLine, biasCardCta } from "@/content/bias/copy";
+import { biasCardSwayLine, biasCardCta, biasHeadline } from "@/content/bias/copy";
 import { baseUrl } from "@/lib/site";
 
 export const runtime = "nodejs";
@@ -57,7 +57,13 @@ export async function GET(request: Request) {
     });
   }
   const result = computeBiasResult(BIAS_INSTRUMENT_ID, BIAS_CLIPS, blind, labeled);
-  const verdict = VERDICT_COPY[result.verdict];
+  /*
+   * A CARD IS THE MOST PUBLIC SURFACE THIS PRODUCT HAS, so it is the last place
+   * a refused reading may be dressed as a number (E19/S8, PM ruling RT-U1 a).
+   * The percentage is dropped rather than printed as 0, and the verdict with
+   * it: both would be claims the engine has declined to stand behind.
+   */
+  const headline = biasHeadline(result);
   const swayed = result.swayShare !== null
     ? biasCardSwayLine(result.movedCount, result.movableCount)
     : null;
@@ -99,19 +105,21 @@ export async function GET(request: Request) {
         >
           THE PRESTIGE TEST
         </div>
-        <div
-          style={{
-            display: "flex",
-            marginTop: (isOg ? 18 : 44) * s,
-            fontSize: 300 * s,
-            lineHeight: 1,
-            fontFamily: "Fraunces",
-            fontWeight: 900,
-            color: GOLD,
-          }}
-        >
-          {`${result.pct > 0 ? "+" : ""}${result.pct}%`}
-        </div>
+        {headline.pct ? (
+          <div
+            style={{
+              display: "flex",
+              marginTop: (isOg ? 18 : 44) * s,
+              fontSize: 300 * s,
+              lineHeight: 1,
+              fontFamily: "Fraunces",
+              fontWeight: 900,
+              color: GOLD,
+            }}
+          >
+            {headline.pct}
+          </div>
+        ) : null}
         <div
           style={{
             display: "flex",
@@ -120,7 +128,9 @@ export async function GET(request: Request) {
             color: MUTED,
           }}
         >
-          my ratings moved when the famous names showed up
+          {headline.pct
+            ? "my ratings moved when the famous names showed up"
+            : "there was nothing here the test could measure"}
         </div>
         <div
           style={{
@@ -132,7 +142,7 @@ export async function GET(request: Request) {
             fontWeight: 900,
           }}
         >
-          {verdict.title}
+          {headline.title}
         </div>
         {swayed && !isOg ? (
           <div

@@ -30,7 +30,7 @@ import {
 } from "@/engine/bias";
 import { BIAS_CLIPS, BIAS_INSTRUMENT_ID, BIAS_POOL_VERSION, type BiasClip } from "@/content/bias/items";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
-import { VERDICT_COPY, shareText } from "@/content/bias/copy";
+import { biasHeadline, shareTextFor } from "@/content/bias/copy";
 import { creatorLines as biasCreatorLines } from "@/content/vocabulary/bias";
 import ComparisonReading from "@/components/ComparisonReading";
 import AcrossSessions from "@/components/AcrossSessions";
@@ -550,22 +550,36 @@ export default function BiasFlow() {
 
   /* --------------------------------------------------------------- reveal */
   if (phase === "reveal" && result) {
-    const v = VERDICT_COPY[result.verdict];
+    /*
+     * NO NUMBER WHERE THE ENGINE HAS REFUSED ONE (E19/S8, PM ruling RT-U1 a).
+     * The eyebrow goes too: "YOUR NUMBER" above a refusal promises the thing
+     * the paragraph underneath is about to say does not exist.
+     */
+    const headline = biasHeadline(result);
     return (
       <main className={`${shell} justify-center text-center`}>
         <FluidField colors={FLUID} intensity={0.78} scrim={false} vignette />
         <div className="relative z-10 flex flex-col items-center">
-          <p className="text-xs font-bold tracking-[0.4em] text-muted">YOUR NUMBER</p>
-          <p className="mt-4 font-display text-8xl font-semibold leading-none" style={{ color: GOLD, textShadow: `0 0 60px ${GOLD_GLOW}` }}>
-            {result.pct > 0 ? "+" : ""}
-            {result.pct}%
+          {headline.pct ? (
+            <>
+              <p className="text-xs font-bold tracking-[0.4em] text-muted">YOUR NUMBER</p>
+              <p className="mt-4 font-display text-8xl font-semibold leading-none" style={{ color: GOLD, textShadow: `0 0 60px ${GOLD_GLOW}` }}>
+                {headline.pct}
+              </p>
+              <p className="mt-3 text-sm text-muted">
+                how far your ratings moved toward the labels
+                {result.controlDriftPts !== null ? " — corrected for your own re-listen drift" : ""}
+              </p>
+            </>
+          ) : (
+            <p className="text-xs font-bold tracking-[0.4em] text-muted">THE PRESTIGE TEST</p>
+          )}
+          <h1 className="mt-8 font-display text-4xl font-semibold">
+            {headline.title}
+          </h1>
+          <p className="mt-2 max-w-sm text-base leading-relaxed text-muted">
+            {headline.sub}
           </p>
-          <p className="mt-3 text-sm text-muted">
-            how far your ratings moved toward the labels
-            {result.controlDriftPts !== null ? " — corrected for your own re-listen drift" : ""}
-          </p>
-          <h1 className="mt-8 font-display text-4xl font-semibold">{v.title}</h1>
-          <p className="mt-2 max-w-sm text-base leading-relaxed text-muted">{v.sub}</p>
           {result.swayShare !== null ? (
             <p className="mt-5 rounded-full border border-white/10 px-4 py-1.5 text-sm text-muted">
               You moved with the label on{" "}
@@ -730,7 +744,7 @@ export default function BiasFlow() {
             <div className="mt-4 flex flex-wrap items-center gap-3">
               <ShareButton
                 url={`${origin}${resultPath}`}
-                text={shareText(result.pct)}
+                text={shareTextFor(result)}
                 label="Share your number"
                 event="bias_share"
                 primary

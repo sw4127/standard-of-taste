@@ -11,7 +11,7 @@ import { describe, expect, it } from "vitest";
 import { checkVoice, formatVoiceReport, type VoiceString } from "./voice";
 import { flawFamilies, FLAWS_INTRO, FLAWS_LIMITS, FLAWS_INVITE } from "./flaw-families";
 import { landingLead, landingHint, SECONDARY_DOORS } from "./landing";
-import { VERDICT_COPY, biasCardSwayLine, biasCardCta, shareText as biasShareText, resultTitleFragment } from "./bias/copy";
+import { BIAS_NO_READING, VERDICT_COPY, biasCardSwayLine, biasCardCta, shareText as biasShareText, resultTitleFragment } from "./bias/copy";
 import {
   CALIBRATION_PHASE_LINE,
   MAGNITUDE_WORDS,
@@ -179,6 +179,16 @@ function shippingStrings(): VoiceString[] {
   for (const pct of [-31, -1, 0, 1, 31]) {
     out.push({ surface: `bias/result/title/${pct}`, text: resultTitleFragment(pct), intensity: "calm" });
   }
+
+  /*
+   * THE REFUSED SITTING (E19/S8). Copy that renders only where the engine
+   * declines to report a number is exactly the copy a hazard gate never sees,
+   * because no fixture reaches the screen it lives on. It is swept here by
+   * name for that reason. "pointed" rather than "calm": it carries no datum,
+   * and the calm tier's rules are written for strings that do.
+   */
+  out.push({ surface: "bias/no-reading/title", text: BIAS_NO_READING.title, intensity: "pointed" });
+  out.push({ surface: "bias/no-reading/sub", text: BIAS_NO_READING.sub, intensity: "pointed" });
 
   /**
    * THE ITEM BLURBS (E7/S5) — the most consequential strings in the product,
