@@ -1293,13 +1293,13 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > The Prestige Test measures one thing: how far a famous name can move your ratings. Not whether you like the right music — whether the label in the room changes what your ears report.
 
 `PAGE-LEARN-PRESTIGEBIASTEST-02` · OPEN
-> The design is a within-subject experiment, about eight minutes long. You hear sixteen short clips and rate each one blind — no artist, no context, just sound. Then you hear the same sixteen clips again with names and reputations attached, and rate them again. Your score is computed from the gap between the two passes: the share of your rating movement that flowed toward the labels.
+> The design is a within-subject experiment, about {BIAS_SESSION_MINUTES} minutes long. You hear {numberWord(BIAS_CLIP_COUNT)} short clips and rate each one blind — no artist, no context, just sound. Then you hear the same {numberWord(BIAS_CLIP_COUNT)} clips again with names and reputations attached, and rate them again. Your score is computed from the gap between the two passes: the share of your rating movement that flowed toward the labels.
 
 `PAGE-LEARN-PRESTIGEBIASTEST-03` · OPEN
-> Here is the part that makes it an instrument instead of a party trick: two of the fourteen labels are deliberately false. A modest work arrives wearing borrowed acclaim; a distinguished one arrives dressed down. If your ratings follow the labels even when the labels lie, the movement can't be explained by the music — only by the prestige. You serve as your own control, which is why the test needs no external ground truth about which clip is "objectively better."
+> Here is the part that makes it an instrument instead of a party trick: {numberWord(BIAS_SWAPPED_COUNT)} of the {numberWord(BIAS_LABELLED_COUNT)} labels are deliberately false. A modest work arrives wearing borrowed acclaim; a distinguished one arrives dressed down. If your ratings follow the labels even when the labels lie, the movement can't be explained by the music — only by the prestige. You serve as your own control, which is why the test needs no external ground truth about which clip is "objectively better."
 
 `PAGE-LEARN-PRESTIGEBIASTEST-04` · OPEN
-> Two of the sixteen clips are controls: they carry no label in either pass. They measure how much your ratings drift on a plain second listen — memory, familiarity, fatigue — and that measured drift is corrected out of your headline number. The obvious objection to any re-rating design, "the second pass just tests memory," is thereby a published control rather than a caveat.
+> {numberWordLeading(BIAS_CONTROL_COUNT)} of the {numberWord(BIAS_CLIP_COUNT)} clips are controls: they carry no label in either pass. They measure how much your ratings drift on a plain second listen — memory, familiarity, fatigue — and that measured drift is corrected out of your headline number. The obvious objection to any re-rating design, "the second pass just tests memory," is thereby a published control rather than a caveat.
 
 `PAGE-LEARN-PRESTIGEBIASTEST-05` · OPEN
 > Every swap is confessed. The test ends with a mandatory debrief that names each false label, shows the true attribution, and shows exactly what your ratings did when the name was a lie. You cannot exit around it. An instrument built on deception owes you the disclosure — and the disclosure is the part worth staying for.
@@ -1319,7 +1319,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > A critic once put twenty-one Beethoven works in order. Michael Tanner did it for BBC Music Magazine, and like every such list it is one person's opinion published under his own name — which is exactly what makes it usable here. It is not a correct answer. It is a second set of gaps to compare yours against.
 
 `PAGE-LEARN-RANKINGTEST-02` · OPEN
-> {numberWordLeading(WORKS)} of those works are played here, forty seconds each, with nothing attached: no composer date, no movement title, no hint of where he placed them. You rate what you hear. Afterwards the instrument reports how far apart your two ratings fell across the {numberWord(FAR)} pairs he separated by ten positions or more, and the same figure across the {numberWord(CLOSE)} pairs he placed within three of each other.
+> {numberWordLeading(WORKS)} of those works are played here, {numberWord(SPREAD_CLIP_SECONDS)} seconds each, with nothing attached: no composer date, no movement title, no hint of where he placed them. You rate what you hear. Afterwards the instrument reports how far apart your two ratings fell across the {numberWord(FAR)} pairs he separated by ten positions or more, and the same figure across the {numberWord(CLOSE)} pairs he placed within three of each other.
 
 `PAGE-LEARN-RANKINGTEST-03` · OPEN
 > Agreeing with him is not measured, and the instrument could not measure it if it tried. The only thing taken from the ranking is the distance between two positions. Which of the two he put higher was never imported, so there is no stored number from which your agreement could be worked out afterwards — not by us, not later, not by accident. Preferring the work he ranked lower costs you nothing. It would also contradict the Prestige Test, which measures being moved by an authority, to reward being moved by one on the same product.
@@ -1331,10 +1331,10 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > The two numbers are never combined, and the difference between them is never reported. They rest on {numberWord(FAR)} pairs and {numberWord(CLOSE)} pairs, built from clips that appear in several pairs apiece, and nobody has sat this instrument twice — so how far the figures wander on their own has never been measured. There is no honest size at which the gap between them becomes a result. Offering one would be inventing the threshold, which is the failure this product spends its existence refusing.
 
 `PAGE-LEARN-RANKINGTEST-06` · OPEN
-> If you already know the music, say so before you rate it. Half of any critic's list is famous, and recognising a work means part of your rating is memory of a reputation rather than the last forty seconds. Those clips are removed before anything is computed. It is taken on your word — nothing checks — and what you recognised is never reported as a fact about you. Recognise enough and you get no number at all, plus a plain statement of why, because the instrument needs at least {numberWord(MIN_PAIRS_PER_KIND)} usable pairs of each kind and will not print a figure it cannot support.
+> If you already know the music, say so before you rate it. Half of any critic's list is famous, and recognising a work means part of your rating is memory of a reputation rather than the last {numberWord(SPREAD_CLIP_SECONDS)} seconds. Those clips are removed before anything is computed. It is taken on your word — nothing checks — and what you recognised is never reported as a fact about you. Recognise enough and you get no number at all, plus a plain statement of why, because the instrument needs at least {numberWord(MIN_PAIRS_PER_KIND)} usable pairs of each kind and will not print a figure it cannot support.
 
 `PAGE-LEARN-RANKINGTEST-07` · OPEN
-> Two limits are published rather than hidden. A forty-second excerpt cannot carry a critic's verdict on a work that runs forty minutes; forty seconds is longer than anything else here and is still a mitigation rather than a fix. And these six recordings differ in brightness by about ten kilohertz for reasons no ranking caused — one source is a 128 kbps mp3 whose sound stops at 8,624 Hz. Measured, that difference is larger across the pairs he bracketed together than across the ones he separated, so it makes a difference harder to find rather than easier. Both figures, and what they were measured against, are on the Lab.
+> Two limits are published rather than hidden. A forty-second excerpt cannot carry a critic's verdict on a work that runs forty minutes; {numberWord(SPREAD_CLIP_SECONDS)} seconds is longer than anything else here and is still a mitigation rather than a fix. And these {numberWord(WORKS)} recordings differ in brightness by about ten kilohertz for reasons no ranking caused — one source is a 128 kbps mp3 whose sound stops at 8,624 Hz. Measured, that difference is larger across the pairs he bracketed together than across the ones he separated, so it makes a difference harder to find rather than easier. Both figures, and what they were measured against, are on the Lab.
 
 `PAGE-LEARN-RANKINGTEST-08` · OPEN
 > Your answers stay in the browser you gave them in, like every other result here — the ratings and which clips you said you already knew, never the two figures, which are worked out again each time they are read. Underneath the result is the raw record: what you gave each of the six, which works they actually were, and the gap you left on every pair that counted. It is the only place the six are named, and reading it is the end of your blind sitting.
@@ -1403,13 +1403,13 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > **A critic ranked these works. Do your gaps fall where his did?**
 
 `PAGE-SPREAD-FRAME-02` · OPEN
-> Six pieces of music, forty seconds each. Rate what you hear, and nothing else. A published critic once ranked all of these against each other — some he placed far apart, some he bracketed together.
+> {numberWordLeading(SPREAD_WORK_COUNT)} pieces of music, {numberWord(SPREAD_CLIP_SECONDS)} seconds each. Rate what you hear, and nothing else. A published critic once ranked all of these against each other — some he placed far apart, some he bracketed together.
 
 `PAGE-SPREAD-FRAME-03` · OPEN
 > What comes out is two numbers: how far apart your ratings fell on the pairs he separated, and how far apart they fell on the pairs he did not. Agreeing with him is not the point and is not measured. Nothing here can even see which of two works he ranked higher.
 
 `PAGE-SPREAD-FRAME-04` · OPEN
-> About four minutes of listening. Headphones help.
+> About {numberWord(SPREAD_SESSION_MINUTES)} minutes of listening. Headphones help.
 
 `PAGE-SPREAD-FRAME-05` · OPEN
 > Listen, then say whether you know it — and only then rate it.

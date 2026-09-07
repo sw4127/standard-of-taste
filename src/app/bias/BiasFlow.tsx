@@ -31,6 +31,8 @@ import {
 import { BIAS_CLIPS, BIAS_INSTRUMENT_ID, BIAS_POOL_VERSION, type BiasClip } from "@/content/bias/items";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
 import { biasHeadline, shareTextFor } from "@/content/bias/copy";
+import { numberWord, numberWordLeading } from "@/content/vocabulary/numbers";
+import { BIAS_CLIP_COUNT, BIAS_SESSION_MINUTES } from "@/content/instrument-shape";
 import { creatorLines as biasCreatorLines } from "@/content/vocabulary/bias";
 import ComparisonReading from "@/components/ComparisonReading";
 import AcrossSessions from "@/components/AcrossSessions";
@@ -313,7 +315,8 @@ export default function BiasFlow() {
             a famous name can make a mediocre thing sound profound. He called it prejudice.
           </p>
           <p className="mt-3 text-base leading-relaxed text-muted">
-            Sixteen clips. You rate them twice: once with nothing but your ears, once with the names and
+            {numberWordLeading(BIAS_CLIP_COUNT)} clips. You rate them twice: once with nothing but your
+            ears, once with the names and
             the acclaim attached. <span className="text-foreground">The gap is your number.</span>
           </p>
           <button
@@ -353,7 +356,9 @@ export default function BiasFlow() {
           >
             Start the blind pass
           </button>
-          <p className="mt-4 text-xs text-muted">~8 minutes. No sign-up. Headphones help.</p>
+          <p className="mt-4 text-xs text-muted">
+            ~{BIAS_SESSION_MINUTES} minutes. No sign-up. Headphones help.
+          </p>
           {/* THE CREDIBILITY CHECK (E7/S24). Only the Threshold frame offered
               one, so on the two instruments people actually start with there
               was no way to ask "should I trust this before I give it eight
@@ -397,7 +402,8 @@ export default function BiasFlow() {
           {kicker}
           <h1 className="mt-6 font-display text-4xl font-semibold leading-tight">Round two.</h1>
           <p className="mt-4 text-base leading-relaxed text-muted">
-            Same sixteen clips — this time the names and the reputations come attached, and the question
+            Same {numberWord(BIAS_CLIP_COUNT)} clips — this time the names and the reputations come
+            attached, and the question
             changes. A couple stay blank on purpose. Rate what you hear.
           </p>
 

@@ -1,6 +1,14 @@
 import Link from "next/link";
 import Explainer, { explainerMetadata } from "../Explainer";
 import { learnPage } from "@/content/learn";
+import { numberWord, numberWordLeading } from "@/content/vocabulary/numbers";
+import {
+  BIAS_CLIP_COUNT,
+  BIAS_CONTROL_COUNT,
+  BIAS_LABELLED_COUNT,
+  BIAS_SESSION_MINUTES,
+  BIAS_SWAPPED_COUNT,
+} from "@/content/instrument-shape";
 
 const page = learnPage("prestige-bias-test")!;
 export const metadata = explainerMetadata(page);
@@ -14,22 +22,27 @@ export default function Page() {
         changes what your ears report.
       </p>
       <p>
-        The design is a within-subject experiment, about eight minutes long. You hear sixteen short
-        clips and rate each one <strong>blind</strong> — no artist, no context, just sound. Then
-        you hear the same sixteen clips again with names and reputations attached, and rate them again. Your
+        The design is a within-subject experiment, about {BIAS_SESSION_MINUTES} minutes long. You hear{" "}
+        {numberWord(BIAS_CLIP_COUNT)} short clips and rate each one <strong>blind</strong> — no artist, no
+        context, just sound. Then you hear the same {numberWord(BIAS_CLIP_COUNT)} clips again with names
+        and reputations attached, and rate them again. Your
         score is computed from the gap between the two passes: the share of your rating movement
         that flowed <em>toward</em> the labels.
       </p>
       <p>
         Here is the part that makes it an instrument instead of a party trick:{" "}
-        <strong>two of the fourteen labels are deliberately false.</strong>{" "}A modest work arrives
+        <strong>
+          {numberWord(BIAS_SWAPPED_COUNT)} of the {numberWord(BIAS_LABELLED_COUNT)} labels are deliberately
+          false.
+        </strong>{" "}A modest work arrives
         wearing borrowed acclaim; a distinguished one arrives dressed down. If your ratings follow
         the labels even when the labels lie, the movement can&apos;t be explained by the music —
         only by the prestige. You serve as your own control, which is why the test needs no
         external ground truth about which clip is &quot;objectively better.&quot;
       </p>
       <p>
-        Two of the sixteen clips are <strong>controls</strong>: they carry no label in either pass.
+        {numberWordLeading(BIAS_CONTROL_COUNT)} of the {numberWord(BIAS_CLIP_COUNT)} clips are{" "}
+        <strong>controls</strong>: they carry no label in either pass.
         They measure how much your ratings drift on a plain second listen — memory, familiarity,
         fatigue — and that measured drift is corrected out of your headline number. The obvious
         objection to any re-rating design, &quot;the second pass just tests memory,&quot; is

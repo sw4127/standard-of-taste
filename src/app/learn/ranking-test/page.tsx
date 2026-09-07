@@ -4,6 +4,7 @@ import { learnPage } from "@/content/learn";
 import { MIN_PAIRS_PER_KIND, SPREAD_POOL, closePairs, farPairs } from "@/content/spread/ranking";
 import { spreadIfIndifferent } from "@/engine/spread";
 import { numberWord, numberWordLeading } from "@/content/vocabulary/numbers";
+import { SPREAD_CLIP_SECONDS } from "@/content/instrument-shape";
 
 const WORKS = SPREAD_POOL.length;
 const FAR = farPairs().length;
@@ -41,7 +42,8 @@ export default function Page() {
         correct answer. It is a <strong>second set of gaps</strong> to compare yours against.
       </p>
       <p>
-        {numberWordLeading(WORKS)} of those works are played here, forty seconds each, with nothing
+        {numberWordLeading(WORKS)} of those works are played here, {numberWord(SPREAD_CLIP_SECONDS)}{" "}
+        seconds each, with nothing
         attached: no composer date, no movement title, no hint of where he placed them. You rate
         what you hear. Afterwards the instrument reports{" "}
         <strong>how far apart your two ratings fell</strong> across the {numberWord(FAR)} pairs he
@@ -76,7 +78,8 @@ export default function Page() {
       <p>
         <strong>If you already know the music, say so before you rate it.</strong>{" "}Half of any
         critic&apos;s list is famous, and recognising a work means part of your rating is memory of
-        a reputation rather than the last forty seconds. Those clips are removed before anything is
+        a reputation rather than the last {numberWord(SPREAD_CLIP_SECONDS)} seconds. Those clips are
+        removed before anything is
         computed. It is taken on your word — nothing checks — and what you recognised is never
         reported as a fact about you. Recognise enough and you get no number at all, plus a plain
         statement of why, because the instrument needs at least {numberWord(MIN_PAIRS_PER_KIND)}{" "}
@@ -84,9 +87,10 @@ export default function Page() {
       </p>
       <p>
         <strong>Two limits are published rather than hidden.</strong>{" "}A forty-second excerpt
-        cannot carry a critic&apos;s verdict on a work that runs forty minutes; forty seconds is
-        longer than anything else here and is still a mitigation rather than a fix. And these six
-        recordings differ in brightness by about ten kilohertz for reasons no ranking caused — one
+        cannot carry a critic&apos;s verdict on a work that runs forty minutes;{" "}
+        {numberWord(SPREAD_CLIP_SECONDS)} seconds is
+        longer than anything else here and is still a mitigation rather than a fix. And these{" "}
+        {numberWord(WORKS)} recordings differ in brightness by about ten kilohertz for reasons no ranking caused — one
         source is a 128 kbps mp3 whose sound stops at 8,624 Hz. Measured, that difference is
         larger across the pairs he bracketed together than across the ones he separated, so it
         makes a difference <em>harder</em> to find rather than easier. Both figures, and what they

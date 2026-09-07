@@ -53,6 +53,12 @@ import {
 import { recordResult } from "@/lib/result-store";
 import { SPREAD_POOL, SPREAD_POOL_VERSION } from "@/content/spread/ranking";
 import { RECOGNITION_DISCLOSURE, spreadLines } from "@/content/vocabulary/spread";
+import { numberWord, numberWordLeading } from "@/content/vocabulary/numbers";
+import {
+  SPREAD_CLIP_SECONDS,
+  SPREAD_SESSION_MINUTES,
+  SPREAD_WORK_COUNT,
+} from "@/content/instrument-shape";
 
 const { accent, soft, glow } = SPREAD_PALETTE;
 
@@ -153,7 +159,8 @@ export default function SpreadFlow() {
         </h1>
         <div className="mt-6 space-y-4 text-sm leading-relaxed text-muted">
           <p>
-            Six pieces of music, forty seconds each. Rate what you hear, and nothing else. A
+            {numberWordLeading(SPREAD_WORK_COUNT)} pieces of music, {numberWord(SPREAD_CLIP_SECONDS)} seconds
+            each. Rate what you hear, and nothing else. A
             published critic once ranked all of these against each other — some he placed far
             apart, some he bracketed together.
           </p>
@@ -166,7 +173,9 @@ export default function SpreadFlow() {
             Nothing here can even see which of two works he ranked higher.
           </p>
           <p>{RECOGNITION_DISCLOSURE}</p>
-          <p className="text-xs">About four minutes of listening. Headphones help.</p>
+          <p className="text-xs">
+            About {numberWord(SPREAD_SESSION_MINUTES)} minutes of listening. Headphones help.
+          </p>
         </div>
         <button
           type="button"
