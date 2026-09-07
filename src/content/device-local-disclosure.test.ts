@@ -1,5 +1,6 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+const NL = String.fromCharCode(10);
 import { EXPERT_PANEL } from "./vocabulary/expert";
 import { COOLDOWN_DEVICE_NOTE, MATERIAL_REUSE_NOTE } from "./staircase/copy";
 import { FORGET } from "./forget";
@@ -232,5 +233,87 @@ describe("no surface reads remembered state without appearing on that list", () 
       expect(walked.has(surface.file), `the scan never reached ${surface.file}`).toBe(true);
     }
     expect(walked.size).toBeGreaterThan(20);
+  });
+});
+
+/**
+ * THE DEVICE STORE HOLDS NO COMPUTED SCORE, AND `/legal` SAYS SO (E19/S11).
+ *
+ * FOUND BY THE BATCH-2 WRITING PASS, reading the deck with the repository
+ * closed. `/legal` says the browser keeps "your raw answers — never a computed
+ * score, so nothing here can be edited into a better result". `/learn/methodology`
+ * listed "computed scores" among what the dataset holds. A reader comparing the
+ * two saw the product contradict itself about whether it keeps a score, and the
+ * `/legal` sentence is load-bearing: it is the whole reason nothing can be
+ * edited into a better result.
+ *
+ * BOTH WERE TRUE, WHICH IS WHY NEITHER SIDE COULD SIMPLY BE DELETED. They are
+ * different stores — `StoredPayload` carries raw answers, and the analytics
+ * events carry `pct` and `verdict`. The writing pass proposed removing the
+ * phrase from the methodology page, which would have made THAT page false; the
+ * fix was to name the store on both sides instead.
+ *
+ * WHAT THIS PINS IS THE FACT, NOT THE WORDING. If a computed value is ever
+ * added to the device payload, `/legal` becomes a false claim about data
+ * handling on the page a reader opens to find out what they agreed to. The
+ * union is read from source because the shape is a type, and a type cannot be
+ * inspected at run time.
+ */
+describe("the load-bearing claim on /legal", () => {
+  const store = readFileSync("src/lib/result-store.ts", "utf8");
+  const legal = readFileSync("src/app/legal/page.tsx", "utf8");
+
+  /**
+   * The `StoredPayload` union, which is everything the device can hold.
+   *
+   * READ LINE BY LINE TO THE END OF THE DECLARATION, and the first version cut
+   * at the first semicolon — which sits INSIDE the first union member, so it
+   * scanned one line and found nothing. Adding `score: number` to the delicacy
+   * payload passed it. A guard that reads almost none of its subject reports
+   * success for the same reason a broken one does, which is why the check below
+   * asserts it found every member before looking for anything.
+   */
+  const payload = () => {
+    const lines = store.split(NL);
+    const at = lines.findIndex((line) => line.startsWith("export type StoredPayload"));
+    expect(at, "StoredPayload has moved; this guard is checking nothing").toBeGreaterThan(-1);
+    const body: string[] = [];
+    for (const line of lines.slice(at + 1)) {
+      body.push(line);
+      if (line.trimEnd().endsWith(";")) break;
+    }
+    return body.join(NL);
+  };
+
+  it("still makes the claim this guard exists to protect", () => {
+    expect(legal).toContain("never a computed score");
+  });
+
+  it("reads the whole union, so the check below is not looking at one line", () => {
+    const union = payload();
+    for (const kind of ["bias", "delicacy", "threshold", "spread"]) {
+      expect(union, `the union scan missed the ${kind} member`).toContain(`kind: "${kind}"`);
+    }
+  });
+
+  it("stores no computed value on the device", () => {
+    const scores = ["pct", "verdict", "score", "band", "accuracy", "brier", "threshold:"];
+    const found = scores.filter((field) => payload().indexOf(field) !== -1);
+    expect(
+      found,
+      "these look like computed values in the device payload, and /legal promises the browser " +
+        "holds raw answers only — either the field is not a score, or that promise is now false:",
+    ).toEqual([]);
+  });
+
+  /**
+   * The other half. The methodology page describes a DIFFERENT store, and must
+   * say so — otherwise the two sentences read as one contradiction again.
+   */
+  it("keeps the methodology page naming which store it means", () => {
+    const method = readFileSync("src/app/learn/methodology/page.tsx", "utf8");
+    expect(method, "the methodology page mentions scores without naming its store").toContain(
+      "a different store from the one on your device",
+    );
   });
 });

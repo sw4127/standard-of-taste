@@ -20,7 +20,7 @@ export default function Page() {
       </p>
       <p>
         <strong>1. Performance over self-report.</strong> Every instrument is a task where you can
-        be wrong. Questionnaires measure your self-image; tasks measure you. The prestige gap is
+        be wrong. Questionnaires measure your self-image; tasks measure what you actually did. The prestige gap is
         computed from what your ratings did under false labels; delicacy from whether you found the
         planted flaw; good sense from whether your confidence matched your accuracy. Nothing asks
         you to describe your taste, because that answer was never evidence.
@@ -52,8 +52,8 @@ export default function Page() {
       <p>
         <strong>5. The rulers were not invented here.</strong>{" "}Every figure above is simulated
         and the cohort is zero, so this product cannot argue from data about people. What it can
-        show is where its measuring apparatus came from — and it was already standing on published
-        practice without telling anyone.
+        show is where its measuring apparatus came from — which was published practice all along,
+        uncredited until now.
       </p>
       {apparatusLines().map((line) => (
         <p key={line} className="text-[14px] text-neutral-400">
@@ -72,10 +72,13 @@ export default function Page() {
         </p>
       ) : null}
       <p>
-        The dataset behind this is self-generated and boring by design: anonymized response
-        vectors — ratings, listen times, item-pool version, computed scores — under a random
-        session id. No accounts, no names, no ad-tech. It exists so the instruments can be
-        calibrated honestly, and that&apos;s the whole job. The criteria these rules serve are in
+        The analytics dataset behind this — a different store from the one on your device — is
+        self-generated and boring by design: anonymized response vectors under a random session id,
+        carrying ratings, listen times, item-pool version and the scores computed from them. No
+        accounts, no names, no ad-tech. Your browser keeps only your raw answers, never a score;
+        the two are separate on purpose, and{" "}<Link href="/legal">the terms</Link>{" "}say which
+        is which. It exists so the instruments can be calibrated honestly, and that&apos;s the whole
+        job. The criteria these rules serve are in
         the reading room — start with{" "}
         <Link href="/learn/freedom-from-prejudice">freedom from prejudice</Link> — or skip the
         theory and <Link href="/bias">take the Prestige Test</Link>.

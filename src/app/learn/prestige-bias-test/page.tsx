@@ -39,7 +39,7 @@ export default function Page() {
         Every swap is confessed. The test ends with a <strong>mandatory debrief</strong> that names
         each false label, shows the true attribution, and shows exactly what your ratings did when
         the name was a lie. You cannot exit around it. An instrument built on deception owes you
-        the disclosure — and the disclosure is where most people actually learn something.
+        the disclosure — and the disclosure is the part worth staying for.
       </p>
       <p>
         Your result is a measured number, not a diagnosis. And until enough real sessions exist to

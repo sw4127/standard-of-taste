@@ -1110,13 +1110,13 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > Hume's test case is a pairing nobody now remembers was ever a contest: John Ogilby, a workmanlike seventeenth-century versifier, against John Milton. His point was uncomfortable: a person acquainted with no better poetry might genuinely admire Ogilby — and the admiration would be sincere, felt, and wrong in a way the admirer has no way to detect. By comparison alone, he argued, do we learn to assign degrees of praise; whoever has seen only one kind of beauty cannot rank any.
 
 `PAGE-LEARN-COMPARISON-02` · OPEN
-> Read that carefully and it is not a claim about how much music you have heard. It is a claim about what breadth gives you — degrees. The judge who has weighed many works can say that one is a little better than another and a third is far worse; the judge who has not is left with liking and not-liking, which is one degree and a floor.
+> Read that carefully and it is not a claim about how much music you have heard. It is a claim about what breadth gives you — degrees. The judge who has weighed many works can say that one is a little better than another and a third is far worse; the judge who has not is left with liking and not-liking, which is not a scale but a floor.
 
 `PAGE-LEARN-COMPARISON-03` · OPEN
 > This page used to promise something else, and the correction is worth stating rather than hiding. It described an optional import of your streaming history and said that breadth was a fact about your listening rather than a skill anyone could test. That version needed a catalogue we would have had to license and a taxonomy we would have had to invent, and it measured what you had been exposed to rather than what you could do with it. The version that shipped measures the thing Hume actually named.
 
 `PAGE-LEARN-COMPARISON-04` · OPEN
-> It reuses a test you have already taken. The Prestige Test asks you to rate {numberWord(CLIPS)} clips blind on a scale of {numberWord(DEGREES_AVAILABLE)} whole numbers, then rate them again with names attached. Those ratings are already on your device, so comparison costs no new clip and no new tap. Two things come out of them: how many of the {numberWord(DEGREES_AVAILABLE)} degrees you actually landed on, and how many pairs you ordered one way blind and the other way round the second time — counting only pairs where the labels pushed both clips the same direction, so a prestige label cannot be the explanation.
+> It reuses a test you have already taken. The Prestige Test asks you to rate {numberWord(CLIPS)} clips blind on a scale of {numberWord(DEGREES_AVAILABLE)} whole numbers, then rate them again with names attached. Those ratings are already on your device, so comparison costs no new clip and no new tap. Two things come out of them: how many of the {numberWord(DEGREES_AVAILABLE)} degrees you actually landed on, and how many pairs you ordered one way blind and the opposite way once the names were time — counting only pairs where the labels pushed both clips the same direction, so a prestige label cannot be the explanation.
 
 `PAGE-LEARN-COMPARISON-05` · OPEN
 > Neither number is a mark out of anything. The count is read against what an indifferent rater would produce rather than against the top of the scale, because rating {numberWord(CLIPS)} clips at random already lands on about {numberWord(BY_CHANCE)} distinct values — the ceiling is reachable by accident, and a reader measuring themselves against it is measuring themselves against nothing.
@@ -1159,10 +1159,10 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > The point of the story is not that the kinsmen had refined opinions. It's that their perception was verifiable. There was a fact at the bottom of the barrel, and their palates found it while everyone else's missed it. Delicacy, in Hume's account, is exactly this: the capacity to register fine ingredients in a composition that most perceivers never notice — and the key in the wine is what separates delicacy from pretension. A claim of fine taste that can never be checked is just a claim.
 
 `PAGE-LEARN-DELICACY-03` · OPEN
-> Most taste tests never leave opinion territory, which is why they can't measure delicacy at all. The Delicacy Trials are built the other way around: start from recordings in the public domain or under Creative Commons licenses, introduce controlled degradations — {flawFamilyList()} — and ask which version is the original and what, precisely, is wrong with the other. Every trial has a key at the bottom of the barrel: an objectively correct answer. Difficulty is tunable, so the trials can find the exact threshold where your ears give out, and items are calibratable with item-response theory as real response data accumulates.
+> Most taste tests never leave opinion territory, which is why they can't measure delicacy at all. The Delicacy Trials are built the other way around: start from recordings in the public domain or under Creative Commons licenses, introduce controlled degradations — {flawFamilyList()} — and ask which version is the original and what, precisely, is wrong with the other. Every trial has a key at the bottom of the barrel: an objectively correct answer. Difficulty is tunable, so the trials can find the exact threshold where your ears give out, and the items can be calibrated with item-response theory as real response data accumulates.
 
 `PAGE-LEARN-DELICACY-04` · OPEN
-> In the gym, the Delicacy Trials are {DELICACY_LIVE ? "machine 02, and they are open" : "machine 02, visible and locked until their pool clears validation"} — built after the Prestige Test. And unlike prejudice, Hume insists delicacy improves with training — which is what practice is for.
+> In the gym, the Delicacy Trials are {DELICACY_LIVE ? "machine 02, and they are open" : "machine 02, visible and locked until their pool clears validation"} — built after the Prestige Test. And where prejudice is something to be caught in the act, delicacy is something Hume says training improves — which is what practice is for.
 
 ---
 
@@ -1199,7 +1199,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > That is the entire design brief of the Prestige Test: same clips, rated blind and then labeled, with some labels deliberately swapped. When your rating follows a false name, prejudice is the only suspect left in the room. The gap between your two passes is Hume's criterion turned into a number — and because you are your own control, the number never depends on anyone's opinion of what the "right" rating was.
 
 `PAGE-LEARN-FREEDOMFROMPREJUDICE-06` · OPEN
-> Freedom from prejudice is the first criterion the gym measures, but it is one of five. The others — delicacy, practice, comparison, and good sense — have their own machines, built or planned.
+> Freedom from prejudice is the first criterion the gym measures, but it is one of five. The others — delicacy, practice, comparison, and good sense — each have a machine of their own.
 
 ---
 
@@ -1216,7 +1216,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > That sounds unmeasurable — a faculty about faculties. It isn't. Decision science has a precise, boring name for it: calibration. A judge is well calibrated when their confidence matches their accuracy — when the answers they'd stake 95% on are right about 95% of the time, and the coin-flip feelings are right about half the time. Overconfidence and underconfidence are both failures of exactly the thing Hume was pointing at: knowing the reliability of your own judgment.
 
 `PAGE-LEARN-GOODSENSE-03` · OPEN
-> So the gym measures it. On performance items — trials with objectively right answers, like the Delicacy Trials — you attach a confidence level to each answer: 95%, 70%, or 50%. Plot claimed confidence against actual accuracy and you get a calibration curve; a Brier score summarizes how far you sit from the diagonal where confidence and reality agree. The result is Hume's most abstract criterion operationalized as one of the most rigorous numbers in the building.
+> So the gym measures it. On performance items — trials with objectively right answers, like the Delicacy Trials — you attach a confidence level to each answer: 95%, 70%, or 50%. Plot claimed confidence against actual accuracy and you get a calibration curve; a Brier score summarizes how far you sit from the diagonal where confidence and reality agree. The result is Hume's most abstract criterion turned into arithmetic: a curve you can read, and one number for how far it sits from the line.
 
 `PAGE-LEARN-GOODSENSE-04` · OPEN
 > One honesty note, because it's the house rule: confidence input never inflates or weights your scores — it's measured against your accuracy, never blended into it. A confident wrong answer costs you calibration; it cannot buy you points. The gym opens with the Prestige Test; the full measurement rules live in the methodology.
@@ -1233,7 +1233,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > Hume closed his essay with a job description: strong sense, delicate sentiment, improved by practice, perfected by comparison, cleared of prejudice — that is a true judge. The Taste Gym's methodology is that sentence turned into engineering constraints.
 
 `PAGE-LEARN-METHODOLOGY-02` · OPEN
-> 1. Performance over self-report. Every instrument is a task where you can be wrong. Questionnaires measure your self-image; tasks measure you. The prestige gap is computed from what your ratings did under false labels; delicacy from whether you found the planted flaw; good sense from whether your confidence matched your accuracy. Nothing asks you to describe your taste, because that answer was never evidence.
+> 1. Performance over self-report. Every instrument is a task where you can be wrong. Questionnaires measure your self-image; tasks measure what you actually did. The prestige gap is computed from what your ratings did under false labels; delicacy from whether you found the planted flaw; good sense from whether your confidence matched your accuracy. Nothing asks you to describe your taste, because that answer was never evidence.
 
 `PAGE-LEARN-METHODOLOGY-03` · OPEN
 > 2. The user is their own control. Wherever possible the design is within-subject: your labeled ratings are compared to your blind ratings, your retest to your baseline. This removes the need for an external ground truth about which music is good — the instrument never has to take a side in that argument to measure your movement within it. The Prestige Test additionally carries unlabeled control clips, rated in both passes and labeled in neither: they measure each user's plain second-pass drift (memory, familiarity, regression), and the headline score subtracts the residual that drift would leave in it.
@@ -1245,13 +1245,13 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > 4. No number the data can't back. Until a real calibration cohort exists, results carry a provisional label and no percentile appears anywhere in the product. As sessions accumulate, the psychometrics are standard and open about their assumptions: item-response theory for item difficulty and discrimination, signal-detection analysis for the trials, calibration curves and Brier scores for confidence, reliability checks before any norm is published — always with its N attached.
 
 `PAGE-LEARN-METHODOLOGY-06` · OPEN
-> 5. The rulers were not invented here. Every figure above is simulated and the cohort is zero, so this product cannot argue from data about people. What it can show is where its measuring apparatus came from — and it was already standing on published practice without telling anyone.
+> 5. The rulers were not invented here. Every figure above is simulated and the cohort is zero, so this product cannot argue from data about people. What it can show is where its measuring apparatus came from — which was published practice all along, uncredited until now.
 
 `PAGE-LEARN-METHODOLOGY-07` · OPEN
 > {degreesConvergenceLine()} That last number is the comparison reading, and it is the only place in this product where a professional's scale appears beside your own. It is a reference point and never a target: agreement with a critic is not scored here, because the Prestige Test measures being moved by a prestigious name and rewarding that agreement would contradict it on the same screen.
 
 `PAGE-LEARN-METHODOLOGY-08` · OPEN
-> The dataset behind this is self-generated and boring by design: anonymized response vectors — ratings, listen times, item-pool version, computed scores — under a random session id. No accounts, no names, no ad-tech. It exists so the instruments can be calibrated honestly, and that's the whole job. The criteria these rules serve are in the reading room — start with freedom from prejudice — or skip the theory and take the Prestige Test.
+> The analytics dataset behind this — a different store from the one on your device — is self-generated and boring by design: anonymized response vectors under a random session id, carrying ratings, listen times, item-pool version and the scores computed from them. No accounts, no names, no ad-tech. Your browser keeps only your raw answers, never a score; the two are separate on purpose, and the terms say which is which. It exists so the instruments can be calibrated honestly, and that's the whole job. The criteria these rules serve are in the reading room — start with freedom from prejudice — or skip the theory and take the Prestige Test.
 
 *2 further blocks on this page are filled entirely from content modules, so the words are reviewed in the earlier parts rather than here.*
 
@@ -1302,7 +1302,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > Two of the sixteen clips are controls: they carry no label in either pass. They measure how much your ratings drift on a plain second listen — memory, familiarity, fatigue — and that measured drift is corrected out of your headline number. The obvious objection to any re-rating design, "the second pass just tests memory," is thereby a published control rather than a caveat.
 
 `PAGE-LEARN-PRESTIGEBIASTEST-05` · OPEN
-> Every swap is confessed. The test ends with a mandatory debrief that names each false label, shows the true attribution, and shows exactly what your ratings did when the name was a lie. You cannot exit around it. An instrument built on deception owes you the disclosure — and the disclosure is where most people actually learn something.
+> Every swap is confessed. The test ends with a mandatory debrief that names each false label, shows the true attribution, and shows exactly what your ratings did when the name was a lie. You cannot exit around it. An instrument built on deception owes you the disclosure — and the disclosure is the part worth staying for.
 
 `PAGE-LEARN-PRESTIGEBIASTEST-06` · OPEN
 > Your result is a measured number, not a diagnosis. And until enough real sessions exist to compute honest norms, it is labeled provisional — no invented percentiles, no "better than 73% of listeners." The philosophy behind the design is Hume's criterion of freedom from prejudice; the measurement principles are laid out in the methodology.
@@ -1325,7 +1325,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > Agreeing with him is not measured, and the instrument could not measure it if it tried. The only thing taken from the ranking is the distance between two positions. Which of the two he put higher was never imported, so there is no stored number from which your agreement could be worked out afterwards — not by us, not later, not by accident. Preferring the work he ranked lower costs you nothing. It would also contradict the Prestige Test, which measures being moved by an authority, to reward being moved by one on the same product.
 
 `PAGE-LEARN-RANKINGTEST-04` · OPEN
-> Both numbers are read against {BY_CHANCE} points, which is what rating at random produces — and it produces the same figure on both kinds of pair, because chance does not know which works a critic separated. That is the whole reference point. A reader whose two figures sit together near it has not discriminated; a reader whose figures differ has, in this sitting, on these clips.
+> Both numbers are read against {BY_CHANCE} points, which is what rating at random produces — and it produces the same figure on both kinds of pair, because chance does not know which works a critic separated. That is the whole reference point. Two figures sitting together near it show no discrimination in this sitting; two that differ show some, on these clips.
 
 `PAGE-LEARN-RANKINGTEST-05` · OPEN
 > The two numbers are never combined, and the difference between them is never reported. They rest on {numberWord(FAR)} pairs and {numberWord(CLOSE)} pairs, built from clips that appear in several pairs apiece, and nobody has sat this instrument twice — so how far the figures wander on their own has never been measured. There is no honest size at which the gap between them becomes a result. Offering one would be inventing the threshold, which is the failure this product spends its existence refusing.
@@ -1438,7 +1438,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 ---
 
-**94 blocks, roughly 4244 words, across 11 surfaces.**
+**94 blocks, roughly 4299 words, across 11 surfaces.**
 
 
 ---

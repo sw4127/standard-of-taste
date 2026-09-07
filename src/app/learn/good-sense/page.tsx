@@ -29,7 +29,7 @@ export default function Page() {
         each answer: <strong>95%, 70%, or 50%</strong>. Plot claimed confidence against actual
         accuracy and you get a calibration curve; a Brier score summarizes how far you sit from the
         diagonal where confidence and reality agree. The result is Hume&apos;s most abstract
-        criterion operationalized as one of the most rigorous numbers in the building.
+        criterion turned into arithmetic: a curve you can read, and one number for how far it sits from the line.
       </p>
       <p>
         One honesty note, because it&apos;s the house rule: confidence input never inflates or

@@ -41,8 +41,7 @@ export default function Page() {
         others — <Link href="/learn/delicacy">delicacy</Link>,{" "}
         <Link href="/learn/practice">practice</Link>,{" "}
         <Link href="/learn/comparison">comparison</Link>, and{" "}
-        <Link href="/learn/good-sense">good sense</Link> — have their own machines, built or
-        planned.
+        <Link href="/learn/good-sense">good sense</Link> — each have a machine of their own.
       </p>
     </Explainer>
   );

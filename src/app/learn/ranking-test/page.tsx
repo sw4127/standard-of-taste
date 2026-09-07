@@ -61,9 +61,9 @@ export default function Page() {
       <p>
         Both numbers are read against <strong>{BY_CHANCE} points</strong>, which is what rating at
         random produces — and it produces the same figure on both kinds of pair, because chance
-        does not know which works a critic separated. That is the whole reference point. A reader
-        whose two figures sit together near it has not discriminated; a reader whose figures differ
-        has, in this sitting, on these clips.
+        does not know which works a critic separated. That is the whole reference point. Two figures
+        sitting together near it show no discrimination in this sitting; two that differ show some,
+        on these clips.
       </p>
       <p>
         <strong>The two numbers are never combined, and the difference between them is never

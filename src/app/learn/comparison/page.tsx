@@ -45,7 +45,7 @@ export default function Page() {
         Read that carefully and it is not a claim about how much music you have heard. It is a
         claim about what breadth <em>gives</em> you — <strong>degrees</strong>. The judge who has
         weighed many works can say that one is a little better than another and a third is far
-        worse; the judge who has not is left with liking and not-liking, which is one degree and a
+        worse; the judge who has not is left with liking and not-liking, which is not a scale but a
         floor.
       </p>
       <p>
@@ -62,7 +62,7 @@ export default function Page() {
         {numberWord(CLIPS)} clips blind on a scale of {numberWord(DEGREES_AVAILABLE)} whole numbers, then rate them again with names attached. Those ratings
         are already on your device, so comparison costs no new clip and no new tap. Two things come
         out of them: <strong>how many of the {numberWord(DEGREES_AVAILABLE)} degrees you actually landed on</strong>,
-        and <strong>how many pairs you ordered one way blind and the other way round the second
+        and <strong>how many pairs you ordered one way blind and the opposite way once the names were
         time</strong> — counting only pairs where the labels pushed both clips the same direction,
         so a prestige label cannot be the explanation.
       </p>

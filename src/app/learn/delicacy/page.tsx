@@ -31,7 +31,7 @@ export default function Page() {
         controlled degradations — {flawFamilyList()} — and ask which version is the original and
         what, precisely, is wrong with the other. Every trial has a key at the bottom of the barrel:{" "}
         <strong>an objectively correct answer</strong>. Difficulty is tunable, so the trials can
-        find the exact threshold where your ears give out, and items are calibratable with
+        find the exact threshold where your ears give out, and the items can be calibrated with
         item-response theory as real response data accumulates.
       </p>
       <p>
@@ -39,8 +39,9 @@ export default function Page() {
         {DELICACY_LIVE
           ? "machine 02, and they are open"
           : "machine 02, visible and locked until their pool clears validation"}{" "}
-        — built after <Link href="/learn/prestige-bias-test">the Prestige Test</Link>. And unlike prejudice,
-        Hume insists delicacy improves with training — which is what{" "}
+        — built after <Link href="/learn/prestige-bias-test">the Prestige Test</Link>. And where
+        prejudice is something to be caught in the act, delicacy is something Hume says training
+        improves — which is what{" "}
         <Link href="/learn/practice">practice</Link> is for.
       </p>
     </Explainer>
