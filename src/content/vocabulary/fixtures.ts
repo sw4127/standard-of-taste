@@ -20,13 +20,19 @@ import type { VoiceString } from "../voice";
 import { creatorLines as thresholdLines } from "./threshold";
 import { creatorLines as delicacyLines } from "./delicacy";
 import { creatorLines as biasLines } from "./bias";
-import { acrossLines, thresholdRoster, type AcrossInput } from "./across";
+import { acrossLines,
+  replicationLine, thresholdRoster, type AcrossInput } from "./across";
 import { arcLines } from "./arc";
 import { spreadLines } from "./spread";
 import { computeSpreadResult } from "@/engine/spread";
 import { SPREAD_POOL } from "@/content/spread/ranking";
 import { biasArc, delicacyArc, thresholdArc, type ArcReading } from "@/engine/arc";
 import { brierNote, expertStrings } from "./expert";
+import { comparisonLines, comparisonRefusal, COMPARISON_BOUNDARY, criticReferenceLines, ourScaleLine } from "./comparison";
+import { apparatusLines, citationStrengthLine, degreesConvergenceLine } from "./apparatus";
+import { ARC_DEVICE_NOTE, ARC_REFUSAL } from "./arc";
+import { COMPARISON_PANEL } from "./comparison";
+import { FLAW_IN_YOUR_WORK } from "./delicacy";
 import { thresholdClaim, type Claim } from "@/engine/evidence";
 import { replicationCheck } from "@/engine/replication";
 import type { ReplicationCheck } from "@/engine/replication";
@@ -35,6 +41,7 @@ import { DELICACY_INSTRUMENT_ID, MEASURED_TRIALS } from "@/content/delicacy/item
 import { computeDelicacyResult, type DelicacyResponses } from "@/engine/delicacy";
 import { BIAS_CLIPS, BIAS_INSTRUMENT_ID } from "@/content/bias/items";
 import { BIAS_SCALE_MAX, BIAS_SCALE_MIN, computeBiasResult } from "@/engine/bias";
+import { computeComparisonResult, type ComparisonResult } from "@/engine/comparison";
 import {
   answer,
   axisFor,
@@ -125,6 +132,59 @@ function biasResult(shift: number) {
 /** One session per verdict — the only axis the prestige copy branches on. */
 export function biasResults() {
   return { swayed: biasResult(2), steady: biasResult(0), contrarian: biasResult(-2) };
+}
+
+/**
+ * THE COMPARISON READING, WHICH NO FIXTURE REACHED UNTIL NOW (E18/S17, RT-R9 a).
+ *
+ * `src/content/vocabulary/comparison.ts` is a whole instrument's reading layer
+ * and it appeared in NO deck. The reason is the interesting part: the coverage
+ * guard written in E18/S8 checks that every surface the vocabulary layer
+ * RENDERS has a deck section, and a module with no fixtures renders nothing —
+ * so it was invisible to a guard written to catch exactly this. Cowork found
+ * eight unreached sentences by reading source; a census of the extracted
+ * templates found twenty, including ten here.
+ *
+ * The ratings are built the same way the prestige fixtures are, because
+ * comparison is computed from the Prestige Test's own ratings and inventing a
+ * separate shape would let this fixture drift from what a real sitting
+ * produces. Three cases reach the branches the copy has: a spread-out rater, a
+ * rater whose ratings sit too close for the second number, and a session with
+ * fewer clips than the scale has degrees.
+ */
+function comparisonPasses(
+  blindRate: (index: number) => number,
+  labeledRate: (index: number) => number,
+  items = BIAS_CLIPS,
+) {
+  const blind: Record<string, number> = {};
+  const labeled: Record<string, number> = {};
+  items.forEach((item, i) => {
+    blind[item.id] = Math.max(BIAS_SCALE_MIN, Math.min(BIAS_SCALE_MAX, blindRate(i)));
+    labeled[item.id] = Math.max(BIAS_SCALE_MIN, Math.min(BIAS_SCALE_MAX, labeledRate(i)));
+  });
+  return computeComparisonResult(items, blind, labeled);
+}
+
+const comparisonFrom = (rate: (index: number) => number, items = BIAS_CLIPS) =>
+  comparisonPasses(rate, rate, items);
+
+export function comparisonResults(): Record<string, ComparisonResult> {
+  return {
+    // Uses most of the scale, and repeats the order on the labelled pass.
+    "wide-and-stable": comparisonFrom((i) => i % 11),
+    // Everything within two points: the stability number cannot be supported.
+    "too-close": comparisonFrom((i) => 5 + (i % 2)),
+    // Fewer clips than the scale has degrees.
+    "short-session": comparisonFrom((i) => i % 5, BIAS_CLIPS.slice(0, 5)),
+    /*
+     * A RATER WHO REVERSED SOME PAIRS. The other cases rate both passes
+     * identically, so the stability sentence only ever reached its
+     * everything-held branch and the reversed one was unvoiced -- the same
+     * shape of gap as the arc fixtures that only rendered one flaw family.
+     */
+    reversed: comparisonPasses((i) => i % 11, (i) => (i % 3 === 0 ? 10 - (i % 11) : i % 11)),
+  };
 }
 
 /**
@@ -410,6 +470,103 @@ export function vocabularyStrings(): VoiceString[] {
     text: brierNote(0.287, 15, 0.25),
     intensity: "calm",
   });
+
+  /*
+   * COMPARISON AND APPARATUS, WHICH WERE IN NO DECK AT ALL (E18/S17, RT-R9 a).
+   *
+   * Two whole modules. Neither had a fixture, so neither rendered a surface,
+   * so the E18/S8 guard that checks "every surface has a deck section" could
+   * not see them -- it compares RENDERED surfaces against sections, and a
+   * module nothing renders is invisible to it. That hole is why the census in
+   * `template-trace.test.ts` now works from the modules instead.
+   */
+  for (const [name, result] of Object.entries(comparisonResults())) {
+    comparisonLines(result).forEach((text, i) => {
+      out.push({ surface: `vocabulary/comparison/${name}/${i}`, text, intensity: "pointed" });
+    });
+  }
+  /*
+   * BOTH REFUSAL BRANCHES, DRIVEN THROUGH THE REAL FUNCTION. `comparisonLines`
+   * reaches whichever one its result produces; the other stays unvoiced unless
+   * it is asked for by name, which is how a refusal branch goes unwritten.
+   */
+  const forRefusal = comparisonResults()["too-close"];
+  for (const gap of ["too-few-asserted-pairs", "too-few-clips"]) {
+    out.push({
+      surface: `vocabulary/comparison/refusal-${gap}/0`,
+      text: comparisonRefusal(gap, forRefusal),
+      intensity: "pointed",
+    });
+  }
+  for (const [i, text] of criticReferenceLines().entries()) {
+    out.push({ surface: `vocabulary/comparison/critic-scales/${i}`, text, intensity: "calm" });
+  }
+  out.push({ surface: "vocabulary/comparison/our-scale/0", text: ourScaleLine(), intensity: "calm" });
+  out.push({ surface: "vocabulary/comparison/boundary/0", text: COMPARISON_BOUNDARY, intensity: "pointed" });
+  apparatusLines().forEach((text, i) => {
+    out.push({ surface: `vocabulary/apparatus/lines/${i}`, text, intensity: "calm" });
+  });
+  const convergence = degreesConvergenceLine();
+  if (convergence) {
+    out.push({ surface: "vocabulary/apparatus/convergence/0", text: convergence, intensity: "calm" });
+  }
+  out.push({
+    surface: "vocabulary/apparatus/citation-strength/0",
+    text: citationStrengthLine(),
+    intensity: "calm",
+  });
+
+  /*
+   * EXPORTED CONSTANTS NO ASSEMBLER REACHES FROM A FIXTURE (E18/S17).
+   *
+   * `ARC_DEVICE_NOTE` is the clearest case and Cowork found it by hand: the
+   * arc's own rules require a sentence saying where the memory lives, the
+   * sentence exists, and it was in no deck. A constant is not reached by
+   * rendering a result, so nothing here would ever have voiced it.
+   */
+  out.push({ surface: "vocabulary/arc/device-note/0", text: ARC_DEVICE_NOTE, intensity: "calm" });
+  for (const [gap, text] of Object.entries(ARC_REFUSAL)) {
+    out.push({ surface: `vocabulary/arc/refusal-${gap}/0`, text, intensity: "pointed" });
+  }
+  for (const [key, text] of Object.entries(COMPARISON_PANEL)) {
+    out.push({ surface: `vocabulary/comparison/panel-${key}/0`, text, intensity: "calm" });
+  }
+  for (const [family, text] of Object.entries(FLAW_IN_YOUR_WORK)) {
+    out.push({ surface: `vocabulary/delicacy/in-your-work-${family}/0`, text, intensity: "pointed" });
+  }
+
+  /*
+   * THE DISAGREEMENT BRANCHES, CONSTRUCTED RATHER THAN TUNED (E18/S17).
+   *
+   * `replicationLine` has three shapes and the fixtures only ever reached one,
+   * because producing a disagreement through the real engine means tuning a
+   * simulated listener until two instruments contradict each other -- which
+   * would freeze whatever placement happened to work. The check is a plain
+   * record, so the copy layer is exercised directly on each shape.
+   *
+   * Cowork singled the all-disagree line out as the strongest sentence nobody
+   * had ever read: "One of the two sittings is not describing your ear."
+   */
+  const check = (agree: number, disagree: number, crossMaterial: boolean) => ({
+    family: "pitch-drift" as const,
+    unit: "cents",
+    trials: [],
+    agree,
+    disagree,
+    unpredicted: 0,
+    crossMaterial,
+  });
+  for (const [name, value] of Object.entries({
+    "all-disagree": check(0, 3, false),
+    "partly-agree": check(2, 1, false),
+    "cross-material": check(2, 1, true),
+  })) {
+    out.push({
+      surface: `vocabulary/across/replication-${name}/0`,
+      text: replicationLine(value),
+      intensity: "pointed",
+    });
+  }
 
   return out;
 }

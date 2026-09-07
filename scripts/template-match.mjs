@@ -40,11 +40,23 @@ const SLOT = String.fromCharCode(1); // a marker no source text contains
 
 const DIR = "src/content/vocabulary";
 
-/** Files whose exported strings the vocabulary deck renders. */
+/**
+ * Files whose exported strings the vocabulary deck renders.
+ *
+ * TWO DATA MODULES ARE IN THE LIST, and they are not an afterthought. The
+ * critic-scale descriptions and the borrowed-standard descriptions are PROSE a
+ * reader meets on screen, assembled by the vocabulary layer out of fields
+ * defined elsewhere. Scanning only `vocabulary/` reported five renderings as
+ * having no template, which was true and useless: the template exists, in a
+ * file that happens to hold data as well as words.
+ */
+const EXTRA = ["src/content/comparison/scales.ts", "src/content/apparatus/standards.ts"];
+
 export function moduleFiles() {
-  return readdirSync(DIR)
+  const local = readdirSync(DIR)
     .filter((name) => name.endsWith(".ts") && !name.endsWith(".test.ts") && name !== "fixtures.ts")
     .map((name) => DIR + "/" + name);
+  return [...local, ...EXTRA];
 }
 
 /**

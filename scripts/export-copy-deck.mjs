@@ -176,6 +176,58 @@ const SECTIONS = [
     ],
   },
   {
+    key: "comparison",
+    title: "Comparison — “DEGREES OF PRAISE”",
+    where:
+      "Renders under the Prestige result, on both the flow's debrief and the share page. It is " +
+      "computed from the Prestige Test's own ratings — no new clip, no new tap.",
+    already:
+      "The screen has already given the prestige verdict and its percentage. This layer adds a " +
+      "different question about the same ratings: how much of the scale the listener used, and " +
+      "whether they put the same clips in the same order twice.",
+    job:
+      "Report a spread and a stability without either reading as a mark out of eleven, and mark " +
+      "the boundary that says a narrow spread may simply be correct.",
+    rules: [
+      "A DEGREES COUNT INVITES A VERDICT AND MUST NOT BE ONE. “You used five of eleven” reads as " +
+        "a grade unless the chance figure is in the same breath: rating at random lands on about " +
+        "nine distinct values, so eleven is not an achievement and five is not a failure.",
+      "A NARROW SPREAD MAY BE THE CORRECT ANSWER. If the clips really are close in quality, " +
+        "compressing them is right, and this instrument cannot tell that case from a narrow ear. " +
+        "`COMPARISON_BOUNDARY` says so and is appended unconditionally — it is not a footnote.",
+      "Nobody is ranked. There is no cohort. The only outside reference is what professional " +
+        "critics do with their OWN scales, and that is a reference point, never a target.",
+      "THE CRITIC SENTENCES ARE NOT WRITTEN HERE. They are composed from " +
+        "`src/content/comparison/scales.ts`, where each is bound to the page it came from and the " +
+        "date somebody opened it. Edit the field in that file, never a copy of it.",
+      "Refusals name what was missing and print no number — the same rule the other instruments " +
+        "keep.",
+    ],
+  },
+  {
+    key: "apparatus",
+    title: "The borrowed apparatus — WHERE THE RULERS CAME FROM",
+    where:
+      "Renders on `/method`, as the section explaining which published standards this product's " +
+      "measurements are built on.",
+    already:
+      "The page has already described what each instrument does. This layer says whose rulers it " +
+      "borrowed to do it.",
+    job:
+      "Show that the loudness normalisation, the transparency anchor and the listening-test design " +
+      "sit in a tradition with published standards — and say where this product departs from them.",
+    rules: [
+      "A CITATION MAY DESCRIBE THE MEASURING APPARATUS. It may NEVER describe how well people " +
+        "score. This is the rule the whole section runs on: quoting a standard's method is " +
+        "allowed, quoting anybody's results about listeners is not.",
+      "Every standard named is one somebody opened. The descriptions live in " +
+        "`src/content/apparatus/standards.ts` beside the URL and the date; edit them there.",
+      "Where this product departs from a standard, the departure is stated rather than glossed.",
+      "It is short on purpose. The product already carries a great deal of methodological prose, " +
+        "and a reader who wanted a number about their ear is not helped by a survey of standards.",
+    ],
+  },
+  {
     key: "across",
     title: "Combined view — “ACROSS YOUR SESSIONS”",
     where:

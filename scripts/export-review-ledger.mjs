@@ -89,6 +89,23 @@ const PASSES = [
  */
 const UNDECKED = [];
 
+/**
+ * A HEADING WITHOUT ITS NUMBER, because the number is not part of its identity.
+ *
+ * THIS COST A COMPLETED PASS AND ALMOST WENT UNNOTICED. The pass records match
+ * on the deck heading, and headings carry a position — "6. Combined view".
+ * E18/S17 inserted two sections earlier in the list, every heading after them
+ * renumbered, and two surfaces that had been through a writer silently reverted
+ * to "never". The ledger under-reported real work and nothing failed. The
+ * position is assigned by the exporter's loop and means nothing about the
+ * surface, so it is stripped before comparing.
+ */
+function withoutNumber(heading) {
+  const dot = heading.indexOf(". ");
+  if (dot > 0 && dot < 4 && /^[0-9]+$/.test(heading.slice(0, dot))) return heading.slice(dot + 2);
+  return heading;
+}
+
 /** Surface headings, read out of each generated deck. */
 function surfacesOf(file) {
   const text = readFileSync(file, "utf8");
@@ -120,10 +137,25 @@ const rows = [];
 for (const deck of DECKS) {
   for (const surface of surfacesOf(deck.file)) {
     total += 1;
-    const record = PASSES.find((p) => p.surface === surface);
+    const record = PASSES.find((p) => withoutNumber(p.surface) === withoutNumber(surface));
     if (record) passed += 1;
     rows.push({ part: deck.part, surface, record });
   }
+}
+
+/*
+ * EVERY PASS RECORD MUST HAVE FOUND ITS ROW. A record that matches nothing is a
+ * completed pass the ledger has forgotten -- which is what renumbering did --
+ * and it under-reports silently unless somebody counts.
+ */
+const orphaned = PASSES.filter(
+  (p) => !rows.some((row) => withoutNumber(row.surface) === withoutNumber(p.surface)),
+);
+if (orphaned.length > 0) {
+  throw new Error(
+    "export-review-ledger: these pass records match no surface in any deck, so a completed pass " +
+      "would be reported as never: " + orphaned.map((p) => p.surface).join(" | "),
+  );
 }
 
 lines.push("## The state of it");

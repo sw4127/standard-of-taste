@@ -64,7 +64,7 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 - Never a per-family count or percentage on this screen.
 - Must say nothing about confidence or calibration — that block owns it.
 
-**3 templates to review** — they render 4 distinct sentences across 5 reachable renderings. Each block below is the TEMPLATE, read from the source file, with `${…}` marking its real slots; the italic lines under it are examples of how it renders. Rewrite the template. Leave every slot exactly as it is — a slot is a value the engine computes, and resolving one freezes a number or a name that is supposed to move.
+**6 templates to review** — they render 7 distinct sentences across 8 reachable renderings. Each block below is the TEMPLATE, read from the source file, with `${…}` marking its real slots; the italic lines under it are examples of how it renders. Rewrite the template. Leave every slot exactly as it is — a slot is a value the engine computes, and resolving one freezes a number or a name that is supposed to move.
 
 > Naming is the half that transfers. Hearing that a render is wrong sends you back to generate again and hope; hearing which of the three it is sends you to a control that fixes it. You named it ${flawCorrect} of the ${flawEligible} times you were asked.
 
@@ -75,6 +75,12 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 > This session will not break your result down by flaw type, and the reason is arithmetic rather than modesty: at ${per} pairs of each, a listener equally good at all three comes out with uneven tallies about nine times in ten. Any split shown here would mostly be luck wearing a label.
 
   *As rendered:* “This session will not break your result down by flaw type, and the reason is arithmetic rather than modesty: at 5 pairs of each, a listener equally good at all three comes out with uneven tallies about nine times in ten. Any split shown here would mostly be luck wearing a label.”
+
+> leads and vocals going quietly sour
+
+> the brittle, underwater sheen of a bad export
+
+> the groove never quite locking
 
 ---
 
@@ -176,7 +182,7 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 - An arc compares one person to themselves. That is the only comparison this product may make: no cohort, no percentile, and no promise that practice will work (N3).
 - It says where the memory lives. This is the strongest claim to remembering anywhere in the product, and it is one browser's localStorage.
 
-**11 templates to review** — they render 14 distinct sentences across 14 reachable renderings. Each block below is the TEMPLATE, read from the source file, with `${…}` marking its real slots; the italic lines under it are examples of how it renders. Rewrite the template. Leave every slot exactly as it is — a slot is a value the engine computes, and resolving one freezes a number or a name that is supposed to move.
+**13 templates to review** — they render 16 distinct sentences across 20 reachable renderings. Each block below is the TEMPLATE, read from the source file, with `${…}` marking its real slots; the italic lines under it are examples of how it renders. Rewrite the template. Leave every slot exactly as it is — a slot is a value the engine computes, and resolving one freezes a number or a name that is supposed to move.
 
 > Across your ${label} sittings, ${way} — a change of about ${moved}. This ladder cannot distinguish anything under ${floor} from ordinary run-to-run wobble, so a move this size is the instrument speaking rather than the dice.
 
@@ -188,7 +194,11 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 > Nobody has measured how much this machine's numbers wander between sittings, so there is no honest line between a change and a coin flip here. Until there is, it says nothing.
 
+> One of these two sittings has no answers that can be scored, so there is no pair to compare.
+
 > One sitting cannot say whether your ear moved — there is nothing to compare it against. A second one in this browser is what makes that sentence possible at all.
+
+> Read from this browser only — there are no accounts and nothing on a server, so another device has no history to compare and starts over.
 
 > The label moved you ${before} before and ${after} since. That gap is inside the ${floor} points this test wanders by on its own, so it is not a change anybody could stand behind — the same person, retested, moves this much without anything about them changing.
 
@@ -218,7 +228,98 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 ---
 
-## 6. Combined view — “ACROSS YOUR SESSIONS”
+## 6. Comparison — “DEGREES OF PRAISE”
+
+**Where it renders.** Renders under the Prestige result, on both the flow's debrief and the share page. It is computed from the Prestige Test's own ratings — no new clip, no new tap.
+
+**What the screen has already said.** The screen has already given the prestige verdict and its percentage. This layer adds a different question about the same ratings: how much of the scale the listener used, and whether they put the same clips in the same order twice.
+
+**This layer's job.** Report a spread and a stability without either reading as a mark out of eleven, and mark the boundary that says a narrow spread may simply be correct.
+
+**Rules this copy must keep:**
+
+- A DEGREES COUNT INVITES A VERDICT AND MUST NOT BE ONE. “You used five of eleven” reads as a grade unless the chance figure is in the same breath: rating at random lands on about nine distinct values, so eleven is not an achievement and five is not a failure.
+- A NARROW SPREAD MAY BE THE CORRECT ANSWER. If the clips really are close in quality, compressing them is right, and this instrument cannot tell that case from a narrow ear. `COMPARISON_BOUNDARY` says so and is appended unconditionally — it is not a footnote.
+- Nobody is ranked. There is no cohort. The only outside reference is what professional critics do with their OWN scales, and that is a reference point, never a target.
+- THE CRITIC SENTENCES ARE NOT WRITTEN HERE. They are composed from `src/content/comparison/scales.ts`, where each is bound to the page it came from and the date somebody opened it. Edit the field in that file, never a copy of it.
+- Refusals name what was missing and print no number — the same rule the other instruments keep.
+
+**12 templates to review**, plus 3 short labels — they render 17 distinct sentences across 24 reachable renderings. Each block below is the TEMPLATE, read from the source file, with `${…}` marking its real slots; the italic lines under it are examples of how it renders. Rewrite the template. Leave every slot exactly as it is — a slot is a value the engine computes, and resolving one freezes a number or a name that is supposed to move.
+
+*Labels:* `(close)` · `(read it)` · `degrees of praise you used`
+
+> COMPARISON · HUME'S FIFTH CRITERION
+
+> None of that says your ear is narrow. These clips were never spaced out by quality — if they really do sit close together, hearing them that way is the right answer, and this instrument cannot tell that apart from a listener who hears everything as much the same.
+
+> Not a target, and not a score you are being given. Two published scales, and what their owners actually did with them.
+
+> ${scope}, you put every one of them back in the same order.
+
+  *As rendered:* “Of the thirty-four pairs you separated by two points or more, counting only pairs where the names on screen pushed both clips the same way, you put every one of them back in the same order.”
+
+> ${scope}, you put ${numberWord(say.reversed)} of them the other way round the second time${ties}.
+
+  *As rendered:* “Of the thirty-four pairs you separated by two points or more, counting only pairs where the names on screen pushed both clips the same way, you put fourteen of them the other way round the second time, and two more came out level.”
+
+> Pitchfork: The scale runs from 0.0 to 10.0 in tenths, which is a hundred and one places a record can land. Across more than 18,000 reviews published between January 1999 and January 2017, the mean score was 7.0. Most of those scores lie between 6.4 and 7.8. Scores ending in .0 appear nearly twice as often as scores ending in .1 — the reviewers avoid the decimals their own scale offers them.
+
+> Robert Christgau's Consumer Guide: The Consumer Guide's letter grades ran from A+ down to E−. From 1990 he used fewer letter grades for records below B+, replacing the bottom of his own ladder with honourable mentions and the categories Choice Cuts, Neither and Duds.
+
+> This one gives you ${numberWord(OUR_SCALE.degreesAllowed)} — ${OUR_SCALE.scale} — and asks only how many of them you used. Not whether you used the right ones. There is no right one.
+
+  *As rendered:* “This one gives you eleven — 0 to 10, whole numbers only — and asks only how many of them you used. Not whether you used the right ones. There is no right one.”
+
+> This sitting had fewer clips than the scale has degrees, so a count out of ${numberWord(result.degreesAvailable)} would be measuring you against room you were never given.
+
+  *As rendered:* “This sitting had fewer clips than the scale has degrees, so a count out of eleven would be measuring you against room you were never given.”
+
+> WHAT THE PROFESSIONALS DO WITH THEIR OWN SCALES
+
+> You put ${numberWord(say.itemCount)} clips on ${spread}, with ${range}. Someone rating the same clips at random would have landed on about ${numberWord(Math.round(say.degreesIfIndifferent))}.
+
+  *As rendered:* “You put sixteen clips on all eleven of the degrees this scale offers, with the top and the bottom both in play. Someone rating the same clips at random would have landed on about nine.”  ·  “You put sixteen clips on two of the eleven degrees this scale offers, with nothing below five and nothing above six. Someone rating the same clips at random would have landed on about nine.”
+
+> Your ratings sat too close together for this second number to mean anything: it needs ${numberWord(MIN_ASSERTED_PAIRS)} pairs separated by ${numberWord(ASSERTION_FLOOR)} points or more, and this sitting produced ${numberWord(result.pairs.asserted)}. Below that, one clip's wobble moves the answer further than the answer moves, so there is nothing here worth printing.
+
+  *As rendered:* “Your ratings sat too close together for this second number to mean anything: it needs ten pairs separated by two points or more, and this sitting produced one. Below that, one clip's wobble moves the answer further than the answer moves, so there is nothing here worth printing.”  ·  “Your ratings sat too close together for this second number to mean anything: it needs ten pairs separated by two points or more, and this sitting produced zero. Below that, one clip's wobble moves the answer further than the answer moves, so there is nothing here worth printing.”
+
+---
+
+## 7. The borrowed apparatus — WHERE THE RULERS CAME FROM
+
+**Where it renders.** Renders on `/method`, as the section explaining which published standards this product's measurements are built on.
+
+**What the screen has already said.** The page has already described what each instrument does. This layer says whose rulers it borrowed to do it.
+
+**This layer's job.** Show that the loudness normalisation, the transparency anchor and the listening-test design sit in a tradition with published standards — and say where this product departs from them.
+
+**Rules this copy must keep:**
+
+- A CITATION MAY DESCRIBE THE MEASURING APPARATUS. It may NEVER describe how well people score. This is the rule the whole section runs on: quoting a standard's method is allowed, quoting anybody's results about listeners is not.
+- Every standard named is one somebody opened. The descriptions live in `src/content/apparatus/standards.ts` beside the URL and the date; edit them there.
+- Where this product departs from a standard, the departure is stated rather than glossed.
+- It is short on purpose. The product already carries a great deal of methodological prose, and a reader who wanted a number about their ear is not helped by a survey of standards.
+
+**5 templates to review** — they render 5 distinct sentences across 5 reachable renderings. Each block below is the TEMPLATE, read from the source file, with `${…}` marking its real slots; the italic lines under it are examples of how it renders. Rewrite the template. Leave every slot exactly as it is — a slot is a value the engine computes, and resolving one freezes a number or a name that is supposed to move.
+
+> EBU R 128 — The broadcast method for measuring perceived loudness, rather than peak level. Every clip is loudness-normalised with a two-pass R 128 measurement to one fixed target before it is ever played, so no clip can seem better simply for arriving louder than the one before it. The target here is chosen for headphone listening rather than for broadcast delivery, and this file states the figure it actually uses rather than any figure the standard recommends.
+
+> ${mushra.name} puts a sample anywhere on ${mushra.scaleLabel}. ${pitchfork.critic} offers ${pitchfork.degreesAllowed} places to put a record. Two very different attempts at the same problem, both landing near a hundred degrees. This one offers ${numberWord(OUR_SCALE.degreesAllowed)}, and asks only how many of them you used.
+
+  *As rendered:* “ITU-R BS.1534-3 (MUSHRA) puts a sample anywhere on a continuous scale from 0 to 100. Pitchfork offers 101 places to put a record. Two very different attempts at the same problem, both landing near a hundred degrees. This one offers eleven, and asks only how many of them you used.”
+
+> ITU-R BS.1534-3 (MUSHRA) — The international recommendation for subjective listening tests, using a hidden reference and anchors, with each sample rated on a continuous scale from 0 to 100. The same document places BS.1116 over small impairments and itself over intermediate quality. It is the tradition our trials sit in rather than a specification we claim to meet: a forced choice between two samples with a required listen, scored against chance. Our pairs carry near-transparent damage, which by that document's own division is BS.1116's regime rather than MUSHRA's — so the familiar 0-to-100 scale is the wrong one to picture here, and we do not use it.
+
+> The transparent-encode anchor — A reference point for how much measurable difference an encode can cost while remaining, by consensus, inaudible. Clip fitness is judged against a 320 kbps MP3 round-trip of the same recording rather than against a fixed number, because the same encode costs more spectral distance on dense material than on sparse material. The anchor is a convention rather than a published standard, and it is a measurement of audio files: nobody has listened to confirm the clips it passes are transparent to any actual ear.
+
+> ${inRepo} of these are decisions living in this repository, so a test opens the file that implements them and fails the build if the passage has moved. The other ${external} rests on a document no test can open, and carries the date a person opened it instead. Those are not the same strength of claim, and this page will not pretend otherwise.
+
+  *As rendered:* “Two of these are decisions living in this repository, so a test opens the file that implements them and fails the build if the passage has moved. The other one rests on a document no test can open, and carries the date a person opened it instead. Those are not the same strength of claim, and this page will not pretend otherwise.”
+
+---
+
+## 8. Combined view — “ACROSS YOUR SESSIONS”
 
 **Where it renders.** Renders on all three result screens, but ONLY when two or more instruments have been run on this device AND the result on screen is this device's own (never on somebody else's shared link).
 
@@ -234,7 +335,7 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 - The roster lists thresholds in different units side by side — a LIST, never a ranking.
 - No sentence here may also appear in an instrument section above; a test enforces it.
 
-**5 templates to review** — they render 15 distinct sentences across 30 reachable renderings. Each block below is the TEMPLATE, read from the source file, with `${…}` marking its real slots; the italic lines under it are examples of how it renders. Rewrite the template. Leave every slot exactly as it is — a slot is a value the engine computes, and resolving one freezes a number or a name that is supposed to move.
+**7 templates to review** — they render 18 distinct sentences across 33 reachable renderings. Each block below is the TEMPLATE, read from the source file, with `${…}` marking its real slots; the italic lines under it are examples of how it renders. Rewrite the template. Leave every slot exactly as it is — a slot is a value the engine computes, and resolving one freezes a number or a name that is supposed to move.
 
 > ${label}: caught at ${quantity(say.heardAt, t.unit)}${onSource(t)}
 
@@ -246,6 +347,14 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
   *As rendered:* “Two separate sessions measured your compression damage in kbps, by different methods, and they agreed on 5 of 5 checks — and on different recordings, which is a harder test than either session alone. That is the closest thing here to evidence that the number is real and not an afternoon.”  ·  “Two separate sessions measured your pitch drift in cents, by different methods, and they agreed on 5 of 5 checks. That is the closest thing here to evidence that the number is real and not an afternoon.”
 
+> Two separate sessions measured your ${label} in ${unit} and agreed on ${check.agree} of ${tested} checks${material}. Partial agreement is the ordinary result for two short sessions; a third would narrow it.
+
+  *As rendered:* “Two separate sessions measured your pitch drift in cents and agreed on 2 of 3 checks — and on different recordings, which is a harder test than either session alone. Partial agreement is the ordinary result for two short sessions; a third would narrow it.”  ·  “Two separate sessions measured your pitch drift in cents and agreed on 2 of 3 checks. Partial agreement is the ordinary result for two short sessions; a third would narrow it.”
+
+> Two separate sessions measured your ${label} in ${unit} and disagreed on all ${tested} checks${material}. One of the two sittings is not describing your ear — which is worth more than a number that was never tested twice.
+
+  *As rendered:* “Two separate sessions measured your pitch drift in cents and disagreed on all 3 checks. One of the two sittings is not describing your ear — which is worth more than a number that was never tested twice.”
+
 > Unmeasured on this device: ${list}. Nothing here says how you would do on ${names.length === 1 ? "it" : "them"}.
 
   *As rendered:* “Unmeasured on this device: pitch drift and compression damage. Nothing here says how you would do on them.”  ·  “Unmeasured on this device: pitch drift, timing smear and compression damage. Nothing here says how you would do on them.”  · …and 1 more
@@ -256,7 +365,7 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 ---
 
-## 7. The expert panel — “THE RAW RECORD”
+## 9. The expert panel — “THE RAW RECORD”
 
 **Where it renders.** A collapsed panel under every result that this device stored, open only when the result on screen is the one this device recorded — on a link you share with someone else it renders nothing at all.
 
@@ -307,6 +416,6 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 ---
 
-**160 concrete sentences across 7 surfaces.**
+**190 concrete sentences across 9 surfaces.**
 
 Anything rewritten here must still pass `src/content/voice.test.ts`, which screens five named hazards — motive attribution, person-verdicts, beige chrome, fabricated norms, unmeasured audibility claims. A green run there does **not** mean the prose is good; it means no named hazard is present. Judging whether it is good is the point of this document.
