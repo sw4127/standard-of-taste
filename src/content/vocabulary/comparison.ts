@@ -39,6 +39,7 @@ import { MIN_ASSERTED_PAIRS, comparisonDegreesClaim, comparisonStabilityClaim } 
 import { ASSERTION_FLOOR, type ComparisonResult } from "@/engine/comparison";
 import { CRITIC_SCALES, OUR_SCALE } from "@/content/comparison/scales";
 import { numberWord } from "./numbers";
+import { emit, type EmissionSpec } from "./emission";
 
 /**
  * SAID EVERY TIME, WITH NO CONDITION ON IT.
@@ -189,17 +190,44 @@ export function comparisonRefusal(gap: string, result: ComparisonResult): string
  * do, and the limit. Empty only if the engine refuses everything, which the
  * shipped pool cannot produce.
  */
+export const COMPARISON_EMISSION: EmissionSpec<ComparisonResult> = {
+  fn: "comparisonLines",
+  in: "comparison.ts",
+  parts: [
+    {
+      /*
+       * ALWAYS, AND THE REFUSAL IS NOT A FOURTH PART. Each of the first two
+       * slots emits exactly one sentence — the reading or the refusal standing
+       * in for it — so a reader always sees three. The old hand-written line
+       * said each was "replaced by its own refusal", which reads as a slot that
+       * can go empty and none of them can.
+       */
+      id: "degrees",
+      says: "how much of the eleven-point scale the listener used, or why that cannot be said",
+      always: true,
+      produce: (result) => {
+        const degrees = comparisonDegreesClaim(result);
+        return [degrees.ok ? degreesLine(degrees.value) : comparisonRefusal(degrees.gap, result)];
+      },
+    },
+    {
+      id: "stability",
+      says: "whether the same clips landed in the same order twice, or why that cannot be said",
+      always: true,
+      produce: (result) => {
+        const stability = comparisonStabilityClaim(result);
+        return [stability.ok ? stabilityLine(stability.value) : comparisonRefusal(stability.gap, result)];
+      },
+    },
+    {
+      id: "boundary",
+      says: "the limit — that a narrow spread may simply be the correct answer (`COMPARISON_BOUNDARY`)",
+      always: true,
+      produce: () => [COMPARISON_BOUNDARY],
+    },
+  ],
+};
+
 export function comparisonLines(result: ComparisonResult): string[] {
-  const lines: string[] = [];
-
-  const degrees = comparisonDegreesClaim(result);
-  if (degrees.ok) lines.push(degreesLine(degrees.value));
-  else lines.push(comparisonRefusal(degrees.gap, result));
-
-  const stability = comparisonStabilityClaim(result);
-  if (stability.ok) lines.push(stabilityLine(stability.value));
-  else lines.push(comparisonRefusal(stability.gap, result));
-
-  lines.push(COMPARISON_BOUNDARY);
-  return lines;
+  return emit(COMPARISON_EMISSION, result);
 }

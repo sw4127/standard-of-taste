@@ -11,7 +11,10 @@
  * was added.
  */
 import type { DescribedSpec } from "./emission";
+import { ACROSS_EMISSION } from "./across";
+import { ARC_EMISSION } from "./arc";
 import { BIAS_EMISSION } from "./bias";
+import { COMPARISON_EMISSION } from "./comparison";
 import { DELICACY_EMISSION } from "./delicacy";
 import { SPREAD_EMISSION } from "./spread";
 import { THRESHOLD_EMISSION } from "./threshold";
@@ -21,4 +24,7 @@ export const EMISSION_SPECS: Record<string, DescribedSpec> = {
   delicacy: DELICACY_EMISSION,
   bias: BIAS_EMISSION,
   spread: SPREAD_EMISSION,
+  arc: ARC_EMISSION,
+  comparison: COMPARISON_EMISSION,
+  across: ACROSS_EMISSION,
 };

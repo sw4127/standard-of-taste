@@ -53,6 +53,7 @@ import type { Claim } from "@/engine/evidence";
 import { familyLabel } from "@/content/staircase/copy";
 import { DELICACY_ARC_FLOOR, type DelicacyArcFloor } from "@/content/delicacy/arc-floor";
 import { numberWord } from "./numbers";
+import { emit, type EmissionSpec } from "./emission";
 
 /**
  * WHERE THE MEMORY BEHIND THIS PANEL LIVES (E14/S5).
@@ -271,10 +272,43 @@ function biasLines(reading: ArcReading): string[] {
  * saying the important thing; here, silence would leave a person who came back
  * for a second session with no acknowledgement that they did.
  */
+export const ARC_EMISSION: EmissionSpec<Claim<ArcReading>> = {
+  fn: "arcLines",
+  in: "arc.ts",
+  parts: [
+    {
+      id: "refusal",
+      says: "why there is nothing to compare yet, naming the floor in the reader's own units",
+      always: false,
+      when: "only when there is not enough to compare",
+      produce: (claim) => (claim.ok ? [] : [arcRefusal(claim.gap)]),
+    },
+    {
+      id: "reading",
+      says: "whether the change is bigger than what this instrument can resolve",
+      always: false,
+      when: "only when there is enough to compare",
+      produce: (claim) =>
+        !claim.ok
+          ? []
+          : claim.value.instrument === "bias"
+            ? biasLines(claim.value)
+            : thresholdLines(claim.value),
+    },
+    {
+      id: "pooled",
+      says: "what coming back a further time buys, stated as the only number this layer may count",
+      always: false,
+      when: "only when the sitting count supports it",
+      produce: (claim) => {
+        if (!claim.ok) return [];
+        const pooled = pooledLine(claim.value);
+        return pooled ? [pooled] : [];
+      },
+    },
+  ],
+};
+
 export function arcLines(claim: Claim<ArcReading>): string[] {
-  if (!claim.ok) return [arcRefusal(claim.gap)];
-  const reading = claim.value;
-  const lines = reading.instrument === "bias" ? biasLines(reading) : thresholdLines(reading);
-  const pooled = pooledLine(reading);
-  return pooled ? [...lines, pooled] : lines;
+  return emit(ARC_EMISSION, claim);
 }

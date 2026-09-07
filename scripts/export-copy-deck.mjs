@@ -167,9 +167,10 @@ const SECTIONS = [
   },
   {
     key: "arc",
-    alongside:
-      "`arcLines` emits the reading, then — where the sitting count supports it — the pooled " +
-      "sentence about what coming back buys. `ARC_DEVICE_NOTE` sits under both.",
+    note:
+      "The refusal is the MAIN case, not the edge case, so it is first in the list rather than " +
+      "last. A separate constant, `ARC_DEVICE_NOTE`, is rendered under this whole block by the " +
+      "component — it is not part of the emission and nothing here binds its position.",
     title: "The retest arc — “DID YOUR EAR MOVE”",
     where:
       "Renders under a result when this device holds an EARLIER sitting of the same instrument, " +
@@ -203,10 +204,11 @@ const SECTIONS = [
   },
   {
     key: "comparison",
-    alongside:
-      "`comparisonLines` emits the degrees sentence, then the stability sentence — each replaced " +
-      "by its own refusal where the evidence floor is not met — then `COMPARISON_BOUNDARY`, every " +
-      "time. The critic-scale lines and the our-scale line render beside them as a reference panel.",
+    note:
+      "A reader always sees three sentences: each of the first two slots emits either its reading " +
+      "or the refusal standing in for it, never nothing. The critic-scale lines and the our-scale " +
+      "line render beside this block as a reference panel, laid out by the component rather than " +
+      "emitted here, so nothing binds their position.",
     title: "Comparison — “DEGREES OF PRAISE”",
     where:
       "Renders under the Prestige result, on both the flow's debrief and the share page. It is " +
@@ -263,9 +265,9 @@ const SECTIONS = [
   },
   {
     key: "across",
-    alongside:
-      "`acrossLines` emits the dossier, then the replication, then the coverage roster. Each is " +
-      "present only when it has something to say, so any of them may be the only line on screen.",
+    note:
+      "Any one of the three may be the only line on screen, so no sentence here may depend on " +
+      "another having been said. Under fewer than two instruments the whole block is silent.",
     title: "Combined view — “ACROSS YOUR SESSIONS”",
     where:
       "Renders on all three result screens, but ONLY when two or more instruments have been run on this " +

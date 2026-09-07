@@ -368,14 +368,22 @@ function acrossInput(
 }
 
 /**
- * The combined view's reachable states: two instruments and three, with and
+ * The combined view's reachable states: ONE instrument, two and three, with and
  * without a replication, and with coverage both partial and complete.
+ *
+ * THE ONE-INSTRUMENT STATE WAS MISSING UNTIL E19/S3, and this docblock said
+ * "two instruments and three" as though one were not a state. It is the most
+ * common state a real device is in — every listener passes through it — and the
+ * whole layer is silent there. Nothing rendered, so nothing noticed: a fixture
+ * set built from what the copy SAYS cannot cover the case where it says
+ * nothing. Found by declaring the condition and being asked for evidence.
  */
 export function acrossInputs(): Record<string, AcrossInput> {
   const pitch = session("pitch-drift", 0, 7919);
   const timing = session("timing-smear", 0.4, 7919);
   const lossy = session("lossy-artifact", 0, 7919, eligibleSources("lossy-artifact")[0]);
   return {
+    "one-instrument": acrossInput([pitch], false, false),
     "bias-delicacy": acrossInput([], true, true),
     "delicacy-threshold": acrossInput([pitch], false, true),
     "no-replication": acrossInput([timing], false, true),

@@ -32,6 +32,7 @@ import type { StaircaseResult } from "@/engine/staircase-session";
 import type { ReplicationCheck } from "@/engine/replication";
 import { familyLabel, onSource, quantity, shortUnit } from "@/content/staircase/copy";
 import { thresholdClaim } from "@/engine/evidence";
+import { emit, type EmissionSpec } from "./emission";
 
 export interface AcrossInput {
   bias: BiasResult | null;
@@ -196,13 +197,51 @@ export function thresholdRoster(input: AcrossInput): string[] {
 }
 
 /** Everything this layer contributes, in reading order. Empty below two instruments. */
+/**
+ * THE WHOLE LAYER IS SILENT UNDER TWO INSTRUMENTS, and every part carries that
+ * gate rather than an early return above them. An early return would put a
+ * fourth rule outside the array the deck prints, which is the arrangement this
+ * mechanism exists to remove: one place says what renders, or it is not one
+ * place.
+ */
+const silent = (input: AcrossInput) => instrumentCount(input) < 2;
+
+export const ACROSS_EMISSION: EmissionSpec<AcrossInput> = {
+  fn: "acrossLines",
+  in: "across.ts",
+  parts: [
+    {
+      id: "dossier",
+      says: "what the instruments run so far add up to",
+      always: false,
+      when: "only when there is something to add up",
+      produce: (input) => {
+        if (silent(input)) return [];
+        const dossier = dossierLine(input);
+        return dossier ? [dossier] : [];
+      },
+    },
+    {
+      id: "replications",
+      says: "one line per family two instruments both measured, saying whether they agreed",
+      always: false,
+      when: "once per replication check, so none at all is the common case",
+      produce: (input) => (silent(input) ? [] : input.replications.map((check) => replicationLine(check))),
+    },
+    {
+      id: "coverage",
+      says: "the roster of thresholds measured so far, as a list and never a ranking",
+      always: false,
+      when: "only when a threshold has been measured",
+      produce: (input) => {
+        if (silent(input)) return [];
+        const coverage = coverageLine(input);
+        return coverage ? [coverage] : [];
+      },
+    },
+  ],
+};
+
 export function acrossLines(input: AcrossInput): string[] {
-  if (instrumentCount(input) < 2) return [];
-  const lines: string[] = [];
-  const dossier = dossierLine(input);
-  if (dossier) lines.push(dossier);
-  for (const check of input.replications) lines.push(replicationLine(check));
-  const coverage = coverageLine(input);
-  if (coverage) lines.push(coverage);
-  return lines;
+  return emit(ACROSS_EMISSION, input);
 }

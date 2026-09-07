@@ -181,7 +181,7 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 **This layer's job.** Say whether the change is bigger than what the instrument can resolve, and when it is not, name the floor in the reader's own units so a refusal is not read as a shrug.
 
-**What renders with it, in order.** `arcLines` emits the reading, then — where the sitting count supports it — the pooled sentence about what coming back buys. `ARC_DEVICE_NOTE` sits under both.
+**What renders with it, in order.** `arcLines` in `arc.ts` emits, in this order: (1) why there is nothing to compare yet, naming the floor in the reader's own units; (2) whether the change is bigger than what this instrument can resolve; (3) what coming back a further time buys, stated as the only number this layer may count. (1) renders only when there is not enough to compare; (2) renders only when there is enough to compare; (3) renders only when the sitting count supports it. The refusal is the MAIN case, not the edge case, so it is first in the list rather than last. A separate constant, `ARC_DEVICE_NOTE`, is rendered under this whole block by the component — it is not part of the emission and nothing here binds its position.
 
 **Rules this copy must keep:**
 
@@ -246,7 +246,7 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 **This layer's job.** Report a spread and a stability without either reading as a mark out of eleven, and mark the boundary that says a narrow spread may simply be correct.
 
-**What renders with it, in order.** `comparisonLines` emits the degrees sentence, then the stability sentence — each replaced by its own refusal where the evidence floor is not met — then `COMPARISON_BOUNDARY`, every time. The critic-scale lines and the our-scale line render beside them as a reference panel.
+**What renders with it, in order.** `comparisonLines` in `comparison.ts` emits, in this order: (1) how much of the eleven-point scale the listener used, or why that cannot be said; (2) whether the same clips landed in the same order twice, or why that cannot be said; (3) the limit — that a narrow spread may simply be the correct answer (`COMPARISON_BOUNDARY`). All of them render every time. A reader always sees three sentences: each of the first two slots emits either its reading or the refusal standing in for it, never nothing. The critic-scale lines and the our-scale line render beside this block as a reference panel, laid out by the component rather than emitted here, so nothing binds their position.
 
 **Rules this copy must keep:**
 
@@ -341,7 +341,7 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 **This layer's job.** Say the three things that are only true once more than one instrument has run: the dossier, the replication, the coverage.
 
-**What renders with it, in order.** `acrossLines` emits the dossier, then the replication, then the coverage roster. Each is present only when it has something to say, so any of them may be the only line on screen.
+**What renders with it, in order.** `acrossLines` in `across.ts` emits, in this order: (1) what the instruments run so far add up to; (2) one line per family two instruments both measured, saying whether they agreed; (3) the roster of thresholds measured so far, as a list and never a ranking. (1) renders only when there is something to add up; (2) renders once per replication check, so none at all is the common case; (3) renders only when a threshold has been measured. Any one of the three may be the only line on screen, so no sentence here may depend on another having been said. Under fewer than two instruments the whole block is silent.
 
 **Rules this copy must keep:**
 
@@ -351,7 +351,7 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 - The roster lists thresholds in different units side by side — a LIST, never a ranking.
 - No sentence here may also appear in an instrument section above; a test enforces it.
 
-**7 templates to review** — they render 18 distinct sentences across 33 reachable renderings. Each block below is the TEMPLATE, read from the source file, with `${…}` marking its real slots; the italic lines under it are examples of how it renders. Rewrite the template. Leave every slot exactly as it is — a slot is a value the engine computes, and resolving one freezes a number or a name that is supposed to move.
+**7 templates to review** — they render 18 distinct sentences across 34 reachable renderings. Each block below is the TEMPLATE, read from the source file, with `${…}` marking its real slots; the italic lines under it are examples of how it renders. Rewrite the template. Leave every slot exactly as it is — a slot is a value the engine computes, and resolving one freezes a number or a name that is supposed to move.
 
 > ${label}: caught at ${quantity(say.heardAt, t.unit)}${onSource(t)}
 
