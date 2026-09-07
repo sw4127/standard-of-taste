@@ -6,7 +6,7 @@ This is the brief. The sentences themselves are in `docs/copy-deck.md`, which is
 
 ## What is being asked
 
-Rewrite the sentences a small web product shows its users. They were drafted by the engineer who built it, who is the weaker writer of the two tools on this project; that is the entire reason this document exists. **203 of 236 sentences are open to rewriting.** The rest are locked, for reasons given below that are about measurement rather than about taste.
+Rewrite the sentences a small web product shows its users. They were drafted by the engineer who built it, who is the weaker writer of the two tools on this project; that is the entire reason this document exists. **182 of 215 sentences are open to rewriting.** The rest are locked, for reasons given below that are about measurement rather than about taste.
 
 You have no access to the repository or to a running copy of the product, so everything you need is here. Where that is not true, say so — a brief that assumes knowledge the writer does not have is a defective brief.
 
@@ -35,12 +35,18 @@ One more, narrower and absolute: **no leaderboard, no streak, no XP, no points, 
 
 Every sentence in the deck carries an id and one of these:
 
-- **OPEN** (178) — rewrite freely, within the rules listed under its section.
+- **OPEN** (157) — rewrite freely, within the rules listed under its section.
 - **PART-LOCKED** (25) — the prose is yours, but the block contains quoted words from a cited document, listed under LOAD-BEARING in that section. A test verifies them character for character; change one and the build fails, correctly, because the page would be putting words in the record's mouth.
 - **LOCKED** (14) — do not touch. These are the Prestige Test's clip blurbs, and they are not copy: they are the **independent variable**. The test measures how much a listener's rating moves when a blurb is attached. Editing one changes the experiment, invalidates every response already recorded against it, and breaks every share link keyed to the pool version.
 - **PASSED** (19) — already written, by you, in August 2026 under ruling RT-107a. Included for tone, not for rewriting. If it now reads worse than the rest, that is worth saying.
 
-**Braces are slots, and they must survive.** `{n}`, `{f.unit}`, `{numberWord(DEGREES_AVAILABLE)}` — the product fills these at render time from the code that computed them. Typing the current value in is how a page starts lying about an instrument that has since changed. Move a slot within a sentence freely; do not resolve it.
+**In Part 1 you are rewriting TEMPLATES, not sentences.** Each block is the string as it is written in the source file, and `${...}` marks a value the engine computes. The italic lines beneath are examples of how that template renders — they are there to show you what the slots become, and they are not separate sentences to edit.
+
+**Leave every slot exactly as it is.** Resolving one freezes a value that is supposed to move: `${label}` is a flaw family and that template renders for three of them, `${floor}` is a whole multiple like 3.5x, `${way}` is an entire alternating clause. You may move a slot within a sentence; you may not turn it into words.
+
+**This is a correction, and it is worth knowing why.** The first version of this brief told a writer that the braces in the deck were the product's slots. They were not — they came from a regex over rendered numbers, so a family name and a whole clause were printed as though they were literals, and a writer following the instruction exactly would have shipped "pitch drift" into a template that renders for three families. The deck now reads the templates from source. If a slot still looks wrong, say so rather than working around it.
+
+**Parts 2 to 4 are still keyed to rendered sentences**, not templates. The same collapse almost certainly exists there and has not been measured yet, so treat repeated-looking sentences in those parts with suspicion and say so if you find a set that must be one string.
 
 ## How to hand the work back
 
@@ -68,7 +74,7 @@ Take these one at a time. The single pass that worked on this project covered on
 
 | Order | Batch | Sentences | Open | Locked | Why it is where it is |
 |---|---|---|---|---|---|
-| 1 | The reading layer | 70 | 70 | 0 | The sentences each instrument says about a result. This is the product's actual voice: it is what a person reads at the moment they find out how they did, and it is the largest and least-written part of the whole thing. |
+| 1 | The reading layer | 49 | 49 | 0 | The sentences each instrument says about a result. This is the product's actual voice: it is what a person reads at the moment they find out how they did, and it is the largest and least-written part of the whole thing. |
 | 2 | The pages | 74 | 74 | 0 | The reading room, the terms page, and the frame a listener reads before the Ranking Test starts. Long-form prose rather than one-line readouts, and the place a sceptical reader goes to decide whether any of this is serious. |
 | 3 | The instrument copy | 63 | 30 | 33 | Smaller batches around the instruments: the result title, the flaw line, the not-built-yet notice, the creator vocabulary. Includes the clip blurbs, which are LOCKED, and the one batch already written, which is PASSED and here only for tone. |
 | 4 | The methodology page | 29 | 29 | 0 | The published account of how the instruments work. Mostly PART-LOCKED: it quotes cited documents word for word and a test verifies the quotations, so the writing to be done is the connective prose around them. |

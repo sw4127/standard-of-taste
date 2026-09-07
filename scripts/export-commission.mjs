@@ -194,10 +194,32 @@ p(
 );
 p();
 p(
-  "**Braces are slots, and they must survive.** `{n}`, `{f.unit}`, " +
-    "`{numberWord(DEGREES_AVAILABLE)}` — the product fills these at render time from the code " +
-    "that computed them. Typing the current value in is how a page starts lying about an " +
-    "instrument that has since changed. Move a slot within a sentence freely; do not resolve it.",
+  "**In Part 1 you are rewriting TEMPLATES, not sentences.** Each block is the string as it is " +
+    "written in the source file, and `${...}` marks a value the engine computes. The italic lines " +
+    "beneath are examples of how that template renders — they are there to show you what the " +
+    "slots become, and they are not separate sentences to edit.",
+);
+p();
+p(
+  "**Leave every slot exactly as it is.** Resolving one freezes a value that is supposed to move: " +
+    "`${label}` is a flaw family and that template renders for three of them, `${floor}` is a " +
+    "whole multiple like 3.5x, `${way}` is an entire alternating clause. You may move a slot " +
+    "within a sentence; you may not turn it into words.",
+);
+p();
+p(
+  "**This is a correction, and it is worth knowing why.** The first version of this brief told a " +
+    "writer that the braces in the deck were the product's slots. They were not — they came from " +
+    "a regex over rendered numbers, so a family name and a whole clause were printed as though " +
+    "they were literals, and a writer following the instruction exactly would have shipped " +
+    "\"pitch drift\" into a template that renders for three families. The deck now reads the " +
+    "templates from source. If a slot still looks wrong, say so rather than working around it.",
+);
+p();
+p(
+  "**Parts 2 to 4 are still keyed to rendered sentences**, not templates. The same collapse " +
+    "almost certainly exists there and has not been measured yet, so treat repeated-looking " +
+    "sentences in those parts with suspicion and say so if you find a set that must be one string.",
 );
 p();
 

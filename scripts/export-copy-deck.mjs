@@ -19,6 +19,7 @@
  *   node scripts/export-copy-deck.mjs > docs/copy-deck-vocabulary.md
  */
 import { execSync } from "node:child_process";
+import { allChains, matchesFor } from "./template-match.mjs";
 
 /*
  * The fixtures are TypeScript with path aliases, so they are run through
@@ -214,6 +215,9 @@ const SECTIONS = [
   },
 ];
 
+/** Source templates, matched against every rendering (E18/S15, RT-R5 a). */
+const CHAINS = allChains();
+
 const lines = [];
 lines.push("# Vocabulary copy deck — for a writing pass");
 lines.push("");
@@ -272,9 +276,23 @@ for (const [index, section] of SECTIONS.entries()) {
    */
   const templates = new Map();
   for (const text of unique) {
-    const shape = text.replace(/\d+(?:\.\d+)?\s*(cents|ms|kbps|pairs|clips|times)/g, "{$1}").replace(/\b\d+\b/g, "{n}");
-    if (!templates.has(shape)) templates.set(shape, []);
-    templates.get(shape).push(text);
+    /*
+     * THE GROUPING KEY IS THE SOURCE TEMPLATE (E18/S16, from Cowork's batch-1
+     * return). It used to be a REGEX OVER THE RENDERED NUMBERS -- brace every
+     * digit and call the result a shape -- and that was wrong in both
+     * directions. It split one template into several ids whenever a
+     * non-numeric slot varied, so VOC-RETEST-ARC-01 and -02 were the same
+     * string differing only by ${way}; and the braces it produced were not the
+     * product's slots at all, so the deck printed {n}.5x for ${floor} and
+     * printed a family name, a whole alternating clause and a multiple as
+     * literals a writer was invited to rewrite. Following the brief exactly
+     * would have shipped "pitch drift" into a template that renders for three
+     * families.
+     */
+    const hits = matchesFor(text, CHAINS);
+    const key = hits.length === 1 ? hits[0].display : text;
+    if (!templates.has(key)) templates.set(key, []);
+    templates.get(key).push(text);
   }
 
   /*
@@ -289,10 +307,13 @@ for (const [index, section] of SECTIONS.entries()) {
   const prose = [...templates.entries()].filter(([t]) => t.length > LABEL_MAX);
 
   lines.push(
-    `**${prose.length} sentence${prose.length === 1 ? "" : "s"} to review**` +
+    `**${prose.length} template${prose.length === 1 ? "" : "s"} to review**` +
       (labels.length ? `, plus ${labels.length} short labels` : "") +
-      ` — ${unique.length} concrete variants, ${mine.length} reachable renderings. ` +
-      `Braces mark values the engine fills in; leave them as slots.`,
+      ` — they render ${unique.length} distinct sentences across ${mine.length} reachable ` +
+      `renderings. Each block below is the TEMPLATE, read from the source file, with \`$\{…}\` ` +
+      `marking its real slots; the italic lines under it are examples of how it renders. Rewrite ` +
+      `the template. Leave every slot exactly as it is — a slot is a value the engine computes, ` +
+      `and resolving one freezes a number or a name that is supposed to move.`,
   );
   lines.push("");
   if (labels.length) {

@@ -75,17 +75,21 @@ function readLiteral(source, at) {
   const quote = source[at];
   let i = at + 1;
   let text = "";
+  let display = "";
   while (i < source.length) {
     const ch = source[i];
     if (ch === BACKSLASH) {
       // An escape contributes one character; which one does not matter here,
       // because the escaped quote is what must not end the literal.
-      text += source[i + 1] === "n" ? " " : source[i + 1];
+      const decoded = source[i + 1] === "n" ? " " : source[i + 1];
+      text += decoded;
+      display += decoded;
       i += 2;
       continue;
     }
-    if (ch === quote) return { text, end: i + 1 };
+    if (ch === quote) return { text, display, end: i + 1 };
     if (quote === BACKTICK && ch === "$" && source[i + 1] === "{") {
+      const from = i;
       let depth = 0;
       while (i < source.length) {
         if (source[i] === "{") depth += 1;
@@ -99,9 +103,15 @@ function readLiteral(source, at) {
         i += 1;
       }
       text += SLOT;
+      // THE EXPRESSION IS KEPT, not just its position. Matching needs only the
+      // position; a writer needs to see WHICH value fills the slot, and the
+      // whole point of this rework is that `${floor}` is one slot spanning
+      // "3.5x" rather than a stray `{n}` in front of a `.5` that never moves.
+      display += source.slice(from, i).split(NL).join(" ");
       continue;
     }
     text += ch;
+    display += ch;
     i += 1;
   }
   return null;
@@ -127,6 +137,7 @@ export function chainsIn(source) {
       continue;
     }
     let text = first.text;
+    let display = first.display;
     let at = first.end;
     // Keep consuming ` + <literal|identifier>` while the chain continues.
     for (;;) {
@@ -140,6 +151,7 @@ export function chainsIn(source) {
         const next = readLiteral(clean, j);
         if (!next) break;
         text += next.text;
+        display += next.display;
         at = next.end;
         continue;
       }
@@ -148,6 +160,8 @@ export function chainsIn(source) {
       while (k < clean.length && /[A-Za-z0-9_.$()]/.test(clean[k])) k += 1;
       if (k === j) break;
       text += SLOT;
+      // A spliced constant is a slot too, and shown as one.
+      display += "${" + clean.slice(j, k) + "}";
       at = k;
     }
     /*
@@ -160,7 +174,7 @@ export function chainsIn(source) {
      * the floor only has to exclude fragments too small to identify anything.
      */
     const literal = text.split(SLOT).join("").trim();
-    if (literal.length > 8) chains.push(text);
+    if (literal.length > 8) chains.push({ text, display });
     i = at;
   }
   return chains;
@@ -170,7 +184,7 @@ export function chainsIn(source) {
 export function allChains() {
   const out = [];
   for (const file of moduleFiles()) {
-    for (const text of chainsIn(readFileSync(file, "utf8"))) out.push({ file, text });
+    for (const chain of chainsIn(readFileSync(file, "utf8"))) out.push({ file, ...chain });
   }
   return out;
 }

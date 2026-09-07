@@ -20,6 +20,7 @@
  * templates, the deck cannot say which one an edit belongs to, and a returned
  * pass would be applied to a guess.
  */
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { vocabularyStrings } from "./fixtures";
 import { flawFamilies } from "@/content/flaw-families";
@@ -105,5 +106,72 @@ describe("every rendered sentence traces to one template", () => {
       families.size,
       "every arc rendering shows one flaw family, so a writer never sees what the others say",
     ).toBeGreaterThan(1);
+  });
+});
+
+/**
+ * PART 1 OF THE DECK SHOWS TEMPLATES, NOT RENDERINGS (E18/S16, RT-R7 a).
+ *
+ * The deck used to key each rendered string as its own editable sentence, with
+ * braces produced by a regex over rendered numbers. That was wrong in both
+ * directions: one template appeared as several ids, and the braces were not the
+ * product's slots — a family name and an entire alternating clause were printed
+ * as literals a writer was invited to rewrite.
+ *
+ * This holds the generated deck to the fix. Every quoted block in the
+ * vocabulary part must be a template the extractor found in source, so a
+ * rendering can never sneak back in as the editable unit.
+ */
+describe("the vocabulary deck is keyed to templates", () => {
+  const deck = readFileSync("docs/copy-deck-vocabulary.md", "utf8");
+  const NEWLINE = String.fromCharCode(10);
+
+  const quoted = deck
+    .split(NEWLINE)
+    .filter((line) => line.startsWith("> "))
+    .map((line) => line.slice(2).trim());
+
+  it("found quoted blocks to check", () => {
+    expect(quoted.length).toBeGreaterThan(30);
+  });
+
+  it("quotes only strings that exist in source as templates", () => {
+    const known = new Set(allChains().map((chain) => chain.display.trim()));
+    const strangers = quoted.filter((block) => !known.has(block));
+    expect(
+      strangers.map((s) => s.slice(0, 70)),
+      "these blocks in the vocabulary deck are not templates found in source — a rendering has " +
+        "been keyed as the editable unit again:",
+    ).toEqual([]);
+  });
+
+  /**
+   * THE CASE THAT STARTED IT. `${label}` renders as a flaw family and `${floor}`
+   * as a whole multiple; the old deck printed the first as a literal and split
+   * the second into `{n}.5x`. Both must now appear as slots.
+   */
+  it("shows the arc template's slots rather than one rendering of them", () => {
+    const arc = quoted.filter((block) => block.indexOf("sittings") !== -1);
+    expect(arc.length).toBeGreaterThan(2);
+    const withLabel = arc.filter((block) => block.indexOf("${label}") !== -1);
+    expect(withLabel.length, "no arc template shows ${label} as a slot").toBeGreaterThan(0);
+    /*
+     * DERIVED AGAIN, AND I TYPED THEM AGAIN. This assertion listed two family
+     * names in one regex and `flaw-families.test.ts` failed it -- the second
+     * time in this session, in a test whose subject is derived-versus-typed
+     * rosters. The guard is right both times.
+     */
+    for (const block of withLabel) {
+      for (const family of flawFamilies()) {
+        expect(
+          block.indexOf("your " + family.label.toLowerCase() + " sittings"),
+          "a flaw family is printed as a literal where the template has a slot",
+        ).toBe(-1);
+      }
+    }
+    expect(
+      quoted.some((block) => block.indexOf("${floor}") !== -1),
+      "no template shows ${floor} as a slot; the old deck split it into {n}.5x",
+    ).toBe(true);
   });
 });
