@@ -255,6 +255,33 @@ p();
 p("**Do not** renumber, reorder, merge or split sentences. One id, one sentence back.");
 p();
 
+p("## Batch 2 runs with the repository closed");
+p();
+p(
+  "**This is Cowork's protocol, not the engineer's, and it exists because Cowork refused to " +
+    "answer a question it could not answer honestly.** Asked whether this brief now stands alone, " +
+    "it declined: it had read the source modules before batch 1 and cannot un-know them, so it " +
+    "cannot separate *this deck is sufficient* from *I already know what it leaves out*. Three of " +
+    "its twenty-four edits came from adjacency learned in source; reading the deck again it would " +
+    "find those three from memory and credit the deck. A contaminated measurement — the same " +
+    "failure this product refuses everywhere else.",
+);
+p();
+p(
+  "So: **do not open the repository.** Keep a log instead — every moment you reach for source and " +
+    "stop, with the id and what you wanted to know. The batch ships either way; the log is the " +
+    "by-product and it is the actual measurement. If it is short and cosmetic, the brief stands " +
+    "alone. If it holds one item that would have changed a sentence, it does not.",
+);
+p();
+p(
+  "**The prediction, registered before the batch and falsifiable by it:** the log will be " +
+    "dominated by ADJACENCY and contain almost nothing about slots or coverage. Four fixes since " +
+    "batch 1 were all about what a string IS; what remains is what a string sits NEXT TO. A log " +
+    "full of slot questions falsifies it, and that would be the more useful result.",
+);
+p();
+
 p("## The batches, in order");
 p();
 p(
