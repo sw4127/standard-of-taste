@@ -1,3 +1,11 @@
+import { numberWord, numberWordLeading } from "@/content/vocabulary/numbers";
+import {
+  BIAS_CLIP_COUNT,
+  BIAS_SESSION_MINUTES,
+  SPREAD_CLIP_SECONDS,
+  SPREAD_SESSION_MINUTES,
+  SPREAD_WORK_COUNT,
+} from "@/content/instrument-shape";
 import type { Metadata } from "next";
 import Link from "next/link";
 import GymStage from "./GymStage";
@@ -18,7 +26,7 @@ import { PRESTIGE_GOLD, PRESTIGE_FIELD, DELICACY_ICE, DELICACY_FIELD, THRESHOLD_
 export const metadata: Metadata = {
   title: "The Taste Gym — do you hear the music, or the name?",
   description:
-    "Your taste has a number. The Prestige Test measures how far a famous name can move your ratings. Sixteen clips, rated twice — the gap is your number.",
+    `Your taste has a number. The Prestige Test measures how far a famous name can move your ratings. ${numberWordLeading(BIAS_CLIP_COUNT)} clips, rated twice — the gap is your number.`,
   alternates: { canonical: "/" },
   openGraph: {
     title: "The Taste Gym — do you hear the music, or the name?",
@@ -60,8 +68,8 @@ const MACHINES: Machine[] = [
     title: "The Prestige Test",
     criterion: "Freedom from prejudice",
     blurb:
-      "Rate sixteen clips blind, then again with the famous names attached — asked a different way, in a different order. Your number is the gap.",
-    meta: "~8 min · 16 clips",
+      `Rate ${numberWord(BIAS_CLIP_COUNT)} clips blind, then again with the famous names attached — asked a different way, in a different order. Your number is the gap.`,
+    meta: `~${BIAS_SESSION_MINUTES} min · ${BIAS_CLIP_COUNT} clips`,
   },
   ...(DELICACY_LIVE
     ? [
@@ -140,8 +148,8 @@ const MACHINES: Machine[] = [
     title: "The Ranking Test",
     criterion: "Comparison · heard",
     blurb:
-      "A critic ranked six works against each other. Rate them with your ears alone and find out whether your gaps fall where his did — agreeing with him is not the point, and is not measured.",
-    meta: "~6 min · 6 works, 40 seconds each",
+      `A critic ranked ${numberWord(SPREAD_WORK_COUNT)} works against each other. Rate them with your ears alone and find out whether your gaps fall where his did — agreeing with him is not the point, and is not measured.`,
+    meta: `~${SPREAD_SESSION_MINUTES} min · ${SPREAD_WORK_COUNT} works, ${SPREAD_CLIP_SECONDS} seconds each`,
   },
 ];
 

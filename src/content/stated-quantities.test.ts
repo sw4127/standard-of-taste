@@ -25,7 +25,7 @@
  * number-words — on the surfaces that describe the instruments those counts
  * belong to.
  */
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   BIAS_CLIP_COUNT,
@@ -64,9 +64,43 @@ interface Quantity {
   readonly files: readonly string[];
 }
 
-const BIAS_PAGES = ["src/app/learn/prestige-bias-test/page.tsx", "src/app/bias/BiasFlow.tsx"];
-const SPREAD_PAGES = ["src/app/learn/ranking-test/page.tsx", "src/app/spread/SpreadFlow.tsx"];
-const PRACTICE_PAGES = ["src/app/learn/practice/page.tsx"];
+/*
+ * EVERY SURFACE THAT RENDERS COPY, NOT A LIST OF PAGES (E19/S15).
+ *
+ * The first roster named page COMPONENTS, and E19/S12 reported the job done on
+ * that basis. It was not: the reading-room FAQ lives in `src/content/learn.ts`
+ * and `/method`'s claims in `src/content/method/claims.ts`, both of which render
+ * into those same pages, and every quantity survived in them untouched — the
+ * clip count, the labels, the controls, the swaps, the chance figure, both clip
+ * lengths and the pitch floor. A roster of files is a roster of the places
+ * somebody thought to look, which is the defect this guard was written to catch,
+ * one layer up.
+ *
+ * So the roster is derived: every .tsx under src/app and src/components, plus
+ * every non-test .ts under src/content. Each quantity is checked against ALL of
+ * them, because a page's copy can now live anywhere.
+ */
+function sourcesUnder(dir: string, ext: string): string[] {
+  const out: string[] = [];
+  for (const name of readdirSync(dir)) {
+    const path = dir + "/" + name;
+    if (statSync(path).isDirectory()) out.push(...sourcesUnder(path, ext));
+    else if (name.endsWith(ext) && !name.endsWith(".test.ts") && !name.endsWith(".test.tsx")) {
+      out.push(path);
+    }
+  }
+  return out;
+}
+
+const SURFACES = [
+  ...sourcesUnder("src/app", ".tsx"),
+  ...sourcesUnder("src/components", ".tsx"),
+  ...sourcesUnder("src/content", ".ts"),
+];
+
+const BIAS_PAGES = SURFACES;
+const SPREAD_PAGES = SURFACES;
+const PRACTICE_PAGES = SURFACES;
 
 /** Rounded as the page prints it: the prose says "3.5 times", not 3.4878. */
 const PITCH_FLOOR = Math.round((soloFloorFactor("pitch-drift") ?? 0) * 10) / 10;

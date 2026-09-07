@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { numberWord } from "@/content/vocabulary/numbers";
+import { BIAS_CLIP_COUNT, BIAS_SESSION_MINUTES } from "@/content/instrument-shape";
 import BiasFlow from "./BiasFlow";
 import JsonLd from "@/components/JsonLd";
 import { baseUrl } from "@/lib/site";
@@ -10,12 +12,12 @@ import { baseUrl } from "@/lib/site";
 export const metadata: Metadata = {
   title: "The Prestige Test — do you hear the music, or the name?",
   description:
-    "Rate sixteen clips with just your ears. Rate them again with the names attached. The gap is your number.",
+    `Rate ${numberWord(BIAS_CLIP_COUNT)} clips with just your ears. Rate them again with the names attached. The gap is your number.`,
   alternates: { canonical: "/bias" },
   openGraph: {
     title: "The Prestige Test — do you hear the music, or the name?",
     description:
-      "Rate sixteen clips with just your ears. Rate them again with the names attached. The gap is your number.",
+      `Rate ${numberWord(BIAS_CLIP_COUNT)} clips with just your ears. Rate them again with the names attached. The gap is your number.`,
     images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
 };
@@ -35,7 +37,7 @@ export default function BiasPage() {
           operatingSystem: "Web",
           offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
           description:
-            "An eight-minute within-subject test of prestige bias in music taste: sixteen clips rated blind, then labeled — some labels deliberately swapped and disclosed in a mandatory debrief, two clips never labeled (drift controls). The blind-vs-labeled gap, corrected by the control drift, is the measured result.",
+            `An ${numberWord(BIAS_SESSION_MINUTES)}-minute within-subject test of prestige bias in music taste: ${numberWord(BIAS_CLIP_COUNT)} clips rated blind, then labeled — some labels deliberately swapped and disclosed in a mandatory debrief, two clips never labeled (drift controls). The blind-vs-labeled gap, corrected by the control drift, is the measured result.`,
           isPartOf: { "@type": "WebSite", name: "The Taste Gym", url: baseUrl() },
         }}
       />

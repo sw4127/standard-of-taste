@@ -27,6 +27,8 @@
  * is checked against the module that owns it.
  */
 
+import { numberWord } from "@/content/vocabulary/numbers";
+import { SPREAD_WORK_COUNT } from "@/content/instrument-shape";
 import { KNOWN_EVENTS } from "@/lib/events";
 import { metric } from "./metrics";
 
@@ -255,7 +257,7 @@ export const LINEAGE: LineageRow[] = [
     metricId: "degrees_used",
   },
   {
-    action: "You rate six works a critic ranked, having been told nothing about them.",
+    action: `You rate ${numberWord(SPREAD_WORK_COUNT)} works a critic ranked, having been told nothing about them.`,
     event: "spread_complete",
     storedAs: "gym.result.spread → payload.ratings, payload.recognised",
     computedIn: "src/engine/spread.ts",

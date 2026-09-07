@@ -12,6 +12,28 @@
 
 import { flawFamilyList } from "./flaw-families";
 import { DELICACY_LIVE } from "./delicacy/items";
+import { numberWord } from "./vocabulary/numbers";
+import { numberWordLeading } from "./vocabulary/numbers";
+import { ARC_FLOORS, soloFloorFactor } from "@/engine/arc";
+import {
+  BIAS_CLIP_COUNT,
+  BIAS_CLIP_SECONDS,
+  BIAS_CONTROL_COUNT,
+  BIAS_DEGREES_BY_CHANCE,
+  BIAS_LABELLED_COUNT,
+  BIAS_SWAPPED_COUNT,
+  SPREAD_CLIP_SECONDS,
+  SPREAD_WORK_COUNT,
+} from "./instrument-shape";
+
+/*
+ * THE FAQ STATES THE SAME QUANTITIES THE PAGES DO (E19/S15), and it was missed.
+ * E19/S12 derived them across the reading room and reported the job done; the
+ * guard it shipped scanned page components only, so every one of these survived
+ * in a data module that renders into those same pages. A roster of files is a
+ * roster of the places somebody thought to look.
+ */
+const PITCH_FLOOR_TIMES = (soloFloorFactor("pitch-drift") ?? 0).toFixed(1);
 
 /**
  * The degradation families, derived (E11/S1).
@@ -61,12 +83,12 @@ export const LEARN_PAGES: LearnPage[] = [
     title: "What is the Prestige Test?",
     metaTitle: "What is the Prestige Test? — The Taste Gym",
     description:
-      "Sixteen clips, rated twice — once blind, once with names attached. Some names are deliberately false. The gap between your two ratings is your prestige-bias number.",
+      `${numberWordLeading(BIAS_CLIP_COUNT)} clips, rated twice — once blind, once with names attached. Some names are deliberately false. The gap between your two ratings is your prestige-bias number.`,
     teaser: "The flagship machine: how far can a famous name move your ratings?",
     faq: [
       {
         q: "How does the Prestige Test work?",
-        a: "You rate sixteen short music clips blind, then rate the same sixteen clips again — fourteen with artist names and reputations attached, two deliberately left unlabeled as drift controls. Two of the fourteen labels are deliberately swapped. Your score is computed from how far your ratings moved toward the labels, corrected by your measured drift on the unlabeled controls — a measured gap, not a self-report.",
+        a: `You rate ${numberWord(BIAS_CLIP_COUNT)} short music clips blind, then rate the same ${numberWord(BIAS_CLIP_COUNT)} clips again — ${numberWord(BIAS_LABELLED_COUNT)} with artist names and reputations attached, ${numberWord(BIAS_CONTROL_COUNT)} deliberately left unlabeled as drift controls. ${numberWord(BIAS_SWAPPED_COUNT)} of the ${numberWord(BIAS_LABELLED_COUNT)} labels are deliberately swapped. Your score is computed from how far your ratings moved toward the labels, corrected by your measured drift on the unlabeled controls — a measured gap, not a self-report.`,
       },
       {
         q: "Why does the test lie about some labels?",
@@ -169,7 +191,7 @@ export const LEARN_PAGES: LearnPage[] = [
       },
       {
         q: "How does the Taste Gym use practice?",
-        a: "Sit a threshold ladder twice in the same browser and the result screen compares the two sittings. It is free, because charging for the training loop would put the one honest question — did your ear actually move — behind a wall. The comparison is judged against a noise floor measured first, so a difference smaller than the instrument's own run-to-run wobble is reported as no change rather than as progress: on the pitch ladder two sittings must differ by roughly three and a half times before it will call it movement. Most retests are therefore told that nothing changed the instrument could hear, which is the honest answer.",
+        a: "Sit a threshold ladder twice in the same browser and the result screen compares the two sittings. It is free, because charging for the training loop would put the one honest question — did your ear actually move — behind a wall. The comparison is judged against a noise floor measured first, so a difference smaller than the instrument's own run-to-run wobble is reported as no change rather than as progress: on the pitch ladder two sittings must differ by roughly ${PITCH_FLOOR_TIMES} times before it will call it movement. Most retests are therefore told that nothing changed the instrument could hear, which is the honest answer.",
       },
     ],
   },
@@ -191,7 +213,7 @@ export const LEARN_PAGES: LearnPage[] = [
       },
       {
         q: "Is a narrow spread a bad result?",
-        a: "No, and the instrument is built so it can never say otherwise. The clips were chosen for licence clarity and genre spread, never for being equally good, so nobody knows how far apart they truly are — a listener who heard them as close together and rated them that way did the task correctly. The count is also read against what an indifferent rater would produce rather than against the top of the scale, because rating sixteen clips at random already lands on about nine distinct values.",
+        a: `No, and the instrument is built so it can never say otherwise. The clips were chosen for licence clarity and genre spread, never for being equally good, so nobody knows how far apart they truly are — a listener who heard them as close together and rated them that way did the task correctly. The count is also read against what an indifferent rater would produce rather than against the top of the scale, because rating ${numberWord(BIAS_CLIP_COUNT)} clips at random already lands on about ${numberWord(BIAS_DEGREES_BY_CHANCE)} distinct values.`,
       },
       {
         q: "Why does it quote Pitchfork and Robert Christgau?",
@@ -204,8 +226,8 @@ export const LEARN_PAGES: LearnPage[] = [
     title: "The Ranking Test",
     metaTitle: "The Ranking Test — Do Your Gaps Fall Where a Critic's Did?",
     description:
-      "Six works a published critic ranked against each other, rated blind. It reports how far apart your ratings fell on the pairs he separated, beside the same figure on the pairs he bracketed together. Agreeing with him is never scored.",
-    teaser: "A critic ranked six works. Do your gaps fall where his did?",
+      `${numberWordLeading(SPREAD_WORK_COUNT)} works a published critic ranked against each other, rated blind. It reports how far apart your ratings fell on the pairs he separated, beside the same figure on the pairs he bracketed together. Agreeing with him is never scored.`,
+    teaser: `A critic ranked ${numberWord(SPREAD_WORK_COUNT)} works. Do your gaps fall where his did?`,
     faq: [
       {
         q: "What does the Ranking Test actually measure?",
@@ -225,11 +247,11 @@ export const LEARN_PAGES: LearnPage[] = [
       },
       {
         q: "Is a small number a poor result?",
-        a: "No. Six recordings of six different works were never spaced out by quality, and if they genuinely sounded close to you then rating them close was the accurate thing to do. The recordings also differ in brightness by about ten kilohertz for reasons no ranking caused — one source is a 128 kbps mp3 that stops at 8,624 Hz. That difference is measurably larger across the pairs the critic bracketed together than across the ones he separated, which means it works against the instrument finding anything rather than for it.",
+        a: `No. ${numberWordLeading(SPREAD_WORK_COUNT)} recordings of ${numberWord(SPREAD_WORK_COUNT)} different works were never spaced out by quality, and if they genuinely sounded close to you then rating them close was the accurate thing to do. The recordings also differ in brightness by about ten kilohertz for reasons no ranking caused — one source is a 128 kbps mp3 that stops at 8,624 Hz. That difference is measurably larger across the pairs the critic bracketed together than across the ones he separated, which means it works against the instrument finding anything rather than for it.`,
       },
       {
-        q: "Why forty seconds, when the other instruments use twenty?",
-        a: "Because a critic's verdict is on a whole work, and some of these run forty minutes. A twenty-second excerpt could not carry that at all; forty seconds is a mitigation rather than a fix, and the limit is published rather than hidden. The window itself is chosen by measurement — the pipeline renders candidates and keeps the first one that passes its fitness gates, which on one source took twenty-three attempts because the work is short variations separated by pauses.",
+        q: `Why ${numberWord(SPREAD_CLIP_SECONDS)} seconds, when the other instruments use ${numberWord(BIAS_CLIP_SECONDS)}?`,
+        a: `Because a critic's verdict is on a whole work, and some of these run forty minutes. A ${numberWord(BIAS_CLIP_SECONDS)}-second excerpt could not carry that at all; ${numberWord(SPREAD_CLIP_SECONDS)} seconds is a mitigation rather than a fix, and the limit is published rather than hidden. The window itself is chosen by measurement — the pipeline renders candidates and keeps the first one that passes its fitness gates, which on one source took twenty-three attempts because the work is short variations separated by pauses.`,
       },
     ],
   },

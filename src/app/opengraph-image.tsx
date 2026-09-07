@@ -10,6 +10,8 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
+import { numberWord, numberWordLeading } from "@/content/vocabulary/numbers";
+import { BIAS_CLIP_COUNT, BIAS_SESSION_MINUTES } from "@/content/instrument-shape";
 
 export const runtime = "nodejs";
 export const alt =
@@ -68,12 +70,12 @@ export default function OgImage() {
               maxWidth: 900,
             }}
           >
-            Sixteen clips, rated twice — the gap is how far a famous name can move you.
+            {`${numberWordLeading(BIAS_CLIP_COUNT)} clips, rated twice — the gap is how far a famous name can move you.`}
           </div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div style={{ display: "flex", fontSize: 26, fontWeight: 600, color: SUB }}>
-            Free · eight minutes · no sign-up
+            {`Free · ${numberWord(BIAS_SESSION_MINUTES)} minutes · no sign-up`}
           </div>
           <div style={{ display: "flex", fontSize: 26, fontWeight: 600, color: GOLD }}>
             The Prestige Test →

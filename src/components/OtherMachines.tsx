@@ -1,4 +1,6 @@
 import { DELICACY_LIVE } from "@/content/delicacy/items";
+import { numberWordLeading } from "@/content/vocabulary/numbers";
+import { SPREAD_WORK_COUNT } from "@/content/instrument-shape";
 import {
   PRESTIGE_GOLD,
   DELICACY_ICE,
@@ -63,7 +65,7 @@ export const MACHINES: MachineRef[] = [
     href: "/spread",
     title: "The Ranking Test",
     accent: SPREAD_ROSE,
-    line: "Six works a critic ranked. Whether your gaps fall where his did — never whether you agree.",
+    line: `${numberWordLeading(SPREAD_WORK_COUNT)} works a critic ranked. Whether your gaps fall where his did — never whether you agree.`,
     live: true,
   },
 ];

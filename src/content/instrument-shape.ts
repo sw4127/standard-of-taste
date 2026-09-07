@@ -30,6 +30,7 @@ import biasManifest from "@/content/bias/manifest.json";
 import spreadManifest from "@/content/spread/manifest.json";
 import { BIAS_CLIPS } from "@/content/bias/items";
 import { SPREAD_POOL } from "@/content/spread/ranking";
+import { degreesIfIndifferent } from "@/engine/comparison";
 
 /* ---------------------------------------------------------------- Prestige */
 
@@ -69,6 +70,13 @@ export const BIAS_CLIP_SECONDS: number = biasManifest.clipSeconds;
  * that it was estimated separately on each page.
  */
 export const BIAS_SESSION_MINUTES = 8;
+
+/**
+ * Distinct rating values an indifferent rater lands on, which is the reference
+ * the degrees count is read against. Derived so no surface can invite the
+ * comparison against the top of the scale instead.
+ */
+export const BIAS_DEGREES_BY_CHANCE = Math.round(degreesIfIndifferent(BIAS_CLIP_COUNT));
 
 /* ------------------------------------------------------------ Ranking Test */
 

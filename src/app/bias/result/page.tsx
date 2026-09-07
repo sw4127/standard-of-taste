@@ -15,6 +15,8 @@ import { redirect } from "next/navigation";
 import { computeBiasResult, decodeBiasRatings, type BiasRatings, type BiasResult } from "@/engine/bias";
 import { BIAS_CLIPS, BIAS_INSTRUMENT_ID, BIAS_POOL_VERSION } from "@/content/bias/items";
 import { biasHeadline, shareTextFor, titleFragmentFor } from "@/content/bias/copy";
+import { numberWord } from "@/content/vocabulary/numbers";
+import { BIAS_CLIP_COUNT } from "@/content/instrument-shape";
 import { creatorLines } from "@/content/vocabulary/bias";
 import AcrossSessions from "@/components/AcrossSessions";
 import ComparisonReading from "@/components/ComparisonReading";
@@ -59,7 +61,7 @@ export async function generateMetadata({ searchParams }: { searchParams: SearchP
   const data = resultFrom(await searchParams);
   if (!data) return { title: "The Prestige Test" };
   const title = `${titleFragmentFor(data.result)} — The Prestige Test`;
-  const description = "Rate sixteen clips blind, then with the names attached. The gap is your number.";
+  const description = `Rate ${numberWord(BIAS_CLIP_COUNT)} clips blind, then with the names attached. The gap is your number.`;
   const og = `${baseUrl()}${cardUrl("og", data.b, data.l)}`;
   return {
     title,

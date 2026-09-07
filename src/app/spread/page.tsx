@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { numberWord, numberWordLeading } from "@/content/vocabulary/numbers";
+import { SPREAD_CLIP_SECONDS, SPREAD_WORK_COUNT } from "@/content/instrument-shape";
 import SpreadFlow from "./SpreadFlow";
 import JsonLd from "@/components/JsonLd";
 import { baseUrl } from "@/lib/site";
@@ -11,12 +13,12 @@ import { baseUrl } from "@/lib/site";
 export const metadata: Metadata = {
   title: "The Ranking Test — do your gaps fall where a critic's did?",
   description:
-    "Six works a published critic ranked against each other, forty seconds each. Two numbers: how far apart your ratings fell on the pairs he separated, and on the pairs he did not. Agreement is never scored.",
+    `${numberWordLeading(SPREAD_WORK_COUNT)} works a published critic ranked against each other, ${numberWord(SPREAD_CLIP_SECONDS)} seconds each. Two numbers: how far apart your ratings fell on the pairs he separated, and on the pairs he did not. Agreement is never scored.`,
   alternates: { canonical: "/spread" },
   openGraph: {
     title: "The Ranking Test — do your gaps fall where a critic's did?",
     description:
-      "Six works a published critic ranked against each other. Whether your ratings move where his judgment moved — never whether you agree with him.",
+      `${numberWordLeading(SPREAD_WORK_COUNT)} works a published critic ranked against each other. Whether your ratings move where his judgment moved — never whether you agree with him.`,
     images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
 };
