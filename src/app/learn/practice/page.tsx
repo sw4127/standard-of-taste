@@ -3,6 +3,34 @@ import Explainer, { explainerMetadata } from "../Explainer";
 import { learnPage } from "@/content/learn";
 import { DELICACY_ARC_FLOOR } from "@/content/delicacy/arc-floor";
 import { numberWord } from "@/content/vocabulary/numbers";
+import { ARC_FLOORS, soloFloorFactor } from "@/engine/arc";
+
+/*
+ * THE TWO FLOORS THIS PARAGRAPH EXPLAINS ARE MEASURED, so it may not write them
+ * in (E19/S13, from Cowork's batch-2 return). `ARC_FLOORS` is re-derived on
+ * every test run; the prose was not, and it sat in the sentence saying the
+ * floors were measured. `PITCH_SOLO_FLOOR` is null only if that ladder loses
+ * its floor, which would make the sentence untrue rather than merely stale — so
+ * the paragraph drops to the prestige half rather than printing a placeholder.
+ */
+const PITCH_SOLO_FLOOR = soloFloorFactor("pitch-drift");
+const BIAS_FLOOR_POINTS = ARC_FLOORS.bias;
+
+/*
+ * A BRANCH HERE WOULD LAND IN THE COPY DECK AS RAW MARKUP. The first version
+ * guarded the null case inline, and the page deck -- which scrapes the JSX a
+ * reader sees -- rendered the writer a paragraph beginning `{PITCH_SOLO_FLOOR
+ * !== null ? ( <>`. Correct page, unreadable artefact.
+ *
+ * There is no honest fallback anyway: if the pitch ladder loses its floor this
+ * paragraph is describing a floor that does not exist, and a page that cannot
+ * be rendered truthfully should fail the build rather than print a placeholder.
+ * `arc-floors.test.ts` pins the entry so this throw is a backstop, not a plan.
+ */
+if (PITCH_SOLO_FLOOR === null) {
+  throw new Error("practice page: the pitch ladder has no arc floor to describe");
+}
+const PITCH_FLOOR_TIMES = PITCH_SOLO_FLOOR.toFixed(1);
 
 const page = learnPage("practice")!;
 export const metadata = explainerMetadata(page);
@@ -36,10 +64,9 @@ export default function Page() {
       </p>
       <p>
         That floor is high, and saying so is the point. Two sittings on the pitch ladder have to
-        differ by roughly <strong>three and a half times</strong>{" "}
-        before the arc will call it
-        movement; on the prestige test the label&apos;s pull has to shift by eight points of the
-        scale. Most retests are therefore told that nothing changed the instrument could hear —
+        differ by roughly <strong>{PITCH_FLOOR_TIMES} times</strong>{" "}before the arc will call
+        it movement; on the prestige test the label&apos;s pull has to shift by{" "}
+        {numberWord(BIAS_FLOOR_POINTS)} points of the scale. Most retests are therefore told that nothing changed the instrument could hear —
         which is the honest answer, and the reason the sentence names what it would have taken
         instead of leaving you to guess. The delicacy trials get no arc at all:{" "}
         {numberWord(DELICACY_ARC_FLOOR.trials)} pairs cannot resolve a change smaller than{" "}

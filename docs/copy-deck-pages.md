@@ -148,7 +148,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 > The gym takes the claim literally, with the same honesty rule as everything else: an improvement you can't measure is an improvement you can't claim. Sit a threshold ladder twice in the same browser and the result screen compares the two — against a noise floor we measured first, so that a difference smaller than the instrument's own run-to-run wobble is reported as no change rather than as progress.
 
-> That floor is high, and saying so is the point. Two sittings on the pitch ladder have to differ by roughly three and a half times before the arc will call it movement; on the prestige test the label's pull has to shift by eight points of the scale. Most retests are therefore told that nothing changed the instrument could hear — which is the honest answer, and the reason the sentence names what it would have taken instead of leaving you to guess. The delicacy trials get no arc at all: {numberWord(DELICACY_ARC_FLOOR.trials)} pairs cannot resolve a change smaller than {numberWord(DELICACY_ARC_FLOOR.itemsToMove)} of them, so that screen says so and points here.
+> That floor is high, and saying so is the point. Two sittings on the pitch ladder have to differ by roughly {PITCH_FLOOR_TIMES} times before the arc will call it movement; on the prestige test the label's pull has to shift by {numberWord(BIAS_FLOOR_POINTS)} points of the scale. Most retests are therefore told that nothing changed the instrument could hear — which is the honest answer, and the reason the sentence names what it would have taken instead of leaving you to guess. The delicacy trials get no arc at all: {numberWord(DELICACY_ARC_FLOOR.trials)} pairs cannot resolve a change smaller than {numberWord(DELICACY_ARC_FLOOR.itemsToMove)} of them, so that screen says so and points here.
 
 > What a second sitting genuinely buys is precision. The wobble of an average falls as the square root of the number of sittings, so the more often you come back, the smaller a real change has to be before this can see it. That is the whole return: not a badge or a streak, but a number that gets harder to argue with.
 
@@ -206,7 +206,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 > THE TASTE GYM
 
-> Plain language, no tricks. Last updated September 2026.
+> Plain language, no tricks. Last updated {LEGAL_LAST_UPDATED}.
 
 > What this is
 
@@ -278,4 +278,4 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 ---
 
-**94 blocks, roughly 4299 words, across 11 surfaces.**
+**94 blocks, roughly 4295 words, across 11 surfaces.**

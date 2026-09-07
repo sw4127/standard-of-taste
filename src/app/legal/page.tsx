@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { LEGAL_LAST_UPDATED } from "@/content/legal-updated";
 import ForgetThisBrowser from "@/components/ForgetThisBrowser";
 
 export const metadata: Metadata = {
@@ -38,7 +39,9 @@ export default function LegalPage() {
       <h1 className="mt-6 font-display text-4xl font-black leading-tight">
         Terms & privacy
       </h1>
-      <p className="mt-3 text-sm text-muted">Plain language, no tricks. Last updated September 2026.</p>
+      <p className="mt-3 text-sm text-muted">
+        Plain language, no tricks. Last updated {LEGAL_LAST_UPDATED}.
+      </p>
 
       <section className="mt-8">
         <h2 className="font-display text-xl font-semibold">What this is</h2>

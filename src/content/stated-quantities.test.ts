@@ -37,6 +37,7 @@ import {
   SPREAD_SESSION_MINUTES,
   SPREAD_WORK_COUNT,
 } from "./instrument-shape";
+import { ARC_FLOORS, soloFloorFactor } from "@/engine/arc";
 
 const NL = String.fromCharCode(10);
 
@@ -44,6 +45,15 @@ const WORDS: Record<number, string> = {
   2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight",
   9: "nine", 10: "ten", 12: "twelve", 14: "fourteen", 15: "fifteen", 16: "sixteen",
   18: "eighteen", 20: "twenty", 24: "twenty-four", 30: "thirty", 40: "forty",
+  /*
+   * A FRACTION SPELLED OUT, because /learn/practice wrote its pitch floor as
+   * "three and a half times" and the first version of this guard could not see
+   * it: the value is not an integer and "times" was not a noun it counted.
+   * Mutation R typed that floor back in and passed. A guard that covers the
+   * quantities it happens to have met is a guard that stops where the last
+   * defect stopped.
+   */
+  3.5: "three and a half",
 };
 
 interface Quantity {
@@ -56,6 +66,10 @@ interface Quantity {
 
 const BIAS_PAGES = ["src/app/learn/prestige-bias-test/page.tsx", "src/app/bias/BiasFlow.tsx"];
 const SPREAD_PAGES = ["src/app/learn/ranking-test/page.tsx", "src/app/spread/SpreadFlow.tsx"];
+const PRACTICE_PAGES = ["src/app/learn/practice/page.tsx"];
+
+/** Rounded as the page prints it: the prose says "3.5 times", not 3.4878. */
+const PITCH_FLOOR = Math.round((soloFloorFactor("pitch-drift") ?? 0) * 10) / 10;
 
 const QUANTITIES: Quantity[] = [
   { name: "BIAS_CLIP_COUNT", value: BIAS_CLIP_COUNT, nouns: ["clips", "short clips"], files: BIAS_PAGES },
@@ -66,6 +80,8 @@ const QUANTITIES: Quantity[] = [
   { name: "SPREAD_WORK_COUNT", value: SPREAD_WORK_COUNT, nouns: ["works", "pieces of music", "recordings"], files: SPREAD_PAGES },
   { name: "SPREAD_CLIP_SECONDS", value: SPREAD_CLIP_SECONDS, nouns: ["seconds"], files: SPREAD_PAGES },
   { name: "SPREAD_SESSION_MINUTES", value: SPREAD_SESSION_MINUTES, nouns: ["minutes"], files: SPREAD_PAGES },
+  { name: "soloFloorFactor(pitch-drift)", value: PITCH_FLOOR, nouns: ["times"], files: PRACTICE_PAGES },
+  { name: "ARC_FLOORS.bias", value: ARC_FLOORS.bias, nouns: ["points"], files: PRACTICE_PAGES },
 ];
 
 /** Numerals and number-words for `n`, as a page might write them. */

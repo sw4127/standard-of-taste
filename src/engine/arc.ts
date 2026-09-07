@@ -36,7 +36,7 @@
 import type { Claim, EvidenceGap } from "./evidence";
 import type { BiasResult } from "./bias";
 import { fitPosterior } from "./threshold-fit";
-import { flipAxis, type StaircaseSession } from "./staircase-session";
+import { axisFor, flipAxis, type StaircaseSession } from "./staircase-session";
 
 const refuse = (gap: EvidenceGap): Claim<never> => ({ ok: false, gap });
 
@@ -67,6 +67,30 @@ export const ARC_FLOORS: Readonly<Record<string, number>> = {
   "lossy-artifact@pb4": 3.5664,
   bias: 8.0,
 };
+
+/**
+ * THE FLOOR A SINGLE PAIR OF SITTINGS FACES, AS A MULTIPLE (E19/S13).
+ *
+ * `/learn/practice` explains that these floors are MEASURED and then wrote two
+ * of them in by hand — "three and a half times", "eight points" — in that same
+ * paragraph. Cowork's batch-2 return found it. The floors live in `ARC_FLOORS`,
+ * are re-derived on every test run, and can move; the prose could not.
+ *
+ * SCOPED TO TWO SITTINGS ON PURPOSE. `pooledFloor` shrinks the floor as
+ * sittings accumulate, which is the whole point of pooling, so there is no
+ * single number that is "the floor" — there is the floor a reader with two
+ * sittings faces, which is what that paragraph is about. `pooledFloor(base, 1, 1)`
+ * IS `base`, and writing it through the function rather than reaching past it
+ * keeps the two definitions from drifting apart.
+ *
+ * Returns null for a ladder with no floor, rather than a number that would look
+ * like a measurement.
+ */
+export function soloFloorFactor(family: string, sourceId?: string): number | null {
+  const base = ARC_FLOORS[floorKey(family, sourceId)];
+  if (base === undefined) return null;
+  return Math.exp(pooledFloor(base, 1, 1) * stepLog(axisFor(family, sourceId).magnitudes));
+}
 
 /** The key a ladder's floor is stored under. One spelling, used by both sides. */
 export function floorKey(family: string, sourceId?: string): string {
