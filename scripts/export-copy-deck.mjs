@@ -74,7 +74,9 @@ const SECTIONS = [
     title: "Threshold result — “WHAT THIS MEANS IN A RENDER”",
     where:
       "Renders on `/threshold/[slug]/result` and at the end of a Gym session, in a bordered panel " +
-      "BELOW the measurement paragraphs and ABOVE the no-cohort footnote.",
+      "BELOW the measurement paragraphs and ABOVE the no-cohort footnote. Not adjacent to that " +
+      "footnote: the retest arc, the combined view and the expert panel are all between them when " +
+      "the reader has earned any of the three.",
     already:
       "The screen has already said: the band (“You caught the damage at 25 cents. At 8.8 cents you " +
       "were guessing.”), the fitted point where one exists, the per-rung ladder, the material, and " +
@@ -115,7 +117,10 @@ const SECTIONS = [
       "The two render together or not at all, and the second refers back to the first, so a rewrite " +
       "that drops the cue list leaves the boundary pointing at nothing.",
     title: "Prestige result — “WHAT THIS MEANS IN YOUR WORK”",
-    where: "Renders on `/bias/result` and in the flow's debrief, under the verdict and above the share card.",
+    where:
+      "Renders on `/bias/result` and in the flow's debrief, directly under the verdict. It is above " +
+      "the share card but nowhere near it: the degrees-of-praise reading, the retest arc, the " +
+      "combined view and the expert panel sit between this block and the card.",
     already:
       "The screen has already said: the signed percentage, “how far these ratings moved toward the labels”, " +
       "the verdict pair (“Label-driven.” / “Steady ears.” / “Contrarian.”), and — in the flow — the receipt " +
@@ -274,8 +279,12 @@ const SECTIONS = [
       "another having been said. Under fewer than two instruments the whole block is silent.",
     title: "Combined view — “ACROSS YOUR SESSIONS”",
     where:
-      "Renders on all three result screens, but ONLY when two or more instruments have been run on this " +
-      "device AND the result on screen is this device's own (never on somebody else's shared link).",
+      "Renders on the result surface of all FOUR instruments — the Prestige, Delicacy and Threshold " +
+      "result pages and the Ranking Test's reading — but ONLY when two or more instruments have been " +
+      "run on this device AND the result on screen is this device's own (never on somebody else's " +
+      "shared link). It said \"all three result screens\" until E19/S7, which was written before the " +
+      "Ranking Test existed and had quietly become the description of a bug: the layer counted that " +
+      "instrument and named it, and its screen was the one place the block never appeared.",
     already: "Every instrument section above, plus each instrument's own measurement copy.",
     job: "Say the three things that are only true once more than one instrument has run: the dossier, the replication, the coverage.",
     rules: [

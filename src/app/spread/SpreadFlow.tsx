@@ -39,6 +39,7 @@ import { track } from "@/lib/analytics";
 import Link from "next/link";
 import ClipPlayer from "../bias/ClipPlayer";
 import OtherMachines from "@/components/OtherMachines";
+import AcrossSessions from "@/components/AcrossSessions";
 import ExpertPanel from "@/components/ExpertPanel";
 import { SPREAD_PALETTE } from "@/content/instrument-accents";
 
@@ -316,6 +317,29 @@ export default function SpreadFlow() {
           <p key={line.slice(0, 32)}>{line}</p>
         ))}
       </div>
+
+      {/*
+        THE COMBINED VIEW, WHICH THIS INSTRUMENT WAS COUNTED BY AND NEVER
+        CARRIED (E19/S7).
+
+        `acrossLines` counts the Ranking Test as one of the instruments a device
+        can hold, and `dossierLine` names the question it asked — so a listener
+        who ran this and one other saw the combined view on the OTHER
+        instrument's screen, naming this one, and never on this one. The layer
+        was taught about the Ranking Test in E17 and the mount was never added.
+        Nothing failed, because a block that is absent renders nothing.
+
+        The gate is the block's own: it stays silent under two instruments, so
+        somebody who has only sat this sees no change.
+      */}
+      <AcrossSessions
+        accent={accent}
+        own={{
+          kind: "spread",
+          ratings: encodeSpreadRatings(ratings),
+          recognised: encodeSpreadRecognised(recognised),
+        }}
+      />
 
       {/*
         THE RAW RECORD, UNDER THE READING AND ABOVE THE EXITS (E18/S3). It reads

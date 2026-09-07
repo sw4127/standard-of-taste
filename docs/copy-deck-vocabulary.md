@@ -14,7 +14,7 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 ## 1. Threshold result — “WHAT THIS MEANS IN A RENDER”
 
-**Where it renders.** Renders on `/threshold/[slug]/result` and at the end of a Gym session, in a bordered panel BELOW the measurement paragraphs and ABOVE the no-cohort footnote.
+**Where it renders.** Renders on `/threshold/[slug]/result` and at the end of a Gym session, in a bordered panel BELOW the measurement paragraphs and ABOVE the no-cohort footnote. Not adjacent to that footnote: the retest arc, the combined view and the expert panel are all between them when the reader has earned any of the three.
 
 **What the screen has already said.** The screen has already said: the band (“You caught the damage at 25 cents. At 8.8 cents you were guessing.”), the fitted point where one exists, the per-rung ladder, the material, and “Come back in a week and run it again.”
 
@@ -90,7 +90,7 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 ## 3. Prestige result — “WHAT THIS MEANS IN YOUR WORK”
 
-**Where it renders.** Renders on `/bias/result` and in the flow's debrief, under the verdict and above the share card.
+**Where it renders.** Renders on `/bias/result` and in the flow's debrief, directly under the verdict. It is above the share card but nowhere near it: the degrees-of-praise reading, the retest arc, the combined view and the expert panel sit between this block and the card.
 
 **What the screen has already said.** The screen has already said: the signed percentage, “how far these ratings moved toward the labels”, the verdict pair (“Label-driven.” / “Steady ears.” / “Contrarian.”), and — in the flow — the receipt pill “You moved with the label on N of M clips that could move.”
 
@@ -335,7 +335,7 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 ## 8. Combined view — “ACROSS YOUR SESSIONS”
 
-**Where it renders.** Renders on all three result screens, but ONLY when two or more instruments have been run on this device AND the result on screen is this device's own (never on somebody else's shared link).
+**Where it renders.** Renders on the result surface of all FOUR instruments — the Prestige, Delicacy and Threshold result pages and the Ranking Test's reading — but ONLY when two or more instruments have been run on this device AND the result on screen is this device's own (never on somebody else's shared link). It said "all three result screens" until E19/S7, which was written before the Ranking Test existed and had quietly become the description of a bug: the layer counted that instrument and named it, and its screen was the one place the block never appeared.
 
 **What the screen has already said.** Every instrument section above, plus each instrument's own measurement copy.
 
