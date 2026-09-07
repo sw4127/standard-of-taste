@@ -20,7 +20,7 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 **This layer's job.** Say what this flaw IS in a track the reader made, and what their measured band implies gets past them.
 
-**What renders with it, in order.** `creatorLines` emits the symptom line, then the consequence line. On a wide band it emits the symptom line ALONE — the consequence is dropped rather than hedged.
+**What renders with it, in order.** `creatorLines` in `threshold.ts` emits, in this order: (1) what this flaw sounds like in a track the reader made; (2) what their measured band implies gets past them. (1) renders every time; (2) renders only on a band narrow enough to name a limit. The consequence is dropped on a wide band rather than hedged, because the screen above has already refused twice and a third refusal is noise.
 
 **Rules this copy must keep:**
 
@@ -59,7 +59,7 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 **This layer's job.** Say why NAMING a flaw is the half that transfers, and why the result is not broken down per flaw.
 
-**What renders with it, in order.** `creatorLines` emits the naming line, then the per-family refusal where one applies. On a session that caught nothing it emits the refusal ALONE, so that sentence carries the screen.
+**What renders with it, in order.** `creatorLines` in `delicacy.ts` emits, in this order: (1) why naming a flaw is the half that transfers, or that the session never reached the question; (2) why the result is not broken down per flaw family. (1) renders every time; (2) renders only when a split was possible to ask for. On a session that caught nothing, the FIRST line is itself a refusal — it says the naming question was never reached — and it carries the screen alone. Two refusals stacked at the bottom of an already-empty result is boilerplate.
 
 **Rules this copy must keep:**
 
@@ -96,7 +96,7 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 **This layer's job.** Name where the same KIND of cue lives in the reader's own work, and mark the boundary of what was measured.
 
-**What renders with it, in order.** `creatorLines` emits `CUE_IN_YOUR_WORK` — which names the cues this test could not show — and then the verdict-branched boundary, which refers back to it as "the cues above". The two always render together, in that order.
+**What renders with it, in order.** `creatorLines` in `bias.ts` emits, in this order: (1) the cues this test could not put in front of the reader (`CUE_IN_YOUR_WORK`); (2) the verdict-branched boundary, which refers back to the line above as "the cues above". All of them render only when some rating had headroom to move. The two render together or not at all, and the second refers back to the first, so a rewrite that drops the cue list leaves the boundary pointing at nothing.
 
 **Rules this copy must keep:**
 
@@ -124,7 +124,7 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 **This layer's job.** Say what was set aside and why, read both figures against chance, name which way they fell without claiming the gap between them means anything, and mark the boundary.
 
-**What renders with it, in order.** `spreadLines` emits, in this order: (1) what was set aside, and on a refused reading why that leaves too little; (2) the two figures, each against the chance figure; (3) which way the gaps fell, with the refusal to size the difference attached; (4) `SPREAD_BOUNDARY`, the limit. (1) and (4) render every time; (2) and (3) render only when a reading was produced. The boundary is always the last thing a reader sees, so anything it already says does not need saying above it.
+**What renders with it, in order.** `spreadLines` in `spread.ts` emits, in this order: (1) what was set aside, and on a refused reading why that leaves too little; (2) the two figures, each against the chance figure; (3) which way the gaps fell, with the refusal to size the difference attached; (4) the limit on what this instrument can say (`SPREAD_BOUNDARY`). (1) and (4) render every time; (2) and (3) render only when a reading was produced. The boundary is always the last thing a reader sees, so anything it already says does not need saying above it.
 
 **Rules this copy must keep:**
 

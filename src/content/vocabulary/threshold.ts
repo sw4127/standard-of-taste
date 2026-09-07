@@ -31,6 +31,7 @@
  */
 import type { ThresholdSay } from "@/engine/evidence";
 import { quantity } from "@/content/staircase/copy";
+import { emit, type EmissionSpec } from "./emission";
 
 /**
  * WHERE THE FLAW LIVES IN GENERATED AUDIO.
@@ -167,7 +168,26 @@ export function whatGetsPast(say: ThresholdSay): string {
  * E18/S18: this function is the only caller, it drops the sentence on a wide
  * band, and so the branch could not be reached from anywhere.
  */
+export const THRESHOLD_EMISSION: EmissionSpec<ThresholdSay> = {
+  fn: "creatorLines",
+  in: "threshold.ts",
+  parts: [
+    {
+      id: "symptom",
+      says: "what this flaw sounds like in a track the reader made",
+      always: true,
+      produce: (say) => [flawInAGeneration(say.family)].filter((line) => line !== ""),
+    },
+    {
+      id: "consequence",
+      says: "what their measured band implies gets past them",
+      always: false,
+      when: "only on a band narrow enough to name a limit",
+      produce: (say) => (say.wide ? [] : [whatGetsPast(say)].filter((line) => line !== "")),
+    },
+  ],
+};
+
 export function creatorLines(say: ThresholdSay): string[] {
-  const lines = say.wide ? [flawInAGeneration(say.family)] : [flawInAGeneration(say.family), whatGetsPast(say)];
-  return lines.filter((l) => l !== "");
+  return emit(THRESHOLD_EMISSION, say);
 }

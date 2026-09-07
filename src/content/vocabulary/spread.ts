@@ -252,6 +252,7 @@ export function directionLine(result: SpreadResult): string {
  */
 export const SPREAD_EMISSION: EmissionSpec<SpreadResult> = {
   fn: "spreadLines",
+  in: "spread.ts",
   parts: [
     {
       id: "recognition",
@@ -275,7 +276,7 @@ export const SPREAD_EMISSION: EmissionSpec<SpreadResult> = {
     },
     {
       id: "boundary",
-      says: "`SPREAD_BOUNDARY`, the limit",
+      says: "the limit on what this instrument can say (`SPREAD_BOUNDARY`)",
       always: true,
       produce: () => [SPREAD_BOUNDARY],
     },

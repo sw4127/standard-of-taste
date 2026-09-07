@@ -38,6 +38,7 @@
  */
 import type { BiasResult, BiasVerdict } from "@/engine/bias";
 import { biasClaim } from "@/engine/evidence";
+import { emit, type EmissionSpec } from "./emission";
 
 /**
  * The cues that stand in for a famous name once someone is judging their own
@@ -82,7 +83,27 @@ export function whatToDoAboutIt(verdict: BiasVerdict): string {
  * `biasClaim` refuses there, because "0% swayed" would describe the scale
  * rather than the person (N3).
  */
+export const BIAS_EMISSION: EmissionSpec<BiasResult> = {
+  fn: "creatorLines",
+  in: "bias.ts",
+  parts: [
+    {
+      id: "cue",
+      says: "the cues this test could not put in front of the reader (`CUE_IN_YOUR_WORK`)",
+      always: false,
+      when: "only when some rating had headroom to move",
+      produce: (result) => (biasClaim(result).ok ? [CUE_IN_YOUR_WORK] : []),
+    },
+    {
+      id: "boundary",
+      says: 'the verdict-branched boundary, which refers back to the line above as "the cues above"',
+      always: false,
+      when: "only when some rating had headroom to move",
+      produce: (result) => (biasClaim(result).ok ? [whatToDoAboutIt(result.verdict)] : []),
+    },
+  ],
+};
+
 export function creatorLines(result: BiasResult): string[] {
-  if (!biasClaim(result).ok) return [];
-  return [CUE_IN_YOUR_WORK, whatToDoAboutIt(result.verdict)];
+  return emit(BIAS_EMISSION, result);
 }

@@ -129,9 +129,35 @@ function biasResult(shift: number) {
   return biasResultBy(() => shift);
 }
 
-/** One session per verdict — the only axis the prestige copy branches on. */
+/**
+ * A sitting with NO HEADROOM ANYWHERE: every clip rated blind at the scale edge
+ * the label points toward, so no rating could have moved even in principle.
+ *
+ * ADDED BECAUSE A DECLARATION HAD NO EVIDENCE (E19/S2). `creatorLines` returns
+ * nothing at all when `biasClaim` refuses, and no fixture reached that — so the
+ * deck's claim that the two sentences are conditional rested on reading the
+ * code. This is a state a real listener can produce by rating everything at the
+ * top, and it renders no sentences, so nothing is added to any deck by it.
+ */
+function biasPinned() {
+  const blind: Record<string, number> = {};
+  const labeled: Record<string, number> = {};
+  for (const item of BIAS_CLIPS) {
+    const edge = item.labelDirection === "up" ? BIAS_SCALE_MAX : BIAS_SCALE_MIN;
+    blind[item.id] = edge;
+    labeled[item.id] = edge;
+  }
+  return computeBiasResult(BIAS_INSTRUMENT_ID, BIAS_CLIPS, blind, labeled);
+}
+
+/** One session per verdict, plus the sitting the copy refuses to read at all. */
 export function biasResults() {
-  return { swayed: biasResult(2), steady: biasResult(0), contrarian: biasResult(-2) };
+  return {
+    swayed: biasResult(2),
+    steady: biasResult(0),
+    contrarian: biasResult(-2),
+    pinned: biasPinned(),
+  };
 }
 
 /**

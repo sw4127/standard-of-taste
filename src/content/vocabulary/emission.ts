@@ -52,6 +52,13 @@ export type EmissionPart<T> =
 export interface EmissionSpec<T> {
   /** The assembler this spec IS, named so the deck can name it. */
   readonly fn: string;
+  /**
+   * The module it lives in. Optional in the type, supplied by every real spec,
+   * and it earns its place: THREE surfaces call their assembler `creatorLines`,
+   * so a deck saying "`creatorLines` emits" three times tells a writer who
+   * cannot open the repository nothing about which one they are reading.
+   */
+  readonly in?: string;
   readonly parts: ReadonlyArray<EmissionPart<T>>;
 }
 
@@ -71,6 +78,7 @@ export interface DescribedPart {
 
 export interface DescribedSpec {
   readonly fn: string;
+  readonly in?: string;
   readonly parts: ReadonlyArray<DescribedPart>;
 }
 
@@ -121,7 +129,6 @@ export function orderLine(spec: DescribedSpec): string {
   const conditions =
     groups.size === 1 ? "All of them render " + [...groups.keys()][0] + "." : clauses.join("; ") + ".";
 
-  return (
-    TICK + spec.fn + TICK + " emits, in this order: " + listed.join("; ") + ". " + conditions
-  );
+  const named = spec.in ? TICK + spec.fn + TICK + " in " + TICK + spec.in + TICK : TICK + spec.fn + TICK;
+  return named + " emits, in this order: " + listed.join("; ") + ". " + conditions;
 }

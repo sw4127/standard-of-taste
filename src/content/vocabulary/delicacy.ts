@@ -43,6 +43,7 @@ import type { DelicacyResult, DegradationFamily } from "@/engine/delicacy";
 import { DEGRADATION_FAMILIES } from "@/engine/delicacy";
 import { FLAW_LABELS } from "@/content/delicacy/items";
 import { delicacyClaim, delicacyFamilyClaim, familyContrastClaim } from "@/engine/evidence";
+import { emit, type EmissionSpec } from "./emission";
 
 /**
  * WHAT EACH FLAW IS IN SOMEONE'S OWN RENDER.
@@ -148,8 +149,41 @@ export function familyTallies(result: DelicacyResult): FamilyTally[] {
  * of an already-empty result is boilerplate, and the screen above has said the
  * honest thing once already.
  */
+export const DELICACY_EMISSION: EmissionSpec<DelicacyResult> = {
+  fn: "creatorLines",
+  in: "delicacy.ts",
+  parts: [
+    {
+      /*
+       * ALWAYS, AND THE NULL BRANCH BELOW IT IS DEAD RATHER THAN RARE.
+       * `namingLine` returns null when `delicacyClaim` refuses, and it refuses
+       * only on `nTrials === 0` — which `computeDelicacyResult` cannot produce,
+       * because it throws on an empty item list. No result the engine can build
+       * reaches it. That premise is checked in `emission.test.ts` rather than
+       * assumed, because this declaration is only as true as the throw.
+       */
+      id: "naming",
+      says: "why naming a flaw is the half that transfers, or that the session never reached the question",
+      always: true,
+      produce: (result) => {
+        const naming = namingLine(result);
+        return naming === null ? [] : [naming];
+      },
+    },
+    {
+      id: "per-family-refusal",
+      says: "why the result is not broken down per flaw family",
+      always: false,
+      when: "only when a split was possible to ask for",
+      produce: (result) => {
+        if (result.flawEligible === 0) return [];
+        const refusal = perFamilyRefusal(result);
+        return refusal === null ? [] : [refusal];
+      },
+    },
+  ],
+};
+
 export function creatorLines(result: DelicacyResult): string[] {
-  const naming = namingLine(result);
-  if (result.flawEligible === 0) return naming === null ? [] : [naming];
-  return [naming, perFamilyRefusal(result)].filter((l): l is string => l !== null);
+  return emit(DELICACY_EMISSION, result);
 }

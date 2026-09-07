@@ -11,8 +11,14 @@
  * was added.
  */
 import type { DescribedSpec } from "./emission";
+import { BIAS_EMISSION } from "./bias";
+import { DELICACY_EMISSION } from "./delicacy";
 import { SPREAD_EMISSION } from "./spread";
+import { THRESHOLD_EMISSION } from "./threshold";
 
 export const EMISSION_SPECS: Record<string, DescribedSpec> = {
+  threshold: THRESHOLD_EMISSION,
+  delicacy: DELICACY_EMISSION,
+  bias: BIAS_EMISSION,
   spread: SPREAD_EMISSION,
 };

@@ -67,9 +67,9 @@ const { strings, order } = JSON.parse(match[1]);
 const SECTIONS = [
   {
     key: "threshold",
-    alongside:
-      "`creatorLines` emits the symptom line, then the consequence line. On a wide band it emits " +
-      "the symptom line ALONE — the consequence is dropped rather than hedged.",
+    note:
+      "The consequence is dropped on a wide band rather than hedged, because the screen above has " +
+      "already refused twice and a third refusal is noise.",
     title: "Threshold result — “WHAT THIS MEANS IN A RENDER”",
     where:
       "Renders on `/threshold/[slug]/result` and at the end of a Gym session, in a bordered panel " +
@@ -88,9 +88,10 @@ const SECTIONS = [
   },
   {
     key: "delicacy",
-    alongside:
-      "`creatorLines` emits the naming line, then the per-family refusal where one applies. On a " +
-      "session that caught nothing it emits the refusal ALONE, so that sentence carries the screen.",
+    note:
+      "On a session that caught nothing, the FIRST line is itself a refusal — it says the naming " +
+      "question was never reached — and it carries the screen alone. Two refusals stacked at the " +
+      "bottom of an already-empty result is boilerplate.",
     title: "Delicacy result — “WHAT THIS MEANS IN YOUR WORK”",
     where:
       "Renders on `/delicacy/result` and in the flow's reveal, between the flaw line it interprets " +
@@ -109,10 +110,9 @@ const SECTIONS = [
   },
   {
     key: "bias",
-    alongside:
-      "`creatorLines` emits `CUE_IN_YOUR_WORK` — which names the cues this test could not show — " +
-      "and then the verdict-branched boundary, which refers back to it as \"the cues above\". The " +
-      "two always render together, in that order.",
+    note:
+      "The two render together or not at all, and the second refers back to the first, so a rewrite " +
+      "that drops the cue list leaves the boundary pointing at nothing.",
     title: "Prestige result — “WHAT THIS MEANS IN YOUR WORK”",
     where: "Renders on `/bias/result` and in the flow's debrief, under the verdict and above the share card.",
     already:
