@@ -239,13 +239,6 @@ describe("every prose template is reachable, or listed as not", () => {
         "citation record and is rendered as an attribution wherever the citation appears; " +
         "rewriting it would be misquoting someone else's article.",
     },
-    {
-      match: "The range this session bracketed covers most of what the ladder can ask",
-      why:
-        "whatGetsPast's wide-band branch. It may be DEAD COPY: creatorLines drops the consequence " +
-        "sentence entirely on a wide band by design (E8/S3), so this string may be unreachable in " +
-        "the product as well as in the fixtures. Not deleted, because that needs checking first.",
-    },
   ];
 
   it("lists only templates that are genuinely unrendered", () => {
@@ -292,5 +285,45 @@ describe("every prose template is reachable, or listed as not", () => {
     );
     expect(surfaces.has("comparison"), "comparison.ts renders nothing").toBe(true);
     expect(surfaces.has("apparatus"), "apparatus.ts renders nothing").toBe(true);
+  });
+});
+
+/**
+ * EVERY SURFACE SAYS WHAT RENDERS WITH IT (E18/S18, from Cowork's second return).
+ *
+ * Three of Cowork's twenty-four batch-1 edits existed only because it had read
+ * the assembly functions and found sentences repeating each other inside one
+ * block — a writer with the deck alone could not have caught any of them. It
+ * called this the highest-value addition to the brief, and it also said the
+ * scoping was too large: the assemblers already return each block as an ORDERED
+ * ARRAY, so the order is the adjacency and one line per surface carries it.
+ */
+describe("the deck says what each sentence renders beside", () => {
+  const source = readFileSync("scripts/export-copy-deck.mjs", "utf8");
+  const deck = readFileSync("docs/copy-deck-vocabulary.md", "utf8");
+
+  it("gives every surface an adjacency line", () => {
+    const keys = source.split('key: "').slice(1).map((part) => part.split('"')[0]);
+    expect(keys.length).toBeGreaterThan(7);
+    const alongside = deck.split("**What renders with it, in order.**").length - 1;
+    expect(
+      alongside,
+      "some surfaces do not say what renders with them, so a writer cannot see repetition inside " +
+        "a block — which is how three sentences repeated each other in shipped copy",
+    ).toBe(keys.length);
+  });
+
+  /**
+   * The chart is a DIFFERENT defect from adjacency, as Cowork pointed out: a
+   * deck that enumerates strings will never contain an SVG however good the
+   * adjacency data gets. It needs a hand-written line, and the sentence that
+   * referred to "the line above" is the reason.
+   */
+  it("names the non-text a reader sees on the expert panel", () => {
+    expect(deck).toContain("Not text, and not in this deck.");
+    expect(deck).toContain("DASHED DIAGONAL");
+    expect(deck, "the Brier sentence still refers to a line the deck never describes").not.toContain(
+      "the distance from the line above",
+    );
   });
 });

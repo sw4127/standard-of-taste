@@ -20,6 +20,8 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 **This layer's job.** Say what this flaw IS in a track the reader made, and what their measured band implies gets past them.
 
+**What renders with it, in order.** `creatorLines` emits the symptom line, then the consequence line. On a wide band it emits the symptom line ALONE — the consequence is dropped rather than hedged.
+
 **Rules this copy must keep:**
 
 - Two sentences; ONE on a wide band (the screen has already refused twice — a third is noise).
@@ -57,6 +59,8 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 **This layer's job.** Say why NAMING a flaw is the half that transfers, and why the result is not broken down per flaw.
 
+**What renders with it, in order.** `creatorLines` emits the naming line, then the per-family refusal where one applies. On a session that caught nothing it emits the refusal ALONE, so that sentence carries the screen.
+
 **Rules this copy must keep:**
 
 - The second sentence is a REFUSAL and the arithmetic forces it: at 5 pairs a family, an equally good ear looks uneven 88.7–92.8% of the time. It must not read as modesty or apology.
@@ -92,6 +96,8 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 **This layer's job.** Name where the same KIND of cue lives in the reader's own work, and mark the boundary of what was measured.
 
+**What renders with it, in order.** `creatorLines` emits `CUE_IN_YOUR_WORK` — which names the cues this test could not show — and then the verdict-branched boundary, which refers back to it as "the cues above". The two always render together, in that order.
+
 **Rules this copy must keep:**
 
 - Carries NO counts — the receipt pill and the share card own those.
@@ -117,6 +123,8 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 **What the screen has already said.** The screen has already shown the two numbers themselves, each with the chance figure beside it (“Rating at random gives 3.6 on both”). On a refused reading it has shown no number at all.
 
 **This layer's job.** Say what was set aside and why, read both figures against chance, name which way they fell without claiming the gap between them means anything, and mark the boundary.
+
+**What renders with it, in order.** `spreadLines` emits, in this order: what was set aside; then, only if a reading was produced, the two figures and the direction; then `SPREAD_BOUNDARY`, every time. The boundary is always the last thing a reader sees, so anything it already says does not need saying above it.
 
 **Rules this copy must keep:**
 
@@ -172,6 +180,8 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 **What the screen has already said.** The screen has already given this sitting's own reading in full. This layer adds the only thing a single sitting cannot say: what happened between then and now.
 
 **This layer's job.** Say whether the change is bigger than what the instrument can resolve, and when it is not, name the floor in the reader's own units so a refusal is not read as a shrug.
+
+**What renders with it, in order.** `arcLines` emits the reading, then — where the sitting count supports it — the pooled sentence about what coming back buys. `ARC_DEVICE_NOTE` sits under both.
 
 **Rules this copy must keep:**
 
@@ -236,6 +246,8 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 **This layer's job.** Report a spread and a stability without either reading as a mark out of eleven, and mark the boundary that says a narrow spread may simply be correct.
 
+**What renders with it, in order.** `comparisonLines` emits the degrees sentence, then the stability sentence — each replaced by its own refusal where the evidence floor is not met — then `COMPARISON_BOUNDARY`, every time. The critic-scale lines and the our-scale line render beside them as a reference panel.
+
 **Rules this copy must keep:**
 
 - A DEGREES COUNT INVITES A VERDICT AND MUST NOT BE ONE. “You used five of eleven” reads as a grade unless the chance figure is in the same breath: rating at random lands on about nine distinct values, so eleven is not an achievement and five is not a failure.
@@ -294,6 +306,8 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 **This layer's job.** Show that the loudness normalisation, the transparency anchor and the listening-test design sit in a tradition with published standards — and say where this product departs from them.
 
+**What renders with it, in order.** `apparatusLines` emits one entry per borrowed standard, then the citation-strength line, then the degrees-convergence line where it applies. They sit inside `/method`, beneath the page prose that describes the instruments themselves.
+
 **Rules this copy must keep:**
 
 - A CITATION MAY DESCRIBE THE MEASURING APPARATUS. It may NEVER describe how well people score. This is the rule the whole section runs on: quoting a standard's method is allowed, quoting anybody's results about listeners is not.
@@ -326,6 +340,8 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 **What the screen has already said.** Every instrument section above, plus each instrument's own measurement copy.
 
 **This layer's job.** Say the three things that are only true once more than one instrument has run: the dossier, the replication, the coverage.
+
+**What renders with it, in order.** `acrossLines` emits the dossier, then the replication, then the coverage roster. Each is present only when it has something to say, so any of them may be the only line on screen.
 
 **Rules this copy must keep:**
 
@@ -373,6 +389,10 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 **This layer's job.** Label measurements and state limits. Never judge them — this is the verdict-free surface.
 
+**What renders with it, in order.** The panel emits its blurb, then a section per instrument. The Brier sentence renders directly beneath the calibration chart it refers to.
+
+**Not text, and not in this deck.** An SVG CALIBRATION CHART renders immediately above the Brier sentence: claimed confidence on the x axis, delivered accuracy on the y, with a DASHED DIAGONAL for perfect calibration. "The line above" is that diagonal, and a reader of this deck cannot see it. Every result surface also carries tables of numbers this deck does not reproduce.
+
 **Rules this copy must keep:**
 
 - No verdict, ever. `expert.ts` cannot supply one — it carries numbers, ids and enums with no sentence in it — and the calibration data deliberately omits the overconfident/underconfident label the result screen shows.
@@ -384,9 +404,9 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 *Labels:* `#` · `95% interval` · `After correction` · `At the scale edge` · `Before correction` · `Blind` · `By flaw family` · `By rung` · `Caught` · `Caught at` · `Clip` · `Clips counted` · `Closely-spaced pairs` · `Control drift` · `Delivered` · `Drift` · `Every clip` · `Family` · `First` · `Fitted point` · `Flaw named` · `In his ranking` · `In the result` · `Label` · `Labelled` · `Mean gap · closely spaced` · `Mean gap · widely spaced` · `Missed at` · `Moved with label` · `Of` · `Original` · `Outcome` · `Pair` · `Positions apart` · `Rating at random` · `Right` · `Room to move` · `Rung` · `Said` · `Second` · `Set aside` · `Shown` · `Swapped items only` · `THE RAW RECORD` · `The session` · `Toward label` · `Trials` · `Versus claim` · `Where` · `Widely-spaced pairs` · `Work` · `You picked` · `You said` · `Your gap` · `Your rating` · `bracketed` · `caught` · `counted` · `far apart` · `fictional` · `guessed` · `hide` · `in band` · `not earned` · `set aside` · `show` · `too few to say` · `true` · `—`
 
-> Brier score ${brier.toFixed(3)} over ${n} answers — always saying 50% on a two-way choice scores ${chance.toFixed(2)}. Lower is better, and it only means something next to the distance from the line above.
+> Brier score ${brier.toFixed(3)} over ${n} answers — always saying 50% on a two-way choice scores ${chance.toFixed(2)}. Lower is better, but it only means something read against the chart above: the dashed diagonal is perfect calibration, and the score alone cannot tell you which side of it you sat on.
 
-  *As rendered:* “Brier score 0.287 over 15 answers — always saying 50% on a two-way choice scores 0.25. Lower is better, and it only means something next to the distance from the line above.”
+  *As rendered:* “Brier score 0.287 over 15 answers — always saying 50% on a two-way choice scores 0.25. Lower is better, but it only means something read against the chart above: the dashed diagonal is perfect calibration, and the score alone cannot tell you which side of it you sat on.”
 
 > Controls · rated twice, labelled neither time
 

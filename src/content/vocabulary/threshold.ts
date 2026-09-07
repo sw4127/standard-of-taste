@@ -87,20 +87,31 @@ export function whatGetsPast(say: ThresholdSay): string {
      * built on almost nothing. `wide` comes from `isWideBand`, the one rule both
      * copy layers ask.
      */
-    if (say.wide) {
-      /**
-       * PRECISE ABOUT WHAT IS WIDE. An earlier draft said "there is not enough
-       * here to tell you what a render would get away with", which contradicts
-       * the screen: a wide band can still sit on a session the fitter DID score,
-       * and `thresholdLine` prints that point with its interval two lines up.
-       * The band is the thing that failed to narrow, so the band is what this
-       * sentence talks about.
-       */
-      return (
-        `The range this session bracketed covers most of what the ladder can ask, so it does not pin down ` +
-        `where that starts for you.`
-      );
-    }
+    /*
+     * THE WIDE BRANCH IS GONE, AND IT WAS DEAD (E18/S18, PM ruling RT-S2 a).
+     *
+     * It returned a sentence for a wide band, and a docblock justified keeping
+     * it: "the combined view shows these sentences with no bandLine beside
+     * them, so the refusal has to be spoken rather than assumed." That caller
+     * does not exist. `creatorLines` is the only one, and it drops the
+     * consequence sentence entirely when the band is wide -- so the branch was
+     * unreachable, and the comment explaining why it was kept described a
+     * relationship that had gone.
+     *
+     * Found by a census of templates no fixture renders (E18/S17), which listed
+     * it as possibly dead rather than deleting it on a guess. Checked, then
+     * removed.
+     *
+     * IT RETURNS EMPTY RATHER THAN FALLING THROUGH, and that is the whole care
+     * in this change. Deleting the branch outright would have let a wide band
+     * reach the two-sided sentence below -- "Damage gentler than 100 cents
+     * slipped past you" on a session that bracketed seven rungs of eleven,
+     * which is the exact false confidence the branch existed to prevent.
+     * Silence is what `creatorLines` already does with a wide band, and an
+     * empty string is filtered there, so this states the invariant instead of
+     * relying on every future caller knowing it.
+     */
+    if (say.wide) return "";
     return (
       `Damage gentler than ${quantity(heardAt, unit)} slipped past you on these clips. ` +
       `That is the margin a render can wander inside while still sounding clean to you.`
@@ -151,9 +162,10 @@ export function whatGetsPast(say: ThresholdSay): string {
  * is the vocabulary — what the flaw IS in the reader's own work — which is
  * exactly what they came for and is true regardless of how the band came out.
  *
- * `whatGetsPast` keeps its wide branch because the combined view (E8/S8) shows
- * these sentences with no `bandLine` beside them, and there the refusal has to
- * be spoken rather than assumed.
+ * `whatGetsPast` HAD a wide branch on the same reasoning -- that the combined
+ * view shows these sentences with no `bandLine` beside them. It was removed in
+ * E18/S18: this function is the only caller, it drops the sentence on a wide
+ * band, and so the branch could not be reached from anywhere.
  */
 export function creatorLines(say: ThresholdSay): string[] {
   const lines = say.wide ? [flawInAGeneration(say.family)] : [flawInAGeneration(say.family), whatGetsPast(say)];

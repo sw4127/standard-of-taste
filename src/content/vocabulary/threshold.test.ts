@@ -257,8 +257,17 @@ describe("whatGetsPast — the three band shapes, directly", () => {
     const narrow = whatGetsPast({ ...base, wide: false });
     const wide = whatGetsPast({ ...base, wide: true });
     expect(narrow).toContain("gentler than 25 cents");
+    /*
+     * A WIDE BAND NOW RETURNS NOTHING (E18/S18, PM ruling RT-S2 a). It used to
+     * return a sentence saying the band did not pin anything down, and a census
+     * of unrendered templates showed that sentence was unreachable: the only
+     * caller drops this line entirely when the band is wide. What matters is
+     * that a wide band NEVER produces the two-sided claim -- "gentler than 25
+     * cents" on a session that bracketed most of the ladder -- and that is what
+     * an empty string guarantees for every future caller, not just the one.
+     */
+    expect(wide).toBe("");
     expect(wide).not.toContain("25 cents");
-    expect(wide).toContain("does not pin down");
   });
 
   it("has a symptom line for every family the gym can run", () => {

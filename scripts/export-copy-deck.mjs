@@ -63,6 +63,9 @@ const { strings } = JSON.parse(match[1]);
 const SECTIONS = [
   {
     key: "threshold",
+    alongside:
+      "`creatorLines` emits the symptom line, then the consequence line. On a wide band it emits " +
+      "the symptom line ALONE — the consequence is dropped rather than hedged.",
     title: "Threshold result — “WHAT THIS MEANS IN A RENDER”",
     where:
       "Renders on `/threshold/[slug]/result` and at the end of a Gym session, in a bordered panel " +
@@ -81,6 +84,9 @@ const SECTIONS = [
   },
   {
     key: "delicacy",
+    alongside:
+      "`creatorLines` emits the naming line, then the per-family refusal where one applies. On a " +
+      "session that caught nothing it emits the refusal ALONE, so that sentence carries the screen.",
     title: "Delicacy result — “WHAT THIS MEANS IN YOUR WORK”",
     where:
       "Renders on `/delicacy/result` and in the flow's reveal, between the flaw line it interprets " +
@@ -99,6 +105,10 @@ const SECTIONS = [
   },
   {
     key: "bias",
+    alongside:
+      "`creatorLines` emits `CUE_IN_YOUR_WORK` — which names the cues this test could not show — " +
+      "and then the verdict-branched boundary, which refers back to it as \"the cues above\". The " +
+      "two always render together, in that order.",
     title: "Prestige result — “WHAT THIS MEANS IN YOUR WORK”",
     where: "Renders on `/bias/result` and in the flow's debrief, under the verdict and above the share card.",
     already:
@@ -115,6 +125,11 @@ const SECTIONS = [
   },
   {
     key: "spread",
+    alongside:
+      "`spreadLines` emits, in this order: what was set aside; then, only if a reading was " +
+      "produced, the two figures and the direction; then `SPREAD_BOUNDARY`, every time. The " +
+      "boundary is always the last thing a reader sees, so anything it already says does not need " +
+      "saying above it.",
     title: "The Ranking Test — “WHERE YOUR GAPS FELL”",
     where:
       "The whole reading on `/spread`, below the two figures. There is no share page for this " +
@@ -144,6 +159,9 @@ const SECTIONS = [
   },
   {
     key: "arc",
+    alongside:
+      "`arcLines` emits the reading, then — where the sitting count supports it — the pooled " +
+      "sentence about what coming back buys. `ARC_DEVICE_NOTE` sits under both.",
     title: "The retest arc — “DID YOUR EAR MOVE”",
     where:
       "Renders under a result when this device holds an EARLIER sitting of the same instrument, " +
@@ -177,6 +195,10 @@ const SECTIONS = [
   },
   {
     key: "comparison",
+    alongside:
+      "`comparisonLines` emits the degrees sentence, then the stability sentence — each replaced " +
+      "by its own refusal where the evidence floor is not met — then `COMPARISON_BOUNDARY`, every " +
+      "time. The critic-scale lines and the our-scale line render beside them as a reference panel.",
     title: "Comparison — “DEGREES OF PRAISE”",
     where:
       "Renders under the Prestige result, on both the flow's debrief and the share page. It is " +
@@ -206,6 +228,10 @@ const SECTIONS = [
   },
   {
     key: "apparatus",
+    alongside:
+      "`apparatusLines` emits one entry per borrowed standard, then the citation-strength line, " +
+      "then the degrees-convergence line where it applies. They sit inside `/method`, beneath the " +
+      "page prose that describes the instruments themselves.",
     title: "The borrowed apparatus — WHERE THE RULERS CAME FROM",
     where:
       "Renders on `/method`, as the section explaining which published standards this product's " +
@@ -229,6 +255,9 @@ const SECTIONS = [
   },
   {
     key: "across",
+    alongside:
+      "`acrossLines` emits the dossier, then the replication, then the coverage roster. Each is " +
+      "present only when it has something to say, so any of them may be the only line on screen.",
     title: "Combined view — “ACROSS YOUR SESSIONS”",
     where:
       "Renders on all three result screens, but ONLY when two or more instruments have been run on this " +
@@ -245,6 +274,14 @@ const SECTIONS = [
   },
   {
     key: "expert",
+    alongside:
+      "The panel emits its blurb, then a section per instrument. The Brier sentence renders " +
+      "directly beneath the calibration chart it refers to.",
+    nonText:
+      "An SVG CALIBRATION CHART renders immediately above the Brier sentence: claimed confidence " +
+      "on the x axis, delivered accuracy on the y, with a DASHED DIAGONAL for perfect " +
+      "calibration. \"The line above\" is that diagonal, and a reader of this deck cannot see it. " +
+      "Every result surface also carries tables of numbers this deck does not reproduce.",
     title: "The expert panel — “THE RAW RECORD”",
     where:
       "A collapsed panel under every result that this device stored, open only when the result on screen is the " +
@@ -313,6 +350,33 @@ for (const [index, section] of SECTIONS.entries()) {
   lines.push("");
   lines.push(`**This layer's job.** ${section.job}`);
   lines.push("");
+  /*
+   * WHAT ELSE IS ON SCREEN, AND WHAT THE DECK CANNOT SHOW (E18/S18).
+   *
+   * Cowork's return: three of its twenty-four edits existed only because it had
+   * read the assembly functions and found sentences repeating each other in one
+   * block. A writer with the deck alone could not have caught any of them, and
+   * it called this the highest-value thing to add.
+   *
+   * IT ALSO SAID I WAS SCOPING IT TOO LARGE, and it was right. This needs no
+   * general "renders alongside" system: the assemblers already return the block
+   * as an ordered array, so the ORDER is the adjacency and one line per surface
+   * carries it.
+   *
+   * THE NON-TEXT LINE IS A DIFFERENT DEFECT AND NEEDS A DIFFERENT FIX. A deck
+   * that enumerates strings will never contain an SVG however good the
+   * adjacency data becomes, which is why the expert panel's Brier sentence
+   * referred to "the line above" and no reader of the deck could tell what that
+   * was. Hand-written, changed rarely, and the only honest way to carry it.
+   */
+  if (section.alongside) {
+    lines.push(`**What renders with it, in order.** ${section.alongside}`);
+    lines.push("");
+  }
+  if (section.nonText) {
+    lines.push(`**Not text, and not in this deck.** ${section.nonText}`);
+    lines.push("");
+  }
   lines.push("**Rules this copy must keep:**");
   lines.push("");
   for (const rule of section.rules) lines.push(`- ${rule}`);

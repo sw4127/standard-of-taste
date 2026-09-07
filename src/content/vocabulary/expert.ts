@@ -171,12 +171,26 @@ export const EXPERT_NOTES = {
     "music you have now been told about.",
 } as const;
 
-/** The Brier line, which needs both numbers and therefore cannot be a constant. */
+/**
+ * The Brier line, which needs both numbers and therefore cannot be a constant.
+ *
+ * COWORK REFUSED THIS ID IN BATCH 1 AND WAS RIGHT TO (E18/S18). It said "the
+ * distance from the line above" and nothing in the brief said what that line
+ * was, so rewriting around it meant inventing a referent. The referent is real
+ * — the dashed diagonal in the calibration chart that renders directly above —
+ * and the deck simply could not carry an SVG. Once the surface declared its
+ * non-text context, Cowork wrote this and named the diagonal.
+ *
+ * The closing clause is a LIMIT rather than a finding, which is this surface's
+ * rule, and it matches a decision already in the panel: the calibration payload
+ * deliberately withholds the overconfident/underconfident label.
+ */
 export function brierNote(brier: number, n: number, chance: number): string {
   return (
     `Brier score ${brier.toFixed(3)} over ${n} answers — always saying 50% on a two-way choice ` +
-    `scores ${chance.toFixed(2)}. Lower is better, and it only means something next to the ` +
-    `distance from the line above.`
+    `scores ${chance.toFixed(2)}. Lower is better, but it only means something read against the ` +
+    `chart above: the dashed diagonal is perfect calibration, and the score alone cannot tell you ` +
+    `which side of it you sat on.`
   );
 }
 

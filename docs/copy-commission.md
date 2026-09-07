@@ -8,7 +8,7 @@ This is the brief. The sentences themselves are in `docs/copy-deck.md`, which is
 
 Rewrite the sentences a small web product shows its users. They were drafted by the engineer who built it, who is the weaker writer of the two tools on this project; that is the entire reason this document exists. **203 of 236 sentences are open to rewriting.** The rest are locked, for reasons given below that are about measurement rather than about taste.
 
-You have no access to the repository or to a running copy of the product, so everything you need is here. Where that is not true, say so — a brief that assumes knowledge the writer does not have is a defective brief.
+**Everything about the sentences is here. What this deck cannot carry is listed per surface.** That is a smaller promise than the one this brief used to make, and it is the true one: an exporter that enumerates strings will never contain a chart, a table or a layout, however good its adjacency data gets. Each surface names what renders alongside its sentences, in order, and names the non-text a reader sees that you cannot. Where that still leaves you guessing, say so — a brief that assumes knowledge the writer does not have is a defective brief, and this one has been wrong once already.
 
 ## What the product is
 
