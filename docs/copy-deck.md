@@ -251,7 +251,7 @@ Every sentence the vocabulary layer can render, enumerated from the same fixture
 - An arc compares one person to themselves. That is the only comparison this product may make: no cohort, no percentile, and no promise that practice will work (N3).
 - It says where the memory lives. This is the strongest claim to remembering anywhere in the product, and it is one browser's localStorage.
 
-**13 sentences to review** — 13 concrete variants, 13 reachable renderings. Braces mark values the engine fills in; leave them as slots.
+**14 sentences to review** — 14 concrete variants, 14 reachable renderings. Braces mark values the engine fills in; leave them as slots.
 
 `VOC-RETEST-ARC-01` · OPEN
 > Across your pitch drift sittings, it now takes a larger flaw to reach you than it did — a change of about 11x. This ladder cannot distinguish anything under {n}.5x from ordinary run-to-run wobble, so a move this size is the instrument speaking rather than the dice.
@@ -274,38 +274,43 @@ Every sentence the vocabulary layer can render, enumerated from the same fixture
   *As rendered:* “Across your pitch drift sittings, you now catch a smaller flaw than you did. One sitting ran past the end of what this ladder can render, so the direction holds but the size does not — all that can be said is that the move cleared 3.5x, the smallest change this machine can tell from noise.”
 
 `VOC-RETEST-ARC-05` · OPEN
-> Nobody has measured how much this machine's numbers wander between sittings, so there is no honest line between a change and a coin flip here. Until there is, it says nothing.
+> Across your timing smear sittings, you now catch a smaller flaw than you did — a change of about {n}.4x. This ladder cannot distinguish anything under {n}.5x from ordinary run-to-run wobble, so a move this size is the instrument speaking rather than the dice.
+
+  *As rendered:* “Across your timing smear sittings, you now catch a smaller flaw than you did — a change of about 7.4x. This ladder cannot distinguish anything under 2.5x from ordinary run-to-run wobble, so a move this size is the instrument speaking rather than the dice.”
 
 `VOC-RETEST-ARC-06` · OPEN
-> One sitting cannot say whether your ear moved — there is nothing to compare it against. A second one in this browser is what makes that sentence possible at all.
+> Nobody has measured how much this machine's numbers wander between sittings, so there is no honest line between a change and a coin flip here. Until there is, it says nothing.
 
 `VOC-RETEST-ARC-07` · OPEN
+> One sitting cannot say whether your ear moved — there is nothing to compare it against. A second one in this browser is what makes that sentence possible at all.
+
+`VOC-RETEST-ARC-08` · OPEN
 > The label moved you +{n}% before and +{n}% since. That gap is inside the {n} points this test wanders by on its own, so it is not a change anybody could stand behind — the same person, retested, moves this much without anything about them changing.
 
   *As rendered:* “The label moved you +20% before and +15% since. That gap is inside the 8 points this test wanders by on its own, so it is not a change anybody could stand behind — the same person, retested, moves this much without anything about them changing.”
 
-`VOC-RETEST-ARC-08` · OPEN
+`VOC-RETEST-ARC-09` · OPEN
 > The label moved you +{n}% before and {n}% since — {n} points closer to zero, where zero means the name changed nothing. That is more than the {n} points this test wanders by on its own, so a name is doing less to what you hear than it was.
 
   *As rendered:* “The label moved you +20% before and 0% since — 20 points closer to zero, where zero means the name changed nothing. That is more than the 8 points this test wanders by on its own, so a name is doing less to what you hear than it was.”
 
-`VOC-RETEST-ARC-09` · OPEN
+`VOC-RETEST-ARC-10` · OPEN
 > The label moved you {n}% before and +{n}% since — {n} points further from zero, and more than the {n} points this test wanders by on its own. A name is doing more to what you hear than it was. Both directions count: marking a labelled clip down is still the name deciding, not your ears.
 
   *As rendered:* “The label moved you 0% before and +20% since — 20 points further from zero, and more than the 8 points this test wanders by on its own. A name is doing more to what you hear than it was. Both directions count: marking a labelled clip down is still the name deciding, not your ears.”
 
-`VOC-RETEST-ARC-10` · OPEN
+`VOC-RETEST-ARC-11` · OPEN
 > These trials are too short to show change over time. Your score would have to move by six of the fifteen pairs — or four of a single flaw's five — before it meant anything, so this machine reports where you are and leaves the question of movement to the threshold ladders.
 
-`VOC-RETEST-ARC-11` · OPEN
+`VOC-RETEST-ARC-12` · OPEN
 > These two compression sessions ran on different recordings, so they are not comparable. A fixed bitrate does up to twice as much damage to one recording as to another, which means the difference between these two sittings would be a fact about the music rather than about you.
 
-`VOC-RETEST-ARC-12` · OPEN
+`VOC-RETEST-ARC-13` · OPEN
 > This rests on {n} sittings — {n} before and {n} since. That is what pulled the line above down from {n}.5x to {n}.5x: the wobble of an average falls as the square root of how many sittings are in it, so each time you come back, a smaller real change becomes visible.
 
   *As rendered:* “This rests on 4 sittings — 2 before and 2 since. That is what pulled the line above down from 3.5x to 2.5x: the wobble of an average falls as the square root of how many sittings are in it, so each time you come back, a smaller real change becomes visible.”
 
-`VOC-RETEST-ARC-13` · OPEN
+`VOC-RETEST-ARC-14` · OPEN
 > Your pitch drift sittings are {n}.9x apart, which this ladder cannot tell from its own noise. It would take about {n}.5x before a change here meant anything. That is not a report that you stood still — it is the instrument saying a move this small is beneath what it can see.
 
   *As rendered:* “Your pitch drift sittings are 1.9x apart, which this ladder cannot tell from its own noise. It would take about 3.5x before a change here meant anything. That is not a report that you stood still — it is the instrument saying a move this small is beneath what it can see.”
@@ -459,7 +464,7 @@ Every sentence the vocabulary layer can render, enumerated from the same fixture
 
 ---
 
-**159 concrete sentences across 7 surfaces.**
+**160 concrete sentences across 7 surfaces.**
 
 Anything rewritten here must still pass `src/content/voice.test.ts`, which screens five named hazards — motive attribution, person-verdicts, beige chrome, fabricated norms, unmeasured audibility claims. A green run there does **not** mean the prose is good; it means no named hazard is present. Judging whether it is good is the point of this document.
 
@@ -1865,5 +1870,5 @@ What happened next is the part that is harder to read, and this reading is mine 
 
 ---
 
-**235 sentences, each with an id.** Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.
+**236 sentences, each with an id.** Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.
 

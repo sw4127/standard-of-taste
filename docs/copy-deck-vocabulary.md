@@ -196,7 +196,7 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 - An arc compares one person to themselves. That is the only comparison this product may make: no cohort, no percentile, and no promise that practice will work (N3).
 - It says where the memory lives. This is the strongest claim to remembering anywhere in the product, and it is one browser's localStorage.
 
-**13 sentences to review** — 13 concrete variants, 13 reachable renderings. Braces mark values the engine fills in; leave them as slots.
+**14 sentences to review** — 14 concrete variants, 14 reachable renderings. Braces mark values the engine fills in; leave them as slots.
 
 > Across your pitch drift sittings, it now takes a larger flaw to reach you than it did — a change of about 11x. This ladder cannot distinguish anything under {n}.5x from ordinary run-to-run wobble, so a move this size is the instrument speaking rather than the dice.
 
@@ -213,6 +213,10 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 > Across your pitch drift sittings, you now catch a smaller flaw than you did. One sitting ran past the end of what this ladder can render, so the direction holds but the size does not — all that can be said is that the move cleared {n}.5x, the smallest change this machine can tell from noise.
 
   *As rendered:* “Across your pitch drift sittings, you now catch a smaller flaw than you did. One sitting ran past the end of what this ladder can render, so the direction holds but the size does not — all that can be said is that the move cleared 3.5x, the smallest change this machine can tell from noise.”
+
+> Across your timing smear sittings, you now catch a smaller flaw than you did — a change of about {n}.4x. This ladder cannot distinguish anything under {n}.5x from ordinary run-to-run wobble, so a move this size is the instrument speaking rather than the dice.
+
+  *As rendered:* “Across your timing smear sittings, you now catch a smaller flaw than you did — a change of about 7.4x. This ladder cannot distinguish anything under 2.5x from ordinary run-to-run wobble, so a move this size is the instrument speaking rather than the dice.”
 
 > Nobody has measured how much this machine's numbers wander between sittings, so there is no honest line between a change and a coin flip here. Until there is, it says nothing.
 
@@ -367,6 +371,6 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 ---
 
-**159 concrete sentences across 7 surfaces.**
+**160 concrete sentences across 7 surfaces.**
 
 Anything rewritten here must still pass `src/content/voice.test.ts`, which screens five named hazards — motive attribution, person-verdicts, beige chrome, fabricated norms, unmeasured audibility claims. A green run there does **not** mean the prose is good; it means no named hazard is present. Judging whether it is good is the point of this document.

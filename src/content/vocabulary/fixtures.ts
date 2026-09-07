@@ -181,6 +181,18 @@ export function arcClaims(): Record<string, Claim<ArcReading>> {
      */
     "threshold-closer": thresholdArc(pair(sharpBefore, sharpAfter)),
     /*
+     * A SECOND FLAW FAMILY, BECAUSE THE DECK WAS SHOWING ONE (E18/S15, PM
+     * ruling RT-R6 a). Every arc rendering in the copy deck said "pitch drift"
+     * -- eight of eight -- so a writer reviewing this surface never saw what
+     * the other two families render as, while the deck implied it was the full
+     * set. It also made `${label}` invisible to anything that infers slots by
+     * diffing renderings, which is why the deck printed a family name as
+     * though it were a literal a writer could rewrite.
+     */
+    "threshold-closer-timing": thresholdArc(
+      pair(arcSession("timing-smear", 0.65, 7919), arcSession("timing-smear", 0.35, 15838)),
+    ),
+    /*
      * FOUR SITTINGS, so the pooled sentence is reached (E14/S6). Without a
      * fixture at this length the only sentence describing what coming back buys
      * would never be rendered by anything — unvoiced, unread and unchecked,
