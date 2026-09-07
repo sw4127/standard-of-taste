@@ -27,14 +27,25 @@ const TAG = "` · ";
 
 const deck = readFileSync("docs/copy-deck.md", "utf8");
 
-/** Every id tag in the assembled deck, with its state. */
+/**
+ * Every id tag in the assembled deck, with its state.
+ *
+ * REPEATS ARE NOT SENTENCES (E19/S9). The deck mints one id per TEMPLATE and
+ * shows the same string again where it renders at another branch, marked as a
+ * further rendering. Counting those lines told the writer there were 234
+ * sentences when 223 are editable -- the same over-count the ids themselves had
+ * just been fixed for, surviving one level up in the document that ESTIMATES
+ * THE WORK. A brief that oversells the size of a batch is a brief that gets a
+ * shallower pass.
+ */
 const tags = deck
   .split(NL)
   .filter((line) => line.startsWith("`") && line.indexOf(TAG) !== -1)
   .map((line) => ({
     id: line.slice(1, line.indexOf(TAG)),
     state: line.slice(line.indexOf(TAG) + TAG.length).trim(),
-  }));
+  }))
+  .filter((tag) => !tag.state.startsWith("another rendering"));
 
 const countOf = (prefix, state) =>
   tags.filter((t) => t.id.startsWith(prefix) && (state === undefined || t.state === state)).length;

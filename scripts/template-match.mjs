@@ -31,7 +31,7 @@
  * one level of backslash escaping. Regexes appear only where they are built
  * from escaped literal text at run time.
  */
-import { readdirSync, readFileSync } from "node:fs";
+import { readdirSync, readFileSync, statSync } from "node:fs";
 
 const BACKTICK = String.fromCharCode(96);
 const BACKSLASH = String.fromCharCode(92);
@@ -193,10 +193,33 @@ export function chainsIn(source) {
 }
 
 /** Every chain across every vocabulary module, with the file it came from. */
-export function allChains() {
+export function allChains(files = moduleFiles()) {
   const out = [];
-  for (const file of moduleFiles()) {
+  for (const file of files) {
     for (const chain of chainsIn(readFileSync(file, "utf8"))) out.push({ file, ...chain });
+  }
+  return out;
+}
+
+/**
+ * EVERY COPY MODULE, NOT JUST THE VOCABULARY LAYER (E19/S9).
+ *
+ * `moduleFiles()` is deliberately narrow: it is the roster the vocabulary deck
+ * and the unrendered-template census work from, and widening it would change
+ * what those two report. The INSTRUMENT deck draws on a different set — the
+ * delicacy, bias, landing and learn modules — and its sentences could not be
+ * matched to a template until this existed.
+ *
+ * DERIVED BY WALKING THE DIRECTORY, never typed. A copy module added tomorrow
+ * is scanned tomorrow; that is the whole reason the census caught two modules
+ * nobody had listed.
+ */
+export function contentFiles(dir = "src/content") {
+  const out = [];
+  for (const name of readdirSync(dir)) {
+    const path = dir + "/" + name;
+    if (statSync(path).isDirectory()) out.push(...contentFiles(path));
+    else if (name.endsWith(".ts") && !name.endsWith(".test.ts") && name !== "fixtures.ts") out.push(path);
   }
   return out;
 }

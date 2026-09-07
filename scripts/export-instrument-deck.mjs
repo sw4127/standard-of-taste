@@ -256,9 +256,23 @@ w("- Zero is a real outcome and must not read as a failure or an error.");
 w("- No claim about the person (D1); no percentile or cohort (N3).");
 w("- It has to make sense with no context at all, because a tab title arrives with none.");
 w();
-w("**Every reachable shape:**");
+/*
+ * THE TEMPLATE IS LISTED BEFORE ITS RENDERINGS (E19/S9), and it was not until
+ * a guard asked. Every rendering here is under forty characters -- "-31% toward
+ * the labels" -- so the assembler treated none of them as reviewable and this
+ * section carried NO editable id at all. The string that shows up in a shared
+ * link preview, a bookmark and a screen reader was the one string in the deck a
+ * writer could not return an edit for.
+ */
+w("**The sentence** — the sign and the number come from the engine:");
 w();
 w("```");
+w("<signed percentage> toward the labels — the whole title, as a bookmark shows it");
+w("```");
+w();
+w("**Every reachable shape** (renderings of the sentence above, not separate strings):");
+w();
+w("```renders");
 for (const [p, s] of d.titleFragments) w(`pct = ${String(p).padStart(3)} → ${s}`);
 w("```");
 w();
@@ -291,13 +305,25 @@ w("- The denominator is the pairs CAUGHT, not all pairs — the sentence must no
 w("- Zero must read as a fact, not a rebuke.");
 w("- The number keeps its own styling in the flow, so the prefix and the suffix are separate strings and must work with a figure set between them.");
 w();
-w(`**Prefix (styled number follows it):** \`${d.flawPrefix}\``);
+/*
+ * THE PREFIX AND THE SUFFIX ARE THE EDITABLE UNITS, so they go in a fence of
+ * their own and each takes an id (E19/S9). They used to be bold labels, which
+ * the assembler does not treat as reviewable -- so the only ids in this section
+ * belonged to the ASSEMBLED demonstrations below, three renderings of one
+ * sentence. Tagging that block as a demonstration without this change removed
+ * the flaw line from the deck altogether, which is worse than listing it three
+ * times: a writer cannot return an edit for a sentence that has no id.
+ */
+w("**The two editable strings** — a styled figure is set between them:");
 w();
-w(`**Suffix:** ${d.flawLabels.map(([k, v]) => `${k} → “${v}”`).join(" · ")}`);
+w("```");
+w(`prefix → ${d.flawPrefix}`);
+for (const [k, v] of d.flawLabels) w(`suffix, ${k} → ${v}`);
+w("```");
 w();
 w("**Assembled, at every interesting count:**");
 w();
-w("```");
+w("```renders");
 for (const [a, b, s] of d.flawLines) w(`${a} of ${b} → ${s}`);
 w("```");
 w();

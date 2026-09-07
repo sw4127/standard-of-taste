@@ -748,9 +748,16 @@ Overshadowed by the quartet he wrote next, whose slow movement became a Broadway
 - No claim about the person (D1); no percentile or cohort (N3).
 - It has to make sense with no context at all, because a tab title arrives with none.
 
-**Every reachable shape:**
+**The sentence** — the sign and the number come from the engine:
 
 ```
+`INS-RESULTTITLEFRAGMENT-01` · OPEN
+<signed percentage> toward the labels — the whole title, as a bookmark shows it
+```
+
+**Every reachable shape** (renderings of the sentence above, not separate strings):
+
+```renders
 pct = -31 → -31% toward the labels
 pct =  -1 → -1% toward the labels
 pct =   0 → 0% toward the labels
@@ -775,20 +782,21 @@ pct =  31 → +31% toward the labels
 - Zero must read as a fact, not a rebuke.
 - The number keeps its own styling in the flow, so the prefix and the suffix are separate strings and must work with a figure set between them.
 
-**Prefix (styled number follows it):** `And on the ones you caught, you named the flaw`
-
-**Suffix:** 1 → “time” · 2 → “times”
-
-**Assembled, at every interesting count:**
+**The two editable strings** — a styled figure is set between them:
 
 ```
 `INS-FLAW-LINE-01` · OPEN
+prefix → And on the ones you caught, you named the flaw
+suffix, 1 → time
+suffix, 2 → times
+```
+
+**Assembled, at every interesting count:**
+
+```renders
 1 of 1 → And on the ones you caught, you named the flaw 1 of 1 time.
-`INS-FLAW-LINE-02` · OPEN
 3 of 5 → And on the ones you caught, you named the flaw 3 of 5 times.
-`INS-FLAW-LINE-03` · OPEN
 5 of 8 → And on the ones you caught, you named the flaw 5 of 8 times.
-`INS-FLAW-LINE-04` · OPEN
 0 of 4 → And on the ones you caught, you named the flaw 0 of 4 times.
 ```
 
@@ -1005,64 +1013,64 @@ A two-way choice is generous: guess every pair blind and the long-run average is
 ```
 
 ```
-`INS-DELICACY-DETECTION-05` · PASSED
+`INS-DELICACY-DETECTION-03` · another rendering of the same template — edit it once, above
 13 of 15 — 13 of 15. Now subtract the guessing.
-`INS-DELICACY-DETECTION-06` · PASSED
+`INS-DELICACY-DETECTION-04` · another rendering of the same template — edit it once, above
 A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 13 — 5.5 beyond what that generosity covers, and past the 12 it takes to clear the coin at 95% confidence. Subtract the pairs luck would have handed you anyway and what remains, flaws actually detected rather than merely called, lands somewhere between 24% and 93%. That window is embarrassingly wide, and wide for an honest reason: 15 pairs is 15 pairs. But every value inside it sits above zero, and staying above zero is the one thing a coin cannot arrange.
 ```
 
 ```
-`INS-DELICACY-DETECTION-07` · PASSED
+`INS-DELICACY-DETECTION-03` · another rendering of the same template — edit it once, above
 11 of 15 — 11 of 15. Now subtract the guessing.
-`INS-DELICACY-DETECTION-08` · PASSED
+`INS-DELICACY-DETECTION-05` · PASSED
 A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 11 — 3.5 beyond what that generosity covers, and 3.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 78% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
 ```
 
 ```
-`INS-DELICACY-DETECTION-09` · PASSED
+`INS-DELICACY-DETECTION-03` · another rendering of the same template — edit it once, above
 8 of 15 — 8 of 15. Now subtract the guessing.
-`INS-DELICACY-DETECTION-10` · PASSED
+`INS-DELICACY-DETECTION-05` · another rendering of the same template — edit it once, above
 A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 8 — 0.5 beyond what that generosity covers, and 0.5 is not a margin anyone can defend. Subtract the pairs luck would have handed you anyway and the range that still fits your session runs from 0% to 50% detected, touching zero at the bottom. On 15 pairs it takes 12 to pull clear of the coin at 95% confidence. So the honest reading is not that you heard nothing — it is that a session this short cannot tell you apart from a lucky afternoon. A longer one can.
 ```
 
 ```
-`INS-DELICACY-DETECTION-11` · PASSED
+`INS-DELICACY-DETECTION-03` · another rendering of the same template — edit it once, above
 4 of 15 — 4 of 15. Now subtract the guessing.
-`INS-DELICACY-DETECTION-12` · PASSED
+`INS-DELICACY-DETECTION-06` · PASSED
 A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 4, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: the range that fits runs from 0% to 4% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
 ```
 
 ```
-`INS-DELICACY-DETECTION-13` · PASSED
+`INS-DELICACY-DETECTION-03` · another rendering of the same template — edit it once, above
 0 of 15 — 0 of 15. Now subtract the guessing.
-`INS-DELICACY-DETECTION-14` · PASSED
+`INS-DELICACY-DETECTION-06` · another rendering of the same template — edit it once, above
 A two-way choice is generous: guess every pair blind and the long-run average is 7.5 of 15, half the paper handed over before you hear anything. You returned 0, at or beneath what that generosity alone returns, so once the lucky guesses come out there is nothing left to credit: there is no range left to draw, it sits flat at 0% detected. Clearing the coin at 95% confidence would have taken 12 of 15. What these 15 pairs found is nothing that separates your ear from chance — which is a sentence about 15 pairs, and not yet a sentence about your ear.
 ```
 
 **The summary line, and the share line:**
 
 ```
-`INS-DELICACY-DETECTION-15` · PASSED
+`INS-DELICACY-DETECTION-07` · PASSED
 all: 15 of 15 originals — a coin flip averages 7.5
 ```
 
 ```
-`INS-DELICACY-DETECTION-16` · PASSED
+`INS-DELICACY-DETECTION-07` · another rendering of the same template — edit it once, above
 some: 10 of 15 originals — a coin flip averages 7.5
 ```
 
 ```
-`INS-DELICACY-DETECTION-17` · PASSED
+`INS-DELICACY-DETECTION-07` · another rendering of the same template — edit it once, above
 none: 0 of 15 originals — a coin flip averages 7.5
 ```
 
 ```
-`INS-DELICACY-DETECTION-18` · PASSED
+`INS-DELICACY-DETECTION-08` · PASSED
 share at 13/15: I called 13 of 15 originals in the Delicacy Trials — a coin flip averages 7.5. Think your ears are better?
 ```
 
 ```
-`INS-DELICACY-DETECTION-19` · PASSED
+`INS-DELICACY-DETECTION-08` · another rendering of the same template — edit it once, above
 share at 8/15: I called 8 of 15 originals in the Delicacy Trials — a coin flip averages 7.5. Think your ears are better?
 ```
 
@@ -1935,5 +1943,5 @@ What happened next is the part that is harder to read, and this reading is mine 
 
 ---
 
-**236 sentences, each with an id.** Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.
+**223 sentences, each with an id.** 11 further lines are additional RENDERINGS of sentences already listed — they carry the id they belong to and are not separate strings to edit. Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.
 

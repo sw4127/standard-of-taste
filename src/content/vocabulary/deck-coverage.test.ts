@@ -343,7 +343,24 @@ describe("the deck is commissionable", () => {
   const lines = deck.split(String.fromCharCode(10));
   const TAG = "` · ";
 
-  const tags = lines
+  /*
+   * A REPEATED ID IS NOW LEGAL, AND SAYING SO IS THE POINT (E19/S9).
+   *
+   * These tests were written when one id meant one LINE. The deck now mints one
+   * id per TEMPLATE: where the same sentence is shown again at another branch,
+   * the line carries the id it belongs to and is marked as a further rendering.
+   * That is a strengthening of the rule these tests exist for — one id, one
+   * editable string — not a violation of it, so the NEEDLE moves and the rule
+   * does not. Pasting the new shape in without deciding which of those it was
+   * is the trap this project has a standing note about.
+   *
+   * `tags` therefore means "lines that MINT an id". The repeats are checked
+   * separately, and both directions are enforced: a repeat must be marked, and
+   * a marked line must repeat an id that exists.
+   */
+  const REPEAT = "another rendering";
+
+  const tagged = lines
     .map((line, at) => ({ line, at }))
     .filter((row) => row.line.startsWith("`") && row.line.indexOf(TAG) !== -1)
     .map((row) => ({
@@ -352,14 +369,38 @@ describe("the deck is commissionable", () => {
       state: row.line.slice(row.line.indexOf(TAG) + TAG.length).trim(),
     }));
 
+  const repeats = tagged.filter((t) => t.state.startsWith(REPEAT));
+  const tags = tagged.filter((t) => !t.state.startsWith(REPEAT));
+
   it("found tags, so nothing below passes vacuously", () => {
     expect(tags.length).toBeGreaterThan(200);
   });
 
-  it("gives every id exactly once", () => {
+  it("mints every id exactly once", () => {
     const seen = tags.map((t) => t.id);
     const duplicates = seen.filter((id, at) => seen.indexOf(id) !== at);
-    expect([...new Set(duplicates)], "two sentences share an id, so a returned edit is ambiguous:").toEqual([]);
+    expect(
+      [...new Set(duplicates)],
+      "two DIFFERENT sentences share an id, so a returned edit is ambiguous:",
+    ).toEqual([]);
+  });
+
+  /**
+   * The other half of the same rule. A line reusing an id must say it is a
+   * further rendering — otherwise it reads as a second editable sentence, which
+   * is the defect — and the id it reuses must have been minted somewhere, or it
+   * points at nothing.
+   */
+  it("attaches every repeated id to a sentence that exists", () => {
+    const minted = new Set(tags.map((t) => t.id));
+    const orphans = repeats.filter((r) => !minted.has(r.id));
+    expect(orphans.map((r) => r.id), "these repeats name an id no sentence owns:").toEqual([]);
+    for (const repeat of repeats) {
+      expect(
+        repeat.state,
+        `${repeat.id} reuses an id without telling the writer not to edit it twice`,
+      ).toContain("edit it once");
+    }
   });
 
   it("uses only the four declared states", () => {
@@ -432,7 +473,16 @@ describe("the commission brief agrees with the deck", () => {
     .map((line) => ({
       id: line.slice(1, line.indexOf(TAG)),
       state: line.slice(line.indexOf(TAG) + TAG.length).trim(),
-    }));
+    }))
+    /*
+     * A FURTHER RENDERING IS NOT A SENTENCE (E19/S9). The deck mints one id per
+     * TEMPLATE and shows the same string again where it renders at another
+     * branch. Counting those made the brief claim a batch was 61 sentences when
+     * 50 are editable, and this guard -- whose whole job is to catch the brief
+     * disagreeing with the deck -- agreed with it, because both were counting
+     * the same lines twice. The RULE is unchanged; the needle now expresses it.
+     */
+    .filter((tag) => !tag.state.startsWith("another rendering"));
 
   it("found a brief and a deck to compare", () => {
     expect(tags.length).toBeGreaterThan(200);

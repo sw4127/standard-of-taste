@@ -36,6 +36,7 @@
  */
 import { execSync } from "node:child_process";
 import { writeFileSync } from "node:fs";
+import { allChains, contentFiles, matchesFor } from "./template-match.mjs";
 
 const NL = String.fromCharCode(10);
 
@@ -142,15 +143,77 @@ function lockOf(partCode, heading, sectionText) {
   return "OPEN";
 }
 
-function reviewable(line, insideFence) {
+/*
+ * A FENCE THE EXPORTER HAS TAGGED `renders` IS A DEMONSTRATION (E19/S9).
+ *
+ * Some fenced blocks hold copy somebody edits -- the /method page's own
+ * paragraphs. Others hold the same string printed once per branch, to show what
+ * it looks like at each. The second kind must mint no ids: its parts are
+ * already listed as editable strings above it, and giving the assembled line an
+ * id invites an edit that lands nowhere.
+ *
+ * TAGGED BY THE EXPORTER THAT KNOWS, rather than guessed at from the content.
+ * The guess was tried: treat every digit as a wildcard and call two lines the
+ * same. E18/S16 measured that and it was wrong in both directions. An untagged
+ * demonstration is caught by `deck-templates.test.ts` instead.
+ */
+function reviewable(line, fence) {
   const t = line.trim();
   if (t.length < 40) return false;
-  if (insideFence) return true;
+  if (fence === "renders") return false;
+  if (fence !== null) return true;
   return t.startsWith(">");
+}
+
+/*
+ * ONE ID PER TEMPLATE, NOT ONE PER RENDERING (E19/S9).
+ *
+ * WHAT WENT WRONG. The instrument deck shows the branches of a template one at
+ * a time -- "the band, at every branch a reader can reach" -- and this file
+ * minted a fresh id and an editable state for each LINE. So six renderings of
+ * `${band.nCorrect} of ${band.nTrials}. Now subtract the guessing.` arrived as
+ * six independently editable sentences. A writer rewrites it six times and the
+ * last edit silently overwrites the other five, which is the exact defect
+ * Cowork reported in the vocabulary deck and predicted would exist here.
+ *
+ * MATCHED AGAINST SOURCE TEMPLATES, NOT AGAINST RENDERED NUMBERS. The cheap
+ * version -- treat every digit as a wildcard and call two lines the same -- was
+ * tried in E18/S16 and was wrong in both directions: it split one template
+ * whenever a non-numeric slot varied, and it merged text that merely shared a
+ * shape. The extractor parses `${...}` out of the modules instead, and refuses
+ * when a line matches more than one chain, in which case the line keeps its own
+ * id rather than being guessed at.
+ */
+const CHAINS = allChains(contentFiles());
+
+/*
+ * THE DECK LABELS ITS OWN DEMONSTRATIONS, AND THE LABEL BREAKS THE MATCH.
+ * A line reads `share at 13/15: I called 13 of 15 originals...` -- the part
+ * before the colon is the exporter saying which branch this is, not product
+ * copy. Matching is tried on the whole line first and then on the line with a
+ * leading label removed; a wrong strip costs nothing, because a failed match
+ * just leaves the line with an id of its own.
+ */
+function withoutLabel(line) {
+  for (const sep of [" → ", ": "]) {
+    const at = line.indexOf(sep);
+    if (at > 0 && at < 34) return line.slice(at + sep.length);
+  }
+  return null;
+}
+
+function templateKey(line) {
+  for (const candidate of [line, withoutLabel(line)]) {
+    if (candidate === null) continue;
+    const hits = matchesFor(candidate, CHAINS);
+    if (hits.length === 1) return "chain:" + hits[0].display;
+  }
+  return null;
 }
 
 const out = [];
 let considered = 0;
+let collapsed = 0;
 const ids = [];
 
 /**
@@ -266,12 +329,17 @@ DECKS.forEach((deck, i) => {
   }
 
   const part = [];
-  let fenced = false;
+  /** Template -> the id already minted for it, within this part. */
+  const byTemplate = new Map();
+  /** null outside a fence, otherwise the fence's info string ("" when bare). */
+  let fenced = null;
   let slug = "X";
   let lock = "OPEN";
   let counter = 0;
   for (const line of generated.split(NL)) {
-    if (line.trim().startsWith("```")) fenced = !fenced;
+    if (line.trim().startsWith("```")) {
+      fenced = fenced === null ? line.trim().slice(3).trim() : null;
+    }
     // The per-deck file's own title; the part heading above replaces it.
     if (line.startsWith("# ")) continue;
     if (said.has(line.trim())) continue;
@@ -282,11 +350,24 @@ DECKS.forEach((deck, i) => {
       counter = 0;
     }
     if (reviewable(line, fenced)) {
-      considered += 1;
-      counter += 1;
-      const id = partCode + "-" + slug + "-" + String(counter).padStart(2, "0");
-      ids.push(id);
-      part.push("`" + id + "` · " + lock);
+      const key = templateKey(line.trim().replace(/^> /, ""));
+      const seen = key === null ? undefined : byTemplate.get(key);
+      if (seen === undefined) {
+        considered += 1;
+        counter += 1;
+        const id = partCode + "-" + slug + "-" + String(counter).padStart(2, "0");
+        if (key !== null) byTemplate.set(key, id);
+        ids.push(id);
+        part.push("`" + id + "` · " + lock);
+      } else {
+        /*
+         * A FURTHER RENDERING OF A SENTENCE ALREADY LISTED. It keeps the id it
+         * belongs to and is explicitly NOT a second editable string, because
+         * editing it twice means the second edit wins and nobody is told.
+         */
+        collapsed += 1;
+        part.push("`" + seen + "` · another rendering of the same template — edit it once, above");
+      }
     }
     // Demote the per-deck headings so the assembled document nests correctly.
     part.push(line.startsWith("#") ? "#" + line : line);
@@ -330,8 +411,12 @@ if (duplicates.length > 0) {
 }
 
 out.push(
-  "**" + considered + " sentences, each with an id.** Which surfaces have ever been through a " +
-    "writer is in `docs/copy-review-ledger.md`.",
+  "**" + considered + " sentences, each with an id.** " +
+    (collapsed > 0
+      ? collapsed + " further lines are additional RENDERINGS of sentences already listed — they " +
+        "carry the id they belong to and are not separate strings to edit. "
+      : "") +
+    "Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.",
 );
 out.push("");
 

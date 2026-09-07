@@ -193,9 +193,15 @@ Overshadowed by the quartet he wrote next, whose slow movement became a Broadway
 - No claim about the person (D1); no percentile or cohort (N3).
 - It has to make sense with no context at all, because a tab title arrives with none.
 
-**Every reachable shape:**
+**The sentence** — the sign and the number come from the engine:
 
 ```
+<signed percentage> toward the labels — the whole title, as a bookmark shows it
+```
+
+**Every reachable shape** (renderings of the sentence above, not separate strings):
+
+```renders
 pct = -31 → -31% toward the labels
 pct =  -1 → -1% toward the labels
 pct =   0 → 0% toward the labels
@@ -220,13 +226,17 @@ pct =  31 → +31% toward the labels
 - Zero must read as a fact, not a rebuke.
 - The number keeps its own styling in the flow, so the prefix and the suffix are separate strings and must work with a figure set between them.
 
-**Prefix (styled number follows it):** `And on the ones you caught, you named the flaw`
+**The two editable strings** — a styled figure is set between them:
 
-**Suffix:** 1 → “time” · 2 → “times”
+```
+prefix → And on the ones you caught, you named the flaw
+suffix, 1 → time
+suffix, 2 → times
+```
 
 **Assembled, at every interesting count:**
 
-```
+```renders
 1 of 1 → And on the ones you caught, you named the flaw 1 of 1 time.
 3 of 5 → And on the ones you caught, you named the flaw 3 of 5 times.
 5 of 8 → And on the ones you caught, you named the flaw 5 of 8 times.
