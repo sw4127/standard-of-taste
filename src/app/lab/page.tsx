@@ -400,8 +400,17 @@ export default function LabIndex() {
           <p className="mt-4 text-sm leading-relaxed text-neutral-300">
             <strong className="font-semibold text-white">What the last column is for.</strong>{" "}A
             rate without an interval is decoration, and an interval that does not contain the truth
-            as often as it claims is worse than none. Ninety-five per cent of these intervals should
-            contain the answer key, and that is what the column reports — measured, not asserted.
+            as often as it claims is worse than none. A 95% interval should contain the answer key
+            about 95 times in 100, and that column is the measurement of whether it does.
+          </p>
+          <p className="mt-3 text-sm leading-relaxed text-neutral-300">
+            <strong className="font-semibold text-white">Read it down the column, not across.</strong>{" "}
+            Coverage sits on 95 at the top and slips a point or two at the bottom, and that is the
+            most useful thing on this page. Each step&apos;s denominator is the step above it, so a
+            run that starts with {DEMO_ARRIVALS.toLocaleString()} arrivals has a few hundred left by
+            the debrief — and an interval built on a few hundred is doing worse than one built on
+            thousands, exactly where a funnel is most often quoted. That is the arithmetic reason
+            this panel is not built, shown rather than asserted.
           </p>
           <p className="mt-3 text-sm leading-relaxed text-muted">
             The same code is what would run the day traffic arrives; it is exercised on the real

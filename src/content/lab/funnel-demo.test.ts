@@ -12,7 +12,8 @@
  */
 import { describe, expect, it } from "vitest";
 import { FUNNEL_SPEC } from "./funnel-spec";
-import { DEMO_ARRIVALS, DEMO_REPLICATIONS, DEMO_STEPS, demoRecovery } from "./funnel-demo";
+import { simulateFunnel } from "@/analytics/funnel";
+import { DEMO_ARRIVALS, DEMO_REPLICATIONS, DEMO_SEED, DEMO_STEPS, demoRecovery } from "./funnel-demo";
 
 describe("the Lab's funnel demonstration", () => {
   it("runs on the specification's real events, not invented ones", () => {
@@ -49,9 +50,31 @@ describe("the Lab's funnel demonstration", () => {
    */
   it("covers the truth about as often as ninety-five per cent claims", () => {
     for (const row of demoRecovery()) {
-      expect(row.coverage, `${row.event} covered ${(row.coverage * 100).toFixed(1)}%`).toBeGreaterThan(0.9);
+      expect(row.coverage, `${row.event} covered ${(row.coverage * 100).toFixed(1)}%`).toBeGreaterThan(0.88);
       expect(row.coverage, `${row.event} covered ${(row.coverage * 100).toFixed(1)}%`).toBeLessThan(0.99);
     }
+  });
+
+  /**
+   * THE DEMONSTRATION MUST INCLUDE A THIN STEP, AND THIS WAS FOUND BY READING
+   * THE RENDERED PAGE (E19/S18).
+   *
+   * The unit tests exercised four steps; the page renders all eight, because
+   * the demo is bound to the published specification. Down eight steps the
+   * denominator falls from thousands to low hundreds, and interval coverage
+   * slips from 95 to about 92 — which the page's copy originally did not admit,
+   * claiming a flat ninety-five.
+   *
+   * That slip is the most useful thing in the table: it is the arithmetic
+   * reason the panel is not built, happening in front of the reader. So it is
+   * pinned. A demonstration whose every step had thousands of observations
+   * would be a demonstration of the easy case.
+   */
+  it("runs deep enough that the last step is thin, which is the point", () => {
+    const counts = simulateFunnel(DEMO_STEPS, DEMO_ARRIVALS, DEMO_SEED);
+    const last = counts[counts.length - 1];
+    expect(last, "the funnel no longer reaches a thin step").toBeLessThan(DEMO_ARRIVALS / 10);
+    expect(last, "the last step lost its denominator entirely").toBeGreaterThan(30);
   });
 
   it("states an arrivals count the page can print", () => {
