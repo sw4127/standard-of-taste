@@ -61,3 +61,73 @@ The hook is untracked (`.claude/` is not published) and wired in `.claude/settin
 which is gitignored. **It therefore protects this machine only.** A session on another machine has
 this paragraph and nothing else — which is the situation that produced the violation, so treat the
 paragraph as the weaker half.
+
+
+## Standing auto-advance (owner-approved 2026-09-07) — IN FORCE
+
+**Nothing above is amended away. What changes is who the loop reports to.**
+
+Autumn recruitment has started and the project is past its internal deadline. The owner has ruled
+that engineering **proceeds on its own recommendation** rather than stopping for a ruling between
+slices. Section 2's per-reply stop and section 3's grant-by-phrase are superseded **while this
+section says IN FORCE**.
+
+### What is removed
+
+The **round-trip**, and only the round-trip. A slice no longer ends by waiting.
+
+### What is NOT removed
+
+The seven-step loop still runs **per slice, in full**: north star · plan and alternative · build ·
+prove with a real run · three hostile red-team findings, FIXED · confession · north star. The owner's
+words: *"three red-team confession and north star were still needed for each slice, I just need you
+to do them internally."*
+
+**"Internally" is not "silently".** A discipline that leaves no trace is a discipline that decays,
+and this project has watched exactly that happen to a rule that lived only in prose. So the loop's
+artefacts move out of the chat and into **the commit message**, which is where the PM already
+reviews the work and which survives the session:
+
+```
+North-star: <one line — what advantage this slice serves, or that it serves none>
+Red-team: <finding, and what was done about it>
+Red-team: <finding, and what was done about it>
+Red-team: <finding, and what was done about it>
+Confession: <what is stubbed, unverified, assumed, or knowingly left broken>
+```
+
+`.githooks/commit-msg` **refuses a commit touching `src/` or `scripts/` without them**. The hook
+checks that they are present and non-trivial; it cannot check that they are honest, and nobody
+should imagine otherwise. Its value is that skipping the loop now takes a deliberate act rather than
+a lapse of attention — the same reason the latch exists.
+
+An emergency may skip it with `Loop: n/a — <reason>` in the message. That line is logged forever and
+is the first thing a reviewer will grep for.
+
+### What still stops the work
+
+Auto-advance is not a licence to decide everything. **Stop and ask** when:
+
+1. **A one-way door** — money, a deletion, anything published or irreversible, a data-schema choice.
+2. **A product or scope decision the code cannot settle** — what the product should DO, not how.
+3. **A red-team finding rated SHIP-RISK or worse that cannot be fixed inside its own slice.**
+4. **A premise behind an existing ruling turns out to be false.** This is not hypothetical: E19/S5
+   found that a state the owner had ruled on was near-unreachable, and the ruling had been made on
+   engineering's own incorrect description of it. Executing a ruling whose basis has collapsed is
+   worse than pausing.
+
+Everything else proceeds.
+
+### How this is revoked
+
+**Edit the word IN FORCE in this section's heading to SUSPENDED.** The machine guard reads this file
+for it, so the document is the switch rather than a description of one. Do not disable the hook
+instead: that would leave the rule and the enforcement disagreeing, which is the two-copies defect
+this repository keeps paying for.
+
+### Why the reply format changes too
+
+A reply that still recites the full ceremony has moved the cost from round-trips to reading. Slice
+replies now report: what shipped, the proof, and anything the owner must decide. The full loop is in
+the commit. The `== DECISIONS NEEDED ==` block still ends every reply that has something in it, and
+is omitted rather than padded when it does not.

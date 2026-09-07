@@ -1,0 +1,83 @@
+#!/bin/sh
+#
+# THE SEVEN-STEP LOOP, RECORDED WHERE IT SURVIVES (E19/S6, owner ruling 2026-09-07).
+#
+# The owner removed the per-slice stop because autumn recruitment started and the
+# project is past its internal deadline. The loop itself was NOT removed: the
+# ruling was that the red-team, the confession and the north star still run, just
+# internally. "Internally" is not "silently" — a discipline that leaves no trace
+# decays, and this repository has already watched that happen to a rule that
+# lived only in prose (docs/slice-protocol.md, machine-enforcement section).
+#
+# So the artefacts move into the commit message and this refuses one without
+# them. It checks PRESENCE, not honesty. Nobody should imagine otherwise: its
+# whole value is that skipping the loop now takes a deliberate act rather than a
+# lapse of attention.
+#
+# SCOPED TO COMMITS THAT TOUCH CODE. A documentation commit carrying a red-team
+# ceremony is filler, and filler teaches the reader to skip the block.
+#
+# THE ESCAPE HATCH IS LOGGED, WHICH IS THE POINT. "Loop: n/a — reason" passes.
+# A hook that cannot be satisfied gets bypassed with --no-verify, which CLAUDE.md
+# forbids without approval and which leaves no record at all. A visible hatch in
+# the permanent log beats an invisible bypass.
+set -e
+
+msg_file="$1"
+[ -f "$msg_file" ] || exit 0
+
+# Merges, reverts and fixups carry no slice of their own.
+head_line=$(sed -n '1p' "$msg_file")
+case "$head_line" in
+  Merge\ *|Revert\ *|fixup!\ *|squash!\ *) exit 0 ;;
+esac
+
+# Only code commits. The index is staged by the time commit-msg runs.
+if ! git diff --cached --name-only | grep -Eq '^(src|scripts)/'; then
+  exit 0
+fi
+
+if grep -q '^Loop: n/a' "$msg_file"; then
+  exit 0
+fi
+
+fail() {
+  echo "commit-msg: $1" >&2
+  echo "" >&2
+  echo "This commit touches src/ or scripts/, so it must carry the slice loop." >&2
+  echo "See docs/slice-protocol.md, 'Standing auto-advance'. Required trailers:" >&2
+  echo "" >&2
+  echo "  North-star: <what advantage this slice serves, or that it serves none>" >&2
+  echo "  Red-team: <finding, and what was done about it>   (three of these)" >&2
+  echo "  Red-team: ..." >&2
+  echo "  Red-team: ..." >&2
+  echo "  Confession: <stubbed, unverified, assumed, or knowingly left broken>" >&2
+  echo "" >&2
+  echo "An emergency may write 'Loop: n/a — <reason>' instead. It is logged forever." >&2
+  exit 1
+}
+
+# A trailer that is present but empty is worse than a missing one: it looks
+# discharged. Each must carry real words.
+short() {
+  awk -v key="$1" '
+    index($0, key) == 1 {
+      body = substr($0, length(key) + 1)
+      gsub(/^[ \t]+|[ \t]+$/, "", body)
+      if (length(body) < 12) bad = 1
+    }
+    END { exit bad ? 1 : 0 }
+  ' "$msg_file"
+}
+
+grep -q '^North-star:' "$msg_file" || fail "no North-star: line"
+short "North-star:" || fail "the North-star: line says almost nothing"
+
+count=$(grep -c '^Red-team:' "$msg_file" || true)
+[ "$count" -ge 3 ] || fail "found $count Red-team: lines, the loop asks for three"
+short "Red-team:" || fail "a Red-team: line says almost nothing"
+
+grep -q '^Confession:' "$msg_file" || fail "no Confession: line"
+short "Confession:" || fail "the Confession: line says almost nothing"
+
+exit 0

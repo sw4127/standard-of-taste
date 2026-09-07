@@ -80,6 +80,25 @@ Follow all 7 steps; the PM reviews the git diff after every task, and nothing is
 
 Red-team asks surface per `docs/redteam-protocol.md` (the `== DECISIONS NEEDED ==` block); asks outside the block are deemed not asked.
 
+### Standing auto-advance — the loop moved into the commit (owner-approved 2026-09-07)
+
+**Appended, nothing above is amended away.** Autumn recruitment has started and the project is past
+its internal deadline, so the owner has removed the per-slice STOP: engineering now proceeds on its
+own recommendation instead of waiting for a ruling between slices.
+
+**The seven-step loop still runs, per slice, in full.** The owner's ruling was that the three
+red-team findings, the confession and the north star are *"still needed for each slice, I just need
+you to do them internally"* — and internally is not silently. They are recorded in the **commit
+message** (`North-star:`, three `Red-team:`, `Confession:`), where the PM already reviews the work
+and where they survive the session. `.githooks/commit-msg` refuses a commit touching `src/` or
+`scripts/` without them.
+
+**Work still stops** for a one-way door, a product decision the code cannot settle, a SHIP-RISK
+finding that cannot be fixed inside its slice, or a premise behind an existing ruling turning out to
+be false. Full text, including how to revoke this: **`docs/slice-protocol.md`, "Standing
+auto-advance"** — the heading in that file is the switch the machine guard reads, so changing IN
+FORCE to SUSPENDED there restores the old rhythm everywhere at once.
+
 ### Session close — hand over an activation prompt (owner-approved append 2026-08-13)
 **Engineering owns the handover, not the PM.** When the session is nearing its end — context running low, the
 approved slice queue finished, or the PM says to wrap up — do BOTH of these before the last reply ends:
