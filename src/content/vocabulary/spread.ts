@@ -58,6 +58,7 @@
 import type { SpreadResult } from "@/engine/spread";
 import { MIN_PAIRS_PER_KIND, SPREAD_POOL } from "@/content/spread/ranking";
 import { numberWord, numberWordLeading } from "./numbers";
+import { emit, type EmissionSpec } from "./emission";
 
 /**
  * SAID WHEREVER THE FILTER IS DESCRIBED, WITH NO CONDITION ON IT.
@@ -238,16 +239,49 @@ export function directionLine(result: SpreadResult): string {
 }
 
 /**
- * The reading, in order: what was set aside, the two numbers, what the
- * difference between them is not, and the limit. A refused reading stops after
- * the refusal — there is nothing to compose.
+ * THE READING, IN ORDER — AND THE ORDER IS DECLARED HERE, NOT DESCRIBED
+ * ELSEWHERE (E19/S1).
+ *
+ * What was set aside, the two numbers, what the difference between them is
+ * not, and the limit. A refused reading stops after the refusal: there is
+ * nothing to compose, and the two number sentences throw rather than invent
+ * one, which is why their parts are gated on the same flag the engine set.
+ *
+ * The copy deck prints this array. See `emission.ts` for why it is one array
+ * and not two agreeing ones.
  */
+export const SPREAD_EMISSION: EmissionSpec<SpreadResult> = {
+  fn: "spreadLines",
+  parts: [
+    {
+      id: "recognition",
+      says: "what was set aside, and on a refused reading why that leaves too little",
+      always: true,
+      produce: recognitionLines,
+    },
+    {
+      id: "figures",
+      says: "the two figures, each against the chance figure",
+      always: false,
+      when: "only when a reading was produced",
+      produce: (result) => (result.refusal ? [] : [figuresLine(result)]),
+    },
+    {
+      id: "direction",
+      says: "which way the gaps fell, with the refusal to size the difference attached",
+      always: false,
+      when: "only when a reading was produced",
+      produce: (result) => (result.refusal ? [] : [directionLine(result)]),
+    },
+    {
+      id: "boundary",
+      says: "`SPREAD_BOUNDARY`, the limit",
+      always: true,
+      produce: () => [SPREAD_BOUNDARY],
+    },
+  ],
+};
+
 export function spreadLines(result: SpreadResult): string[] {
-  const lines = recognitionLines(result);
-  if (!result.refusal) {
-    lines.push(figuresLine(result));
-    lines.push(directionLine(result));
-  }
-  lines.push(SPREAD_BOUNDARY);
-  return lines;
+  return emit(SPREAD_EMISSION, result);
 }

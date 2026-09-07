@@ -25,6 +25,7 @@ import { describe, expect, it } from "vitest";
 import { vocabularyStrings } from "./fixtures";
 import { flawFamilies } from "@/content/flaw-families";
 import { allChains, matcherFor, matchesFor } from "../../../scripts/template-match.mjs";
+import { EMISSION_SPECS } from "./emission-registry";
 
 /** The rendered sentences the deck enumerates, deduplicated as the deck does. */
 function renderings(): Map<string, string> {
@@ -241,6 +242,34 @@ describe("every prose template is reachable, or listed as not", () => {
     },
   ];
 
+  /**
+   * EMISSION METADATA IS NOT PRODUCT COPY (E19/S1), AND THIS CENSUS CAUGHT IT
+   * BEING TREATED AS IF IT WERE.
+   *
+   * A declared emission spec carries `says` and `when` — prose describing when
+   * a part renders — in the same object literal as the `produce` that
+   * implements it, which is the whole reason the description cannot drift from
+   * the code. But they are string literals in a scanned module, so the census
+   * reported three of them as live templates no fixture renders. It was right
+   * to: it cannot tell copy from metadata by looking.
+   *
+   * THE EXCLUSION IS DERIVED FROM THE SPECS THEMSELVES, never from a key name
+   * or a length threshold. A metadata string is excluded because the registry
+   * says it is one; a sentence that stops being metadata stops being excluded
+   * the same day. And the set is proven non-empty below, because an exclusion
+   * that silently matches nothing is how a census goes quiet.
+   */
+  const emissionMetadata = (): Set<string> => {
+    const out = new Set<string>();
+    for (const spec of Object.values(EMISSION_SPECS)) {
+      for (const part of spec.parts) {
+        out.add(part.says.trim());
+        if (part.when) out.add(part.when.trim());
+      }
+    }
+    return out;
+  };
+
   it("lists only templates that are genuinely unrendered", () => {
     const rendered = [
       ...new Set(
@@ -249,8 +278,15 @@ describe("every prose template is reachable, or listed as not", () => {
           .map((entry) => entry.text),
       ),
     ];
+    const metadata = emissionMetadata();
+    expect(metadata.size, "no emission metadata to exclude — the registry is empty").toBeGreaterThan(0);
+    let excluded = 0;
     const unreached = allChains().filter((chain) => {
       const literal = chain.text.split(SLOT).join("").trim();
+      if (metadata.has(literal)) {
+        excluded += 1;
+        return false;
+      }
       if (literal.length < 45 || literal.indexOf(" ") === -1) return false;
       const re = matcherFor(chain.text);
       if (rendered.some((text) => re.test(text))) return false;
@@ -259,6 +295,12 @@ describe("every prose template is reachable, or listed as not", () => {
       if (runs.length > 0 && runs.every((run) => rendered.some((t) => t.indexOf(run) !== -1))) return false;
       return true;
     });
+
+    expect(
+      excluded,
+      "the emission-metadata exclusion matched nothing, so it is either dead or the specs have " +
+        "moved out of the scanned modules — either way this census is quieter than it looks",
+    ).toBeGreaterThan(0);
 
     const unexplained = unreached.filter(
       (chain) => !ALLOWED.some((a) => chain.display.indexOf(a.match) !== -1),

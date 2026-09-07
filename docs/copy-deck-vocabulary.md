@@ -124,7 +124,7 @@ Two constraints apply everywhere. **D1:** every sentence is about the performanc
 
 **This layer's job.** Say what was set aside and why, read both figures against chance, name which way they fell without claiming the gap between them means anything, and mark the boundary.
 
-**What renders with it, in order.** `spreadLines` emits, in this order: what was set aside; then, only if a reading was produced, the two figures and the direction; then `SPREAD_BOUNDARY`, every time. The boundary is always the last thing a reader sees, so anything it already says does not need saying above it.
+**What renders with it, in order.** `spreadLines` emits, in this order: (1) what was set aside, and on a refused reading why that leaves too little; (2) the two figures, each against the chance figure; (3) which way the gaps fell, with the refusal to size the difference attached; (4) `SPREAD_BOUNDARY`, the limit. (1) and (4) render every time; (2) and (3) render only when a reading was produced. The boundary is always the last thing a reader sees, so anything it already says does not need saying above it.
 
 **Rules this copy must keep:**
 

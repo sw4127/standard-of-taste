@@ -28,11 +28,15 @@ import { allChains, matchesFor } from "./template-match.mjs";
  */
 const script = `
 import { vocabularyStrings } from "@/content/vocabulary/fixtures";
+import { EMISSION_SPECS } from "@/content/vocabulary/emission-registry";
+import { orderLine } from "@/content/vocabulary/emission";
 import { describe, it } from "vitest";
 
 describe("export", () => {
   it("emits the deck", () => {
-    const out = { strings: vocabularyStrings() };
+    const order = {};
+    for (const [key, spec] of Object.entries(EMISSION_SPECS)) order[key] = orderLine(spec);
+    const out = { strings: vocabularyStrings(), order };
     console.log("DECK_START" + JSON.stringify(out) + "DECK_END");
   });
 });
@@ -57,7 +61,7 @@ if (!match) {
   console.error(raw.slice(-4000));
   throw new Error("export-copy-deck: fixtures produced no deck");
 }
-const { strings } = JSON.parse(match[1]);
+const { strings, order } = JSON.parse(match[1]);
 
 /** surface prefix -> where it renders and what governs it. */
 const SECTIONS = [
@@ -125,11 +129,15 @@ const SECTIONS = [
   },
   {
     key: "spread",
-    alongside:
-      "`spreadLines` emits, in this order: what was set aside; then, only if a reading was " +
-      "produced, the two figures and the direction; then `SPREAD_BOUNDARY`, every time. The " +
-      "boundary is always the last thing a reader sees, so anything it already says does not need " +
-      "saying above it.",
+    /*
+     * NO `alongside` HERE, AND THAT IS THE POINT (E19/S1). The order sentence
+     * is composed from `SPREAD_EMISSION`, the array `spreadLines` runs, so it
+     * cannot describe an order the code does not have. `note` is the part a
+     * machine cannot derive: WHY the order is that way.
+     */
+    note:
+      "The boundary is always the last thing a reader sees, so anything it already says does not " +
+      "need saying above it.",
     title: "The Ranking Test — “WHERE YOUR GAPS FELL”",
     where:
       "The whole reading on `/spread`, below the two figures. There is no share page for this " +
@@ -369,8 +377,25 @@ for (const [index, section] of SECTIONS.entries()) {
    * referred to "the line above" and no reader of the deck could tell what that
    * was. Hand-written, changed rarely, and the only honest way to carry it.
    */
-  if (section.alongside) {
-    lines.push(`**What renders with it, in order.** ${section.alongside}`);
+  /*
+   * A DECLARED ORDER BEATS A DESCRIBED ONE (E19/S1). Where the surface has an
+   * emission spec, the sentence is composed from it and the hand-written half
+   * is reduced to the reason the order is that way. The label is unchanged, so
+   * a writer reads one kind of paragraph and the coverage guard still counts.
+   */
+  const declared = order[section.key];
+  if (declared !== undefined && declared.length === 0) {
+    throw new Error(`export-copy-deck: ${section.key} has an empty emission spec`);
+  }
+  if (section.alongside && declared) {
+    throw new Error(
+      `export-copy-deck: ${section.key} has BOTH a declared order and a hand-written one; ` +
+        "the hand-written one is the stale half by construction",
+    );
+  }
+  const adjacency = declared ? [declared, section.note].filter(Boolean).join(" ") : section.alongside;
+  if (adjacency) {
+    lines.push(`**What renders with it, in order.** ${adjacency}`);
     lines.push("");
   }
   if (section.nonText) {
