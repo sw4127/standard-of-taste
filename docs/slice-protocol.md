@@ -131,3 +131,38 @@ A reply that still recites the full ceremony has moved the cost from round-trips
 replies now report: what shipped, the proof, and anything the owner must decide. The full loop is in
 the commit. The `== DECISIONS NEEDED ==` block still ends every reply that has something in it, and
 is omitted rather than padded when it does not.
+
+
+### What may appear in the decisions block (owner-approved amendment 2026-09-07, same day)
+
+**Why this was needed within hours of the auto-advance ruling.** Auto-advance was granted and the
+work still stopped every reply, because the session kept ending with `== DECISIONS NEEDED ==` items
+marked BLOCKER that were not blockers: *"commission batch 2 now?"* (a sequencing call with an obvious
+answer), *"these two strings are under the length floor"* (a pure engineering trade-off that
+`docs/redteam-protocol.md` and the standing notes already say must never appear there). The owner
+asked why there were so many, and the honest answer is that the block was being used as a checkpoint
+— a way to hand back a decision rather than carry it. That is the round-trip the ruling removed,
+wearing the costume of diligence.
+
+**The bar. An item goes in the block only if it is one of these:**
+
+1. **A one-way door** — money, a recurring cost, a deletion, anything published or irreversible, a
+   data-schema choice.
+2. **A product decision the code cannot settle** — what the product should DO or SAY to a person,
+   where two answers are both defensible and the owner's taste is the deciding input.
+3. **A SHIP-RISK or worse finding that cannot be fixed inside its own slice.**
+4. **A premise behind an existing ruling has turned out to be false**, so the ruling needs remaking
+   on the corrected facts.
+
+**Everything else is engineering's to decide, and deciding it is the job.** Sequencing, guard design,
+test strategy, refactor shape, what to name a thing, whether a heuristic is good enough, which of two
+defensible implementations to use — these are chosen, done, and reported in the commit, not asked
+about. If the choice is close, pick one, say in one line which and why, and move on.
+
+**Severity is not a mood.** BLOCKER means the critical path genuinely stops without an answer. A
+question with a sensible default is at most POLISH, and a question with an obvious answer is not a
+question. Padding the block with POLISH items to look thorough teaches the owner to skim it, which
+costs exactly the attention the real items need.
+
+**An empty block is the normal case.** Omit it rather than filling it. A reply that ends without one
+means engineering found nothing that only the owner can decide, which on most slices is the truth.
