@@ -53,22 +53,22 @@ Every sentence the vocabulary layer can render, enumerated from the same fixture
 **12 sentences to review** — 25 concrete variants, 78 reachable renderings. Braces mark values the engine fills in; leave them as slots.
 
 `VOC-THRESHOLD-RESULT-01` · OPEN
-> Damage gentler than {cents} slipped past you on these clips. That is the range a render can drift inside without you flagging it.
+> Damage gentler than {cents} slipped past you on these clips. That is the margin a render can wander inside while still sounding clean to you.
 
-  *As rendered:* “Damage gentler than 100 cents slipped past you on these clips. That is the range a render can drift inside without you flagging it.”  ·  “Damage gentler than 17.7 cents slipped past you on these clips. That is the range a render can drift inside without you flagging it.”
+  *As rendered:* “Damage gentler than 100 cents slipped past you on these clips. That is the margin a render can wander inside while still sounding clean to you.”  ·  “Damage gentler than 17.7 cents slipped past you on these clips. That is the margin a render can wander inside while still sounding clean to you.”
 
 `VOC-THRESHOLD-RESULT-02` · OPEN
-> Damage gentler than {ms} slipped past you on these clips. That is the range a render can drift inside without you flagging it.
+> Damage gentler than {ms} slipped past you on these clips. That is the margin a render can wander inside while still sounding clean to you.
 
-  *As rendered:* “Damage gentler than 50 ms slipped past you on these clips. That is the range a render can drift inside without you flagging it.”
+  *As rendered:* “Damage gentler than 50 ms slipped past you on these clips. That is the margin a render can wander inside while still sounding clean to you.”
 
 `VOC-THRESHOLD-RESULT-03` · OPEN
-> Damage gentler than {kbps} slipped past you on these clips. That is the range a render can drift inside without you flagging it.
+> Damage gentler than {kbps} slipped past you on these clips. That is the margin a render can wander inside while still sounding clean to you.
 
-  *As rendered:* “Damage gentler than 96 kbps slipped past you on these clips. That is the range a render can drift inside without you flagging it.”
+  *As rendered:* “Damage gentler than 96 kbps slipped past you on these clips. That is the margin a render can wander inside while still sounding clean to you.”
 
 `VOC-THRESHOLD-RESULT-04` · OPEN
-> In a render this is the lead that turns faintly sour on a long note — most often a vocal, a bowed string or a synth lead, where a slow slide reads as bad singing rather than bad audio.
+> In a render this is the lead that turns faintly sour over a long note — a vocal, a bowed string, a synth lead — where the slide is slow enough to read as a bad performance rather than bad audio.
 
 `VOC-THRESHOLD-RESULT-05` · OPEN
 > In a render this is the rubbery, unanchored feel — everything agreeing on the tempo but not quite on where the beat sits, so the groove never locks.
@@ -77,34 +77,34 @@ Every sentence the vocabulary layer can render, enumerated from the same fixture
 > In a render this is the underwater, brittle quality — cymbals turning to gauze, reverb tails breaking into grit, the whole thing sounding like a worse copy of itself.
 
 `VOC-THRESHOLD-RESULT-07` · OPEN
-> This session never settled on damage you catch reliably, so it cannot say what would get past you — only that {cents} did.
+> This session never found a level of damage you catch reliably, so it cannot say what would slip past you — only that {cents} already did.
 
-  *As rendered:* “This session never settled on damage you catch reliably, so it cannot say what would get past you — only that 100 cents did.”  ·  “This session never settled on damage you catch reliably, so it cannot say what would get past you — only that 35.4 cents did.”  · …and 1 more
+  *As rendered:* “This session never found a level of damage you catch reliably, so it cannot say what would slip past you — only that 100 cents already did.”  ·  “This session never found a level of damage you catch reliably, so it cannot say what would slip past you — only that 35.4 cents already did.”  · …and 1 more
 
 `VOC-THRESHOLD-RESULT-08` · OPEN
-> This session never settled on damage you catch reliably, so it cannot say what would get past you — only that {ms} did.
+> This session never found a level of damage you catch reliably, so it cannot say what would slip past you — only that {ms} already did.
 
-  *As rendered:* “This session never settled on damage you catch reliably, so it cannot say what would get past you — only that 100 ms did.”  ·  “This session never settled on damage you catch reliably, so it cannot say what would get past you — only that 19.8 ms did.”  · …and 2 more
+  *As rendered:* “This session never found a level of damage you catch reliably, so it cannot say what would slip past you — only that 100 ms already did.”  ·  “This session never found a level of damage you catch reliably, so it cannot say what would slip past you — only that 19.8 ms already did.”  · …and 2 more
 
 `VOC-THRESHOLD-RESULT-09` · OPEN
-> This session never settled on damage you catch reliably, so it cannot say what would get past you — only that {kbps} did.
+> This session never found a level of damage you catch reliably, so it cannot say what would slip past you — only that {kbps} already did.
 
-  *As rendered:* “This session never settled on damage you catch reliably, so it cannot say what would get past you — only that 32 kbps did.”  ·  “This session never settled on damage you catch reliably, so it cannot say what would get past you — only that 48 kbps did.”  · …and 1 more
+  *As rendered:* “This session never found a level of damage you catch reliably, so it cannot say what would slip past you — only that 32 kbps already did.”  ·  “This session never found a level of damage you catch reliably, so it cannot say what would slip past you — only that 48 kbps already did.”  · …and 1 more
 
 `VOC-THRESHOLD-RESULT-10` · OPEN
-> This session pinned {ms} as damage you catch, but never found the level where you stop — so what gets past you is gentler than that, by an amount these clips did not settle.
+> This session pinned {ms} as damage you catch, but never found the level where you stop catching it — so what gets past you is gentler than that, by some amount these clips never established.
 
-  *As rendered:* “This session pinned 12.5 ms as damage you catch, but never found the level where you stop — so what gets past you is gentler than that, by an amount these clips did not settle.”  ·  “This session pinned 15.7 ms as damage you catch, but never found the level where you stop — so what gets past you is gentler than that, by an amount these clips did not settle.”
+  *As rendered:* “This session pinned 12.5 ms as damage you catch, but never found the level where you stop catching it — so what gets past you is gentler than that, by some amount these clips never established.”  ·  “This session pinned 15.7 ms as damage you catch, but never found the level where you stop catching it — so what gets past you is gentler than that, by some amount these clips never established.”
 
 `VOC-THRESHOLD-RESULT-11` · OPEN
-> This session pinned {kbps} as damage you catch, but never found the level where you stop — so what gets past you is gentler than that, by an amount these clips did not settle.
+> This session pinned {kbps} as damage you catch, but never found the level where you stop catching it — so what gets past you is gentler than that, by some amount these clips never established.
 
-  *As rendered:* “This session pinned 160 kbps as damage you catch, but never found the level where you stop — so what gets past you is gentler than that, by an amount these clips did not settle.”  ·  “This session pinned 192 kbps as damage you catch, but never found the level where you stop — so what gets past you is gentler than that, by an amount these clips did not settle.”  · …and 1 more
+  *As rendered:* “This session pinned 160 kbps as damage you catch, but never found the level where you stop catching it — so what gets past you is gentler than that, by some amount these clips never established.”  ·  “This session pinned 192 kbps as damage you catch, but never found the level where you stop catching it — so what gets past you is gentler than that, by some amount these clips never established.”  · …and 1 more
 
 `VOC-THRESHOLD-RESULT-12` · OPEN
-> This session pinned {cents} as damage you catch, but never found the level where you stop — so what gets past you is gentler than that, by an amount these clips did not settle.
+> This session pinned {cents} as damage you catch, but never found the level where you stop catching it — so what gets past you is gentler than that, by some amount these clips never established.
 
-  *As rendered:* “This session pinned 3.1 cents as damage you catch, but never found the level where you stop — so what gets past you is gentler than that, by an amount these clips did not settle.”  ·  “This session pinned 6.3 cents as damage you catch, but never found the level where you stop — so what gets past you is gentler than that, by an amount these clips did not settle.”  · …and 1 more
+  *As rendered:* “This session pinned 3.1 cents as damage you catch, but never found the level where you stop catching it — so what gets past you is gentler than that, by some amount these clips never established.”  ·  “This session pinned 6.3 cents as damage you catch, but never found the level where you stop catching it — so what gets past you is gentler than that, by some amount these clips never established.”  · …and 1 more
 
 ---
 
@@ -126,17 +126,17 @@ Every sentence the vocabulary layer can render, enumerated from the same fixture
 **3 sentences to review** — 4 concrete variants, 5 reachable renderings. Braces mark values the engine fills in; leave them as slots.
 
 `VOC-DELICACY-RESULT-01` · OPEN
-> Naming is the half that transfers. Hearing that a render is wrong sends you back to generate again and hope; knowing WHICH of the three it is sends you to a control. You named it {n} of the {times} you were asked.
+> Naming is the half that transfers. Hearing that a render is wrong sends you back to generate again and hope; hearing which of the three it is sends you to a control that fixes it. You named it {n} of the {times} you were asked.
 
-  *As rendered:* “Naming is the half that transfers. Hearing that a render is wrong sends you back to generate again and hope; knowing WHICH of the three it is sends you to a control. You named it 10 of the 10 times you were asked.”  ·  “Naming is the half that transfers. Hearing that a render is wrong sends you back to generate again and hope; knowing WHICH of the three it is sends you to a control. You named it 15 of the 15 times you were asked.”
+  *As rendered:* “Naming is the half that transfers. Hearing that a render is wrong sends you back to generate again and hope; hearing which of the three it is sends you to a control that fixes it. You named it 10 of the 10 times you were asked.”  ·  “Naming is the half that transfers. Hearing that a render is wrong sends you back to generate again and hope; hearing which of the three it is sends you to a control that fixes it. You named it 15 of the 15 times you were asked.”
 
 `VOC-DELICACY-RESULT-02` · OPEN
+> The naming question only comes after a pair you called correctly, and this session never reached one — so it says nothing about whether you can name a flaw, only about whether you spotted one.
+
+`VOC-DELICACY-RESULT-03` · OPEN
 > This session will not break your result down by flaw type, and the reason is arithmetic rather than modesty: at {pairs} of each, a listener equally good at all three comes out with uneven tallies about nine times in ten. Any split shown here would mostly be luck wearing a label.
 
   *As rendered:* “This session will not break your result down by flaw type, and the reason is arithmetic rather than modesty: at 5 pairs of each, a listener equally good at all three comes out with uneven tallies about nine times in ten. Any split shown here would mostly be luck wearing a label.”
-
-`VOC-DELICACY-RESULT-03` · OPEN
-> You never got far enough into a pair to be asked what was wrong with it, so this session says nothing about whether you can name a flaw — only about whether you spotted one.
 
 ---
 
@@ -160,13 +160,13 @@ Every sentence the vocabulary layer can render, enumerated from the same fixture
 > In your own work the label is rarely a composer's name. It is which model made it, how long you spent on the prompt, and whether this is the take you already told someone was the good one.
 
 `VOC-PRESTIGE-RESULT-02` · OPEN
-> That result is about these names, on this afternoon. The cue this test cannot put in front of you is your own effort — the hour in the prompt, the take you already shared — and nothing here has measured that one.
+> That result is about these names, on this afternoon. The cues above are the ones this test could not put in front of you, so nothing here has measured what they do to your judgment.
 
 `VOC-PRESTIGE-RESULT-03` · OPEN
 > This test played every clip unlabelled first, and that order is the part worth stealing: the cue has to be gone before the judgment, not argued away after it.
 
 `VOC-PRESTIGE-RESULT-04` · OPEN
-> Your ratings ran against the names rather than with them, and that is still a cue steering the judgment — it is only pointing the other way. The move is the same either way: decide before the label arrives, not after it.
+> Your ratings ran against the names rather than with them, which is still the name doing the steering — only in reverse. The remedy does not change: decide before the label arrives, not after it.
 
 ---
 
@@ -200,37 +200,37 @@ Every sentence the vocabulary layer can render, enumerated from the same fixture
   *As rendered:* “Across the three pairs he placed far apart, your two ratings differed by 5.0 points on average. Across the three pairs he bracketed together, 4.7. Rating at random produces 3.6 on both, because chance does not know which works a critic separated.”
 
 `VOC-RANKING-TEST-03` · OPEN
-> Every clip here was one you had heard before, so all six were set aside. You told us which of these you had heard before, and we took your word for it — nothing here checks. It only ever leaves clips out; what you recognised is not part of any result.
+> Neither number says you agreed with him, and neither could: this looks only at how far apart your two ratings fell, never at which one you placed higher. Preferring the work he ranked lower costs you nothing, because agreement was never imported and cannot be worked out. Small numbers are not a poor result either — six recordings of six different works are not spaced out by quality, and if they genuinely sounded close, rating them close was the accurate thing to do.
 
 `VOC-RANKING-TEST-04` · OPEN
-> Neither number says you agreed with him, and neither could: this only ever looks at how far apart your two ratings fell, never at which one you put higher. Preferring the work he ranked lower costs you nothing here, because nothing here is checking. Small numbers are not a poor result either — six recordings of six different works are not spaced out by quality, and if they genuinely sounded close to you then rating them close was the accurate thing to do.
+> No number this time. Setting aside the one you had heard before left five clips, and that makes only one usable widely-spaced pair where this needs three. Under that count, one clip's wobble is larger than the thing being measured. Nothing you do differently changes that; the pool would have to grow.
 
 `VOC-RANKING-TEST-05` · OPEN
-> No number this time. Setting aside the one you had heard before left five clips, and that makes only one usable widely-spaced pair where this needs three. Below that, one clip's wobble moves the answer further than the answer moves. Come back and try it with fewer set aside.
+> No number this time. Setting aside the two you had heard before left four clips, and that makes only one usable closely-spaced pair where this needs three. Under that count, one clip's wobble is larger than the thing being measured. Nothing you do differently changes that; the pool would have to grow.
 
 `VOC-RANKING-TEST-06` · OPEN
-> No number this time. Setting aside the two you had heard before left four clips, and that makes only one usable closely-spaced pair where this needs three. Below that, one clip's wobble moves the answer further than the answer moves. Come back and try it with fewer set aside.
+> One clip you had heard before was set aside before anything was worked out, so what follows rests on the five that were new to you. You said which of these you had heard before, and that was taken at face value — nothing here verifies it. Recognition only ever removes clips; what you recognised is never part of a result.
 
 `VOC-RANKING-TEST-07` · OPEN
-> One clip you had heard before was set aside before anything was worked out, so what follows rests on the five that were new to you. You told us which of these you had heard before, and we took your word for it — nothing here checks. It only ever leaves clips out; what you recognised is not part of any result.
+> Two clips you had heard before were set aside before anything was worked out, so what follows rests on the four that were new to you. You said which of these you had heard before, and that was taken at face value — nothing here verifies it. Recognition only ever removes clips; what you recognised is never part of a result.
 
 `VOC-RANKING-TEST-08` · OPEN
-> Two clips you had heard before were set aside before anything was worked out, so what follows rests on the four that were new to you. You told us which of these you had heard before, and we took your word for it — nothing here checks. It only ever leaves clips out; what you recognised is not part of any result.
+> You gave every one of these the same rating, so there are no gaps to compare and nothing here to work on. That is an answer, not a failure to produce one.
 
 `VOC-RANKING-TEST-09` · OPEN
-> You gave every one of these the same rating, so there are no gaps to compare and nothing for this to work on. That is a real answer rather than a failed attempt — if the six genuinely sounded alike to you, saying so was the accurate thing to do.
-
-`VOC-RANKING-TEST-10` · OPEN
 > You had heard all six of these before, so there is nothing here to read. This one only works on music that is new to you — on anything you already know, a rating is partly memory, and no instrument can separate the two afterwards. There is no second attempt that would fix that: it needs more music than this pool currently holds. Come back if it grows.
 
+`VOC-RANKING-TEST-10` · OPEN
+> You had heard every clip here before, so all six were set aside. You said which of these you had heard before, and that was taken at face value — nothing here verifies it. Recognition only ever removes clips; what you recognised is never part of a result.
+
 `VOC-RANKING-TEST-11` · OPEN
-> You said none of these were familiar, so all of them counted. You told us which of these you had heard before, and we took your word for it — nothing here checks. It only ever leaves clips out; what you recognised is not part of any result.
+> You said none of these were familiar, so all of them counted. You said which of these you had heard before, and that was taken at face value — nothing here verifies it. Recognition only ever removes clips; what you recognised is never part of a result.
 
 `VOC-RANKING-TEST-12` · OPEN
-> Your ratings moved further apart where his judgment did not. Whether that means anything is a question this cannot answer: four pairs against four, built from clips that each appear in several of them, and nobody has sat this twice to find out how far the numbers wander on their own. There is no honest size at which the gap between them becomes a result, so none is offered.
+> Your ratings moved further apart where his judgment did not. Whether that means anything is a question this cannot answer: four pairs against four, drawn from a set of clips that each appear in several pairs, and nobody has sat this twice to find out how far these numbers wander on their own. There is no honest size at which the gap between them becomes a result, so none is offered.
 
 `VOC-RANKING-TEST-13` · OPEN
-> Your ratings moved further apart where his judgment did. Whether that means anything is a question this cannot answer: three pairs against three, built from clips that each appear in several of them, and nobody has sat this twice to find out how far the numbers wander on their own. There is no honest size at which the gap between them becomes a result, so none is offered.
+> Your ratings moved further apart where his judgment did. Whether that means anything is a question this cannot answer: three pairs against three, drawn from a set of clips that each appear in several pairs, and nobody has sat this twice to find out how far these numbers wander on their own. There is no honest size at which the gap between them becomes a result, so none is offered.
 
 ---
 
@@ -269,15 +269,15 @@ Every sentence the vocabulary layer can render, enumerated from the same fixture
   *As rendered:* “Across your pitch drift sittings, you now catch a smaller flaw than you did — a change of about 8.9x. This ladder cannot distinguish anything under 2.5x from ordinary run-to-run wobble, so a move this size is the instrument speaking rather than the dice.”
 
 `VOC-RETEST-ARC-04` · OPEN
-> Across your pitch drift sittings, you now catch a smaller flaw than you did. One of them put you past the end of what this ladder can render, so the direction is solid and the size is not — it is at least {n}.5x, which is the smallest move this machine can distinguish from noise.
+> Across your pitch drift sittings, you now catch a smaller flaw than you did. One sitting ran past the end of what this ladder can render, so the direction holds but the size does not — all that can be said is that the move cleared {n}.5x, the smallest change this machine can tell from noise.
 
-  *As rendered:* “Across your pitch drift sittings, you now catch a smaller flaw than you did. One of them put you past the end of what this ladder can render, so the direction is solid and the size is not — it is at least 3.5x, which is the smallest move this machine can distinguish from noise.”
+  *As rendered:* “Across your pitch drift sittings, you now catch a smaller flaw than you did. One sitting ran past the end of what this ladder can render, so the direction holds but the size does not — all that can be said is that the move cleared 3.5x, the smallest change this machine can tell from noise.”
 
 `VOC-RETEST-ARC-05` · OPEN
 > Nobody has measured how much this machine's numbers wander between sittings, so there is no honest line between a change and a coin flip here. Until there is, it says nothing.
 
 `VOC-RETEST-ARC-06` · OPEN
-> One session cannot say whether your ear moved — there is nothing to compare it against. A second sitting on this machine is what makes that sentence possible at all.
+> One sitting cannot say whether your ear moved — there is nothing to compare it against. A second one in this browser is what makes that sentence possible at all.
 
 `VOC-RETEST-ARC-07` · OPEN
 > The label moved you +{n}% before and +{n}% since. That gap is inside the {n} points this test wanders by on its own, so it is not a change anybody could stand behind — the same person, retested, moves this much without anything about them changing.
@@ -306,9 +306,9 @@ Every sentence the vocabulary layer can render, enumerated from the same fixture
   *As rendered:* “This rests on 4 sittings — 2 before and 2 since. That is what pulled the line above down from 3.5x to 2.5x: the wobble of an average falls as the square root of how many sittings are in it, so each time you come back, a smaller real change becomes visible.”
 
 `VOC-RETEST-ARC-13` · OPEN
-> Your pitch drift sittings are {n}.9x apart, and that is inside what this ladder cannot tell from noise. It would take about {n}.5x before a change here meant anything. This is not a report that you stood still — it is the instrument saying it cannot see a move this small.
+> Your pitch drift sittings are {n}.9x apart, which this ladder cannot tell from its own noise. It would take about {n}.5x before a change here meant anything. That is not a report that you stood still — it is the instrument saying a move this small is beneath what it can see.
 
-  *As rendered:* “Your pitch drift sittings are 1.9x apart, and that is inside what this ladder cannot tell from noise. It would take about 3.5x before a change here meant anything. This is not a report that you stood still — it is the instrument saying it cannot see a move this small.”
+  *As rendered:* “Your pitch drift sittings are 1.9x apart, which this ladder cannot tell from its own noise. It would take about 3.5x before a change here meant anything. That is not a report that you stood still — it is the instrument saying a move this small is beneath what it can see.”
 
 ---
 
@@ -430,7 +430,7 @@ Every sentence the vocabulary layer can render, enumerated from the same fixture
 > Every clip, in the order you heard them
 
 `VOC-EXPERT-PANEL-04` · OPEN
-> Every number behind the result, and the answers. No verdict, no interpretation — read from this browser, so a link you share shows nobody else this.
+> Every number behind the result, and the answer key. No verdict, no interpretation — and it is read from this browser, so a link you share carries none of it.
 
 `VOC-EXPERT-PANEL-05` · OPEN
 > Every pair that counted · by the numbers above
@@ -440,10 +440,10 @@ Every sentence the vocabulary layer can render, enumerated from the same fixture
 > Every rung · gentlest first
 
 `VOC-EXPERT-PANEL-06` · OPEN
-> The distance column is every single thing taken from the critic's list. Which of two works he put higher was never read in, so no table here can be sorted into his order and no agreement figure can be worked out from this — by us, or by you, or later.
+> The distance column is the whole of what was taken from the critic's list. Which of two works he placed higher was never read in, so no table here can be sorted into his order and no agreement figure can be recovered from it — not by this page, not by you, not later.
 
 `VOC-EXPERT-PANEL-07` · OPEN
-> The pairs below are what you did; the averages are missing because too few pairs survived for either one to mean anything. Nothing has been hidden from you — the figure was never worked out.
+> The pairs below are your ratings as they fell; the averages are missing because too few pairs survived for either one to mean anything. Nothing has been hidden — the figure was never worked out.
 
 `VOC-EXPERT-PANEL-08` · OPEN
 > The two percentages agree because the pool carries as many acclaimed labels as dismissive ones, and a balanced set cancels re-listen drift outright. The correction is shown anyway: it is what would move if that balance ever changed.

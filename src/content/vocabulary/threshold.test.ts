@@ -233,7 +233,7 @@ describe("whatGetsPast — the three band shapes, directly", () => {
 
   it("missed only: refuses to say what gets past", () => {
     const s = whatGetsPast({ ...base, heardAt: null });
-    expect(s).toContain("cannot say what would get past");
+    expect(s).toContain("cannot say what would slip past");
     expect(s).toContain("8.8 cents");
   });
 

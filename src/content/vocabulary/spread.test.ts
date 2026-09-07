@@ -13,8 +13,10 @@
  *   (e) THE SENTENCES RENDER for every reachable state of the engine, and none
  *       of them opens with a digit or a lowercase count.
  */
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { SPREAD_POOL } from "@/content/spread/ranking";
+import { numberWord } from "./numbers";
 import { computeSpreadResult, type SpreadResult } from "@/engine/spread";
 import {
   RECOGNITION_DISCLOSURE,
@@ -46,7 +48,8 @@ describe("(a) recognising everything produces a refusal, not a number", () => {
     expect(r.refusal).toBe("too-few-rated-clips");
     const text = spreadRefusal(r);
     expect(text).toContain("six"); // all of them, spelled
-    expect(text.toLowerCase()).toContain("come back");
+    // Its own branch already refuses honestly: no second attempt fixes this.
+    expect(text).toMatch(/no second attempt that would fix that/i);
     expect(text).toMatch(/nothing here to read/i);
   });
 
@@ -56,7 +59,16 @@ describe("(a) recognising everything produces a refusal, not a number", () => {
     const text = spreadRefusal(r);
     expect(text).toMatch(/no number/i);
     expect(text).toContain("three"); // MIN_PAIRS_PER_KIND, spelled
-    expect(text.toLowerCase()).toContain("come back");
+    /*
+     * RT-N1 AMENDED (PM ruling RT-R1 i a, 2026-09-06). This asserted "come
+     * back", because the rule said every refusal invites the reader back. On
+     * this branch that invitation was one the reader CANNOT ACT ON -- nobody
+     * can un-hear music -- while the all-recognised branch above already said
+     * so plainly. The rule now asks for an honest statement about whether a
+     * second attempt would change anything, and this asserts that instead.
+     */
+    expect(text).toMatch(/nothing you do differently changes that/i);
+    expect(text.toLowerCase()).not.toContain("try it with fewer");
   });
 
   it("puts the refusal in the reading, so the screen is never just blank", () => {
@@ -100,12 +112,41 @@ describe("(c) the filter is disclosed as self-report, never as a measurement", (
   });
 
   it("says plainly that nothing was checked", () => {
-    expect(RECOGNITION_DISCLOSURE).toMatch(/took your word|nothing here checks/i);
-    expect(RECOGNITION_DISCLOSURE).toMatch(/not part of any result/i);
+    expect(RECOGNITION_DISCLOSURE).toMatch(/taken at face value|nothing here verifies it/i);
+    expect(RECOGNITION_DISCLOSURE).toMatch(/never part of a result/i);
+  });
+
+  /**
+   * NOTHING MAY COUNT, AND THE BOUNDARY WAS BREAKING ITS OWN RULE (E18/S14).
+   *
+   * Cowork found this in the batch-1 return, and it is the only rule violation
+   * in shipped copy the pass turned up. `SPREAD_BOUNDARY` wrote "six" twice as
+   * a literal — "six recordings of six different works" — against this
+   * surface's own rule that every number is derived. It mattered because
+   * `spreadRefusal` promises the opposite on an adjacent screen: "it needs more
+   * music than this pool currently holds. Come back if it grows." The day it
+   * grows, one screen invites the reader back for more music while another
+   * still says six.
+   *
+   * ASSERTED ON THE SOURCE, NOT THE RENDERED STRING, because a derived count
+   * and a frozen one render identically at today's pool size — which is exactly
+   * why reading the deck could never have caught it.
+   */
+  it("derives the pool count in the boundary rather than writing it in", () => {
+    const source = readFileSync("src/content/vocabulary/spread.ts", "utf8");
+    const start = source.indexOf("export const SPREAD_BOUNDARY");
+    expect(start, "SPREAD_BOUNDARY has moved").toBeGreaterThan(-1);
+    const body = source.slice(start, source.indexOf(";", start));
+    expect(body).toContain("SPREAD_POOL.length");
+    for (const word of ["six", "seven", "eight", "five", "four"]) {
+      expect(body.toLowerCase().includes(" " + word + " "), "a count is written into the boundary: " + word).toBe(false);
+    }
+    // And it still renders the real number today.
+    expect(SPREAD_BOUNDARY).toContain(numberWord(SPREAD_POOL.length));
   });
 
   it("states that agreement is not what is being looked at", () => {
-    expect(SPREAD_BOUNDARY).toMatch(/never at which one you put higher/i);
+    expect(SPREAD_BOUNDARY).toMatch(/never at which one you placed higher/i);
     expect(SPREAD_BOUNDARY).toMatch(/costs you nothing/i);
   });
 });
@@ -180,7 +221,7 @@ describe("(f) the reading states two numbers and refuses their difference", () =
     const text = directionLine(flat);
     expect(text).toContain("same rating");
     expect(text).not.toContain("the same amount either way");
-    expect(text).toMatch(/real answer rather than a failed attempt/);
+    expect(text).toMatch(/an answer, not a failure to produce one/i);
   });
 
   it("keeps the even-handed sentence for a reader who moved but moved equally", () => {

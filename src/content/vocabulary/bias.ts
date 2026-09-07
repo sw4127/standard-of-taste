@@ -58,17 +58,16 @@ export const CUE_IN_YOUR_WORK =
 export function whatToDoAboutIt(verdict: BiasVerdict): string {
   if (verdict === "contrarian") {
     return (
-      `Your ratings ran against the names rather than with them, and that is still a cue steering the ` +
-      `judgment — it is only pointing the other way. The move is the same either way: decide before the ` +
-      `label arrives, not after it.`
+      `Your ratings ran against the names rather than with them, which is still the name doing the ` +
+      `steering — only in reverse. The remedy does not change: decide before the label arrives, not ` +
+      `after it.`
     );
   }
 
   if (verdict === "steady") {
     return (
-      `That result is about these names, on this afternoon. The cue this test cannot put in front of ` +
-      `you is your own effort — the hour in the prompt, the take you already shared — and nothing here ` +
-      `has measured that one.`
+      `That result is about these names, on this afternoon. The cues above are the ones this test ` +
+      `could not put in front of you, so nothing here has measured what they do to your judgment.`
     );
   }
 

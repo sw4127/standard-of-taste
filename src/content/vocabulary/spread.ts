@@ -37,6 +37,15 @@
  * The tempting alternative — print the number anyway with a caveat — was
  * rejected because it prints a figure the engine has just declared it cannot
  * support, and a caveat under a number does not stop anyone reading the number.
+ *
+ * RT-N1 AMENDED 2026-09-06 (PM ruling RT-R1 i a), on Cowork's finding in the
+ * batch-1 return. The rule said every refusal "invites the reader back". Here
+ * that produced "come back and try it with fewer set aside" — an invitation the
+ * reader CANNOT ACT ON, because nobody can un-hear music. The rule now reads:
+ * name what was set aside, and say honestly whether a second attempt would
+ * change anything. The all-recognised branch below already refused to dress
+ * this up ("There is no second attempt that would fix that"), so the rule was
+ * being applied inconsistently and the inconsistent half was the honest one.
  * The engine now makes that structurally impossible: a refused reading carries
  * no mean at all, only counts.
  *
@@ -47,7 +56,7 @@
  */
 
 import type { SpreadResult } from "@/engine/spread";
-import { MIN_PAIRS_PER_KIND } from "@/content/spread/ranking";
+import { MIN_PAIRS_PER_KIND, SPREAD_POOL } from "@/content/spread/ranking";
 import { numberWord, numberWordLeading } from "./numbers";
 
 /**
@@ -57,8 +66,8 @@ import { numberWord, numberWordLeading } from "./numbers";
  * what the instrument does, never overstate what it knows.
  */
 export const RECOGNITION_DISCLOSURE =
-  "You told us which of these you had heard before, and we took your word for it — nothing here " +
-  "checks. It only ever leaves clips out; what you recognised is not part of any result.";
+  "You said which of these you had heard before, and that was taken at face value — nothing here " +
+  "verifies it. Recognition only ever removes clips; what you recognised is never part of a result.";
 
 /**
  * SAID EVERY TIME A READING IS PRODUCED, WITH NO CONDITION ON IT.
@@ -69,11 +78,12 @@ export const RECOGNITION_DISCLOSURE =
  * which this instrument cannot see and would refuse to report if it could.
  */
 export const SPREAD_BOUNDARY =
-  "Neither number says you agreed with him, and neither could: this only ever looks at how far " +
-  "apart your two ratings fell, never at which one you put higher. Preferring the work he ranked " +
-  "lower costs you nothing here, because nothing here is checking. Small numbers are not a poor " +
-  "result either — six recordings of six different works are not spaced out by quality, and if " +
-  "they genuinely sounded close to you then rating them close was the accurate thing to do.";
+  "Neither number says you agreed with him, and neither could: this looks only at how far apart " +
+  "your two ratings fell, never at which one you placed higher. Preferring the work he ranked " +
+  "lower costs you nothing, because agreement was never imported and cannot be worked out. Small " +
+  `numbers are not a poor result either — ${numberWord(SPREAD_POOL.length)} recordings of ` +
+  `${numberWord(SPREAD_POOL.length)} different works are not spaced out by quality, and if they ` +
+  "genuinely sounded close, rating them close was the accurate thing to do.";
 
 /** How many clips the listener set aside, as self-report rather than a score. */
 export function recognitionLine(result: SpreadResult): string {
@@ -93,7 +103,7 @@ export function recognitionLine(result: SpreadResult): string {
    */
   if (left === 0) {
     return (
-      `Every clip here was one you had heard before, so all ${numberWord(n)} were set aside. ` +
+      `You had heard every clip here before, so all ${numberWord(n)} were set aside. ` +
       RECOGNITION_DISCLOSURE
     );
   }
@@ -132,8 +142,8 @@ export function spreadRefusal(result: SpreadResult): string {
     `No number this time. Setting aside the ${numberWord(set)} you had heard before left ` +
     `${numberWord(left)} ${left === 1 ? "clip" : "clips"}, and ${count === 1 ? "that makes" : "those make"} only ` +
     `${numberWord(count)} usable ${spacing} ${count === 1 ? "pair" : "pairs"} where this needs ${need}. ` +
-    `Below that, one clip's wobble moves the answer further than the answer moves. ` +
-    `Come back and try it with fewer set aside.`
+    `Under that count, one clip's wobble is larger than the thing being measured. ` +
+    `Nothing you do differently changes that; the pool would have to grow.`
   );
 }
 
@@ -209,8 +219,7 @@ export function directionLine(result: SpreadResult): string {
   if (far === 0 && close === 0) {
     return (
       `You gave every one of these the same rating, so there are no gaps to compare and nothing ` +
-      `for this to work on. That is a real answer rather than a failed attempt — if the six ` +
-      `genuinely sounded alike to you, saying so was the accurate thing to do.`
+      `here to work on. That is an answer, not a failure to produce one.`
     );
   }
   const shape =
@@ -221,9 +230,10 @@ export function directionLine(result: SpreadResult): string {
         : "Your ratings moved the same amount either way";
   return (
     `${shape}. Whether that means anything is a question this cannot answer: ` +
-    `${numberWord(result.far.count)} pairs against ${numberWord(result.close.count)}, built from clips that ` +
-    `each appear in several of them, and nobody has sat this twice to find out how far the numbers wander ` +
-    `on their own. There is no honest size at which the gap between them becomes a result, so none is offered.`
+    `${numberWord(result.far.count)} pairs against ${numberWord(result.close.count)}, drawn from a set of ` +
+    `clips that each appear in several pairs, and nobody has sat this twice to find out how far these ` +
+    `numbers wander on their own. There is no honest size at which the gap between them becomes a ` +
+    `result, so none is offered.`
   );
 }
 

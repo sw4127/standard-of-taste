@@ -6,17 +6,17 @@ The writing pass is **Cowork's**, not the PM's and not engineering's. The decks 
 
 ## The state of it
 
-**1 of 28 surfaces in the decks have been through a pass.** Everything else below is the engineer's first draft, shipped and live.
+**8 of 28 surfaces in the decks have been through a pass.** Everything else below is the engineer's first draft, shipped and live.
 
 | Part | Surface | Pass |
 |---|---|---|
-| 1 · The vocabulary layer | 1. Threshold result — “WHAT THIS MEANS IN A RENDER” | **never** |
-| 1 · The vocabulary layer | 2. Delicacy result — “WHAT THIS MEANS IN YOUR WORK” | **never** |
-| 1 · The vocabulary layer | 3. Prestige result — “WHAT THIS MEANS IN YOUR WORK” | **never** |
-| 1 · The vocabulary layer | 4. The Ranking Test — “WHERE YOUR GAPS FELL” | **never** |
-| 1 · The vocabulary layer | 5. The retest arc — “DID YOUR EAR MOVE” | **never** |
-| 1 · The vocabulary layer | 6. Combined view — “ACROSS YOUR SESSIONS” | **never** |
-| 1 · The vocabulary layer | 7. The expert panel — “THE RAW RECORD” | **never** |
+| 1 · The vocabulary layer | 1. Threshold result — “WHAT THIS MEANS IN A RENDER” | Cowork, batch 1, returned 2026-09-06 (`docs/copy-return-VOC-2026-09-06.md`) |
+| 1 · The vocabulary layer | 2. Delicacy result — “WHAT THIS MEANS IN YOUR WORK” | Cowork, batch 1, returned 2026-09-06 (`docs/copy-return-VOC-2026-09-06.md`) |
+| 1 · The vocabulary layer | 3. Prestige result — “WHAT THIS MEANS IN YOUR WORK” | Cowork, batch 1, returned 2026-09-06 (`docs/copy-return-VOC-2026-09-06.md`) |
+| 1 · The vocabulary layer | 4. The Ranking Test — “WHERE YOUR GAPS FELL” | Cowork, batch 1, returned 2026-09-06 (`docs/copy-return-VOC-2026-09-06.md`) |
+| 1 · The vocabulary layer | 5. The retest arc — “DID YOUR EAR MOVE” | Cowork, batch 1, returned 2026-09-06 (`docs/copy-return-VOC-2026-09-06.md`) |
+| 1 · The vocabulary layer | 6. Combined view — “ACROSS YOUR SESSIONS” | Cowork, batch 1, returned 2026-09-06 (`docs/copy-return-VOC-2026-09-06.md`) |
+| 1 · The vocabulary layer | 7. The expert panel — “THE RAW RECORD” | Cowork, batch 1, returned 2026-09-06 (`docs/copy-return-VOC-2026-09-06.md`) |
 | 2 · The instrument copy | 1. The clip blurbs — the Prestige Test's independent variable | **never** |
 | 2 · The instrument copy | 2. `resultTitleFragment` — the Prestige result's name for your number | **never** |
 | 2 · The instrument copy | 3. The flaw line — the Delicacy result's second number | **never** |

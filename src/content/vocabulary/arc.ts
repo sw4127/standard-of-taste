@@ -132,8 +132,8 @@ export function delicacyArcRefusal(floor: DelicacyArcFloor): string {
  */
 export const ARC_REFUSAL: Record<string, string> = {
   "too-few-sessions":
-    "One session cannot say whether your ear moved — there is nothing to compare it against. " +
-    "A second sitting on this machine is what makes that sentence possible at all.",
+    "One sitting cannot say whether your ear moved — there is nothing to compare it against. " +
+    "A second one in this browser is what makes that sentence possible at all.",
   "different-material":
     "These two compression sessions ran on different recordings, so they are not comparable. A " +
     "fixed bitrate does up to twice as much damage to one recording as to another, which means " +
@@ -205,9 +205,10 @@ function thresholdLines(reading: ArcReading): string[] {
 
   if (reading.direction === null) {
     return [
-      `Your ${label} sittings are ${moved} apart, and that is inside what this ladder cannot ` +
-        `tell from noise. It would take about ${floor} before a change here meant anything. This is ` +
-        `not a report that you stood still — it is the instrument saying it cannot see a move this small.`,
+      `Your ${label} sittings are ${moved} apart, which this ladder cannot tell from its own ` +
+        `noise. It would take about ${floor} before a change here meant anything. That is not a ` +
+        `report that you stood still — it is the instrument saying a move this small is beneath ` +
+        `what it can see.`,
     ];
   }
 
@@ -218,9 +219,9 @@ function thresholdLines(reading: ArcReading): string[] {
 
   if (offLadder(reading)) {
     return [
-      `Across your ${label} sittings, ${way}. One of them put you past the end of what this ` +
-        `ladder can render, so the direction is solid and the size is not — it is at least ${floor}, ` +
-        `which is the smallest move this machine can distinguish from noise.`,
+      `Across your ${label} sittings, ${way}. One sitting ran past the end of what this ladder ` +
+        `can render, so the direction holds but the size does not — all that can be said is that ` +
+        `the move cleared ${floor}, the smallest change this machine can tell from noise.`,
     ];
   }
 

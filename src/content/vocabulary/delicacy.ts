@@ -73,15 +73,16 @@ export function namingLine(result: DelicacyResult): string | null {
 
   if (flawEligible === 0 || flawAccuracy === null) {
     return (
-      `You never got far enough into a pair to be asked what was wrong with it, so this session says ` +
-      `nothing about whether you can name a flaw — only about whether you spotted one.`
+      `The naming question only comes after a pair you called correctly, and this session never ` +
+      `reached one — so it says nothing about whether you can name a flaw, only about whether you ` +
+      `spotted one.`
     );
   }
 
   return (
     `Naming is the half that transfers. Hearing that a render is wrong sends you back to generate ` +
-    `again and hope; knowing WHICH of the three it is sends you to a control. You named it ` +
-    `${flawCorrect} of the ${flawEligible} times you were asked.`
+    `again and hope; hearing which of the three it is sends you to a control that fixes it. You ` +
+    `named it ${flawCorrect} of the ${flawEligible} times you were asked.`
   );
 }
 

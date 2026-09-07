@@ -42,7 +42,7 @@ It also refuses. Where a session cannot support a per-family split, it says so a
 
 **The expert view.** Every result carries a verdict-free panel underneath it: the session's own numbers and every trial, pair or rung inside it, with no interpretation attached. It is read from the browser that recorded the sitting, so a shared link shows nobody else this.
 
-> Every number behind the result, and the answers. No verdict, no interpretation — read from this browser, so a link you share shows nobody else this.
+> Every number behind the result, and the answer key. No verdict, no interpretation — and it is read from this browser, so a link you share carries none of it.
 
 ## The part that matters: it refuses to make things up
 

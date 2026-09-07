@@ -46,12 +46,34 @@ const DECKS = [
  * without updating this drops the row back to "never" -- loudly wrong rather
  * than quietly wrong, and the guard on the other side catches it.
  */
+const BATCH_ONE = {
+  pass: "Cowork, batch 1, returned 2026-09-06",
+  brief: "docs/copy-return-VOC-2026-09-06.md",
+};
+
 const PASSES = [
   {
     surface: "6. The Delicacy detection readout — THE ONE BATCH A WRITER HAS ALREADY SEEN",
     pass: "Cowork, PM ruling RT-107a, returned 2026-08-22",
     brief: "docs/copy-brief-delicacy-readout.md",
   },
+  /*
+   * BATCH 1 -- the whole reading layer. 24 ids rewritten, 45 left alone, and
+   * three RULE entries returned rather than silently obeyed. Two of those
+   * changed the product: RT-N1 was amended so a refusal says whether a second
+   * attempt would help instead of inviting a return the reader cannot act on,
+   * and SPREAD_BOUNDARY stopped writing its pool count in by hand.
+   *
+   * "Left alone" counts as passed. A writer reading a sentence and choosing not
+   * to touch it is the review; only an unread sentence is unreviewed.
+   */
+  { surface: "1. Threshold result — “WHAT THIS MEANS IN A RENDER”", ...BATCH_ONE },
+  { surface: "2. Delicacy result — “WHAT THIS MEANS IN YOUR WORK”", ...BATCH_ONE },
+  { surface: "3. Prestige result — “WHAT THIS MEANS IN YOUR WORK”", ...BATCH_ONE },
+  { surface: "4. The Ranking Test — “WHERE YOUR GAPS FELL”", ...BATCH_ONE },
+  { surface: "5. The retest arc — “DID YOUR EAR MOVE”", ...BATCH_ONE },
+  { surface: "6. Combined view — “ACROSS YOUR SESSIONS”", ...BATCH_ONE },
+  { surface: "7. The expert panel — “THE RAW RECORD”", ...BATCH_ONE },
 ];
 
 /**

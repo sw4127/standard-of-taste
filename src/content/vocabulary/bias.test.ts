@@ -141,8 +141,27 @@ describe("D1 — the boundary around what was NOT measured", () => {
   });
 
   it("the steady branch explicitly disclaims the untested cue", () => {
-    expect(whatToDoAboutIt("steady")).toMatch(/nothing here has measured that one/i);
-    expect(whatToDoAboutIt("steady")).toMatch(/your own effort/i);
+    expect(whatToDoAboutIt("steady")).toMatch(/nothing here has measured/i);
+  });
+
+  /**
+   * THE DISCLAIMER NOW POINTS AT ITS NEIGHBOUR, so the neighbour has to be
+   * there (E18/S14, from Cowork's batch-1 return).
+   *
+   * The steady branch used to name the untested cue itself — "your own effort,
+   * the hour in the prompt". Cowork cut the repetition, because
+   * `CUE_IN_YOUR_WORK` names those cues one sentence earlier on the same
+   * screen, and the sentence now says "the cues above". That is better prose
+   * and a new dependency: if the two ever stop co-rendering, the reference
+   * dangles and the disclaimer stops naming anything. `creatorLines` is the
+   * only assembler, and this holds it to emitting both, in that order.
+   */
+  it("keeps the cue sentence above the disclaimer that points at it", () => {
+    const lines = creatorLines(SESSIONS.steady);
+    expect(lines).toHaveLength(2);
+    expect(lines[0]).toBe(CUE_IN_YOUR_WORK);
+    expect(lines[0]).toMatch(/how long you spent on the prompt/i);
+    expect(lines[1]).toMatch(/the cues above/i);
   });
 
   it("makes no claim about the person and no promise about the future", () => {
@@ -183,7 +202,7 @@ describe("verdict branching", () => {
   /** "Different bias — still a bias" is the verdict copy's own stance; the
    *  translation must not quietly congratulate a contrarian for resisting. */
   it("does not call a contrarian session unbiased", () => {
-    expect(whatToDoAboutIt("contrarian")).toMatch(/still a cue/i);
+    expect(whatToDoAboutIt("contrarian")).toMatch(/still the name doing the steering/i);
   });
 });
 

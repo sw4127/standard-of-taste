@@ -43,8 +43,9 @@ import { quantity } from "@/content/staircase/copy";
  */
 export const FLAW_IN_A_GENERATION: Record<string, string> = {
   "pitch-drift":
-    "In a render this is the lead that turns faintly sour on a long note — most often a vocal, " +
-    "a bowed string or a synth lead, where a slow slide reads as bad singing rather than bad audio.",
+    "In a render this is the lead that turns faintly sour over a long note — a vocal, a bowed " +
+    "string, a synth lead — where the slide is slow enough to read as a bad performance rather " +
+    "than bad audio.",
   "timing-smear":
     "In a render this is the rubbery, unanchored feel — everything agreeing on the tempo but not " +
     "quite on where the beat sits, so the groove never locks.",
@@ -102,7 +103,7 @@ export function whatGetsPast(say: ThresholdSay): string {
     }
     return (
       `Damage gentler than ${quantity(heardAt, unit)} slipped past you on these clips. ` +
-      `That is the range a render can drift inside without you flagging it.`
+      `That is the margin a render can wander inside while still sounding clean to you.`
     );
   }
 
@@ -126,14 +127,15 @@ export function whatGetsPast(say: ThresholdSay): string {
      */
     return (
       `This session pinned ${quantity(heardAt, unit)} as damage you catch, but never found the level ` +
-      `where you stop — so what gets past you is gentler than that, by an amount these clips did not settle.`
+      `where you stop catching it — so what gets past you is gentler than that, by some amount these ` +
+      `clips never established.`
     );
   }
 
   // missedAt !== null: the claim floor in evidence.ts guarantees one of the two.
   return (
-    `This session never settled on damage you catch reliably, so it cannot say what would get past ` +
-    `you — only that ${quantity(missedAt!, unit)} did.`
+    `This session never found a level of damage you catch reliably, so it cannot say what would slip ` +
+    `past you — only that ${quantity(missedAt!, unit)} already did.`
   );
 }
 

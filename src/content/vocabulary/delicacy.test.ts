@@ -114,7 +114,7 @@ describe("the refusal is present and leads", () => {
     expect(SESSIONS.blank.flawEligible).toBe(0);
     const lines = creatorLines(SESSIONS.blank);
     expect(lines).toHaveLength(1);
-    expect(lines[0]).toMatch(/never got far enough/i);
+    expect(lines[0]).toMatch(/says nothing about whether you can name a flaw|naming question only comes after/i);
     // The scoring sessions still get both.
     expect(creatorLines(SESSIONS.uneven)).toHaveLength(2);
   });
@@ -160,7 +160,7 @@ describe("naming line", () => {
   it("refuses a naming read when the question was never asked", () => {
     expect(SESSIONS.blank.flawEligible).toBe(0);
     const line = namingLine(SESSIONS.blank)!;
-    expect(line).toMatch(/never got far enough/i);
+    expect(line).toMatch(/naming question only comes after/i);
     expect(line).not.toMatch(/\b0 of\b/);
   });
 

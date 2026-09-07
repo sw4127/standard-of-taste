@@ -29,8 +29,8 @@ export const EXPERT_PANEL = {
    * device-local so nobody assumes a shared link carries it.
    */
   blurb:
-    "Every number behind the result, and the answers. No verdict, no interpretation — read from " +
-    "this browser, so a link you share shows nobody else this.",
+    "Every number behind the result, and the answer key. No verdict, no interpretation — and it is " +
+    "read from this browser, so a link you share carries none of it.",
 } as const;
 
 export const EXPERT_SECTIONS = {
@@ -147,8 +147,8 @@ export const EXPERT_NOTES = {
    * the average is the thing being withheld — not the other way round.
    */
   spreadNoMean:
-    "The pairs below are what you did; the averages are missing because too few pairs survived " +
-    "for either one to mean anything. Nothing has been hidden from you — the figure was never " +
+    "The pairs below are your ratings as they fell; the averages are missing because too few pairs " +
+    "survived for either one to mean anything. Nothing has been hidden — the figure was never " +
     "worked out.",
   /**
    * THE DISTANCE COLUMN, AND WHY IT IS THE ONLY THING THE RANKING CONTRIBUTES.
@@ -156,9 +156,9 @@ export const EXPERT_NOTES = {
    * is in here somewhere. It is not, and this says so where they are looking.
    */
   spreadDistanceOnly:
-    "The distance column is every single thing taken from the critic's list. Which of two works " +
-    "he put higher was never read in, so no table here can be sorted into his order and no " +
-    "agreement figure can be worked out from this — by us, or by you, or later.",
+    "The distance column is the whole of what was taken from the critic's list. Which of two works " +
+    "he placed higher was never read in, so no table here can be sorted into his order and no " +
+    "agreement figure can be recovered from it — not by this page, not by you, not later.",
   /**
    * A LIMIT THE PANEL ITSELF CREATES. Naming the six works is the useful half of
    * this view and it costs something real: the instrument only works on music
