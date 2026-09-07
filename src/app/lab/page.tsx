@@ -4,6 +4,7 @@ import SourceBadge from "@/components/lab/SourceBadge";
 import { METRICS, type MetricDefinition } from "@/content/lab/metrics";
 import { LAB_PANELS, LIVE_PANELS, PENDING_PANELS } from "@/content/lab/panels";
 import { FUNNEL_SPEC, sessionsForPrecision, stepTrigger } from "@/content/lab/funnel-spec";
+import { DEMO_ARRIVALS, DEMO_REPLICATIONS, demoRecovery } from "@/content/lab/funnel-demo";
 import { GYM_INK } from "@/content/instrument-accents";
 
 /**
@@ -328,6 +329,84 @@ export default function LabIndex() {
             How many arrivals it takes to put {sessionsForPrecision(5)} people at the bottom depends
             on the pass-through between steps, which has never been measured here — so this page
             does not estimate it. {REAL_PANELS === 0 ? "No panel on this page carries a REAL badge." : null}
+          </p>
+        </div>
+
+        {/*
+          THE DEMONSTRATION (E19/S17, PM ruling RT-J a + the 2026-09-06
+          amendment). The owner ruled that saying honestly why the panel is
+          absent is not enough on its own: traffic will not arrive before the
+          applications do, and a reader assessing this page wants to know
+          whether the analysis can be DONE.
+
+          A MOCK DASHBOARD WOULD BE THE WRONG ANSWER — numbers shaped like
+          findings, which is the failure N2 names and this whole page argues
+          against. So the demonstration is the one the psychometrics panel
+          already makes: choose the rates, generate the data from them, run the
+          estimator, and show what it recovers. Every figure below is a claim
+          about arithmetic. None of them is a claim about a person.
+        */}
+        <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+          <div className="flex flex-wrap items-baseline gap-3">
+            <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: INK }}>
+              THE ESTIMATOR, DEMONSTRATED
+            </p>
+            <SourceBadge source="SIMULATED" />
+          </div>
+          <p className="mt-3 text-sm leading-relaxed text-neutral-300">
+            The panel is absent because there is no traffic. The ANALYSIS is not absent, and this
+            shows it working. {DEMO_ARRIVALS.toLocaleString()} synthetic arrivals were pushed
+            through the steps below {DEMO_REPLICATIONS} times, each step keeping people at a rate{" "}
+            <strong className="font-semibold text-white">chosen in advance</strong>. The estimator
+            then read those rates back off the counts, knowing nothing about how they were made.
+          </p>
+          <p className="mt-3 text-sm leading-relaxed text-muted">
+            The pass-through rates in the first column are inventions. They are not this
+            product&apos;s rates, they are not anybody&apos;s rates, and nothing here should be read
+            as an estimate of what real visitors would do. They are the answer key: the point is
+            whether the estimator finds them.
+          </p>
+
+          <div className="mt-5 overflow-x-auto">
+            <table className="w-full min-w-[34rem] border-collapse text-left text-xs">
+              <thead>
+                <tr className="text-[0.6rem] uppercase tracking-[0.18em] text-muted">
+                  <th className="py-2 pr-3 font-semibold">Step</th>
+                  <th className="py-2 pr-3 font-semibold">True rate</th>
+                  <th className="py-2 pr-3 font-semibold">Recovered</th>
+                  <th className="py-2 pr-3 font-semibold">Error</th>
+                  <th className="py-2 font-semibold">95% interval covered it</th>
+                </tr>
+              </thead>
+              <tbody className="text-neutral-300">
+                {demoRecovery().map((row) => (
+                  <tr key={row.event} className="border-t border-white/10">
+                    <td className="py-2 pr-3">
+                      <code className="font-mono text-[0.65rem]">{row.event}</code>
+                    </td>
+                    <td className="py-2 pr-3 font-mono">{(row.truth * 100).toFixed(1)}%</td>
+                    <td className="py-2 pr-3 font-mono">{(row.estimated * 100).toFixed(1)}%</td>
+                    <td className="py-2 pr-3 font-mono">
+                      {row.biasPoints >= 0 ? "+" : ""}
+                      {row.biasPoints.toFixed(2)} pts
+                    </td>
+                    <td className="py-2 font-mono">{(row.coverage * 100).toFixed(1)}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p className="mt-4 text-sm leading-relaxed text-neutral-300">
+            <strong className="font-semibold text-white">What the last column is for.</strong>{" "}A
+            rate without an interval is decoration, and an interval that does not contain the truth
+            as often as it claims is worse than none. Ninety-five per cent of these intervals should
+            contain the answer key, and that is what the column reports — measured, not asserted.
+          </p>
+          <p className="mt-3 text-sm leading-relaxed text-muted">
+            The same code is what would run the day traffic arrives; it is exercised on the real
+            event names above. Everything it cannot do without respondents — say what any of these
+            rates IS — it still cannot do, and this page will go on saying so.
           </p>
         </div>
       </section>

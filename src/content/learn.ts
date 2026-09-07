@@ -14,7 +14,7 @@ import { flawFamilyList } from "./flaw-families";
 import { DELICACY_LIVE } from "./delicacy/items";
 import { numberWord } from "./vocabulary/numbers";
 import { numberWordLeading } from "./vocabulary/numbers";
-import { ARC_FLOORS, soloFloorFactor } from "@/engine/arc";
+import { soloFloorFactor } from "@/engine/arc";
 import {
   BIAS_CLIP_COUNT,
   BIAS_CLIP_SECONDS,
@@ -191,7 +191,7 @@ export const LEARN_PAGES: LearnPage[] = [
       },
       {
         q: "How does the Taste Gym use practice?",
-        a: "Sit a threshold ladder twice in the same browser and the result screen compares the two sittings. It is free, because charging for the training loop would put the one honest question — did your ear actually move — behind a wall. The comparison is judged against a noise floor measured first, so a difference smaller than the instrument's own run-to-run wobble is reported as no change rather than as progress: on the pitch ladder two sittings must differ by roughly ${PITCH_FLOOR_TIMES} times before it will call it movement. Most retests are therefore told that nothing changed the instrument could hear, which is the honest answer.",
+        a: `Sit a threshold ladder twice in the same browser and the result screen compares the two sittings. It is free, because charging for the training loop would put the one honest question — did your ear actually move — behind a wall. The comparison is judged against a noise floor measured first, so a difference smaller than the instrument's own run-to-run wobble is reported as no change rather than as progress: on the pitch ladder two sittings must differ by roughly ${PITCH_FLOOR_TIMES} times before it will call it movement. Most retests are therefore told that nothing changed the instrument could hear, which is the honest answer.`,
       },
     ],
   },
