@@ -31,6 +31,8 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { computeSpreadResult } from "@/engine/spread";
 import { computeDelicacyResult } from "@/engine/delicacy";
+import { BIAS_CLIPS, BIAS_INSTRUMENT_ID } from "@/content/bias/items";
+import { BIAS_SCALE_MAX, BIAS_SCALE_MIN, computeBiasResult } from "@/engine/bias";
 import { ACROSS_EMISSION, acrossLines, instrumentCount } from "./across";
 import { ARC_EMISSION, arcLines } from "./arc";
 import { BIAS_EMISSION, creatorLines as biasCreatorLines } from "./bias";
@@ -263,6 +265,45 @@ describe("declared emission order", () => {
     expect(quiet.length, "no fixture holds a single instrument, so this checks nothing").toBeGreaterThan(0);
     for (const input of quiet) {
       expect(acrossLines(input), "the combined view spoke on a device with one instrument").toEqual([]);
+    }
+  });
+
+  /**
+   * WHAT THE `pinned` SITTING ACTUALLY IS, MEASURED RATHER THAN ASSERTED.
+   *
+   * E19/S2 added it to give `bias/cue`'s conditional declaration some evidence,
+   * and described it as "a state a real listener can produce by rating
+   * everything at the top". THAT WAS WRONG, and the error is worth keeping in
+   * front of whoever reads this next.
+   *
+   * A rating has no headroom when it already sits at the end of the scale the
+   * clip's label points TOWARD — and the listener cannot see which end that is
+   * at the blind pass. The pool is direction-balanced, so a listener who rates
+   * every clip at one extreme leaves exactly the other half movable and the
+   * reading proceeds normally. The refusal branch needs every clip rated at the
+   * edge matching its own hidden direction, which nobody can aim at.
+   *
+   * SO THIS IS NOT A CLAIM THAT THE BRANCH IS UNREACHABLE. A listener could hit
+   * it by coincidence, and the branch must therefore keep working. It is a
+   * claim that no UNIFORM rating reaches it, which is the case somebody would
+   * reason their way to, and the case I reasoned my way to wrongly.
+   */
+  it("cannot be reached by rating everything at one end of the scale", () => {
+    const scored = BIAS_CLIPS.filter((clip) => !clip.isControl);
+    const up = scored.filter((clip) => clip.labelDirection === "up").length;
+    const down = scored.length - up;
+    expect(up, "the pool is no longer direction-balanced").toBeGreaterThan(0);
+    expect(down, "the pool is no longer direction-balanced").toBeGreaterThan(0);
+
+    for (const at of [BIAS_SCALE_MIN, BIAS_SCALE_MAX]) {
+      const flat: Record<string, number> = {};
+      for (const clip of BIAS_CLIPS) flat[clip.id] = at;
+      const result = computeBiasResult(BIAS_INSTRUMENT_ID, BIAS_CLIPS, flat, flat);
+      expect(
+        result.movableCount,
+        `rating every clip ${at} leaves nothing able to move, so the Prestige result screen would ` +
+          "print a percentage and a verdict for a sitting the engine has refused to read",
+      ).toBeGreaterThan(0);
     }
   });
 

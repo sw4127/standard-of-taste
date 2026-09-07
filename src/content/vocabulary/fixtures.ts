@@ -136,8 +136,17 @@ function biasResult(shift: number) {
  * ADDED BECAUSE A DECLARATION HAD NO EVIDENCE (E19/S2). `creatorLines` returns
  * nothing at all when `biasClaim` refuses, and no fixture reached that — so the
  * deck's claim that the two sentences are conditional rested on reading the
- * code. This is a state a real listener can produce by rating everything at the
- * top, and it renders no sentences, so nothing is added to any deck by it.
+ * code. It renders no sentences, so nothing is added to any deck by it.
+ *
+ * IT IS CONSTRUCTED FROM INFORMATION THE LISTENER DOES NOT HAVE (corrected
+ * E19/S5). S2 called this "a state a real listener can produce by rating
+ * everything at the top", and that is false: headroom runs out only at the end
+ * of the scale a clip's label points toward, the listener cannot see which end
+ * that is while rating blind, and the pool is direction-balanced — so rating
+ * everything at one extreme leaves half the clips movable and the reading
+ * proceeds. Reaching this needs every clip pinned in its own hidden direction.
+ * The branch is real and a coincidence could still hit it; nobody can aim at
+ * it. `emission.test.ts` pins the half of that which is checkable.
  */
 function biasPinned() {
   const blind: Record<string, number> = {};
