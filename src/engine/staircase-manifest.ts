@@ -34,10 +34,17 @@
  */
 
 import manifest from "@/content/delicacy/staircase.json";
+import { audioUrl } from "@/content/audio-host";
 import { eligibleWindows, isSourceLocked } from "./staircase-pool";
 
 /** Where the rendered pool is served from. Git-ignored until E5 commits it. */
-export const STAIRCASE_AUDIO_BASE = "/audio/staircase";
+/**
+ * SERVED FROM THE PINNED CDN, NOT FROM THIS DEPLOYMENT (E19/S21, RT-Z8 a).
+ * 131 MB of ladder audio was re-stored on every push to serve bytes identical
+ * to the previous push. See `src/content/audio-host.ts` for why the pin is a
+ * commit and not a branch.
+ */
+export const STAIRCASE_AUDIO_BASE = "staircase";
 
 interface RawMeasured {
   unit: string;
@@ -132,7 +139,7 @@ const POOLED = "*";
 const groupOf = (family: string, sourceId: string) => (isSourceLocked(family) ? sourceId : POOLED);
 const groupKey = (family: string, sourceId: string) => `${family}|${groupOf(family, sourceId)}`;
 
-const toUrl = (file: string) => `${STAIRCASE_AUDIO_BASE}/${file}`;
+const toUrl = (file: string) => audioUrl(`${STAIRCASE_AUDIO_BASE}/${file}`);
 
 const clipIndex = new Map<string, StaircaseClip>();
 const refIndex = new Map<string, StaircaseReference>();

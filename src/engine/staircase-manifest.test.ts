@@ -118,7 +118,16 @@ describe("E5/S1 — coverage", () => {
         referenceFor(w.sourceId, w.startSec); // throws if missing
         for (const level of ladderLevels(family, w.sourceId)) {
           const clip = clipFor(family, w.sourceId, w.startSec, level);
-          expect(clip.url).toMatch(/^\/audio\/staircase\/st-.+\.mp3$/);
+          /*
+           * THE RULE IS THAT EVERY LEVEL HAS A CLIP AND THE URL NAMES THE RIGHT
+           * FILE — not where that file is hosted. This pinned `/audio/staircase/`
+           * until E19/S21 moved the audio onto a pinned CDN, and the needle is
+           * rewritten to the property rather than to the new prefix: the URL ends
+           * in this family's directory and a `st-` clip. `audio-host.test.ts`
+           * owns the question of which host, and whether the pin contains it.
+           */
+          expect(clip.url).toContain("/staircase/st-");
+          expect(clip.url.endsWith(".mp3"), clip.url).toBe(true);
           expect(Number.isFinite(clip.damageDb)).toBe(true);
           pairs++;
           counts[family] = (counts[family] ?? 0) + 1;
