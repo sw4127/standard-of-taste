@@ -22,8 +22,11 @@
  */
 import { execSync } from "node:child_process";
 import { describe, expect, it } from "vitest";
-import { AUDIO_PIN, AUDIO_REPO, AUDIO_ROOT, audioUrl } from "./audio-host";
+import { AUDIO_PIN, AUDIO_REPO, AUDIO_ROOT, audioRepoPath, audioUrl, isPinnedAudio } from "./audio-host";
 import manifest from "@/content/delicacy/staircase.json";
+import { BIAS_CLIPS } from "@/content/bias/items";
+import { MEASURED_TRIALS, PRACTICE_TRIALS } from "@/content/delicacy/items";
+import { SPREAD_POOL } from "@/content/spread/ranking";
 
 const pool = manifest as unknown as {
   instanceWindows: Record<string, { sourceId: string; startSec: number }[]>;
@@ -39,6 +42,14 @@ const pool = manifest as unknown as {
  * for the cost of one process, and a guard nobody wants to wait for is a guard
  * somebody eventually skips.
  */
+function pinnedTree(): Set<string> {
+  const out = execSync(`git ls-tree -r --name-only ${AUDIO_PIN} -- ${AUDIO_ROOT}`, {
+    encoding: "utf8",
+    maxBuffer: 16 * 1024 * 1024,
+  });
+  return new Set(out.split(NL).filter(Boolean));
+}
+
 function pinnedFiles(): Set<string> {
   const out = execSync(`git ls-tree -r --name-only ${AUDIO_PIN} -- ${AUDIO_ROOT}/staircase`, {
     encoding: "utf8",
@@ -124,4 +135,49 @@ describe("the pinned audio commit", () => {
         "will 404 in every browser while existing perfectly on this machine:",
     ).toEqual([]);
   });
+});
+
+/**
+ * EVERY INSTRUMENT, NOT JUST THE LADDER (E19/S22).
+ *
+ * The staircase moved first because it is 131 of the 154 MB. The other three
+ * pools followed, and each of them addresses its audio differently — the bias
+ * clips carry a literal per item, delicacy composes two sides from an id, the
+ * Ranking Test builds its path in the flow — so "the audio is pinned" is three
+ * separate claims and this makes all three checkable in one place.
+ *
+ * A POOL THAT ADDS A CLIP WITHOUT PINNING IT fails here rather than in a
+ * browser. That is the whole reason the check is per-pool rather than a single
+ * assertion that the module exists.
+ */
+describe("every pool's audio is pinned and present", () => {
+  const pinned = pinnedTree();
+
+  const cases: Array<{ pool: string; urls: string[] }> = [
+    { pool: "bias", urls: BIAS_CLIPS.map((c) => c.audioSrc).filter((u) => !u.includes("PLACEHOLDER")) },
+    {
+      pool: "delicacy",
+      urls: [...MEASURED_TRIALS, ...PRACTICE_TRIALS].flatMap((t) => [t.srcA, t.srcB]),
+    },
+    { pool: "spread", urls: SPREAD_POOL.map((item) => audioUrl(`spread/${item.id}.mp3`)) },
+  ];
+
+  it("has clips in every pool, so none of the checks below is vacuous", () => {
+    for (const c of cases) expect(c.urls.length, `${c.pool} has no clips`).toBeGreaterThan(3);
+  });
+
+  for (const { pool, urls } of cases) {
+    it(`serves every ${pool} clip from the pinned commit`, () => {
+      const notPinned = urls.filter((u) => !isPinnedAudio(u));
+      expect(notPinned, `${pool} clips still addressed outside the pinned host:`).toEqual([]);
+
+      const absent = urls
+        .map((u) => audioRepoPath(u) as string)
+        .filter((rel) => !pinned.has(rel));
+      expect(
+        [...new Set(absent)].slice(0, 10),
+        `${absent.length} ${pool} clips are NOT in the pinned commit and will 404 in every browser:`,
+      ).toEqual([]);
+    });
+  }
 });

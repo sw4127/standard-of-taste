@@ -63,3 +63,25 @@ export function audioUrl(relativePath: string): string {
   const clean = relativePath.replace(/^\/+/, "");
   return `https://cdn.jsdelivr.net/gh/${AUDIO_REPO}@${AUDIO_PIN}/${AUDIO_ROOT}/${clean}`;
 }
+
+
+/**
+ * The repository path a served URL points at, or null if it is not one of ours.
+ *
+ * The inverse of `audioUrl`, and it exists so the pool gates can go on asking
+ * the question they have always asked — does the audio a listener will request
+ * actually exist — now that the answer lives in a commit rather than in
+ * `public/`. A gate that checked the URL PREFIX was checking where the files
+ * used to be; this lets it check whether they are there at all.
+ */
+export function audioRepoPath(url: string): string | null {
+  const marker = `@${AUDIO_PIN}/`;
+  const at = url.indexOf(marker);
+  if (at === -1) return null;
+  return url.slice(at + marker.length);
+}
+
+/** Whether a URL is served by this project's pinned audio host. */
+export function isPinnedAudio(url: string): boolean {
+  return url.startsWith(`https://cdn.jsdelivr.net/gh/${AUDIO_REPO}@${AUDIO_PIN}/${AUDIO_ROOT}/`);
+}

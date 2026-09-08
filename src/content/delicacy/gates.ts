@@ -52,6 +52,7 @@
  * labelled uncalibrated).
  */
 
+import { isPinnedAudio } from "@/content/audio-host";
 import { DEGRADATION_FAMILIES } from "@/engine/delicacy";
 import type { DelicacyTrialClip } from "./items";
 
@@ -98,8 +99,15 @@ export function checkDelicacyPool(
   for (const t of trials) {
     famCount.set(t.family, (famCount.get(t.family) ?? 0) + 1);
     magCount.set(t.magnitude, (magCount.get(t.magnitude) ?? 0) + 1);
-    if (!t.srcA.startsWith("/audio/delicacy/") || !t.srcB.startsWith("/audio/delicacy/"))
-      err(`${t.id}: audio must live under /audio/delicacy/`);
+    /*
+     * THE RULE IS THAT BOTH SIDES COME FROM THIS PROJECT'S OWN PINNED AUDIO,
+     * not that the path begins with a particular prefix (E19/S22). The prefix
+     * was where the files used to be served from; when they moved onto a pinned
+     * commit this gate would have rejected the entire live pool for a reason
+     * that had nothing to do with the pool.
+     */
+    if (!isPinnedAudio(t.srcA) || !isPinnedAudio(t.srcB))
+      err(`${t.id}: audio must be served from this project's pinned audio host`);
     if (!t.license || !t.attribution) err(`${t.id}: license/attribution missing (CC credit is a legal requirement)`);
   }
   const perFamily = EXPECTED / 3;

@@ -43,6 +43,7 @@
  */
 
 import type { DegradationFamily, DelicacyItemSpec } from "@/engine/delicacy";
+import { audioUrl } from "@/content/audio-host";
 
 export const DELICACY_INSTRUMENT_ID = "delicacy-v1";
 
@@ -144,8 +145,8 @@ const pair = (
   family,
   magnitude,
   originalSide,
-  srcA: `/audio/delicacy/${id}-a.mp3`,
-  srcB: `/audio/delicacy/${id}-b.mp3`,
+  srcA: audioUrl(`delicacy/${id}-a.mp3`),
+  srcB: audioUrl(`delicacy/${id}-b.mp3`),
   sourceCredit,
   license,
   attribution,

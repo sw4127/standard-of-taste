@@ -5,6 +5,7 @@
  * pass — or the change is a decision, not an accident.
  */
 import { existsSync, readFileSync } from "node:fs";
+import { audioRepoPath, isPinnedAudio } from "@/content/audio-host";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { BIAS_CLIPS, BIAS_POOL_VERSION } from "./items";
@@ -69,7 +70,11 @@ describe("prestige-bias item pool design constraints", () => {
   it("every clip carries license + attribution fields (CC credit is a legal requirement)", () => {
     for (const c of BIAS_CLIPS) {
       expect(c.license.length).toBeGreaterThan(0);
-      expect(c.audioSrc).toMatch(/^\/audio\/bias\//);
+      // The rule is that the clip is served by this project's own pinned audio,
+      // not that its path starts with a prefix (E19/S22). The prefix described
+      // where the files used to live.
+      expect(isPinnedAudio(c.audioSrc), c.audioSrc).toBe(true);
+      expect(c.audioSrc).toContain("/bias/");
     }
   });
 
@@ -78,12 +83,27 @@ describe("prestige-bias item pool design constraints", () => {
     expect(BIAS_POOL_VERSION).toBeGreaterThanOrEqual(1);
   });
 
-  it("every REAL (non-placeholder) audioSrc exists under public/", () => {
+  /**
+   * THE RULE IS UNCHANGED — the audio a listener will request must exist — and
+   * only its ADDRESS moved (E19/S22). The clips are served from a pinned commit
+   * rather than from this deployment, so the file is looked up by its
+   * repository path instead of under `public/`. Checking `public/` would keep
+   * passing right up until the files leave it, and then pass forever while
+   * every clip 404s.
+   */
+  it("every REAL (non-placeholder) audioSrc exists in the repository", () => {
+    let checked = 0;
     for (const c of BIAS_CLIPS) {
       if (c.audioSrc.includes("PLACEHOLDER")) continue;
-      const file = join(process.cwd(), "public", c.audioSrc);
-      expect(existsSync(file), `missing audio file for ${c.id}: ${c.audioSrc}`).toBe(true);
+      const rel = audioRepoPath(c.audioSrc);
+      expect(rel, `${c.id} is not served by the pinned audio host: ${c.audioSrc}`).not.toBeNull();
+      checked += 1;
+      expect(
+        existsSync(join(process.cwd(), rel as string)),
+        `missing audio file for ${c.id}: ${rel}`,
+      ).toBe(true);
     }
+    expect(checked, "no real clips were checked, so this passes vacuously").toBeGreaterThan(5);
   });
 
   // rt-answers §Content-ops item 4: "fail CI if any item lacks a license

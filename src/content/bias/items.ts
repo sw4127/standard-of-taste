@@ -43,6 +43,7 @@
  */
 
 import type { BiasItemSpec } from "@/engine/bias";
+import { audioUrl } from "@/content/audio-host";
 
 export const BIAS_INSTRUMENT_ID = "prestige-bias-v1";
 
@@ -74,7 +75,7 @@ export interface BiasClip extends BiasItemSpec {
 export const BIAS_CLIPS: BiasClip[] = [
   {
     id: "pb1",
-    audioSrc: "/audio/bias/pb1.mp3",
+    audioSrc: audioUrl("bias/pb1.mp3"),
     trueArtist: "J.S. Bach — Kimiko Ishizaka, piano (Open Goldberg Variations)",
     shownArtist: "J.S. Bach — Kimiko Ishizaka, piano (Open Goldberg Variations)",
     shownBlurb: "One of thirty variations, and not one of the ones anybody quotes.",
@@ -91,7 +92,7 @@ export const BIAS_CLIPS: BiasClip[] = [
   },
   {
     id: "pb7",
-    audioSrc: "/audio/bias/pb7.mp3",
+    audioSrc: audioUrl("bias/pb7.mp3"),
     trueArtist: "Komiku",
     shownArtist: "Komiku",
     shownBlurb: "Written to be dropped into other people's games, and released by the album-load.",
@@ -108,7 +109,7 @@ export const BIAS_CLIPS: BiasClip[] = [
   },
   {
     id: "pb3",
-    audioSrc: "/audio/bias/pb3.mp3",
+    audioSrc: audioUrl("bias/pb3.mp3"),
     trueArtist: "F. Chopin — Musopen Complete Chopin project",
     shownArtist: "F. Chopin — Musopen Complete Chopin project",
     shownBlurb: "The nocturne recital programmers skip; even devoted Chopin listeners rarely defend it.",
@@ -120,7 +121,7 @@ export const BIAS_CLIPS: BiasClip[] = [
   },
   {
     id: "pb9",
-    audioSrc: "/audio/bias/pb9.mp3",
+    audioSrc: audioUrl("bias/pb9.mp3"),
     trueArtist: "J. Suk — Musopen Kickstarter ensemble",
     shownArtist: "J. Suk — Musopen Kickstarter ensemble",
     shownBlurb: "Written in 1914 as a patriotic act, when Czech orchestras were forbidden the national anthem and played this instead.",
@@ -139,7 +140,7 @@ export const BIAS_CLIPS: BiasClip[] = [
     // the engine for controls.
     id: "b3",
     isControl: true,
-    audioSrc: "/audio/bias/b3.mp3",
+    audioSrc: audioUrl("bias/b3.mp3"),
     trueArtist: "Komiku",
     shownArtist: "",
     shownBlurb: "",
@@ -151,7 +152,7 @@ export const BIAS_CLIPS: BiasClip[] = [
   },
   {
     id: "pb6",
-    audioSrc: "/audio/bias/pb6.mp3",
+    audioSrc: audioUrl("bias/pb6.mp3"),
     trueArtist: "Chris Zabriskie",
     shownArtist: "Chris Zabriskie",
     shownBlurb: "Released into the open under a Creative Commons licence, and picked up by film and podcast makers ever since.",
@@ -167,7 +168,7 @@ export const BIAS_CLIPS: BiasClip[] = [
   },
   {
     id: "pb10",
-    audioSrc: "/audio/bias/pb10.mp3",
+    audioSrc: audioUrl("bias/pb10.mp3"),
     trueArtist: "F. Mendelssohn — Musopen Kickstarter ensemble",
     shownArtist: "F. Mendelssohn — Musopen Kickstarter ensemble",
     shownBlurb: "His last completed work, written in the months after his sister died; the one piece where the polish drops away.",
@@ -179,7 +180,7 @@ export const BIAS_CLIPS: BiasClip[] = [
   },
   {
     id: "pb2",
-    audioSrc: "/audio/bias/pb2.mp3",
+    audioSrc: audioUrl("bias/pb2.mp3"),
     trueArtist: "J.S. Bach — Kimiko Ishizaka, piano",
     shownArtist: "J.S. Bach — Kimiko Ishizaka, piano",
     shownBlurb: "From a recording project so admired it was placed in the public domain as a cultural gift.",
@@ -191,7 +192,7 @@ export const BIAS_CLIPS: BiasClip[] = [
   },
   {
     id: "pb11",
-    audioSrc: "/audio/bias/pb11.mp3",
+    audioSrc: audioUrl("bias/pb11.mp3"),
     trueArtist: "J. Brahms — Musopen Kickstarter ensemble",
     shownArtist: "Alexander Vane",
     shownBlurb: "A student overture, wheeled out when an orchestra needs something short before the interval.",
@@ -212,7 +213,7 @@ export const BIAS_CLIPS: BiasClip[] = [
   },
   {
     id: "pb8",
-    audioSrc: "/audio/bias/pb8.mp3",
+    audioSrc: audioUrl("bias/pb8.mp3"),
     trueArtist: "Jason Shaw (Audionautix)",
     shownArtist: "Jason Shaw (Audionautix)",
     shownBlurb: "Stock production music, written to be inoffensive; the audio equivalent of a waiting room.",
@@ -224,7 +225,7 @@ export const BIAS_CLIPS: BiasClip[] = [
   },
   {
     id: "pb13",
-    audioSrc: "/audio/bias/pb13.mp3",
+    audioSrc: audioUrl("bias/pb13.mp3"),
     trueArtist: "Monplaisir",
     shownArtist: "Noé Calvet",
     shownBlurb: "A minimalist study praised on year-end experimental lists for doing more with less.",
@@ -241,7 +242,7 @@ export const BIAS_CLIPS: BiasClip[] = [
   },
   {
     id: "pb5",
-    audioSrc: "/audio/bias/pb5.mp3",
+    audioSrc: audioUrl("bias/pb5.mp3"),
     trueArtist: "F. Chopin — Musopen Complete Chopin project",
     shownArtist: "F. Chopin — Musopen Complete Chopin project",
     shownBlurb: "Late-period Chopin at its most refined — the mazurka connoisseurs reach for when they want the form taken seriously.",
@@ -253,7 +254,7 @@ export const BIAS_CLIPS: BiasClip[] = [
   },
   {
     id: "pb4",
-    audioSrc: "/audio/bias/pb4.mp3",
+    audioSrc: audioUrl("bias/pb4.mp3"),
     trueArtist: "L. van Beethoven — Musopen Kickstarter ensemble",
     shownArtist: "L. van Beethoven — Musopen Kickstarter ensemble",
     shownBlurb: "The movement scholars point to when they argue early Beethoven was already looking decades ahead.",
@@ -265,7 +266,7 @@ export const BIAS_CLIPS: BiasClip[] = [
   },
   {
     id: "pb14",
-    audioSrc: "/audio/bias/pb14.mp3",
+    audioSrc: audioUrl("bias/pb14.mp3"),
     trueArtist: "Jason Shaw (Audionautix)",
     shownArtist: "Jason Shaw (Audionautix)",
     shownBlurb: "Library music filed under jazz: the sound of the genre with nobody taking a risk inside it.",
@@ -282,7 +283,7 @@ export const BIAS_CLIPS: BiasClip[] = [
     // sound-worlds.
     id: "b1",
     isControl: true,
-    audioSrc: "/audio/bias/b1.mp3",
+    audioSrc: audioUrl("bias/b1.mp3"),
     trueArtist: "J.S. Bach — Kimiko Ishizaka, piano",
     shownArtist: "",
     shownBlurb: "",
@@ -294,7 +295,7 @@ export const BIAS_CLIPS: BiasClip[] = [
   },
   {
     id: "pb12",
-    audioSrc: "/audio/bias/pb12.mp3",
+    audioSrc: audioUrl("bias/pb12.mp3"),
     trueArtist: "A. Borodin — Musopen Kickstarter ensemble",
     shownArtist: "A. Borodin — Musopen Kickstarter ensemble",
     shownBlurb: "Overshadowed by the quartet he wrote next, whose slow movement became a Broadway song. This one did not.",

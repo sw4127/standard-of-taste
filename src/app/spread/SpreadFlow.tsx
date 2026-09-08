@@ -54,6 +54,7 @@ import { recordResult } from "@/lib/result-store";
 import { SPREAD_POOL, SPREAD_POOL_VERSION } from "@/content/spread/ranking";
 import { RECOGNITION_DISCLOSURE, spreadLines } from "@/content/vocabulary/spread";
 import { numberWord, numberWordLeading } from "@/content/vocabulary/numbers";
+import { audioUrl } from "@/content/audio-host";
 import {
   SPREAD_CLIP_SECONDS,
   SPREAD_SESSION_MINUTES,
@@ -200,7 +201,7 @@ export default function SpreadFlow() {
         </p>
         <ClipPlayer
           key={clip.id}
-          src={`/audio/spread/${clip.id}.mp3`}
+          src={audioUrl(`spread/${clip.id}.mp3`)}
           index={idx}
           label={`Clip ${idx + 1}`}
           caption="Listen, then say whether you know it — and only then rate it."
