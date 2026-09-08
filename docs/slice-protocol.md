@@ -166,3 +166,42 @@ costs exactly the attention the real items need.
 
 **An empty block is the normal case.** Omit it rather than filling it. A reply that ends without one
 means engineering found nothing that only the owner can decide, which on most slices is the truth.
+
+
+### Push cadence: once per TASK, not once per slice (owner-approved 2026-09-08)
+
+**Why this is a rule and not a preference.** Every push to `main` is a production deployment, and
+every deployment stores a full copy of the built site — including **154 MB of tracked instrument
+audio**, which cannot be reduced because the lossy ladder's rungs ARE specific bitrates and
+re-encoding them changes the instrument rather than compressing an asset. The Vercel free tier
+allows 10 GB of deployment storage, so the ceiling arrives at roughly **sixty pushes**. E19 made
+about thirty-four commits in two days, pushing after each one, and hit 100% of the quota.
+
+**The rule.** Commit per slice, as before. **Push when a TASK is done**, not when a slice is.
+
+**What is unchanged, so nothing is traded away for this:**
+- The full suite still runs on every slice, before every commit.
+- The pre-push hook still refuses a red tree; batching pushes does not batch that gate.
+- The PM still sees every slice, because the latch stops the session at each one regardless.
+
+**What is genuinely lost, stated plainly:** work sits on one machine for longer. So **always push
+before the session ends**, and push immediately after any slice whose loss would be expensive to
+reproduce — a long measurement, a migration, anything whose value is in the doing rather than the
+diff.
+
+#### What was rejected, and why it is worth knowing
+
+A Vercel `ignoreCommand` skipping builds for documentation-only commits was approved and then NOT
+built. Two reasons, measured:
+
+1. **It buys almost nothing.** Of E19's thirty-four commits, **five** touched no production file.
+   That is a 15% saving against the ~70% this cadence change buys.
+2. **It is unsafe in exactly the case this amendment creates.** Vercel's documented pattern is
+   `git diff --quiet HEAD^ HEAD ./`, which inspects only the LAST commit. Once a push carries
+   several commits, a documentation-only commit at the tip skips the build for the whole push — and
+   every source change in it silently never reaches production. There is no error; the site simply
+   goes stale. A 15% saving is not worth a failure mode whose symptom is "the deploy looked fine".
+
+The earlier framing of the same ruling — *"only main-branch pushes deploy"* — was also a non-fix,
+and it was engineering's error: this project pushes exclusively to `main`, so every push already was
+one. It is recorded here because the owner approved it on that framing.

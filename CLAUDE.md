@@ -99,6 +99,13 @@ be false. Full text, including how to revoke this: **`docs/slice-protocol.md`, "
 auto-advance"** — the heading in that file is the switch the machine guard reads, so changing IN
 FORCE to SUSPENDED there restores the old rhythm everywhere at once.
 
+**Push once per TASK, not once per slice (owner-approved 2026-09-08).** Every push to `main` is a
+production deployment carrying 154 MB of instrument audio, and the free tier holds ten of those
+before it is full — E19 hit 100% of the quota in two days. Commit per slice; push when the task is
+done, and always before the session ends. The suite still runs per slice and the pre-push gate is
+unchanged. Full text, including the `ignoreCommand` that was approved and then rejected as unsafe:
+**`docs/slice-protocol.md`, "Push cadence"**.
+
 ### Session close — hand over an activation prompt (owner-approved append 2026-08-13)
 **Engineering owns the handover, not the PM.** When the session is nearing its end — context running low, the
 approved slice queue finished, or the PM says to wrap up — do BOTH of these before the last reply ends:
