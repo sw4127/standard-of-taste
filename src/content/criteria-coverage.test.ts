@@ -85,6 +85,15 @@ describe("Hume's five criteria", () => {
    * The product built a component for admitting a door is not there. While no
    * criterion needs it, the unhedged sentence is true; the day one does, that
    * sentence has to change with it. This is the tripwire on that pairing.
+   *
+   * IT HAS CHECKED NOTHING SINCE cd79c6b (noted E20/S2). `NotBuiltYet` was
+   * deleted there, so `uses` is empty, so the condition below is false whatever
+   * the page says -- a guard that reports success by checking nothing, which is
+   * the failure mode this repository has now found three times. The pairing
+   * check is KEPT, because re-adding the component is exactly when it must
+   * fire, and the emptiness is now ASSERTED rather than assumed: a
+   * reintroduction has to come past a red test and say why, since it means a
+   * criterion lost its instrument and that is not a silent event.
    */
   it("advertises no missing instrument while claiming all five exist", () => {
     const uses = sourcesUnder("src/app")
@@ -97,5 +106,12 @@ describe("Hume's five criteria", () => {
       "a surface renders the not-built-yet notice while /learn/freedom-from-prejudice claims all " +
         `five criteria have machines: ${uses.join(", ")}`,
     ).toBe(false);
+    expect(
+      uses,
+      "the not-built-yet notice is back. That means a criterion no longer has an instrument, so " +
+        "/learn/freedom-from-prejudice, the README, the llms files and docs/index.html all need " +
+        "their claim changed with it -- and the copy deck needs the section E20/S2 deleted as " +
+        "dead. Update this test deliberately, not to make it green.",
+    ).toEqual([]);
   });
 });

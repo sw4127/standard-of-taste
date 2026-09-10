@@ -802,36 +802,7 @@ suffix, 2 → times
 
 ---
 
-### 4. `NotBuiltYet` — the product admitting a door is not there
-
-**Where it renders.** A dashed-border panel at the foot of two reading-room articles — `/learn/comparison` and `/learn/practice` — whose criteria have no instrument behind them.
-
-**What the screen has already said.** A full article explaining the criterion, which is exactly why the panel is needed: a reader who arrived searching for that criterion would otherwise leave believing they had missed a door.
-
-**Rules this copy must keep:**
-
-- **Planned, never promised.** Neither instrument has been started and no date has been decided, so “coming soon” is a claim nobody has earned.
-- It must read as a fact, not an apology or an excuse.
-- The blocker clause differs per criterion and is passed in — it must stay true of that criterion.
-- It is the one place the product tells a reader something is missing; it should not be the one place the writing goes limp.
-
-**The template, with both blockers filled in:**
-
-```
-NOT BUILT YET
-
-`INS-NOTBUILTYET-01` · OPEN
-There is no instrument for comparison in the gym today. It is in the plan and not in the product — it needs no new audio, so what it waits on is a decision rather than a build. When it exists it will be measured the same way as the rest, and until then this page is an explanation rather than a door.
-
-`INS-NOTBUILTYET-02` · OPEN
-There is no instrument for practice in the gym today. It is in the plan and not in the product — it needs the product to remember you between sessions, and today it does not. When it exists it will be measured the same way as the rest, and until then this page is an explanation rather than a door.
-
-The criteria that do have machines →
-```
-
----
-
-### 5. The creator vocabulary — added in E11 (Track B), never written by a writer
+### 4. The creator vocabulary — added in E11 (Track B), never written by a writer
 
 **Where it renders.** `/learn/flaws` (a new reading-room page), the front door's lead paragraph and its three secondary doors, the delicacy explainer's state sentences, and a link on the Delicacy and Threshold result screens.
 
@@ -845,7 +816,7 @@ The criteria that do have machines →
 - **Three families, and the limits sentence is load-bearing.** Three named flaws read as “the flaws” without it.
 - The unit names (`cents of peak detune`, `ms of drift IQR`) are the pipeline's own labels. They are the weakest lines here and the engineer flagged them; they are also the honest name of the measured quantity, so a friendlier synonym would add a second vocabulary rather than replace one.
 
-#### 5.1 The flaw families — symptom and mechanism (`/learn/flaws`)
+#### 4.1 The flaw families — symptom and mechanism (`/learn/flaws`)
 
 The symptom is deliberately the complaint a person makes BEFORE they have the word; the mechanism is what is physically true. The gap between them is the vocabulary.
 
@@ -876,7 +847,7 @@ symptom:   It sounds cheap, underwater or brittle — like a good idea saved one
 mechanism: Low-bitrate compression throws away quiet detail. Cymbals turn grainy and reverb tails go swishy and airless, while the loud middle survives intact.
 ```
 
-#### 5.2 The page's two claim-bearing sentences
+#### 4.2 The page's two claim-bearing sentences
 
 ```
 `INS-CREATOR-VOCABULARY-07` · OPEN
@@ -886,7 +857,7 @@ intro:  You can hear that a render is wrong and have no word for it. That is the
 limits: These three are what the pipeline can render as a controlled dose with a right answer at the bottom of it. They are not a list of everything that can go wrong with a piece of audio. A render can fail in ways nothing here measures, and this page would rather be short than pretend otherwise.
 ```
 
-#### 5.3 The page's questions
+#### 4.3 The page's questions
 
 ```
 `INS-CREATOR-VOCABULARY-09` · OPEN
@@ -908,9 +879,9 @@ Q: If I catch these in the trials, will I catch them in my own work?
 A: Unmeasured, so it is not claimed. The instruments report what you caught in these trials, on these recordings, in physical units. Whether that transfers to your own sessions is a question no data here answers.
 ```
 
-#### 5.4 The front door
+#### 4.4 The front door
 
-The lead is shown with the machine count interpolated; three is what ships. The hint sits under the cards, and the three doors are the quiet rows beneath it.
+The lead is shown with the machine count interpolated; four is what ships today. The hint sits under the cards, and the three doors are the quiet rows beneath it.
 
 ```
 `INS-CREATOR-VOCABULARY-14` · OPEN
@@ -938,7 +909,7 @@ Reading room. Hume's five criteria, and how we measure them.
 Snack. Five taps, a verdict, and no measurement behind it.
 ```
 
-#### 5.5 The route from a result to the reference
+#### 4.5 The route from a result to the reference
 
 One string, shown on both the Delicacy and Threshold results. It must stay true after a session that measured one family and after a session that measured three.
 
@@ -947,7 +918,7 @@ One string, shown on both the Delicacy and Threshold results. It must stay true 
 What each flaw is called, and what it sounds like
 ```
 
-#### 5.6 The delicacy explainer, now that the machine is open
+#### 4.6 The delicacy explainer, now that the machine is open
 
 These read the live flag and have a second form for the locked state, which is not shown here because it is not what ships.
 
@@ -977,7 +948,7 @@ A: They are machine 02, and they are open. The battery was built after the Prest
 
 ---
 
-### 6. The Delicacy detection readout — THE ONE BATCH A WRITER HAS ALREADY SEEN
+### 5. The Delicacy detection readout — THE ONE BATCH A WRITER HAS ALREADY SEEN
 
 **Where it renders.** The Delicacy Trials result screen and the flow's reveal: the heading, the body beneath it, the provisional footnote, and the share line.
 
@@ -1076,7 +1047,7 @@ share at 8/15: I called 8 of 15 originals in the Delicacy Trials — a coin flip
 
 ---
 
-### 7. `CRITIC_CONTRADICTION` — why no instrument scores you against a critic
+### 6. `CRITIC_CONTRADICTION` — why no instrument scores you against a critic
 
 **Where it renders.** Three pages: `/learn/comparison`, which is its home; `/learn/methodology`, beside the degrees-convergence line; and `/learn/ranking-test`, after the mechanism paragraph. The `/spread` frame states the refusal without the reason and does not render this.
 
@@ -1965,5 +1936,5 @@ What happened next is the part that is harder to read, and this reading is mine 
 
 ---
 
-**224 sentences, each with an id.** 11 further lines are additional RENDERINGS of sentences already listed — they carry the id they belong to and are not separate strings to edit. Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.
+**222 sentences, each with an id.** 11 further lines are additional RENDERINGS of sentences already listed — they carry the id they belong to and are not separate strings to edit. Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.
 

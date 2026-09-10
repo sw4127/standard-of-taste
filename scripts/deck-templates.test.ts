@@ -19,10 +19,15 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { allChains, contentFiles, matchesFor } from "./template-match.mjs";
+// ONE IMPLEMENTATION OF "can a writer's edit land", not two. The first version
+// of the guard below re-derived it, mis-stripped the deck's own labels, and
+// reported twenty-nine live strings as hand-typed.
+import { trace } from "./deck-source-trace.mjs";
 
 const NL = String.fromCharCode(10);
 const DECK = "docs/copy-deck.md";
 const CHAINS = allChains(contentFiles());
+
 
 interface Owned {
   id: string;
@@ -113,5 +118,64 @@ describe("the copy deck keys sentences to templates", () => {
       "these sections show copy a writer cannot return an edit for, because nothing in them " +
         "carries an id:",
     ).toEqual([]);
+  });
+});
+
+/**
+ * A DECK LINE THAT IS IN NO SOURCE FILE (E20/S2).
+ *
+ * WHAT WENT WRONG. `NotBuiltYet` was deleted on 2026-09-02 when the fifth
+ * criterion got an instrument. Its two sentences stayed in the copy deck for
+ * eight days, under a preamble promising every string below is live in the
+ * product today, because that section was HAND-TYPED into the exporter instead
+ * of read from the module. Nothing was asking the question, so nobody could
+ * have been told; it was found by writing the census that asks it.
+ *
+ * THIS IS THE PART 2 GUARD ONLY, and the scope is a fact rather than a choice.
+ * Chains are parsed from the content modules, so Part 3 -- whose copy is
+ * written inline in JSX -- cannot be matched at all and would report thirty-one
+ * live strings as absent. A guard extended past what it can see does not become
+ * broader, it becomes wrong.
+ */
+describe("no sentence in the instrument deck is copy the product does not have", () => {
+  /*
+   * THE ALLOWLIST SHRINKS TO ZERO OR THIS TEST IS THEATRE. One entry today:
+   * the Prestige title, whose deck block is a pseudo-template an engineer typed
+   * ("<signed percentage> toward the labels") rather than the string in
+   * `bias/copy.ts`. E20/S3 replaces it with the source template and empties
+   * this list. It is named individually so that adding a SECOND one is a
+   * visible act in a diff rather than a pattern quietly widening.
+   */
+  const KNOWN_TYPED = ["INS-RESULTTITLEFRAGMENT-01"];
+
+  const rows = trace(2);
+
+  it("read the part, so nothing below passes vacuously", () => {
+    expect(rows.length).toBeGreaterThan(40);
+    expect(rows.filter((r) => r.verdict === "TEMPLATE").length).toBeGreaterThan(20);
+  });
+
+  it("has no hand-typed line beyond the ones named", () => {
+    const typed = rows
+      .filter((r) => r.verdict === "TYPED" || r.verdict === "DEAD")
+      .filter((r) => KNOWN_TYPED.indexOf(r.id) === -1)
+      .map((r) => `${r.id}  [${r.verdict}]  ${r.text.slice(0, 72)}`);
+    expect(
+      typed,
+      "these deck lines exist in no source file, so a writer's rewrite of them lands nowhere and " +
+        "the copy can outlive the surface that rendered it -- which is exactly what NotBuiltYet " +
+        "did for eight days after its component was deleted:",
+    ).toEqual([]);
+  });
+
+  it("still names a line that is genuinely typed, so the allowlist is not hiding an empty check", () => {
+    const known = rows.filter((r) => KNOWN_TYPED.indexOf(r.id) !== -1);
+    expect(known.length, "the allowlisted id is gone from the deck; delete it from KNOWN_TYPED").toBe(
+      KNOWN_TYPED.length,
+    );
+    expect(
+      known.every((r) => r.verdict === "TYPED"),
+      "the allowlisted id is no longer typed -- S3 has landed, so empty KNOWN_TYPED",
+    ).toBe(true);
   });
 });

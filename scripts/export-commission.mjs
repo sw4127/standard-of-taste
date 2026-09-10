@@ -71,9 +71,10 @@ const BATCHES = [
     prefix: "INS-",
     name: "The instrument copy",
     why:
-      "Smaller batches around the instruments: the result title, the flaw line, the not-built-yet " +
-      "notice, the creator vocabulary. Includes the clip blurbs, which are LOCKED, and the one " +
-      "batch already written, which is PASSED and here only for tone.",
+      "Smaller batches around the instruments: the result title, the flaw line, the creator " +
+      "vocabulary, and the refusal to score you against a critic. Includes the clip blurbs, " +
+      "which are LOCKED, and the one batch already written, which is PASSED and here only " +
+      "for tone.",
   },
   {
     prefix: "MET-",

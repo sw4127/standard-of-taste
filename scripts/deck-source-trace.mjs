@@ -29,13 +29,14 @@
  *   node scripts/deck-source-trace.mjs [PART]     PART defaults to 2
  */
 import { readFileSync, readdirSync, statSync } from "node:fs";
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { allChains, contentFiles, matchesFor, SLOT_MARKER } from "./template-match.mjs";
 
 const NL = String.fromCharCode(10);
 const TICK = String.fromCharCode(96);
 const DECK = "docs/copy-deck.md";
 
-const part = Number(process.argv[2] || "2");
 
 /**
  * THE PART'S OWN SLICE OF THE ASSEMBLED DOCUMENT. Cut on the part heading
@@ -188,38 +189,60 @@ function assembled(line, depth = 0) {
   return false;
 }
 
-const rows = [];
-for (const row of owned(partBody(readFileSync(DECK, "utf8"), part))) {
-  const found = chainFor(row.text);
-  if (found === null) {
-    const bare = withoutLabel(row.text);
-    if (assembled(row.text) || (bare !== null && assembled(bare))) {
+/**
+ * EVERY ID IN ONE PART, WITH THE VERDICT ON WHETHER AN EDIT TO IT CAN LAND.
+ *
+ * EXPORTED BECAUSE THE GUARD MUST NOT RE-IMPLEMENT IT (E20/S2). The first
+ * version of `deck-templates.test.ts` wrote its own copy of "is this line in
+ * source", got the label-stripping wrong, and reported twenty-nine live
+ * strings as hand-typed. Two copies of one rule is the defect this repository
+ * keeps paying for; the guard now asks this function.
+ */
+export function trace(part) {
+  const rows = [];
+  for (const row of owned(partBody(readFileSync(DECK, "utf8"), part))) {
+    const found = chainFor(row.text);
+    if (found === null) {
+      const bare = withoutLabel(row.text);
+      if (assembled(row.text) || (bare !== null && assembled(bare))) {
+        rows.push({
+          ...row,
+          verdict: "ASSEMBLED",
+          note: "two source strings joined by the exporter",
+        });
+        continue;
+      }
+      const where = appearsIn(row.text);
+      const live = where.filter((p) => p.indexOf(".test.") === -1);
       rows.push({
         ...row,
-        verdict: "ASSEMBLED",
-        note: "two source strings joined by the exporter",
+        verdict: where.length === 0 ? "TYPED" : live.length === 0 ? "DEAD" : "UNMATCHED",
+        note: where.length === 0 ? "in no source file" : where.join(", "),
       });
       continue;
     }
-    const where = appearsIn(row.text);
-    const live = where.filter((p) => p.indexOf(".test.") === -1);
+    const slots = found.chain.text.split(SLOT_MARKER).length - 1;
+    const verbatim = found.chain.display === found.text;
     rows.push({
       ...row,
-      verdict: where.length === 0 ? "TYPED" : live.length === 0 ? "DEAD" : "UNMATCHED",
-      note: where.length === 0 ? "in no source file" : where.join(", "),
+      verdict: verbatim ? "TEMPLATE" : slots > 0 ? "RESOLVED" : "TEMPLATE",
+      note: (slots > 0 ? slots + " slot" + (slots === 1 ? "" : "s") + " in " : "") + found.chain.file,
     });
-    continue;
   }
-  const slots = found.chain.text.split(SLOT_MARKER).length - 1;
-  const verbatim = found.chain.display === found.text;
-  rows.push({
-    ...row,
-    verdict: verbatim ? "TEMPLATE" : slots > 0 ? "RESOLVED" : "TEMPLATE",
-    note: (slots > 0 ? slots + " slot" + (slots === 1 ? "" : "s") + " in " : "") + found.chain.file,
-  });
+  return rows;
 }
 
-const order = ["DEAD", "TYPED", "ASSEMBLED", "UNMATCHED", "RESOLVED", "TEMPLATE"];
+export const VERDICTS = ["DEAD", "TYPED", "ASSEMBLED", "UNMATCHED", "RESOLVED", "TEMPLATE"];
+
+/*
+ * THE REPORT RUNS ONLY WHEN THIS FILE IS THE COMMAND. Importing it from a test
+ * must not print a census into the test output.
+ */
+const invoked = process.argv[1] !== undefined &&
+  fileURLToPath(import.meta.url) === resolve(process.argv[1]);
+const part = Number(process.argv[2] || "2");
+const order = VERDICTS;
+const rows = invoked ? trace(part) : [];
 const tally = new Map(order.map((k) => [k, 0]));
 for (const r of rows) tally.set(r.verdict, (tally.get(r.verdict) || 0) + 1);
 
@@ -251,4 +274,4 @@ for (const key of order) {
   }
   out.push("");
 }
-process.stdout.write(out.join(NL) + NL);
+if (invoked) process.stdout.write(out.join(NL) + NL);

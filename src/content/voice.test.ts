@@ -84,25 +84,13 @@ function shippingStrings(): VoiceString[] {
   }
   out.push({ surface: "bias/card/cta", text: biasCardCta("example.com"), intensity: "calm" });
 
-  /**
-   * The "not built yet" notice (E7/S24b, RT-155a). It appears on two reading-room
-   * articles whose criterion has no instrument, and it is the one place the
-   * product tells a reader that a door they came looking for is not there. If
-   * that sentence goes off-voice it reads as an excuse instead of a fact.
+  /*
+   * THE "NOT BUILT YET" NOTICE WAS GATED HERE UNTIL E20/S2, and it is gone
+   * because the copy is gone. `NotBuiltYet` was deleted in cd79c6b when the
+   * fifth criterion got an instrument, so this fixture was gating a sentence
+   * no surface renders -- and asserting, by its presence in the deck, that
+   * the product still tells someone a door is missing. It does not.
    */
-  for (const [criterion, blocker] of [
-    ["comparison", "it needs no new audio, so what it waits on is a decision rather than a build"],
-    ["practice", "it needs the product to remember you between sessions, and today it does not"],
-  ]) {
-    out.push({
-      surface: `learn/not-built/${criterion}`,
-      text:
-        `There is no instrument for ${criterion} in the gym today. It is in the plan and not in ` +
-        `the product — ${blocker}. When it exists it will be measured the same way as the rest, ` +
-        `and until then this page is an explanation rather than a door.`,
-      intensity: "calm",
-    });
-  }
 
   /**
    * THE READING-ROOM FAQ (E9/S1) — the largest block of cohort-visible prose

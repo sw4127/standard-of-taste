@@ -46,6 +46,7 @@ import { CRITIC_CONTRADICTION } from "@/content/critic-refusal";
 import { landingLead, landingHint, SECONDARY_DOORS } from "@/content/landing";
 import { MACHINES } from "@/components/OtherMachines";
 import { learnPage } from "@/content/learn";
+import { numberWord } from "@/content/vocabulary/numbers";
 import { describe, it } from "vitest";
 
 describe("export", () => {
@@ -103,6 +104,9 @@ describe("export", () => {
       // "Three machines" into the deck the day a fourth shipped — the deck
       // the writing pass reads, describing a product that no longer exists.
       landingLead: landingLead(MACHINES.filter((m) => m.live).length),
+      // The count itself, so the deck's PROSE about the slot is derived too.
+      liveMachines: numberWord(MACHINES.filter((m) => m.live).length),
+      doorCount: numberWord(SECONDARY_DOORS.length),
       landingHint: landingHint(),
       doors: SECONDARY_DOORS,
     };
@@ -332,49 +336,24 @@ w();
 w("---");
 w();
 
-/* ------------------------------------------------------------------ 4 */
-w("## 4. `NotBuiltYet` — the product admitting a door is not there");
-w();
-w(
-  "**Where it renders.** A dashed-border panel at the foot of two reading-room articles — " +
-    "`/learn/comparison` and `/learn/practice` — whose criteria have no instrument behind them.",
-);
-w();
-w(
-  "**What the screen has already said.** A full article explaining the criterion, which is exactly " +
-    "why the panel is needed: a reader who arrived searching for that criterion would otherwise leave " +
-    "believing they had missed a door.",
-);
-w();
-w("**Rules this copy must keep:**");
-w();
-w("- **Planned, never promised.** Neither instrument has been started and no date has been decided, so “coming soon” is a claim nobody has earned.");
-w("- It must read as a fact, not an apology or an excuse.");
-w("- The blocker clause differs per criterion and is passed in — it must stay true of that criterion.");
-w("- It is the one place the product tells a reader something is missing; it should not be the one place the writing goes limp.");
-w();
-w("**The template, with both blockers filled in:**");
-w();
-w("```");
-w("NOT BUILT YET");
-w();
-for (const [criterion, blocker] of [
-  ["comparison", "it needs no new audio, so what it waits on is a decision rather than a build"],
-  ["practice", "it needs the product to remember you between sessions, and today it does not"],
-]) {
-  w(
-    `There is no instrument for ${criterion} in the gym today. It is in the plan and not in the ` +
-      `product — ${blocker}. When it exists it will be measured the same way as the rest, and until ` +
-      `then this page is an explanation rather than a door.`,
-  );
-  w();
-}
-w("The criteria that do have machines →");
-w("```");
-w();
-w("---");
-w();
-w("## 5. The creator vocabulary — added in E11 (Track B), never written by a writer");
+/*
+ * SECTION 4 WAS `NotBuiltYet`, AND IT WAS DEAD COPY (E20/S2).
+ *
+ * The component was deleted in cd79c6b (2026-09-02) when the fifth criterion
+ * got an instrument and the product stopped saying any door was missing. This
+ * deck kept printing its two sentences for eight days, under a preamble that
+ * promises every string below is live in the product today, because THE
+ * SECTION WAS HAND-TYPED HERE rather than read from the module. A generated
+ * deck cannot outlive its source; a hand-typed one does, silently -- and this
+ * one would have spent a commissioned writing pass on two sentences that
+ * render nowhere and contradict /learn/freedom-from-prejudice, which tells a
+ * reader all five criteria have a machine of their own.
+ *
+ * Found by `scripts/deck-source-trace.mjs`, which asks of every id whether a
+ * source string produces it. Nothing else in the repository was asking.
+ */
+
+w("## 4. The creator vocabulary — added in E11 (Track B), never written by a writer");
 
 w();
 w(
@@ -397,7 +376,7 @@ w("- **Nothing may count.** Several of these strings are shown after sessions th
 w("- **Three families, and the limits sentence is load-bearing.** Three named flaws read as “the flaws” without it.");
 w("- The unit names (`cents of peak detune`, `ms of drift IQR`) are the pipeline's own labels. They are the weakest lines here and the engineer flagged them; they are also the honest name of the measured quantity, so a friendlier synonym would add a second vocabulary rather than replace one.");
 w();
-w("### 5.1 The flaw families — symptom and mechanism (`/learn/flaws`)");
+w("### 4.1 The flaw families — symptom and mechanism (`/learn/flaws`)");
 w();
 w("The symptom is deliberately the complaint a person makes BEFORE they have the word; the mechanism is what is physically true. The gap between them is the vocabulary.");
 w();
@@ -410,7 +389,7 @@ for (const f of d.families) {
   w("```");
   w();
 }
-w("### 5.2 The page's two claim-bearing sentences");
+w("### 4.2 The page's two claim-bearing sentences");
 w();
 w("```");
 w(`intro:  ${d.flawsIntro}`);
@@ -418,7 +397,7 @@ w();
 w(`limits: ${d.flawsLimits}`);
 w("```");
 w();
-w("### 5.3 The page's questions");
+w("### 4.3 The page's questions");
 w();
 for (const f of d.flawsFaq) {
   w("```");
@@ -427,9 +406,19 @@ for (const f of d.flawsFaq) {
   w("```");
   w();
 }
-w("### 5.4 The front door");
+w("### 4.4 The front door");
 w();
-w("The lead is shown with the machine count interpolated; three is what ships. The hint sits under the cards, and the three doors are the quiet rows beneath it.");
+/*
+ * COUNTED, LIKE THE VALUE IT DESCRIBES (E20/S2). This sentence said "three is
+ * what ships" beside a rendering that says "Four machines" -- E17/S5 fixed the
+ * VALUE by counting live machines and left the prose next to it asserting the
+ * old number. A writer reads both and has to guess which one the product means.
+ */
+w(
+  `The lead is shown with the machine count interpolated; ${d.liveMachines} is what ships ` +
+    `today. The hint sits under the cards, and the ${d.doorCount} doors are the quiet ` +
+    "rows beneath it.",
+);
 w();
 w("```");
 w(`lead:  ${d.landingLead}`);
@@ -444,7 +433,7 @@ for (const door of d.doors) {
   w("```");
   w();
 }
-w("### 5.5 The route from a result to the reference");
+w("### 4.5 The route from a result to the reference");
 w();
 w("One string, shown on both the Delicacy and Threshold results. It must stay true after a session that measured one family and after a session that measured three.");
 w();
@@ -452,7 +441,7 @@ w("```");
 w(d.flawsInvite);
 w("```");
 w();
-w("### 5.6 The delicacy explainer, now that the machine is open");
+w("### 4.6 The delicacy explainer, now that the machine is open");
 w();
 w("These read the live flag and have a second form for the locked state, which is not shown here because it is not what ships.");
 w();
@@ -469,7 +458,7 @@ for (const f of d.delicacyFaq) {
 }
 w("---");
 w();
-w("## 6. The Delicacy detection readout — THE ONE BATCH A WRITER HAS ALREADY SEEN");
+w("## 5. The Delicacy detection readout — THE ONE BATCH A WRITER HAS ALREADY SEEN");
 w();
 w(
   "**Where it renders.** The Delicacy Trials result screen and the flow's reveal: the heading, " +
@@ -539,7 +528,7 @@ w("---");
 w();
 
 /* ------------------------------------------------------------------ CRITIC */
-w("## 7. `CRITIC_CONTRADICTION` — why no instrument scores you against a critic");
+w("## 6. `CRITIC_CONTRADICTION` — why no instrument scores you against a critic");
 w();
 w(
   "**Where it renders.** Three pages: `/learn/comparison`, which is its home; `/learn/methodology`, " +
