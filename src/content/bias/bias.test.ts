@@ -5,7 +5,7 @@
  * pass — or the change is a decision, not an accident.
  */
 import { existsSync, readFileSync } from "node:fs";
-import { audioRepoPath, isPinnedAudio } from "@/content/audio-host";
+import { audioDiskPath, isPinnedAudio } from "@/content/audio-host";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { BIAS_CLIPS, BIAS_POOL_VERSION } from "./items";
@@ -95,7 +95,7 @@ describe("prestige-bias item pool design constraints", () => {
     let checked = 0;
     for (const c of BIAS_CLIPS) {
       if (c.audioSrc.includes("PLACEHOLDER")) continue;
-      const rel = audioRepoPath(c.audioSrc);
+      const rel = audioDiskPath(c.audioSrc);
       expect(rel, `${c.id} is not served by the pinned audio host: ${c.audioSrc}`).not.toBeNull();
       checked += 1;
       expect(

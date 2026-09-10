@@ -35,6 +35,22 @@ export const DEMO_STEPS: FunnelStep[] = FUNNEL_SPEC.map((step, i) => ({
   passThrough: CHOSEN[i % CHOSEN.length],
 }));
 
+/**
+ * MEMOISED, BECAUSE IT IS DETERMINISTIC AND IT IS NOT CHEAP (E19/S23).
+ *
+ * 200 replications over 4,000 arrivals across 8 steps is about 6.4 million
+ * Bernoulli draws. The seed is fixed, so every call returns the identical table
+ * — and it was being called three times by the tests and once per render of
+ * `/lab`. Recomputing an answer that cannot change is the kind of waste that
+ * shows up as somebody else's test timing out: this session's additions pushed
+ * the suite from roughly 120 to 199 seconds of test time, and unrelated tests
+ * began failing under the contention.
+ */
+let cached: FunnelRecoveryRow[] | null = null;
+
 export function demoRecovery(): FunnelRecoveryRow[] {
-  return recoverFunnel(DEMO_STEPS, DEMO_ARRIVALS, DEMO_REPLICATIONS, DEMO_SEED);
+  if (cached === null) {
+    cached = recoverFunnel(DEMO_STEPS, DEMO_ARRIVALS, DEMO_REPLICATIONS, DEMO_SEED);
+  }
+  return cached;
 }

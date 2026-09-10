@@ -50,8 +50,23 @@ export const AUDIO_REPO = "sw4127/standard-of-taste";
  */
 export const AUDIO_PIN = "41ab6dda578247f8f0a6f3a39f1e640038d2815f";
 
-/** Path inside the repository where the audio lives, without a leading slash. */
+/**
+ * WHERE THE PINNED COMMIT KEEPS THE AUDIO — which is NOT where this checkout
+ * keeps it, and the difference is deliberate.
+ *
+ * The pin is a historical commit, taken before the files were moved out of
+ * `public/` so they would stop being copied into every deployment. That commit
+ * is immutable, so its paths are frozen at `public/audio/...` and the URLs go on
+ * resolving. `AUDIO_DIR` is where the same files live today.
+ *
+ * The two converge again the next time the pin moves forward. Until then,
+ * anything asking "is this clip in the tree the CDN reads" wants this one, and
+ * anything asking "is this clip in my working copy" wants the other.
+ */
 export const AUDIO_ROOT = "public/audio";
+
+/** Where the audio lives in this checkout, outside the deployed directory. */
+export const AUDIO_DIR = "audio";
 
 /**
  * A clip's URL from a repo-relative path such as `staircase/st-pb1-w1.mp3`.
@@ -84,4 +99,18 @@ export function audioRepoPath(url: string): string | null {
 /** Whether a URL is served by this project's pinned audio host. */
 export function isPinnedAudio(url: string): boolean {
   return url.startsWith(`https://cdn.jsdelivr.net/gh/${AUDIO_REPO}@${AUDIO_PIN}/${AUDIO_ROOT}/`);
+}
+
+/**
+ * Where a served clip lives in THIS checkout.
+ *
+ * `audioRepoPath` answers for the pinned commit; the pipeline, and any gate
+ * checking that a candidate file is actually present locally, needs the working
+ * copy instead. Composed from the two roots rather than string-patched, so the
+ * day the pin moves forward this returns the same answer without an edit.
+ */
+export function audioDiskPath(url: string): string | null {
+  const rel = audioRepoPath(url);
+  if (rel === null || !rel.startsWith(`${AUDIO_ROOT}/`)) return null;
+  return `${AUDIO_DIR}/${rel.slice(AUDIO_ROOT.length + 1)}`;
 }

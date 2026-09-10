@@ -44,7 +44,7 @@ const FFMPEG = process.env.FFMPEG_PATH || require("ffmpeg-static");
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..", "..");
 const MANIFEST = join(ROOT, "src", "content", "spread", "manifest.json");
-const AUDIO = join(ROOT, "public", "audio", "spread");
+const AUDIO = join(ROOT, "audio", "spread");
 
 /** Full-rate decode — the analysis rate used elsewhere caps at 11 kHz. */
 const SR = 44100;

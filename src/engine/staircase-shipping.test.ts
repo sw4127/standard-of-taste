@@ -7,7 +7,7 @@ import { eligibleSources, isSourceLocked } from "./staircase-pool";
 /**
  * THE BUG THIS EXISTS TO PREVENT SHIPPED, AND NOTHING CAUGHT IT (RT-88a).
  *
- * `public/audio/staircase/` was git-ignored while the Gym was built on top of
+ * `audio/staircase/` was git-ignored while the Gym was built on top of
  * it. Every test passed, the dev server played every clip, and the machine was
  * unusable on the deployed site because not one of its 400 files had ever left
  * the laptop it was rendered on. `staircase-manifest.test.ts` checks the same
@@ -61,7 +61,7 @@ function reachableClips(): Set<string> {
 
 function trackedClips(): Set<string> | null {
   try {
-    const out = execFileSync("git", ["ls-files", "-z", "public/audio/staircase"], {
+    const out = execFileSync("git", ["ls-files", "-z", "audio/staircase"], {
       cwd: process.cwd(),
       encoding: "utf8",
       stdio: ["ignore", "pipe", "ignore"],

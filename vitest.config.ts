@@ -31,5 +31,30 @@ export default defineConfig({
       "**/.next/**",
       "**/.claude/worktrees/**",
     ],
+
+    /**
+     * THE DEFAULT FIVE SECONDS IS A SPEED BUDGET, AND THIS SUITE HAS TESTS THAT
+     * LEGITIMATELY EXCEED IT UNDER LOAD (E19/S23).
+     *
+     * Several tests do real work rather than arithmetic: `speech.test.ts`
+     * decodes the whole shipped audio pool through ffmpeg, `irt.test.ts`
+     * recovers parameters across sample sizes. Alone they take one to two
+     * seconds. Run in parallel with 160 other files they intermittently crossed
+     * five, and the failures moved around between runs — speech, then irt, then
+     * deck-templates — which is the signature of contention rather than of a
+     * defect. Each was verified to pass on its own before this was touched.
+     *
+     * RAISING A TIMEOUT TO MAKE A RED SUITE GREEN IS USUALLY THE WRONG MOVE and
+     * it is worth saying why this is not that. A timeout catches a HANG. It was
+     * doing a second job here — enforcing a speed budget on tests whose cost is
+     * dominated by how busy the machine is, which is not a property of the test.
+     * The first response was to cut what had actually got slower: `demoRecovery`
+     * was recomputing 6.4 million draws on every call and is now memoised. This
+     * covers the remainder.
+     *
+     * A genuinely hung test now takes fifteen seconds to fail instead of five.
+     * That is the whole cost.
+     */
+    testTimeout: 15_000,
   },
 });

@@ -393,7 +393,7 @@ Rendering ${plan.length} pairs — same path as \`clip-pipeline degrade\``);
     for (const o of orphans) {
       for (const side of ["a", "b"]) {
         for (const ext of ["mp3", "m4a"]) {
-          const f = join(ROOT, "public", "audio", "delicacy", `${o.id}-${side}.${ext}`);
+          const f = join(ROOT, "audio", "delicacy", `${o.id}-${side}.${ext}`);
           if (existsSync(f)) rmSync(f, { force: true });
         }
       }

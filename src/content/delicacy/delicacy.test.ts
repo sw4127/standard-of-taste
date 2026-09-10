@@ -5,6 +5,7 @@
  * errors (checkDelicacyPool is pure exactly so this file can do that).
  */
 import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { AUDIO_DIR } from "@/content/audio-host";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
@@ -75,7 +76,7 @@ describe("delicacy pool of record — the real thing passes every gate", () => {
     for (const t of DELICACY_TRIALS) {
       for (const side of ["a", "b"]) {
         expect(
-          existsSync(join(process.cwd(), "public", "audio", "delicacy", `${t.id}-${side}.mp3`)),
+          existsSync(join(process.cwd(), AUDIO_DIR, "delicacy", `${t.id}-${side}.mp3`)),
           `${t.id}-${side}.mp3 missing`,
         ).toBe(true);
       }

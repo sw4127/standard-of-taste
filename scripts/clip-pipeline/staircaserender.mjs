@@ -74,7 +74,7 @@ const TMP = join(CACHE, "staircase-tmp");
 /** Where the staircase pool lives. Separate from the fixed pool: different
  *  instrument, different naming, and E4 multiplies the file count by an order
  *  of magnitude — mixing them would make the fixed pool impossible to audit. */
-export const STAIRCASE_OUT = join(ROOT, "public", "audio", "staircase");
+export const STAIRCASE_OUT = join(ROOT, "audio", "staircase");
 export const STAIRCASE_MANIFEST = join(ROOT, "src", "content", "delicacy", "staircase.json");
 
 const SR = DEFAULT_SPECTRAL_OPTS.sampleRate;

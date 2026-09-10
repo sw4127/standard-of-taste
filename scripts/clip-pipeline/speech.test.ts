@@ -26,7 +26,7 @@ const FFMPEG = process.env.FFMPEG_PATH || require("ffmpeg-static");
 const SPEECH = join(__dirname, "fixtures", "speech-pd-60s.mp3");
 const SR = 22050;
 const POOL = ["pb1", "pb2", "pb3", "pb4", "pb5", "pb6", "pb7", "pb8", "b1", "b2", "b3"];
-const poolFile = (id: string) => join(process.cwd(), "public", "audio", "bias", `${id}.mp3`);
+const poolFile = (id: string) => join(process.cwd(), "audio", "bias", `${id}.mp3`);
 
 function pcm(args: string[]): Float32Array {
   const out = execFileSync(FFMPEG, [...args, "-ac", "1", "-ar", String(SR), "-f", "s16le", "-v", "error", "pipe:1"], {
@@ -65,6 +65,18 @@ describe("E7/S3 — gate 1: an excerpt that is largely someone talking", () => {
     expect(existsSync(SPEECH), "PD speech fixture missing — the calibration cannot run").toBe(true);
   });
 
+  /*
+   * AN EXPLICIT TIMEOUT, AND WHY (E19/S23). This decodes the WHOLE shipped pool
+   * through ffmpeg — inherently seconds, 1.8s when it runs alone. It began
+   * timing out at vitest's 5s default when this session's additions pushed the
+   * suite from about 120 to 199 seconds of test time and the parallel
+   * contention rose with it. The first response was to cut what I had added
+   * (`demoRecovery` was recomputing 6.4 million draws on every call and is now
+   * memoised), which fixed the sporadic failures elsewhere. This one is not
+   * sporadic and not new work: it is a genuinely slow test whose budget was set
+   * when the suite was lighter. Raising it is the honest fix; raising it
+   * silently would not be.
+   */
   it("separates pure speech from every clip in the shipped pool", () => {
     const speech = [0, 8, 16, 24, 32, 40].map((t) => risk(cut(SPEECH, t)));
     const music = POOL.map((id) => ({ id, v: risk(cut(poolFile(id), 0)) }));
@@ -79,7 +91,7 @@ describe("E7/S3 — gate 1: an excerpt that is largely someone talking", () => {
     expect(worstSpeech, `no separation at all:\n${report}`).toBeGreaterThan(loudest.v);
     expect(worstSpeech, `speech falls below the gate:\n${report}`).toBeGreaterThan(SPEECH_RISK_GATE);
     expect(loudest.v, `a shipped clip trips the gate:\n${report}`).toBeLessThan(SPEECH_RISK_GATE);
-  });
+  }, 20_000);
 
   it("catches a voice running the whole length of the clip", () => {
     const rows: string[] = [];

@@ -1,7 +1,7 @@
 /**
  * EVERY CLIP THE LADDER CAN SERVE IS ACTUALLY IN THE DEPLOYMENT (E19/S20).
  *
- * WHAT MAKES THIS POSSIBLE. `public/audio/staircase/` is GITIGNORED — the
+ * WHAT MAKES THIS POSSIBLE. `audio/staircase/` is GITIGNORED — the
  * .gitignore comment describes the chunked force-add that got 400 files onto
  * the remote — so every shipped clip is in the repository because somebody
  * remembered to add it past the ignore rule. Nothing checks that they did.
@@ -44,7 +44,7 @@ const base = (path: string) => path.split("/").pop() ?? path;
 
 /** Files the repository will actually deploy. */
 function trackedAudio(): Set<string> {
-  const out = execSync("git ls-files public/audio/staircase", { encoding: "utf8" });
+  const out = execSync("git ls-files audio/staircase", { encoding: "utf8" });
   return new Set(out.split("\n").filter(Boolean).map(base));
 }
 
@@ -75,7 +75,7 @@ describe("staircase audio that the ladder can serve", () => {
     const absent = reachable.map((c) => base(c.file)).filter((f) => !tracked.has(f));
     expect(
       [...new Set(absent)],
-      "these clips are in the rotation and NOT tracked in git. public/audio/staircase is " +
+      "these clips are in the rotation and NOT tracked in git. audio/staircase is " +
         "gitignored, so they exist only on the machine that rendered them: in production they " +
         "404, and the player holds the rating gate closed on a load failure:",
     ).toEqual([]);

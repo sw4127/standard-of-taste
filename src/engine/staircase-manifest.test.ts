@@ -14,6 +14,7 @@
  * fails loudly rather than the Gym stepping its ladder backwards in silence.
  */
 
+import { AUDIO_DIR } from "@/content/audio-host";
 import { sessionInstances } from "./trial-instances";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
@@ -258,7 +259,14 @@ describe("E5/S1 — the direction rule, proven both ways", () => {
  * the skip stays loud.
  */
 describe("E5/S1 — every URL resolves to a file that exists", () => {
-  const dir = join(process.cwd(), "public", "audio", "staircase");
+  /*
+   * THE AUDIO MOVED OUT OF `public/` (E19/S23) so it would stop being copied
+   * into every deployment. This check self-skips when the directory is absent,
+   * which meant the move silently turned OFF the only test that verifies 367
+   * clips exist — it reported success by checking nothing. Found by reading the
+   * skip count, not by a failure.
+   */
+  const dir = join(process.cwd(), AUDIO_DIR, "staircase");
   const present = existsSync(dir);
 
   it.skipIf(!present)("all 367 clips and their references are on disk", () => {

@@ -29,7 +29,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const MANIFEST = join(ROOT, "src", "content", "bias", "manifest.json");
 const CACHE = join(dirname(fileURLToPath(import.meta.url)), ".cache");
 const LICENSES = join(ROOT, "src", "content", "bias", "licenses");
-const AUDIO_OUT = join(ROOT, "public", "audio", "bias");
+const AUDIO_OUT = join(ROOT, "audio", "bias");
 
 
 

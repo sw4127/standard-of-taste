@@ -41,7 +41,7 @@ const BIAS_MANIFEST = join(ROOT, "src", "content", "bias", "manifest.json");
 const DELICACY_MANIFEST = join(ROOT, "src", "content", "delicacy", "manifest.json");
 const CACHE = join(HERE, ".cache");
 const TMP = join(CACHE, "degrade-tmp");
-const OUT = join(ROOT, "public", "audio", "delicacy");
+const OUT = join(ROOT, "audio", "delicacy");
 export const LUFS = -16; // matches the bias pool target
 /**
  * EXPORTED (E2/S1) because the segment count defines the RAMP MODEL, and the

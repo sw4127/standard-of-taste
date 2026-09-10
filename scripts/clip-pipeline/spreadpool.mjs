@@ -37,7 +37,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..", "..");
 const MANIFEST = join(ROOT, "src", "content", "spread", "manifest.json");
 const CACHE = join(HERE, ".cache");
-const AUDIO_OUT = join(ROOT, "public", "audio", "spread");
+const AUDIO_OUT = join(ROOT, "audio", "spread");
 
 const load = () => JSON.parse(readFileSync(MANIFEST, "utf8"));
 const save = (m) => writeFileSync(MANIFEST, JSON.stringify(m, null, 2) + "\n");

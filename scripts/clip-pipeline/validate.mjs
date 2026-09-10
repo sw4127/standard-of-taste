@@ -59,7 +59,7 @@ const CACHE = join(HERE, ".cache");
  *  grader, which renders anchors through `renderAnchors` too, can clear the
  *  same directory rather than leaving a second one behind. */
 export const TMP = join(CACHE, "validate-tmp");
-const OUT = join(ROOT, "public", "audio", "delicacy");
+const OUT = join(ROOT, "audio", "delicacy");
 
 /** Analysis rate — must match what the spectral defaults assume. */
 const SR = DEFAULT_SPECTRAL_OPTS.sampleRate;
