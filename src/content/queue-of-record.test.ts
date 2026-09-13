@@ -1,0 +1,80 @@
+/**
+ * NOTHING PLANNED DROPS OUT BECAUSE A SESSION FORGOT IT (2026-09-13).
+ *
+ * WHY THIS FILE EXISTS, in the owner's words: a session that was handed several
+ * new directions at once might close and lose what was already planned. The
+ * risk is real and structural rather than a matter of care —
+ * `docs/blueprint-phase-2.md` and `docs/blueprint-phase-3.md` are UNTRACKED, so
+ * the queue lives on one machine, in files a fresh clone cannot open. Phase 3's
+ * own finding ③ names that as the project's largest instance of its signature
+ * defect, and the planning file is the instance.
+ *
+ * THE RULE THE GUARD ENFORCES: every track letter from both phases appears in
+ * `docs/queue-of-record.md`, and each carries a status. A track cannot leave by
+ * being forgotten — only by being marked done or killed, which is a visible act
+ * in a diff.
+ *
+ * WHAT IT CANNOT DO, said plainly: it cannot tell whether a status is TRUE. It
+ * checks that every track is accounted for and that the accounting uses words
+ * that mean something. A wrong "done" passes this and is caught only by a
+ * person reading it.
+ */
+import { readFileSync, existsSync } from "node:fs";
+import { describe, expect, it } from "vitest";
+
+const NL = String.fromCharCode(10);
+const QUEUE = "docs/queue-of-record.md";
+
+/** Phase 2's tracks, then Phase 3's. Letters are the blueprints' own. */
+const PHASE_TWO = ["G", "H", "I", "J", "K", "L", "M"];
+const PHASE_THREE = ["N", "O", "P", "Q", "R", "S"];
+
+/** Words that count as a status. Anything else is not an accounting. */
+const STATUSES = ["done", "OPEN", "PARTLY DONE", "killed", "moot"];
+
+describe("the queue of record accounts for every planned track", () => {
+  const queue = readFileSync(QUEUE, "utf8");
+
+  it("is tracked, unlike the blueprints it carries", () => {
+    expect(existsSync(QUEUE)).toBe(true);
+    expect(queue.length, "the queue is empty").toBeGreaterThan(2000);
+  });
+
+  it("names every track from both phases", () => {
+    const missing: string[] = [];
+    for (const letter of [...PHASE_TWO, ...PHASE_THREE]) {
+      // The table writes them as "**G** — persistence".
+      if (queue.indexOf(`**${letter}** —`) === -1) missing.push(letter);
+    }
+    expect(
+      missing,
+      "these tracks are in a blueprint and not in the tracked queue, so they exist only in a file a " +
+        "fresh clone cannot open:" + NL + missing.join(", "),
+    ).toEqual([]);
+  });
+
+  it("gives every track a status that means something", () => {
+    const unstated: string[] = [];
+    for (const letter of [...PHASE_TWO, ...PHASE_THREE]) {
+      const at = queue.indexOf(`**${letter}** —`);
+      if (at === -1) continue;
+      const row = queue.slice(at, queue.indexOf(NL, at));
+      if (!STATUSES.some((status) => row.indexOf(status) !== -1)) unstated.push(`${letter}: ${row.slice(0, 90)}`);
+    }
+    expect(
+      unstated,
+      "these tracks are listed without a status, which is a row that looks like an accounting and " +
+        "is not one:" + NL + unstated.join(NL),
+    ).toEqual([]);
+  });
+
+  it("still carries the owner actions a session cannot discharge", () => {
+    for (const item of ["GitHub Support", "backup refs", "engine package"]) {
+      expect(
+        queue.indexOf(item),
+        `the queue has lost "${item}" — an owner action that no session can do and every session ` +
+          "has to carry",
+      ).toBeGreaterThan(-1);
+    }
+  });
+});
