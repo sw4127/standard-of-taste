@@ -130,10 +130,32 @@ describe("the README states what its audience claim rests on", () => {
     expect(readme).toContain("Who it's for");
   });
 
-  it("says plainly that no one in that audience has been interviewed", () => {
-    const admits =
-      readme.indexOf("No AI music producer has been interviewed") !== -1 ||
-      readme.indexOf("no AI music producer has been interviewed") !== -1;
+  /*
+   * THE RULE, NOT THE SENTENCE — AND IT BROKE WITHIN HOURS (2026-09-13).
+   *
+   * The first version pinned the literal words "No AI music producer has been
+   * interviewed". Then one was asked: the owner, who uses Suno, and who
+   * reported that sound quality is not a problem he has. The sentence became
+   * obsolete because the WORLD changed, not because the rule did — and a needle
+   * pinned to prose fails at exactly the moment the prose is being corrected
+   * toward the truth.
+   *
+   * What must survive is that the README marks the audience claim as
+   * unvalidated: either nobody has been asked, or what was found points against
+   * it. A phrase list is a weak way to check that and it is the honest one
+   * available; the alternative is asserting that a paragraph "sounds
+   * appropriately uncertain", which no test can do.
+   */
+  const ADMISSIONS = [
+    "has been interviewed",
+    "has now been asked",
+    "points against",
+    "weak evidence",
+    "the open question",
+  ];
+
+  it("marks the audience claim as unvalidated, in whatever words", () => {
+    const admits = ADMISSIONS.some((phrase) => readme.indexOf(phrase) !== -1);
     expect(
       admits,
       "the README names an audience without saying the claim is unresearched. It was decided as a " +
@@ -145,8 +167,11 @@ describe("the README states what its audience claim rests on", () => {
 
   it("keeps the admission near the claim, not in a footer", () => {
     const claim = readme.indexOf("Who it's for");
-    const admission = readme.indexOf("No AI music producer has been interviewed");
+    const admission = Math.min(
+      ...ADMISSIONS.map((phrase) => readme.indexOf(phrase)).filter((at) => at > -1),
+    );
     expect(claim).toBeGreaterThan(-1);
+    expect(Number.isFinite(admission), "no admission phrase found at all").toBe(true);
     expect(admission).toBeGreaterThan(claim);
     expect(
       admission - claim,
