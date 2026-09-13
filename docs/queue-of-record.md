@@ -26,7 +26,7 @@ and risked burying what was already planned.
 | **J** — the Lab panels | Data model, instrument health, falsified registry | **done** (became Phase 3's R1/R2) |
 | **K** — the composite Taste Index | Build or kill | **done** — killed (RT-I a) and published as `/method`'s fifth refusal |
 | **L** — the public surfaces | README, ARCHITECTURE, llms files | **done** |
-| **M** — the Taste Gem | A five-facet visual of the result | **OPEN.** Gated on "build only if the sentences failed". Three copy batches have now landed, so under its own condition it should be **killed and published** like the Index was. Not done. |
+| **M** — the Taste Gem | A five-facet visual of the result | **done — killed and published** 2026-09-13 as `/method`'s sixth refusal. **Phase 2 is now complete.** Note the recorded reason ("two visibly unlit facets") had expired; the surviving objection is that most facets are dark for most READERS, which is a completion meter |
 
 ## Phase 3
 
@@ -37,7 +37,7 @@ and risked burying what was already planned.
 | **P** — the arc | Retest after the 7-day cooldown; publish whether the ear moved, against its noise floor | **OPEN**, blocked by O and then by seven days |
 | **Q** — governance debt | Q1 rulings into a tracked file · Q2 the expertise line · Q3 bind the untracked blueprints | **Q2 done.** Q1 and Q3 are *this file*, partly: the queue is now tracked. The individual **rulings** still live in untracked blueprints and in handoffs |
 | **R** — the closing surface | Falsified registry, data-model page, Lab honesty | **done** — 33 entries live at `/lab/falsified` |
-| **S** — the kill list, published | State the kills on the page, not in a document | **PARTLY DONE.** The Taste Index is published as a refusal. **The Taste Gem and "no sixth instrument" are not** |
+| **S** — the kill list, published | State the kills on the page, not in a document | **PARTLY DONE.** The Taste Index and the Taste Gem are both published as refusals. **"No sixth instrument" is deliberately NOT published** — RT-P1 queued a mock for a possible fifth instrument on 2026-09-13, so publishing that line would make `/method` false the day it is approved. It waits on RT-P1 |
 
 ---
 

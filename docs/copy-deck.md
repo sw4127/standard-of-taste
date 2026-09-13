@@ -1267,7 +1267,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > THE HOUSE RULES · METHODOLOGY
 
 `PAGE-LEARN-METHODOLOGY-01` · OPEN
-> Hume closed his essay with a job description: strong sense, delicate sentiment, improved by practice, perfected by comparison, cleared of prejudice — that is a true judge. The Taste Gym's methodology is that sentence turned into engineering constraints.
+> Hume closed his essay with a job description: strong sense, delicate sentiment, improved by practice, perfected by comparison, cleared of prejudice — that is a true judge. Standard of Taste's methodology is that sentence turned into engineering constraints.
 
 `PAGE-LEARN-METHODOLOGY-02` · OPEN
 > 1. Performance over self-report. Every instrument is a task where you can be wrong. Questionnaires measure your self-image; tasks measure what you actually did. The prestige gap is computed from what your ratings did under false labels; delicacy from whether you found the planted flaw; good sense from whether your confidence matched your accuracy. Nothing asks you to describe your taste, because that answer was never evidence.
@@ -1382,7 +1382,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 **Edits land in** `src/app/legal/page.tsx`.
 
-> THE TASTE GYM
+> STANDARD OF TASTE
 
 `PAGE-LEGAL-01` · OPEN
 > Plain language, no tricks. Last updated {LEGAL_LAST_UPDATED}.
@@ -1390,7 +1390,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > What this is
 
 `PAGE-LEGAL-02` · OPEN
-> The Taste Gym measures how you hear music. Each instrument is a listening task with answers you can get objectively wrong, and every number is computed by a deterministic engine in code — no machine-learning model and no language model classifies you. It is not a psychological assessment, not a personality test, not medical or mental-health advice, and not a diagnosis of anything. It does not predict your personality, your mood or your character, and it never claims to. Older readings still reachable here — the music and football quizzes — are entertainment and were never measurements.
+> Standard of Taste measures how you hear music. Each instrument is a listening task with answers you can get objectively wrong, and every number is computed by a deterministic engine in code — no machine-learning model and no language model classifies you. It is not a psychological assessment, not a personality test, not medical or mental-health advice, and not a diagnosis of anything. It does not predict your personality, your mood or your character, and it never claims to. Older readings still reachable here — the music and football quizzes — are entertainment and were never measurements.
 
 > Terms of use
 
@@ -1401,7 +1401,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > Don't use any result here to make decisions about employment, credit, insurance, housing, or anything else that matters that much. It measures how you heard a handful of short clips on one afternoon.
 
 `PAGE-LEGAL-05` · OPEN
-> Footballer names appear only to describe public playing styles. The Taste Gym is not affiliated with, endorsed by, or connected to FIFA, any club, league, or player.
+> Footballer names appear only to describe public playing styles. Standard of Taste is not affiliated with, endorsed by, or connected to FIFA, any club, league, or player.
 
 `PAGE-LEGAL-06` · OPEN
 > Don't abuse, reverse-engineer, or resell the service. Be normal.
@@ -1798,11 +1798,41 @@ Where a measurement is noisy the product must show the uncertainty rather than h
 
 ---
 
-### 3. The five refusals
+### 3. The six refusals
 
 Each renders as a heading, a small-caps rule line, the refusal, and a paragraph opening “What it cost.” The heading and the rule line are free; a test requires only that the price is substantial and does not say the refusal was free.
 
-#### 14. `refusal-composite-index`
+#### 14. `refusal-taste-gem`
+
+**Kind:** INFERRED — renders under a visible “Inference — the engineer’s reading, not a recorded ruling” label
+
+**Cites:** docs/handoff-2026-09-01.md · docs/handoff-2026-09-04b.md
+
+**Heading on screen (free prose):** The Taste Gem — a five-faceted picture of your result
+
+**Rule line on screen (free prose):** Refused under the anti-clone clause, and the writing pass that made it unnecessary
+
+**Second paragraph opens:** “What it cost. …”
+
+**No locked passage in this block** — all of it is the engineer's own prose and is free.
+
+*The `refusal` field, free prose with no verified passage in it:*
+
+`MET-SIX-REFUSALS-01` · PART-LOCKED
+> A visual was held back until the product's sentences had been through a writer, on the rule that if the sentences landed the picture was decoration. Three batches of them have now been written, applied and shipped, and every result screen ends in prose rather than in a unit. The picture would add no fact the sentences do not already carry. What it would add is five facets, most of them dark for most people — because a reader has usually taken one instrument, not four — and a shape with slots to fill in is a completion meter however carefully it is drawn. This product refuses those by name.
+
+*The `price` field, free prose with no verified passage in it:*
+
+`MET-SIX-REFUSALS-02` · PART-LOCKED
+> The one thing the product will never have is an image a person can post without reading a word. Every result here has to be read to be understood, which costs the share loop most of its reach and is the second time that trade has been made deliberately: the ranked verdict went the same way. What it buys is that nothing on a result screen can be understood as a score out of five.
+
+*The two together, which is how the page reads:*
+
+```renders
+A visual was held back until the product's sentences had been through a writer, on the rule that if the sentences landed the picture was decoration. Three batches of them have now been written, applied and shipped, and every result screen ends in prose rather than in a unit. The picture would add no fact the sentences do not already carry. What it would add is five facets, most of them dark for most people — because a reader has usually taken one instrument, not four — and a shape with slots to fill in is a completion meter however carefully it is drawn. This product refuses those by name. The one thing the product will never have is an image a person can post without reading a word. Every result here has to be read to be understood, which costs the share loop most of its reach and is the second time that trade has been made deliberately: the ranked verdict went the same way. What it buys is that nothing on a result screen can be understood as a score out of five.
+```
+
+#### 15. `refusal-composite-index`
 
 **Kind:** INFERRED — renders under a visible “Inference — the engineer’s reading, not a recorded ruling” label
 
@@ -1818,12 +1848,12 @@ Each renders as a heading, a small-caps rule line, the refusal, and a paragraph 
 
 *The `refusal` field, free prose with no verified passage in it:*
 
-`MET-FIVE-REFUSALS-01` · PART-LOCKED
+`MET-SIX-REFUSALS-03` · PART-LOCKED
 > The design that opened this phase ended at a single composite over five sub-scores. The five are a percentage of movement toward a label, a detection band, a threshold in cents, a count of distinguished works and a calibration score — five different units measuring five different things. Adding them requires deciding how much each is worth, and that weighting can only be argued from a population this product does not have: the cohort is zero. A number assembled from an unjustifiable weighting is not a summary of five measurements, it is a sixth claim resting on none of them. There is no Taste Index, and there will not be one.
 
 *The `price` field, free prose with no verified passage in it:*
 
-`MET-FIVE-REFUSALS-02` · PART-LOCKED
+`MET-SIX-REFUSALS-04` · PART-LOCKED
 > The product gave up the one thing it could have put on a share card and in a headline — a single figure a person could compare, remember and repeat. What ships instead is five readings in their own units, each meaningless outside its own context, on five screens nobody has to visit in order. That is a worse product to market and the only honest one available, and it is the same trade the six ranked tiers lost: a sharper claim given up, rather than kept in the hope nobody checked.
 
 *The two together, which is how the page reads:*
@@ -1832,7 +1862,7 @@ Each renders as a heading, a small-caps rule line, the refusal, and a paragraph 
 The design that opened this phase ended at a single composite over five sub-scores. The five are a percentage of movement toward a label, a detection band, a threshold in cents, a count of distinguished works and a calibration score — five different units measuring five different things. Adding them requires deciding how much each is worth, and that weighting can only be argued from a population this product does not have: the cohort is zero. A number assembled from an unjustifiable weighting is not a summary of five measurements, it is a sixth claim resting on none of them. There is no Taste Index, and there will not be one. The product gave up the one thing it could have put on a share card and in a headline — a single figure a person could compare, remember and repeat. What ships instead is five readings in their own units, each meaningless outside its own context, on five screens nobody has to visit in order. That is a worse product to market and the only honest one available, and it is the same trade the six ranked tiers lost: a sharper claim given up, rather than kept in the hope nobody checked.
 ```
 
-#### 15. `refusal-ranked-tiers`
+#### 16. `refusal-ranked-tiers`
 
 **Kind:** QUOTED — the page presents this as the record speaking
 
@@ -1854,12 +1884,12 @@ Everything else in the block is the engineer's own connective prose and is free.
 
 *The `refusal` field, which carries the verified words “put a person in the right one at the shipping length: 30.5%” and “A tier name is a point estimate wearing an adjective”:*
 
-`MET-FIVE-REFUSALS-03` · PART-LOCKED
+`MET-SIX-REFUSALS-05` · PART-LOCKED
 > They shipped first, and then the measurement meant to justify them killed them. Asked how often the six tiers put a person in the right one at the shipping length: 30.5%. No coarser cut rescued it. A tier name is a point estimate wearing an adjective.
 
 *The `price` field, which carries the verified words “~42–45 trials = 21 min, which is the session 15 was chosen to avoid”:*
 
-`MET-FIVE-REFUSALS-04` · PART-LOCKED
+`MET-SIX-REFUSALS-06` · PART-LOCKED
 > The result screen lost the one line a person could repeat to a friend and got an interval instead — wider, duller, and true. Earning a ranked verdict honestly would land on ~42–45 trials = 21 min, which is the session 15 was chosen to avoid. The product kept the shorter session and gave up the sharper claim, rather than keeping both and hoping nobody checked.
 
 *The two together, which is how the page reads:*
@@ -1868,7 +1898,7 @@ Everything else in the block is the engineer's own connective prose and is free.
 They shipped first, and then the measurement meant to justify them killed them. Asked how often the six tiers put a person in the right one at the shipping length: 30.5%. No coarser cut rescued it. A tier name is a point estimate wearing an adjective. The result screen lost the one line a person could repeat to a friend and got an interval instead — wider, duller, and true. Earning a ranked verdict honestly would land on ~42–45 trials = 21 min, which is the session 15 was chosen to avoid. The product kept the shorter session and gave up the sharper claim, rather than keeping both and hoping nobody checked.
 ```
 
-#### 16. `refusal-paid-tier`
+#### 17. `refusal-paid-tier`
 
 **Kind:** QUOTED — the page presents this as the record speaking
 
@@ -1889,12 +1919,12 @@ Everything else in the block is the engineer's own connective prose and is free.
 
 *The `refusal` field, which carries the verified words “there is no paid tier, and no pricing question”:*
 
-`MET-FIVE-REFUSALS-05` · PART-LOCKED
+`MET-SIX-REFUSALS-07` · PART-LOCKED
 > The plan was to give the assessment away and charge for the training arc. It was withdrawn in one line — there is no paid tier, and no pricing question — because a paywall on the training loop would have put the honest deliverable, whether your ear actually moved, behind the wall.
 
 *The `price` field, which carries the verified words “Monetization remains a goal but as proof of commercial viability, not income”:*
 
-`MET-FIVE-REFUSALS-06` · PART-LOCKED
+`MET-SIX-REFUSALS-08` · PART-LOCKED
 > The project gave up its only means of showing that anyone would pay for this, at a point where monetization remains a goal but as proof of commercial viability, not income. It also created upkeep nobody budgeted for: six weeks after the ruling, three published sentences still promised the tier — on two reading-room pages and in the file the product serves to AI crawlers. Writing a rule down does not enforce it.
 
 *The two together, which is how the page reads:*
@@ -1903,7 +1933,7 @@ Everything else in the block is the engineer's own connective prose and is free.
 The plan was to give the assessment away and charge for the training arc. It was withdrawn in one line — there is no paid tier, and no pricing question — because a paywall on the training loop would have put the honest deliverable, whether your ear actually moved, behind the wall. The project gave up its only means of showing that anyone would pay for this, at a point where monetization remains a goal but as proof of commercial viability, not income. It also created upkeep nobody budgeted for: six weeks after the ruling, three published sentences still promised the tier — on two reading-room pages and in the file the product serves to AI crawlers. Writing a rule down does not enforce it.
 ```
 
-#### 17. `refusal-priced-consumer-product`
+#### 18. `refusal-priced-consumer-product`
 
 **Kind:** QUOTED — the page presents this as the record speaking
 
@@ -1924,12 +1954,12 @@ Everything else in the block is the engineer's own connective prose and is free.
 
 *The `refusal` field, which carries the verified words “Viral consumer distribution for a $3.99 impulse product is dead”:*
 
-`MET-FIVE-REFUSALS-07` · PART-LOCKED
+`MET-SIX-REFUSALS-09` · PART-LOCKED
 > Viral consumer distribution for a $3.99 impulse product is dead, concluded on twenty-nine visitors across a month, with the World Cup front door spreading to nobody at all.
 
 *The `price` field, which carries the verified words “The paid product itself was never tested (4 paywall views)”:*
 
-`MET-FIVE-REFUSALS-08` · PART-LOCKED
+`MET-SIX-REFUSALS-10` · PART-LOCKED
 > A quiz, a share-card pipeline, a paywall and a Merchant-of-Record payment adapter all became legacy in a single decision. And here is the part that is easiest to leave off a page like this: the paid product itself was never tested (4 paywall views). The verdict was reached on distribution evidence, and the pricing question it looks like it answers was never actually asked.
 
 *The two together, which is how the page reads:*
@@ -1938,7 +1968,7 @@ Everything else in the block is the engineer's own connective prose and is free.
 Viral consumer distribution for a $3.99 impulse product is dead, concluded on twenty-nine visitors across a month, with the World Cup front door spreading to nobody at all. A quiz, a share-card pipeline, a paywall and a Merchant-of-Record payment adapter all became legacy in a single decision. And here is the part that is easiest to leave off a page like this: the paid product itself was never tested (4 paywall views). The verdict was reached on distribution evidence, and the pricing question it looks like it answers was never actually asked.
 ```
 
-#### 18. `refusal-human-ear-check`
+#### 19. `refusal-human-ear-check`
 
 **Kind:** QUOTED — the page presents this as the record speaking
 
@@ -1961,12 +1991,12 @@ Everything else in the block is the engineer's own connective prose and is free.
 
 *The `refusal` field, which carries the verified words “The PM never judges a clip again” and “Ear-passes by a non-musician = unstable labels = no value”:*
 
-`MET-FIVE-REFUSALS-09` · PART-LOCKED
+`MET-SIX-REFUSALS-11` · PART-LOCKED
 > Quality control was a person listening to each clip and approving it. It was abolished — The PM never judges a clip again — on the owner's own finding: Ear-passes by a non-musician = unstable labels = no value. The gate was not adding quality. It was adding a delay only one person could clear.
 
 *The `price` field, which carries the verified words “estimated from response data” and “Zero real responses”:*
 
-`MET-FIVE-REFUSALS-10` · PART-LOCKED
+`MET-SIX-REFUSALS-12` · PART-LOCKED
 > The replacement has two layers, and the one the pivot itself calls the real gate — item difficulty and discrimination estimated from response data — has never run, because there are Zero real responses. What gates clips today is the acoustic layer alone: loudness, spectral distance, silence, clipping. It can measure how large a manipulation is. It cannot notice that a clip is bad in a way nobody thought to model.
 
 *The two together, which is how the page reads:*
@@ -1981,7 +2011,7 @@ Quality control was a person listening to each clip and approving it. It was abo
 
 Two blocks. The first is the record's own account; the second is my reading of what happened next, and renders under the inference label. **The distinction between them is the single most consequential thing on this page** — if a rewrite blurs which is which, it breaks the condition the page was approved under.
 
-#### 19. `finding-arc-mostly-refuses`
+#### 20. `finding-arc-mostly-refuses`
 
 **Kind:** QUOTED — the page presents this as the record speaking
 
@@ -2015,7 +2045,7 @@ Everything else in the block is the engineer's own connective prose and is free.
 Before the retest arc was allowed to tell anyone their ear had moved, the size of change it can resolve was measured: the whole hazard here is that subtracting two noisy numbers manufactures progress. Simulating the same unchanged person through two sessions at the shipped length puts the floor on the pitch ladder at roughly 3.5 times — the threshold has to more than halve before the difference can be told from ordinary run-to-run wobble. On the prestige test it is eight points of the scale. The delicacy trials cannot support an arc at all: six of their fifteen pairs would have to change hands. Most retests are therefore told, in as many words, that nothing changed the instrument could hear. That refusal is the ordinary output of this feature rather than its edge case, and the sentence names the floor in the reader's own units so it reads as a fact about the instrument rather than a verdict on them. The only thing that lowers the floor is returning: pooled across four sittings it falls to about two and a half times, which is the entire reward this product offers for coming back.
 ```
 
-#### 20. `finding-launch-avoidance`
+#### 21. `finding-launch-avoidance`
 
 **Kind:** QUOTED — the page presents this as the record speaking
 
@@ -2050,7 +2080,7 @@ Everything else in the block is the engineer's own connective prose and is free.
 A ruling had already been made: post the flagship instrument on its own, within one to two weeks, and do not let the second instrument gate it. The second instrument got built instead. The plan written that day says it without softening: Delicacy got built instead. That is the N2 launch-avoidance pattern, on the record. And directly above it, the diagnosis: Nothing is blocked by engineering. Everything is blocked by the launch not having happened. As of the revision date at the foot of this page, it still has not been posted. The product has had 29 real visitors, ever. There are Zero real responses, which is why every psychometric figure in the Lab is generated from a known model and badged as simulated — the dataset that was named as the project's proprietary asset does not exist. Building is the part that feels like progress, and it is the part that was never the constraint.
 ```
 
-#### 21. `finding-avoidance-then-ratified`
+#### 22. `finding-avoidance-then-ratified`
 
 **Kind:** INFERRED — renders under a visible “Inference — the engineer’s reading, not a recorded ruling” label
 
@@ -2085,10 +2115,10 @@ What happened next is the part that is harder to read, and this reading is mine 
 
 ---
 
-**21 numbered blocks.** Regenerate with `node scripts/export-method-deck.mjs > docs/copy-deck-method.md` after any ledger change.
+**22 numbered blocks.** Regenerate with `node scripts/export-method-deck.mjs > docs/copy-deck-method.md` after any ledger change.
 
 
 ---
 
-**231 sentences, each with an id.** Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.
+**233 sentences, each with an id.** Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.
 

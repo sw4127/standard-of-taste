@@ -154,9 +154,10 @@ describe("the copy deck keys sentences to templates", () => {
  */
 const COVERED = [
   { part: 2, name: "the instrument copy", ids: 49 },
-  // 36 -> 38 in E20/S1: the fifth refusal, `refusal-composite-index`, which
-  // is two ids because a refusal is a `refusal` field and a `price` field.
-  { part: 4, name: "the /method page", ids: 38 },
+  // 36 -> 38 in E20/S1: the fifth refusal, `refusal-composite-index`.
+  // 38 -> 40 in E20: the sixth, `refusal-taste-gem`. Each refusal is two ids
+  // because it is a `refusal` field and a `price` field.
+  { part: 4, name: "the /method page", ids: 40 },
 ];
 
 describe.each(COVERED)("Part $part, $name, shows the copy the product has", ({ part, ids }) => {

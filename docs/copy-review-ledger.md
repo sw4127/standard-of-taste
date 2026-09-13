@@ -38,7 +38,7 @@ The writing pass is **Cowork's**, not the PM's and not engineering's. The decks 
 | 3 · The page copy | `/spread (the frame and the hero captions)` | **never** |
 | 4 · The /method page | 1. The page's own framing prose | **never** |
 | 4 · The /method page | 2. The operating model, in the ruled reader order | **never** |
-| 4 · The /method page | 3. The five refusals | **never** |
+| 4 · The /method page | 3. The six refusals | **never** |
 | 4 · The /method page | 4. The finding against the project itself | **never** |
 
 ## Passed, but in no deck

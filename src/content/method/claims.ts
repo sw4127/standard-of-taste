@@ -302,6 +302,48 @@ export const METHOD_CLAIMS: MethodClaim[] = [
  */
 export const METHOD_REFUSALS: MethodRefusal[] = [
   /**
+   * THE SIXTH REFUSAL (E20, Track M closed, Track S published).
+   *
+   * WHY THE RECORDED REASON IS NOT THE REASON GIVEN HERE, which is the only
+   * interesting thing about this entry. The Gem was put on hold over "two
+   * visibly unlit facets" — two of Hume's five criteria had no instrument, so a
+   * five-faceted visual would have shown two dark. That premise DIED on
+   * 2026-09-02 when the fifth criterion shipped; all five have machines now and
+   * nothing would be dark for a person who finished them.
+   *
+   * Executing a kill on a reason that has expired would have been the easy
+   * path, and it would have put a false sentence on this page. The objection
+   * that survives is different and larger: the darkness was never about which
+   * instruments EXIST, it is about which ones the reader has DONE. A person who
+   * has taken one instrument meets four dark facets and a thing to fill in,
+   * which is a completion meter — and the anti-clone clause refuses those by
+   * name rather than by argument.
+   *
+   * `inferred`, for the same reason as the composite index: the ruling gating
+   * it is citable and tracked, and the JUDGMENT that the sentences landed well
+   * enough to make a visual decoration is mine.
+   */
+  {
+    id: "refusal-taste-gem",
+    what: "The Taste Gem — a five-faceted picture of your result",
+    rule: "the anti-clone clause, and the writing pass that made it unnecessary",
+    kind: "inferred",
+    refusal:
+      "A visual was held back until the product's sentences had been through a writer, on the rule that if the sentences landed the picture was decoration. Three batches of them have now been written, applied and shipped, and every result screen ends in prose rather than in a unit. The picture would add no fact the sentences do not already carry. What it would add is five facets, most of them dark for most people — because a reader has usually taken one instrument, not four — and a shape with slots to fill in is a completion meter however carefully it is drawn. This product refuses those by name.",
+    price:
+      "The one thing the product will never have is an image a person can post without reading a word. Every result here has to be read to be understood, which costs the share loop most of its reach and is the second time that trade has been made deliberately: the ranked verdict went the same way. What it buys is that nothing on a result screen can be understood as a score out of five.",
+    sources: [
+      {
+        path: "docs/handoff-2026-09-01.md",
+        anchor: "two visibly unlit facets",
+      },
+      {
+        path: "docs/handoff-2026-09-04b.md",
+        anchor: "Track M was always gated on the sentences having been read",
+      },
+    ],
+  },
+  /**
    * THE FIFTH REFUSAL (E20/S1, executing RT-I (a), ruled 2026-09-01).
    *
    * WHY IT IS `inferred` AND NOT `quoted`, which is the only interesting
