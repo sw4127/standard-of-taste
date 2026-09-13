@@ -137,87 +137,72 @@ describe("the copy deck keys sentences to templates", () => {
  * live strings as absent. A guard extended past what it can see does not become
  * broader, it becomes wrong.
  */
-describe("no sentence in the instrument deck is copy the product does not have", () => {
+/**
+ * THE PARTS THIS GUARD CAN SPEAK FOR, AND WHY NOT THE OTHER ONE (E20/S3).
+ *
+ * Chains are parsed from the content modules, so a part whose copy is written
+ * inline in JSX cannot be matched and would report thirty-one live strings as
+ * absent. Part 3 is that part. Parts 2 and 4 have had their copy moved into
+ * modules -- that was the work of E20 -- so they can be held to the whole
+ * invariant. A guard extended past what it can see does not become broader, it
+ * becomes wrong.
+ *
+ * THE COUNTS ARE CANARIES, NOT SPECIFICATIONS. They are expected to change when
+ * a part gains or loses copy; the point is that it cannot change SILENTLY.
+ * E20/S4 found that a lost handle -- a live string whose only id disappeared --
+ * broke no test at all, because the section it sat in still had other ids.
+ */
+const COVERED = [
+  { part: 2, name: "the instrument copy", ids: 49 },
+  { part: 4, name: "the /method page", ids: 36 },
+];
+
+describe.each(COVERED)("Part $part, $name, shows the copy the product has", ({ part, ids }) => {
+  const rows = trace(part);
+
+  it("read the part, so nothing below passes vacuously", () => {
+    expect(rows.length).toBeGreaterThan(20);
+    expect(rows.filter((r) => r.verdict === "TEMPLATE").length).toBeGreaterThan(15);
+  });
+
+  it("prints no rendering, no glued pair and nothing hand-typed", () => {
+    const wrong = rows
+      .filter((r) => r.verdict !== "TEMPLATE")
+      .map((r) => `${r.id}  [${r.verdict}]  ${r.note}  ::  ${r.text.slice(0, 64)}`);
+    expect(
+      wrong,
+      "these ids do not show the string the product has. RESOLVED means the slots were filled in, " +
+        "so rewriting it freezes a value that is supposed to move. ASSEMBLED means two source " +
+        "strings share one id, so one of two edits lands nowhere. TYPED means the line is in no " +
+        "source file at all, which is how a deleted component's copy stayed in this deck for " +
+        "eight days:",
+    ).toEqual([]);
+  });
+
+  it("still hands out the number of ids it did when this was written", () => {
+    expect(
+      rows.length,
+      "this part's id count moved. If copy was added or removed deliberately, update the number in " +
+        "COVERED and name the string in the commit message. If it was not deliberate, a live " +
+        "sentence has just lost the only handle a writer could return an edit on, and nothing " +
+        "else will say so.",
+    ).toBe(ids);
+  });
+});
+
+describe("the deck's hand-typed allowlist is empty and stays visible", () => {
   /*
    * THE ALLOWLIST IS EMPTY, AND IT REACHED EMPTY IN ONE SLICE (E20/S3). It held
    * the Prestige title, whose deck block was a pseudo-template an engineer
    * typed -- "<signed percentage> toward the labels" -- rather than the string
-   * in `bias/copy.ts`. S3 replaced the hand-typed sections with blocks read
-   * from source, and the exporter now THROWS rather than printing a string no
-   * content module contains, so the class is refused at the generator and
-   * caught here if it ever returns by another route.
+   * in `bias/copy.ts`. The exporters now THROW rather than printing a string no
+   * content module contains, so the class is refused at the generator.
    *
-   * An entry added back is a visible act in a diff, which is why the list
-   * stays rather than being deleted with its last member.
+   * An entry added back is a visible act in a diff, which is why the list stays
+   * rather than being deleted with its last member.
    */
   const KNOWN_TYPED: string[] = [];
-
-  const rows = trace(2);
-
-  it("read the part, so nothing below passes vacuously", () => {
-    expect(rows.length).toBeGreaterThan(40);
-    expect(rows.filter((r) => r.verdict === "TEMPLATE").length).toBeGreaterThan(20);
-  });
-
-  it("has no hand-typed line beyond the ones named", () => {
-    const typed = rows
-      .filter((r) => r.verdict === "TYPED" || r.verdict === "DEAD")
-      .filter((r) => KNOWN_TYPED.indexOf(r.id) === -1)
-      .map((r) => `${r.id}  [${r.verdict}]  ${r.text.slice(0, 72)}`);
-    expect(
-      typed,
-      "these deck lines exist in no source file, so a writer's rewrite of them lands nowhere and " +
-        "the copy can outlive the surface that rendered it -- which is exactly what NotBuiltYet " +
-        "did for eight days after its component was deleted:",
-    ).toEqual([]);
-  });
-
-  /**
-   * THE WHOLE INVARIANT, NOW THAT IT HOLDS (E20/S4). Every id'd line in Part 2
-   * is the source string, slots and all. RESOLVED means the deck printed a
-   * RENDERING, so a rewrite freezes a value the engine is supposed to fill;
-   * ASSEMBLED means two source strings share one id, so one of two edits is
-   * silently discarded. Both were present at the start of this session -- nine
-   * and four of them -- and both are gone, which is the only moment this
-   * assertion can be made without an allowlist.
-   */
-  it("prints no rendering and no glued pair, only source templates", () => {
-    const wrong = rows
-      .filter((r) => r.verdict === "RESOLVED" || r.verdict === "ASSEMBLED")
-      .map((r) => `${r.id}  [${r.verdict}]  ${r.note}  ::  ${r.text.slice(0, 64)}`);
-    expect(
-      wrong,
-      "these ids do not show the string the product has. A RESOLVED line has its slots filled in, " +
-        "so rewriting it freezes a value that is supposed to move; an ASSEMBLED line is two " +
-        "source strings under one id, so one of the two edits lands nowhere:",
-    ).toEqual([]);
-  });
-
-  /**
-   * A LOST HANDLE IS SILENT, AND I FOUND THAT BY RUNNING A MUTATION (E20/S4).
-   *
-   * The mutation replaced one template block with a rendering of a DIFFERENT
-   * template -- one already id'd elsewhere. The assembler correctly collapsed
-   * it ("another rendering of the same template"), so it minted no id, so the
-   * verdict check above saw nothing wrong. Meanwhile the phase line had
-   * vanished from the deck entirely and the whole suite stayed green. The
-   * defect was not the rendering; it was a live product string losing its only
-   * handle, which is the failure `leaves no section without a handle` was
-   * written for and cannot see, because the section still had other ids.
-   *
-   * A COUNT IS A CANARY, NOT A SPECIFICATION. It is expected to change when
-   * this part gains or loses copy -- the point is that it cannot change
-   * SILENTLY. Update it in the same commit that changes the deck, and say in
-   * that message which string arrived or left.
-   */
-  it("still hands out the number of ids it did when this was written", () => {
-    expect(
-      rows.length,
-      "Part 2's id count moved. If a string was added or removed deliberately, update this number " +
-        "and name the string in the commit message. If it was not deliberate, a live sentence has " +
-        "just lost the only handle a writer could return an edit on, and nothing else will say so.",
-    ).toBe(49);
-  });
+  const rows = COVERED.flatMap((c) => trace(c.part));
 
   it("keeps every allowlisted id real, so the list cannot hide an empty check", () => {
     const known = rows.filter((r) => KNOWN_TYPED.indexOf(r.id) !== -1);
