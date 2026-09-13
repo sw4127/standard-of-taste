@@ -22,6 +22,10 @@
  */
 import { execSync } from "node:child_process";
 import { writeFileSync, unlinkSync } from "node:fs";
+import { allChains, contentFiles, matchesFor } from "./template-match.mjs";
+
+/** Source templates, parsed from the content modules the product renders from. */
+const CHAINS = allChains(contentFiles());
 
 const script = `
 import { BIAS_CLIPS, BIAS_POOL_VERSION } from "@/content/bias/items";
@@ -144,8 +148,99 @@ const d = JSON.parse(m[1]);
  */
 const NEW_SINCE = ["pb9", "pb10", "pb11", "pb12", "pb13", "pb14"];
 
+const QUOTE_OPEN = String.fromCharCode(8220);
+const QUOTE_CLOSE = String.fromCharCode(8221);
+
 const L = [];
 const w = (s = "") => L.push(s);
+
+/**
+ * PRINT THE SOURCE TEMPLATE, NOT A RENDERING OF IT (E20/S3).
+ *
+ * WHAT THIS FIXES, MEASURED. The census in `deck-source-trace.mjs` found nine
+ * ids in this part whose block was a RENDERING with its slots filled in, and
+ * one whose block was a sentence no source file contains -- a pseudo-template
+ * an engineer typed, "<signed percentage> toward the labels". Batch 2's writing
+ * pass logged seven slot questions against exactly this, and its return said
+ * what the remaining parts need is the thing Part 1 got: templates read from
+ * source. A writer rewriting a rendering freezes `${FAMILY_LIST}` into three
+ * family names, and the fourth family silently never appears.
+ *
+ * IT REFUSES RATHER THAN FALLING BACK. If no chain matches, or several do, this
+ * throws and the deck does not build. That is the whole point: the hand-typed
+ * section this replaces is how `NotBuiltYet` stayed in the deck for eight days
+ * after its component was deleted. A generator that can be talked into printing
+ * a string nobody wrote will eventually print one nobody renders.
+ */
+function template(renderings, lead) {
+  const shown = renderings.filter((r) => typeof r === "string" && r.length > 0);
+  if (shown.length === 0) throw new Error("export-instrument-deck: template() got nothing to show");
+  const hits = matchesFor(shown[0], CHAINS);
+  if (hits.length !== 1) {
+    throw new Error(
+      "export-instrument-deck: " + hits.length + " source templates match, so this block would be " +
+        "hand-typed. Give the string a home in a content module, or narrow it: " + shown[0].slice(0, 90),
+    );
+  }
+  /*
+   * EVERY RENDERING MUST COME FROM THE SAME TEMPLATE, not just the first.
+   *
+   * The first version matched `shown[0]` and trusted the rest. Hand it two
+   * different templates in one call and it prints ONE of them with the other's
+   * renderings underneath as though they were the same sentence -- the merge
+   * defect, which is the exact mirror of the split defect this whole rework
+   * exists to fix, and it would have been invisible in the output.
+   */
+  for (const rendering of shown) {
+    const also = matchesFor(rendering, CHAINS);
+    if (also.length !== 1 || also[0].display !== hits[0].display) {
+      throw new Error(
+        "export-instrument-deck: these renderings are not the same template, so showing them " +
+          "under one id would merge two sentences: " + shown[0].slice(0, 60) + "  ||  " +
+          rendering.slice(0, 60),
+      );
+    }
+  }
+  if (lead) {
+    w(lead);
+    w();
+  }
+  w("> " + hits[0].display);
+  w();
+  /*
+   * A STRING THE ASSEMBLER WILL NOT GIVE AN ID, SAID OUT LOUD.
+   *
+   * Ids are minted only for lines of 40 characters or more. Three of this
+   * part's FAQ questions and three front-door labels fall under it, so they are
+   * printed, they are real product copy, and a writer has no handle to return
+   * an edit on. That was true before this rework and invisible; the deck now
+   * says which strings it cannot take an edit for rather than leaving a writer
+   * to discover it when their return lands nowhere.
+   */
+  if (hits[0].display.length + 2 < 40) {
+    w("  *No id: this string is under the deck's 40-character floor. Name it in prose if it is " +
+      "what needs changing.*");
+    w();
+  }
+  const examples = [...new Set(shown)].filter((r) => r !== hits[0].display);
+  if (examples.length > 0) {
+    /*
+     * THE ENDS OF THE RANGE, NOT THE FIRST TWO. The title's five renderings run
+     * -31, -1, 0, +1, +31, and showing the first two showed a writer two
+     * NEGATIVE numbers -- while the section's rules are about the sign
+     * surviving and zero not reading as a failure. The two examples a writer
+     * sees should be the two the rules argue about.
+     */
+    const ends = examples.length > 2
+      ? [examples[0], examples[examples.length - 1]]
+      : examples;
+    w(
+      "  *As rendered:* " + ends.map((e) => QUOTE_OPEN + e + QUOTE_CLOSE).join("  ·  ") +
+        (examples.length > 2 ? "  · …and " + (examples.length - 2) + " between them" : ""),
+    );
+    w();
+  }
+}
 
 w("# Shipped instrument copy — deck for a writing pass");
 w();
@@ -270,12 +365,11 @@ w();
  * link preview, a bookmark and a screen reader was the one string in the deck a
  * writer could not return an edit for.
  */
-w("**The sentence** — the sign and the number come from the engine:");
-w();
-w("```");
-w("<signed percentage> toward the labels — the whole title, as a bookmark shows it");
-w("```");
-w();
+template(
+  d.titleFragments.map(([, s]) => s),
+  "**The sentence, as the source file writes it.** The sign and the number are slots the engine " +
+    "fills; leave them exactly as they are.",
+);
 w("**Every reachable shape** (renderings of the sentence above, not separate strings):");
 w();
 w("```renders");
@@ -320,12 +414,13 @@ w();
  * the flaw line from the deck altogether, which is worse than listing it three
  * times: a writer cannot return an edit for a sentence that has no id.
  */
-w("**The two editable strings** — a styled figure is set between them:");
-w();
-w("```");
-w(`prefix → ${d.flawPrefix}`);
-for (const [k, v] of d.flawLabels) w(`suffix, ${k} → ${v}`);
-w("```");
+template(
+  [d.flawPrefix],
+  "**The editable string.** A styled figure and the singular/plural word are set after it — both " +
+    "come from the engine, and the two words are below the length at which this deck mints an id, " +
+    "so say so in the return if one of them is what is wrong.",
+);
+w("*The words set after it:* " + d.flawLabels.map(([k, v]) => `${k} → “${v}”`).join("  ·  "));
 w();
 w("**Assembled, at every interesting count:**");
 w();
@@ -383,28 +478,22 @@ w();
 for (const f of d.families) {
   w(`**${f.label}** — measured in ${f.unit}`);
   w();
-  w("```");
-  w(`symptom:   ${f.symptom}`);
-  w(`mechanism: ${f.mechanism}`);
-  w("```");
+  w("*The symptom — the complaint before the word:*");
   w();
+  template([f.symptom]);
+  w("*The mechanism — what is physically true:*");
+  w();
+  template([f.mechanism]);
 }
 w("### 4.2 The page's two claim-bearing sentences");
 w();
-w("```");
-w(`intro:  ${d.flawsIntro}`);
-w();
-w(`limits: ${d.flawsLimits}`);
-w("```");
-w();
+template([d.flawsIntro], "*The intro:*");
+template([d.flawsLimits], "*The limits sentence, which is load-bearing:*");
 w("### 4.3 The page's questions");
 w();
 for (const f of d.flawsFaq) {
-  w("```");
-  w(`Q: ${f.q}`);
-  w(`A: ${f.a}`);
-  w("```");
-  w();
+  template([f.q], "*Question:*");
+  template([f.a], "*Answer:*");
 }
 w("### 4.4 The front door");
 w();
@@ -420,41 +509,42 @@ w(
     "rows beneath it.",
 );
 w();
-w("```");
-w(`lead:  ${d.landingLead}`);
-w();
-w(`hint:  ${d.landingHint}`);
-w("```");
-w();
+template([d.landingLead], "*The lead. The machine count is a slot — it was three, it is four, and a rewrite that spells it out will be wrong again:*");
+template([d.landingHint], "*The hint, under the cards:*");
+/*
+ * TWO FIELDS, TWO IDS (E20/S3). A door is an accented `label` and a plain
+ * `line`, and this printed them joined by a space under one id -- so a returned
+ * rewrite could not be applied without guessing where the cut went, and the
+ * writer was never told there was one. The census calls this ASSEMBLED and
+ * found four of them in this part.
+ */
 for (const door of d.doors) {
-  w("```");
-  w(`${door.href}`);
-  w(`${door.label} ${door.line}`);
-  w("```");
+  /*
+   * THE LABEL IS SHOWN BUT CANNOT BE ID'D, and saying so is better than
+   * quietly dropping it. The assembler mints ids only for lines of 40
+   * characters or more -- "Snack." is six -- so a short label has no handle in
+   * any deck. It is a real source string and a writer may well want it changed,
+   * so it is printed with its own reason attached rather than omitted.
+   */
+  w("*The door to `" + door.href + "` — its accented label is " + QUOTE_OPEN + door.label +
+    QUOTE_CLOSE + ", which is a source string too short for this deck to give an id; name it in " +
+    "prose if it is the part that is wrong. The line beneath it:*");
   w();
+  template([door.line]);
 }
 w("### 4.5 The route from a result to the reference");
 w();
 w("One string, shown on both the Delicacy and Threshold results. It must stay true after a session that measured one family and after a session that measured three.");
 w();
-w("```");
-w(d.flawsInvite);
-w("```");
-w();
+template([d.flawsInvite]);
 w("### 4.6 The delicacy explainer, now that the machine is open");
 w();
 w("These read the live flag and have a second form for the locked state, which is not shown here because it is not what ships.");
 w();
-w("```");
-w(`index card: ${d.delicacyTeaser}`);
-w("```");
-w();
+template([d.delicacyTeaser], "*The index card:*");
 for (const f of d.delicacyFaq) {
-  w("```");
-  w(`Q: ${f.q}`);
-  w(`A: ${f.a}`);
-  w("```");
-  w();
+  template([f.q], "*Question:*");
+  template([f.a], "*Answer:*");
 }
 w("---");
 w();

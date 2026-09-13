@@ -748,12 +748,12 @@ Overshadowed by the quartet he wrote next, whose slow movement became a Broadway
 - No claim about the person (D1); no percentile or cohort (N3).
 - It has to make sense with no context at all, because a tab title arrives with none.
 
-**The sentence** — the sign and the number come from the engine:
+**The sentence, as the source file writes it.** The sign and the number are slots the engine fills; leave them exactly as they are.
 
-```
 `INS-RESULTTITLEFRAGMENT-01` · OPEN
-<signed percentage> toward the labels — the whole title, as a bookmark shows it
-```
+> ${pct > 0 ? "+" : ""}${pct}% toward the labels
+
+  *As rendered:* “-31% toward the labels”  ·  “+31% toward the labels”  · …and 3 between them
 
 **Every reachable shape** (renderings of the sentence above, not separate strings):
 
@@ -782,14 +782,12 @@ pct =  31 → +31% toward the labels
 - Zero must read as a fact, not a rebuke.
 - The number keeps its own styling in the flow, so the prefix and the suffix are separate strings and must work with a figure set between them.
 
-**The two editable strings** — a styled figure is set between them:
+**The editable string.** A styled figure and the singular/plural word are set after it — both come from the engine, and the two words are below the length at which this deck mints an id, so say so in the return if one of them is what is wrong.
 
-```
 `INS-FLAW-LINE-01` · OPEN
-prefix → And on the ones you caught, you named the flaw
-suffix, 1 → time
-suffix, 2 → times
-```
+> And on the ones you caught, you named the flaw
+
+*The words set after it:* 1 → “time”  ·  2 → “times”
 
 **Assembled, at every interesting count:**
 
@@ -822,129 +820,167 @@ The symptom is deliberately the complaint a person makes BEFORE they have the wo
 
 **Pitch drift** — measured in cents
 
-```
+*The symptom — the complaint before the word:*
+
 `INS-CREATOR-VOCABULARY-01` · OPEN
-symptom:   It sounds sour or slightly seasick, and nothing you can point at is off-key.
+> It sounds sour or slightly seasick, and nothing you can point at is off-key.
+
+*The mechanism — what is physically true:*
+
 `INS-CREATOR-VOCABULARY-02` · OPEN
-mechanism: The whole take slides out of tune while it plays. It starts where it should and ends somewhere else, so no single note is wrong — the drift is.
-```
+> The whole take slides out of tune while it plays. It starts where it should and ends somewhere else, so no single note is wrong — the drift is.
 
 **Timing smear** — measured in ms
 
-```
+*The symptom — the complaint before the word:*
+
 `INS-CREATOR-VOCABULARY-03` · OPEN
-symptom:   It feels rubbery and unanchored. The groove will not lock, however hard the drums are pushed.
+> It feels rubbery and unanchored. The groove will not lock, however hard the drums are pushed.
+
+*The mechanism — what is physically true:*
+
 `INS-CREATOR-VOCABULARY-04` · OPEN
-mechanism: The beat wanders off the grid and back again in slow waves. No individual hit is late enough to notice on its own; the pattern of them is.
-```
+> The beat wanders off the grid and back again in slow waves. No individual hit is late enough to notice on its own; the pattern of them is.
 
 **Compression damage** — measured in kbps
 
-```
+*The symptom — the complaint before the word:*
+
 `INS-CREATOR-VOCABULARY-05` · OPEN
-symptom:   It sounds cheap, underwater or brittle — like a good idea saved one too many times.
+> It sounds cheap, underwater or brittle — like a good idea saved one too many times.
+
+*The mechanism — what is physically true:*
+
 `INS-CREATOR-VOCABULARY-06` · OPEN
-mechanism: Low-bitrate compression throws away quiet detail. Cymbals turn grainy and reverb tails go swishy and airless, while the loud middle survives intact.
-```
+> Low-bitrate compression throws away quiet detail. Cymbals turn grainy and reverb tails go swishy and airless, while the loud middle survives intact.
 
 #### 4.2 The page's two claim-bearing sentences
 
-```
+*The intro:*
+
 `INS-CREATOR-VOCABULARY-07` · OPEN
-intro:  You can hear that a render is wrong and have no word for it. That is the gap this page closes: three kinds of damage the gym can measure, what each one sounds like, and the machines that find how small a dose of it you can still catch.
+> You can hear that a render is wrong and have no word for it. That is the gap this page closes: three kinds of damage the gym can measure, what each one sounds like, and the machines that find how small a dose of it you can still catch.
+
+*The limits sentence, which is load-bearing:*
 
 `INS-CREATOR-VOCABULARY-08` · OPEN
-limits: These three are what the pipeline can render as a controlled dose with a right answer at the bottom of it. They are not a list of everything that can go wrong with a piece of audio. A render can fail in ways nothing here measures, and this page would rather be short than pretend otherwise.
-```
+> These three are what the pipeline can render as a controlled dose with a right answer at the bottom of it. They are not a list of everything that can go wrong with a piece of audio. A render can fail in ways nothing here measures, and this page would rather be short than pretend otherwise.
 
 #### 4.3 The page's questions
 
-```
+*Question:*
+
 `INS-CREATOR-VOCABULARY-09` · OPEN
-Q: Can you tell me which flaw is wrecking my track?
+> Can you tell me which flaw is wrecking my track?
+
+*Answer:*
+
 `INS-CREATOR-VOCABULARY-10` · OPEN
-A: No. Nothing here listens to your files, and there is nowhere to upload one. What this gives you is the vocabulary — three kinds of damage, what each sounds like, and the machine that measures how small a dose of it your own ears still catch.
-```
+> No. Nothing here listens to your files, and there is nowhere to upload one. What this gives you is the vocabulary — three kinds of damage, what each sounds like, and the machine that measures how small a dose of it your own ears still catch.
 
-```
-Q: Why only three?
+*Question:*
+
+> Why only three?
+
+  *No id: this string is under the deck's 40-character floor. Name it in prose if it is what needs changing.*
+
+*Answer:*
+
 `INS-CREATOR-VOCABULARY-11` · OPEN
-A: Because three is what the clip pipeline can render as a controlled dose with an objectively correct answer behind it: pitch drift, timing smear and compression damage. Other things go wrong in a mix. They are absent because we cannot measure them yet, not because they do not matter.
-```
+> Because three is what the clip pipeline can render as a controlled dose with an objectively correct answer behind it: ${FAMILY_LIST}. Other things go wrong in a mix. They are absent because we cannot measure them yet, not because they do not matter.
 
-```
+  *As rendered:* “Because three is what the clip pipeline can render as a controlled dose with an objectively correct answer behind it: pitch drift, timing smear and compression damage. Other things go wrong in a mix. They are absent because we cannot measure them yet, not because they do not matter.”
+
+*Question:*
+
 `INS-CREATOR-VOCABULARY-12` · OPEN
-Q: If I catch these in the trials, will I catch them in my own work?
+> If I catch these in the trials, will I catch them in my own work?
+
+*Answer:*
+
 `INS-CREATOR-VOCABULARY-13` · OPEN
-A: Unmeasured, so it is not claimed. The instruments report what you caught in these trials, on these recordings, in physical units. Whether that transfers to your own sessions is a question no data here answers.
-```
+> Unmeasured, so it is not claimed. The instruments report what you caught in these trials, on these recordings, in physical units. Whether that transfers to your own sessions is a question no data here answers.
 
 #### 4.4 The front door
 
 The lead is shown with the machine count interpolated; four is what ships today. The hint sits under the cards, and the three doors are the quiet rows beneath it.
 
-```
+*The lead. The machine count is a slot — it was three, it is four, and a rewrite that spells it out will be wrong again:*
+
 `INS-CREATOR-VOCABULARY-14` · OPEN
-lead:  Not a personality. Not a vibe. Four machines, each measuring one thing Hume said a real judge needs — whether a famous name can move your ratings, whether your ears can catch damage when nobody tells you where it is, how small that damage can get before you lose it, and whether your ratings move at all where a critic's judgment moved.
+> Not a personality. Not a vibe. ${countWordCapitalised(machineCount)} machines, each measuring one thing Hume said a real judge needs — whether a famous name can move your ratings, whether your ears can catch damage when nobody tells you where it is, how small that damage can get before you lose it, and whether your ratings move at all where a critic's judgment moved.
+
+  *As rendered:* “Not a personality. Not a vibe. Four machines, each measuring one thing Hume said a real judge needs — whether a famous name can move your ratings, whether your ears can catch damage when nobody tells you where it is, how small that damage can get before you lose it, and whether your ratings move at all where a critic's judgment moved.”
+
+*The hint, under the cards:*
 
 `INS-CREATOR-VOCABULARY-15` · OPEN
-hint:  Free · no sign-up · headphones help · pick one, the room follows
-```
+> Free · no sign-up · headphones help · pick one, the room follows
 
-```
-/learn/flaws
+*The door to `/learn/flaws` — its accented label is “Something sounds wrong.”, which is a source string too short for this deck to give an id; name it in prose if it is the part that is wrong. The line beneath it:*
+
 `INS-CREATOR-VOCABULARY-16` · OPEN
-Something sounds wrong. Three kinds of damage, what each one is called, and which machine measures it.
-```
+> Three kinds of damage, what each one is called, and which machine measures it.
 
-```
-/learn
+*The door to `/learn` — its accented label is “Reading room.”, which is a source string too short for this deck to give an id; name it in prose if it is the part that is wrong. The line beneath it:*
+
 `INS-CREATOR-VOCABULARY-17` · OPEN
-Reading room. Hume's five criteria, and how we measure them.
-```
+> Hume's five criteria, and how we measure them.
 
-```
-/music/quiz
+*The door to `/music/quiz` — its accented label is “Snack.”, which is a source string too short for this deck to give an id; name it in prose if it is the part that is wrong. The line beneath it:*
+
 `INS-CREATOR-VOCABULARY-18` · OPEN
-Snack. Five taps, a verdict, and no measurement behind it.
-```
+> Five taps, a verdict, and no measurement behind it.
 
 #### 4.5 The route from a result to the reference
 
 One string, shown on both the Delicacy and Threshold results. It must stay true after a session that measured one family and after a session that measured three.
 
-```
 `INS-CREATOR-VOCABULARY-19` · OPEN
-What each flaw is called, and what it sounds like
-```
+> What each flaw is called, and what it sounds like
 
 #### 4.6 The delicacy explainer, now that the machine is open
 
 These read the live flag and have a second form for the locked state, which is not shown here because it is not what ships.
 
-```
+*The index card:*
+
 `INS-CREATOR-VOCABULARY-20` · OPEN
-index card: Machine 02: can your ears find the key in the wine?
-```
+> Machine 02: can your ears find the key in the wine?
 
-```
-Q: What is the key-in-the-wine story?
+*Question:*
+
+> What is the key-in-the-wine story?
+
+  *No id: this string is under the deck's 40-character floor. Name it in prose if it is what needs changing.*
+
+*Answer:*
+
 `INS-CREATOR-VOCABULARY-21` · OPEN
-A: Hume retells it from Don Quixote: two of Sancho's kinsmen judged a wine good but for a faint taste of leather and iron. They were ridiculed — until the hogshead was emptied and an old key on a leathern thong was found at the bottom. Their perception was real and verifiable; that is delicacy.
-```
+> Hume retells it from Don Quixote: two of Sancho's kinsmen judged a wine good but for a faint taste of leather and iron. They were ridiculed — until the hogshead was emptied and an old key on a leathern thong was found at the bottom. Their perception was real and verifiable; that is delicacy.
 
-```
-Q: How do the Delicacy Trials work?
+*Question:*
+
+> How do the Delicacy Trials work?
+
+  *No id: this string is under the deck's 40-character floor. Name it in prose if it is what needs changing.*
+
+*Answer:*
+
 `INS-CREATOR-VOCABULARY-22` · OPEN
-A: Public-domain and Creative-Commons recordings are altered with controlled degradations — pitch drift, timing smear and compression damage — and you identify the original and name the flaw. Unlike a taste quiz, answers are objectively right or wrong, difficulty is tunable, and items can be calibrated with item-response theory.
-```
+> Public-domain and Creative-Commons recordings are altered with controlled degradations — ${FAMILY_LIST} — and you identify the original and name the flaw. Unlike a taste quiz, answers are objectively right or wrong, difficulty is tunable, and items can be calibrated with item-response theory.
 
-```
+  *As rendered:* “Public-domain and Creative-Commons recordings are altered with controlled degradations — pitch drift, timing smear and compression damage — and you identify the original and name the flaw. Unlike a taste quiz, answers are objectively right or wrong, difficulty is tunable, and items can be calibrated with item-response theory.”
+
+*Question:*
+
 `INS-CREATOR-VOCABULARY-23` · OPEN
-Q: Where do the Delicacy Trials sit in the gym?
+> Where do the Delicacy Trials sit in the gym?
+
+*Answer:*
+
 `INS-CREATOR-VOCABULARY-24` · OPEN
-A: They are machine 02, and they are open. The battery was built after the Prestige Test, on the principle that a gym has equipment you can see before you are ready for it — and now you are.
-```
+> They are machine 02, and they are open. The battery was built after the Prestige Test, on the principle that a gym has equipment you can see before you are ready for it — and now you are.
 
 ---
 

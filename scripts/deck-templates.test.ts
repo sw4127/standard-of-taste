@@ -139,14 +139,18 @@ describe("the copy deck keys sentences to templates", () => {
  */
 describe("no sentence in the instrument deck is copy the product does not have", () => {
   /*
-   * THE ALLOWLIST SHRINKS TO ZERO OR THIS TEST IS THEATRE. One entry today:
-   * the Prestige title, whose deck block is a pseudo-template an engineer typed
-   * ("<signed percentage> toward the labels") rather than the string in
-   * `bias/copy.ts`. E20/S3 replaces it with the source template and empties
-   * this list. It is named individually so that adding a SECOND one is a
-   * visible act in a diff rather than a pattern quietly widening.
+   * THE ALLOWLIST IS EMPTY, AND IT REACHED EMPTY IN ONE SLICE (E20/S3). It held
+   * the Prestige title, whose deck block was a pseudo-template an engineer
+   * typed -- "<signed percentage> toward the labels" -- rather than the string
+   * in `bias/copy.ts`. S3 replaced the hand-typed sections with blocks read
+   * from source, and the exporter now THROWS rather than printing a string no
+   * content module contains, so the class is refused at the generator and
+   * caught here if it ever returns by another route.
+   *
+   * An entry added back is a visible act in a diff, which is why the list
+   * stays rather than being deleted with its last member.
    */
-  const KNOWN_TYPED = ["INS-RESULTTITLEFRAGMENT-01"];
+  const KNOWN_TYPED: string[] = [];
 
   const rows = trace(2);
 
@@ -168,14 +172,17 @@ describe("no sentence in the instrument deck is copy the product does not have",
     ).toEqual([]);
   });
 
-  it("still names a line that is genuinely typed, so the allowlist is not hiding an empty check", () => {
+  it("keeps every allowlisted id real, so the list cannot hide an empty check", () => {
     const known = rows.filter((r) => KNOWN_TYPED.indexOf(r.id) !== -1);
-    expect(known.length, "the allowlisted id is gone from the deck; delete it from KNOWN_TYPED").toBe(
-      KNOWN_TYPED.length,
-    );
     expect(
-      known.every((r) => r.verdict === "TYPED"),
-      "the allowlisted id is no longer typed -- S3 has landed, so empty KNOWN_TYPED",
-    ).toBe(true);
+      known.length,
+      "an allowlisted id is not in the deck any more. Delete it from KNOWN_TYPED rather than " +
+        "leaving an exemption nobody can see the subject of.",
+    ).toBe(KNOWN_TYPED.length);
+    expect(
+      known.filter((r) => r.verdict !== "TYPED").map((r) => r.id),
+      "these ids are allowlisted as hand-typed but are no longer hand-typed. Remove them; an " +
+        "exemption that is not exempting anything is a hole left open for the next one.",
+    ).toEqual([]);
   });
 });
