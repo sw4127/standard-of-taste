@@ -76,3 +76,87 @@ describe("public surfaces do not call a live instrument unbuilt", () => {
     expect(plannedRows).toEqual([]);
   });
 });
+
+/**
+ * NO PUBLISHED PAGE MAY COUNT FEWER INSTRUMENTS THAN EXIST (2026-09-13).
+ *
+ * `docs/index.html` said "Three of the five have working instruments" in one
+ * paragraph and "All five of Hume's criteria now have an instrument" in two
+ * others. The unbuilt-marker scan above could not see it: the sentence carries
+ * no unbuilt marker and names no criterion, it just counts. So the summary page
+ * — the one written to convince a stranger — undersold the product by two
+ * instruments, and would have gone to GitHub Pages that way.
+ *
+ * A COUNT IS A CLAIM. This checks the shape rather than the sentence, so the
+ * next page to phrase it differently is still caught.
+ */
+describe("published pages count the instruments correctly", () => {
+  /*
+   * BUILT WITH `new RegExp`, NOT WRITTEN AS A LITERAL. The transport this file
+   * was authored through eats one level of backslash escaping, so every word
+   * boundary in the first version arrived as a literal BACKSPACE character and
+   * the pattern matched nothing at all -- while the corpus scan reported no
+   * violations, which looks exactly like success. The fixture test above is the
+   * only reason it was caught, and it is the third regex this repository has
+   * had hollowed out the same way.
+   */
+  const BS = String.fromCharCode(92);
+  const EDGE = BS + "b";
+  const WS = BS + "s";
+  const COUNTED = new RegExp(
+    EDGE + "(one|two|three|four|five|six)" + WS + "+of" + WS + "+the" + WS + "+five" + EDGE,
+    "gi",
+  );
+  const WORD = ["", "one", "two", "three", "four", "five", "six"];
+
+  /*
+   * FIVE IS HUME'S NUMBER, NOT A COUNT OF OUR WORK. The criteria are fixed by
+   * the 1757 essay; what moves is how many have instruments, and
+   * `criteria-coverage.test.ts` is what proves that all five do — it opens each
+   * implementing file and checks the symbol is exported. This guard does the
+   * other half: it stops a published page CLAIMING fewer than exist.
+   *
+   * My first version asserted `LIVE_CRITERIA.length === 5`, which is a list of
+   * the two criteria whose instruments shipped most recently. It failed
+   * immediately, which is the only reason the mistake is not in the repository.
+   */
+  const HUME_CRITERIA = 5;
+
+  /*
+   * THE PATTERN IS PROVEN ON A FIXTURE, NOT ON THE CORPUS, and that correction
+   * is worth recording. My first vacuity check required a counting sentence to
+   * EXIST in the published files — which passed only while the defect was still
+   * there, and failed the moment it was fixed. A guard that needs a violation
+   * present in order to believe itself is backwards; what has to be shown is
+   * that the matcher would catch one.
+   */
+  it("catches an understated count, and lets a correct one through", () => {
+    const said = (text: string) => (text.match(COUNTED) || []).length;
+    expect(said("Three of the five have working instruments.")).toBe(1);
+    expect(said("Two of the five are built.")).toBe(1);
+    expect(said("All five have working instruments.")).toBe(0);
+    expect(said("Five of the five have working instruments.")).toBe(1);
+  });
+
+  it("reads real files, so the scan below is not scanning nothing", () => {
+    const all = SURFACES.map((path) => readFileSync(path, "utf8")).join(" ");
+    expect(all.length).toBeGreaterThan(5000);
+  });
+
+  it("never says fewer of the five are built than are built", () => {
+    const wrong: string[] = [];
+    for (const path of SURFACES) {
+      const text = readFileSync(path, "utf8");
+      for (const hit of text.match(COUNTED) || []) {
+        const said = WORD.indexOf(hit.trim().split(/\s+/)[0].toLowerCase());
+        if (said > 0 && said < HUME_CRITERIA) wrong.push(`${path}: "${hit}"`);
+      }
+    }
+    expect(
+      wrong,
+      `all ${HUME_CRITERIA} of Hume's criteria have an instrument. These pages count fewer, ` +
+        "which understates the product on the surfaces written to convince a stranger:",
+    ).toEqual([]);
+  });
+});
+
