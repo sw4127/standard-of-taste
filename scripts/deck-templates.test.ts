@@ -172,6 +172,53 @@ describe("no sentence in the instrument deck is copy the product does not have",
     ).toEqual([]);
   });
 
+  /**
+   * THE WHOLE INVARIANT, NOW THAT IT HOLDS (E20/S4). Every id'd line in Part 2
+   * is the source string, slots and all. RESOLVED means the deck printed a
+   * RENDERING, so a rewrite freezes a value the engine is supposed to fill;
+   * ASSEMBLED means two source strings share one id, so one of two edits is
+   * silently discarded. Both were present at the start of this session -- nine
+   * and four of them -- and both are gone, which is the only moment this
+   * assertion can be made without an allowlist.
+   */
+  it("prints no rendering and no glued pair, only source templates", () => {
+    const wrong = rows
+      .filter((r) => r.verdict === "RESOLVED" || r.verdict === "ASSEMBLED")
+      .map((r) => `${r.id}  [${r.verdict}]  ${r.note}  ::  ${r.text.slice(0, 64)}`);
+    expect(
+      wrong,
+      "these ids do not show the string the product has. A RESOLVED line has its slots filled in, " +
+        "so rewriting it freezes a value that is supposed to move; an ASSEMBLED line is two " +
+        "source strings under one id, so one of the two edits lands nowhere:",
+    ).toEqual([]);
+  });
+
+  /**
+   * A LOST HANDLE IS SILENT, AND I FOUND THAT BY RUNNING A MUTATION (E20/S4).
+   *
+   * The mutation replaced one template block with a rendering of a DIFFERENT
+   * template -- one already id'd elsewhere. The assembler correctly collapsed
+   * it ("another rendering of the same template"), so it minted no id, so the
+   * verdict check above saw nothing wrong. Meanwhile the phase line had
+   * vanished from the deck entirely and the whole suite stayed green. The
+   * defect was not the rendering; it was a live product string losing its only
+   * handle, which is the failure `leaves no section without a handle` was
+   * written for and cannot see, because the section still had other ids.
+   *
+   * A COUNT IS A CANARY, NOT A SPECIFICATION. It is expected to change when
+   * this part gains or loses copy -- the point is that it cannot change
+   * SILENTLY. Update it in the same commit that changes the deck, and say in
+   * that message which string arrived or left.
+   */
+  it("still hands out the number of ids it did when this was written", () => {
+    expect(
+      rows.length,
+      "Part 2's id count moved. If a string was added or removed deliberately, update this number " +
+        "and name the string in the commit message. If it was not deliberate, a live sentence has " +
+        "just lost the only handle a writer could return an edit on, and nothing else will say so.",
+    ).toBe(49);
+  });
+
   it("keeps every allowlisted id real, so the list cannot hide an empty check", () => {
     const known = rows.filter((r) => KNOWN_TYPED.indexOf(r.id) !== -1);
     expect(

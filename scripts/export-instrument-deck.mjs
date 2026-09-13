@@ -34,6 +34,7 @@ import {
   CALIBRATION_PHASE_LINE,
   FLAW_LINE_PREFIX,
   PROVISIONAL_FOOTNOTE,
+  PROVISIONAL_FOOTNOTE_PARTS,
   chanceCall,
   delicacyResultSummary,
   detectionBody,
@@ -96,6 +97,12 @@ describe("export", () => {
           delicacyResultSummary(r),
         ]),
         shares: [13, 8].map((n) => [n, shareText(n, 15)]),
+        // The footnote's own parts, so the deck lists pieces rather than a
+        // paragraph whose middle third is another id's string.
+        footnotePieces: PROVISIONAL_FOOTNOTE_PARTS.filter((part) => part !== CALIBRATION_PHASE_LINE),
+        footnoteMiddleIsPhase:
+          PROVISIONAL_FOOTNOTE_PARTS.length === 3 &&
+          PROVISIONAL_FOOTNOTE_PARTS[1] === CALIBRATION_PHASE_LINE,
       },
       criticContradiction: CRITIC_CONTRADICTION,
       flawsIntro: FLAWS_INTRO,
@@ -172,6 +179,48 @@ const w = (s = "") => L.push(s);
  * after its component was deleted. A generator that can be talked into printing
  * a string nobody wrote will eventually print one nobody renders.
  */
+/**
+ * SEVERAL RENDERINGS THAT ARE NOT ALL ONE TEMPLATE (E20/S4).
+ *
+ * The detection body has three branches -- clears chance, does not clear it,
+ * at or beneath it -- and six reachable scores render them. `template()`
+ * refuses a mixed set on purpose, so this groups first and emits one block per
+ * source string, with the scores that reach it named. A writer sees three
+ * sentences to write rather than six to rewrite five times over.
+ */
+function templateGroups(rows, lead) {
+  if (lead) {
+    w(lead);
+    w();
+  }
+  const groups = new Map();
+  for (const [name, rendering] of rows) {
+    const hits = matchesFor(rendering, CHAINS);
+    if (hits.length !== 1) {
+      throw new Error(
+        "export-instrument-deck: " + hits.length + " source templates match this rendering, so " +
+          "its block would be hand-typed: " + rendering.slice(0, 90),
+      );
+    }
+    const key = hits[0].display;
+    if (!groups.has(key)) groups.set(key, { names: [], shown: [] });
+    groups.get(key).names.push(name);
+    groups.get(key).shown.push(rendering);
+  }
+  for (const [, group] of groups) {
+    /*
+     * WHICH BRANCH IS THIS ONE? The three detection bodies open with the same
+     * eleven words, so three unlabelled blocks in a row are three sentences a
+     * writer cannot tell apart -- and the old deck could, because it printed
+     * each under its score. Grouping without saying what reaches each group
+     * traded one defect for a worse one.
+     */
+    w("*Reached at " + group.names.join(", ") + ":*");
+    w();
+    template(group.shown);
+  }
+}
+
 function template(renderings, lead) {
   const shown = renderings.filter((r) => typeof r === "string" && r.length > 0);
   if (shown.length === 0) throw new Error("export-instrument-deck: template() got nothing to show");
@@ -581,39 +630,50 @@ w(
     "as its first casualty; the live line now refuses the claim outright.",
 );
 w();
-w("**The constants, verbatim:**");
+template([d.readout.phase], "**The phase line**, which the footnote also carries:");
+/*
+ * THE FOOTNOTE IS THREE CONSTANTS JOINED, NOT A PARAGRAPH (E20/S4). Printing
+ * the assembled text gave it one id -- an id whose middle third is the phase
+ * line's own id, so a writer editing both would have written the phase line
+ * twice and one of the two edits would have been silently discarded. The
+ * pieces are listed as pieces, and the assembled form is shown as a rendering.
+ */
+/*
+ * THE PROSE BELOW ASSERTS A SHAPE, SO THE SHAPE IS CHECKED. "That phase line
+ * with one sentence before it and one after" is a claim about the array in
+ * `delicacy/copy.ts`, and a filter that quietly returns two parts whatever the
+ * array holds would keep printing the sentence after it stopped being true.
+ */
+if (d.readout.footnotePieces.length !== 2 || d.readout.footnoteMiddleIsPhase !== true) {
+  throw new Error(
+    "export-instrument-deck: the provisional footnote is no longer one sentence, the phase line " +
+      "and one sentence. Rewrite the paragraph that describes it before regenerating.",
+  );
+}
+w("**The provisional footnote** is that phase line with one sentence before it and one after, " +
+  "joined by spaces. The two outer sentences:");
 w();
-w("```");
-w(`phase line: ${d.readout.phase}`);
-w("```");
+for (const piece of d.readout.footnotePieces) template([piece]);
+w("*Assembled, which is what a reader meets:*");
 w();
-w("```");
-w(`provisional footnote (the whole assembled paragraph): ${d.readout.footnote}`);
+w("```renders");
+w(d.readout.footnote);
 w("```");
 w();
 w(`**The band, at every branch a reader can reach** — ${d.readout.need} of 15 is the smallest score that clears chance.`);
 w();
-for (const b of d.readout.bands) {
-  w("```");
-  w(`${b.n} of 15 — ${b.title}`);
-  w(b.body);
-  w("```");
-  w();
-}
+templateGroups(d.readout.bands.map((b) => [b.n + " of 15", b.title]), "*The heading, over every score:*");
+templateGroups(d.readout.bands.map((b) => [b.n + " of 15", b.body]), "*The body. Three branches, one per source sentence:*");
+w("*Every score a reader can reach, assembled:*");
+w();
+w("```renders");
+for (const b of d.readout.bands) w(`${b.n} of 15 — ${b.title}`);
+w("```");
+w();
 w("**The summary line, and the share line:**");
 w();
-for (const [name, text] of d.readout.summaries) {
-  w("```");
-  w(`${name}: ${text}`);
-  w("```");
-  w();
-}
-for (const [score, text] of d.readout.shares) {
-  w("```");
-  w(`share at ${score}/15: ${text}`);
-  w("```");
-  w();
-}
+templateGroups(d.readout.summaries, "*The summary line:*");
+templateGroups(d.readout.shares.map(([n, text]) => ["a score of " + n, text]), "*The share line:*");
 w("---");
 w();
 

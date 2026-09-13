@@ -131,11 +131,21 @@ export const CALIBRATION_PHASE_LINE =
  * Assembling here makes the paragraph one string, so voice.ts reads exactly what
  * the screen shows.
  */
-export const PROVISIONAL_FOOTNOTE = [
+/**
+ * THE PARTS, NAMED (E20/S4). The copy deck listed the assembled paragraph as
+ * one editable string whose middle third is `CALIBRATION_PHASE_LINE` -- itself
+ * listed separately. A writer handed both would have rewritten the phase line
+ * twice and had one of the two edits silently discarded, which is the same
+ * defect the deck's one-id-per-template rework exists to stop. Exported so the
+ * deck can list pieces rather than re-deriving them by splitting prose.
+ */
+export const PROVISIONAL_FOOTNOTE_PARTS = [
   "Provisional read — you're early.",
   CALIBRATION_PHASE_LINE,
   "Difficulty labels are authored, not yet norm-calibrated.",
-].join(" ");
+] as const;
+
+export const PROVISIONAL_FOOTNOTE = PROVISIONAL_FOOTNOTE_PARTS.join(" ");
 
 /**
  * Ladder-rung words. Four rungs since the S6 strength ladder + pool expansion
