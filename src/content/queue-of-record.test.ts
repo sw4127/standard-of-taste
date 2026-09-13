@@ -107,4 +107,28 @@ describe("the queue of record accounts for every planned track", () => {
         "to already know they are there:" + NL + orphaned.join(NL),
     ).toEqual([]);
   });
+
+  /*
+   * A RULING ONLY ONE MACHINE CAN READ IS ONE A LATER SESSION RE-OPENS.
+   *
+   * That is not a hypothesis. RT-I was ruled on 2026-09-01 and three successive
+   * handoffs carried it as still awaiting an answer, because the ruling lived in
+   * an untracked blueprint; this session nearly spent a second ruling on it. The
+   * `rt-answers-*.md` series is the fix — tracked on purpose — and this keeps
+   * the queue pointing at it, so the one file a session is told to read names
+   * where the settled decisions are.
+   */
+  it("points at the tracked rulings, which the blueprints are not", () => {
+    const rulings = readdirSync("docs").filter(
+      (name) => name.startsWith("rt-answers-") && name.endsWith(".md"),
+    );
+    expect(rulings.length, "no rulings-of-record files exist at all").toBeGreaterThan(1);
+    const newest = rulings.sort()[rulings.length - 1];
+    expect(
+      queue.indexOf(newest),
+      `the queue does not name ${newest}, the most recent rulings of record. A session reading only ` +
+        "the queue would not know where the settled decisions are, which is how a ruling gets made " +
+        "twice.",
+    ).toBeGreaterThan(-1);
+  });
 });
