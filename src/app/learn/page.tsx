@@ -12,12 +12,12 @@ import { LEARN_PAGES } from "@/content/learn";
  */
 
 export const metadata: Metadata = {
-  title: "Reading Room — The Taste Gym",
+  title: "Reading Room — Standard of Taste",
   description:
     "How the Taste Gym measures taste: Hume's five criteria, the Prestige Test, the Delicacy Trials, and the methodology — stated plainly, including what we refuse to claim.",
   alternates: { canonical: "/learn" },
   openGraph: {
-    title: "Reading Room — The Taste Gym",
+    title: "Reading Room — Standard of Taste",
     description:
       "Hume's five criteria of taste, and the instruments that turn them into measured numbers.",
     images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
@@ -70,7 +70,7 @@ export default function LearnIndex() {
         data={{
           "@context": "https://schema.org",
           "@type": "CollectionPage",
-          name: "Reading Room — The Taste Gym",
+          name: "Reading Room — Standard of Taste",
           url: `${base}/learn`,
           hasPart: LEARN_PAGES.map((p) => ({
             "@type": "Article",

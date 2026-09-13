@@ -14,7 +14,7 @@ type Params = Promise<{ slug: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
   const family = familyForSlug(slug);
-  if (!family) return { title: "Not found — The Taste Gym" };
+  if (!family) return { title: "Not found — Standard of Taste" };
   const title = `${familyLabel(family)} — how small a flaw can you hear?`;
   const description = `An adaptive listening test that finds the smallest ${FAMILY_BLURB[family]} you can still catch, and reports it in physical units.`;
   return {

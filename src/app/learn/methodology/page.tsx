@@ -17,7 +17,7 @@ export default function Page() {
       <p>
         Hume closed his essay with a job description: strong sense, delicate sentiment, improved by
         practice, perfected by comparison, cleared of prejudice — <em>that</em>{" "}is a true judge.
-        The Taste Gym&apos;s methodology is that sentence turned into engineering constraints.
+        Standard of Taste&apos;s methodology is that sentence turned into engineering constraints.
       </p>
       <p>
         <strong>1. Performance over self-report.</strong> Every instrument is a task where you can

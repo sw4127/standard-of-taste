@@ -44,12 +44,12 @@ import { GYM_INK } from "@/content/instrument-accents";
  */
 
 export const metadata: Metadata = {
-  title: "The method — The Taste Gym",
+  title: "The method — Standard of Taste",
   description:
     "How this project is run: the rules it refuses work under, what each refusal cost, and the worst finding it has recorded against itself. Every claim cites a document in the repository.",
   alternates: { canonical: "/method" },
   openGraph: {
-    title: "The method — The Taste Gym",
+    title: "The method — Standard of Taste",
     description:
       "The rules, the refusals, the price each one carried, and the finding this project recorded against itself.",
     type: "article",

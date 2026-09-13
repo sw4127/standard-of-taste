@@ -18,12 +18,12 @@ import { GYM_INK } from "@/content/instrument-accents";
  */
 
 export const metadata: Metadata = {
-  title: "The Lab — The Taste Gym",
+  title: "The Lab — Standard of Taste",
   description:
     "The measurement layer, in the open: every metric defined with its formula, owner, acceptance band, and caveat — plus the provenance of every number shown.",
   alternates: { canonical: "/lab" },
   openGraph: {
-    title: "The Lab — The Taste Gym",
+    title: "The Lab — Standard of Taste",
     description: "Every metric this product computes, defined in the open — formula, owner, target, caveat.",
     images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },

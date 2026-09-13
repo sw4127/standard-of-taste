@@ -23,10 +23,25 @@
  */
 
 /** Month and year the terms last changed in substance. */
+/*
+ * THE 2026-09-13 MOVE WAS THE PRODUCT'S NAME, NOT A CLAUSE (RT-N1 a).
+ *
+ * The fingerprint changed because /legal names the product and the product was
+ * renamed from "The Taste Gym" to "Standard of Taste". A word-level diff of the
+ * extracted terms showed the ONLY tokens that moved were those three words and
+ * their capitalised forms — no obligation, permission, retention period or
+ * contact detail changed.
+ *
+ * SO THE DATE DID NOT MOVE, and that is the judgment this guard exists to force
+ * somebody to make rather than to make for them. "Last updated" answers "have
+ * the terms you agreed to changed", and they have not; a reader who agreed to
+ * these terms yesterday has agreed to exactly the same ones today, under a name
+ * this page now shares with the rest of the product.
+ */
 export const LEGAL_LAST_UPDATED = "September 2026";
 
 /**
  * Fingerprint of the terms as of that date, maintained by the test that checks
  * it. It is not secret and not security: it is a tripwire on prose.
  */
-export const LEGAL_COPY_FINGERPRINT = "757e6a2a4a68cb1d";
+export const LEGAL_COPY_FINGERPRINT = "b679e0d27ba4cb85";

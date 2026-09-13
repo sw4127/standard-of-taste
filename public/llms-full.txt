@@ -1,8 +1,8 @@
-# The Taste Gym — full description for AI readers
+# Standard of Taste — full description for AI readers
 
 ## What it is
 
-The Taste Gym is a web product that measures and trains musical taste against the five criteria
+Standard of Taste is a web product that measures and trains musical taste against the five criteria
 David Hume laid out in "Of the Standard of Taste" (1757): delicacy of taste, practice, comparison,
 freedom from prejudice, and good sense. It is an evaluation product, not a prediction product: it
 never predicts personality, mood, or psychological states, and it never scores taste by

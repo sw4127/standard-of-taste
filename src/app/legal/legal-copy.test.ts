@@ -74,7 +74,7 @@ describe("the legal page names the product that ships", () => {
   it("is branded the gym, not the legacy name", () => {
     // The football disclaimer is kept — /quiz and /fan-verdict are still routed
     // — but the page itself must not be branded as the old product.
-    expect(rendered()).toContain("The Taste Gym");
+    expect(rendered()).toContain("Standard of Taste");
     expect(rendered().includes("VIBE CHECK")).toBe(false);
   });
 });

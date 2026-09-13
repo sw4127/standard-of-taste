@@ -21,12 +21,12 @@ import { isSourceLocked } from "@/engine/staircase-pool";
  */
 
 export const metadata: Metadata = {
-  title: "Find your threshold — The Taste Gym",
+  title: "Find your threshold — Standard of Taste",
   description:
     "Three adaptive listening tests, one per kind of damage. Each finds the smallest flaw you can still catch and reports it in physical units — cents, milliseconds, kilobits per second.",
   alternates: { canonical: "/threshold" },
   openGraph: {
-    title: "Find your threshold — The Taste Gym",
+    title: "Find your threshold — Standard of Taste",
     description: "How small a flaw can you actually hear? Measured, in physical units.",
     images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
@@ -57,7 +57,7 @@ export default function ThresholdIndex() {
       <div className="relative z-10">
         <div className="flex items-baseline justify-between gap-4">
           <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
-            THE TASTE GYM
+            STANDARD OF TASTE
           </p>
           <Link href="/" className="text-[0.65rem] font-bold tracking-[0.3em] text-muted transition hover:text-white">
             THE GYM FLOOR

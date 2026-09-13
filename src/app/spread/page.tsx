@@ -38,7 +38,7 @@ export default function SpreadPage() {
           offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
           description:
             "Six Beethoven works from a published critic's ranked list, played as forty-second excerpts and rated blind. Reports the mean gap between ratings across pairs the critic placed ten or more positions apart, beside the same figure across pairs he placed within three, both read against what an indifferent rater produces. Agreement with the critic is never scored and cannot be computed: only the distance between his positions is used, never their order.",
-          isPartOf: { "@type": "WebSite", name: "The Taste Gym", url: baseUrl() },
+          isPartOf: { "@type": "WebSite", name: "Standard of Taste", url: baseUrl() },
         }}
       />
     </>

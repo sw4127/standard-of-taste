@@ -249,7 +249,7 @@ export default function ThresholdFlow({ family }: { family: string }) {
         <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
         <div className="relative z-10">
           <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
-            THE TASTE GYM
+            STANDARD OF TASTE
           </p>
           <h1 className="mt-6 font-display text-4xl font-semibold leading-tight">
             {cooldownTitle(family)}
@@ -297,7 +297,7 @@ export default function ThresholdFlow({ family }: { family: string }) {
         <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
         <div className="relative z-10">
           <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
-            THE TASTE GYM
+            STANDARD OF TASTE
           </p>
           <h1 className="mt-6 font-display text-4xl font-semibold leading-tight">
             How small a flaw can you still hear?

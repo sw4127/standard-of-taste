@@ -1,4 +1,4 @@
-# The Taste Gym
+# Standard of Taste
 
 > A gym for musical taste. Instruments that measure David Hume's five criteria of taste
 > ("Of the Standard of Taste", 1757) as numbers, using performance tasks where the user can be
@@ -20,7 +20,7 @@ never their order. All scoring is deterministic code — no AI classifies the us
 
 ## Core pages
 
-- [The Taste Gym (home)](https://vibe-check-app-sepia.vercel.app/): what the gym is; the four machines
+- [Standard of Taste (home)](https://vibe-check-app-sepia.vercel.app/): what the gym is; the four machines
 - [The Prestige Test](https://vibe-check-app-sepia.vercel.app/bias): the flagship instrument — about eight minutes, free, no sign-up
 - [The Delicacy Trials](https://vibe-check-app-sepia.vercel.app/delicacy): three practice trials with answers shown, then fifteen scored pairs
 - [The Threshold Test](https://vibe-check-app-sepia.vercel.app/threshold): an adaptive staircase reporting a sensitivity threshold in physical units

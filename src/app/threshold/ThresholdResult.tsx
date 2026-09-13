@@ -114,7 +114,7 @@ export default function ThresholdResult({
       <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
       <div className="relative z-10">
         <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
-          THE TASTE GYM
+          STANDARD OF TASTE
         </p>
 
         <div className="mt-6 flex items-baseline justify-between gap-3">

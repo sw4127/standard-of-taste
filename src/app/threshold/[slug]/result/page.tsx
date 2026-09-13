@@ -39,7 +39,7 @@ export async function generateMetadata({
   searchParams: Search;
 }): Promise<Metadata> {
   const base: Metadata = {
-    title: "Your threshold — The Taste Gym",
+    title: "Your threshold — Standard of Taste",
     robots: { index: false, follow: false },
   };
   const { slug } = await params;
@@ -58,7 +58,7 @@ export async function generateMetadata({
   }
 
   const og = `${baseUrl()}${thresholdCardPath("og", { slug, seed, answers: responses, sourceId })}`;
-  const title = `${thresholdCardFigure(result)} — The Taste Gym`;
+  const title = `${thresholdCardFigure(result)} — Standard of Taste`;
   const description = thresholdCardCaption(result);
   return {
     ...base,

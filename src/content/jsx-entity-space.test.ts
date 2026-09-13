@@ -18,8 +18,8 @@ import { describe, expect, it } from "vitest";
  * the real instances. Measured by rendering controlled variants and reading the
  * server's own HTML:
  *
- *   cleared of prejudice — <em>that</em> is a true judge. The Taste Gyms.     -> space KEPT
- *   cleared of prejudice — <em>that</em> is a true judge. The Taste Gym&apos;s. -> space LOST
+ *   cleared of prejudice — <em>that</em> is a true judge. Standard of Tastes.     -> space KEPT
+ *   cleared of prejudice — <em>that</em> is a true judge. Standard of Taste&apos;s. -> space LOST
  *
  * One character apart, same line, same tag. The trigger is the ENTITY: a JSX
  * text node that follows an element and contains an HTML entity loses its
@@ -98,10 +98,10 @@ describe("a space next to an entity does not silently vanish from the rendered p
       return false;
     };
     // Measured: this one renders "thatis a true judge".
-    expect(fires("prejudice — <em>that</em> is a true judge. The Taste Gym&apos;s method.")).toBe(true);
+    expect(fires("prejudice — <em>that</em> is a true judge. Standard of Taste&apos;s method.")).toBe(true);
     // Measured: this one renders correctly. One character apart.
-    expect(fires("prejudice — <em>that</em> is a true judge. The Taste Gyms method.")).toBe(false);
+    expect(fires("prejudice — <em>that</em> is a true judge. Standard of Tastes method.")).toBe(false);
     // The repaired form, which is what every fix in this repo looks like.
-    expect(fires('prejudice — <em>that</em>{" "}is a true judge. The Taste Gym&apos;s method.')).toBe(false);
+    expect(fires('prejudice — <em>that</em>{" "}is a true judge. Standard of Taste&apos;s method.')).toBe(false);
   });
 });

@@ -62,7 +62,7 @@ export default function RootLayout({
           data={{
             "@context": "https://schema.org",
             "@type": "WebSite",
-            name: "The Taste Gym",
+            name: "Standard of Taste",
             url: baseUrl(),
             description:
               "A gym for musical taste: instruments that measure Hume's five criteria as numbers — starting with the Prestige Test.",
@@ -72,7 +72,7 @@ export default function RootLayout({
           data={{
             "@context": "https://schema.org",
             "@type": "Organization",
-            name: "The Taste Gym",
+            name: "Standard of Taste",
             url: baseUrl(),
           }}
         />

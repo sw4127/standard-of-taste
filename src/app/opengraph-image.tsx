@@ -15,7 +15,7 @@ import { BIAS_CLIP_COUNT, BIAS_SESSION_MINUTES } from "@/content/instrument-shap
 
 export const runtime = "nodejs";
 export const alt =
-  "The Taste Gym — your taste has a number. The Prestige Test measures how far a famous name can move your ratings.";
+  "Standard of Taste — your taste has a number. The Prestige Test measures how far a famous name can move your ratings.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -46,7 +46,7 @@ export default function OgImage() {
         <div
           style={{ display: "flex", fontSize: 30, letterSpacing: 14, fontWeight: 600, color: GOLD }}
         >
-          THE TASTE GYM
+          STANDARD OF TASTE
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div

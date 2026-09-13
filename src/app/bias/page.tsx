@@ -38,7 +38,7 @@ export default function BiasPage() {
           offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
           description:
             `An ${numberWord(BIAS_SESSION_MINUTES)}-minute within-subject test of prestige bias in music taste: ${numberWord(BIAS_CLIP_COUNT)} clips rated blind, then labeled — some labels deliberately swapped and disclosed in a mandatory debrief, two clips never labeled (drift controls). The blind-vs-labeled gap, corrected by the control drift, is the measured result.`,
-          isPartOf: { "@type": "WebSite", name: "The Taste Gym", url: baseUrl() },
+          isPartOf: { "@type": "WebSite", name: "Standard of Taste", url: baseUrl() },
         }}
       />
     </>

@@ -83,7 +83,7 @@ export const LEARN_PAGES: LearnPage[] = [
   {
     slug: "prestige-bias-test",
     title: "What is the Prestige Test?",
-    metaTitle: "What is the Prestige Test? — The Taste Gym",
+    metaTitle: "What is the Prestige Test? — Standard of Taste",
     description:
       `${numberWordLeading(BIAS_CLIP_COUNT)} clips, rated twice — once blind, once with names attached. Some names are deliberately false. The gap between your two ratings is your prestige-bias number.`,
     teaser: "The flagship machine: how far can a famous name move your ratings?",
@@ -160,7 +160,7 @@ export const LEARN_PAGES: LearnPage[] = [
   {
     slug: "flaws",
     title: "Naming what went wrong",
-    metaTitle: "Naming what went wrong — The Taste Gym",
+    metaTitle: "Naming what went wrong — Standard of Taste",
     description:
       "Three kinds of audio damage, what each one sounds like, the unit it is measured in, and which machine finds how small a dose of it you can still catch.",
     teaser: "You can hear that it is wrong. Here is what it is called.",

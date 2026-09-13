@@ -5,7 +5,7 @@ import ForgetThisBrowser from "@/components/ForgetThisBrowser";
 import { SHELL_MAIN, PROSE_MEASURE } from "@/content/shell";
 
 export const metadata: Metadata = {
-  title: "Terms & Privacy — The Taste Gym",
+  title: "Terms & Privacy — Standard of Taste",
   description: "The plain-language legal page: terms of use and privacy.",
 };
 
@@ -36,7 +36,7 @@ export default function LegalPage() {
 
   return (
     <main className={SHELL_MAIN}>
-      <p className="text-xs font-bold tracking-[0.4em] text-accent">THE TASTE GYM</p>
+      <p className="text-xs font-bold tracking-[0.4em] text-accent">STANDARD OF TASTE</p>
       <h1 className="mt-6 font-display text-4xl font-black leading-tight">
         Terms & privacy
       </h1>
@@ -47,7 +47,7 @@ export default function LegalPage() {
       <section className="mt-8">
         <h2 className="font-display text-xl font-semibold">What this is</h2>
         <p className="mt-2 text-sm leading-relaxed text-slate-300">
-          The Taste Gym measures how you hear music. Each instrument is a listening task with
+          Standard of Taste measures how you hear music. Each instrument is a listening task with
           answers you can get objectively wrong, and every number is computed by a deterministic
           engine in code — no machine-learning model and no language model classifies you. It is
           not a psychological assessment, not a personality test, not medical or mental-health
@@ -72,7 +72,7 @@ export default function LegalPage() {
             short clips on one afternoon.
           </li>
           <li>
-            Footballer names appear only to describe public playing styles. The Taste Gym is not
+            Footballer names appear only to describe public playing styles. Standard of Taste is not
             affiliated with, endorsed by, or connected to FIFA, any club, league, or player.
           </li>
           <li>Don&apos;t abuse, reverse-engineer, or resell the service. Be normal.</li>

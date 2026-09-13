@@ -79,8 +79,8 @@ export default function Explainer({
           headline: page.title,
           description: page.description,
           url,
-          author: { "@type": "Organization", name: "The Taste Gym" },
-          isPartOf: { "@type": "WebSite", name: "The Taste Gym", url: base },
+          author: { "@type": "Organization", name: "Standard of Taste" },
+          isPartOf: { "@type": "WebSite", name: "Standard of Taste", url: base },
         }}
       />
       <JsonLd
@@ -88,7 +88,7 @@ export default function Explainer({
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           itemListElement: [
-            { "@type": "ListItem", position: 1, name: "The Taste Gym", item: base },
+            { "@type": "ListItem", position: 1, name: "Standard of Taste", item: base },
             { "@type": "ListItem", position: 2, name: "Reading room", item: `${base}/learn` },
             { "@type": "ListItem", position: 3, name: page.title, item: url },
           ],

@@ -40,7 +40,7 @@ export default function SiteHeader({ links }: { links: readonly HeaderLink[] }) 
         className="whitespace-nowrap text-xs font-bold tracking-[0.4em]"
         style={{ color: BRAND }}
       >
-        THE TASTE GYM
+        STANDARD OF TASTE
       </Link>
       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
         {links.map((link) => (

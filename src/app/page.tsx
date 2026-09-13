@@ -26,15 +26,15 @@ import { PRESTIGE_GOLD, PRESTIGE_FIELD, DELICACY_ICE, DELICACY_FIELD, THRESHOLD_
  */
 
 export const metadata: Metadata = {
-  title: "The Taste Gym — do you hear the music, or the name?",
+  title: "Standard of Taste — do you hear the music, or the name?",
   description:
     `Your taste has a number. The Prestige Test measures how far a famous name can move your ratings. ${numberWordLeading(BIAS_CLIP_COUNT)} clips, rated twice — the gap is your number.`,
   alternates: { canonical: "/" },
   openGraph: {
-    title: "The Taste Gym — do you hear the music, or the name?",
+    title: "Standard of Taste — do you hear the music, or the name?",
     description:
       "Your taste has a number. The Prestige Test measures how far a famous name can move your ratings.",
-    siteName: "The Taste Gym",
+    siteName: "Standard of Taste",
     type: "website",
   },
 };
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
 /**
  * BRAND CHROME IS NEUTRAL, NOT GOLD (PM user-testing, 2026-08-08).
  *
- * "THE TASTE GYM" used to render in the same gold as the Prestige Test's own
+ * "STANDARD OF TASTE" used to render in the same gold as the Prestige Test's own
  * accent, so the brand read as that instrument and the Delicacy Trials looked
  * like a guest in someone else's house. Gold now belongs to Prestige, ice to
  * Delicacy, and the gym itself is neutral — which is the only arrangement in
