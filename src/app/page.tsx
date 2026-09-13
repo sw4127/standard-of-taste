@@ -196,7 +196,7 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
         <p className={`mt-5 ${PROSE_MEASURE} text-lg leading-relaxed text-muted`}>
           {LANDING_ALGORITHM}
         </p>
-        <p className={`mt-4 ${PROSE_MEASURE} font-display text-2xl leading-snug`}>
+        <p className={`mt-4 ${PROSE_MEASURE} font-display text-xl leading-snug sm:text-2xl`}>
           {LANDING_TURN}
         </p>
         <p className={`mt-5 ${PROSE_MEASURE} text-base leading-relaxed text-muted`}>

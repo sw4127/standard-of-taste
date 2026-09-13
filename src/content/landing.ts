@@ -89,9 +89,30 @@ export const LANDING_ALGORITHM =
   "So does every algorithm that has ever recommended you a song. It just never " +
   "tells you, because what it knows about you is a row of numbers no person can read.";
 
-/** The turn from the feeling to what this product actually does. */
+/**
+ * THE TURN, AND IT CARRIES THE WORD THE PRODUCT IS SELLING (RT-P3 a, amended by
+ * the PM the same day).
+ *
+ * IT SAID "This gives it back in words you can use." That promised the thing
+ * the product does NOT have — a preference instrument that turns taste into
+ * language — so RT-P3 ruled to narrow it. My narrowing was "what your ears
+ * actually do, in words", and the owner's objection was immediate and correct:
+ * it dropped the word UNDERSTANDING, which is the value being sold and the
+ * reason the two lines above it exist at all. An honest sentence that throws
+ * away the product's only felt promise is not the honest option, it is a
+ * different kind of failure.
+ *
+ * SO THE DIRECTION FLIPS RATHER THAN THE PROMISE SHRINKING. The recommender
+ * understands you and will not say; here, YOU do the understanding. That keeps
+ * the word, it is a claim about the reader's activity rather than about the
+ * reader's self — which is what D1 forbids — and every noun in it ships today:
+ * the instruments report a number, and the vocabulary layer already turns every
+ * result into sentences. What it does NOT promise is words for your taste,
+ * which is the unbuilt part.
+ */
 export const LANDING_TURN =
-  "This gives it back in words you can use.";
+  "Here the understanding runs the other way: what your own ears do, " +
+  "in a number you can read and a sentence you can repeat.";
 
 export function landingLead(machineCount: number): string {
   return (
