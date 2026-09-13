@@ -19,7 +19,7 @@
  * that mean something. A wrong "done" passes this and is caught only by a
  * person reading it.
  */
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const NL = String.fromCharCode(10);
@@ -76,5 +76,24 @@ describe("the queue of record accounts for every planned track", () => {
           "has to carry",
       ).toBeGreaterThan(-1);
     }
+  });
+
+  /*
+   * A TASK BRIEF THAT NOTHING POINTS AT IS THE DEFECT THIS PROJECT ALREADY PAID
+   * FOR. Four copy batches sat unactioned for weeks because each handoff copied
+   * the line forward and nobody could tell what the line meant; writing a brief
+   * fixes half of that, and the other half is the brief being findable from the
+   * one file a session is told to read. So every `docs/task-*.md` must be named
+   * in the queue.
+   */
+  it("names every task brief that exists on disk", () => {
+    const briefs = readdirSync("docs").filter((n) => n.startsWith("task-") && n.endsWith(".md"));
+    expect(briefs.length, "no task briefs found, so this checks nothing").toBeGreaterThan(0);
+    const orphaned = briefs.filter((name) => queue.indexOf(name) === -1);
+    expect(
+      orphaned,
+      "these task briefs exist and the queue does not mention them, so the only way to find them is " +
+        "to already know they are there:" + NL + orphaned.join(NL),
+    ).toEqual([]);
   });
 });
