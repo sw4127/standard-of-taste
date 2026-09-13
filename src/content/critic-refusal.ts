@@ -31,5 +31,5 @@
  * markup; every page that makes this argument renders exactly this.
  */
 export const CRITIC_CONTRADICTION =
-  "Rewarding you for agreeing with a prestigious critic would have this product contradict " +
-  "itself on the same screen.";
+  "A product that measures how far a famous name moves your ratings cannot also give you " +
+  "credit for agreeing with a famous critic.";

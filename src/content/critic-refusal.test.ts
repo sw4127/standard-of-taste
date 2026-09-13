@@ -81,10 +81,32 @@ describe("the refusal to score you against a critic", () => {
       const prose = stripComments(readFileSync(path, "utf8"));
       if (prose.indexOf("CRITIC_CONTRADICTION") !== -1) continue;
       const flat = prose.split(NL).join(" ").toLowerCase();
-      // The argument is: rewarding agreement would contradict the product.
+      /*
+       * THE RULE, NOT THE CONSTANT'S CURRENT WORDING (E20, batch-3 return).
+       *
+       * This required the word "contradict", which was in the constant at the
+       * time. The writing pass replaced that wording -- the new one says a
+       * product measuring name-driven movement "cannot also give you credit for
+       * agreeing with a famous critic" -- and a detector keyed to the OLD
+       * vocabulary would have gone on passing while a page restated the
+       * argument in the NEW one. That is the failure this test exists to stop,
+       * committed inside the test.
+       *
+       * The argument, stated as a rule: a page makes it when it puts the
+       * critic-agreement idea next to a refusal of it, in whatever verb.
+       */
+      /*
+       * AND IT MUST NOT CATCH A PAGE MERELY STATING THE FACT. My first widening
+       * added "never scored", which is what `/spread` says -- correctly, and by
+       * design: the frame states the refusal WITHOUT the reason, and the
+       * constant's own docblock records that as deliberate. A guard that flags
+       * the sentence every instrument page is required to carry is a guard
+       * somebody switches off. The argument is the INCOMPATIBILITY claim, and
+       * only that.
+       */
+      const refuses = flat.indexOf("contradict") !== -1 || flat.indexOf("cannot also") !== -1;
       const argues =
-        flat.indexOf("contradict") !== -1 &&
-        (flat.indexOf("agree") !== -1 || flat.indexOf("reward") !== -1);
+        refuses && (flat.indexOf("agree") !== -1 || flat.indexOf("reward") !== -1);
       if (argues) restated.push(path);
     }
     expect(

@@ -105,7 +105,7 @@ export default async function BiasResultPage({ searchParams }: { searchParams: S
             >
               {headline.pct}
             </p>
-            <p className="mt-3 text-sm text-muted">how far these ratings moved toward the labels</p>
+            <p className="mt-3 text-sm text-muted">how far these ratings moved toward the names</p>
           </>
         ) : null}
         <h1 className="mt-6 font-display text-3xl font-semibold">{headline.title}</h1>

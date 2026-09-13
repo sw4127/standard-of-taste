@@ -8,7 +8,7 @@ import {
   type BiasVerdict,
 } from "@/engine/bias";
 import { BIAS_CLIPS, BIAS_INSTRUMENT_ID } from "@/content/bias/items";
-import { VERDICT_COPY } from "@/content/bias/copy";
+import { VERDICT_COPY, resultTitleFragment } from "@/content/bias/copy";
 import { checkVoice, formatVoiceReport } from "@/content/voice";
 import { biasClaim } from "@/engine/evidence";
 
@@ -187,7 +187,18 @@ describe("never restates what the screen already says", () => {
     for (const r of Object.values(SESSIONS)) {
       const joined = creatorLines(r).join(" ");
       expect(joined).not.toContain(`${r.pct}%`);
-      expect(joined).not.toMatch(/toward the labels/i);
+      /*
+       * THE RULE, NOT THE WORDING (E20, batch-3 return). This read
+       * `/toward the labels/` -- the caption's exact words at the time. The
+       * writing pass changed the caption to `toward the names`, which would
+       * have left this forbidding a phrase nothing says and permitting the
+       * echo it exists to stop. The rule is that the creator lines may not
+       * re-announce the headline; the caption's own noun is read from the
+       * function that renders it, so the needle cannot go stale again.
+       */
+      const caption = resultTitleFragment(r.pct).replace(/^[+-]?\d+% /, "");
+      expect(caption.length, "the caption noun could not be read").toBeGreaterThan(4);
+      expect(joined.toLowerCase()).not.toContain(caption.toLowerCase());
     }
   });
 });

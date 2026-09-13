@@ -751,18 +751,18 @@ Overshadowed by the quartet he wrote next, whose slow movement became a Broadway
 **The sentence, as the source file writes it.** The sign and the number are slots the engine fills; leave them exactly as they are.
 
 `INS-RESULTTITLEFRAGMENT-01` · OPEN
-> ${pct > 0 ? "+" : ""}${pct}% toward the labels
+> ${pct > 0 ? "+" : ""}${pct}% toward the names
 
-  *As rendered:* “-31% toward the labels”  ·  “+31% toward the labels”  · …and 3 between them
+  *As rendered:* “-31% toward the names”  ·  “+31% toward the names”  · …and 3 between them
 
 **Every reachable shape** (renderings of the sentence above, not separate strings):
 
 ```renders
-pct = -31 → -31% toward the labels
-pct =  -1 → -1% toward the labels
-pct =   0 → 0% toward the labels
-pct =   1 → +1% toward the labels
-pct =  31 → +31% toward the labels
+pct = -31 → -31% toward the names
+pct =  -1 → -1% toward the names
+pct =   0 → 0% toward the names
+pct =   1 → +1% toward the names
+pct =  31 → +31% toward the names
 ```
 
 ---
@@ -785,17 +785,17 @@ pct =  31 → +31% toward the labels
 **The editable string.** A styled figure and the singular/plural word are set after it — both come from the engine, and the two words are below the length at which this deck mints an id, so say so in the return if one of them is what is wrong.
 
 `INS-FLAW-LINE-01` · OPEN
-> And on the ones you caught, you named the flaw
+> Catching is one skill and naming is another. Of the pairs you caught, you named the flaw
 
 *The words set after it:* 1 → “time”  ·  2 → “times”
 
 **Assembled, at every interesting count:**
 
 ```renders
-1 of 1 → And on the ones you caught, you named the flaw 1 of 1 time.
-3 of 5 → And on the ones you caught, you named the flaw 3 of 5 times.
-5 of 8 → And on the ones you caught, you named the flaw 5 of 8 times.
-0 of 4 → And on the ones you caught, you named the flaw 0 of 4 times.
+1 of 1 → Catching is one skill and naming is another. Of the pairs you caught, you named the flaw 1 of 1 time.
+3 of 5 → Catching is one skill and naming is another. Of the pairs you caught, you named the flaw 3 of 5 times.
+5 of 8 → Catching is one skill and naming is another. Of the pairs you caught, you named the flaw 5 of 8 times.
+0 of 4 → Catching is one skill and naming is another. Of the pairs you caught, you named the flaw 0 of 4 times.
 ```
 
 ---
@@ -828,19 +828,19 @@ The symptom is deliberately the complaint a person makes BEFORE they have the wo
 *The mechanism — what is physically true:*
 
 `INS-CREATOR-VOCABULARY-02` · OPEN
-> The whole take slides out of tune while it plays. It starts where it should and ends somewhere else, so no single note is wrong — the drift is.
+> The whole take slides out of tune while it plays. It starts where it should and ends somewhere else, so what is wrong is never a note — it is a slope.
 
 **Timing smear** — measured in ms
 
 *The symptom — the complaint before the word:*
 
 `INS-CREATOR-VOCABULARY-03` · OPEN
-> It feels rubbery and unanchored. The groove will not lock, however hard the drums are pushed.
+> It feels rubbery and unanchored. The groove will not lock, however much you nudge the drums.
 
 *The mechanism — what is physically true:*
 
 `INS-CREATOR-VOCABULARY-04` · OPEN
-> The beat wanders off the grid and back again in slow waves. No individual hit is late enough to notice on its own; the pattern of them is.
+> The beat wanders off the grid and back again in slow waves. No single hit is late enough to notice on its own; all of them together are.
 
 **Compression damage** — measured in kbps
 
@@ -859,12 +859,12 @@ The symptom is deliberately the complaint a person makes BEFORE they have the wo
 *The intro:*
 
 `INS-CREATOR-VOCABULARY-07` · OPEN
-> You can hear that a render is wrong and have no word for it. That is the gap this page closes: three kinds of damage the gym can measure, what each one sounds like, and the machines that find how small a dose of it you can still catch.
+> You can hear that a render is wrong and have no word for it. This page is the word: three kinds of damage the gym can measure, what each one sounds like, and the machines that find how small a dose you can still catch.
 
 *The limits sentence, which is load-bearing:*
 
 `INS-CREATOR-VOCABULARY-08` · OPEN
-> These three are what the pipeline can render as a controlled dose with a right answer at the bottom of it. They are not a list of everything that can go wrong with a piece of audio. A render can fail in ways nothing here measures, and this page would rather be short than pretend otherwise.
+> These three are what the pipeline can render as a controlled dose with a right answer behind it. They are not a list of everything that can go wrong with a piece of audio. A render can fail in ways nothing here measures, and this page would rather be short than pretend otherwise.
 
 #### 4.3 The page's questions
 
@@ -876,7 +876,7 @@ The symptom is deliberately the complaint a person makes BEFORE they have the wo
 *Answer:*
 
 `INS-CREATOR-VOCABULARY-10` · OPEN
-> No. Nothing here listens to your files, and there is nowhere to upload one. What this gives you is the vocabulary — three kinds of damage, what each sounds like, and the machine that measures how small a dose of it your own ears still catch.
+> No. Nothing here listens to your files, and there is nowhere to upload one. What you get is the vocabulary, and nothing else: the names, and how small a dose of each one your own ears still catch.
 
 *Question:*
 
@@ -887,9 +887,9 @@ The symptom is deliberately the complaint a person makes BEFORE they have the wo
 *Answer:*
 
 `INS-CREATOR-VOCABULARY-11` · OPEN
-> Because three is what the clip pipeline can render as a controlled dose with an objectively correct answer behind it: ${FAMILY_LIST}. Other things go wrong in a mix. They are absent because we cannot measure them yet, not because they do not matter.
+> Because three is what the clip pipeline can render as a controlled dose with a right answer behind it: ${FAMILY_LIST}. Plenty of other things go wrong in a mix; they are absent because we cannot measure them yet, not because they do not matter.
 
-  *As rendered:* “Because three is what the clip pipeline can render as a controlled dose with an objectively correct answer behind it: pitch drift, timing smear and compression damage. Other things go wrong in a mix. They are absent because we cannot measure them yet, not because they do not matter.”
+  *As rendered:* “Because three is what the clip pipeline can render as a controlled dose with a right answer behind it: pitch drift, timing smear and compression damage. Plenty of other things go wrong in a mix; they are absent because we cannot measure them yet, not because they do not matter.”
 
 *Question:*
 
@@ -908,9 +908,9 @@ The lead is shown with the machine count interpolated; four is what ships today.
 *The lead. The machine count is a slot — it was three, it is four, and a rewrite that spells it out will be wrong again:*
 
 `INS-CREATOR-VOCABULARY-14` · OPEN
-> Not a personality. Not a vibe. ${countWordCapitalised(machineCount)} machines, each measuring one thing Hume said a real judge needs — whether a famous name can move your ratings, whether your ears can catch damage when nobody tells you where it is, how small that damage can get before you lose it, and whether your ratings move at all where a critic's judgment moved.
+> Not a personality. Not a vibe. ${countWordCapitalised(machineCount)} machines, each measuring one thing Hume said a real judge needs: whether a famous name can move your ratings, whether your ears can catch damage when nobody tells you where it is, how small that damage can get before you lose it, and whether the gaps you hear fall where a critic's did.
 
-  *As rendered:* “Not a personality. Not a vibe. Four machines, each measuring one thing Hume said a real judge needs — whether a famous name can move your ratings, whether your ears can catch damage when nobody tells you where it is, how small that damage can get before you lose it, and whether your ratings move at all where a critic's judgment moved.”
+  *As rendered:* “Not a personality. Not a vibe. Four machines, each measuring one thing Hume said a real judge needs: whether a famous name can move your ratings, whether your ears can catch damage when nobody tells you where it is, how small that damage can get before you lose it, and whether the gaps you hear fall where a critic's did.”
 
 *The hint, under the cards:*
 
@@ -957,7 +957,7 @@ These read the live flag and have a second form for the locked state, which is n
 *Answer:*
 
 `INS-CREATOR-VOCABULARY-21` · OPEN
-> Hume retells it from Don Quixote: two of Sancho's kinsmen judged a wine good but for a faint taste of leather and iron. They were ridiculed — until the hogshead was emptied and an old key on a leathern thong was found at the bottom. Their perception was real and verifiable; that is delicacy.
+> Hume retells it from Don Quixote: two of Sancho's kinsmen were asked to judge a hogshead of wine. One found a faint taste of leather, the other of iron, and both were laughed at — until the cask was drained and an old key on a leathern thong was found at the bottom. Their perception was real and verifiable, and that is delicacy.
 
 *Question:*
 
@@ -968,9 +968,9 @@ These read the live flag and have a second form for the locked state, which is n
 *Answer:*
 
 `INS-CREATOR-VOCABULARY-22` · OPEN
-> Public-domain and Creative-Commons recordings are altered with controlled degradations — ${FAMILY_LIST} — and you identify the original and name the flaw. Unlike a taste quiz, answers are objectively right or wrong, difficulty is tunable, and items can be calibrated with item-response theory.
+> Public-domain and Creative-Commons recordings are damaged on purpose, by a known amount — ${FAMILY_LIST} — and you pick the original and name the flaw. Unlike a taste quiz, the answers are right or wrong, the difficulty is tunable, and the items can be calibrated with item-response theory.
 
-  *As rendered:* “Public-domain and Creative-Commons recordings are altered with controlled degradations — pitch drift, timing smear and compression damage — and you identify the original and name the flaw. Unlike a taste quiz, answers are objectively right or wrong, difficulty is tunable, and items can be calibrated with item-response theory.”
+  *As rendered:* “Public-domain and Creative-Commons recordings are damaged on purpose, by a known amount — pitch drift, timing smear and compression damage — and you pick the original and name the flaw. Unlike a taste quiz, the answers are right or wrong, the difficulty is tunable, and the items can be calibrated with item-response theory.”
 
 *Question:*
 
@@ -980,7 +980,7 @@ These read the live flag and have a second form for the locked state, which is n
 *Answer:*
 
 `INS-CREATOR-VOCABULARY-24` · OPEN
-> They are machine 02, and they are open. The battery was built after the Prestige Test, on the principle that a gym has equipment you can see before you are ready for it — and now you are.
+> They are machine 02, and the door is open. They were built after the Prestige Test, on the principle that a gym leaves its equipment in plain view long before anyone is ready for it. This one is no longer roped off.
 
 ---
 
@@ -1102,7 +1102,7 @@ Provisional read — you're early. Nothing here costs money, and no paid tier is
 
 ```
 `INS-CRITICCONTRADICTION-01` · OPEN
-Rewarding you for agreeing with a prestigious critic would have this product contradict itself on the same screen.
+A product that measures how far a famous name moves your ratings cannot also give you credit for agreeing with a famous critic.
 ```
 
 ---

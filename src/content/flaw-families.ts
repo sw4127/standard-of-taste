@@ -71,12 +71,12 @@ const CREATOR_COPY: Record<DegradationFamily, FlawFamilyCreatorCopy> = {
   "pitch-drift": {
     symptom: "It sounds sour or slightly seasick, and nothing you can point at is off-key.",
     mechanism:
-      "The whole take slides out of tune while it plays. It starts where it should and ends somewhere else, so no single note is wrong — the drift is.",
+      "The whole take slides out of tune while it plays. It starts where it should and ends somewhere else, so what is wrong is never a note — it is a slope.",
   },
   "timing-smear": {
-    symptom: "It feels rubbery and unanchored. The groove will not lock, however hard the drums are pushed.",
+    symptom: "It feels rubbery and unanchored. The groove will not lock, however much you nudge the drums.",
     mechanism:
-      "The beat wanders off the grid and back again in slow waves. No individual hit is late enough to notice on its own; the pattern of them is.",
+      "The beat wanders off the grid and back again in slow waves. No single hit is late enough to notice on its own; all of them together are.",
   },
   "lossy-artifact": {
     symptom: "It sounds cheap, underwater or brittle — like a good idea saved one too many times.",
@@ -204,9 +204,9 @@ export function flawFamilyList(): string {
  * where `voice.test.ts` sweeps them.
  */
 export const FLAWS_INTRO =
-  "You can hear that a render is wrong and have no word for it. That is the gap this page " +
-  "closes: three kinds of damage the gym can measure, what each one sounds like, and the " +
-  "machines that find how small a dose of it you can still catch.";
+  "You can hear that a render is wrong and have no word for it. This page is the word: three " +
+  "kinds of damage the gym can measure, what each one sounds like, and the machines that find " +
+  "how small a dose you can still catch.";
 
 /**
  * N3, and the most important sentence on the page.
@@ -216,8 +216,8 @@ export const FLAWS_INTRO =
  * correct answer — which is a statement about our instruments, not about audio.
  */
 export const FLAWS_LIMITS =
-  "These three are what the pipeline can render as a controlled dose with a right answer at the " +
-  "bottom of it. They are not a list of everything that can go wrong with a piece of audio. A " +
+  "These three are what the pipeline can render as a controlled dose with a right answer " +
+  "behind it. They are not a list of everything that can go wrong with a piece of audio. A " +
   "render can fail in ways nothing here measures, and this page would rather be short than " +
   "pretend otherwise.";
 

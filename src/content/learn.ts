@@ -134,16 +134,16 @@ export const LEARN_PAGES: LearnPage[] = [
     faq: [
       {
         q: "What is the key-in-the-wine story?",
-        a: "Hume retells it from Don Quixote: two of Sancho's kinsmen judged a wine good but for a faint taste of leather and iron. They were ridiculed — until the hogshead was emptied and an old key on a leathern thong was found at the bottom. Their perception was real and verifiable; that is delicacy.",
+        a: "Hume retells it from Don Quixote: two of Sancho's kinsmen were asked to judge a hogshead of wine. One found a faint taste of leather, the other of iron, and both were laughed at — until the cask was drained and an old key on a leathern thong was found at the bottom. Their perception was real and verifiable, and that is delicacy.",
       },
       {
         q: DELICACY_LIVE ? "How do the Delicacy Trials work?" : "How will the Delicacy Trials work?",
-        a: `Public-domain and Creative-Commons recordings are altered with controlled degradations — ${FAMILY_LIST} — and you identify the original and name the flaw. Unlike a taste quiz, answers are objectively right or wrong, difficulty is tunable, and items can be calibrated with item-response theory.`,
+        a: `Public-domain and Creative-Commons recordings are damaged on purpose, by a known amount — ${FAMILY_LIST} — and you pick the original and name the flaw. Unlike a taste quiz, the answers are right or wrong, the difficulty is tunable, and the items can be calibrated with item-response theory.`,
       },
       {
         q: DELICACY_LIVE ? "Where do the Delicacy Trials sit in the gym?" : "When do the Delicacy Trials open?",
         a: DELICACY_LIVE
-          ? "They are machine 02, and they are open. The battery was built after the Prestige Test, on the principle that a gym has equipment you can see before you are ready for it — and now you are."
+          ? "They are machine 02, and the door is open. They were built after the Prestige Test, on the principle that a gym leaves its equipment in plain view long before anyone is ready for it. This one is no longer roped off."
           : "The battery is built after the Prestige Test and is visible in the gym now as a locked tier. A gym has equipment you can see before you're ready for it.",
       },
     ],
@@ -165,11 +165,11 @@ export const LEARN_PAGES: LearnPage[] = [
     faq: [
       {
         q: "Can you tell me which flaw is wrecking my track?",
-        a: "No. Nothing here listens to your files, and there is nowhere to upload one. What this gives you is the vocabulary — three kinds of damage, what each sounds like, and the machine that measures how small a dose of it your own ears still catch.",
+        a: "No. Nothing here listens to your files, and there is nowhere to upload one. What you get is the vocabulary, and nothing else: the names, and how small a dose of each one your own ears still catch.",
       },
       {
         q: "Why only three?",
-        a: `Because three is what the clip pipeline can render as a controlled dose with an objectively correct answer behind it: ${FAMILY_LIST}. Other things go wrong in a mix. They are absent because we cannot measure them yet, not because they do not matter.`,
+        a: `Because three is what the clip pipeline can render as a controlled dose with a right answer behind it: ${FAMILY_LIST}. Plenty of other things go wrong in a mix; they are absent because we cannot measure them yet, not because they do not matter.`,
       },
       {
         q: "If I catch these in the trials, will I catch them in my own work?",

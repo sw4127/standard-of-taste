@@ -108,7 +108,7 @@ export function hasBiasReading(result: BiasResult): boolean {
  * actually computed.
  */
 export function resultTitleFragment(pct: number): string {
-  return `${pct > 0 ? "+" : ""}${pct}% toward the labels`;
+  return `${pct > 0 ? "+" : ""}${pct}% toward the names`;
 }
 
 export function shareText(pct: number): string {

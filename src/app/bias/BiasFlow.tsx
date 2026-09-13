@@ -573,7 +573,7 @@ export default function BiasFlow() {
                 {headline.pct}
               </p>
               <p className="mt-3 text-sm text-muted">
-                how far your ratings moved toward the labels
+                how far your ratings moved toward the names
                 {result.controlDriftPts !== null ? " — corrected for your own re-listen drift" : ""}
               </p>
             </>

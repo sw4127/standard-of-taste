@@ -54,9 +54,9 @@ export function countWordCapitalised(n: number): string {
 export function landingLead(machineCount: number): string {
   return (
     `Not a personality. Not a vibe. ${countWordCapitalised(machineCount)} machines, each measuring one thing ` +
-    `Hume said a real judge needs — whether a famous name can move your ratings, whether your ears ` +
+    `Hume said a real judge needs: whether a famous name can move your ratings, whether your ears ` +
     `can catch damage when nobody tells you where it is, how small that damage can get before ` +
-    `you lose it, and whether your ratings move at all where a critic's judgment moved.`
+    `you lose it, and whether the gaps you hear fall where a critic's did.`
   );
 }
 

@@ -82,7 +82,8 @@ export function calibrationLine(cal: CalibrationResult): string {
  * component is outside it. The number keeps its styling in the flow by
  * composing these two pieces around the styled span.
  */
-export const FLAW_LINE_PREFIX = "And on the ones you caught, you named the flaw";
+export const FLAW_LINE_PREFIX =
+  "Catching is one skill and naming is another. Of the pairs you caught, you named the flaw";
 
 export function flawTimesLabel(eligible: number): string {
   return eligible === 1 ? "time" : "times";
