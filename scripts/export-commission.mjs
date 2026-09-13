@@ -233,15 +233,16 @@ p(
 );
 p();
 p(
-  "**Parts 1 and 2 are keyed to templates. Parts 3 and 4 are not, and the difference is " +
-    "measured rather than assumed.** `scripts/deck-source-trace.mjs` asks of every id whether a " +
-    "source string produces it, and Part 2 is now 49 of 49: every block is the string the product " +
-    "has, slots intact. It was not this morning — nine ids showed a RENDERING with the slots " +
-    "filled in, four glued two source strings under one id, and three were in no source file at " +
-    "all, two of those being a panel whose component was deleted eight days earlier. Part 4 has " +
-    "one hand-typed line and seven glued pairs and has not been fixed; Part 3's copy lives inline " +
-    "in JSX, where the census cannot see it at all. So in Parts 3 and 4, treat repeated-looking " +
-    "sentences with suspicion and say so if you find a set that must be one string.",
+  "**Parts 1, 2 and 4 are keyed to templates. Part 3 is not, and the difference is measured " +
+    "rather than assumed.** `scripts/deck-source-trace.mjs` asks of every id whether a source " +
+    "string produces it, and Parts 2 and 4 are now 49 of 49 and 36 of 36: every block is the " +
+    "string the product has, slots intact, and a test refuses any deck that stops being true of " +
+    "them. Neither was, a day ago — between them, nine ids showed a RENDERING with the slots " +
+    "filled in, eleven glued two source strings under one id, and four were in no source file at " +
+    "all, two of those being a panel whose component had been deleted eight days earlier. " +
+    "**Part 3 cannot be measured by this tool**: its copy is written inline in JSX, which the " +
+    "extractor cannot parse. So in Part 3, treat repeated-looking sentences with suspicion and " +
+    "say so if you find a set that must be one string.",
 );
 p();
 
@@ -307,14 +308,28 @@ p(
     "went deep; a commission covering everything at once gets a shallow result.",
 );
 p();
-p("| Order | Batch | Sentences | Open | Locked | Why it is where it is |");
-p("|---|---|---|---|---|---|");
+/*
+ * EVERY STATE GETS ITS OWN COLUMN (E20/S4).
+ *
+ * "Open" used to be OPEN plus PART-LOCKED, and "Locked" LOCKED plus PASSED.
+ * So batch 4 -- 4 free sentences and 32 that carry verified quotations -- was
+ * advertised to a writer as "36 open, 0 locked". That is the single most
+ * misleading number a writer could be handed here: they would arrive expecting
+ * thirty-six free rewrites and meet a page where most of the words are
+ * quotations a test opens the cited document to verify. The states are named
+ * separately, because the brief already explains what each one means and
+ * summing them throws that explanation away.
+ */
+p("| Order | Batch | Sentences | Open | Part-locked | Locked | Passed | Why it is where it is |");
+p("|---|---|---|---|---|---|---|---|");
 BATCHES.forEach((batch, i) => {
   p(
     "| " + (i + 1) + " | " + batch.name +
       " | " + countOf(batch.prefix) +
-      " | " + (countOf(batch.prefix, "OPEN") + countOf(batch.prefix, "PART-LOCKED")) +
-      " | " + (countOf(batch.prefix, "LOCKED") + countOf(batch.prefix, "PASSED")) +
+      " | " + countOf(batch.prefix, "OPEN") +
+      " | " + countOf(batch.prefix, "PART-LOCKED") +
+      " | " + countOf(batch.prefix, "LOCKED") +
+      " | " + countOf(batch.prefix, "PASSED") +
       " | " + batch.why + " |",
   );
 });

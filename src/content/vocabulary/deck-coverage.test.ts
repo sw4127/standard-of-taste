@@ -504,15 +504,27 @@ describe("the commission brief agrees with the deck", () => {
       .map((line) => line.split("|").map((cell) => cell.trim()))
       .filter((cells) => /^[0-9]+$/.test(cells[1] || ""));
     expect(rows.length, "the brief has no batch table").toBe(PREFIXES.length);
+    /*
+     * ONE COLUMN PER STATE (E20/S4). This used to compare a single "open"
+     * column holding OPEN plus PART-LOCKED, which let the brief advertise the
+     * methodology batch as "36 open, 0 locked" when 32 of its 36 carry verified
+     * quotations. The table now names each state, so the check names each
+     * state -- four comparisons where there was one, and no summing to hide
+     * behind.
+     */
+    const STATES = ["OPEN", "PART-LOCKED", "LOCKED", "PASSED"];
     const wrong: string[] = [];
     PREFIXES.forEach((prefix, at) => {
       const n = tags.filter((t) => t.id.startsWith(prefix)).length;
-      const open = tags.filter(
-        (t) => t.id.startsWith(prefix) && (t.state === "OPEN" || t.state === "PART-LOCKED"),
-      ).length;
       expect(n, prefix + " has no sentences").toBeGreaterThan(0);
       if (rows[at][3] !== String(n)) wrong.push(prefix + " sentences: says " + rows[at][3] + ", deck has " + n);
-      if (rows[at][4] !== String(open)) wrong.push(prefix + " open: says " + rows[at][4] + ", deck has " + open);
+      STATES.forEach((state, column) => {
+        const held = tags.filter((t) => t.id.startsWith(prefix) && t.state === state).length;
+        const said = rows[at][4 + column];
+        if (said !== String(held)) {
+          wrong.push(prefix + " " + state + ": says " + said + ", deck has " + held);
+        }
+      });
     });
     expect(wrong, "the brief's batch table disagrees with the deck:").toEqual([]);
   });

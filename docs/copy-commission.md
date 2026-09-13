@@ -46,7 +46,7 @@ Every sentence in the deck carries an id and one of these:
 
 **This is a correction, and it is worth knowing why.** The first version of this brief told a writer that the braces in the deck were the product's slots. They were not — they came from a regex over rendered numbers, so a family name and a whole clause were printed as though they were literals, and a writer following the instruction exactly would have shipped "pitch drift" into a template that renders for three families. The deck now reads the templates from source. If a slot still looks wrong, say so rather than working around it.
 
-**Parts 1 and 2 are keyed to templates. Parts 3 and 4 are not, and the difference is measured rather than assumed.** `scripts/deck-source-trace.mjs` asks of every id whether a source string produces it, and Part 2 is now 49 of 49: every block is the string the product has, slots intact. It was not this morning — nine ids showed a RENDERING with the slots filled in, four glued two source strings under one id, and three were in no source file at all, two of those being a panel whose component was deleted eight days earlier. Part 4 has one hand-typed line and seven glued pairs and has not been fixed; Part 3's copy lives inline in JSX, where the census cannot see it at all. So in Parts 3 and 4, treat repeated-looking sentences with suspicion and say so if you find a set that must be one string.
+**Parts 1, 2 and 4 are keyed to templates. Part 3 is not, and the difference is measured rather than assumed.** `scripts/deck-source-trace.mjs` asks of every id whether a source string produces it, and Parts 2 and 4 are now 49 of 49 and 36 of 36: every block is the string the product has, slots intact, and a test refuses any deck that stops being true of them. Neither was, a day ago — between them, nine ids showed a RENDERING with the slots filled in, eleven glued two source strings under one id, and four were in no source file at all, two of those being a panel whose component had been deleted eight days earlier. **Part 3 cannot be measured by this tool**: its copy is written inline in JSX, which the extractor cannot parse. So in Part 3, treat repeated-looking sentences with suspicion and say so if you find a set that must be one string.
 
 ## How to hand the work back
 
@@ -80,12 +80,12 @@ So: **do not open the repository.** Keep a log instead — every moment you reac
 
 Take these one at a time. The single pass that worked on this project covered one batch and went deep; a commission covering everything at once gets a shallow result.
 
-| Order | Batch | Sentences | Open | Locked | Why it is where it is |
-|---|---|---|---|---|---|
-| 1 | The reading layer | 70 | 70 | 0 | The sentences each instrument says about a result. This is the product's actual voice: it is what a person reads at the moment they find out how they did, and it is the largest and least-written part of the whole thing. |
-| 2 | The pages | 74 | 74 | 0 | The reading room, the terms page, and the frame a listener reads before the Ranking Test starts. Long-form prose rather than one-line readouts, and the place a sceptical reader goes to decide whether any of this is serious. |
-| 3 | The instrument copy | 49 | 27 | 22 | Smaller batches around the instruments: the result title, the flaw line, the creator vocabulary, and the refusal to score you against a critic. Includes the clip blurbs, which are LOCKED, and the one batch already written, which is PASSED and here only for tone. |
-| 4 | The methodology page | 36 | 36 | 0 | The published account of how the instruments work. Mostly PART-LOCKED: it quotes cited documents word for word and a test verifies the quotations, so the writing to be done is the connective prose around them. |
+| Order | Batch | Sentences | Open | Part-locked | Locked | Passed | Why it is where it is |
+|---|---|---|---|---|---|---|---|
+| 1 | The reading layer | 70 | 70 | 0 | 0 | 0 | The sentences each instrument says about a result. This is the product's actual voice: it is what a person reads at the moment they find out how they did, and it is the largest and least-written part of the whole thing. |
+| 2 | The pages | 74 | 74 | 0 | 0 | 0 | The reading room, the terms page, and the frame a listener reads before the Ranking Test starts. Long-form prose rather than one-line readouts, and the place a sceptical reader goes to decide whether any of this is serious. |
+| 3 | The instrument copy | 49 | 27 | 0 | 14 | 8 | Smaller batches around the instruments: the result title, the flaw line, the creator vocabulary, and the refusal to score you against a critic. Includes the clip blurbs, which are LOCKED, and the one batch already written, which is PASSED and here only for tone. |
+| 4 | The methodology page | 36 | 4 | 32 | 0 | 0 | The published account of how the instruments work. Mostly PART-LOCKED: it quotes cited documents word for word and a test verifies the quotations, so the writing to be done is the connective prose around them. |
 
 Ids are prefixed by batch: `VOC-`, `PAGE-`, `INS-`, `MET-`. Find your batch in `docs/copy-deck.md` by that prefix.
 

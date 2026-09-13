@@ -15,38 +15,65 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 const NL = String.fromCharCode(10);
-const NOTE = "docs/commission-batch-3.md";
 const DECK = "docs/copy-deck.md";
 
-/** The states of every id in Part 2, counted from the deck itself. */
-function statesInPartTwo(): Map<string, number> {
+/**
+ * The notes, and the part of the deck each one commissions.
+ *
+ * PARAMETERISED RATHER THAN COPIED (E20/S4). Batch 4's note states its own
+ * counts and needed the same pin; duplicating the file would have put two
+ * copies of one rule in the test whose subject is a document disagreeing with
+ * the thing it describes.
+ */
+const NOTES = [
+  { note: "docs/commission-batch-3.md", part: "2", prefix: "INS" },
+  { note: "docs/commission-batch-4.md", part: "4", prefix: "MET" },
+];
+
+/** The states of every id in one part, counted from the deck itself. */
+function statesIn(part: string, prefix: string): Map<string, number> {
   const body = readFileSync(DECK, "utf8")
     .split(NL + "# Part ")
-    .find((part) => part.startsWith("2 "));
-  expect(body, "no Part 2 in the copy deck, so this test checks nothing").toBeTruthy();
+    .find((section) => section.startsWith(part + " "));
+  expect(body, `no Part ${part} in the copy deck, so this test checks nothing`).toBeTruthy();
+  const marked = new RegExp("^`(" + prefix + "-[A-Z0-9-]+)` · (.+)$");
   const tally = new Map<string, number>();
   for (const raw of (body as string).split(NL)) {
-    const marked = /^`(INS-[A-Z0-9-]+)` · (.+)$/.exec(raw.trim());
-    if (!marked || marked[2].startsWith("another rendering")) continue;
-    tally.set(marked[2], (tally.get(marked[2]) || 0) + 1);
+    const hit = marked.exec(raw.trim());
+    if (!hit || hit[2].startsWith("another rendering")) continue;
+    tally.set(hit[2], (tally.get(hit[2]) || 0) + 1);
   }
   return tally;
 }
 
-describe("the batch-3 commission note agrees with the deck", () => {
-  const states = statesInPartTwo();
-  const note = readFileSync(NOTE, "utf8");
+describe.each(NOTES)("$note agrees with the deck", ({ note: path, part, prefix }) => {
+  const states = statesIn(part, prefix);
+  const note = readFileSync(path, "utf8");
   const total = [...states.values()].reduce((a, b) => a + b, 0);
 
+  /*
+   * VACUITY, WITHOUT PINNING ONE PART'S STATE SET. The first version asserted
+   * the states were exactly LOCKED/OPEN/PASSED, which is Part 2's set -- so
+   * Part 4, which is OPEN and PART-LOCKED, failed a test about whether the
+   * COUNT was real. The check that matters is that ids were found and that
+   * every state read out of the deck is one the brief explains; a state this
+   * does not know is a deck change nobody told the writer about.
+   */
+  const KNOWN_STATES = ["OPEN", "PART-LOCKED", "LOCKED", "PASSED"];
+
   it("counted a real deck, so nothing below passes vacuously", () => {
-    expect(total).toBeGreaterThan(40);
-    expect([...states.keys()].sort()).toEqual(["LOCKED", "OPEN", "PASSED"]);
+    expect(total, `${path} commissions Part ${part}, and no ids were found in it`).toBeGreaterThan(20);
+    expect(
+      [...states.keys()].filter((state) => KNOWN_STATES.indexOf(state) === -1),
+      "the deck carries a lock state the brief does not explain:",
+    ).toEqual([]);
   });
 
   it("states the batch size the deck actually has", () => {
     expect(
       note.indexOf(`${total} ids:`),
-      `the note does not say "${total} ids:". The deck's Part 2 holds ${total} ids and the note is ` +
+      `the note does not say "${total} ids:". The deck's Part ${part} holds ${total} ids and the ` +
+        "note is " +
         "read before the deck, so a writer would go looking for a batch that is not there.",
     ).toBeGreaterThan(-1);
   });
