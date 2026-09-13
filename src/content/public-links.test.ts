@@ -102,3 +102,56 @@ describe("the public surfaces have no dead links", () => {
     ).toEqual([]);
   });
 });
+
+/**
+ * THE WEAKEST CLAIM ON THE README CARRIES ITS STATUS (2026-09-13).
+ *
+ * "Who it's for — people making music with AI tools" was stated as established
+ * fact. It is not one. `docs/redirection-blueprint-2026-08-26.md` §2 records how
+ * it was decided: "a positioning change with zero engine build" — the
+ * instruments already existed, and the audience was fitted to them afterwards
+ * by mapping each flaw family onto a plausible failure mode of generated audio.
+ * That mapping is an argument. No AI music producer has been interviewed. The
+ * two findings this project genuinely rests on came from listener interviews
+ * and are about listeners.
+ *
+ * N3 IS NOT ONLY ABOUT PERCENTILES. A page that refuses to invent a norm and
+ * then asserts an unresearched audience as fact is honest in the expensive
+ * place and careless in the cheap one — and it is the claim a product manager
+ * reading this will test first.
+ *
+ * SO THE STATUS IS PINNED, NOT THE WORDING. What must survive is that the
+ * README says the audience is unvalidated and says so near the claim itself.
+ */
+describe("the README states what its audience claim rests on", () => {
+  const readme = readFileSync("README.md", "utf8");
+
+  it("makes the claim at all, so the check below is not vacuous", () => {
+    expect(readme).toContain("Who it's for");
+  });
+
+  it("says plainly that no one in that audience has been interviewed", () => {
+    const admits =
+      readme.indexOf("No AI music producer has been interviewed") !== -1 ||
+      readme.indexOf("no AI music producer has been interviewed") !== -1;
+    expect(
+      admits,
+      "the README names an audience without saying the claim is unresearched. It was decided as a " +
+        "positioning change with no engine build, and the two user findings this project rests on " +
+        "are about listeners. Stating it as fact is the same class of invention N3 forbids in a " +
+        "percentile, on the page most likely to be read by someone who will test it.",
+    ).toBe(true);
+  });
+
+  it("keeps the admission near the claim, not in a footer", () => {
+    const claim = readme.indexOf("Who it's for");
+    const admission = readme.indexOf("No AI music producer has been interviewed");
+    expect(claim).toBeGreaterThan(-1);
+    expect(admission).toBeGreaterThan(claim);
+    expect(
+      admission - claim,
+      "the admission has drifted far from the claim it qualifies. A caveat a reader meets three " +
+        "screens later is a caveat most readers never meet.",
+    ).toBeLessThan(1600);
+  });
+});
