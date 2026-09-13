@@ -46,7 +46,7 @@ Every sentence in the deck carries an id and one of these:
 
 **This is a correction, and it is worth knowing why.** The first version of this brief told a writer that the braces in the deck were the product's slots. They were not — they came from a regex over rendered numbers, so a family name and a whole clause were printed as though they were literals, and a writer following the instruction exactly would have shipped "pitch drift" into a template that renders for three families. The deck now reads the templates from source. If a slot still looks wrong, say so rather than working around it.
 
-**Parts 2 to 4 are still keyed to rendered sentences**, not templates. The same collapse almost certainly exists there and has not been measured yet, so treat repeated-looking sentences in those parts with suspicion and say so if you find a set that must be one string.
+**Parts 1 and 2 are keyed to templates. Parts 3 and 4 are not, and the difference is measured rather than assumed.** `scripts/deck-source-trace.mjs` asks of every id whether a source string produces it, and Part 2 is now 49 of 49: every block is the string the product has, slots intact. It was not this morning — nine ids showed a RENDERING with the slots filled in, four glued two source strings under one id, and three were in no source file at all, two of those being a panel whose component was deleted eight days earlier. Part 4 has one hand-typed line and seven glued pairs and has not been fixed; Part 3's copy lives inline in JSX, where the census cannot see it at all. So in Parts 3 and 4, treat repeated-looking sentences with suspicion and say so if you find a set that must be one string.
 
 ## How to hand the work back
 
