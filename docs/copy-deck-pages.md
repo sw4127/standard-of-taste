@@ -116,7 +116,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 > THE HOUSE RULES · METHODOLOGY
 
-> Hume closed his essay with a job description: strong sense, delicate sentiment, improved by practice, perfected by comparison, cleared of prejudice — that is a true judge. The Taste Gym's methodology is that sentence turned into engineering constraints.
+> Hume closed his essay with a job description: strong sense, delicate sentiment, improved by practice, perfected by comparison, cleared of prejudice — that is a true judge. Standard of Taste's methodology is that sentence turned into engineering constraints.
 
 > 1. Performance over self-report. Every instrument is a task where you can be wrong. Questionnaires measure your self-image; tasks measure what you actually did. The prestige gap is computed from what your ratings did under false labels; delicacy from whether you found the planted flaw; good sense from whether your confidence matched your accuracy. Nothing asks you to describe your taste, because that answer was never evidence.
 
@@ -204,13 +204,13 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 **Edits land in** `src/app/legal/page.tsx`.
 
-> THE TASTE GYM
+> STANDARD OF TASTE
 
 > Plain language, no tricks. Last updated {LEGAL_LAST_UPDATED}.
 
 > What this is
 
-> The Taste Gym measures how you hear music. Each instrument is a listening task with answers you can get objectively wrong, and every number is computed by a deterministic engine in code — no machine-learning model and no language model classifies you. It is not a psychological assessment, not a personality test, not medical or mental-health advice, and not a diagnosis of anything. It does not predict your personality, your mood or your character, and it never claims to. Older readings still reachable here — the music and football quizzes — are entertainment and were never measurements.
+> Standard of Taste measures how you hear music. Each instrument is a listening task with answers you can get objectively wrong, and every number is computed by a deterministic engine in code — no machine-learning model and no language model classifies you. It is not a psychological assessment, not a personality test, not medical or mental-health advice, and not a diagnosis of anything. It does not predict your personality, your mood or your character, and it never claims to. Older readings still reachable here — the music and football quizzes — are entertainment and were never measurements.
 
 > Terms of use
 
@@ -218,7 +218,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 > Don't use any result here to make decisions about employment, credit, insurance, housing, or anything else that matters that much. It measures how you heard a handful of short clips on one afternoon.
 
-> Footballer names appear only to describe public playing styles. The Taste Gym is not affiliated with, endorsed by, or connected to FIFA, any club, league, or player.
+> Footballer names appear only to describe public playing styles. Standard of Taste is not affiliated with, endorsed by, or connected to FIFA, any club, league, or player.
 
 > Don't abuse, reverse-engineer, or resell the service. Be normal.
 

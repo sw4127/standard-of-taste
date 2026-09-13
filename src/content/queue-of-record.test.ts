@@ -59,7 +59,18 @@ describe("the queue of record accounts for every planned track", () => {
       const at = queue.indexOf(`**${letter}** —`);
       if (at === -1) continue;
       const row = queue.slice(at, queue.indexOf(NL, at));
-      if (!STATUSES.some((status) => row.indexOf(status) !== -1)) unstated.push(`${letter}: ${row.slice(0, 90)}`);
+      /*
+       * CASE-INSENSITIVE, AND IT COST A BLOCKED PUSH TO LEARN. A row written
+       * "**DONE, and it did not mean what it sounded like**" failed a check
+       * whose list holds "done" — so the guard reported that a track had NO
+       * status while looking straight at one, which is the worst kind of
+       * failure message: precise, confident and about the wrong thing. Case is
+       * formatting. The word is the meaning.
+       */
+      const flat = row.toLowerCase();
+      if (!STATUSES.some((status) => flat.indexOf(status.toLowerCase()) !== -1)) {
+        unstated.push(`${letter}: ${row.slice(0, 90)}`);
+      }
     }
     expect(
       unstated,
