@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LEGAL_LAST_UPDATED } from "@/content/legal-updated";
 import ForgetThisBrowser from "@/components/ForgetThisBrowser";
+import { SHELL_MAIN, PROSE_MEASURE } from "@/content/shell";
 
 export const metadata: Metadata = {
   title: "Terms & Privacy — The Taste Gym",
@@ -34,7 +35,7 @@ export default function LegalPage() {
   const support = process.env.NEXT_PUBLIC_SUPPORT_EMAIL;
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-6 py-10">
+    <main className={SHELL_MAIN}>
       <p className="text-xs font-bold tracking-[0.4em] text-accent">THE TASTE GYM</p>
       <h1 className="mt-6 font-display text-4xl font-black leading-tight">
         Terms & privacy

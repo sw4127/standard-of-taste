@@ -1,4 +1,6 @@
 import Link from "next/link";
+import SiteHeader from "@/components/SiteHeader";
+import { SHELL_MAIN, PROSE_MEASURE } from "@/content/shell";
 import FluidField from "@/components/FluidField";
 import { GYM_FIELD, FIELD_READING } from "@/content/instrument-accents";
 
@@ -18,39 +20,21 @@ import { GYM_FIELD, FIELD_READING } from "@/content/instrument-accents";
  * Delicacy, and the gym itself is neutral — which is the only arrangement in
  * which two instruments can actually be peers.
  */
-const BRAND = "rgba(244,245,248,0.72)";
+// The neutral chrome colour this paragraph is about now lives in SiteHeader.
 const FLUID = GYM_FIELD;
+
+const HEADER_LINKS = [
+  { href: "/method", label: "THE METHOD" },
+  { href: "/", label: "THE GYM FLOOR" },
+] as const;
 
 export default function LearnLayout({ children }: { children: React.ReactNode }) {
   return (
-    <main className="relative mx-auto flex min-h-dvh w-full max-w-2xl flex-col overflow-hidden px-6 py-12">
+    <main className={SHELL_MAIN}>
       <FluidField colors={FLUID} intensity={FIELD_READING} scrim={false} vignette />
       <div className="relative z-10">
-        <div className="flex items-baseline justify-between gap-4">
-          <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
-            THE TASTE GYM
-          </p>
-          {/* Nav = the same tracked-caps voice as the kicker (PM 2026-07-17:
-              no bare underline/arrow links — they read cheap). */}
-          <div className="flex items-baseline gap-4">
-            {/* E9/S5, RT-U(a): /method is reachable from the two surfaces
-                built to attract strangers. A page nothing points at is the
-                kind that goes stale unnoticed. */}
-            <Link
-              href="/method"
-              className="text-[0.65rem] font-bold tracking-[0.3em] text-muted transition hover:text-white"
-            >
-              THE METHOD
-            </Link>
-            <Link
-              href="/"
-              className="text-[0.65rem] font-bold tracking-[0.3em] text-muted transition hover:text-white"
-            >
-              THE GYM FLOOR
-            </Link>
-          </div>
-        </div>
-        {children}
+        <SiteHeader links={HEADER_LINKS} />
+        <div className={PROSE_MEASURE}>{children}</div>
         <p className="mt-14 text-[11px] text-muted/70">
           <Link href="/learn" className="transition hover:text-white">
             Reading room

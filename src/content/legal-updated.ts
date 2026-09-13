@@ -29,4 +29,4 @@ export const LEGAL_LAST_UPDATED = "September 2026";
  * Fingerprint of the terms as of that date, maintained by the test that checks
  * it. It is not secret and not security: it is a tripwire on prose.
  */
-export const LEGAL_COPY_FINGERPRINT = "e82fd94c323b9d7a";
+export const LEGAL_COPY_FINGERPRINT = "757e6a2a4a68cb1d";

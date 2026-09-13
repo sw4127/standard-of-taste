@@ -31,9 +31,35 @@ const GT = String.fromCharCode(62);
  * level of escaping, and a regex that quietly matches nothing reports success.
  */
 function proseOf(source: string): string {
+  /*
+   * IT HASHED THE IMPORTS TOO, AND THAT WAS A REAL FALSE ALARM (Phase 3,
+   * Track N). Adding one `import` line to put this page on the site shell
+   * moved the fingerprint and this test reported that "the terms have
+   * changed". They had not: a word-by-word diff of the extracted text showed
+   * the only new tokens were `import`, `from`, `SHELL_MAIN`, `PROSE_MEASURE`
+   * and the module path.
+   *
+   * A guard that fires on a refactor is a guard people learn to silence by
+   * pasting the new hash, which is exactly the reflex this one exists to
+   * prevent — it is the only check standing between a quietly edited clause
+   * and a stale "last updated" date. So it now reads only the RENDERED BODY:
+   * everything from the component's `return (` onward, with comments removed.
+   */
+  const body = source.slice(source.indexOf("return ("));
+  let stripped = "";
+  let i = 0;
+  while (i < body.length) {
+    if (body[i] === "/" && body[i + 1] === "*") {
+      const end = body.indexOf("*/", i + 2);
+      i = end === -1 ? body.length : end + 2;
+      continue;
+    }
+    stripped += body[i];
+    i += 1;
+  }
   let out = "";
   let depth = 0;
-  for (const ch of source) {
+  for (const ch of stripped) {
     if (ch === LT) depth += 1;
     else if (ch === GT) depth = Math.max(0, depth - 1);
     else if (depth === 0) out += ch;

@@ -11,6 +11,8 @@ import Link from "next/link";
 import GymStage from "./GymStage";
 import GymFloor, { type Machine } from "./GymFloor";
 import Track from "@/components/Track";
+import SiteHeader from "@/components/SiteHeader";
+import { SHELL_MAIN, PROSE_MEASURE } from "@/content/shell";
 import { worldCup } from "@/content/world-cup";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
 import { landingLead, SECONDARY_DOORS } from "@/content/landing";
@@ -46,7 +48,7 @@ export const metadata: Metadata = {
  * Delicacy, and the gym itself is neutral — which is the only arrangement in
  * which two instruments can actually be peers.
  */
-const BRAND = "rgba(244,245,248,0.72)";
+// The neutral chrome colour this paragraph is about now lives in SiteHeader.
 const GOLD = PRESTIGE_GOLD;
 /** The delicacy instrument's own accent — each machine owns exactly one. */
 const ICE = DELICACY_ICE;
@@ -155,6 +157,12 @@ const MACHINES: Machine[] = [
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
+const HEADER_LINKS = [
+  { href: "/learn", label: "READING ROOM" },
+  { href: "/lab", label: "THE LAB" },
+  { href: "/method", label: "THE METHOD" },
+] as const;
+
 export default async function Home({ searchParams }: { searchParams: SearchParams }) {
   // Legacy WC share links land here with ?from=<archetypeId> — greet them and
   // point at the game they were actually sent (Track 5: legacy, not featured).
@@ -165,13 +173,11 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
     : undefined;
 
   return (
-    <main className="relative mx-auto flex min-h-dvh w-full max-w-lg flex-col justify-center overflow-hidden px-6 py-12">
+    <main className={`${SHELL_MAIN} justify-center`}>
       <Track event="landing_view" props={{ variant: "gym" }} />
       <GymStage machines={MACHINES}>
       <div className="relative z-10">
-        <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
-          THE TASTE GYM
-        </p>
+        <SiteHeader links={HEADER_LINKS} />
 
         {friendArchetype ? (
           <p className="mt-5 inline-block rounded-full border border-white/10 px-4 py-1.5 text-sm text-muted">
@@ -184,10 +190,10 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
           </p>
         ) : null}
 
-        <h1 className="mt-7 font-display text-5xl font-semibold leading-[1.02] tracking-tight">
+        <h1 className={`mt-7 ${PROSE_MEASURE} font-display text-5xl font-semibold leading-[1.02] tracking-tight`}>
           Your taste has a number.
         </h1>
-        <p className="mt-5 text-base leading-relaxed text-muted">
+        <p className={`mt-5 ${PROSE_MEASURE} text-base leading-relaxed text-muted`}>
           {landingLead(MACHINES.length)}{" "}
           <span className="text-foreground">You can be wrong, and that is the point.</span>
         </p>

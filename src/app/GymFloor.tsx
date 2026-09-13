@@ -68,7 +68,13 @@ export default function GymFloor({ machines, locked }: { machines: Machine[]; lo
 
   return (
     <div>
-      <div className="grid gap-3 sm:grid-cols-2">
+      {/* FOUR ACROSS ON A DESKTOP (Phase 3, N3). The cards were two-up inside a
+          512px column, so at 1280px the four machines stacked into a strip down
+          the middle of an empty screen. The shell is wide now; this is the half
+          that uses it. The braces are not decoration: without them React renders
+          the comment as page text, which is what the first attempt shipped and
+          what reading the rendered page caught. */}
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {machines.map((m) => {
           const isSelected = selected === m.id;
           const dimmed = selected !== null && !isSelected;

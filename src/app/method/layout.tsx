@@ -1,4 +1,6 @@
 import Link from "next/link";
+import SiteHeader from "@/components/SiteHeader";
+import { SHELL_MAIN, ARTICLE_MEASURE } from "@/content/shell";
 import FluidField from "@/components/FluidField";
 import { GYM_FIELD, FIELD_READING } from "@/content/instrument-accents";
 
@@ -20,26 +22,20 @@ import { GYM_FIELD, FIELD_READING } from "@/content/instrument-accents";
  * itself is neutral. /method is not an instrument and takes no instrument's
  * colour.
  */
-const BRAND = "rgba(244,245,248,0.72)";
+// The neutral chrome colour this paragraph is about now lives in SiteHeader.
 const FLUID = GYM_FIELD;
+
+const HEADER_LINKS = [
+  { href: "/", label: "THE GYM FLOOR" },
+] as const;
 
 export default function MethodLayout({ children }: { children: React.ReactNode }) {
   return (
-    <main className="relative mx-auto flex min-h-dvh w-full max-w-3xl flex-col overflow-hidden px-6 py-12">
+    <main className={SHELL_MAIN}>
       <FluidField colors={FLUID} intensity={FIELD_READING} scrim={false} vignette />
       <div className="relative z-10">
-        <div className="flex items-baseline justify-between gap-4">
-          <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
-            THE TASTE GYM
-          </p>
-          <Link
-            href="/"
-            className="text-[0.65rem] font-bold tracking-[0.3em] text-muted transition hover:text-white"
-          >
-            THE GYM FLOOR
-          </Link>
-        </div>
-        {children}
+        <SiteHeader links={HEADER_LINKS} />
+        <div className={ARTICLE_MEASURE}>{children}</div>
         <p className="mt-14 text-[11px] text-muted/70">
           <Link href="/learn" className="transition hover:text-white">
             Reading room
