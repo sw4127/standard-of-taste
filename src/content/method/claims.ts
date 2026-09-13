@@ -166,15 +166,36 @@ export const METHOD_CLAIMS: MethodClaim[] = [
       },
     ],
   },
+  /**
+   * REWRITTEN 2026-09-13 (Phase 3, Q2), AND THE DEFECT IS WORTH NAMING.
+   *
+   * This block used to open "the constitution names the owner's expertise as a
+   * constraint" and then quote the words "they are newer to engineering". Every
+   * test here passed: the quotation is real, the anchor resolved, the claim was
+   * faithful to the document. It was still wrong on the page, because a
+   * quotation about a DOCUMENT's instruction renders to a stranger as a
+   * statement about a PERSON — and this is the page a reader uses to decide how
+   * much to trust everything else on the site. The owner is an engineering
+   * student; the sentence read as if he were not.
+   *
+   * The anchor is now the half of the constitution's sentence that carries the
+   * INSTRUCTION rather than the characterisation. That is not a softer citation:
+   * it is the part the claim is actually about, and the discarded half was never
+   * doing any work except describing somebody.
+   *
+   * VERIFIED BY A TEST AND STILL WRONG is the general lesson, and it belongs
+   * here rather than in a handoff — every guard on this page checks that a claim
+   * is SUPPORTED, and none of them can check what it will be read as.
+   */
   {
     id: "pm-is-not-an-engineer",
     kind: "quoted",
     text:
-      "The constitution opens by naming the owner's expertise as a constraint on how work is presented to them: they are newer to engineering, so explain tradeoffs in plain language and teach as you go. Every option put to them has to be legible without the jargon, or the ruling that comes back is a rubber stamp on a sentence nobody understood.",
+      "The constitution constrains how the engineer must write, not what the owner must know: explain tradeoffs in plain language and teach as you go. Every option put to them has to be legible without the jargon, or the ruling that comes back is a rubber stamp on a sentence nobody understood — so the rule is enforced against the writer, and a decision taken on an unread sentence is the failure it exists to prevent.",
     sources: [
       {
         path: "CLAUDE.md",
-        anchor: "they are newer to engineering, so explain tradeoffs in plain language",
+        anchor: "explain tradeoffs in plain language and teach as you go",
       },
     ],
   },

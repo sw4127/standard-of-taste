@@ -324,3 +324,52 @@ describe("the verifier catches what it exists to catch", () => {
     expect(check(wrapped)).toEqual([]);
   });
 });
+
+/**
+ * THE PAGE DESCRIBES THE WORK, NEVER THE PEOPLE (Phase 3, Q2, 2026-09-13).
+ *
+ * `/method` shipped a block quoting the constitution's words "they are newer to
+ * engineering" for two weeks. Every guard in this file passed it — the
+ * quotation was real, the anchor resolved, the claim was faithful. It was still
+ * wrong on the page, because a quotation about a DOCUMENT's instruction reads
+ * to a stranger as a verdict on a PERSON, on the page a reader uses to decide
+ * how much to trust everything else here.
+ *
+ * THE GENERAL RULE CANNOT BE TESTED and pretending otherwise would be worse
+ * than this. What is testable is the specific characterisation that shipped,
+ * and the ones nearest to it. A phrase list is a weak guard; it is the same
+ * shape as the paid-tier one, and it exists so that putting this back takes a
+ * deliberate act rather than a careless quotation.
+ */
+describe("the method page characterises no one", () => {
+  const CHARACTERISATIONS = [
+    "newer to engineering",
+    "not an engineer",
+    "is not technical",
+    "non-technical",
+    "lacks the background",
+  ];
+
+  it("names no person's level of expertise", () => {
+    const rendered = [
+      ...METHOD_CLAIMS.map((c) => c.text),
+      ...METHOD_REFUSALS.flatMap((r) => [r.what, r.refusal, r.price]),
+      ...METHOD_FINDINGS.flatMap((f) => [f.finding, f.consequence]),
+    ];
+    expect(rendered.length, "the ledger is empty, so this checks nothing").toBeGreaterThan(10);
+    const found: string[] = [];
+    for (const text of rendered) {
+      const flat = text.toLowerCase();
+      for (const phrase of CHARACTERISATIONS) {
+        if (flat.indexOf(phrase) !== -1) found.push(`"${phrase}" in: ${text.slice(0, 72)}`);
+      }
+    }
+    expect(
+      found,
+      "this page states someone's level of expertise. Even as a faithful quotation it renders as a " +
+        "verdict on a person, on the page a reader uses to weigh everything else on the site. Quote " +
+        "the instruction, not the characterisation:",
+    ).toEqual([]);
+  });
+});
+

@@ -1561,13 +1561,13 @@ The project runs on a written constitution and two review protocols. What is unu
 
 **LOAD-BEARING — these exact words are verified against the cited file and a test fails if they change:**
 
-- “they are newer to engineering, so explain tradeoffs in plain language”
+- “explain tradeoffs in plain language and teach as you go”
 
 Everything else in the block is the engineer's own connective prose and is free.
 
 ```
 `MET-OPERATING-MODEL-03` · PART-LOCKED
-The constitution opens by naming the owner's expertise as a constraint on how work is presented to them: they are newer to engineering, so explain tradeoffs in plain language and teach as you go. Every option put to them has to be legible without the jargon, or the ruling that comes back is a rubber stamp on a sentence nobody understood.
+The constitution constrains how the engineer must write, not what the owner must know: explain tradeoffs in plain language and teach as you go. Every option put to them has to be legible without the jargon, or the ruling that comes back is a rubber stamp on a sentence nobody understood — so the rule is enforced against the writer, and a decision taken on an unread sentence is the failure it exists to prevent.
 ```
 
 #### 2. `asks-must-be-in-the-block`
