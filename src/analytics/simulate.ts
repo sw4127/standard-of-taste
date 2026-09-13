@@ -354,8 +354,9 @@ export function simulateBias(
  *
  * Why it exists: `simulatePersons` called twice with different seeds yields two
  * different populations whose ids nonetheless collide (`p0001` in both). Any
- * cross-instrument join — the Taste Index, the retest arc, every longitudinal
- * question in the pivot's §3 — would then silently merge strangers and report
+ * cross-instrument join — the retest arc, every longitudinal
+ * question in the pivot's §3, and the composite Taste Index back when there
+ * was going to be one — would then silently merge strangers and report
  * the result as a correlation. Generating the person array exactly once makes
  * that class of bug unrepresentable.
  */

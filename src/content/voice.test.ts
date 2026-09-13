@@ -447,6 +447,74 @@ function promisesPayment(text: string): boolean {
   );
 }
 
+/**
+ * DOES THIS STRING OFFER ONE NUMBER FOR A PERSON'S TASTE? (E20/S1, RT-I2 a.)
+ *
+ * RT-I killed the composite Taste Index on 2026-09-01 and RT-I2 (a), ruled
+ * 2026-09-13, settled that the five readings stay where they are measured
+ * rather than being gathered onto a profile page. Both rulings are only ever
+ * violated the same way the paid-tier ruling was: a screen offers a thing that
+ * does not exist, and nobody notices until a stranger reads it.
+ *
+ * WHY A GUARD FOR SOMETHING THAT IS NOT BUILT. Because that is exactly when it
+ * is cheap. The five sub-scores exist, in five different units, on five
+ * screens; adding them up is the obvious-looking move and the reason it is
+ * wrong -- no weighting is arguable with a cohort of zero -- is an argument,
+ * not an obstacle. An argument keeps no one out.
+ *
+ * NEGATED FORMS ARE STRIPPED FIRST, exactly as `promisesPayment` does, and for
+ * the same reason: /method's fifth refusal names the Taste Index in order to
+ * say it does not exist. A string may name the composite only while refusing
+ * it, which is a harder test to pass than silence.
+ */
+/** Phrases that put the composite in the past. Deliberately short and plain. */
+const COMPOSITE_IS_GONE = /there is no taste index|no composite|was killed|is killed|will not be one/i;
+
+function promisesComposite(text: string): boolean {
+  /*
+   * BUILT WITH `new RegExp`, NOT WRITTEN AS A LITERAL, and that is not style.
+   * The first version of this function was authored through a transport that
+   * eats one level of backslash escaping, so every `\\b` in it arrived as a
+   * literal BACKSPACE character. The pattern matched nothing, the guard passed
+   * over shipped copy, and the only reason I know is that the reverse test
+   * below asserts three strings it MUST catch. It is the third time this
+   * repository has shipped a regex the transport hollowed out.
+   */
+  const BS = String.fromCharCode(92);
+  const EDGE = BS + "b";
+  const WS = BS + "s";
+  const WORD = BS + "w";
+  const strip = [
+    // Denying a composite is what the copy is supposed to do.
+    new RegExp(EDGE + "no (composite|combined|overall|single)" + EDGE, "gi"),
+    new RegExp(EDGE + "not? a (composite|combined|overall|single) (score|number|index)" + EDGE, "gi"),
+    // /method's fifth refusal names the dead design in order to bury it.
+    /one number standing for a person's taste/gi,
+    new RegExp(EDGE + "kill(ed)?" + EDGE + "[^.]{0,40}" + EDGE + "(index|composite)" + EDGE, "gi"),
+  ];
+  let claim = text;
+  for (const pattern of strip) claim = claim.replace(pattern, "");
+  /*
+   * NAMING IT IS ALLOWED WHILE BURYING IT, and that is a HARDER test to pass
+   * than silence -- the same shape as the documentary rule for payment models
+   * on /method. Writing the refusal exposed that it never actually said the
+   * thing does not exist: it described the design, made the argument, and left
+   * a reader to infer the outcome. It says it now, in a sentence, and this is
+   * what requires it to keep saying it.
+   */
+  if (COMPOSITE_IS_GONE.test(text)) return false;
+  const offers = new RegExp(
+    [
+      EDGE + "taste index" + EDGE,
+      EDGE + "(composite|combined|overall|total)" + WS + "+(?:" + WORD + "+" + WS + "+){0,2}" +
+        "(score|number|index|rating)" + EDGE,
+      EDGE + "your (overall|total) " + WORD + "+" + EDGE,
+    ].join("|"),
+    "i",
+  );
+  return offers.test(claim);
+}
+
 describe("hazard gate — the shipping decks", () => {
   it("every cohort-visible string passes the spec", () => {
     const violations = checkVoice(shippingStrings());
@@ -461,6 +529,47 @@ describe("hazard gate — the shipping decks", () => {
    *
    * Asserted on the ASSEMBLED footnote, because that is the unit a user reads.
    */
+  /**
+   * RT-I (2026-09-01) and RT-I2 (a) (2026-09-13). The product publishes five
+   * readings in five different units and refuses to add them up. The refusal is
+   * on /method; this is what keeps it true on every other screen.
+   */
+  it("no shipped copy offers one number for a person's taste (RT-I)", () => {
+    const strings = shippingStrings();
+    expect(strings.length, "the deck is empty, so this checks nothing").toBeGreaterThan(40);
+    const offers = strings
+      .filter((s) => promisesComposite(s.text))
+      .map((s) => `${s.surface}  "${s.text.slice(0, 96)}"`);
+    expect(
+      offers,
+      "These offer a combined or overall taste number. RT-I killed the composite Taste Index and " +
+        "RT-I2 (a) settled that the five readings stay where they are measured -- five different " +
+        "units, and a weighting that can only be argued from a cohort this product does not have. " +
+        "A string may name the composite only while refusing it:",
+    ).toEqual([]);
+  });
+
+  /*
+   * PROVEN IN BOTH DIRECTIONS, because a phrase-matching guard that has never
+   * matched anything is indistinguishable from one whose pattern is broken --
+   * which this repository has now shipped three times.
+   */
+  it("catches a composite promise, and lets the refusal through", () => {
+    expect(promisesComposite("Your overall taste score is 72.")).toBe(true);
+    expect(promisesComposite("Your Taste Index, across all five instruments.")).toBe(true);
+    expect(promisesComposite("A combined number for how good your ear is.")).toBe(true);
+    // Naming it while burying it, which is what /method's fifth refusal does.
+    expect(
+      promisesComposite(
+        "The Taste Index — one number standing for a person's taste. There is no Taste Index, and " +
+          "there will not be one.",
+      ),
+    ).toBe(false);
+    // Naming it WITHOUT burying it is the thing this catches.
+    expect(promisesComposite("The Taste Index — one number standing for a person's taste")).toBe(true);
+    expect(promisesComposite("There is no composite score, and there will not be one.")).toBe(false);
+  });
+
   it("no Gym copy promises a paid tier (D4 amendment)", () => {
     const surfaces = shippingStrings().filter((s) =>
       GYM_SURFACE_PREFIXES.some((p) => s.surface.startsWith(`${p}/`)),
