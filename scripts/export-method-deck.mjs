@@ -20,6 +20,11 @@
  */
 import { execSync } from "node:child_process";
 import { writeFileSync, unlinkSync } from "node:fs";
+import { allChains, contentFiles, matchesFor } from "./template-match.mjs";
+
+const CHAINS = allChains(contentFiles());
+const QUOTE_OPEN = String.fromCharCode(8220);
+const QUOTE_CLOSE = String.fromCharCode(8221);
 
 /*
  * The ledger is TypeScript behind a path alias, so it runs through vitest
@@ -33,6 +38,13 @@ import {
   METHOD_SECTIONS,
   METHOD_AS_OF,
 } from "@/content/method/claims";
+import {
+  METHOD_CLOSING_LINKS,
+  METHOD_HEADLINE,
+  METHOD_KICKER,
+  METHOD_LEDE,
+  methodClosing,
+} from "@/content/method/prose";
 import { describe, it } from "vitest";
 
 describe("export", () => {
@@ -43,6 +55,14 @@ describe("export", () => {
       findings: METHOD_FINDINGS,
       sections: METHOD_SECTIONS,
       asOf: METHOD_AS_OF,
+      prose: {
+        kicker: METHOD_KICKER,
+        headline: METHOD_HEADLINE,
+        lede: METHOD_LEDE,
+        closing: methodClosing(METHOD_AS_OF),
+        emphasis: METHOD_LEDE.filter((p) => p.emphasis).map((p) => p.emphasis),
+        linkLabels: METHOD_CLOSING_LINKS.map((l) => l.label),
+      },
     };
     console.log("DECK_START" + JSON.stringify(out) + "DECK_END");
   });
@@ -67,10 +87,39 @@ if (!match) {
   console.error(raw.slice(-4000));
   throw new Error("export-method-deck: the ledger produced no deck");
 }
-const { claims, refusals, findings, sections, asOf } = JSON.parse(match[1]);
+const { claims, refusals, findings, sections, asOf, prose } = JSON.parse(match[1]);
 
 const L = [];
 const w = (s = "") => L.push(s);
+
+/**
+ * PRINT THE SOURCE STRING, OR REFUSE (E20/S1, ported from the instrument deck).
+ *
+ * The same contract, for the same reason: a block this file types itself is a
+ * block that can outlive the page, and it already had. Slots stay slots.
+ */
+function template(renderings, lead) {
+  const shown = renderings.filter((r) => typeof r === "string" && r.length > 0);
+  if (shown.length === 0) throw new Error("export-method-deck: template() got nothing to show");
+  const hits = matchesFor(shown[0], CHAINS);
+  if (hits.length !== 1) {
+    throw new Error(
+      "export-method-deck: " + hits.length + " source templates match, so this block would be " +
+        "hand-typed. Give the string a home in a content module: " + shown[0].slice(0, 90),
+    );
+  }
+  if (lead) {
+    w(lead);
+    w();
+  }
+  w("> " + hits[0].display);
+  w();
+  const examples = [...new Set(shown)].filter((r) => r !== hits[0].display);
+  if (examples.length > 0) {
+    w("  *As rendered:* " + examples.map((e) => QUOTE_OPEN + e + QUOTE_CLOSE).join("  ·  "));
+    w();
+  }
+}
 
 /**
  * The verified passages inside a piece of prose, so a reviewer can see them.
@@ -180,41 +229,36 @@ w(
     "your eye. It is also entirely free to rewrite.",
 );
 w();
-w("**Kicker + headline, top of page:**");
+w(
+  "**What renders that this deck cannot show you.** The second paragraph italicises one word, and " +
+    "the closing line carries two links. Both are found by searching the sentence for the word or " +
+    "the label, so they are part of the string rather than markup around it: the emphasised word " +
+    `is “${prose.emphasis.join("”, “")}” and the link labels are ` +
+    `“${prose.linkLabels.join("” and “")}”. Rewriting a sentence without them ` +
+    "renders a paragraph with no italic and a closing line with no links, and no test can tell that " +
+    "from an intended change.",
+);
 w();
-w("```");
-w("THE HOUSE RULES · HOW THIS IS RUN");
-w("What this project refused, and what each refusal cost.");
-w("```");
-w();
+/*
+ * READ FROM THE MODULE, NOT TYPED HERE (E20/S1).
+ *
+ * These five strings were a second copy, and the copy had already drifted: the
+ * closing line was printed with the date resolved, so the census reported it as
+ * a sentence in no source file at all -- a writer would have been rewriting the
+ * exporter rather than the page. They now live in `content/method/prose.ts`,
+ * which the page renders and the voice gate reads, and `template()` refuses to
+ * print anything that is not one of its strings.
+ */
+template([prose.kicker], "**Kicker, top of page:**");
+template([prose.headline], "**Headline:**");
 w("**Two opening paragraphs:**");
 w();
-w("```");
-w(
-  "The instruments on this site are the visible part. The part worth reading about is the operating " +
-    "model that produced them — a written constitution, two review protocols, and a decision record " +
-    "that has repeatedly deleted finished work for being untrue rather than for being broken.",
+for (const paragraph of prose.lede) template([paragraph.text]);
+template(
+  [prose.closing],
+  "**Closing line.** The date is a slot -- it is a standing fact with its own constant, and " +
+    "resolving it here is what made this line untraceable to source:",
 );
-w();
-w(
-  "Any project can list what it built. This page lists what it refused, because a refusal is the only " +
-    "decision with a verifiable cost attached, and because a page of things that went well is a " +
-    "brochure. Each block below names the document it comes from. Those documents are in the " +
-    "repository, and a test opens every one of them on every run to check the quoted passage is still " +
-    "there — if a source is reworded, this page fails the build instead of quietly becoming false.",
-);
-w("```");
-w();
-w("**Closing line:**");
-w();
-w("```");
-w(
-  `Standing facts on this page last checked ${asOf}. The instruments themselves are in the reading ` +
-    "room; the measurements behind them are in the Lab, including a page listing what the instruments " +
-    "cannot do.",
-);
-w("```");
-w();
 w("---");
 w();
 

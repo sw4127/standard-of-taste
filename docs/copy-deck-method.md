@@ -25,26 +25,27 @@ If a locked passage is what makes a sentence bad, say so. The fix is either to r
 
 **This is the only prose on the page with no ledger entry behind it, and therefore the only part with nothing verifying it.** It is framing rather than claim, but that is my judgment and worth your eye. It is also entirely free to rewrite.
 
-**Kicker + headline, top of page:**
+**What renders that this deck cannot show you.** The second paragraph italicises one word, and the closing line carries two links. Both are found by searching the sentence for the word or the label, so they are part of the string rather than markup around it: the emphasised word is “refused” and the link labels are “reading room” and “the Lab”. Rewriting a sentence without them renders a paragraph with no italic and a closing line with no links, and no test can tell that from an intended change.
 
-```
-THE HOUSE RULES · HOW THIS IS RUN
-What this project refused, and what each refusal cost.
-```
+**Kicker, top of page:**
+
+> THE HOUSE RULES · HOW THIS IS RUN
+
+**Headline:**
+
+> What this project refused, and what each refusal cost.
 
 **Two opening paragraphs:**
 
-```
-The instruments on this site are the visible part. The part worth reading about is the operating model that produced them — a written constitution, two review protocols, and a decision record that has repeatedly deleted finished work for being untrue rather than for being broken.
+> The instruments on this site are the visible part. The part worth reading about is the operating model that produced them — a written constitution, two review protocols, and a decision record that has repeatedly deleted finished work for being untrue rather than for being broken.
 
-Any project can list what it built. This page lists what it refused, because a refusal is the only decision with a verifiable cost attached, and because a page of things that went well is a brochure. Each block below names the document it comes from. Those documents are in the repository, and a test opens every one of them on every run to check the quoted passage is still there — if a source is reworded, this page fails the build instead of quietly becoming false.
-```
+> Any project can list what it built. This page lists what it refused, because a refusal is the only decision with a verifiable cost attached, and because a page of things that went well is a brochure. Each block below names the document it comes from. Those documents are in the repository, and a test opens every one of them on every run to check the quoted passage is still there — if a source is reworded, this page fails the build instead of quietly becoming false.
 
-**Closing line:**
+**Closing line.** The date is a slot -- it is a standing fact with its own constant, and resolving it here is what made this line untraceable to source:
 
-```
-Standing facts on this page last checked 2026-08-27. The instruments themselves are in the reading room; the measurements behind them are in the Lab, including a page listing what the instruments cannot do.
-```
+> Standing facts on this page last checked ${asOf}. The instruments themselves are in the reading room; the measurements behind them are in the Lab, including a page listing what the instruments cannot do.
+
+  *As rendered:* “Standing facts on this page last checked 2026-08-27. The instruments themselves are in the reading room; the measurements behind them are in the Lab, including a page listing what the instruments cannot do.”
 
 ---
 

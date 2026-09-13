@@ -1,5 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import type { ReactNode } from "react";
+import {
+  METHOD_CLOSING_LINKS,
+  METHOD_HEADLINE,
+  METHOD_KICKER,
+  METHOD_LEDE,
+  methodClosing,
+  type MethodParagraph,
+  type ProseLink,
+} from "@/content/method/prose";
 import {
   METHOD_AS_OF,
   METHOD_FINDINGS,
@@ -98,31 +108,63 @@ function InferenceMark() {
   );
 }
 
+/**
+ * ONE SENTENCE, RENDERED WITH ITS MARKUP FOUND INSIDE IT (E20/S1).
+ *
+ * The prose moved to `content/method/prose.ts` so the deck and the voice gate
+ * read the same string the page shows. Emphasis and links are therefore data --
+ * a word, and a label -- and these two put them back. They SPLIT rather than
+ * interpolate, so the sentence in the module is the whole sentence: if the
+ * emphasised word or a link label is edited out of it, the split finds nothing
+ * and `method-prose.test.ts` fails rather than the page quietly losing a link.
+ */
+function withEmphasis(paragraph: MethodParagraph) {
+  if (!paragraph.emphasis) return paragraph.text;
+  const at = paragraph.text.indexOf(paragraph.emphasis);
+  if (at === -1) return paragraph.text;
+  return (
+    <>
+      {paragraph.text.slice(0, at)}
+      <em>{paragraph.emphasis}</em>
+      {paragraph.text.slice(at + paragraph.emphasis.length)}
+    </>
+  );
+}
+
+const PROSE_LINK = "text-[hsl(225_8%_78%)] transition hover:text-[hsl(225_8%_90%)]";
+
+function withLinks(text: string, links: readonly ProseLink[]): ReactNode[] {
+  const out: ReactNode[] = [];
+  let rest = text;
+  for (const link of links) {
+    const at = rest.indexOf(link.label);
+    if (at === -1) continue;
+    out.push(rest.slice(0, at));
+    out.push(
+      <Link key={link.href} href={link.href} className={PROSE_LINK}>
+        {link.label}
+      </Link>,
+    );
+    rest = rest.slice(at + link.label.length);
+  }
+  out.push(rest);
+  return out;
+}
+
 export default function MethodPage() {
   return (
     <article>
       <p className="mt-10 text-[0.65rem] font-bold tracking-[0.3em] text-muted">
-        THE HOUSE RULES · HOW THIS IS RUN
+        {METHOD_KICKER}
       </p>
       <h1 className="mt-2 font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl">
-        What this project refused, and what each refusal cost.
+        {METHOD_HEADLINE}
       </h1>
 
       <div className="mt-7 space-y-5 text-[15px] leading-relaxed text-neutral-300">
-        <p>
-          The instruments on this site are the visible part. The part worth reading about is the
-          operating model that produced them — a written constitution, two review protocols, and a
-          decision record that has repeatedly deleted finished work for being untrue rather than for
-          being broken.
-        </p>
-        <p>
-          Any project can list what it built. This page lists what it <em>refused</em>, because a
-          refusal is the only decision with a verifiable cost attached, and because a page of things
-          that went well is a brochure. Each block below names the document it comes from. Those
-          documents are in the repository, and a test opens every one of them on every run to check
-          the quoted passage is still there — if a source is reworded, this page fails the build
-          instead of quietly becoming false.
-        </p>
+        {METHOD_LEDE.map((paragraph) => (
+          <p key={paragraph.text.slice(0, 32)}>{withEmphasis(paragraph)}</p>
+        ))}
       </div>
 
       {/* The operating model, in the ruled reader order (blueprint E1). The
@@ -199,11 +241,7 @@ export default function MethodPage() {
       </section>
 
       <p className="mt-14 text-[13px] leading-relaxed text-muted">
-        Standing facts on this page last checked {METHOD_AS_OF}. The instruments themselves are in
-        the <Link href="/learn" className="text-[hsl(225_8%_78%)] transition hover:text-[hsl(225_8%_90%)]">reading room</Link>;
-        the measurements behind them are in{" "}
-        <Link href="/lab" className="text-[hsl(225_8%_78%)] transition hover:text-[hsl(225_8%_90%)]">the Lab</Link>,
-        including a page listing what the instruments cannot do.
+        {withLinks(methodClosing(METHOD_AS_OF), METHOD_CLOSING_LINKS)}
       </p>
     </article>
   );

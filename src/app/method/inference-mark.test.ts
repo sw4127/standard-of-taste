@@ -72,6 +72,20 @@ describe("the /method page marks every inference it renders", () => {
       // Both are strings, not ledger entries.
       "Set(sources.map(",
       "paths.map(",
+      /*
+       * THE PAGE'S OWN FRAMING PARAGRAPHS (E20/S1). They moved out of JSX into
+       * `content/method/prose.ts` so the copy deck and the voice gate could
+       * read the string the page renders; before that they were literal JSX and
+       * this guard never saw them.
+       *
+       * THEY ARE NOT LEDGER ENTRIES, and the distinction is the one this page
+       * exists to keep: a ledger entry carries a cited document and a passage
+       * inside it, and can be QUOTED or INFERRED. These carry neither, which is
+       * exactly why the deck calls them "the only prose on the page with
+       * nothing verifying it". An inference mark on them would claim a status
+       * they do not have. `method-prose.test.tsx` is what holds them instead.
+       */
+      "METHOD_LEDE.map(",
     ];
     const known = [...RENDERED.map((r) => r.mapExpr), ...NON_LEDGER];
     const maps = [...source.matchAll(/[\w.()]+\.map\(/g)].map((m) => m[0]);

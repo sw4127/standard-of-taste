@@ -51,7 +51,9 @@ import { vocabularyStrings } from "./vocabulary/fixtures";
 import { LIMIT_KIND_COPY, RETIRED_SOURCE_NOTE } from "./staircase/limits";
 import { LEARN_PAGES } from "./learn";
 import { FORGET } from "./forget";
+import { METHOD_HEADLINE, METHOD_LEDE, methodClosing } from "@/content/method/prose";
 import {
+  METHOD_AS_OF,
   METHOD_CLAIMS,
   METHOD_FINDINGS,
   METHOD_REFUSALS,
@@ -157,6 +159,27 @@ function shippingStrings(): VoiceString[] {
   for (const s of METHOD_SECTIONS) {
     out.push({ surface: `method/section/${s.id}`, text: `${s.heading} ${s.lede}`, intensity: "calm" });
   }
+
+  /**
+   * THE PAGE'S OWN FRAMING PROSE (E20/S1) — the headline, the two opening
+   * paragraphs and the closing line.
+   *
+   * It was never in this deck, because it was written into the component and
+   * prose in a component is prose outside the gate. That is the same gap
+   * `landingLead` was moved out of JSX to close in E11/S2, and the same one
+   * that let two paid-tier promises ship in the reading room and be served as
+   * structured data. It is also the ONLY prose on /method with no ledger entry
+   * behind it, so it is the part with nothing else verifying it at all.
+   */
+  out.push({ surface: "method/prose/headline", text: METHOD_HEADLINE, intensity: "calm" });
+  METHOD_LEDE.forEach((paragraph, at) => {
+    out.push({ surface: `method/prose/lede-${at}`, text: paragraph.text, intensity: "calm" });
+  });
+  out.push({
+    surface: "method/prose/closing",
+    text: methodClosing(METHOD_AS_OF),
+    intensity: "calm",
+  });
 
   /**
    * The result page's <title> and the card's alt text (E7/S6). Both sides of
