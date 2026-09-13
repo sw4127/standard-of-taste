@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, sep } from "node:path";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { DEGRADATION_FAMILIES } from "@/engine/delicacy";
 import { STAIRCASE_FAMILIES, familyUnit } from "@/engine/staircase-manifest";
 import { FAMILY_LABEL } from "@/content/staircase/copy";
@@ -8,12 +8,14 @@ import { MEASURED_TRIALS } from "@/content/delicacy/items";
 import { MACHINES } from "@/components/OtherMachines";
 import {
   flawFamilies,
+  flawFamilyCount,
   flawFamilyList,
   FLAWS_INTRO,
   FLAWS_LIMITS,
   FLAWS_HREF,
   FLAWS_INVITE,
 } from "./flaw-families";
+import { numberWord } from "./vocabulary/numbers";
 import { FLAW_IN_A_GENERATION } from "./vocabulary/threshold";
 import { FLAW_IN_YOUR_WORK } from "./vocabulary/delicacy";
 import { LEARN_PAGES, learnPage } from "./learn";
@@ -483,5 +485,72 @@ describe("the writing pass can see every string this session shipped", () => {
       "these ship but are not in the deck, so the writing pass cannot see them. " +
         "Re-run: node scripts/export-instrument-deck.mjs > " + DECK + " — missing:",
     ).toEqual([]);
+  });
+});
+
+/**
+ * THE FAMILY COUNT MAY NOT BE TYPED (E20, batch-3 RULE return).
+ *
+ * Cowork found `three` typed as a word in four shipped strings, one of them in
+ * the same sentence as the derived family list — so the day a fourth family
+ * ships, that sentence renders four names beside the word "three". It is
+ * exactly the failure `countWordCapitalised(machineCount)` exists for, one
+ * level down, and it had not bitten only because this list has moved less.
+ *
+ * THE TEST ADDS A FAMILY RATHER THAN ASSERTING TODAY'S WORD. Checking that the
+ * strings say "three" today passes just as well when the word is typed, which
+ * is the state this is meant to end. The only check that can tell derived from
+ * typed is to change the count and see whether the prose follows.
+ */
+describe("the family count is derived, not typed", () => {
+  const COUNTED = () => [
+    FLAWS_INTRO,
+    FLAWS_LIMITS,
+    learnPage("flaws")!.faq.map((f) => f.a).join(" "),
+    SECONDARY_DOORS.map((d) => d.line).join(" "),
+  ];
+
+  it("says the number the family list actually has", () => {
+    const word = numberWord(flawFamilyCount());
+    expect(flawFamilyCount(), "no families, so nothing below checks anything").toBeGreaterThan(1);
+    for (const text of COUNTED()) {
+      expect(
+        text.toLowerCase().indexOf(word) !== -1,
+        `this string counts the families but does not say "${word}": ${text.slice(0, 80)}`,
+      ).toBe(true);
+    }
+  });
+
+  /*
+   * THE REVERSE, WHICH IS THE WHOLE POINT. `DEGRADATION_FAMILIES` is the source
+   * of truth for the count, so a fourth entry must move every one of these
+   * sentences. A typed "three" survives this; a derived one does not.
+   */
+  it("follows the list when a family is added", async () => {
+    const before = flawFamilyCount();
+    vi.resetModules();
+    vi.doMock("@/engine/delicacy", async () => {
+      const actual = await vi.importActual<typeof import("@/engine/delicacy")>("@/engine/delicacy");
+      return {
+        ...actual,
+        DEGRADATION_FAMILIES: [...actual.DEGRADATION_FAMILIES, actual.DEGRADATION_FAMILIES[0]],
+      };
+    });
+    try {
+      const fresh = await import("./flaw-families");
+      expect(fresh.flawFamilyCount(), "the added family did not reach the module").toBe(before + 1);
+      const grown = numberWord(before + 1);
+      expect(
+        fresh.FLAWS_INTRO.toLowerCase(),
+        `the intro still does not say "${grown}", so its count is typed rather than derived`,
+      ).toContain(grown);
+      expect(
+        fresh.FLAWS_LIMITS.toLowerCase(),
+        `the limits sentence still does not say "${grown}", so its count is typed`,
+      ).toContain(grown);
+    } finally {
+      vi.doUnmock("@/engine/delicacy");
+      vi.resetModules();
+    }
   });
 });

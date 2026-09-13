@@ -1,3 +1,4 @@
+import { flawFamilyCountWordLeading } from "./flaw-families";
 /**
  * THE FRONT DOOR'S LEAD SENTENCE (E11/S2, Track B).
  *
@@ -106,7 +107,9 @@ export const SECONDARY_DOORS: SecondaryDoor[] = [
   {
     href: "/learn/flaws",
     label: "Something sounds wrong.",
-    line: "Three kinds of damage, what each one is called, and which machine measures it.",
+    line:
+      `${flawFamilyCountWordLeading()} kinds of damage, what each one is called, and which ` +
+      "machine measures it.",
   },
   {
     href: "/learn",

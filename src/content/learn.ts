@@ -10,7 +10,7 @@
  * numbers arrive when the cohort does.
  */
 
-import { flawFamilyList } from "./flaw-families";
+import { flawFamilyCountWord, flawFamilyList } from "./flaw-families";
 import { DELICACY_LIVE } from "./delicacy/items";
 import { numberWord } from "./vocabulary/numbers";
 import { numberWordLeading } from "./vocabulary/numbers";
@@ -44,6 +44,8 @@ const PITCH_FLOOR_TIMES = (soloFloorFactor("pitch-drift") ?? 0).toFixed(1);
  * engine was being told it too.
  */
 const FAMILY_LIST = flawFamilyList();
+// Typed as the word "three" until E20; see flawFamilyCountWord's docblock.
+const FAMILY_COUNT = flawFamilyCountWord();
 
 /**
  * THE READING ROOM DESCRIBED A MACHINE THAT HAD BEEN OPEN FOR TWENTY DAYS (E11/S2).
@@ -169,7 +171,7 @@ export const LEARN_PAGES: LearnPage[] = [
       },
       {
         q: "Why only three?",
-        a: `Because three is what the clip pipeline can render as a controlled dose with a right answer behind it: ${FAMILY_LIST}. Plenty of other things go wrong in a mix; they are absent because we cannot measure them yet, not because they do not matter.`,
+        a: `Because ${FAMILY_COUNT} is what the clip pipeline can render as a controlled dose with a right answer behind it: ${FAMILY_LIST}. Plenty of other things go wrong in a mix; they are absent because we cannot measure them yet, not because they do not matter.`,
       },
       {
         q: "If I catch these in the trials, will I catch them in my own work?",

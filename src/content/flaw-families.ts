@@ -42,6 +42,7 @@ import { DEGRADATION_FAMILIES, type DegradationFamily } from "@/engine/delicacy"
 import { STAIRCASE_FAMILIES, familyUnit } from "@/engine/staircase-manifest";
 import { FAMILY_LABEL, shortUnit } from "@/content/staircase/copy";
 import { MEASURED_TRIALS } from "@/content/delicacy/items";
+import { numberWord, numberWordLeading } from "@/content/vocabulary/numbers";
 
 /** A machine, by the id `@/components/OtherMachines` knows it as. */
 export type MachineId = "bias" | "delicacy" | "threshold";
@@ -189,6 +190,38 @@ export function flawFamilies(): FlawFamily[] {
  * This exists because the same list was hand-typed on two reading-room
  * surfaces and both had been wrong since before the Delicacy Trials opened.
  */
+/**
+ * HOW MANY FAMILIES, AS A WORD (E20, batch-3 RULE return).
+ *
+ * WHY IT EXISTS, AND IT IS NOT A HYPOTHETICAL. `countWordCapitalised(
+ * machineCount)` was written because "three machines" went stale and became
+ * four on the busiest page in the product. The family count had no such slot:
+ * the word "three" was TYPED in four shipped strings, and in one of them it sat
+ * in the same sentence as `${FAMILY_LIST}` -- so the day a fourth family ships,
+ * that sentence renders four names with the word "three" beside them.
+ *
+ * The writing pass found it and refused to resolve it, correctly: it is the
+ * machine-count failure one level down, already written, and it had not bitten
+ * only because this list has moved less. That is luck, not design.
+ *
+ * LIGHT ENOUGH FOR MODULE SCOPE, like `flawFamilyList()` and for the same
+ * reason: no manifest read, so `learn.ts` can call it on import without turning
+ * a missing clip render into an import-time crash.
+ */
+export function flawFamilyCount(): number {
+  return DEGRADATION_FAMILIES.length;
+}
+
+/** The count as a lowercase word, for mid-sentence use. */
+export function flawFamilyCountWord(): string {
+  return numberWord(flawFamilyCount());
+}
+
+/** The count as a capitalised word, for a sentence that opens with it. */
+export function flawFamilyCountWordLeading(): string {
+  return numberWordLeading(flawFamilyCount());
+}
+
 export function flawFamilyList(): string {
   const names = DEGRADATION_FAMILIES.map((f) => FAMILY_LABEL[f].toLowerCase());
   return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
@@ -204,9 +237,9 @@ export function flawFamilyList(): string {
  * where `voice.test.ts` sweeps them.
  */
 export const FLAWS_INTRO =
-  "You can hear that a render is wrong and have no word for it. This page is the word: three " +
-  "kinds of damage the gym can measure, what each one sounds like, and the machines that find " +
-  "how small a dose you can still catch.";
+  "You can hear that a render is wrong and have no word for it. This page is the word: " +
+  `${flawFamilyCountWord()} kinds of damage the gym can measure, what each one sounds like, ` +
+  "and the machines that find how small a dose you can still catch.";
 
 /**
  * N3, and the most important sentence on the page.
@@ -216,8 +249,9 @@ export const FLAWS_INTRO =
  * correct answer — which is a statement about our instruments, not about audio.
  */
 export const FLAWS_LIMITS =
-  "These three are what the pipeline can render as a controlled dose with a right answer " +
-  "behind it. They are not a list of everything that can go wrong with a piece of audio. A " +
+  `These ${flawFamilyCountWord()} are what the pipeline can render as a controlled dose with ` +
+  "a right answer behind it. They are not a list of everything that can go wrong with a " +
+  "piece of audio. A " +
   "render can fail in ways nothing here measures, and this page would rather be short than " +
   "pretend otherwise.";
 

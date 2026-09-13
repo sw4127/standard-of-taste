@@ -859,12 +859,16 @@ The symptom is deliberately the complaint a person makes BEFORE they have the wo
 *The intro:*
 
 `INS-CREATOR-VOCABULARY-07` · OPEN
-> You can hear that a render is wrong and have no word for it. This page is the word: three kinds of damage the gym can measure, what each one sounds like, and the machines that find how small a dose you can still catch.
+> You can hear that a render is wrong and have no word for it. This page is the word: ${flawFamilyCountWord()} kinds of damage the gym can measure, what each one sounds like, and the machines that find how small a dose you can still catch.
+
+  *As rendered:* “You can hear that a render is wrong and have no word for it. This page is the word: three kinds of damage the gym can measure, what each one sounds like, and the machines that find how small a dose you can still catch.”
 
 *The limits sentence, which is load-bearing:*
 
 `INS-CREATOR-VOCABULARY-08` · OPEN
-> These three are what the pipeline can render as a controlled dose with a right answer behind it. They are not a list of everything that can go wrong with a piece of audio. A render can fail in ways nothing here measures, and this page would rather be short than pretend otherwise.
+> These ${flawFamilyCountWord()} are what the pipeline can render as a controlled dose with a right answer behind it. They are not a list of everything that can go wrong with a piece of audio. A render can fail in ways nothing here measures, and this page would rather be short than pretend otherwise.
+
+  *As rendered:* “These three are what the pipeline can render as a controlled dose with a right answer behind it. They are not a list of everything that can go wrong with a piece of audio. A render can fail in ways nothing here measures, and this page would rather be short than pretend otherwise.”
 
 #### 4.3 The page's questions
 
@@ -887,7 +891,7 @@ The symptom is deliberately the complaint a person makes BEFORE they have the wo
 *Answer:*
 
 `INS-CREATOR-VOCABULARY-11` · OPEN
-> Because three is what the clip pipeline can render as a controlled dose with a right answer behind it: ${FAMILY_LIST}. Plenty of other things go wrong in a mix; they are absent because we cannot measure them yet, not because they do not matter.
+> Because ${FAMILY_COUNT} is what the clip pipeline can render as a controlled dose with a right answer behind it: ${FAMILY_LIST}. Plenty of other things go wrong in a mix; they are absent because we cannot measure them yet, not because they do not matter.
 
   *As rendered:* “Because three is what the clip pipeline can render as a controlled dose with a right answer behind it: pitch drift, timing smear and compression damage. Plenty of other things go wrong in a mix; they are absent because we cannot measure them yet, not because they do not matter.”
 
@@ -920,7 +924,9 @@ The lead is shown with the machine count interpolated; four is what ships today.
 *The door to `/learn/flaws` — its accented label is “Something sounds wrong.”, which is a source string too short for this deck to give an id; name it in prose if it is the part that is wrong. The line beneath it:*
 
 `INS-CREATOR-VOCABULARY-16` · OPEN
-> Three kinds of damage, what each one is called, and which machine measures it.
+> ${flawFamilyCountWordLeading()} kinds of damage, what each one is called, and which machine measures it.
+
+  *As rendered:* “Three kinds of damage, what each one is called, and which machine measures it.”
 
 *The door to `/learn` — its accented label is “Reading room.”, which is a source string too short for this deck to give an id; name it in prose if it is the part that is wrong. The line beneath it:*
 

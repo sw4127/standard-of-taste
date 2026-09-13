@@ -94,7 +94,21 @@ export function flawLineText(correct: number, eligible: number): string {
   return `${FLAW_LINE_PREFIX} ${correct} of ${eligible} ${flawTimesLabel(eligible)}.`;
 }
 
-/** The one-line share text next to the permalink. */
+/**
+ * The one-line share text next to the permalink.
+ *
+ * "THINK YOUR EARS ARE BETTER?" SURVIVED AN N3 CHALLENGE (RT-J1 a, ruled
+ * 2026-09-13). The batch-3 writing pass raised it: N3 forbids the product
+ * comparing people, and this line is the closest thing in the deck to one. The
+ * distinction the ruling rests on is that the product compares nobody -- the
+ * sentence invites a reader to, which is what a share line is for, and the
+ * number beside it is measured against a coin rather than against a person.
+ *
+ * It is recorded here rather than in a handoff because the pass called it the
+ * thinnest distinction in the deck and the sentence most likely to be quoted
+ * back at the project. The next person to notice it should find the ruling
+ * attached to the line rather than re-open it.
+ */
 export function shareText(nCorrect: number, nTrials: number): string {
   // "calls 7.5" again — the third surface carrying it. A coin averages a
   // fraction; it cannot call one. Same number, same fix as the summary line.
