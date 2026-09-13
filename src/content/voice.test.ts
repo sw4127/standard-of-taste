@@ -10,7 +10,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { checkVoice, formatVoiceReport, type VoiceString } from "./voice";
 import { flawFamilies, FLAWS_INTRO, FLAWS_LIMITS, FLAWS_INVITE } from "./flaw-families";
-import { landingLead, landingHint, SECONDARY_DOORS } from "./landing";
+import { landingLead, landingHint, LANDING_OPENER, LANDING_ALGORITHM, LANDING_TURN, SECONDARY_DOORS } from "./landing";
 import { BIAS_NO_READING, VERDICT_COPY, biasCardSwayLine, biasCardCta, shareText as biasShareText, resultTitleFragment } from "./bias/copy";
 import {
   CALIBRATION_PHASE_LINE,
@@ -171,6 +171,26 @@ function shippingStrings(): VoiceString[] {
    * structured data. It is also the ONLY prose on /method with no ledger entry
    * behind it, so it is the part with nothing else verifying it at all.
    */
+  /*
+   * THE FIRST TWO SENTENCES OF THE PRODUCT (2026-09-13). They carry the frame
+   * the owner asked for — good music is the feeling of being understood — and
+   * they are the only place the product says anything about a feeling rather
+   * than a measurement, which is exactly where a person-verdict would be
+   * easiest to write by accident.
+   *
+   * `pointed`, NOT `full`, AND THE GATE IS WHAT SETTLED IT. Registered at full
+   * intensity these failed the datum rule — the loudest tier must cite a
+   * measured quantity — and the failure was right: a frame is not a verdict and
+   * carries no number. `pointed` is still checked for beige chrome, which is
+   * the rule these two lines most need to face, and is not asked for a datum
+   * because the numbers are on the machine cards below them rather than inside
+   * them. That is the tier's stated purpose, not a downgrade to get past a
+   * check.
+   */
+  out.push({ surface: "learn/landing/opener", text: LANDING_OPENER, intensity: "pointed" });
+  out.push({ surface: "learn/landing/algorithm", text: LANDING_ALGORITHM, intensity: "pointed" });
+  out.push({ surface: "learn/landing/turn", text: LANDING_TURN, intensity: "pointed" });
+
   out.push({ surface: "method/prose/headline", text: METHOD_HEADLINE, intensity: "calm" });
   METHOD_LEDE.forEach((paragraph, at) => {
     out.push({ surface: `method/prose/lede-${at}`, text: paragraph.text, intensity: "calm" });

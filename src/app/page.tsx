@@ -15,7 +15,7 @@ import SiteHeader from "@/components/SiteHeader";
 import { SHELL_MAIN, PROSE_MEASURE } from "@/content/shell";
 import { worldCup } from "@/content/world-cup";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
-import { landingLead, SECONDARY_DOORS } from "@/content/landing";
+import { landingLead, LANDING_OPENER, LANDING_ALGORITHM, LANDING_TURN, SECONDARY_DOORS } from "@/content/landing";
 import { PRESTIGE_GOLD, PRESTIGE_FIELD, DELICACY_ICE, DELICACY_FIELD, THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE, SPREAD_ROSE, SPREAD_FIELD, SPREAD_BASE, GYM_INK } from "@/content/instrument-accents";
 
 /**
@@ -190,9 +190,15 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
           </p>
         ) : null}
 
-        <h1 className={`mt-7 ${PROSE_MEASURE} font-display text-5xl font-semibold leading-[1.02] tracking-tight`}>
-          Your taste has a number.
+        <h1 className={`mt-7 ${PROSE_MEASURE} font-display text-[2rem] font-semibold leading-[1.06] tracking-tight sm:text-5xl sm:leading-[1.02]`}>
+          {LANDING_OPENER}
         </h1>
+        <p className={`mt-5 ${PROSE_MEASURE} text-lg leading-relaxed text-muted`}>
+          {LANDING_ALGORITHM}
+        </p>
+        <p className={`mt-4 ${PROSE_MEASURE} font-display text-2xl leading-snug`}>
+          {LANDING_TURN}
+        </p>
         <p className={`mt-5 ${PROSE_MEASURE} text-base leading-relaxed text-muted`}>
           {landingLead(MACHINES.length)}{" "}
           <span className="text-foreground">You can be wrong, and that is the point.</span>

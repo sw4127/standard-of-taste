@@ -52,6 +52,47 @@ export function countWordCapitalised(n: number): string {
  * `instrument-state.test.ts` fails if the machine count ever stops being
  * three, and says to come here and write the missing clause.
  */
+/**
+ * THE FIRST THING ANYONE READS (PM direction, 2026-09-13).
+ *
+ * WHY THE PAGE DID NOT OPEN LIKE THIS BEFORE, and why it now does. The front
+ * door led with "Your taste has a number." — true, differentiating, and cold.
+ * The owner's objection is that nothing on it gives a reason to care before it
+ * asks for eight minutes, and he is right: a measurement is an answer to a
+ * question nobody has been made to ask yet.
+ *
+ * THE QUESTION IS HIS, AND IT IS THE BEST FRAME THIS PROJECT HAS HAD. The
+ * feeling of good music is the feeling of being understood. That is also
+ * exactly what a recommender does and exactly what it withholds — it models you
+ * as coordinates that are machine-readable and not human-readable, so it can
+ * act on your taste while you still cannot say a word about it. That is not a
+ * slogan bolted on; it is the SECOND of the two user findings this project
+ * actually has, the one it has served least.
+ *
+ * WHAT IT MAY NOT BECOME. "We understand you" is a claim about a person, which
+ * D1 forbids and which nothing here has measured. The line is about the
+ * EXPERIENCE of music understanding you, and about the machines that already
+ * do; the product's own promise stays what it was — what your ears did, in
+ * words, and you can be wrong about it.
+ */
+export const LANDING_OPENER =
+  "The music that got you understood something you could not say.";
+
+/**
+ * THE SECOND BEAT. Split out of the headline after reading the rendered page:
+ * all three sentences as one `h1` ran to seven lines of display type at 1280px
+ * and pushed every machine card below the fold — which defeats the other half
+ * of the same complaint, that nothing shows a person what they are being asked
+ * to do. A headline is one sentence.
+ */
+export const LANDING_ALGORITHM =
+  "So does every algorithm that has ever recommended you a song. It just never " +
+  "tells you, because what it knows about you is a row of numbers no person can read.";
+
+/** The turn from the feeling to what this product actually does. */
+export const LANDING_TURN =
+  "This gives it back in words you can use.";
+
 export function landingLead(machineCount: number): string {
   return (
     `Not a personality. Not a vibe. ${countWordCapitalised(machineCount)} machines, each measuring one thing ` +
