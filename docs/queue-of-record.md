@@ -59,5 +59,6 @@ and risked burying what was already planned.
   backup refs** (one branch, three tags). Until then: never `git push --force --mirror origin`.
 - **GitHub Pages** — enabled, live at `sw4127.github.io/standard-of-taste`.
 - **The engine package** — recommended CUT, not done, and not to be done without a fresh ruling.
+- **RT-Z2** — ruled OUT permanently 2026-09-13: a seeded cohort buys item parameters, and a friends-sized sample sits below the noisy end of the pipeline's own recovery sweep. Two Lab badges stay SIMULATED and two Tier 1 goals stay blocked; the reasoning is in `docs/rt-answers-2026-09-13.md` §3.
 - **RT-Z6** — closed as moot: the retention window mattered when each deployment stored 154 MB of
   audio, and `public/` is now 35 KB.

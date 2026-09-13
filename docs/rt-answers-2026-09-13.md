@@ -37,17 +37,42 @@ Everything in §1 and §2 is settled. §3 is what is still open, and it is short
 | **RT-Z6** | Can the Vercel retention window go under 30 days? | **Closed as moot.** It mattered when each deployment stored 154 MB of audio; `public/` is now 35 KB |
 | **RT-Z7** | Rename the `vibe-check-app-sepia.vercel.app` deployment? | **(c) leave it.** Renaming breaks every share URL already posted, and nobody knows whether any are |
 
-## 3. Still open
+## 3. RT-Z2 — ruled OUT, permanently, on the pipeline's own numbers
 
-- **RT-Z2 — is a bounded, one-shot seeded cohort ruled in or out, permanently?** Phase 3 put it with
-  NO DEFAULT because it touches a question the owner has closed. It was never asked in this session
-  and remains the only Phase 3 decision with no answer. Ruling it OUT is a complete answer and costs
-  two Lab badges.
+**The question:** is a bounded, one-shot seeded cohort ruled in or out — one deliberate ask to a
+list of people the owner already knows, never repeated?
+
+**The ruling (2026-09-13): (a) OUT. This document does not raise it again.**
+
+**Why, and it is arithmetic rather than principle.** The only thing a seeded cohort buys that
+Track O does not is **item parameters** — difficulty and discrimination estimated from real
+responses instead of simulated ones. That is also the one thing a list of friends cannot deliver.
+`src/analytics/recovery.ts` sweeps **n = 50 to n = 1000** and records, in its own words, that error
+*"at n=50 from one seed can undercut error at n=1000 from another purely by luck"*. Fifty is the
+noisy end of the study. A bounded personal ask plausibly returns a fraction of that, in the regime
+where a single draw's luck dominates the estimate.
+
+So (b) would flip the Lab's item statistics from `SIMULATED` to `REAL` over numbers that are noise.
+**That is worse than the simulation, not better**, because `SIMULATED` is honest about what it is and
+a `REAL` badge on twenty convenience-sampled friends is a claim about a population that does not
+exist. It is the fabricated-norm hazard, arrived at by being helpful.
+
+**What is NOT given up.** Track O is already ruled in and produces real responses at n = 1, honestly
+labelled. n = 1 supports an arc and a calibration curve and does not pretend to support item
+parameters. The difference between the two options was never "real data or none" — it was whether the
+product would claim a cohort it could not have.
+
+**What it costs, stated plainly:** two Lab badges stay `SIMULATED` permanently, and two Tier 1 goals
+in `docs/kpis.md` that depend on item statistics stay blocked. Nothing on any live surface promised
+otherwise — checked before ruling.
+
+## 4. Still open
+
 - **RT-P1's second half** — whether the preference instrument gets built, and whether the shipped
   no-transfer ruling would have to be revisited to justify it. The mock exists so this can be
   decided by reading rather than by building.
 
-## 4. What is deliberately NOT in this file
+## 5. What is deliberately NOT in this file
 
 **The blueprints themselves.** Track Q3 asks whether to retire or bind them, and binding means
 tracking, and tracking means publishing — this repository is public and those files contain strategy
