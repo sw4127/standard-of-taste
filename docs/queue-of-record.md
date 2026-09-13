@@ -32,7 +32,7 @@ and risked burying what was already planned.
 
 | Track | What it is | Status |
 |---|---|---|
-| **N** — one shell | One container width, one navigation model | **PARTLY DONE.** `/`, `/learn`, `/method`, `/lab`, `/legal` and the Prestige flow are on the shell. **Three instrument flows and four result screens are not** — they are listed by name in `src/app/shell-width.test.ts`, which fails if that list goes stale |
+| **N** — one shell | One container width, one navigation model | **DONE, and it did not mean what it sounded like.** `/`, `/learn`, `/method`, `/lab`, `/legal` took the shell. The Prestige and Ranking flows took it because their eleven-point scale wrapped 6 + 5 into two rows — a measured defect. Delicacy and Threshold were measured and LEFT: a two-way and a three-way choice have nothing to unwrap, and widening them would stretch a focused task for symmetry. Result screens stay narrow because line length is what matters on a reading. Each exemption now carries its reason in `shell-width.test.ts` |
 | **O** — the first real number | The owner sits all four instruments; one real result on the front door, badged REAL, n = 1 | **OPEN, and blocked on the owner.** RT-Z1 ruled (b). ~35 minutes. Nothing else in the project is waiting on a decision — only on this |
 | **P** — the arc | Retest after the 7-day cooldown; publish whether the ear moved, against its noise floor | **OPEN**, blocked by O and then by seven days |
 | **Q** — governance debt | Q1 rulings into a tracked file · Q2 the expertise line · Q3 bind the untracked blueprints | **Q2 done.** Q1 and Q3 are *this file*, partly: the queue is now tracked. The individual **rulings** still live in untracked blueprints and in handoffs |

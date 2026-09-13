@@ -44,6 +44,7 @@ import ExpertPanel from "@/components/ExpertPanel";
 import { SPREAD_PALETTE } from "@/content/instrument-accents";
 
 import { BIAS_SCALE_MAX } from "@/engine/bias";
+import { SHELL_WIDTH } from "@/content/shell";
 import {
   computeSpreadResult,
   encodeSpreadRatings,
@@ -194,8 +195,17 @@ export default function SpreadFlow() {
   }
 
   if (phase === "rate") {
+    /*
+     * `w-full` IS NOT DECORATION HERE. The page body is a flex COLUMN, and in
+     * one of those `mx-auto` on a block child makes it size to its CONTENT and
+     * centre, rather than stretch. With `max-w-xl` that was invisible — the
+     * content was wider than the cap, so it clamped at 576. Widening the cap to
+     * the shell made the element SHRINK to 456 instead of growing, the eleven
+     * buttons became 32px wide, and the rendered page looked as though the fix
+     * had simply not applied. `SHELL_MAIN` carries `w-full` for this reason.
+     */
     return (
-      <main className="mx-auto max-w-xl px-5 py-10">
+      <main className={`mx-auto w-full ${SHELL_WIDTH} px-5 py-10`}>
         <p className="text-xs uppercase tracking-[0.2em] text-muted">
           Clip {idx + 1} of {SPREAD_POOL.length}
         </p>
@@ -262,14 +272,21 @@ export default function SpreadFlow() {
         <div className={said === null ? "mt-8 opacity-40" : "mt-8"}>
           <p className="text-sm font-semibold">How good is it?</p>
           {/*
-            SIX COLUMNS, NOT ELEVEN — the eleven buttons wrap onto two rows.
+            SIX COLUMNS ON A PHONE, ELEVEN ON A DESKTOP.
             Measured at 375px: `grid-cols-11` gave 27px-wide targets, and the
             Prestige Test's own scale gives 50px from `grid-cols-6`. I had
             assumed mine was inherited from that flow and it was not; it was a
             regression I introduced, found by measuring both rather than by
             reasoning about one.
+
+            THE DESKTOP HALF CAME LATER (Phase 3, Track N). At 576px the eleven
+            points still wrapped 6 + 5, and a wrapped scale reads as a grid
+            rather than a line — the ends stop being the ends. This screen takes
+            the shell's width so all eleven fit on one row from `lg` up, which
+            is the same fix and the same measurement as the Prestige flow. The
+            phone keeps six columns, for the reason above.
           */}
-          <div className="mt-3 grid grid-cols-6 gap-1.5">
+          <div className="mt-3 grid grid-cols-6 gap-1.5 lg:grid-cols-11">
             {Array.from({ length: BIAS_SCALE_MAX + 1 }, (_, v) => (
               <button
                 key={v}

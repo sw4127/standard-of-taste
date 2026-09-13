@@ -18,9 +18,15 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { BIAS_SCALE_MAX } from "@/engine/bias";
 
-const FLOW = "src/app/bias/BiasFlow.tsx";
+/**
+ * BOTH FLOWS THAT USE THE ELEVEN-POINT SCALE. The Ranking Test renders the same
+ * scale from the same constant and had the same wrap — measured at 576px, 6 + 5
+ * — so it gets the same fix and the same check. A guard written for one of two
+ * identical screens is half a guard.
+ */
+const FLOWS = ["src/app/bias/BiasFlow.tsx", "src/app/spread/SpreadFlow.tsx"];
 
-describe("the prestige rating scale", () => {
+describe.each(FLOWS)("the eleven-point rating scale in %s", (FLOW) => {
   const source = readFileSync(FLOW, "utf8");
   const points = BIAS_SCALE_MAX + 1;
 
