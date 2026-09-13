@@ -11,8 +11,9 @@
  *
  * It pins what the note CLAIMS, not what it says. The prose is free.
  */
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { LANDING_OPENER, LANDING_ALGORITHM, LANDING_TURN } from "./landing";
 
 const NL = String.fromCharCode(10);
 const DECK = "docs/copy-deck.md";
@@ -94,3 +95,62 @@ describe.each(NOTES)("$note agrees with the deck", ({ note: path, part, prefix }
     expect(/paid tier|costs? money|subscription/i.test(note.replace(/no paid tier/gi, ""))).toBe(false);
   });
 });
+
+/**
+ * BATCH 5 QUOTES THE PRODUCT'S FIRST THREE SENTENCES (E20).
+ *
+ * It has to: they are not in the copy deck, so the covering note carries them
+ * verbatim or the writer cannot see what they are editing. That makes the note
+ * a SECOND COPY of the most-read copy in the product, and this session has
+ * already watched two commission notes go stale the moment the thing they
+ * described moved — batch 3's and batch 4's counts, both in the same week.
+ *
+ * So the quotations are pinned to the constants rather than trusted. A sentence
+ * rewritten in `landing.ts` without the note following it fails here, before
+ * the note is handed to anyone.
+ */
+describe("the batch-5 note quotes the product's actual first sentences", () => {
+  const raw = readFileSync("docs/commission-batch-5.md", "utf8");
+  /*
+   * MARKDOWN WRAPS A QUOTATION ACROSS LINES AND PREFIXES EACH WITH "> ". The
+   * first version compared the constant against the raw file and failed on
+   * formatting rather than on content — which would have taught the next person
+   * that this guard cries wolf. The comparison is on the TEXT: blockquote
+   * markers gone, whitespace collapsed.
+   */
+  const note = raw
+    .split(NL)
+    // NESTED: the note quotes the sentences INSIDE the message blockquote, so
+    // lines begin "> > ". Stripping one level left a stray marker mid-sentence.
+    .map((line) => line.replace(/^(>\s*)+/, ""))
+    .join(" ")
+    .replace(/\s+/g, " ");
+
+  it("read a real note, so nothing below passes vacuously", () => {
+    expect(raw.length).toBeGreaterThan(3000);
+  });
+
+  it("quotes each of the three exactly as the product renders it", () => {
+    const wrong: string[] = [];
+    for (const [name, text] of [
+      ["LANDING_OPENER", LANDING_OPENER],
+      ["LANDING_ALGORITHM", LANDING_ALGORITHM],
+      ["LANDING_TURN", LANDING_TURN],
+    ] as const) {
+      if (note.indexOf(text) === -1) wrong.push(`${name}: ${text.slice(0, 70)}`);
+    }
+    expect(
+      wrong,
+      "the note quotes the front door's sentences and these no longer match what the product " +
+        "renders. A writer would be editing a sentence that is not on screen:" + NL + wrong.join(NL),
+    ).toEqual([]);
+  });
+
+  it("names the three surfaces it commissions, and they exist", () => {
+    for (const path of ["README.md", "docs/index.html"]) {
+      expect(raw.indexOf(path), `the note does not name ${path}`).toBeGreaterThan(-1);
+      expect(existsSync(path), `${path} does not exist`).toBe(true);
+    }
+  });
+});
+

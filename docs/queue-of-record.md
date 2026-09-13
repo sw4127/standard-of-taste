@@ -48,7 +48,7 @@ and risked burying what was already planned.
 | **RT-P1 (a)** | The preference instrument, mocked on paper before building | **Mock written** (`docs/preference-mock-2026-09-13.md`). Awaiting the owner's judgment on whether it is worth building |
 | **RT-P2 (a)** | Keep the AI-music-producer positioning, with the disclosure | Done, and the disclosure now records a **negative** first datum |
 | **RT-P3 (a)** | Narrow the front door's promise to what ships | Done, then amended the same day to keep the word *understanding* |
-| **batch 5** | A writing pass on the README, the pitch page and the three front-door sentences | **OPEN.** These are the highest-traffic copy in the project and the only surfaces never sent to a writer |
+| **batch 5** | A writing pass on the README, the pitch page and the three front-door sentences | **OPEN, note written** (`docs/commission-batch-5.md`), not yet handed over. Commissioned as documents rather than deck ids — these are long-form prose, not assembled strings |
 | **the PRD** | A product requirements document for a reviewer at a larger company — use cases, functional requirements, audiences, non-goals. Brief: `docs/task-prd.md` | **OPEN, queued 2026-09-13.** Multi-session. Wireframes wait on Track N |
 | **five conversations** | Ask people who generate audio whether the flaw vocabulary is a problem they have | **OPEN, owner's to run.** The audience claim rests on a positioning decision and one negative data point |
 
