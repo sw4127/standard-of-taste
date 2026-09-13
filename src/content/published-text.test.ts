@@ -1,6 +1,8 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { BIAS_CLIPS } from "./bias/items";
+import { FALSIFIED } from "./lab/falsified";
+import { numberWord, numberWordLeading } from "./vocabulary/numbers";
 import { DELICACY_LIVE, MEASURED_TRIALS, PRACTICE_TRIALS } from "./delicacy/items";
 import { minToClearChance } from "./delicacy/copy";
 import { STAIRCASE_FAMILIES } from "@/engine/staircase-manifest";
@@ -872,3 +874,48 @@ describe("the published files index the pages that exist", () => {
     }
   });
 });
+
+/**
+ * THE README'S "START HERE" TABLE COUNTS THINGS (2026-09-13).
+ *
+ * It was added so a reader can find the strongest thing here in ten seconds
+ * instead of a hundred lines, and it does that by naming figures: how many
+ * hypotheses the falsified registry holds, how many clips the Prestige Test
+ * uses. Both were TYPED.
+ *
+ * `stated-quantities.test.ts` derives thirty-four such numbers, and its roster
+ * is every .tsx under src/app and src/components plus the content modules — so
+ * it does not read the README at all. A number typed into the first screen a
+ * recruiter sees is the worst place in the repository for one to rot, and it
+ * was the only place not covered.
+ */
+describe("the README's entry table counts what the code counts", () => {
+  const readme = readFileSync("README.md", "utf8");
+
+  it("found the table, so nothing below passes vacuously", () => {
+    expect(readme).toContain("## Start here");
+    expect(readme.length).toBeGreaterThan(2000);
+  });
+
+  it("states the real number of falsified hypotheses", () => {
+    const n = FALSIFIED.length;
+    expect(n, "the registry is empty, so this checks nothing").toBeGreaterThan(5);
+    expect(
+      readme.indexOf(`${numberWordLeading(n)} entries`) !== -1 ||
+        readme.indexOf(`${n} entries`) !== -1,
+      `the README's entry table does not say the registry holds ${n} entries. The registry grew or ` +
+        "shrank and the first screen a reader sees still quotes the old number.",
+    ).toBe(true);
+  });
+
+  it("states the real number of Prestige clips in the entry table", () => {
+    const n = BIAS_CLIPS.length;
+    const table = readme.slice(readme.indexOf("## Start here"), readme.indexOf("## The instruments"));
+    expect(table.length, "the entry table could not be isolated").toBeGreaterThan(200);
+    expect(
+      table.indexOf(numberWord(n)) !== -1 || table.indexOf(String(n)) !== -1,
+      `the entry table invites a reader to rate clips but does not say there are ${n} of them`,
+    ).toBe(true);
+  });
+});
+

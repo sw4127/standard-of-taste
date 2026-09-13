@@ -6,6 +6,22 @@
 
 ---
 
+## Start here
+
+Pick the one that matches the time you have. Each is a complete answer on its own.
+
+| You have | Do this | What you learn |
+|---|---|---|
+| **60 seconds** | Read *What it refuses to do*, below | The one design constraint everything else follows from: the instrument has never been fielded, so it publishes no percentile, no norm and no comparison between people — and every synthetic figure is badged as synthetic |
+| **8 minutes** | [Take the Prestige Test](https://vibe-check-app-sepia.vercel.app/bias) | The product, doing the only thing it claims: rate sixteen clips blind, rate them again with artist names attached — two of them false — and get the gap between your own two judgments. No account, nothing stored off your device |
+| **5 minutes, reading** | [The Lab](https://vibe-check-app-sepia.vercel.app/lab) → [what the instruments cannot do](https://vibe-check-app-sepia.vercel.app/lab/instrument-limits) → [hypotheses this project disproved](https://vibe-check-app-sepia.vercel.app/lab/falsified) | The evidence layer. Thirty-three entries of things this project believed and then measured its way out of, each citing the file that killed it |
+| **10 minutes, hiring** | [Method](https://vibe-check-app-sepia.vercel.app/method) | What was refused and what each refusal cost — a paid business model withdrawn, a ranked verdict killed by its own measurement at 30.5%, a human quality gate deleted and replaced with code |
+| **Reading the code** | [`ARCHITECTURE.md`](ARCHITECTURE.md), then [`src/engine/`](src/engine) | Deterministic scoring in pure TypeScript. Zero model calls anywhere in the measurement path |
+
+**The shortest honest summary.** Four instruments are live and work end to end. The analytics behind them are validated against simulated responses and labelled as such, because **no human has yet been fielded on it** — so nothing here is a percentile, and the project says so on every surface rather than in a footnote.
+
+---
+
 In 1757 David Hume argued that taste is not arbitrary, and named five things a real judge needs: freedom from prejudice, delicacy, good sense, comparison, and practice. He never got to measure any of it.
 
 That's the project. Each criterion becomes a **performance task where you can be objectively wrong**, not a questionnaire. It predicts no personality, no mood, no psychological state. It measures whether a famous name moves your ratings, whether your ears can find damage nobody pointed at, and how small that damage can get before you lose it.
