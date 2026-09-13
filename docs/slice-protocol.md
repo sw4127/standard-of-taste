@@ -118,6 +118,49 @@ Auto-advance is not a licence to decide everything. **Stop and ask** when:
 
 Everything else proceeds.
 
+### What "auto-advance" does NOT excuse (owner-approved amendment 2026-09-12)
+
+**Appended, nothing above is amended away.** The owner granted auto-advance and asked for this in
+the same breath, and the reason is worth recording in their words: the fear is that *"in the future
+you will forget procedures for individual slices like confession, red-team etc when I say auto
+advance"*. That fear is correct. It is the same mechanism the closing rules already name — **self-
+preference, goal drift and laziness** — and removing the round-trip removes the one moment that
+used to expose all three.
+
+**Auto-advance removes the WAIT. It removes nothing else.** Per slice, every time, whether or not a
+grant is in force:
+
+1. **Three red-team findings, hostile, and FIXED inside their own slice.** Not two. Not deferred to
+   a later slice. If a finding cannot be fixed in its slice and is SHIP-RISK or worse, the work
+   stops — that is already in "What still stops the work" and auto-advance does not touch it.
+2. **A confession naming what is stubbed, hardcoded, assumed or unverified.** A confession that
+   gets shorter while the work gets riskier is the laziness signal, stated in the closing rules.
+3. **A north star, including the answer "this serves none" when that is the truth.**
+4. **Proof from a real run**, pasted — not "should work", not a description of a run.
+5. **The mutation, actually run**, for any guard the slice adds. A guard that has never failed has
+   not been tested, and three guards in this repository passed their own mutations before being
+   repaired.
+
+**They go in BOTH places, and that is the amendment's substance.** The 2026-09-07 ruling put the
+loop's artefacts in the commit message, on the reasoning that the PM reviews the diff. Measured on
+2026-09-10: the PM asked *"where is the red-team part I asked for each slice"* after two slices had
+shipped with complete red-teams in their commit messages. The commit is where the record survives;
+**the reply is where the PM actually reads**. A record nobody opens is the same failure as a rule
+nobody reads, which is what the machine enforcement section exists for. So: the three findings and
+the confession appear in the **reply text** as well as the commit message, in every slice, granted
+or not.
+
+**Why this is a rule and not a reminder.** The three failures it guards against do not announce
+themselves. Self-preference feels like judgment; goal drift feels like momentum; laziness feels
+like efficiency. The countermeasure cannot be "remember to be honest" — it has to be an artefact
+that is missing in a way somebody notices. Three findings and a confession, visible in the reply,
+are that artefact: their absence is obvious at a glance, and their *thinning* is the earliest
+signal the closing rules tell this session to watch for in itself.
+
+**What the PM should do with it.** If a slice's reply arrives with fewer than three findings, with
+findings that are compliments, or with a confession of "nothing" — say so and stop the session.
+That reply is evidence about the session's honesty, not about the slice's quality.
+
 ### How this is revoked
 
 **Edit the word IN FORCE in this section's heading to SUSPENDED.** The machine guard reads this file
@@ -131,6 +174,14 @@ A reply that still recites the full ceremony has moved the cost from round-trips
 replies now report: what shipped, the proof, and anything the owner must decide. The full loop is in
 the commit. The `== DECISIONS NEEDED ==` block still ends every reply that has something in it, and
 is omitted rather than padded when it does not.
+
+> **AMENDED 2026-09-12 — see "What auto-advance does NOT excuse" above.** The sentence "the full
+> loop is in the commit" was measured and found wrong in the half that matters: two slices shipped
+> with complete red-teams in their commit messages and the PM asked where the red-team was. The
+> commit is where the record SURVIVES; the reply is where it is READ. The three findings and the
+> confession now go in both. What this section still gets right, and what the amendment keeps, is
+> that a reply must not recite ceremony — three real findings and a confession are not ceremony,
+> and the north star, the plan-and-alternative and the slice bookkeeping stay in the commit.
 
 
 ### What may appear in the decisions block (owner-approved amendment 2026-09-07, same day)

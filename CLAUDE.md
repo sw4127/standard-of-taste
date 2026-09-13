@@ -99,6 +99,16 @@ be false. Full text, including how to revoke this: **`docs/slice-protocol.md`, "
 auto-advance"** — the heading in that file is the switch the machine guard reads, so changing IN
 FORCE to SUSPENDED there restores the old rhythm everywhere at once.
 
+**Amended 2026-09-12, owner-approved — what auto-advance does NOT excuse.** The grant removes the
+WAIT and nothing else: per slice, still three hostile red-team findings FIXED in their own slice, a
+confession, a north star, proof from a real run, and the mutation actually run for any guard added.
+**These now appear in the REPLY as well as the commit** — measured on 2026-09-10, two slices shipped
+with complete red-teams in their commit messages and the PM still had to ask where the red-team was.
+The commit is where the record survives; the reply is where it is read. The rule exists because
+self-preference, goal drift and laziness do not announce themselves, and removing the round-trip
+removed the moment that used to expose them. Full text: **`docs/slice-protocol.md`, "What
+auto-advance does NOT excuse"**.
+
 **Push once per TASK, not once per slice (owner-approved 2026-09-08).** Every push to `main` is a
 production deployment carrying 154 MB of instrument audio, and the free tier holds ten of those
 before it is full — E19 hit 100% of the quota in two days. Commit per slice; push when the task is
