@@ -15,6 +15,7 @@
  */
 
 import Jump from "@/components/Jump";
+import { SHELL_MAIN, PROSE_MEASURE } from "@/content/shell";
 import OtherMachines from "@/components/OtherMachines";
 import { readableOn } from "@/lib/readable-on";
 import { useEffect, useRef, useState } from "react";
@@ -293,7 +294,24 @@ export default function BiasFlow() {
     }, RATE_BEAT_MS);
   }
 
-  const shell = "relative mx-auto flex min-h-dvh w-full max-w-lg flex-col overflow-hidden px-6 py-10";
+  /*
+   * THE FLOW JOINS THE SITE SHELL (Phase 3, Track N, RT-Z3 a) — MEASURED, not
+   * for consistency's sake. At 512px the eleven-point rating scale wrapped 6 + 5
+   * into two rows, and a wrapped scale reads as a grid rather than as a scale:
+   * the ends stop being the ends, and 5 sits under 0. The shell's width puts all
+   * eleven on one row from `lg` up, which is the whole reason to widen this.
+   *
+   * SAFE FOR THE MEASUREMENT, and the reasoning is in this file's own header.
+   * Differencing two passes assumes they measure the same thing on the same
+   * scale, and that header warns that a change to how people USE the scale is
+   * the kind two control items may not absorb. A LAYOUT change is not that
+   * kind: it applies identically to both passes, so it cancels in the
+   * difference, where the framing change it warns about does not. It also lands
+   * while n = 0 — there is no recorded response for it to make incomparable,
+   * and doing it before the first sitting rather than after is the only order
+   * in which that stays true.
+   */
+  const shell = `${SHELL_MAIN} py-10`;
   const kicker = (
     <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
       STANDARD OF TASTE
@@ -456,7 +474,7 @@ export default function BiasFlow() {
     return (
       <main className={shell}>
         <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
-        <div className="relative z-10 flex flex-1 flex-col">
+        <div className={`relative z-10 flex flex-1 flex-col ${PROSE_MEASURE} lg:max-w-none`}>
           <div className="mb-8">
             <div className="flex items-center justify-between text-xs font-medium text-muted">
               <span className="tracking-[0.3em]">{pass === "blind" ? "BLIND PASS" : "LABELED PASS"}</span>
@@ -526,7 +544,7 @@ export default function BiasFlow() {
               played ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-1.5 opacity-35"
             }`}
           >
-            <div className="grid grid-cols-6 gap-1.5">
+            <div className="grid grid-cols-6 gap-1.5 lg:grid-cols-11">
               {Array.from({ length: BIAS_SCALE_MAX + 1 }, (_, v) => (
                 <button
                   key={v}

@@ -27,7 +27,6 @@ const NL = String.fromCharCode(10);
 
 /** Flows still on the narrow column, by the file that sets their width. */
 const NOT_YET_ON_THE_SHELL = [
-  "src/app/bias/BiasFlow.tsx",
   "src/app/bias/result/page.tsx",
   "src/app/delicacy/DelicacyFlow.tsx",
   "src/app/delicacy/result/page.tsx",
@@ -77,6 +76,31 @@ function mainTags(source: string): string[] {
   return out;
 }
 
+/**
+ * DOES THIS `<main>` USE THE SHELL, DIRECTLY OR THROUGH ONE LOCAL NAME?
+ *
+ * The first version demanded the token inside the tag, and `BiasFlow` failed it
+ * five times while being perfectly correct: the flow assigns
+ * `const shell = `${SHELL_MAIN} py-10`` once and every screen renders
+ * `className={shell}`. Naming a shared value before using it five times is
+ * better code, not an evasion, and a guard that forbids it teaches people to
+ * paste the token instead — which is how one width becomes four.
+ *
+ * ONE HOP, DELIBERATELY. The identifier must be assigned from SHELL_MAIN in the
+ * SAME file, so the check still reads one file and cannot be satisfied by an
+ * indirection it never sees.
+ */
+function usesShell(tag: string, source: string): boolean {
+  if (tag.indexOf("SHELL_MAIN") !== -1 || tag.indexOf(SHELL_WIDTH) !== -1) return true;
+  for (const name of tag.match(/[A-Za-z_$][A-Za-z0-9_$]*/g) || []) {
+    if (source.indexOf("const " + name + " =") === -1) continue;
+    const at = source.indexOf("const " + name + " =");
+    const decl = source.slice(at, source.indexOf(";", at) + 1);
+    if (decl.indexOf("SHELL_MAIN") !== -1 || decl.indexOf(SHELL_WIDTH) !== -1) return true;
+  }
+  return false;
+}
+
 describe("the site has one container width", () => {
   const files = routeFiles();
   const withMain = files.filter((path) => readFileSync(path, "utf8").indexOf("<main") !== -1);
@@ -93,9 +117,10 @@ describe("the site has one container width", () => {
       // GymStage only MENTIONS <main> in a docblock; it renders no container.
       if (path === "src/app/GymStage.tsx") continue;
       if (NOT_YET_ON_THE_SHELL.indexOf(path) !== -1) continue;
-      for (const tag of mainTags(readFileSync(path, "utf8"))) {
-        const usesToken = tag.indexOf("SHELL_MAIN") !== -1 || tag.indexOf(SHELL_WIDTH) !== -1;
-        if (!usesToken) wrong.push(`${path}${NL}      ${tag.slice(0, 110)}`);
+      const source = readFileSync(path, "utf8");
+      for (const tag of mainTags(source)) {
+        if (usesShell(tag, source)) continue;
+        wrong.push(`${path}${NL}      ${tag.slice(0, 110)}`);
       }
     }
     expect(
