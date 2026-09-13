@@ -16,7 +16,7 @@ which batch, under which protocol, and what changed since batch 3.
 > zero real respondents), the voice, and how to hand the work back.
 >
 > **Your batch is `docs/copy-deck.md`, Part 4 — "The /method page". Find it by the `MET-` id
-> prefix. 36 ids: 4 OPEN and 32 PART-LOCKED.** It is one page: the published account of how this
+> prefix. 38 ids: 4 OPEN and 34 PART-LOCKED.** It is one page: the published account of how this
 > project is run, told as what it refused and what each refusal cost.
 >
 > **This batch is mostly PART-LOCKED, and that is the whole character of it.** A PART-LOCKED block
@@ -57,7 +57,7 @@ which batch, under which protocol, and what changed since batch 3.
 
 ## What changed since batch 3, and why it matters to this batch
 
-- **Part 4 is 36 of 36 source templates**, measured by `scripts/deck-source-trace.mjs`. A day ago it
+- **Part 4 is 38 of 38 source templates**, measured by `scripts/deck-source-trace.mjs`. A day ago it
   was 18 of 29: one line was in no source file, three the tool could not see, and seven blocks glued
   two source strings under one id.
 - **The page's own framing prose left the component.** The kicker, headline, both opening paragraphs

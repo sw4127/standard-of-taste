@@ -21,6 +21,7 @@
  *   node scripts/export-commission.mjs > docs/copy-commission.md
  */
 import { readFileSync } from "node:fs";
+import { trace } from "./deck-source-trace.mjs";
 
 const NL = String.fromCharCode(10);
 const TAG = "` · ";
@@ -87,6 +88,22 @@ const BATCHES = [
 ];
 
 const w = [];
+
+/**
+ * "49 of 49" — THE CENSUS RESULT, COUNTED RATHER THAN TYPED (E20/S1).
+ *
+ * This sentence said "36 of 36" for a part that had just become 38 of 38, and
+ * nothing failed: it is prose in a generated file, so no guard was reading it.
+ * It went stale inside the same slice that changed the number, in the brief
+ * whose whole subject is documents that disagree with what they describe.
+ */
+function traced(part) {
+  const rows = trace(part);
+  const template = rows.filter((r) => r.verdict === "TEMPLATE").length;
+  return template + " of " + rows.length;
+}
+
+
 const p = (s = "") => w.push(s);
 
 p("# Copy commission — the brief for a writing pass");
@@ -235,7 +252,8 @@ p();
 p(
   "**Parts 1, 2 and 4 are keyed to templates. Part 3 is not, and the difference is measured " +
     "rather than assumed.** `scripts/deck-source-trace.mjs` asks of every id whether a source " +
-    "string produces it, and Parts 2 and 4 are now 49 of 49 and 36 of 36: every block is the " +
+    "string produces it, and Parts 2 and 4 are now " + traced(2) + " and " + traced(4) +
+    ": every block is the " +
     "string the product has, slots intact, and a test refuses any deck that stops being true of " +
     "them. Neither was, a day ago — between them, nine ids showed a RENDERING with the slots " +
     "filled in, eleven glued two source strings under one id, and four were in no source file at " +

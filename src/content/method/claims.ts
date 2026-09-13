@@ -280,6 +280,45 @@ export const METHOD_CLAIMS: MethodClaim[] = [
  * import blueprint material to support some future claim without asking again.
  */
 export const METHOD_REFUSALS: MethodRefusal[] = [
+  /**
+   * THE FIFTH REFUSAL (E20/S1, executing RT-I (a), ruled 2026-09-01).
+   *
+   * WHY IT IS `inferred` AND NOT `quoted`, which is the only interesting
+   * decision in this entry. The RULING is on the tracked record and is cited
+   * below; the DESIGN it killed is too. The REASONING -- that no weighting over
+   * five incommensurable scales can be justified without respondents -- is not
+   * in any tracked document. It lives in a working blueprint that is not in
+   * this repository, so /method cannot cite it, and a claim citing nothing
+   * verifiable is the one thing this page refuses to do. So it renders under
+   * the inference label: the engineer's reading, not the record speaking.
+   *
+   * Marking it `quoted` would have been easy, invisible to every test here, and
+   * exactly the failure RT-159a made this page conditional on.
+   */
+  {
+    id: "refusal-composite-index",
+    what: "The Taste Index — one number standing for a person's taste",
+    rule: "N3, and the ruling on ranked tiers that it would have repeated",
+    kind: "inferred",
+    refusal:
+      "The design that opened this phase ended at a single composite over five sub-scores. The five are a percentage of movement toward a label, a detection band, a threshold in cents, a count of distinguished works and a calibration score — five different units measuring five different things. Adding them requires deciding how much each is worth, and that weighting can only be argued from a population this product does not have: the cohort is zero. A number assembled from an unjustifiable weighting is not a summary of five measurements, it is a sixth claim resting on none of them.",
+    price:
+      "The product gave up the one thing it could have put on a share card and in a headline — a single figure a person could compare, remember and repeat. What ships instead is five readings in their own units, each meaningless outside its own context, on five screens nobody has to visit in order. That is a worse product to market and the only honest one available, and it is the same trade the six ranked tiers lost: a sharper claim given up, rather than kept in the hope nobody checked.",
+    sources: [
+      {
+        path: "docs/artifact-pivot-2026-08-07.md",
+        anchor: "five sub-scores + one composite, each traceable to a measured task",
+      },
+      {
+        path: "docs/handoff-2026-09-01.md",
+        anchor: "kill the composite Taste Index, publish sub-scores as a profile",
+      },
+      {
+        path: "src/engine/delicacy.ts",
+        anchor: "A tier name is a point estimate wearing an adjective.",
+      },
+    ],
+  },
   {
     id: "refusal-ranked-tiers",
     what: "Six ranked verdict tiers on the Delicacy result",

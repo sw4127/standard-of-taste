@@ -38,6 +38,7 @@ import {
   METHOD_SECTIONS,
   METHOD_AS_OF,
 } from "@/content/method/claims";
+import { numberWord } from "@/content/vocabulary/numbers";
 import {
   METHOD_CLOSING_LINKS,
   METHOD_HEADLINE,
@@ -55,6 +56,9 @@ describe("export", () => {
       findings: METHOD_FINDINGS,
       sections: METHOD_SECTIONS,
       asOf: METHOD_AS_OF,
+      // Spelled where the content modules are in scope. The exporter itself is
+      // plain .mjs and cannot import TypeScript behind a path alias.
+      refusalCount: numberWord(METHOD_REFUSALS.length),
       prose: {
         kicker: METHOD_KICKER,
         headline: METHOD_HEADLINE,
@@ -87,7 +91,7 @@ if (!match) {
   console.error(raw.slice(-4000));
   throw new Error("export-method-deck: the ledger produced no deck");
 }
-const { claims, refusals, findings, sections, asOf, prose } = JSON.parse(match[1]);
+const { claims, refusals, findings, sections, asOf, prose, refusalCount } = JSON.parse(match[1]);
 
 const L = [];
 const w = (s = "") => L.push(s);
@@ -337,7 +341,11 @@ for (const s of sections) {
   w();
 }
 
-w("## 3. The four refusals");
+/*
+ * COUNTED (E20/S1). It said "four" and a fifth arrived in the same slice --
+ * the heading a writer reads would have contradicted the blocks under it.
+ */
+w(`## 3. The ${refusalCount} refusals`);
 w();
 w(
   "Each renders as a heading, a small-caps rule line, the refusal, and a paragraph opening “What it " +
