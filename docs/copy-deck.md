@@ -1816,8 +1816,19 @@ Each renders as a heading, a small-caps rule line, the refusal, and a paragraph 
 
 Everything else in the block is the engineer's own connective prose and is free.
 
-```
+*The `refusal` field, which carries the verified words “put a person in the right one at the shipping length: 30.5%” and “A tier name is a point estimate wearing an adjective”:*
+
 `MET-FOUR-REFUSALS-01` · PART-LOCKED
+> They shipped first, and then the measurement meant to justify them killed them. Asked how often the six tiers put a person in the right one at the shipping length: 30.5%. No coarser cut rescued it. A tier name is a point estimate wearing an adjective.
+
+*The `price` field, which carries the verified words “~42–45 trials = 21 min, which is the session 15 was chosen to avoid”:*
+
+`MET-FOUR-REFUSALS-02` · PART-LOCKED
+> The result screen lost the one line a person could repeat to a friend and got an interval instead — wider, duller, and true. Earning a ranked verdict honestly would land on ~42–45 trials = 21 min, which is the session 15 was chosen to avoid. The product kept the shorter session and gave up the sharper claim, rather than keeping both and hoping nobody checked.
+
+*The two together, which is how the page reads:*
+
+```renders
 They shipped first, and then the measurement meant to justify them killed them. Asked how often the six tiers put a person in the right one at the shipping length: 30.5%. No coarser cut rescued it. A tier name is a point estimate wearing an adjective. The result screen lost the one line a person could repeat to a friend and got an interval instead — wider, duller, and true. Earning a ranked verdict honestly would land on ~42–45 trials = 21 min, which is the session 15 was chosen to avoid. The product kept the shorter session and gave up the sharper claim, rather than keeping both and hoping nobody checked.
 ```
 
@@ -1840,8 +1851,19 @@ They shipped first, and then the measurement meant to justify them killed them. 
 
 Everything else in the block is the engineer's own connective prose and is free.
 
-```
-`MET-FOUR-REFUSALS-02` · PART-LOCKED
+*The `refusal` field, which carries the verified words “there is no paid tier, and no pricing question”:*
+
+`MET-FOUR-REFUSALS-03` · PART-LOCKED
+> The plan was to give the assessment away and charge for the training arc. It was withdrawn in one line — there is no paid tier, and no pricing question — because a paywall on the training loop would have put the honest deliverable, whether your ear actually moved, behind the wall.
+
+*The `price` field, which carries the verified words “Monetization remains a goal but as proof of commercial viability, not income”:*
+
+`MET-FOUR-REFUSALS-04` · PART-LOCKED
+> The project gave up its only means of showing that anyone would pay for this, at a point where monetization remains a goal but as proof of commercial viability, not income. It also created upkeep nobody budgeted for: six weeks after the ruling, three published sentences still promised the tier — on two reading-room pages and in the file the product serves to AI crawlers. Writing a rule down does not enforce it.
+
+*The two together, which is how the page reads:*
+
+```renders
 The plan was to give the assessment away and charge for the training arc. It was withdrawn in one line — there is no paid tier, and no pricing question — because a paywall on the training loop would have put the honest deliverable, whether your ear actually moved, behind the wall. The project gave up its only means of showing that anyone would pay for this, at a point where monetization remains a goal but as proof of commercial viability, not income. It also created upkeep nobody budgeted for: six weeks after the ruling, three published sentences still promised the tier — on two reading-room pages and in the file the product serves to AI crawlers. Writing a rule down does not enforce it.
 ```
 
@@ -1864,8 +1886,19 @@ The plan was to give the assessment away and charge for the training arc. It was
 
 Everything else in the block is the engineer's own connective prose and is free.
 
-```
-`MET-FOUR-REFUSALS-03` · PART-LOCKED
+*The `refusal` field, which carries the verified words “Viral consumer distribution for a $3.99 impulse product is dead”:*
+
+`MET-FOUR-REFUSALS-05` · PART-LOCKED
+> Viral consumer distribution for a $3.99 impulse product is dead, concluded on twenty-nine visitors across a month, with the World Cup front door spreading to nobody at all.
+
+*The `price` field, which carries the verified words “The paid product itself was never tested (4 paywall views)”:*
+
+`MET-FOUR-REFUSALS-06` · PART-LOCKED
+> A quiz, a share-card pipeline, a paywall and a Merchant-of-Record payment adapter all became legacy in a single decision. And here is the part that is easiest to leave off a page like this: the paid product itself was never tested (4 paywall views). The verdict was reached on distribution evidence, and the pricing question it looks like it answers was never actually asked.
+
+*The two together, which is how the page reads:*
+
+```renders
 Viral consumer distribution for a $3.99 impulse product is dead, concluded on twenty-nine visitors across a month, with the World Cup front door spreading to nobody at all. A quiz, a share-card pipeline, a paywall and a Merchant-of-Record payment adapter all became legacy in a single decision. And here is the part that is easiest to leave off a page like this: the paid product itself was never tested (4 paywall views). The verdict was reached on distribution evidence, and the pricing question it looks like it answers was never actually asked.
 ```
 
@@ -1890,8 +1923,19 @@ Viral consumer distribution for a $3.99 impulse product is dead, concluded on tw
 
 Everything else in the block is the engineer's own connective prose and is free.
 
-```
-`MET-FOUR-REFUSALS-04` · PART-LOCKED
+*The `refusal` field, which carries the verified words “The PM never judges a clip again” and “Ear-passes by a non-musician = unstable labels = no value”:*
+
+`MET-FOUR-REFUSALS-07` · PART-LOCKED
+> Quality control was a person listening to each clip and approving it. It was abolished — The PM never judges a clip again — on the owner's own finding: Ear-passes by a non-musician = unstable labels = no value. The gate was not adding quality. It was adding a delay only one person could clear.
+
+*The `price` field, which carries the verified words “estimated from response data” and “Zero real responses”:*
+
+`MET-FOUR-REFUSALS-08` · PART-LOCKED
+> The replacement has two layers, and the one the pivot itself calls the real gate — item difficulty and discrimination estimated from response data — has never run, because there are Zero real responses. What gates clips today is the acoustic layer alone: loudness, spectral distance, silence, clipping. It can measure how large a manipulation is. It cannot notice that a clip is bad in a way nobody thought to model.
+
+*The two together, which is how the page reads:*
+
+```renders
 Quality control was a person listening to each clip and approving it. It was abolished — The PM never judges a clip again — on the owner's own finding: Ear-passes by a non-musician = unstable labels = no value. The gate was not adding quality. It was adding a delay only one person could clear. The replacement has two layers, and the one the pivot itself calls the real gate — item difficulty and discrimination estimated from response data — has never run, because there are Zero real responses. What gates clips today is the acoustic layer alone: loudness, spectral distance, silence, clipping. It can measure how large a manipulation is. It cannot notice that a clip is bad in a way nobody thought to model.
 ```
 
@@ -1917,8 +1961,21 @@ Two blocks. The first is the record's own account; the second is my reading of w
 
 Everything else in the block is the engineer's own connective prose and is free.
 
-```
+*The `finding` field, which carries the verified words “subtracting two noisy numbers manufactures”:*
+
 `MET-FINDING-AGAINST-01` · PART-LOCKED
+> Before the retest arc was allowed to tell anyone their ear had moved, the size of change it can resolve was measured: the whole hazard here is that subtracting two noisy numbers manufactures progress. Simulating the same unchanged person through two sessions at the shipped length puts the floor on the pitch ladder at roughly ${(soloFloorFactor("pitch-drift") ?? 0).toFixed(1)} times — the threshold has to more than halve before the difference can be told from ordinary run-to-run wobble. On the prestige test it is ${numberWord(ARC_FLOORS.bias)} points of the scale. The delicacy trials cannot support an arc at all: ${numberWord(DELICACY_ARC_FLOOR.itemsToMove)} of their ${numberWord(DELICACY_ARC_FLOOR.trials)} pairs would have to change hands.
+
+  *As rendered:* “Before the retest arc was allowed to tell anyone their ear had moved, the size of change it can resolve was measured: the whole hazard here is that subtracting two noisy numbers manufactures progress. Simulating the same unchanged person through two sessions at the shipped length puts the floor on the pitch ladder at roughly 3.5 times — the threshold has to more than halve before the difference can be told from ordinary run-to-run wobble. On the prestige test it is eight points of the scale. The delicacy trials cannot support an arc at all: six of their fifteen pairs would have to change hands.”
+
+*The `consequence` field, free prose with no verified passage in it:*
+
+`MET-FINDING-AGAINST-02` · PART-LOCKED
+> Most retests are therefore told, in as many words, that nothing changed the instrument could hear. That refusal is the ordinary output of this feature rather than its edge case, and the sentence names the floor in the reader's own units so it reads as a fact about the instrument rather than a verdict on them. The only thing that lowers the floor is returning: pooled across four sittings it falls to about two and a half times, which is the entire reward this product offers for coming back.
+
+*The two together, which is how the page reads:*
+
+```renders
 Before the retest arc was allowed to tell anyone their ear had moved, the size of change it can resolve was measured: the whole hazard here is that subtracting two noisy numbers manufactures progress. Simulating the same unchanged person through two sessions at the shipped length puts the floor on the pitch ladder at roughly 3.5 times — the threshold has to more than halve before the difference can be told from ordinary run-to-run wobble. On the prestige test it is eight points of the scale. The delicacy trials cannot support an arc at all: six of their fifteen pairs would have to change hands. Most retests are therefore told, in as many words, that nothing changed the instrument could hear. That refusal is the ordinary output of this feature rather than its edge case, and the sentence names the floor in the reader's own units so it reads as a fact about the instrument rather than a verdict on them. The only thing that lowers the floor is returning: pooled across four sittings it falls to about two and a half times, which is the entire reward this product offers for coming back.
 ```
 
@@ -1941,8 +1998,19 @@ Before the retest arc was allowed to tell anyone their ear had moved, the size o
 
 Everything else in the block is the engineer's own connective prose and is free.
 
-```
-`MET-FINDING-AGAINST-02` · PART-LOCKED
+*The `finding` field, which carries the verified words “Delicacy got built instead. That is the N2 launch-avoidance pattern, on the record” and “Nothing is blocked by engineering. Everything is blocked by the launch not having happened”:*
+
+`MET-FINDING-AGAINST-03` · PART-LOCKED
+> A ruling had already been made: post the flagship instrument on its own, within one to two weeks, and do not let the second instrument gate it. The second instrument got built instead. The plan written that day says it without softening: Delicacy got built instead. That is the N2 launch-avoidance pattern, on the record. And directly above it, the diagnosis: Nothing is blocked by engineering. Everything is blocked by the launch not having happened.
+
+*The `consequence` field, which carries the verified words “29 real visitors, ever” and “Zero real responses”:*
+
+`MET-FINDING-AGAINST-04` · PART-LOCKED
+> As of the revision date at the foot of this page, it still has not been posted. The product has had 29 real visitors, ever. There are Zero real responses, which is why every psychometric figure in the Lab is generated from a known model and badged as simulated — the dataset that was named as the project's proprietary asset does not exist. Building is the part that feels like progress, and it is the part that was never the constraint.
+
+*The two together, which is how the page reads:*
+
+```renders
 A ruling had already been made: post the flagship instrument on its own, within one to two weeks, and do not let the second instrument gate it. The second instrument got built instead. The plan written that day says it without softening: Delicacy got built instead. That is the N2 launch-avoidance pattern, on the record. And directly above it, the diagnosis: Nothing is blocked by engineering. Everything is blocked by the launch not having happened. As of the revision date at the foot of this page, it still has not been posted. The product has had 29 real visitors, ever. There are Zero real responses, which is why every psychometric figure in the Lab is generated from a known model and badged as simulated — the dataset that was named as the project's proprietary asset does not exist. Building is the part that feels like progress, and it is the part that was never the constraint.
 ```
 
@@ -1963,8 +2031,19 @@ A ruling had already been made: post the flagship instrument on its own, within 
 
 Everything else in the block is the engineer's own connective prose and is free.
 
-```
-`MET-FINDING-AGAINST-03` · PART-LOCKED
+*The `finding` field, which carries the verified words “Resume value cannot be hostage to a launch the owner has no energy to run” and “The 2026-09-15 deadline is not a live constraint”:*
+
+`MET-FINDING-AGAINST-05` · PART-LOCKED
+> What happened next is the part that is harder to read, and this reading is mine rather than a recorded ruling. Within the same week the project adopted a direction that made the avoided thing optional: Resume value cannot be hostage to a launch the owner has no energy to run, and after it, The 2026-09-15 deadline is not a live constraint. That argument is sound on its own terms. It is also, in sequence, a project noticing that it was avoiding something and then removing the requirement to do it.
+
+*The `consequence` field, free prose with no verified passage in it:*
+
+`MET-FINDING-AGAINST-06` · PART-LOCKED
+> I cannot tell from the record which of the two it was, and neither can a reader, so the page says so rather than choosing the flattering reading. The test that would settle it is not an argument: it is whether the instruments are ever put in front of strangers. Until they are, the honest description of this project is that it has built three working instruments and measured them against simulated respondents.
+
+*The two together, which is how the page reads:*
+
+```renders
 What happened next is the part that is harder to read, and this reading is mine rather than a recorded ruling. Within the same week the project adopted a direction that made the avoided thing optional: Resume value cannot be hostage to a launch the owner has no energy to run, and after it, The 2026-09-15 deadline is not a live constraint. That argument is sound on its own terms. It is also, in sequence, a project noticing that it was avoiding something and then removing the requirement to do it. I cannot tell from the record which of the two it was, and neither can a reader, so the page says so rather than choosing the flattering reading. The test that would settle it is not an argument: it is whether the instruments are ever put in front of strangers. Until they are, the honest description of this project is that it has built three working instruments and measured them against simulated respondents.
 ```
 
@@ -1975,5 +2054,5 @@ What happened next is the part that is harder to read, and this reading is mine 
 
 ---
 
-**222 sentences, each with an id.** Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.
+**229 sentences, each with an id.** Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.
 

@@ -145,7 +145,30 @@ function locked(entry, text) {
   return [...new Set(inside)];
 }
 
-function block(n, label, entry, text, notes) {
+/**
+ * TWO FIELDS, TWO IDS (E20/S2).
+ *
+ * WHAT WENT WRONG. A refusal is `refusal` + `price`; a finding is `finding` +
+ * `consequence`. This file printed each pair joined by a space inside one
+ * fence, so seven blocks carried two source strings under one id. A writer
+ * returning a rewrite gives back one line for two strings, and applying it
+ * means deciding where the cut goes -- a decision the writer was never told
+ * they were making, and the wrong guess silently rewrites the wrong field.
+ *
+ * WHY IT MATTERS MORE HERE THAN ANYWHERE ELSE. These are PART-LOCKED blocks:
+ * the quoted passage a test verifies lives in one of the two fields, so a
+ * mis-applied cut can move verified words into free prose or the reverse. The
+ * page would still build and would be putting words in the record's mouth.
+ *
+ * The parts are listed separately, and the joined form is shown as a rendering
+ * because the two DO read as one paragraph on screen and a writer needs the
+ * seam to be visible rather than hidden.
+ */
+function pairBlock(n, label, entry, parts, notes) {
+  block(n, label, entry, parts.map(([, text]) => text).join(" "), notes, parts);
+}
+
+function block(n, label, entry, text, notes, parts) {
   w(`### ${n}. ${label}`);
   w();
   w(`**Kind:** ${entry.kind === "inferred" ? "INFERRED — renders under a visible “Inference — the engineer’s reading, not a recorded ruling” label" : "QUOTED — the page presents this as the record speaking"}`);
@@ -167,7 +190,32 @@ function block(n, label, entry, text, notes) {
     w("**No locked passage in this block** — all of it is the engineer's own prose and is free.");
   }
   w();
-  w("```");
+  if (parts === undefined) {
+    w("```");
+    w(text.replace(/\s+/g, " ").trim());
+    w("```");
+    w();
+    return;
+  }
+  for (const [field, value] of parts) {
+    /*
+     * THE LOCKED PASSAGE IS NAMED PER FIELD, NOT PER BLOCK (E20/S2).
+     *
+     * The block-level LOAD-BEARING list was written when a block was one
+     * string. Now it is two, and "these exact words are verified" above two
+     * editable strings does not say WHICH of them carries them -- on a page
+     * where the whole distinction is between the record speaking and the
+     * engineer speaking. A writer who guesses wrong rewrites a quotation.
+     */
+    const flat = value.replace(/\s+/g, " ").trim();
+    const mine = locked(entry, flat);
+    template([flat], `*The \`${field}\` field` + (mine.length > 0
+      ? ", which carries the verified words " + mine.map((a) => QUOTE_OPEN + a + QUOTE_CLOSE).join(" and ") + ":*"
+      : ", free prose with no verified passage in it:*"));
+  }
+  w("*The two together, which is how the page reads:*");
+  w();
+  w("```renders");
   w(text.replace(/\s+/g, " ").trim());
   w("```");
   w();
@@ -299,7 +347,7 @@ w(
 w();
 for (const r of refusals) {
   n += 1;
-  block(n, `\`${r.id}\``, r, `${r.refusal} ${r.price}`, [
+  pairBlock(n, `\`${r.id}\``, r, [["refusal", r.refusal], ["price", r.price]], [
     ["Heading on screen (free prose)", r.what],
     ["Rule line on screen (free prose)", `Refused under ${r.rule}`],
     ["Second paragraph opens", "“What it cost. …”"],
@@ -319,7 +367,7 @@ w(
 w();
 for (const f of findings) {
   n += 1;
-  block(n, `\`${f.id}\``, f, `${f.finding} ${f.consequence}`, [
+  pairBlock(n, `\`${f.id}\``, f, [["finding", f.finding], ["consequence", f.consequence]], [
     ["Date line on screen (free prose)", `${f.date} · broke ${f.rule}`],
     ["Second paragraph opens", "“Since then. …”"],
   ]);
