@@ -37,7 +37,7 @@ and risked burying what was already planned.
 | **P** — the arc | Retest after the 7-day cooldown; publish whether the ear moved, against its noise floor | **OPEN**, blocked by O and then by seven days |
 | **Q** — governance debt | Q1 rulings into a tracked file · Q2 the expertise line · Q3 bind the untracked blueprints | **Q1 and Q2 done.** Every settled ruling from both blueprints, plus the nine made on 2026-09-13, is in `docs/rt-answers-2026-09-13.md` — tracked. **Q3 is an owner decision and a one-way door**: binding means tracking means publishing, and this repository is public while those files hold strategy and the owner's own assessment |
 | **R** — the closing surface | Falsified registry, data-model page, Lab honesty | **done** — 33 entries live at `/lab/falsified` |
-| **S** — the kill list, published | State the kills on the page, not in a document | **PARTLY DONE.** The Taste Index and the Taste Gem are both published as refusals. **"No sixth instrument" is deliberately NOT published** — RT-P1 queued a mock for a possible fifth instrument on 2026-09-13, so publishing that line would make `/method` false the day it is approved. It waits on RT-P1 |
+| **S** — the kill list, published | State the kills on the page, not in a document | **PARTLY DONE, and no longer blocked.** The Taste Index and the Taste Gem are both published as refusals. The third line — that no further instrument is added — was deliberately held because RT-P1 had queued a mock for one, and publishing it would have made `/method` false the day the mock was approved. **RT-P1 is now closed as killed (RT-3 a), so the hold is released**: the line ships as `/method`'s seventh refusal, carrying the arithmetic that killed it rather than a preference for restraint |
 
 ---
 
@@ -45,7 +45,7 @@ and risked burying what was already planned.
 
 | | What it is | Status |
 |---|---|---|
-| **RT-P1 (a)** | The preference instrument, mocked on paper before building | **Mock written** (`docs/preference-mock-2026-09-13.md`). Awaiting the owner's judgment on whether it is worth building |
+| **RT-P1 (a)** | The preference instrument, mocked on paper before building | **CLOSED 2026-09-13 — killed.** The mock was approved, sized by ruling RT-2 (a), and then killed by ruling RT-3 (a) when the first slice derived what it actually costs: three dimensions is 84 pairs and **84 minutes**, against the "~20 minutes" the sizing ruling was taken on. Two of the mock's own four findings do not survive its own arithmetic. No audio was rendered. Full reasoning: `docs/rt-answers-2026-09-13.md` §6. The engine stays in the repository as the documentation of the refusal |
 | **RT-P2 (a)** | Keep the AI-music-producer positioning, with the disclosure | Done, and the disclosure now records a **negative** first datum |
 | **RT-P3 (a)** | Narrow the front door's promise to what ships | Done, then amended the same day to keep the word *understanding* |
 | **batch 5** | A writing pass on the README, the pitch page and the three front-door sentences | **OPEN, note written** (`docs/commission-batch-5.md`), not yet handed over. Commissioned as documents rather than deck ids — these are long-form prose, not assembled strings |

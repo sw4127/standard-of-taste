@@ -68,9 +68,13 @@ otherwise — checked before ruling.
 
 ## 4. Still open
 
-- **RT-P1's second half** — whether the preference instrument gets built, and whether the shipped
+- ~~**RT-P1's second half** — whether the preference instrument gets built, and whether the shipped
   no-transfer ruling would have to be revisited to justify it. The mock exists so this can be
-  decided by reading rather than by building.
+  decided by reading rather than by building.~~
+  **CLOSED 2026-09-13 — see §6. It was decided by measuring rather than by reading, and the answer
+  was no.** The original text is struck rather than deleted, because the sentence "the mock exists
+  so this can be decided by reading" turned out to be the thing that was wrong: reading the mock
+  could not have produced the finding that killed it.
 
 ## 5. What is deliberately NOT in this file
 
@@ -79,3 +83,59 @@ tracking, and tracking means publishing — this repository is public and those 
 and the owner's own assessment of the project. **That is an owner decision and a one-way door**, so
 this file takes the RULINGS out of them, which is the part that has to survive, and leaves the
 documents where they are.
+
+---
+
+## 6. RT-P1 closed — the preference instrument is killed, on its own arithmetic
+
+Three rulings, made the same day the mock was written, in the order they were made.
+
+| Id | The question | Ruling |
+|---|---|---|
+| **RT-P1 (second half)** | Does the preference instrument get built? | **Build it** — ruled on the option label alone. The owner's words: *"I don't know what that is"* |
+| **RT-2** | Six dimensions cannot fit a five-minute sitting. Which shape ships? | **(a) three dimensions** — ruled on a sitting length of "~20 minutes" |
+| **RT-3** | That figure was wrong. What now? | **(a) kill it, and publish why** |
+
+**What happened between them, because the sequence is the whole lesson.** The instrument was
+approved before anyone knew what it was, sized against a number nobody had derived, and killed by
+the first slice that did the arithmetic. No audio was rendered. The cost of the whole detour was two
+engine modules that now document the refusal.
+
+### The arithmetic that killed it
+
+A preference has no right answer, so the only thing measurable is whether a listener's blind choices
+**agree with each other**. That is an exact two-sided sign test against a coin, and it has a floor: a
+dimension needs **at least seven forced choices** before any result is possible, and a realistic
+listener — one who picks their preferred side four times in five — needs **twenty-eight**. Three
+dimensions is eighty-four pairs. At the pace this product already assumes for a clip somebody has to
+judge, **the sitting is eighty-four minutes** — longer than all four shipped instruments together.
+
+Two figures engineering had put in front of the owner were wrong, and both are recorded because the
+ruling was taken on them:
+
+- **"~20 minutes"** for three dimensions. The derived answer is eighty-four.
+- **"roughly 20-fold"** for the saving from cutting six dimensions to three. The real saving is
+  **2.3-fold**: cutting dimensions barely changes the cost of each one, it just means asking about
+  fewer things.
+
+### What the mock got wrong, measured against its own invented numbers
+
+The mock was written to be judged before anything was built, which worked — but it was judged by
+running its figures through the engine rather than by reading them. Of its four reported findings,
+**two do not survive**. Its flagship sentence, the contradiction the entire instrument was proposed
+to deliver, sits at **p = 0.146** and does not clear chance even before the correction for having
+asked six questions at once. Only its Space finding survives.
+
+### What is NOT given up
+
+The transfer claim was already refused and stays refused. The four shipped instruments are
+untouched. `src/engine/preference.ts` and `src/content/preference-shape.test.ts` stay in the
+repository **as the documentation of this refusal**, not as groundwork — an instrument killed by an
+argument leaves a paragraph, and one killed by arithmetic leaves a test that still runs.
+
+### What it costs, stated plainly
+
+The product still serves only the first of its two listener findings. **Almost nobody can describe
+their own taste in words, and this product still does not help them**, which was the entire case for
+building this and remains unanswered. Nothing here says the instrument was a bad idea; it says this
+one could not be built at a length anybody would sit.

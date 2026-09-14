@@ -1,15 +1,31 @@
 /**
- * THE PREFERENCE INSTRUMENT (E21/S1, Track RT-P1 a).
+ * THE PREFERENCE INSTRUMENT — KILLED, AND THIS IS THE DOCUMENTATION OF THE KILL
+ * (E21, PM ruling RT-3 (a), 2026-09-13).
  *
- * The four shipped instruments turn DAMAGE into language — detune, smear,
- * codec artifacts. None turns PREFERENCE into language, and the second of the
- * project's two listener findings is that almost nobody can describe their own
- * taste in words. This module is the arithmetic for the instrument that tries.
+ * NOTHING HERE SHIPS. There is no pool, no flow and no route, and there will not
+ * be one. This module is not groundwork and must not be read as a plan: a
+ * reader who finds it and starts building is finishing something the owner
+ * ruled out on the numbers below.
  *
- * WHAT IT DOES. A person states six preferences in words, then makes forced
- * choices between pairs that are the SAME PERFORMANCE re-rendered, differing on
- * exactly one dimension. The stated preference is compared with the chosen one.
- * The product is the disagreement.
+ * WHY IT IS STILL IN THE REPOSITORY. An instrument killed by an argument leaves
+ * a paragraph; one killed by arithmetic leaves a test that still runs. The
+ * refusal published at `/method` cites what this file computes, and
+ * `src/content/preference-shape.test.ts` re-derives it on every suite run — so
+ * the claim on the page cannot quietly stop being true. Delete this and the
+ * refusal becomes a boast.
+ *
+ * WHAT IT WOULD HAVE DONE. A person states six preferences in words, then makes
+ * forced choices between pairs that are the SAME PERFORMANCE re-rendered,
+ * differing on exactly one dimension. The stated preference is compared with the
+ * chosen one. The product is the disagreement.
+ *
+ * WHAT KILLED IT, IN ONE LINE. A preference has no right answer, so the only
+ * measurable thing is whether blind choices agree with each other — and the
+ * sign test below needs 28 choices per dimension from a realistic listener.
+ * Three dimensions is 84 pairs, which at this product's own assumed pace is 84
+ * minutes: longer than all four shipped instruments together. Run against the
+ * mock's own invented figures, two of its four findings do not survive, its
+ * flagship contradiction among them at p = 0.146.
  *
  * ---------------------------------------------------------------------------
  * THE SELF-REPORT STEP, AND WHY IT DOES NOT BREACH D2
