@@ -1,6 +1,6 @@
 # PRD — Standard of Taste · Part 1: the use-case inventory
 
-**Status: slice 1 of 4.** Brief and definition of done: `docs/task-prd.md`. This part answers *what
+**Status: part 1 of 4 — the PRD is complete.** The other three: `docs/prd-2-features.md` (what each feature proves and how fast a reviewer sees it), `docs/prd-3-requirements.md` (functional requirements, each citing the symbol that implements it), `docs/prd-4-screens.md` (measured screen specifications). Brief and definition of done: `docs/task-prd.md`. This part answers *what
 tasks can a person complete here* and labels each by the evidence behind it. Functional
 requirements, non-goals and wireframes are parts 2 to 4.
 
