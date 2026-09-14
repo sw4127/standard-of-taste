@@ -139,3 +139,28 @@ The product still serves only the first of its two listener findings. **Almost n
 their own taste in words, and this product still does not help them**, which was the entire case for
 building this and remains unanswered. Nothing here says the instrument was a bad idea; it says this
 one could not be built at a length anybody would sit.
+
+### RT-4 — the refusal stays on one page
+
+*Kept inside §6 rather than given a section of its own, because it is a ruling about where the
+refusal above is published and means nothing detached from it. It is a separate ruling all the same,
+with its own id.*
+
+**Asked after the seventh refusal shipped:** does `/learn`, the reading room, also carry a note about
+the killed fifth instrument? A reader who wonders *why is there nothing here about what I actually
+like* is browsing `/learn`, not `/method`.
+
+**Ruled 2026-09-13: (a) leave it. `/method` is the page for refusals, and it is the only page that
+carries this one.**
+
+**Why, and it is not tidiness.** A claim written in two places is a claim that will eventually
+disagree with itself, and this repository has paid for that specific failure more than once — the
+reading room once described an instrument of eight clips long after it had grown to sixteen, which is
+why quantities are now slotted from the pools rather than retyped. The refusal's numbers are slotted
+and pinned by test in exactly one file. A second copy on `/learn` would be a second thing to keep
+true, guarding a reader who is one click from the page that already says it.
+
+**What it costs, stated plainly:** a reader who never opens `/method` will not learn that the
+question was asked and answered. That is a real loss of reach, accepted rather than denied.
+
+**This is recorded so it is not re-proposed.** Adding the note to `/learn` is an obvious, helpful-looking idea, and a future session that has not read this will have it. The answer is here.

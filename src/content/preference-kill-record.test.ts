@@ -35,6 +35,7 @@ import {
   PREFERENCE_TRIALS_PER_DIMENSION,
 } from "./instrument-shape";
 
+const NL = String.fromCharCode(10);
 const RULINGS = "docs/rt-answers-2026-09-13.md";
 const QUEUE = "docs/queue-of-record.md";
 const ENGINE = "src/engine/preference.ts";
@@ -72,10 +73,38 @@ describe("the preference kill is recorded where a fresh clone can read it", () =
     }
   });
 
-  it("releases the Track S hold, which was blocked on exactly this ruling", () => {
+  it("closes Track S, whose last line this task shipped", () => {
+    // The status moved PARTLY DONE -> done only after the line was actually on
+    // /method. A status that runs ahead of the page is the failure the queue's
+    // own guard cannot catch: it checks that a status word is present, never
+    // that it is true.
+    // BOUNDED TO THE ROW, not to a character count. The first version took a
+    // fixed 900-character window from the row's start, which reads into
+    // WHATEVER FOLLOWS as soon as a neighbouring row grows — and would then
+    // fail, or pass, on another track's status. A markdown table row is one
+    // line, so the line is the boundary.
     const queue = readFileSync(QUEUE, "utf8");
     expect(queue).toContain("**S** —");
-    expect(flat(queue)).toContain("no longer blocked");
+    const from = queue.indexOf("**S** —");
+    const end = queue.indexOf(NL, from);
+    const row = queue.slice(from, end === -1 ? queue.length : end);
+    expect(row).toContain("**done**");
+    expect(row).not.toContain("PARTLY DONE");
+  });
+
+  it("records RT-4, so adding the refusal to /learn is not re-proposed", () => {
+    // The ruling was to publish the refusal on one page only. That is exactly
+    // the kind of decision a later session re-opens helpfully, which is what
+    // this file exists to stop.
+    // ASSERTED ON THE RULING, NOT ON ITS RHETORIC. The first version pinned the
+    // sentence "This is recorded so it is not re-proposed", which is a flourish
+    // — reword it while leaving the ruling intact and the guard fails for its
+    // own reasons, blaming a document that is still correct. What must be there
+    // is the question, the surface it is about, and the answer.
+    const rulings = flat(readFileSync(RULINGS, "utf8"));
+    expect(rulings).toContain("RT-4 — the refusal stays on one page");
+    expect(rulings).toContain("(a) leave it");
+    expect(rulings).toContain("/learn");
   });
 
   it("adds no NEW path to the mock in the section /method cites", () => {
