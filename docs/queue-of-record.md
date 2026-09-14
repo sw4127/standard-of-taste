@@ -49,7 +49,7 @@ and risked burying what was already planned.
 | **RT-P2 (a)** | Keep the AI-music-producer positioning, with the disclosure | Done, and the disclosure now records a **negative** first datum |
 | **RT-P3 (a)** | Narrow the front door's promise to what ships | Done, then amended the same day to keep the word *understanding* |
 | **batch 5** | A writing pass on the README, the pitch page and the three front-door sentences | **OPEN, note written** (`docs/commission-batch-5.md`), not yet handed over. Commissioned as documents rather than deck ids — these are long-form prose, not assembled strings |
-| **the PRD** | A product requirements document for a reviewer at a larger company. Brief: `docs/task-prd.md` | **Part 1 of 4 done** — `docs/prd-1-use-cases.md`, the use-case inventory, 17 cases labelled 3 EVIDENCED / 14 ASSUMED, every one of 35 routes accounted for. **OPEN:** part 2 functional requirements, part 3 non-goals and constraints, part 4 wireframes |
+| **the PRD** | A product requirements document for a reviewer at a larger company. Brief: `docs/task-prd.md` | **Parts 1 and 2 of 4 done** — `docs/prd-1-use-cases.md`, the use-case inventory, 17 cases labelled 3 EVIDENCED / 14 ASSUMED, every one of 35 routes accounted for. Part 2 is `docs/prd-2-features.md` — sixteen features scored on craft and legibility, ranked under three weightings, rankings recomputed by test. **OPEN:** part 3 functional requirements and non-goals, part 4 wireframes |
 | **five conversations** | Ask people who generate audio whether the flaw vocabulary is a problem they have | **OPEN, owner's to run.** The audience claim rests on a positioning decision and one negative data point |
 
 ## Owner actions, carried
