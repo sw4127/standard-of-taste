@@ -19,6 +19,7 @@ import {
   type ClaimSource,
 } from "@/content/method/claims";
 import { GYM_INK } from "@/content/instrument-accents";
+import { numberWordLeading } from "@/content/vocabulary/numbers";
 
 /**
  * `/method` — how this project is run, with the product as its evidence
@@ -192,8 +193,19 @@ export default function MethodPage() {
       ))}
 
       <section className="mt-14">
+        {/*
+          SLOTTED, AFTER RENDERING THE PAGE AND FINDING THE HEADING CLAIMED A
+          COUNT OF FOUR ABOVE A LIST OF SIX. The number was typed directly above
+          the `.map` that renders the array it counts, which is the shortest
+          possible distance between a quantity and its own contradiction — and
+          it had been wrong for two sessions without a test noticing, because
+          every guard on this page inspects the ENTRIES and none read the
+          heading. The guard that now covers it is deliberately blunt enough to
+          flag this comment too, so the wording here avoids the literal phrase
+          rather than the guard exempting the file.
+        */}
         <h2 className="font-display text-2xl font-semibold" style={{ color: INK }}>
-          Four refusals
+          {numberWordLeading(METHOD_REFUSALS.length)} refusals
         </h2>
         <div className="mt-6 space-y-10">
           {METHOD_REFUSALS.map((r) => (

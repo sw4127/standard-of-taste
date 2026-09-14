@@ -36,6 +36,12 @@
 
 import { DELICACY_ARC_FLOOR } from "@/content/delicacy/arc-floor";
 import { numberWord } from "@/content/vocabulary/numbers";
+import {
+  PREFERENCE_SECONDS_PER_PAIR,
+  PREFERENCE_SITTING_MINUTES,
+  PREFERENCE_SITTING_PAIRS,
+  PREFERENCE_SITTING_TRIALS,
+} from "@/content/instrument-shape";
 import { ARC_FLOORS, soloFloorFactor } from "@/engine/arc";
 
 export type ClaimKind =
@@ -301,6 +307,58 @@ export const METHOD_CLAIMS: MethodClaim[] = [
  * import blueprint material to support some future claim without asking again.
  */
 export const METHOD_REFUSALS: MethodRefusal[] = [
+  /**
+   * THE SEVENTH REFUSAL (E21/S4, executing RT-3 (a); Track S's held line, now
+   * released).
+   *
+   * TWO THINGS IN ONE ENTRY, ON PURPOSE. Track S had a line ready — that no
+   * further instrument is added — and it was deliberately unpublished, because
+   * RT-P1 had a mock for one awaiting approval and the line would have been
+   * false the day it was approved. Publishing them separately now would give
+   * the reader a restraint and, elsewhere, a reason, and the reason is the only
+   * part worth having. A product that says it adds nothing more sounds
+   * disciplined; one that says what the last candidate cost to evaluate is
+   * making a checkable claim.
+   *
+   * WHOSE FAILURE THIS RECORDS. The instrument was sized against a session
+   * length engineering put in a decisions block without deriving it, and the
+   * derivation came back four times larger. That is on engineering, and the
+   * entry says so — the page's own expertise rule refuses characterisations of
+   * a person, and "approved on a bad number" is a fact about who computed the
+   * number, not about who read it.
+   *
+   * EVERY FIGURE IS SLOTTED, not typed. `instrument-shape.ts` derives them from
+   * the engine and `preference-kill-record.test.ts` pins the document to the
+   * same functions, so this paragraph cannot quietly stop being true — which
+   * matters more here than anywhere else on the page, because a refusal is the
+   * one claim a reader cannot check by using the product.
+   *
+   * `inferred` for the reason the fifth and sixth carry it: the RULING is
+   * tracked and cited, and the judgment that the arithmetic settles the
+   * question is mine.
+   */
+  {
+    id: "refusal-preference-instrument",
+    what: "A fifth instrument, to turn preference into words",
+    rule: "N3, and the arithmetic the proposal produced about itself",
+    kind: "inferred",
+    refusal:
+      "The four instruments here measure damage — whether you can hear detune, smear, a codec. None of them touches the thing listeners actually report, which is that they cannot say what they like. A fifth was specified for exactly that: you say what you prefer, then choose blind between two versions of the same passage differing in one respect, and the product is the moment your words and your ears disagree. It was approved, sized, and killed by the first slice that did its arithmetic. A preference has no right answer, so the only measurable thing is whether blind choices agree with each other — and that takes " +
+      `${numberWord(PREFERENCE_SITTING_TRIALS)} of them per dimension from a decisive listener. Three dimensions is ${numberWord(PREFERENCE_SITTING_PAIRS)} pairs; at ${numberWord(PREFERENCE_SECONDS_PER_PAIR)} seconds a pair, ${numberWord(PREFERENCE_SITTING_MINUTES)} minutes — longer than all four shipped instruments together. It had been sized against a figure a quarter that size, which engineering stated without deriving. Run against the numbers in its own specification, two of its four findings did not survive, the contradiction it existed to deliver among them. Nothing further is added to this product on easier terms than these: an instrument arrives with the arithmetic for its own sitting length, or it does not arrive.`,
+    price:
+      "The largest one on this page, and it is unpaid rather than accepted. Two findings came out of listening to people: that past listening predicts less than present taste, and that almost nobody can describe their own taste in words. This product serves the first and does nothing at all for the second, which is the one with somebody in front of it. The refusal does not say that instrument was a bad idea — it says this design could not be built at a length anyone would sit, and no better design has been found. Somebody else may well find one.",
+    sources: [
+      {
+        path: "docs/rt-answers-2026-09-13.md",
+        anchor:
+          "an instrument killed by an argument leaves a paragraph, and one killed by arithmetic leaves a test that still runs",
+      },
+      {
+        path: "src/engine/preference.ts",
+        anchor: "must not be read as a plan",
+      },
+    ],
+  },
   /**
    * THE SIXTH REFUSAL (E20, Track M closed, Track S published).
    *

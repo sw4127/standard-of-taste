@@ -164,3 +164,24 @@ export const PREFERENCE_SESSION_MINUTES =
   PREFERENCE_PAIR_COUNT === null
     ? null
     : Math.round((PREFERENCE_PAIR_COUNT * PREFERENCE_SECONDS_PER_PAIR) / 60);
+
+/**
+ * THE SAME THREE FIGURES, FROZEN, FOR PROSE THAT CANNOT TOLERATE A NULL.
+ *
+ * The nullable exports above exist so that a faint design rate fails CI instead
+ * of white-screening the site. `/method`'s seventh refusal then needed to STATE
+ * them — and a page that renders `numberWord(null)` throws at module load,
+ * which is the identical white screen arriving by a different door. Casting the
+ * null away at the call site would have reintroduced the hazard while looking
+ * like a type annotation, which is how that class of bug usually travels.
+ *
+ * So the published refusal reads these, and they cannot be null. The frozen
+ * values are the ones the instrument was killed on — historical facts now,
+ * since nothing will re-size a killed instrument — and the fallback applies
+ * only in the null case that CI already refuses. `preference-kill-record.test.ts`
+ * asserts the derived and the frozen values still agree, so a drift shows up as
+ * a red test rather than as a page quietly printing the wrong century's number.
+ */
+export const PREFERENCE_SITTING_TRIALS = PREFERENCE_TRIALS_PER_DIMENSION ?? 28;
+export const PREFERENCE_SITTING_PAIRS = PREFERENCE_PAIR_COUNT ?? 84;
+export const PREFERENCE_SITTING_MINUTES = PREFERENCE_SESSION_MINUTES ?? 84;

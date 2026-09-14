@@ -24,9 +24,14 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { planSitting, twoSidedSignP, trialsForPower } from "@/engine/preference";
+import { METHOD_REFUSALS } from "./method/claims";
+import { numberWord } from "./vocabulary/numbers";
 import {
   PREFERENCE_PAIR_COUNT,
   PREFERENCE_SESSION_MINUTES,
+  PREFERENCE_SITTING_MINUTES,
+  PREFERENCE_SITTING_PAIRS,
+  PREFERENCE_SITTING_TRIALS,
   PREFERENCE_TRIALS_PER_DIMENSION,
 } from "./instrument-shape";
 
@@ -145,5 +150,83 @@ describe("the engine says it is a kill, not a plan", () => {
 
   it("says why it was kept, so nobody deletes the refusal's evidence", () => {
     expect(flat(header)).toContain("killed by arithmetic leaves a test that still runs");
+  });
+});
+
+describe("the refusal is on the page, and its numbers are slotted not typed", () => {
+  const entry = METHOD_REFUSALS.find((r) => r.id === "refusal-preference-instrument");
+  const plan = planSitting(3)!;
+
+  it("exists, as the seventh refusal", () => {
+    expect(entry, "the kill was recorded and never published").toBeDefined();
+    expect(METHOD_REFUSALS.length).toBeGreaterThan(6);
+  });
+
+  it("renders the choices, pairs and minutes the engine derives", () => {
+    const text = flat(`${entry!.what} ${entry!.refusal} ${entry!.price}`);
+    expect(text).toContain(numberWord(plan.trialsPerDimension));
+    expect(text).toContain(`${numberWord(PREFERENCE_PAIR_COUNT as number)} pairs`);
+    expect(text).toContain(`${numberWord(PREFERENCE_SESSION_MINUTES as number)} minutes`);
+  });
+
+  it("carries Track S's held line — the restraint WITH its reason", () => {
+    // Published as one entry rather than two on purpose: a product that says it
+    // adds nothing more sounds disciplined, and one that says what the last
+    // candidate cost to evaluate is making a checkable claim.
+    expect(flat(entry!.refusal)).toContain("Nothing further is added to this product");
+  });
+
+  it("states a price that names what stays unserved, not a boast", () => {
+    expect(flat(entry!.price)).toContain("almost nobody can describe their own taste in words");
+    expect(flat(entry!.price)).toContain("does nothing at all for the second");
+  });
+
+  it("puts the bad figure on engineering and characterises nobody", () => {
+    // The page's expertise rule refuses verdicts on people. The true sentence
+    // here is about who computed a number, never about who read it.
+    const text = flat(`${entry!.what} ${entry!.refusal} ${entry!.price}`).toLowerCase();
+    expect(text).toContain("which engineering stated without deriving");
+    for (const phrase of ["i don't know", "did not understand", "without knowing", "the owner"]) {
+      expect(text.indexOf(phrase), `the refusal characterises a person: "${phrase}"`).toBe(-1);
+    }
+  });
+});
+
+describe("the page's own heading counts the refusals it renders", () => {
+  // FOUND BY READING THE RENDERED PAGE, NOT BY A TEST. /method carried the
+  // heading "Four refusals" directly above a `.map` over six of them, and no
+  // guard noticed because every check on that page inspects the ENTRIES. A
+  // count typed above the list it counts is the shortest distance between a
+  // quantity and its own contradiction.
+  const page = readFileSync("src/app/method/page.tsx", "utf8");
+
+  it("slots the count from the array instead of typing it", () => {
+    expect(flat(page)).toContain("{numberWordLeading(METHOD_REFUSALS.length)} refusals");
+  });
+
+  it("types no number-word before the word 'refusals' anywhere on the page", () => {
+    const words = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+    const found = words
+      .flatMap((w) => [w, w.charAt(0).toUpperCase() + w.slice(1)])
+      .filter((w) => flat(page).includes(`${w} refusals`));
+    expect(found, "a refusal count is typed into the page again").toEqual([]);
+  });
+});
+
+describe("the frozen figures the refusal prints still match the derived ones", () => {
+  // The refusal cannot render a null, so it reads frozen constants. That is
+  // safe only while frozen and derived agree — this is the assertion that makes
+  // it safe, and the reason the fallback is not a place a wrong number can hide.
+  it("agrees on all three, so the page is printing today's arithmetic", () => {
+    expect(PREFERENCE_SITTING_TRIALS).toBe(PREFERENCE_TRIALS_PER_DIMENSION);
+    expect(PREFERENCE_SITTING_PAIRS).toBe(PREFERENCE_PAIR_COUNT);
+    expect(PREFERENCE_SITTING_MINUTES).toBe(PREFERENCE_SESSION_MINUTES);
+  });
+
+  it("casts no null away in the published refusal", () => {
+    // The hazard this replaced: `X as number` on a nullable export renders
+    // numberWord(null), which throws at module load of a file the page imports.
+    const claims = readFileSync("src/content/method/claims.ts", "utf8");
+    expect(claims.indexOf("as number")).toBe(-1);
   });
 });
