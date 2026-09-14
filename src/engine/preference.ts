@@ -277,6 +277,121 @@ export function trialsForPower(
   return null;
 }
 
+/**
+ * THE DIMENSIONS THIS PRODUCT SHIPS (PM ruling RT-2 a, 2026-09-13).
+ *
+ * Six were specified; three ship. The ruling's reason was arithmetic rather
+ * than taste: every dimension added to a sitting makes the bar stricter for all
+ * of them, because more questions asked is more chances to be fooled once, and
+ * six dimensions at a realistic listener rate is a sitting longer than all four
+ * existing instruments put together.
+ *
+ * The catalogue above keeps all six because the pipeline can render all six and
+ * a later sitting may want them. This is what a person is asked in v1.
+ */
+export const PREFERENCE_SHIPPED_DIMENSION_IDS = ["dynamics", "space", "saturation"] as const;
+
+/**
+ * Why the other three are out, recorded rather than dropped.
+ *
+ * This project publishes what it refuses (`/method`'s refusals), and a
+ * dimension cut for cost is a different thing from one cut for being a bad
+ * question. These were cut for cost, and saying so is what keeps the list
+ * honest if anyone later asks why brightness is missing from an instrument
+ * about how music sounds.
+ */
+export const PREFERENCE_OMITTED_DIMENSIONS: { id: string; because: string }[] = [
+  {
+    id: "brightness",
+    because:
+      "Cut for sitting length, not for being a poor question — it is arguably the most legible of the six. First in line if the sitting is ever lengthened.",
+  },
+  {
+    id: "tempo",
+    because:
+      "Cut for sitting length, and the weakest loss: the same passage played faster changes its character in ways that are not only tempo, so a leaning here is the hardest of the six to attribute.",
+  },
+  {
+    id: "width",
+    because:
+      "Cut for sitting length, and the most fragile on consumer playback — a stereo-width difference heard on a phone speaker is barely a difference at all.",
+  },
+];
+
+/**
+ * The listener this instrument is SIZED FOR, and the single most consequential
+ * number in the design.
+ *
+ * It is the rate at which a person with a genuine preference actually picks
+ * that side. Nobody choosing blind is consistent every time; 0.8 means "four
+ * times in five", which is already a firm preference rather than a faint one.
+ *
+ * IT IS A JUDGEMENT AND IT DRIVES THE COST. Sizing for a firmer listener makes
+ * the sitting shorter and quietly narrows the instrument to people whose taste
+ * is already obvious; sizing for a fainter one makes it longer than anyone will
+ * sit. There is no measured distribution to appeal to — nobody has ever sat
+ * this instrument — so this is one number in one place, flagged, rather than an
+ * assumption buried in a pool size (N3).
+ */
+export const PREFERENCE_DESIGN_RATE = 0.8;
+
+/**
+ * Takes in a pair. Structural — a forced choice is between two renders of one
+ * passage — rather than a pool count that could grow.
+ */
+export const TAKES_PER_PAIR = 2;
+
+/**
+ * How often a sitting of this size is required to FIND a design-rate listener.
+ *
+ * The conventional 80%, and conventional is the only defence it has — there is
+ * no cost model here that would justify a different figure. It is surfaced on
+ * the plan rather than buried in the call, because a plan that reports its
+ * design rate and hides its power reports half its design: two sittings at the
+ * same rate and different power differ by more than a third in length.
+ */
+export const PREFERENCE_DESIGN_POWER = 0.8;
+
+export interface PreferenceSittingPlan {
+  dimensionCount: number;
+  designRate: number;
+  designPower: number;
+  /** Below this many choices per dimension, no finding is possible at all. */
+  detectionFloor: number;
+  /** Choices per dimension to reach `designPower` against `designRate`. */
+  trialsPerDimension: number;
+  /** Pairs a listener actually hears: trials per dimension, times dimensions. */
+  pairs: number;
+  /** Takes rendered, which is what the clip pool has to contain. */
+  takes: number;
+}
+
+/**
+ * THE SITTING, DERIVED. Returns null when the design rate is not detectable
+ * within the exact-arithmetic bound — which is a real answer for a faint
+ * preference and must be reported, not rounded into a number.
+ */
+export function planSitting(
+  dimensionCount: number,
+  designRate: number = PREFERENCE_DESIGN_RATE,
+  designPower: number = PREFERENCE_DESIGN_POWER,
+  alpha: number = PREFERENCE_ALPHA,
+): PreferenceSittingPlan | null {
+  const detectionFloor = minimumTrialsForDetection(dimensionCount, alpha);
+  const trialsPerDimension = trialsForPower(designRate, dimensionCount, designPower, alpha);
+  if (detectionFloor === null || trialsPerDimension === null) return null;
+  const pairs = trialsPerDimension * dimensionCount;
+  return {
+    dimensionCount,
+    designRate,
+    designPower,
+    detectionFloor,
+    trialsPerDimension,
+    pairs,
+    takes: pairs * TAKES_PER_PAIR,
+  };
+}
+
 /** A stated preference. Never scored — see the header. */
 export interface PreferenceClaim {
   dimension: string;

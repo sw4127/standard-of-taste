@@ -31,6 +31,11 @@ import spreadManifest from "@/content/spread/manifest.json";
 import { BIAS_CLIPS } from "@/content/bias/items";
 import { SPREAD_POOL } from "@/content/spread/ranking";
 import { degreesIfIndifferent } from "@/engine/comparison";
+import {
+  PREFERENCE_SHIPPED_DIMENSION_IDS,
+  TAKES_PER_PAIR,
+  planSitting,
+} from "@/engine/preference";
 
 /* ---------------------------------------------------------------- Prestige */
 
@@ -93,3 +98,69 @@ export const SPREAD_CLIP_SECONDS: number = spreadManifest.clipSeconds;
 export const SPREAD_SESSION_MINUTES = Math.round(
   (SPREAD_WORK_COUNT * SPREAD_CLIP_SECONDS) / 60,
 );
+
+/* --------------------------------------------------- Preference (UNBUILT) */
+
+/**
+ * NOTHING BELOW IS REACHABLE BY A USER, AND NO SURFACE MAY STATE IT YET.
+ *
+ * The preference instrument has no pool, no flow and no route. These constants
+ * exist so that the decision about whether to build it is taken against derived
+ * arithmetic instead of against a figure somebody estimated in a chat message —
+ * which is exactly what happened, and is why this block exists at all.
+ */
+
+/** Dimensions a listener is asked about, per the ruling that sized the sitting. */
+export const PREFERENCE_DIMENSION_COUNT = PREFERENCE_SHIPPED_DIMENSION_IDS.length;
+
+/**
+ * NULL WHEN THE DESIGN RATE IS UNDETECTABLE, AND THAT IS NOT AN ERROR HERE.
+ *
+ * The first draft threw at module load. That is the right severity for the
+ * instrument and the wrong place for it: this module is imported by the reading
+ * room and the landing page, so lowering the design rate to something faint
+ * would have taken the whole site down over a feature nobody can reach. A
+ * failure's blast radius should match what failed.
+ *
+ * So it is null here and a TEST holds the invariant instead: an undetectable
+ * design rate fails CI, not `/learn`.
+ */
+const PREFERENCE_PLAN = planSitting(PREFERENCE_DIMENSION_COUNT);
+
+/** Forced choices per dimension. Null when the sitting has no detectable size. */
+export const PREFERENCE_TRIALS_PER_DIMENSION = PREFERENCE_PLAN?.trialsPerDimension ?? null;
+
+/** Pairs a listener hears end to end. */
+export const PREFERENCE_PAIR_COUNT = PREFERENCE_PLAN?.pairs ?? null;
+
+/**
+ * SECONDS PER PAIR — AN ESTIMATE PROPAGATED FROM ANOTHER ESTIMATE, WHICH IS
+ * THE WEAKEST NUMBER ANYWHERE IN THIS FILE AND IS LABELLED SO ON PURPOSE.
+ *
+ * Nobody has sat this instrument, so there is no pace to measure. The nearest
+ * shipped fact is the Prestige Test's pace — and that is not a fact either:
+ * `BIAS_SESSION_MINUTES` says in its own comment that it is a judgement, made
+ * once, because no distribution of how long people take has ever been
+ * collected. Dividing a judgement by a real clip count and multiplying by the
+ * takes in a pair produces a number with a derivation and no measurement under
+ * it. Calling that "derived" without this paragraph would be the exact move N3
+ * forbids: arithmetic borrowing the authority of data.
+ *
+ * WHAT IT IS GOOD FOR ANYWAY. It is good enough to tell 84 minutes from 20,
+ * which is the decision it exists to inform, and no sharper than that. Nothing
+ * that needs a real pace may use it.
+ *
+ * THE DIRECTION OF THE ERROR IS CHOSEN. A forced A-or-B choice is probably
+ * faster than the absolute rating the Prestige pace comes from, so this likely
+ * OVERSTATES the sitting. That is deliberate: a product that promises a shorter
+ * sitting than it delivers has lied to a reader, and one that promises a longer
+ * one has only been pessimistic.
+ */
+export const PREFERENCE_SECONDS_PER_PAIR =
+  Math.round((BIAS_SESSION_MINUTES * 60) / BIAS_CLIP_COUNT) * TAKES_PER_PAIR;
+
+/** Wall-clock minutes. Null when the sitting has no detectable size. */
+export const PREFERENCE_SESSION_MINUTES =
+  PREFERENCE_PAIR_COUNT === null
+    ? null
+    : Math.round((PREFERENCE_PAIR_COUNT * PREFERENCE_SECONDS_PER_PAIR) / 60);
