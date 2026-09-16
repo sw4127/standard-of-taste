@@ -15,6 +15,7 @@ import {
   METHOD_FINDINGS,
   METHOD_SECTIONS,
   METHOD_REFUSALS,
+  METHOD_REVERSALS,
   sectionClaims,
   type ClaimSource,
 } from "@/content/method/claims";
@@ -216,6 +217,47 @@ export default function MethodPage() {
               </p>
               {r.kind === "inferred" ? <InferenceMark /> : null}
               <p className="mt-3 text-[15px] leading-relaxed text-neutral-300">{r.refusal}</p>
+              <p className="mt-3 text-[15px] leading-relaxed text-neutral-300">
+                <span className="font-semibold text-white">What it cost. </span>
+                {r.price}
+              </p>
+              <Sources sources={r.sources} />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/*
+        THE REVERSAL SITS AFTER THE REFUSALS AND IS NOT ONE OF THEM (E21/S5).
+        Its own heading, its own array, and a lede saying what kind of entry it
+        is — because a reader who meets it inside the refusals learns that this
+        page counts a relaxation as a refusal, which is the one thing it cannot
+        afford to be caught doing. The refusals heading above counts
+        METHOD_REFUSALS and this section cannot change that number.
+      */}
+      <section className="mt-14">
+        <h2 className="font-display text-2xl font-semibold" style={{ color: INK }}>
+          {numberWordLeading(METHOD_REVERSALS.length)}{" "}
+          {METHOD_REVERSALS.length === 1 ? "reversal" : "reversals"}
+        </h2>
+        <p className="mt-4 text-[15px] leading-relaxed text-neutral-300">
+          Not a refusal. A constraint this project held, then deliberately relaxed — with what the
+          relaxation bought and what it cost. A page that only ever tightens is a page whose rules
+          were never tested against anything the project wanted.
+        </p>
+        <div className="mt-6 space-y-10">
+          {METHOD_REVERSALS.map((r) => (
+            <div key={r.id} className="border-l-2 border-white/12 pl-5">
+              <h3 className="font-display text-lg font-semibold text-white">{r.what}</h3>
+              <p className="mt-1 text-[0.62rem] font-bold uppercase tracking-[0.22em] text-muted">
+                Relaxed: {r.rule}
+              </p>
+              {r.kind === "inferred" ? <InferenceMark /> : null}
+              <p className="mt-3 text-[15px] leading-relaxed text-neutral-300">{r.reversal}</p>
+              <p className="mt-3 text-[15px] leading-relaxed text-neutral-300">
+                <span className="font-semibold text-white">What it bought. </span>
+                {r.bought}
+              </p>
               <p className="mt-3 text-[15px] leading-relaxed text-neutral-300">
                 <span className="font-semibold text-white">What it cost. </span>
                 {r.price}

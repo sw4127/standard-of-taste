@@ -527,6 +527,71 @@ export const METHOD_REFUSALS: MethodRefusal[] = [
 ];
 
 /**
+ * A REVERSAL, WHICH IS NOT A REFUSAL (E21/S5, Track U4 — RT-Z5 (2026-09-16) (b)).
+ *
+ * WHY IT IS A SEPARATE TYPE AND A SEPARATE SECTION. This page is organised
+ * around constraints this project held. On 2026-09-16 it deliberately RELAXED
+ * one — D1, the rule that the product describes what you did and never what you
+ * are, and the rule the paid personality quiz was killed under. Filing that
+ * among the refusals would be a false statement about the record: it would make
+ * a page of seven refusals read as eight, and the eighth would be the one entry
+ * that is not a refusal at all. The heading counts `METHOD_REFUSALS`, so a
+ * reversal placed in that array would silently change a number the page states
+ * about itself — the defect this page has already shipped once, when a typed
+ * count of four sat above a list of six.
+ *
+ * A PAGE OF SEVEN REFUSALS THAT THEN ADMITS ONE REVERSAL IS MORE CREDIBLE THAN
+ * A PAGE OF EIGHT REFUSALS. That is the argument for publishing it at all, and
+ * it is the MRD's (§6.2). A project that only ever tightens is a project whose
+ * rules were never tested against anything it wanted.
+ *
+ * THE SHAPE BORROWS THE REFUSAL'S DISCIPLINE AND ADDS ONE FIELD. A refusal
+ * states what it cost. A reversal has to state what it cost AND what it bought,
+ * because a relaxation with no stated gain is not a decision either — it is a
+ * rule that was inconvenient.
+ */
+export interface MethodReversal {
+  id: string;
+  /** What was relaxed, as the page's heading for it. */
+  what: string;
+  /** The rule that was relaxed — "D1". */
+  rule: string;
+  /** The relaxation itself, and its boundary. */
+  reversal: string;
+  /** What the relaxation bought. Never "nothing". */
+  bought: string;
+  /** What it cost. Never "nothing". */
+  price: string;
+  kind: ClaimKind;
+  sources: ClaimSource[];
+}
+
+export const METHOD_REVERSALS: MethodReversal[] = [
+  {
+    id: "reversal-d1-on-one-surface",
+    what: "Speaking about the person, on one surface only",
+    rule: "D1 — the product describes what you did, never what you are",
+    kind: "quoted",
+    reversal:
+      "Every reading on this site is a statement about a performance. That was a rule rather than a habit: it is written into the constitution as D1, and it is why a five-tap personality verdict with no measurement behind it was killed rather than improved. On 2026-09-16 the owner relaxed it, against the engineering recommendation on file. The card that turns a measured threshold into words a person can use may speak to the reader about themselves — and D1 is suspended for the prompt card, and for nothing else. Every instrument readout on this site still says only what you did.",
+    bought:
+      "The one thing here anybody would keep. The measurement ends in a threshold in cents, the number is evidence, and it had been standing in the position of the deliverable — which is why a technically sound instrument was neither enjoyable to use nor convincing to look at. A sentence that is only about a performance cannot be the thing somebody leaves with.",
+    price:
+      "This project can no longer say that every sentence it shows is about performance. That was true, it was one of the plainest things the product could say about itself, and it is now false — the exception is real even though it is one surface wide. The constitution also gains an exception, which is complexity it did not have, and every surface built from here has to ask which side of it it falls on. The rule that survives is narrower and harder to hold: offer, do not assert.",
+    sources: [
+      {
+        path: "CLAUDE.md",
+        anchor: "D1 is suspended for the prompt card, and for nothing else",
+      },
+      {
+        path: "docs/rt-answers-2026-09-16.md",
+        anchor: "The card may speak about the person",
+      },
+    ],
+  },
+];
+
+/**
  * One list for the verifier, so claims and refusals are held to the SAME rule.
  *
  * Two ledgers checked by two copies of the same logic is how the rung tables
@@ -548,6 +613,18 @@ export function verifiableEntries(): MethodClaim[] {
       kind: f.kind,
       text: `${f.finding} ${f.consequence}`,
       sources: f.sources,
+    })),
+    /*
+     * The reversal joins the SAME list, for the reason the refusals did: two
+     * ledgers checked by two copies of one rule is how the rung tables came to
+     * disagree with each other. Its verifiable text is everything the reader
+     * sees of it.
+     */
+    ...METHOD_REVERSALS.map((r) => ({
+      id: r.id,
+      kind: r.kind,
+      text: `${r.what} ${r.reversal} ${r.bought} ${r.price}`,
+      sources: r.sources,
     })),
   ];
 }

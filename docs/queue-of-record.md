@@ -52,8 +52,8 @@ over any blueprint. **No fifth instrument is added.**
 
 | Track | What it is | Status |
 |---|---|---|
-| **U** — the ruling record | The 2026-09-16 rulings in a tracked file · the scoped D1 amendment · the MRD tracked and its labels guarded · `/method`'s first reversal | **OPEN** — in progress. U1 done; U2 unblocked by RT-Z9 (a) |
-| **T** — the prompt card | The terminal surface: three flaw families mapped to three prompt axes, assembled from templates, sitting above the threshold readout per RT-Z7 (b) | **OPEN, blocked by U2.** No card copy may be written before the D1 amendment is recorded |
+| **U** — the ruling record | The 2026-09-16 rulings in a tracked file · the scoped D1 amendment · the MRD tracked and its labels guarded · `/method`'s first reversal | **done** 2026-09-16. All four items shipped: `docs/rt-answers-2026-09-16.md` · the D1 amendment in `CLAUDE.md` with the memo stamped and the price held by `d1-amendment.test.ts` · the MRD tracked, 13 claims labelled, `mrd-labels.test.ts` recounting them · `/method` reads "Seven refusals" then "One reversal", two ledgers held disjoint |
+| **T** — the prompt card | The terminal surface: three flaw families mapped to three prompt axes, assembled from templates, sitting above the threshold readout per RT-Z7 (b) | **OPEN, and UNBLOCKED** — U2 landed 2026-09-16, so card copy may now be written. Five items: the mapping module · the templates · the surface · copy-to-clipboard and the on-surface statement · the guards |
 
 ---
 

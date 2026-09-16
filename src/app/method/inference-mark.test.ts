@@ -1,6 +1,11 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { METHOD_CLAIMS, METHOD_FINDINGS, METHOD_REFUSALS } from "@/content/method/claims";
+import {
+  METHOD_CLAIMS,
+  METHOD_FINDINGS,
+  METHOD_REFUSALS,
+  METHOD_REVERSALS,
+} from "@/content/method/claims";
 
 /**
  * THE INFERENCE MARKING CANNOT BE DROPPED (E9/S5 — RT-159a's condition).
@@ -43,6 +48,14 @@ const RENDERED = [
   { collection: "METHOD_SECTIONS", mapExpr: "sectionClaims(section).map(", binding: "c", prose: "text", entries: METHOD_CLAIMS.length },
   { collection: "METHOD_REFUSALS", mapExpr: "METHOD_REFUSALS.map(", binding: "r", prose: "refusal", entries: METHOD_REFUSALS.length },
   { collection: "METHOD_FINDINGS", mapExpr: "METHOD_FINDINGS.map(", binding: "f", prose: "finding", entries: METHOD_FINDINGS.length },
+  /*
+   * E21/S5. The reversal is a fourth ledger, and this guard caught it on the
+   * run that added it — which is what the "covers every collection" test was
+   * written for after the list went stale within one slice. It carries the
+   * mark for the same reason the others do: a reversal can be a reading of
+   * the record as easily as a quotation of it.
+   */
+  { collection: "METHOD_REVERSALS", mapExpr: "METHOD_REVERSALS.map(", binding: "r", prose: "reversal", entries: METHOD_REVERSALS.length },
 ];
 
 describe("the /method page marks every inference it renders", () => {

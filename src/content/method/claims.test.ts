@@ -6,6 +6,7 @@ import {
   METHOD_FINDINGS,
   METHOD_SECTIONS,
   METHOD_REFUSALS,
+  METHOD_REVERSALS,
   verifiableEntries,
   sectionClaims,
   type MethodClaim,
@@ -95,6 +96,56 @@ describe("the /method claim ledger", () => {
       expect(r.rule.trim().length, `${r.id} names no rule`).toBeGreaterThan(0);
       expect(r.price.trim().length, `${r.id} states no price`).toBeGreaterThan(40);
       expect(nothing.test(r.price), `${r.id} claims the refusal was free`).toBe(false);
+    }
+  });
+
+  /**
+   * A REVERSAL IS NOT A REFUSAL, AND THE PAGE MAY NOT COUNT IT AS ONE (E21/S5).
+   *
+   * The refusals heading renders `METHOD_REFUSALS.length` as a word. That was
+   * itself a fix: the number had been TYPED, said four above a list of six, and
+   * stayed wrong for two working sessions because every guard here inspected
+   * the entries and none read the heading. Slotting it fixed the drift and
+   * created a new way to be wrong — an entry pushed into that array now changes
+   * a number the page states about itself, silently and correctly.
+   *
+   * A relaxation filed among the refusals would do exactly that: seven refusals
+   * would become eight, and the eighth would be the one entry on the page that
+   * is not a refusal. So the two ledgers are held disjoint by id AND by the
+   * text a reader actually sees, and the count is asserted against the refusals
+   * alone.
+   */
+  it("keeps reversals out of the refusals, by id and by rendered text", () => {
+    expect(METHOD_REVERSALS.length, "there is no reversal, so this checks nothing").toBeGreaterThan(0);
+    expect(METHOD_REFUSALS.length, "there are no refusals, so this checks nothing").toBeGreaterThan(3);
+    const refusalIds = new Set(METHOD_REFUSALS.map((r) => r.id));
+    const both = METHOD_REVERSALS.filter((r) => refusalIds.has(r.id));
+    expect(both.map((r) => r.id), "a reversal shares an id with a refusal").toEqual([]);
+    const refusalText = METHOD_REFUSALS.map((r) => `${r.what} ${r.refusal}`).join(" ");
+    const smuggled = METHOD_REVERSALS.filter((r) => refusalText.includes(r.what));
+    expect(
+      smuggled.map((r) => r.id),
+      "a reversal's heading appears inside the refusals. Whatever array it is declared in, the " +
+        "reader meets it as a refusal, and the page's count of its own refusals becomes a false " +
+        "statement about the record:",
+    ).toEqual([]);
+  });
+
+  /**
+   * BOTH HALVES OR NEITHER. A refusal states what it cost; a reversal has to
+   * state what it cost AND what it bought, because a relaxation with no stated
+   * gain is not a decision — it is a rule that turned out to be inconvenient.
+   * The shapes that mean "nothing" are refused by name, as they are for the
+   * refusals' price.
+   */
+  it("attaches a real price and a real gain to every reversal", () => {
+    const nothing = /^(?:\s*)(?:none|nothing|no cost|n\/?a)\b/i;
+    for (const r of METHOD_REVERSALS) {
+      expect(r.rule.trim().length, `${r.id} names no rule`).toBeGreaterThan(0);
+      expect(r.price.trim().length, `${r.id} states no price`).toBeGreaterThan(40);
+      expect(r.bought.trim().length, `${r.id} states no gain`).toBeGreaterThan(40);
+      expect(nothing.test(r.price), `${r.id} claims the reversal was free`).toBe(false);
+      expect(nothing.test(r.bought), `${r.id} claims the reversal bought nothing`).toBe(false);
     }
   });
 
@@ -355,6 +406,12 @@ describe("the method page characterises no one", () => {
       ...METHOD_CLAIMS.map((c) => c.text),
       ...METHOD_REFUSALS.flatMap((r) => [r.what, r.refusal, r.price]),
       ...METHOD_FINDINGS.flatMap((f) => [f.finding, f.consequence]),
+      // E21/S5: the reversal is a new surface on this page and the rule is
+      // about the PAGE, not about one array. A guard scoped to the ledgers that
+      // existed when it was written stops covering the page the moment the page
+      // grows — which is how two whole modules came to sit outside the copy
+      // census in E18.
+      ...METHOD_REVERSALS.flatMap((r) => [r.what, r.reversal, r.bought, r.price]),
     ];
     expect(rendered.length, "the ledger is empty, so this checks nothing").toBeGreaterThan(10);
     const found: string[] = [];
