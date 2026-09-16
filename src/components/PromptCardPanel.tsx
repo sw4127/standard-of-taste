@@ -25,7 +25,14 @@
  */
 import { useCallback, useMemo, useRef, useState } from "react";
 import type { StaircaseResult } from "@/engine/staircase-session";
-import { cardSections, CARD_PASTE } from "@/content/card/copy";
+import {
+  cardSections,
+  CARD_COPY_DONE,
+  CARD_COPY_IDLE,
+  CARD_COPY_MANUAL,
+  CARD_KICKER,
+  CARD_PASTE,
+} from "@/content/card/copy";
 import { CARD_STATEMENT } from "@/content/card/statement";
 
 export default function PromptCardPanel({
@@ -91,7 +98,7 @@ export default function PromptCardPanel({
       className="mt-8 rounded-2xl border border-white/12 bg-white/[0.04] px-5 py-6"
     >
       <p className="text-[0.62rem] font-bold uppercase tracking-[0.22em]" style={{ color: accent }}>
-        Your prompt card
+        {CARD_KICKER}
       </p>
 
       <div className="mt-5 space-y-6">
@@ -113,7 +120,7 @@ export default function PromptCardPanel({
                   data-testid="prompt-card-copy"
                   className="mt-2.5 rounded-full border border-white/20 px-3.5 py-1.5 text-[0.62rem] font-bold uppercase tracking-[0.18em] text-neutral-200 transition hover:border-white/40 hover:text-white active:scale-[0.98]"
                 >
-                  {state === "copied" ? "Copied" : state === "manual" ? "Selected — press copy" : "Copy"}
+                  {state === "copied" ? CARD_COPY_DONE : state === "manual" ? CARD_COPY_MANUAL : CARD_COPY_IDLE}
                 </button>
               </div>
             ) : (

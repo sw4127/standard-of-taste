@@ -43,6 +43,34 @@ export const CARD_WORTH = "What that is worth in a prompt";
 export const CARD_PASTE = "Paste this";
 
 /**
+ * THE PANEL'S CHROME, AND IT IS HERE RATHER THAN IN THE COMPONENT (E21/T-S6).
+ *
+ * PROSE WRITTEN INTO A COMPONENT IS PROSE OUTSIDE THE DECK. This repository has
+ * paid for that twice: `landingLead` was moved out of JSX in E11/S2 for exactly
+ * this reason, and the method page's framing paragraphs followed in E20/S1
+ * after the copy deck was found carrying a SECOND copy of them. A string in JSX
+ * is invisible to the voice gate, invisible to the census, and invisible to the
+ * four rules this card is held to — so the card's label and its button states
+ * live here, where every scan can see them.
+ *
+ * `CARD_COPY_MANUAL` is the one that matters. It is shown when the clipboard
+ * API refuses, which it does whenever the document is unfocused, and it is
+ * therefore the label a large share of readers will actually see.
+ */
+export const CARD_KICKER = "Your prompt card";
+export const CARD_COPY_IDLE = "Copy";
+export const CARD_COPY_DONE = "Copied";
+export const CARD_COPY_MANUAL = "Selected — press copy";
+
+/** Every chrome string the panel renders, for the scans that must see them. */
+export const CARD_CHROME = [
+  CARD_KICKER,
+  CARD_COPY_IDLE,
+  CARD_COPY_DONE,
+  CARD_COPY_MANUAL,
+] as const;
+
+/**
  * One line per axis for the first section: what was measured, in its own unit.
  *
  * THE NUMBER IS THE SUBJECT, not decoration around a compliment. A reader who

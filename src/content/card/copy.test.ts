@@ -34,7 +34,8 @@ import { eligibleSources } from "@/engine/staircase-pool";
 import { promptCard } from "@/engine/prompt-card";
 import { checkVoice, formatVoiceReport, type VoiceString } from "@/content/voice";
 import { PROMPT_AXES } from "./axes";
-import { cardSections, pasteLine, separatesLine, tagsFor, worthLine } from "./copy";
+import { CARD_CHROME, cardSections, pasteLine, separatesLine, tagsFor, worthLine } from "./copy";
+import { CARD_STATEMENT } from "./statement";
 import { familyLabel, thresholdCardFigure } from "@/content/staircase/copy";
 
 type Placement = "inside" | "far-better" | "far-worse";
@@ -88,13 +89,24 @@ function allCards() {
   return out;
 }
 
-/** Every rendered string of every card, with where it came from. */
+/**
+ * Every rendered string of every card, with where it came from.
+ *
+ * THE PANEL'S CHROME IS IN HERE TOO (E21/T-S6). Its label and its three button
+ * states are rendered to the same reader as the card's sentences, so they are
+ * held to the same four rules. They lived in the component's JSX until T-S6,
+ * where every one of these scans was blind to them.
+ */
 function allStrings(): { surface: string; text: string }[] {
-  return allCards().flatMap(({ name, results }) =>
-    cardSections(results).flatMap((s, i) =>
-      [s.heading, ...s.lines].map((text, j) => ({ surface: `card/${name}/${i}.${j}`, text })),
+  return [
+    ...CARD_CHROME.map((text, i) => ({ surface: `card/chrome/${i}`, text })),
+    { surface: "card/statement", text: CARD_STATEMENT },
+    ...allCards().flatMap(({ name, results }) =>
+      cardSections(results).flatMap((s, i) =>
+        [s.heading, ...s.lines].map((text, j) => ({ surface: `card/${name}/${i}.${j}`, text })),
+      ),
     ),
-  );
+  ];
 }
 
 /* ------------------------------------------------------------------ *
