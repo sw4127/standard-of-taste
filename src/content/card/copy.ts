@@ -32,9 +32,10 @@
  * NOT YET THROUGH A WRITING PASS. New strings by engineering, gate-clean rather
  * than good. Commission them before this ships anywhere that matters.
  */
-import type { CardAxis, PromptCard } from "@/engine/prompt-card";
+import type { StaircaseResult } from "@/engine/staircase-session";
+import { promptCard, type CardAxis, type PromptCard } from "@/engine/prompt-card";
 import { PROMPT_AXES } from "./axes";
-import { familyLabel, quantity } from "@/content/staircase/copy";
+import { familyLabel, thresholdCardFigure } from "@/content/staircase/copy";
 
 /** The card's three headings. Slots, so a writer can move them as a set. */
 export const CARD_SEPARATES = "What your ear separates";
@@ -48,16 +49,25 @@ export const CARD_PASTE = "Paste this";
  * disagrees with the sentence can check it against the threshold printed below
  * the card, which is the entire reason the card sits ABOVE the readout rather
  * than instead of it (RT-Z7 b).
+ *
+ * `figure` IS THE SCREEN'S OWN FIGURE, PASSED IN, AND THAT IS NOT A STYLE
+ * CHOICE. The first version formatted `axis.threshold` itself, so the card read
+ * "you were still calling it at 7.5 cents" directly above a headline reading
+ * "12.5 cents" — the fitted threshold and the caught rung, both true, both
+ * about the same sitting, and irreconcilable to anybody looking at them
+ * together. Found by reading the rendered page. `thresholdCardFigure` is the
+ * product's one canonical figure for a session, already shared by the screen
+ * and the share image for exactly this reason, and the card now takes it too.
  */
-export function separatesLine(axis: CardAxis): string {
+export function separatesLine(axis: CardAxis, figure: string): string {
   const name = familyLabel(axis.family).toLowerCase();
   switch (axis.state) {
     case "fine":
-      return `${cap(name)} is something you hear finely. You were still calling it at ${quantity(axis.threshold!, axis.unit)}.`;
+      return `${cap(name)} is something you hear finely. You were still calling it at ${figure}.`;
     case "coarse":
-      return `${cap(name)} had to move as far as ${quantity(axis.threshold!, axis.unit)} before you called it.`;
+      return `${cap(name)} had to move as far as ${figure} before you called it.`;
     case "measured":
-      return `${cap(name)}: you were calling it at ${quantity(axis.threshold!, axis.unit)}. This ladder is too short to say how fine that is.`;
+      return `${cap(name)}: you were calling it at ${figure}. This ladder is too short to say how fine that is.`;
     case "finer-than-measured":
       return `${cap(name)}: you caught the gentlest version this instrument can make. Your ear is somewhere past where it can follow.`;
     case "coarser-than-measured":
@@ -127,12 +137,22 @@ export interface CardSection {
   lines: string[];
 }
 
-export function cardSections(card: PromptCard): CardSection[] {
+export function cardSections(results: readonly StaircaseResult[]): CardSection[] {
+  const card = promptCard(results);
   if (card.axes.length === 0) return [];
+  /*
+   * PAIRED BY FAMILY rather than by position. `promptCard` collapses two
+   * sittings on one family, so the two lists are not the same length, and a
+   * positional zip would put one family's figure beside another's sentence.
+   */
+  const figures = new Map(results.map((r) => [r.family, thresholdCardFigure(r)]));
   const worth = card.axes.map(worthLine).filter((l): l is string => l !== null);
   const paste = pasteLine(card);
   const out: CardSection[] = [
-    { heading: CARD_SEPARATES, lines: card.axes.map(separatesLine) },
+    {
+      heading: CARD_SEPARATES,
+      lines: card.axes.map((a) => separatesLine(a, figures.get(a.family) ?? "")),
+    },
   ];
   if (worth.length > 0) out.push({ heading: CARD_WORTH, lines: worth });
   if (paste.length > 0) out.push({ heading: CARD_PASTE, lines: [paste] });

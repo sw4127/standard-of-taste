@@ -35,6 +35,7 @@ import { promptCard } from "@/engine/prompt-card";
 import { checkVoice, formatVoiceReport, type VoiceString } from "@/content/voice";
 import { PROMPT_AXES } from "./axes";
 import { cardSections, pasteLine, separatesLine, tagsFor, worthLine } from "./copy";
+import { familyLabel, thresholdCardFigure } from "@/content/staircase/copy";
 
 type Placement = "inside" | "far-better" | "far-worse";
 
@@ -65,28 +66,32 @@ const PLACEMENTS: Placement[] = ["inside", "far-better", "far-worse"];
 
 /** Every card this product can actually produce, from real sessions. */
 function allCards() {
-  const out: { name: string; card: ReturnType<typeof promptCard> }[] = [];
+  const out: { name: string; card: ReturnType<typeof promptCard>; results: StaircaseResult[] }[] = [];
   let seed = 101;
   for (const p of PLACEMENTS) {
-    out.push({ name: `pitch/${p}`, card: promptCard([play(PITCH, undefined, p, (seed += 2))]) });
-    out.push({ name: `timing/${p}`, card: promptCard([play(TIMING, undefined, p, (seed += 2))]) });
-    out.push({ name: `lossy/${p}`, card: promptCard([play(LOSSY, SOURCES[0], p, (seed += 2))]) });
-    out.push({
-      name: `three/${p}`,
-      card: promptCard([
-        play(PITCH, undefined, p, (seed += 2)),
-        play(TIMING, undefined, p, (seed += 2)),
-        play(LOSSY, SOURCES[1], p, (seed += 2)),
-      ]),
-    });
+    for (const [name, results] of [
+      [`pitch/${p}`, [play(PITCH, undefined, p, (seed += 2))]],
+      [`timing/${p}`, [play(TIMING, undefined, p, (seed += 2))]],
+      [`lossy/${p}`, [play(LOSSY, SOURCES[0], p, (seed += 2))]],
+      [
+        `three/${p}`,
+        [
+          play(PITCH, undefined, p, (seed += 2)),
+          play(TIMING, undefined, p, (seed += 2)),
+          play(LOSSY, SOURCES[1], p, (seed += 2)),
+        ],
+      ],
+    ] as [string, StaircaseResult[]][]) {
+      out.push({ name, card: promptCard(results), results });
+    }
   }
   return out;
 }
 
 /** Every rendered string of every card, with where it came from. */
 function allStrings(): { surface: string; text: string }[] {
-  return allCards().flatMap(({ name, card }) =>
-    cardSections(card).flatMap((s, i) =>
+  return allCards().flatMap(({ name, results }) =>
+    cardSections(results).flatMap((s, i) =>
       [s.heading, ...s.lines].map((text, j) => ({ surface: `card/${name}/${i}.${j}`, text })),
     ),
   );
@@ -193,7 +198,7 @@ describe("the prompt card's copy", () => {
     };
     const [axis] = promptCard([blank]).axes;
     expect(axis.state).toBe("not-enough");
-    const line = separatesLine(axis);
+    const line = separatesLine(axis, thresholdCardFigure(blank));
     expect(line.toLowerCase()).toContain("could not tell");
     expect(tagsFor(axis), "an axis that resolved nothing contributed a tag to the paste line").toEqual([]);
     /*
@@ -234,12 +239,44 @@ describe("the prompt card's copy", () => {
     }
   });
 
+  /**
+   * THE CARD AND THE SCREEN MAY NOT DESCRIBE ONE SITTING WITH TWO NUMBERS.
+   *
+   * Found by reading the rendered page: the card said "still calling it at 7.5
+   * cents" directly above a headline reading "12.5 cents". Both were true — the
+   * fitted threshold and the rung actually caught — and irreconcilable to
+   * anybody looking at them together. `thresholdCardFigure` is the product's
+   * one canonical figure, already shared by the screen and the share image, and
+   * the card now takes it rather than formatting its own.
+   */
+  it("quotes the same figure the screen leads with", () => {
+    let checked = 0;
+    for (const { name, results } of allCards()) {
+      const sections = cardSections(results);
+      if (sections.length === 0) continue;
+      const separates = sections[0].lines;
+      for (const r of results) {
+        const figure = thresholdCardFigure(r);
+        if (figure === "no reading") continue;
+        const line = separates.find((l) => l.toLowerCase().startsWith(familyLabel(r.family).toLowerCase()));
+        if (!line || !/\d/.test(line)) continue;
+        checked++;
+        expect(
+          line,
+          `${name}: the card prints a number the screen does not. The screen leads with "${figure}" ` +
+            `and the card says "${line}".`,
+        ).toContain(figure);
+      }
+    }
+    expect(checked, "no card line carried a number, so this checks nothing").toBeGreaterThan(2);
+  });
+
   it("prints three real cards", () => {
     const show = ["pitch/inside", "three/inside", "lossy/far-worse"];
-    for (const { name, card } of allCards()) {
+    for (const { name, results } of allCards()) {
       if (!show.includes(name)) continue;
       console.log(`[E21/T-S3] ${name}`);
-      for (const s of cardSections(card)) {
+      for (const s of cardSections(results)) {
         console.log(`  ${s.heading}`);
         for (const l of s.lines) console.log(`    ${l}`);
       }

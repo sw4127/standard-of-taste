@@ -48,6 +48,8 @@ import { FLAWS_HREF, FLAWS_INVITE } from "@/content/flaw-families";
 import AcrossSessions from "@/components/AcrossSessions";
 import AcrossTime from "@/components/AcrossTime";
 import ExpertPanel from "@/components/ExpertPanel";
+import PromptCardPanel from "@/components/PromptCardPanel";
+import { cardHistory } from "@/lib/card-history";
 import type { StoredPayload } from "@/lib/result-store";
 
 const ICE = THRESHOLD_VIOLET;
@@ -159,8 +161,17 @@ export default function ThresholdResult({
           lines and "6.3–17.7 cents" breaking after the range reads fine. That
           is why this uses a plain size and the card computes one.
         */}
+        {/*
+          THE CARD ABOVE THE NUMBER (PM ruling RT-Z7 (2026-09-16) (b)).
+          Both are shown; the ordering carries the diagnosis. The number is
+          evidence and the card is the deliverable, and the evidence stood in
+          the deliverable's place for three months. The expert view below is
+          untouched.
+        */}
+        <PromptCardPanel accent={ICE} results={cardHistory(result)} />
+
         <p
-          className="mt-5 font-display text-5xl font-semibold leading-[1.05] tracking-tight"
+          className="mt-8 font-display text-5xl font-semibold leading-[1.05] tracking-tight"
           style={{ color: ICE, textShadow: `0 0 60px ${ICE_GLOW}` }}
         >
           {thresholdCardFigure(result)}
