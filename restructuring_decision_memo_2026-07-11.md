@@ -21,6 +21,8 @@
 
 ## 2. Core decision — D1: Gym, not Mirror
 
+**[D1 AMENDED 2026-09-16 — kept verbatim, nothing below is deleted. D1 is SUSPENDED for one named surface, the prompt card, and stands unchanged everywhere else. The amendment, with what it repeals, where the repeal applies, what it bought and what it cost, is in `CLAUDE.md` under "D1 amendment"; the rulings are `docs/rt-answers-2026-09-16.md` (RT-Z5 b, RT-Z9 a, RT-Z10 a). This memo had never been stamped for the D4 amendment either — that stamp lives only in CLAUDE.md, which is recorded here so the omission is visible rather than repeated.]**
+
 The product **evaluates and cultivates taste** against Hume's five criteria (delicacy, practice, comparison, freedom from prejudice, good sense). It does **not** predict personality, mood, or psychological states.
 
 - Rationale: Hume's essay is an *evaluation* theory, not a prediction theory. The gym reading is more Humean, requires no ground-truth datasets that don't exist (myPersonality closed; LFM-2b withdrawn; Big Five↔music correlations cap at r≈0.2–0.3), and dissolves the GIGO critique instead of relocating it.

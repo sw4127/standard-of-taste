@@ -3,7 +3,7 @@
 ## Pivot of record (2026-07-11) — READ FIRST
 **`restructuring_decision_memo_2026-07-11.md` is the authoritative product strategy.** Approved by the PM/owner in session zero (2026-07-11). It SUPERSEDES the sections now parked under "Legacy (superseded — kept for history)" at the bottom of this file, plus the spec sections stamped `SUPERSEDED` in `vibe_check_mvp_spec.md`. The $3.99 viral-funnel model is concluded dead (memo §0, C1) — do not propose reviving, preserving, or incrementally fixing it.
 
-**What we're building now (memo D1–D6):** a **taste gym** — the product *evaluates and cultivates* taste against Hume's five criteria; it never predicts personality, mood, or psychological states (D1). Measurement = performance tasks where the user can be wrong, not self-report (D2). **v1 flagship = the Prestige-Bias Test**; the delicacy battery ships second but is *visible-and-locked* in v1 (D3). Free = the assessment + headline scores; paid = the training arc / progression (D4; pricing open, memo §9.1). **[D4 AMENDED 2026-08-14 — there is no paid tier. The arc is free and validity-gated. See "D4 amendment" below; this clause is kept verbatim per the keep-intact rule.]** Hume narrates each instrument — depth is unlocked, never buried (D5). Analytics = a psychometrics pipeline (IRT, signal detection, calibration/Brier); the proprietary asset is our self-generated response dataset (D6). Project identity: resume-competitive product artifact; revenue = proof of viability, not income (memo C4).
+**What we're building now (memo D1–D6):** a **taste gym** — the product *evaluates and cultivates* taste against Hume's five criteria; it never predicts personality, mood, or psychological states (D1). **[D1 AMENDED 2026-09-16 — suspended for ONE named surface, the prompt card, and intact everywhere else. See "D1 amendment" below; this clause is kept verbatim per the keep-intact rule.]** Measurement = performance tasks where the user can be wrong, not self-report (D2). **v1 flagship = the Prestige-Bias Test**; the delicacy battery ships second but is *visible-and-locked* in v1 (D3). Free = the assessment + headline scores; paid = the training arc / progression (D4; pricing open, memo §9.1). **[D4 AMENDED 2026-08-14 — there is no paid tier. The arc is free and validity-gated. See "D4 amendment" below; this clause is kept verbatim per the keep-intact rule.]** Hume narrates each instrument — depth is unlocked, never buried (D5). Analytics = a psychometrics pipeline (IRT, signal detection, calibration/Brier); the proprietary asset is our self-generated response dataset (D6). Project identity: resume-competitive product artifact; revenue = proof of viability, not income (memo C4).
 
 **Standing rules (every session):**
 - Every proposal must cite the memo decision (D1–D6) or guardrail (N1–N3) it serves; if none applies, say so instead of proposing it.
@@ -46,6 +46,23 @@ staircase stays in the Gym — is **unchanged**. What changed is one number insi
 rather than left to contradict the shipped product (N3).
 
 **Why (N2/N3):** revenue was never the point (memo C4 — revenue = proof of viability, not income), and a paywall on the training loop would have made the honest deliverable — *does your ear actually move* — the thing behind the wall. Any user-facing copy still promising a paid tier is a false claim and must be fixed on sight (this ruling's first casualty was `CALIBRATION_PHASE_LINE`).
+
+### D1 amendment — a SCOPED suspension, for one named surface (owner-approved 2026-09-16, PM rulings RT-Z5 (b) / RT-Z9 (a) / RT-Z10 (a))
+Appended, not overwritten. Amends **D1 only, and only on one surface**; D2, D3, D4, D5, D6 and N1–N3 are untouched, and **N3 is expressly not relaxed by it**. Full reasoning: `docs/rt-answers-2026-09-16.md` §2, §6 and §7. The brief it serves: `docs/mrd-prompt-card-2026-09-16.md` §6.
+
+**Was (memo D1), and it is still there to read — `restructuring_decision_memo_2026-07-11.md` §2:** *It does **not** predict personality, mood, or psychological states.*
+
+**What is repealed, and where. D1 is suspended for the prompt card, and for nothing else.** On that one surface the product may speak to the reader about what the reading might mean **for them** — what they have lived with, what they reach for, what they sit still for. **The surface says so on itself**, in words derived from this amendment rather than typed beside it.
+
+**Where D1 still stands, unchanged and unrelaxed:** every instrument readout. The Prestige, Delicacy, Threshold and Ranking results remain statements about performance and nothing else. That is not caution. **A card that speaks about the person is only worth reading because the measurement under it does not** — relax D1 there too and the card becomes one more piece of software telling somebody who they are, which is the product this one was pivoted away from.
+
+**The register that survives the repeal (RT-Z5, MRD §6.3): OFFER, DO NOT ASSERT.** *You have unresolved loss* is refused. *You chose the take with the slower decay every time — the one that lets the room finish speaking* is the target. The second still speaks to the person and claims nothing the session cannot support.
+
+**The carve-out (RT-Z10 a):** **no assertion about trauma, abuse, or mental health**, on any surface including the card. Not on D1 grounds, which are suspended there, but because that is the one class where being wrong lands on a person rather than on a number.
+
+**What it bought:** the product's only artifact anybody would keep. The measurement ends in a threshold in cents; the number is evidence, it had been standing in the position of the deliverable, and that single confusion is why a technically sound instrument is neither enjoyable to use nor convincing to look at.
+
+**What it cost, stated rather than glossed:** the product can no longer say that **every sentence it shows is about performance**. That was a true sentence and it is now false, and it was one of the plainest things this project could say about itself. The constitution also gains an exception, and an exception is more complex than a clean rule (N2) — every surface built from here has to ask which side of it it is on. The price is published on `/method` as that page's **first reversal**, kept visibly distinct from its refusals: a reversal filed as a refusal would be a false statement about the record.
 
 ## Roles
 - **The user is the Product Manager.** They drive product and design decisions; they are newer to engineering, so explain tradeoffs in plain language and teach as you go.
