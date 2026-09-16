@@ -9,7 +9,7 @@
  * own finding ③ names that as the project's largest instance of its signature
  * defect, and the planning file is the instance.
  *
- * THE RULE THE GUARD ENFORCES: every track letter from both phases appears in
+ * THE RULE THE GUARD ENFORCES: every track letter from every phase appears in
  * `docs/queue-of-record.md`, and each carries a status. A track cannot leave by
  * being forgotten — only by being marked done or killed, which is a visible act
  * in a diff.
@@ -28,6 +28,17 @@ const QUEUE = "docs/queue-of-record.md";
 /** Phase 2's tracks, then Phase 3's. Letters are the blueprints' own. */
 const PHASE_TWO = ["G", "H", "I", "J", "K", "L", "M"];
 const PHASE_THREE = ["N", "O", "P", "Q", "R", "S"];
+/*
+ * PHASE 4 (2026-09-16) HAS NO BLUEPRINT AT ALL, WHICH IS WHY IT IS HERE.
+ *
+ * Tracks T and U were opened by an activation prompt — a file on one machine,
+ * pasted into one session, which is a weaker carrier than the untracked
+ * blueprints this guard already exists to compensate for. A blueprint at least
+ * survives on disk. So the two letters go into the roster the moment they are
+ * opened rather than when they are finished, and the queue has to account for
+ * them or the suite goes red.
+ */
+const PHASE_FOUR = ["T", "U"];
 
 /** Words that count as a status. Anything else is not an accounting. */
 const STATUSES = ["done", "OPEN", "PARTLY DONE", "killed", "moot"];
@@ -40,22 +51,22 @@ describe("the queue of record accounts for every planned track", () => {
     expect(queue.length, "the queue is empty").toBeGreaterThan(2000);
   });
 
-  it("names every track from both phases", () => {
+  it("names every track from every phase", () => {
     const missing: string[] = [];
-    for (const letter of [...PHASE_TWO, ...PHASE_THREE]) {
+    for (const letter of [...PHASE_TWO, ...PHASE_THREE, ...PHASE_FOUR]) {
       // The table writes them as "**G** — persistence".
       if (queue.indexOf(`**${letter}** —`) === -1) missing.push(letter);
     }
     expect(
       missing,
-      "these tracks are in a blueprint and not in the tracked queue, so they exist only in a file a " +
-        "fresh clone cannot open:" + NL + missing.join(", "),
+      "these tracks were opened somewhere and are not in the tracked queue, so they exist only in " +
+        "a file a fresh clone cannot open:" + NL + missing.join(", "),
     ).toEqual([]);
   });
 
   it("gives every track a status that means something", () => {
     const unstated: string[] = [];
-    for (const letter of [...PHASE_TWO, ...PHASE_THREE]) {
+    for (const letter of [...PHASE_TWO, ...PHASE_THREE, ...PHASE_FOUR]) {
       const at = queue.indexOf(`**${letter}** —`);
       if (at === -1) continue;
       const row = queue.slice(at, queue.indexOf(NL, at));

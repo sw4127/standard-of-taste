@@ -1,4 +1,4 @@
-# The queue of record — every track from Phase 2 and Phase 3, and where it stands
+# The queue of record — every track from Phase 2 onward, and where it stands
 
 **This file is TRACKED. The blueprints it draws from are not.**
 
@@ -38,6 +38,22 @@ and risked burying what was already planned.
 | **Q** — governance debt | Q1 rulings into a tracked file · Q2 the expertise line · Q3 bind the untracked blueprints | **Q1 and Q2 done.** Every settled ruling from both blueprints, plus the nine made on 2026-09-13, is in `docs/rt-answers-2026-09-13.md` — tracked. **Q3 is an owner decision and a one-way door**: binding means tracking means publishing, and this repository is public while those files hold strategy and the owner's own assessment |
 | **R** — the closing surface | Falsified registry, data-model page, Lab honesty | **done** — 33 entries live at `/lab/falsified` |
 | **S** — the kill list, published | State the kills on the page, not in a document | **done** 2026-09-13. The Taste Index and the Taste Gem were published as refusals five and six. The third line — that no further instrument is added — was deliberately held, because RT-P1 had queued a mock for one and publishing it would have made `/method` false the day the mock was approved. RT-P1 closed as killed (RT-3 a), the hold released, and the line shipped **inside** the seventh refusal rather than beside it: it carries the arithmetic that killed the candidate instead of a preference for restraint. `/method` now reads "Seven refusals", slotted from the array rather than typed — it had said four above a list of six until the rendered page was read. **Track S is closed and Phase 3 has no further kill-list work** |
+
+---
+
+## Phase 4 — the readable output (opened 2026-09-16)
+
+**Why there is a Phase 4 at all.** The product ends in a threshold in cents. That number is
+*evidence*, and it has been standing in the position of the *deliverable* — which is why a
+technically sound instrument is neither enjoyable to use nor convincing to look at. The brief is
+`docs/mrd-prompt-card-2026-09-16.md`, tracked by RT-Z6 (2026-09-16); the rulings that opened it are
+in **`docs/rt-answers-2026-09-16.md`**, which is the newest rulings of record and is authoritative
+over any blueprint. **No fifth instrument is added.**
+
+| Track | What it is | Status |
+|---|---|---|
+| **U** — the ruling record | The 2026-09-16 rulings in a tracked file · the scoped D1 amendment · the MRD tracked and its labels guarded · `/method`'s first reversal | **OPEN** — in progress. U1 done; U2 unblocked by RT-Z9 (a) |
+| **T** — the prompt card | The terminal surface: three flaw families mapped to three prompt axes, assembled from templates, sitting above the threshold readout per RT-Z7 (b) | **OPEN, blocked by U2.** No card copy may be written before the D1 amendment is recorded |
 
 ---
 

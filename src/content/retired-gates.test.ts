@@ -54,7 +54,30 @@ const OUTSTANDING =
  * from the claim it corrects.
  */
 const HISTORICAL =
-  /\b(?:retired|abolished|superseded|replaced|replaces|no longer|historical|history|states|corrected|used to|gone|deleted|not a pm|never|former)\b/i;
+  /\b(?:retired|abolished|superseded|replaced|replaces|no longer|historical|history|states|corrected|used to|gone|deleted|not a pm|never|former|converted|became)\b/i;
+
+/*
+ * "CONVERTED" AND "BECAME" WERE MISSING, AND THE TREE WAS RED FOR IT (E21/S1).
+ *
+ * The list above is every way this repository had so far written "that gate is
+ * history", and it did not include the two most natural ways to say it.
+ * `docs/experience-bank-2026-09-14.md` says the two gates were CONVERTED into
+ * code and that each BECAME a test — the retirement stated in the active voice
+ * — and this guard convicted the sentence. The sentence was right; the word
+ * list was short.
+ *
+ * HOW IT WAS FOUND MATTERS MORE THAN THE FIX. The offending document is
+ * UNTRACKED, so it arrived with no diff, and the tree had been red since it was
+ * written on 2026-09-14 while every handoff since reported green. It surfaced
+ * only because the whole suite was run rather than the files under change.
+ * Two specimens in the "stays quiet" list hold the widening in place, and each
+ * one BINDS: removing either word from the list turns its specimen red. The
+ * first draft of the second specimen did not bind — it named a retired gate
+ * with no outstanding-obligation word in it, so it passed with the whole
+ * widening deleted, and the mutation is the only reason that was noticed.
+ * "becomes" was dropped for the same reason: nothing exercises it.
+ * The forward proof still catches both sentences that actually shipped.
+ */
 
 /**
  * FOUR LINES, NOT TWO, and the widening was forced by a real false positive.
@@ -169,6 +192,8 @@ describe("no retired gate is described as outstanding", () => {
     "a recorded PM ear pass no longer grants passage on its own",
     "The PM ear pass was retired; nothing is pending on it.",
     "PM ear pass and PM voice pass are not outstanding — they were ABOLISHED.",
+    'Two human sign-off gates converted into code. A required "ear pass" (one person listening to',
+    "The PM ear pass sign-off became an automated fidelity check.",
   ])("stays quiet on a legitimate mention: %s", (line) => {
     expect(findStaleGateClaims(line)).toEqual([]);
   });
