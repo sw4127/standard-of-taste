@@ -392,6 +392,57 @@ describe("the verifier catches what it exists to catch", () => {
  * shape as the paid-tier one, and it exists so that putting this back takes a
  * deliberate act rather than a careless quotation.
  */
+/**
+ * AND THE CONSTITUTION'S OWN CHARACTERISATION IS WITHDRAWN, NOT JUST HIDDEN
+ * (E21, PM ruling RT-Z11 (a)).
+ *
+ * The describe below stops the PAGE printing somebody's level of expertise. It
+ * was passing while `CLAUDE.md` — tracked, public, and the document the page
+ * cites most — still carried the sentence in its Roles section. A rule that
+ * only suppresses the rendering of a claim the repository still makes is a
+ * rule about display, and this project's own finding is that a repository
+ * disagreeing with itself is a defect a reader can find.
+ *
+ * So the constitution carries a dated withdrawal, kept beside the original
+ * rather than replacing it (the file is append-only), and the withdrawal has
+ * to state the rule that replaced it. Removing the stamp fails here.
+ */
+describe("the constitution withdraws the characterisation it recorded", () => {
+  const constitution = readFileSync("CLAUDE.md", "utf8");
+
+  it("read a real constitution", () => {
+    expect(constitution.length, "CLAUDE.md is missing or empty").toBeGreaterThan(10000);
+    expect(
+      constitution.indexOf("## Roles"),
+      "CLAUDE.md has no Roles section, so this checks nothing",
+    ).toBeGreaterThan(-1);
+  });
+
+  it("stamps the clause and states the rule that replaced it", () => {
+    const roles = constitution.slice(
+      constitution.indexOf("## Roles"),
+      constitution.indexOf("## What we're building"),
+    );
+    expect(roles.length, "the Roles section is empty").toBeGreaterThan(200);
+    expect(
+      roles,
+      "the Roles clause naming someone's level of expertise carries no withdrawal. The original stays " +
+        "— this file is append-only — but a reader meeting it unqualified is told a characterisation " +
+        "the product refuses to print anywhere else.",
+    ).toContain("RT-Z11 (a)");
+    expect(
+      roles,
+      "the withdrawal does not say what rule replaced it. A repeal with no replacement leaves the " +
+        "next session guessing at what is actually in force.",
+    ).toContain("The rule in force");
+    expect(
+      roles.toLowerCase(),
+      "the replacement rule does not say it binds the engineer, which is the whole substance of the " +
+        "ruling: the constraint is on how the writer writes, not on what the reader knows.",
+    ).toContain("enforced against the engineer");
+  });
+});
+
 describe("the method page characterises no one", () => {
   const CHARACTERISATIONS = [
     "newer to engineering",

@@ -167,6 +167,21 @@ are guarded against it in the same way the no-causal-promise rule is guarded tod
 
 ---
 
+## 7b. RT-Z11 (2026-09-16) (a) — the constitution withdraws its own characterisation
+
+**The question.** `CLAUDE.md`'s Roles section said the owner *"they are newer to engineering"*.
+`/method` already refused to print that phrase — `claims.test.ts` blocks it by name — so the
+repository was suppressing the rendering of a claim it still made in its most-cited document.
+
+**The ruling: (a).** Stamp the clause, keep it visible, and restate the rule as a constraint on the
+**writer**: explain every tradeoff in plain language and say what the owner would SEE under each
+option. The owner is the owner of this project and an engineering student; the obligation is
+engineering's regardless.
+
+**Why the original stays.** The file is append-only, and a withdrawal that deletes what it withdraws
+leaves a reader unable to check that anything was withdrawn. The stamp is dated and names the ruling.
+`claims.test.ts` now fails if the stamp or its replacement rule is removed.
+
 ## 8. What these rulings do NOT relax
 
 - **N3 holds everywhere and is not touched by RT-Z5.** No percentile, no cohort, no comparison
