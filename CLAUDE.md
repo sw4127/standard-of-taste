@@ -62,6 +62,10 @@ Appended, not overwritten. Amends **D1 only, and only on one surface**; D2, D3, 
 
 **What it bought:** the product's only artifact anybody would keep. The measurement ends in a threshold in cents; the number is evidence, it had been standing in the position of the deliverable, and that single confusion is why a technically sound instrument is neither enjoyable to use nor convincing to look at.
 
+**On-surface statement, and it is rendered VERBATIM by the card rather than described here.** The amendment requires the surface to say what it is doing, and a requirement satisfied by a sentence somebody typed next to it is a requirement nobody is holding. The sentence is this one, and `src/content/card/statement.test.ts` extracts it from this file and fails the build if the card renders anything else:
+
+> This card speaks to you about what the reading might mean for you. Everything else on this site describes only what you did.
+
 **What it cost, stated rather than glossed:** the product can no longer say that **every sentence it shows is about performance**. That was a true sentence and it is now false, and it was one of the plainest things this project could say about itself. The constitution also gains an exception, and an exception is more complex than a clean rule (N2) — every surface built from here has to ask which side of it it is on. The price is published on `/method` as that page's **first reversal**, kept visibly distinct from its refusals: a reversal filed as a refusal would be a false statement about the record.
 
 ## Roles
