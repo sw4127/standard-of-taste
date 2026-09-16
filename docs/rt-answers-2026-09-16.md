@@ -98,6 +98,13 @@ one EVIDENCED and four ASSUMED mentions between them, and two whole sections of 
 and §2 — carried no label at all. The count in the header of the document about honest labelling was
 false. Tracking it unchanged would have published that.
 
+**What the recount produced (E21/S2).** Every assertion the document makes about the world outside
+this repository is now numbered and labelled in place, M1 to M13, with the arguable ones defended
+underneath. The honest count is **5 EVIDENCED, 8 ASSUMED**, not 4 and 7 — and the header now says so.
+The difference is not a correction of anybody's judgment: the labels had never been written down at
+the claim, so there was nothing to count. The selection rule is stated in the document rather than
+left to taste, because a register whose membership is a matter of opinion cannot be guarded.
+
 ## 4. RT-Z7 (b) — the card sits beside the threshold readout
 
 **The ruling: (b).** Both are shown. The card does not replace the number.
@@ -113,6 +120,15 @@ is the deliverable.
 
 **Why.** The card is text, and text is the integration. Naming a tool dates the surface the moment
 that tool changes its interface, and buys nothing the generic wording does not already buy.
+
+**Scope, decided in E21/S2 and recorded rather than assumed: this binds the PRODUCT SURFACES, not the
+evidence.** The MRD names a generator twice, as the source of the claims it labels EVIDENCED. Two
+facts settle it. First, an evidence claim that cannot say what it rests on is not checkable, and
+RT-Z6 (a) exists precisely to make these claims checkable — reading RT-Z8 across documents would
+cancel RT-Z6. Second, the name is **already published**: `README.md`, `docs/task-prd.md`,
+`docs/roadmap-parking-lot.md` and `src/content/public-links.test.ts` are tracked and name it, the
+README in the passage recording the one unfavourable data point. So tracking the MRD opens no door
+that is not already open, and no surface of the product names a generator.
 
 ## 6. RT-Z9 (a) — D1 is suspended for the card ALONE
 
