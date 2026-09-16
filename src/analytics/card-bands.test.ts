@@ -56,7 +56,9 @@ import {
   CARD_BAND_AGREEMENT_FLOOR,
   CARD_BAND_CANDIDATES,
   bandFor,
+  bandIndexIn,
 } from "@/engine/card-bands";
+import { ladderDirection, ladderLevels } from "@/engine/staircase-manifest";
 
 const NL = String.fromCharCode(10);
 const OUT_DIR = "docs/analytics";
@@ -377,6 +379,43 @@ describe("how many resolution bands the shipped ladders support", () => {
       [2, { agree: 1, agreeN: 9, repeat: 1, repeatN: 400 }],
     ]);
     expect(chooseBandCount(thinSittings), "the sitting floor does not bind").toBe(1);
+  });
+
+  /**
+   * THE DOWN LADDER, PROVED DIRECTLY, BECAUSE NO SHIPPED LADDER EXERCISES IT.
+   *
+   * `bandFor` orders bands by SENSITIVITY rather than by the size of the
+   * number, and on the compression ladder those point opposite ways: rungs are
+   * bitrates, 192 kbps is the gentlest damage and 32 kbps the harshest, so the
+   * listener who only catches it at 32 has the coarser ear and the smaller
+   * number. The first version of the function took the smallest level as the
+   * fine end and would have called that ear fine.
+   *
+   * IT CANNOT BE CAUGHT THROUGH `bandFor` TODAY: `CARD_BANDS["lossy-artifact"]`
+   * is 1, so every compression index is 0 whichever way the ladder is read. A
+   * defect that only surfaces when a measurement IMPROVES is the worst kind to
+   * leave in, so the pure index function is exercised at two bands directly.
+   */
+  it("puts the finest ear in band 0 on a ladder that runs downward", () => {
+    const source = LADDERS.find((l) => l.sourceId)!.sourceId!;
+    const levels = ladderLevels(LOSSY, source);
+    expect(ladderDirection(LOSSY), "the compression ladder no longer runs downward").toBe("down");
+    const gentlest = Math.max(...levels);
+    const harshest = Math.min(...levels);
+    expect(
+      bandIndexIn(levels, "down", 2, gentlest),
+      "heard the damage at the HIGHEST bitrate — the gentlest thing on the ladder — and was not " +
+        "placed in the finest band",
+    ).toBe(0);
+    expect(
+      bandIndexIn(levels, "down", 2, harshest),
+      "only caught it at the lowest bitrate and was not placed in the coarsest band",
+    ).toBe(1);
+
+    // The up ladders must be unaffected: fewer cents IS the finer ear.
+    const pitch = ladderLevels("pitch-drift", undefined);
+    expect(bandIndexIn(pitch, "up", 2, Math.min(...pitch))).toBe(0);
+    expect(bandIndexIn(pitch, "up", 2, Math.max(...pitch))).toBe(1);
   });
 
   it("writes the measurement", () => {

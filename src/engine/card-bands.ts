@@ -25,7 +25,7 @@
  *
  * ALL FIGURES SIMULATED. There are zero real responses.
  */
-import { ladderLevels } from "./staircase-manifest";
+import { ladderDirection, ladderLevels } from "./staircase-manifest";
 
 /**
  * The bar both agreement rates must clear, pre-registered before the
@@ -86,11 +86,56 @@ export interface Band {
 }
 
 /**
- * The band a threshold falls in, on the ladder it was measured on.
+ * Band index from a value and the ladder it sits on, ordered by SENSITIVITY.
+ *
+ * INDEX 0 IS THE FINEST EAR, NOT THE SMALLEST NUMBER, AND THAT DISTINCTION IS
+ * A BUG THIS FILE ALREADY HAD. On the pitch and timing ladders the two are the
+ * same thing: fewer cents of drift detected means a finer ear, and `direction`
+ * is "up". The compression ladder runs "down" — its rungs are BITRATES, so 192
+ * kbps is the gentlest damage and 32 kbps the harshest, and a listener who only
+ * catches it at 32 kbps has the COARSER ear while carrying the smaller number.
+ * The first version of this function took `Math.min` of the levels as the fine
+ * end and would have called that listener's hearing fine.
+ *
+ * It was invisible because `CARD_BANDS["lossy-artifact"]` is 1, so every
+ * compression band index is 0 whichever way the ladder is read. A defect that
+ * only appears when a measurement improves is the worst kind to leave in.
  *
  * LOG SCALE, because every ladder here is geometric — one step is a constant
  * ratio — and equal bands in raw magnitude would put nine of eleven pitch rungs
  * in the bottom band.
+ */
+export function bandIndexIn(
+  levels: readonly number[],
+  direction: "up" | "down",
+  of: number,
+  value: number,
+): number | null {
+  if (levels.length < 2 || of < 1 || !Number.isFinite(value) || value <= 0) return null;
+  const lo = Math.min(...levels);
+  const hi = Math.max(...levels);
+  const span = Math.log(hi) - Math.log(lo);
+  if (span <= 0) return null;
+  const t = (Math.log(value) - Math.log(lo)) / span;
+  /** Fraction of the way from the FINEST end of the ladder to the coarsest. */
+  const fromFine = direction === "up" ? t : 1 - t;
+  /*
+   * CLAMPED, because `fitThreshold` may return a point estimate slightly
+   * outside the rung range — the posterior is continuous and the ladder is not.
+   * Clamping is right here and would be wrong in the fit: a threshold half a
+   * step past the floor is genuinely at the floor for the purpose of saying how
+   * finely somebody hears, and is genuinely NOT a measured rung for the purpose
+   * of printing a number.
+   */
+  return Math.min(of - 1, Math.max(0, Math.floor(fromFine * of)));
+}
+
+/**
+ * The band a threshold falls in, on the ladder it was measured on.
+ *
+ * `value` is in the ladder's READER units — cents, milliseconds, kbps — the
+ * same space `ladderLevels` and `StaircaseResult.label` are in, and NOT the
+ * internal magnitude the fitter works in. The two differ on any "down" ladder.
  *
  * Returns `null` when the family has no ladder, rather than guessing: a caller
  * with a threshold for a family this product does not measure has a bug, and a
@@ -100,25 +145,14 @@ export function bandFor(family: string, sourceId: string | undefined, value: num
   const of = CARD_BANDS[family];
   if (!of) return null;
   let levels: number[];
+  let direction: "up" | "down";
   try {
     levels = ladderLevels(family, sourceId);
+    direction = ladderDirection(family);
   } catch {
     return null;
   }
-  if (levels.length < 2 || !Number.isFinite(value) || value <= 0) return null;
-  const lo = Math.min(...levels);
-  const hi = Math.max(...levels);
-  const span = Math.log(hi) - Math.log(lo);
-  if (span <= 0) return null;
-  const t = (Math.log(value) - Math.log(lo)) / span;
-  /*
-   * CLAMPED, because `fitThreshold` may return a point estimate slightly
-   * outside the rung range — the posterior is continuous and the ladder is not.
-   * Clamping is right here and would be wrong in the fit: a threshold half a
-   * step past the floor is genuinely at the floor for the purpose of saying how
-   * finely somebody hears, and is genuinely NOT a measured rung for the purpose
-   * of printing a number.
-   */
-  const index = Math.min(of - 1, Math.max(0, Math.floor(t * of)));
+  const index = bandIndexIn(levels, direction, of, value);
+  if (index === null) return null;
   return { index, of, name: BAND_NAMES[of][index] };
 }
