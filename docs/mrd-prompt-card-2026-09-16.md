@@ -6,6 +6,9 @@ It contains market claims, and a repository whose public page publishes its refu
 file full of unsupported ones. The PRD already solved that: every use case there carries **EVIDENCED**
 or **ASSUMED**. The same labels are used below and they are load-bearing — **5 EVIDENCED, 8 ASSUMED**.
 A reader is entitled to see which is which, and the ratio is the point rather than an embarrassment.
+**The count is not typed.** `src/content/mrd-labels.test.ts` recounts the labels on every run and
+fails the build if this sentence and the claims below it disagree, if a claim loses its label, or
+if a new section of the position arrives carrying none.
 
 **Rulings of record, 2026-09-16.** RT-Z5 **(b)** — the readable output speaks about the person; §6 is
 rewritten to the ruling and now specifies the amendment it requires. RT-Z6 **(a)** — tracked, labelled.
