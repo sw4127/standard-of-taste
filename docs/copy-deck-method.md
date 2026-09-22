@@ -291,11 +291,41 @@ Where a measurement is noisy the product must show the uncertainty rather than h
 
 ---
 
-## 3. The six refusals
+## 3. The seven refusals
 
 Each renders as a heading, a small-caps rule line, the refusal, and a paragraph opening “What it cost.” The heading and the rule line are free; a test requires only that the price is substantial and does not say the refusal was free.
 
-### 14. `refusal-taste-gem`
+### 14. `refusal-preference-instrument`
+
+**Kind:** INFERRED — renders under a visible “Inference — the engineer’s reading, not a recorded ruling” label
+
+**Cites:** docs/rt-answers-2026-09-13.md · src/engine/preference.ts
+
+**Heading on screen (free prose):** A fifth instrument, to turn preference into words
+
+**Rule line on screen (free prose):** Refused under N3, and the arithmetic the proposal produced about itself
+
+**Second paragraph opens:** “What it cost. …”
+
+**No locked passage in this block** — all of it is the engineer's own prose and is free.
+
+*The `refusal` field, free prose with no verified passage in it:*
+
+> The four instruments here measure damage — whether you can hear detune, smear, a codec. None of them touches the thing listeners actually report, which is that they cannot say what they like. A fifth was specified for exactly that: you say what you prefer, then choose blind between two versions of the same passage differing in one respect, and the product is the moment your words and your ears disagree. It was approved, sized, and killed by the first slice that did its arithmetic. A preference has no right answer, so the only measurable thing is whether blind choices agree with each other — and that takes ${numberWord(PREFERENCE_SITTING_TRIALS)} of them per dimension from a decisive listener. Three dimensions is ${numberWord(PREFERENCE_SITTING_PAIRS)} pairs; at ${numberWord(PREFERENCE_SECONDS_PER_PAIR)} seconds a pair, ${numberWord(PREFERENCE_SITTING_MINUTES)} minutes — longer than all four shipped instruments together. It had been sized against a figure a quarter that size, which engineering stated without deriving. Run against the numbers in its own specification, two of its four findings did not survive, the contradiction it existed to deliver among them. Nothing further is added to this product on easier terms than these: an instrument arrives with the arithmetic for its own sitting length, or it does not arrive.
+
+  *As rendered:* “The four instruments here measure damage — whether you can hear detune, smear, a codec. None of them touches the thing listeners actually report, which is that they cannot say what they like. A fifth was specified for exactly that: you say what you prefer, then choose blind between two versions of the same passage differing in one respect, and the product is the moment your words and your ears disagree. It was approved, sized, and killed by the first slice that did its arithmetic. A preference has no right answer, so the only measurable thing is whether blind choices agree with each other — and that takes twenty-eight of them per dimension from a decisive listener. Three dimensions is eighty-four pairs; at sixty seconds a pair, eighty-four minutes — longer than all four shipped instruments together. It had been sized against a figure a quarter that size, which engineering stated without deriving. Run against the numbers in its own specification, two of its four findings did not survive, the contradiction it existed to deliver among them. Nothing further is added to this product on easier terms than these: an instrument arrives with the arithmetic for its own sitting length, or it does not arrive.”
+
+*The `price` field, free prose with no verified passage in it:*
+
+> The largest one on this page, and it is unpaid rather than accepted. Two findings came out of listening to people: that past listening predicts less than present taste, and that almost nobody can describe their own taste in words. This product serves the first and does nothing at all for the second, which is the one with somebody in front of it. The refusal does not say that instrument was a bad idea — it says this design could not be built at a length anyone would sit, and no better design has been found. Somebody else may well find one.
+
+*The two together, which is how the page reads:*
+
+```renders
+The four instruments here measure damage — whether you can hear detune, smear, a codec. None of them touches the thing listeners actually report, which is that they cannot say what they like. A fifth was specified for exactly that: you say what you prefer, then choose blind between two versions of the same passage differing in one respect, and the product is the moment your words and your ears disagree. It was approved, sized, and killed by the first slice that did its arithmetic. A preference has no right answer, so the only measurable thing is whether blind choices agree with each other — and that takes twenty-eight of them per dimension from a decisive listener. Three dimensions is eighty-four pairs; at sixty seconds a pair, eighty-four minutes — longer than all four shipped instruments together. It had been sized against a figure a quarter that size, which engineering stated without deriving. Run against the numbers in its own specification, two of its four findings did not survive, the contradiction it existed to deliver among them. Nothing further is added to this product on easier terms than these: an instrument arrives with the arithmetic for its own sitting length, or it does not arrive. The largest one on this page, and it is unpaid rather than accepted. Two findings came out of listening to people: that past listening predicts less than present taste, and that almost nobody can describe their own taste in words. This product serves the first and does nothing at all for the second, which is the one with somebody in front of it. The refusal does not say that instrument was a bad idea — it says this design could not be built at a length anyone would sit, and no better design has been found. Somebody else may well find one.
+```
+
+### 15. `refusal-taste-gem`
 
 **Kind:** INFERRED — renders under a visible “Inference — the engineer’s reading, not a recorded ruling” label
 
@@ -323,7 +353,7 @@ Each renders as a heading, a small-caps rule line, the refusal, and a paragraph 
 A visual was held back until the product's sentences had been through a writer, on the rule that if the sentences landed the picture was decoration. Three batches of them have now been written, applied and shipped, and every result screen ends in prose rather than in a unit. The picture would add no fact the sentences do not already carry. What it would add is five facets, most of them dark for most people — because a reader has usually taken one instrument, not four — and a shape with slots to fill in is a completion meter however carefully it is drawn. This product refuses those by name. The one thing the product will never have is an image a person can post without reading a word. Every result here has to be read to be understood, which costs the share loop most of its reach and is the second time that trade has been made deliberately: the ranked verdict went the same way. What it buys is that nothing on a result screen can be understood as a score out of five.
 ```
 
-### 15. `refusal-composite-index`
+### 16. `refusal-composite-index`
 
 **Kind:** INFERRED — renders under a visible “Inference — the engineer’s reading, not a recorded ruling” label
 
@@ -351,7 +381,7 @@ A visual was held back until the product's sentences had been through a writer, 
 The design that opened this phase ended at a single composite over five sub-scores. The five are a percentage of movement toward a label, a detection band, a threshold in cents, a count of distinguished works and a calibration score — five different units measuring five different things. Adding them requires deciding how much each is worth, and that weighting can only be argued from a population this product does not have: the cohort is zero. A number assembled from an unjustifiable weighting is not a summary of five measurements, it is a sixth claim resting on none of them. There is no Taste Index, and there will not be one. The product gave up the one thing it could have put on a share card and in a headline — a single figure a person could compare, remember and repeat. What ships instead is five readings in their own units, each meaningless outside its own context, on five screens nobody has to visit in order. That is a worse product to market and the only honest one available, and it is the same trade the six ranked tiers lost: a sharper claim given up, rather than kept in the hope nobody checked.
 ```
 
-### 16. `refusal-ranked-tiers`
+### 17. `refusal-ranked-tiers`
 
 **Kind:** QUOTED — the page presents this as the record speaking
 
@@ -385,7 +415,7 @@ Everything else in the block is the engineer's own connective prose and is free.
 They shipped first, and then the measurement meant to justify them killed them. Asked how often the six tiers put a person in the right one at the shipping length: 30.5%. No coarser cut rescued it. A tier name is a point estimate wearing an adjective. The result screen lost the one line a person could repeat to a friend and got an interval instead — wider, duller, and true. Earning a ranked verdict honestly would land on ~42–45 trials = 21 min, which is the session 15 was chosen to avoid. The product kept the shorter session and gave up the sharper claim, rather than keeping both and hoping nobody checked.
 ```
 
-### 17. `refusal-paid-tier`
+### 18. `refusal-paid-tier`
 
 **Kind:** QUOTED — the page presents this as the record speaking
 
@@ -418,7 +448,7 @@ Everything else in the block is the engineer's own connective prose and is free.
 The plan was to give the assessment away and charge for the training arc. It was withdrawn in one line — there is no paid tier, and no pricing question — because a paywall on the training loop would have put the honest deliverable, whether your ear actually moved, behind the wall. The project gave up its only means of showing that anyone would pay for this, at a point where monetization remains a goal but as proof of commercial viability, not income. It also created upkeep nobody budgeted for: six weeks after the ruling, three published sentences still promised the tier — on two reading-room pages and in the file the product serves to AI crawlers. Writing a rule down does not enforce it.
 ```
 
-### 18. `refusal-priced-consumer-product`
+### 19. `refusal-priced-consumer-product`
 
 **Kind:** QUOTED — the page presents this as the record speaking
 
@@ -451,7 +481,7 @@ Everything else in the block is the engineer's own connective prose and is free.
 Viral consumer distribution for a $3.99 impulse product is dead, concluded on twenty-nine visitors across a month, with the World Cup front door spreading to nobody at all. A quiz, a share-card pipeline, a paywall and a Merchant-of-Record payment adapter all became legacy in a single decision. And here is the part that is easiest to leave off a page like this: the paid product itself was never tested (4 paywall views). The verdict was reached on distribution evidence, and the pricing question it looks like it answers was never actually asked.
 ```
 
-### 19. `refusal-human-ear-check`
+### 20. `refusal-human-ear-check`
 
 **Kind:** QUOTED — the page presents this as the record speaking
 
@@ -488,11 +518,55 @@ Quality control was a person listening to each clip and approving it. It was abo
 
 ---
 
-## 4. The finding against the project itself
+## 4. The one reversal
+
+Not a refusal. A constraint this project held and then deliberately relaxed. Three blocks rather than two: the reversal, what it bought, and what it cost — a relaxation with no stated gain is not a decision either, so both halves are required and a test refuses the shapes that mean nothing.
+
+### 21. `reversal-d1-on-one-surface`
+
+**Kind:** QUOTED — the page presents this as the record speaking
+
+**Cites:** CLAUDE.md · docs/rt-answers-2026-09-16.md
+
+**Heading on screen (free prose):** Speaking about the person, on one surface only
+
+**Rule line on screen (free prose):** Relaxed: D1 — the product describes what you did, never what you are
+
+**Second paragraph opens:** “What it bought. …”
+
+**Third paragraph opens:** “What it cost. …”
+
+**LOAD-BEARING — these exact words are verified against the cited file and a test fails if they change:**
+
+- “D1 is suspended for the prompt card, and for nothing else”
+
+Everything else in the block is the engineer's own connective prose and is free.
+
+*The `reversal` field, which carries the verified words “D1 is suspended for the prompt card, and for nothing else”:*
+
+> Every reading on this site is a statement about a performance. That was a rule rather than a habit: it is written into the constitution as D1, and it is why a five-tap personality verdict with no measurement behind it was killed rather than improved. On 2026-09-16 the owner relaxed it, against the engineering recommendation on file. The card that turns a measured threshold into words a person can use may speak to the reader about themselves — and D1 is suspended for the prompt card, and for nothing else. Every instrument readout on this site still says only what you did.
+
+*The `bought` field, free prose with no verified passage in it:*
+
+> The one thing here anybody would keep. The measurement ends in a threshold in cents, the number is evidence, and it had been standing in the position of the deliverable — which is why a technically sound instrument was neither enjoyable to use nor convincing to look at. A sentence that is only about a performance cannot be the thing somebody leaves with.
+
+*The `price` field, free prose with no verified passage in it:*
+
+> This project can no longer say that every sentence it shows is about performance. That was true, it was one of the plainest things the product could say about itself, and it is now false — the exception is real even though it is one surface wide. The constitution also gains an exception, which is complexity it did not have, and every surface built from here has to ask which side of it it falls on. The rule that survives is narrower and harder to hold: offer, do not assert.
+
+*The two together, which is how the page reads:*
+
+```renders
+Every reading on this site is a statement about a performance. That was a rule rather than a habit: it is written into the constitution as D1, and it is why a five-tap personality verdict with no measurement behind it was killed rather than improved. On 2026-09-16 the owner relaxed it, against the engineering recommendation on file. The card that turns a measured threshold into words a person can use may speak to the reader about themselves — and D1 is suspended for the prompt card, and for nothing else. Every instrument readout on this site still says only what you did. The one thing here anybody would keep. The measurement ends in a threshold in cents, the number is evidence, and it had been standing in the position of the deliverable — which is why a technically sound instrument was neither enjoyable to use nor convincing to look at. A sentence that is only about a performance cannot be the thing somebody leaves with. This project can no longer say that every sentence it shows is about performance. That was true, it was one of the plainest things the product could say about itself, and it is now false — the exception is real even though it is one surface wide. The constitution also gains an exception, which is complexity it did not have, and every surface built from here has to ask which side of it it falls on. The rule that survives is narrower and harder to hold: offer, do not assert.
+```
+
+---
+
+## 5. The finding against the project itself
 
 Two blocks. The first is the record's own account; the second is my reading of what happened next, and renders under the inference label. **The distinction between them is the single most consequential thing on this page** — if a rewrite blurs which is which, it breaks the condition the page was approved under.
 
-### 20. `finding-arc-mostly-refuses`
+### 22. `finding-arc-mostly-refuses`
 
 **Kind:** QUOTED — the page presents this as the record speaking
 
@@ -524,7 +598,7 @@ Everything else in the block is the engineer's own connective prose and is free.
 Before the retest arc was allowed to tell anyone their ear had moved, the size of change it can resolve was measured: the whole hazard here is that subtracting two noisy numbers manufactures progress. Simulating the same unchanged person through two sessions at the shipped length puts the floor on the pitch ladder at roughly 3.5 times — the threshold has to more than halve before the difference can be told from ordinary run-to-run wobble. On the prestige test it is eight points of the scale. The delicacy trials cannot support an arc at all: six of their fifteen pairs would have to change hands. Most retests are therefore told, in as many words, that nothing changed the instrument could hear. That refusal is the ordinary output of this feature rather than its edge case, and the sentence names the floor in the reader's own units so it reads as a fact about the instrument rather than a verdict on them. The only thing that lowers the floor is returning: pooled across four sittings it falls to about two and a half times, which is the entire reward this product offers for coming back.
 ```
 
-### 21. `finding-launch-avoidance`
+### 23. `finding-launch-avoidance`
 
 **Kind:** QUOTED — the page presents this as the record speaking
 
@@ -557,7 +631,7 @@ Everything else in the block is the engineer's own connective prose and is free.
 A ruling had already been made: post the flagship instrument on its own, within one to two weeks, and do not let the second instrument gate it. The second instrument got built instead. The plan written that day says it without softening: Delicacy got built instead. That is the N2 launch-avoidance pattern, on the record. And directly above it, the diagnosis: Nothing is blocked by engineering. Everything is blocked by the launch not having happened. As of the revision date at the foot of this page, it still has not been posted. The product has had 29 real visitors, ever. There are Zero real responses, which is why every psychometric figure in the Lab is generated from a known model and badged as simulated — the dataset that was named as the project's proprietary asset does not exist. Building is the part that feels like progress, and it is the part that was never the constraint.
 ```
 
-### 22. `finding-avoidance-then-ratified`
+### 24. `finding-avoidance-then-ratified`
 
 **Kind:** INFERRED — renders under a visible “Inference — the engineer’s reading, not a recorded ruling” label
 
@@ -590,4 +664,4 @@ What happened next is the part that is harder to read, and this reading is mine 
 
 ---
 
-**22 numbered blocks.** Regenerate with `node scripts/export-method-deck.mjs > docs/copy-deck-method.md` after any ledger change.
+**24 numbered blocks.** Regenerate with `node scripts/export-method-deck.mjs > docs/copy-deck-method.md` after any ledger change.

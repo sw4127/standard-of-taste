@@ -35,6 +35,7 @@ import {
   METHOD_CLAIMS,
   METHOD_FINDINGS,
   METHOD_REFUSALS,
+  METHOD_REVERSALS,
   METHOD_SECTIONS,
   METHOD_AS_OF,
 } from "@/content/method/claims";
@@ -53,12 +54,14 @@ describe("export", () => {
     const out = {
       claims: METHOD_CLAIMS,
       refusals: METHOD_REFUSALS,
+      reversals: METHOD_REVERSALS,
       findings: METHOD_FINDINGS,
       sections: METHOD_SECTIONS,
       asOf: METHOD_AS_OF,
       // Spelled where the content modules are in scope. The exporter itself is
       // plain .mjs and cannot import TypeScript behind a path alias.
       refusalCount: numberWord(METHOD_REFUSALS.length),
+      reversalCount: numberWord(METHOD_REVERSALS.length),
       prose: {
         kicker: METHOD_KICKER,
         headline: METHOD_HEADLINE,
@@ -91,7 +94,8 @@ if (!match) {
   console.error(raw.slice(-4000));
   throw new Error("export-method-deck: the ledger produced no deck");
 }
-const { claims, refusals, findings, sections, asOf, prose, refusalCount } = JSON.parse(match[1]);
+const { claims, refusals, reversals, findings, sections, asOf, prose, refusalCount, reversalCount } =
+  JSON.parse(match[1]);
 
 const L = [];
 const w = (s = "") => L.push(s);
@@ -364,7 +368,48 @@ for (const r of refusals) {
 w("---");
 w();
 
-w("## 4. The finding against the project itself");
+/*
+ * THE REVERSAL SECTION WAS MISSING FROM THIS DECK FOR ONE SESSION (E21).
+ *
+ * `/method` grew a fourth ledger on 2026-09-16 — a constraint deliberately
+ * RELAXED rather than refused — and this exporter did not know about it, so the
+ * newest block on the page was invisible to the copy deck, to the review ledger
+ * and to any writer handed either. That is the defect the census in E18 was
+ * written for, reappearing one ledger later: a surface that renders is not the
+ * same as a surface the copy system can see.
+ *
+ * IT IS ITS OWN SECTION, NOT APPENDED TO THE REFUSALS. Filing it there would
+ * change the count in the heading above, which is the exact false statement
+ * `claims.test.ts` keeps the two arrays disjoint to prevent.
+ */
+w(`## 4. The ${reversalCount} reversal${reversals.length === 1 ? "" : "s"}`);
+w();
+w(
+  "Not a refusal. A constraint this project held and then deliberately relaxed. Three blocks rather " +
+    "than two: the reversal, what it bought, and what it cost — a relaxation with no stated gain is " +
+    "not a decision either, so both halves are required and a test refuses the shapes that mean " +
+    "nothing.",
+);
+w();
+for (const r of reversals) {
+  n += 1;
+  pairBlock(
+    n,
+    `\`${r.id}\``,
+    r,
+    [["reversal", r.reversal], ["bought", r.bought], ["price", r.price]],
+    [
+      ["Heading on screen (free prose)", r.what],
+      ["Rule line on screen (free prose)", `Relaxed: ${r.rule}`],
+      ["Second paragraph opens", "“What it bought. …”"],
+      ["Third paragraph opens", "“What it cost. …”"],
+    ],
+  );
+}
+w("---");
+w();
+
+w("## 5. The finding against the project itself");
 w();
 w(
   "Two blocks. The first is the record's own account; the second is my reading of what happened next, " +

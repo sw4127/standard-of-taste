@@ -157,7 +157,21 @@ const COVERED = [
   // 36 -> 38 in E20/S1: the fifth refusal, `refusal-composite-index`.
   // 38 -> 40 in E20: the sixth, `refusal-taste-gem`. Each refusal is two ids
   // because it is a `refusal` field and a `price` field.
-  { part: 4, name: "the /method page", ids: 40 },
+  //
+  // 40 -> 45 in E21, and the split matters because only one half is this
+  // session's work:
+  //   +2  `refusal-preference-instrument`, the SEVENTH refusal. It shipped on
+  //       2026-09-13 and the deck was never regenerated after it, so the
+  //       committed deck said "The six refusals" over a page rendering seven,
+  //       for nine days. This guard found it on the first regeneration since.
+  //   +3  `reversal-d1-on-one-surface`, the page's first REVERSAL, shipped
+  //       2026-09-16 and missing from this deck entirely until now — a surface
+  //       that renders is not the same as a surface the copy system can see.
+  //       THREE, not one: an id is a FIELD, and a reversal has `reversal`,
+  //       `bought` and `price` where a refusal has two. I wrote 43 here by
+  //       reasoning about blocks instead of counting fields, and this guard
+  //       refused it.
+  { part: 4, name: "the /method page", ids: 45 },
 ];
 
 describe.each(COVERED)("Part $part, $name, shows the copy the product has", ({ part, ids }) => {

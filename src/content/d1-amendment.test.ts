@@ -164,6 +164,49 @@ describe("the D1 amendment names what it repeals, where, and what it cost", () =
     ).toContain("CLAUDE.md");
   });
 
+  /**
+   * THE WRITER'S BRIEF MUST KNOW ABOUT THE EXCEPTION (E21).
+   *
+   * `docs/copy-commission.md` is the first file a writing pass reads, and it
+   * stated D1 as absolute: "every sentence is about the performance, never
+   * about the person." That was true until 2026-09-16 and is now false for one
+   * surface. A writer handed a brief forbidding what their own surface is
+   * REQUIRED to do will either refuse the work or do it and be corrected after
+   * the fact — which is this project's signature defect (a document describing
+   * a gate nobody performs) pointed at the person doing the writing.
+   *
+   * THE BRIEF IS GENERATED, so the fix lives in `scripts/export-commission.mjs`
+   * and this checks the OUTPUT. Editing the markdown by hand would be undone by
+   * the next `node scripts/export-copy-decks.mjs`, silently.
+   *
+   * IT CHECKS THE BOUNDARY, NOT JUST THE EXCEPTION. "D1 no longer applies" is a
+   * more dangerous sentence than the rule it replaces, so the brief has to name
+   * the one surface and say the others are unchanged.
+   */
+  it("tells the writing brief about the exception, and about its boundary", () => {
+    const brief = readFileSync("docs/copy-commission.md", "utf8");
+    expect(brief.length, "the commission brief is missing or empty").toBeGreaterThan(3000);
+    const flatBrief = flat(brief).toLowerCase();
+    expect(
+      flatBrief,
+      "the brief still states D1 as absolute and says nothing about the exception. A writer reading " +
+        "it would be told the prompt card may not do the one thing the amendment requires it to do.",
+    ).toContain("d1 has one exception");
+    expect(
+      flatBrief,
+      "the brief names no surface for the exception. An unbounded exception is a repeal.",
+    ).toContain("prompt card");
+    expect(
+      flatBrief,
+      "the brief does not say the OTHER surfaces are unchanged, which is the half that keeps the " +
+        "card worth reading",
+    ).toContain("every other surface is unchanged");
+    expect(
+      flatBrief,
+      "the brief does not carry the register that replaced D1 on that surface",
+    ).toContain("offer, do not assert");
+  });
+
   it("amends D1 alone, and says N3 is not relaxed", () => {
     const flatBody = flat(body);
     expect(flatBody, "the amendment does not scope itself to D1").toContain("Amends **D1 only");

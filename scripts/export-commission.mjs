@@ -186,6 +186,30 @@ p(
     "the person is a claim the measurement cannot support.",
 );
 p();
+/*
+ * THE AMENDMENT BELONGS IN THE BRIEF, NOT ONLY IN THE CONSTITUTION (E21).
+ *
+ * D1 was stated here as absolute, and on 2026-09-16 it stopped being absolute:
+ * it is suspended for the prompt card and for nothing else. A writer handed a
+ * brief that forbids what one of their surfaces is REQUIRED to do will either
+ * refuse the work or do it and be told afterwards that the rule moved. Both are
+ * this project's own failure mode — a document describing a gate nobody
+ * performs — pointed at the person doing the writing.
+ *
+ * The exception is stated with its boundary, because "D1 no longer applies" is
+ * a more dangerous sentence than the rule it replaces.
+ */
+p(
+  "**D1 has ONE exception, added 2026-09-16, and it is one surface wide.** The **prompt card** — " +
+    "the block that turns a measured threshold into words for a generator — may speak to the " +
+    "reader about what the reading might mean **for them**. Every other surface is unchanged: the " +
+    "instrument readouts, the reading room, `/method` and the front door all stay on what the " +
+    "listener DID. The register on the card is **offer, do not assert**: \"you chose the take with " +
+    "the slower decay every time\" is the target, \"you have unresolved loss\" is refused, and no " +
+    "sentence anywhere asserts anything about trauma, abuse or mental health. The card says on " +
+    "itself that it is doing this. Full text: `CLAUDE.md`, \"D1 amendment\".",
+);
+p();
 p(
   "**N3 — no cohort, no percentile, no comparison between people.** There are **zero** real " +
     "respondents. Every psychometric figure the product publishes is simulated and labelled as " +

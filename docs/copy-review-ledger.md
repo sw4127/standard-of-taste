@@ -6,7 +6,7 @@ The writing pass is **Cowork's**, not the PM's and not engineering's. The decks 
 
 ## The state of it
 
-**8 of 30 surfaces in the decks have been through a pass.** Everything else below is the engineer's first draft, shipped and live.
+**8 of 31 surfaces in the decks have been through a pass.** Everything else below is the engineer's first draft, shipped and live.
 
 | Part | Surface | Pass |
 |---|---|---|
@@ -38,8 +38,9 @@ The writing pass is **Cowork's**, not the PM's and not engineering's. The decks 
 | 3 · The page copy | `/spread (the frame and the hero captions)` | **never** |
 | 4 · The /method page | 1. The page's own framing prose | **never** |
 | 4 · The /method page | 2. The operating model, in the ruled reader order | **never** |
-| 4 · The /method page | 3. The six refusals | **never** |
-| 4 · The /method page | 4. The finding against the project itself | **never** |
+| 4 · The /method page | 3. The seven refusals | **never** |
+| 4 · The /method page | 4. The one reversal | **never** |
+| 4 · The /method page | 5. The finding against the project itself | **never** |
 
 ## Passed, but in no deck
 

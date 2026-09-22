@@ -65,6 +65,66 @@ describe("commit-msg hook wiring", () => {
 });
 
 /**
+ * PRE-COMMIT: THE LIST OF FILES RULED UNTRACKED (E21, PM ruling RT-AB3 a).
+ *
+ * WIRING, NOT BEHAVIOUR, same as the block above — the refusal itself was
+ * proven by staging `docs/blueprint-phase-2.md` and watching the commit be
+ * refused. What this pins is that the hook still exists, still refuses rather
+ * than warns, and still names every file the owner ruled out of the repository.
+ *
+ * THE LIST IS THE POINT. A file leaves it only when the owner rules it in, and
+ * that deletion is a visible act in a diff. A hook whose list quietly shrank
+ * would be a hook that quietly stopped protecting something.
+ */
+describe("pre-commit hook wiring", () => {
+  const hook = () => read(".githooks/pre-commit");
+
+  it("names every file that is untracked by ruling", () => {
+    /*
+     * Typed here AND in the hook, deliberately — two copies with one meaning is
+     * normally this repository's signature defect, and here it is the
+     * mechanism: the whole purpose is that removing a file from the hook's list
+     * is a deliberate act, so a second list that must be edited too makes it
+     * twice as deliberate. The test names the ruling for each, which the hook
+     * cannot.
+     */
+    const RULED_OUT = [
+      // RT-M:c and RT-X:c — the planning documents, kept off a public repo.
+      "docs/blueprint-phase-2.md",
+      "docs/blueprint-phase-3.md",
+      "docs/redirection-blueprint-2026-08-26.md",
+      // Never ruled on at all, which is not the same as ruled in.
+      "docs/experience-bank-2026-09-14.md",
+      "docs/experience-bank-composed-2026-09-14.md",
+      "docs/activation-2026-09-16-tracks-U-T.md",
+      "docs/activation-2026-09-22-track-V-consistency.md",
+    ];
+    const text = hook();
+    const missing = RULED_OUT.filter((f) => !text.includes(f));
+    expect(
+      missing,
+      "the pre-commit hook no longer names these files, so staging one would be committed " +
+        "silently and pushed to a PUBLIC repository:" + String.fromCharCode(10) + missing.join(String.fromCharCode(10)),
+    ).toEqual([]);
+  });
+
+  it("refuses rather than warns", () => {
+    expect(hook()).toContain("exit 1");
+    expect(hook()).toContain("REFUSED");
+  });
+
+  it("looks at files being ADDED, not at every staged change", () => {
+    // A tracked file being modified is ordinary work. Matching on that would
+    // make the hook fire constantly and teach everyone to pass --no-verify.
+    expect(hook()).toContain("--diff-filter=A");
+  });
+
+  it("keeps the escape hatch, and says so", () => {
+    expect(hook()).toContain("--no-verify");
+  });
+});
+
+/**
  * THE DOCUMENT IS THE SWITCH, so the document must still say what the machinery
  * reads. `.claude/hooks/slice-latch.py` decides whether to arm by looking for
  * this heading and whether it ends in IN FORCE — a machine-local file this test

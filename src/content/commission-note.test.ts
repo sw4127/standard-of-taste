@@ -109,6 +109,18 @@ describe.each(NOTES)("$note agrees with the deck", ({ note: path, part, prefix }
  * rewritten in `landing.ts` without the note following it fails here, before
  * the note is handed to anyone.
  */
+import {
+  CARD_CHROME,
+  CARD_PASTE,
+  CARD_SEPARATES,
+  CARD_WORTH,
+  separatesLine,
+  worthLine,
+} from "@/content/card/copy";
+import { CARD_STATEMENT } from "@/content/card/statement";
+import { PROMPT_AXES } from "@/content/card/axes";
+import type { CardAxis } from "@/engine/prompt-card";
+
 describe("the batch-5 note quotes the product's actual first sentences", () => {
   const raw = readFileSync("docs/commission-batch-5.md", "utf8");
   /*
@@ -154,3 +166,100 @@ describe("the batch-5 note quotes the product's actual first sentences", () => {
   });
 });
 
+
+/**
+ * BATCH 6 QUOTES THE PROMPT CARD, WHICH IS NOT IN THE DECK EITHER (E21).
+ *
+ * Same hazard as batch 5 and nine times the surface: the card's strings live in
+ * `src/content/card/` and not in `docs/copy-deck.md`, so the covering note
+ * carries them verbatim or the writer cannot see what they are editing. That
+ * makes the note a second copy of the newest copy in the product — and this
+ * repository has already watched two commission notes go stale in the week they
+ * were written.
+ *
+ * THE TEMPLATED LINES ARE PINNED BY THEIR FIXED FRAGMENTS, not whole. A branch
+ * like "You were still calling it at ${figure}" cannot be compared verbatim
+ * against a note that shows the slot, so the line is rendered from a real
+ * session and split on the values that went in; what is left is the wording,
+ * and every piece of it must be in the note. A rewrite in `copy.ts` that the
+ * note does not follow fails here, before anybody is handed it.
+ */
+describe("the batch-6 note quotes the prompt card as the product renders it", () => {
+  const raw = readFileSync("docs/commission-batch-6.md", "utf8");
+  const note = raw
+    .split(NL)
+    .map((line) => line.replace(/^(>\s*)+/, ""))
+    .join(" ")
+    .replace(/\s+/g, " ");
+
+  it("read a real note, so nothing below passes vacuously", () => {
+    expect(raw.length).toBeGreaterThan(4000);
+  });
+
+  it("quotes every fixed string the card renders", () => {
+    const fixed: [string, string][] = [
+      ["CARD_SEPARATES", CARD_SEPARATES],
+      ["CARD_WORTH", CARD_WORTH],
+      ["CARD_PASTE", CARD_PASTE],
+      ["CARD_STATEMENT", CARD_STATEMENT],
+      ...CARD_CHROME.map((t, i) => [`CARD_CHROME[${i}]`, t] as [string, string]),
+      ...Object.entries(PROMPT_AXES).flatMap(([family, a]) => [
+        [`${family}.axis`, a.axis] as [string, string],
+        [`${family}.neutral`, a.neutral] as [string, string],
+        ...a.precise.map((t, i) => [`${family}.precise[${i}]`, t] as [string, string]),
+      ]),
+    ];
+    expect(fixed.length, "nothing was collected, so this checks nothing").toBeGreaterThan(15);
+    const wrong = fixed.filter(([, text]) => note.indexOf(text) === -1).map(([name, text]) => `${name}: ${text}`);
+    expect(
+      wrong,
+      "the note quotes the card's strings and these no longer match what it renders. A writer " +
+        "would be editing a sentence that is not on screen:" + NL + wrong.join(NL),
+    ).toEqual([]);
+  });
+
+  it("quotes the wording of every templated branch", () => {
+    /*
+     * Rendered from a real session, then split on the values that were slotted
+     * in. What survives is the wording the writer is being asked to edit.
+     */
+    const FIGURE = "12.5 cents";
+    const axes: CardAxis[] = (["fine", "coarse", "measured", "finer-than-measured", "coarser-than-measured", "not-enough"] as const).map(
+      (state) => ({
+        family: "pitch-drift",
+        unit: "cents of peak detune",
+        state,
+        threshold: state === "fine" || state === "coarse" || state === "measured" ? 12.5 : null,
+        band: null,
+        spend: state === "fine" ? true : state === "coarse" ? false : null,
+      }),
+    );
+    const rendered = [
+      ...axes.map((a) => separatesLine(a, FIGURE)),
+      ...axes.map((a) => worthLine(a)).filter((l): l is string => l !== null),
+    ];
+    expect(rendered.length, "no branches were rendered").toBeGreaterThan(9);
+
+    const SLOTS = [FIGURE, "Pitch drift", PROMPT_AXES["pitch-drift"].axis, PROMPT_AXES["pitch-drift"].neutral];
+    const missing: string[] = [];
+    for (const line of rendered) {
+      let rest = line;
+      for (const slot of SLOTS) rest = rest.split(slot).join("\u0000");
+      for (const fragment of rest.split("\u0000").map((f) => f.trim()).filter((f) => f.length > 12)) {
+        if (note.indexOf(fragment) === -1) missing.push(fragment);
+      }
+    }
+    expect(
+      missing,
+      "these fragments of the card's templated lines are not in the note, so the note describes " +
+        "wording the card no longer uses:" + NL + missing.join(NL),
+    ).toEqual([]);
+  });
+
+  it("names the modules it commissions, and they exist", () => {
+    for (const path of ["src/content/card/copy.ts", "src/content/card/axes.ts", "src/content/card/statement.ts"]) {
+      expect(raw.indexOf(path), `the note does not name ${path}`).toBeGreaterThan(-1);
+      expect(existsSync(path), `${path} does not exist`).toBe(true);
+    }
+  });
+});

@@ -1,0 +1,82 @@
+#!/bin/sh
+#
+# PRE-COMMIT: files the owner ruled UNTRACKED cannot be staged by accident.
+#
+# WHY THIS EXISTS, and it is one session old. On 2026-09-22 the engineer asked
+# the owner's permission to track ONE document, was given it, and in the same
+# command ran `git add -A docs` — which staged seven files that had been kept
+# out of the repository on purpose. The commit was made and caught before any
+# push, so nothing was published. THE SUITE WAS GREEN THROUGHOUT: 2254 tests
+# passed, tsc was clean, and `git status` was the only thing that would have
+# shown it.
+#
+# THE RULE IT ENFORCES. This repository is PUBLIC. Tracking a file publishes
+# it, and publishing is a one-way door — the four backup refs exist because of
+# an earlier one. Until now the rule was a sentence in a prompt saying "ask
+# before adding one". The engineer read that sentence, agreed with it, and then
+# broke it with a wildcard in the same session. A rule that a wildcard can skip
+# will eventually be skipped by one.
+#
+# WHY A LIST AND NOT A PATTERN. These are not a category — they are specific
+# documents the owner ruled on, one at a time, for different reasons (RT-M:c,
+# RT-X:c, and Q3, which is still open). A pattern would guess at which files
+# are sensitive; a list states which ones were decided. Adding a file to the
+# repository on purpose means REMOVING it from this list, in the same commit,
+# which is a visible act in a diff — exactly the deliberate step that was
+# missing.
+#
+# WHAT IT DOES NOT DO: it cannot stop `git add`, because git has no hook there.
+# It stops the COMMIT, which is the last moment before a file enters history.
+# It also says nothing about whether a file SHOULD be tracked; that is the
+# owner's to rule, and this only makes the ruling the thing that changes it.
+#
+# ESCAPE HATCH: `git commit --no-verify`, git's own flag, deliberately left
+# working. A gate nobody can bypass in an emergency gets deleted instead.
+
+# Files ruled untracked. Remove a line only when the owner has ruled it in.
+UNTRACKED_BY_RULING="
+docs/blueprint-phase-2.md
+docs/blueprint-phase-3.md
+docs/redirection-blueprint-2026-08-26.md
+docs/experience-bank-2026-09-14.md
+docs/experience-bank-composed-2026-09-14.md
+docs/activation-2026-09-16-tracks-U-T.md
+docs/activation-2026-09-22-track-V-consistency.md
+"
+
+# ADDED files only. A tracked file being modified is ordinary work; this is
+# about a file ENTERING the repository.
+staged=$(git diff --cached --name-only --diff-filter=A)
+[ -z "$staged" ] && exit 0
+
+offenders=""
+for ruled in $UNTRACKED_BY_RULING; do
+  for file in $staged; do
+    if [ "$file" = "$ruled" ]; then
+      offenders="$offenders  $file
+"
+    fi
+  done
+done
+
+if [ -n "$offenders" ]; then
+  echo ""
+  echo "pre-commit: REFUSED — these files are untracked BY RULING and are newly staged:"
+  echo ""
+  printf '%s' "$offenders"
+  echo ""
+  echo "  This repository is PUBLIC. Tracking a file publishes it, and publishing"
+  echo "  cannot be undone once pushed. blueprint-phase-2/3 and the redirection"
+  echo "  blueprint are RT-M:c / RT-X:c; Q3 — whether to bind them — is still the"
+  echo "  owner's open decision. The rest have never been ruled on at all."
+  echo ""
+  echo "  If the owner HAS ruled one of them in, delete its line from the list in"
+  echo "  .githooks/pre-commit in this same commit. That edit is the record."
+  echo ""
+  echo "  To unstage without losing anything:"
+  echo "    git restore --staged <file>"
+  echo ""
+  exit 1
+fi
+
+exit 0
