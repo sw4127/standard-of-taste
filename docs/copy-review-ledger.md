@@ -39,7 +39,7 @@ The writing pass is **Cowork's**, not the PM's and not engineering's. The decks 
 | 4 · The /method page | 1. The page's own framing prose | **never** |
 | 4 · The /method page | 2. The operating model, in the ruled reader order | **never** |
 | 4 · The /method page | 3. The seven refusals | **never** |
-| 4 · The /method page | 4. The one reversal | **never** |
+| 4 · The /method page | 4. The two reversals | **never** |
 | 4 · The /method page | 5. The finding against the project itself | **never** |
 
 ## Passed, but in no deck

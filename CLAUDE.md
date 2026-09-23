@@ -3,7 +3,7 @@
 ## Pivot of record (2026-07-11) — READ FIRST
 **`restructuring_decision_memo_2026-07-11.md` is the authoritative product strategy.** Approved by the PM/owner in session zero (2026-07-11). It SUPERSEDES the sections now parked under "Legacy (superseded — kept for history)" at the bottom of this file, plus the spec sections stamped `SUPERSEDED` in `vibe_check_mvp_spec.md`. The $3.99 viral-funnel model is concluded dead (memo §0, C1) — do not propose reviving, preserving, or incrementally fixing it.
 
-**What we're building now (memo D1–D6):** a **taste gym** — the product *evaluates and cultivates* taste against Hume's five criteria; it never predicts personality, mood, or psychological states (D1). **[D1 AMENDED 2026-09-16 — suspended for ONE named surface, the prompt card, and intact everywhere else. See "D1 amendment" below; this clause is kept verbatim per the keep-intact rule.]** Measurement = performance tasks where the user can be wrong, not self-report (D2). **v1 flagship = the Prestige-Bias Test**; the delicacy battery ships second but is *visible-and-locked* in v1 (D3). Free = the assessment + headline scores; paid = the training arc / progression (D4; pricing open, memo §9.1). **[D4 AMENDED 2026-08-14 — there is no paid tier. The arc is free and validity-gated. See "D4 amendment" below; this clause is kept verbatim per the keep-intact rule.]** Hume narrates each instrument — depth is unlocked, never buried (D5). Analytics = a psychometrics pipeline (IRT, signal detection, calibration/Brier); the proprietary asset is our self-generated response dataset (D6). Project identity: resume-competitive product artifact; revenue = proof of viability, not income (memo C4).
+**What we're building now (memo D1–D6):** a **taste gym** — the product *evaluates and cultivates* taste against Hume's five criteria; it never predicts personality, mood, or psychological states (D1). **[D1 AMENDED 2026-09-16 — suspended for ONE named surface, the prompt card, and intact everywhere else. See "D1 amendment" below; this clause is kept verbatim per the keep-intact rule.]** **[AMENDED AGAIN 2026-09-23 — a second named surface, the five-tap snack. See "D1 amendment, second surface".]** Measurement = performance tasks where the user can be wrong, not self-report (D2). **v1 flagship = the Prestige-Bias Test**; the delicacy battery ships second but is *visible-and-locked* in v1 (D3). Free = the assessment + headline scores; paid = the training arc / progression (D4; pricing open, memo §9.1). **[D4 AMENDED 2026-08-14 — there is no paid tier. The arc is free and validity-gated. See "D4 amendment" below; this clause is kept verbatim per the keep-intact rule.]** Hume narrates each instrument — depth is unlocked, never buried (D5). Analytics = a psychometrics pipeline (IRT, signal detection, calibration/Brier); the proprietary asset is our self-generated response dataset (D6). Project identity: resume-competitive product artifact; revenue = proof of viability, not income (memo C4).
 
 **Standing rules (every session):**
 - Every proposal must cite the memo decision (D1–D6) or guardrail (N1–N3) it serves; if none applies, say so instead of proposing it.
@@ -66,7 +66,31 @@ Appended, not overwritten. Amends **D1 only, and only on one surface**; D2, D3, 
 
 > This card speaks to you about what the reading might mean for you. Everything else on this site describes only what you did.
 
+*[SUPERSEDED 2026-09-23 by "D1 amendment, second surface" below, which narrows "on this site" to "in the gym". Kept verbatim per the keep-intact rule. The card renders the sentence given there.]*
+
 **What it cost, stated rather than glossed:** the product can no longer say that **every sentence it shows is about performance**. That was a true sentence and it is now false, and it was one of the plainest things this project could say about itself. The constitution also gains an exception, and an exception is more complex than a clean rule (N2) — every surface built from here has to ask which side of it it is on. The price is published on `/method` as that page's **first reversal**, kept visibly distinct from its refusals: a reversal filed as a refusal would be a false statement about the record.
+
+
+### D1 amendment, second surface — the snack (owner-approved 2026-09-23, PM rulings RT-4 (c) / RT-5 (a) / RT-6 (a))
+Appended, not overwritten. It extends the 2026-09-16 suspension to **one more named surface**. Everything else in that amendment stands, and **N3 is not relaxed by it.**
+
+**What changes.** D1 is also suspended for **the five-tap music snack**: `/music/quiz` and the reading it produces at `/music/result`. The snack was retired on 2026-09-23 (RT-2 a) and restored the same day (RT-4 c) because it is the part of the product that carried the owner's thesis. That thesis is the spec's §9, P1–P4: taste carries probabilistic cues about current feeling and the stable self, and the gap between what taste reveals and what a person knows is where insight lives. The instruments made the product testable; the snack is where it spoke to the reader.
+
+**Suspension is by name, never by category.** A future reading built from the thesis (RT-4 c, second half) is not covered by this text. It is named here when it ships, so that a guard can check a named route rather than interpret a description.
+
+**Where D1 still stands, unchanged:** every instrument readout — the Prestige, Delicacy, Threshold and Ranking results.
+
+**The register is the card's: OFFER, DO NOT ASSERT** (RT-Z5, MRD §6.3). The snack is also not a measurement and says so at its own door (*"no measurement behind it"*).
+
+**The carve-out stands, reaffirmed** (RT-Z10 (a), 2026-09-16; RT-6 (a), 2026-09-23): no assertion about trauma, abuse, or mental health, on any surface.
+
+**On-surface statement for the card, narrowed, and rendered VERBATIM.** "On this site" became false the moment a second surface could speak about the reader. `src/content/card/statement.test.ts` reads the LAST on-surface statement in this file, because the constitution is append-only and the newest amendment governs:
+
+> This card speaks to you about what the reading might mean for you. Everything else in the gym describes only what you did.
+
+"The gym" means the four instruments and the pages that describe them. The snack sits beside it, not inside it.
+
+**What it cost, stated rather than glossed.** The pivot of 2026-07-11 concluded the five-tap verdict dead, and the product has mocked it in its own copy since — *five taps, a verdict, and no measurement behind it*. It is now hosted again, beside the instruments. The line between a reading about the person and a measurement of the performance is held only by naming surfaces, so every new surface must be named or it stays under D1. The price is published on `/method` as that page's **second reversal**.
 
 ## Roles
 - **The user is the Product Manager.** They drive product and design decisions; they are newer to engineering, so explain tradeoffs in plain language and teach as you go. **[AMENDED 2026-09-16, PM ruling RT-Z11 (a) — the clause is kept verbatim per the keep-intact rule, and the CHARACTERISATION inside it is withdrawn. The owner is the owner of this project and an engineering student; describing anybody's level of expertise was never the working rule and is not one now. What is in force is the line below, which constrains the WRITER.]**

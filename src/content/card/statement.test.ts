@@ -26,9 +26,15 @@ const MARKER = "**On-surface statement";
  * The blockquoted sentence under the amendment's on-surface-statement
  * paragraph. A blockquote is used because it is the one markdown shape that
  * means "this exact text" rather than "roughly this".
+ *
+ * THE LAST ONE, because the constitution is append-only and the newest
+ * amendment governs (2026-09-23: the second-surface amendment narrowed "on this
+ * site" to "in the gym" when the snack became a second surface). The superseded
+ * sentence stays in the file, stamped; reading the first marker would hold the
+ * card to a rule that no longer applies.
  */
 function statementInConstitution(text: string): string | null {
-  const at = text.indexOf(MARKER);
+  const at = text.lastIndexOf(MARKER);
   if (at === -1) return null;
   const lines = text.slice(at).split(NL);
   const quoted: string[] = [];

@@ -19,5 +19,7 @@
  * build red, which is the point: the surface cannot quietly stop saying what
  * the constitution promised it would say.
  */
+// Narrowed 2026-09-23 (RT-5 (2026-09-23) a): the snack became a second surface
+// that may speak about the reader, so "on this site" was no longer true.
 export const CARD_STATEMENT =
-  "This card speaks to you about what the reading might mean for you. Everything else on this site describes only what you did.";
+  "This card speaks to you about what the reading might mean for you. Everything else in the gym describes only what you did.";

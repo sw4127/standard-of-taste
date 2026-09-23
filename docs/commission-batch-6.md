@@ -171,8 +171,12 @@ suggests.
 
 ### `src/content/card/statement.ts` — bound to the constitution
 
-> This card speaks to you about what the reading might mean for you. Everything else on this
-> site describes only what you did.
+> This card speaks to you about what the reading might mean for you. Everything else in the
+> gym describes only what you did.
+
+*(Narrowed from "on this site" on 2026-09-23, when the snack became a second surface that may
+speak about the reader — CLAUDE.md, "D1 amendment, second surface". It is still bound to the
+constitution: change the amendment, not this.)*
 
 ---
 

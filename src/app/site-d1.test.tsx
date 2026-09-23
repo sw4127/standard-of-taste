@@ -70,6 +70,8 @@ const REFUSALS: Record<string, string> = {
   "why a five-tap personality verdict with no measurement behind it was killed": "/method recording why D1 exists",
   "Not a personality.": "the front door refusing D1's subject by name",
   "Don't abuse, reverse-engineer, or resell the service": "/legal terms of use — abuse of the service, not of a person",
+  "nothing on any surface asserts anything about trauma, abuse or mental health":
+    "/method's second reversal stating the RT-Z10 carve-out, not breaking it",
 };
 
 interface Hit {

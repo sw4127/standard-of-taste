@@ -591,7 +591,7 @@ export const METHOD_REVERSALS: MethodReversal[] = [
     rule: "D1 — the product describes what you did, never what you are",
     kind: "quoted",
     reversal:
-      "Every reading on this site is a statement about a performance. That was a rule rather than a habit: it is written into the constitution as D1, and it is why a five-tap personality verdict with no measurement behind it was killed rather than improved. On 2026-09-16 the owner relaxed it, against the engineering recommendation on file. The card that turns a measured threshold into words a person can use may speak to the reader about themselves — and D1 is suspended for the prompt card, and for nothing else. Every instrument readout on this site still says only what you did.",
+      "Every reading on this site is a statement about a performance. That was a rule rather than a habit: it is written into the constitution as D1, and it is why a five-tap personality verdict with no measurement behind it was killed rather than improved. On 2026-09-16 the owner relaxed it, against the engineering recommendation on file. The card that turns a measured threshold into words a person can use may speak to the reader about themselves. The amendment's own wording was that D1 is suspended for the prompt card, and for nothing else; a second named surface followed a week later, recorded below. Every instrument readout on this site still says only what you did.",
     bought:
       "The one thing here anybody would keep. The measurement ends in a threshold in cents, the number is evidence, and it had been standing in the position of the deliverable — which is why a technically sound instrument was neither enjoyable to use nor convincing to look at. A sentence that is only about a performance cannot be the thing somebody leaves with.",
     price:
@@ -604,6 +604,31 @@ export const METHOD_REVERSALS: MethodReversal[] = [
       {
         path: "docs/rt-answers-2026-09-16.md",
         anchor: "The card may speak about the person",
+      },
+    ],
+  },
+  {
+    /*
+     * THE SECOND REVERSAL (2026-09-23, PM rulings RT-4 (c) / RT-5 (a) / RT-6 (a)).
+     * The first reversal above names the five-tap verdict as the reason D1
+     * exists; this one records that verdict coming back. Its own entry, not an
+     * edit to the first: a reversal is a record, and rewriting the first to
+     * include the second would erase the week in which only the card was exempt.
+     */
+    id: "reversal-d1-second-surface",
+    what: "A second surface that speaks about the person: the snack",
+    rule: "D1 — the product describes what you did, never what you are",
+    kind: "quoted",
+    reversal:
+      "On the morning of 2026-09-23 the five-tap music snack was retired so that two sentences on this site would be true. The same day the owner restored it, on the argument that it was the part of the product carrying the product's own thesis — that taste carries cues about feeling, and that the gap between what a person's taste reveals and what they know about themselves is where insight lives. The constitution records the decision in one line: it extends the 2026-09-16 suspension to one more named surface. A reading built from that thesis later is not covered until it, too, is named.",
+    bought:
+      "The part of the product people could enjoy, and the half of its thesis the instruments never reached. The instruments test whether a listener can hear; the snack is where the product speaks to what a listener might be going through — in the register the card already follows: offer, do not assert.",
+    price:
+      "The pivot concluded the five-tap verdict dead, and the reversal above names it as the reason D1 exists. It is back, beside the instruments. The line between a reading about the person and a measurement of a performance is now held only by naming surfaces one at a time, and the card's own disclosure had to narrow from \"on this site\" to \"in the gym\". One line did not move: nothing on any surface asserts anything about trauma, abuse or mental health.",
+    sources: [
+      {
+        path: "CLAUDE.md",
+        anchor: "It extends the 2026-09-16 suspension to",
       },
     ],
   },

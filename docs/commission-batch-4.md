@@ -16,7 +16,8 @@ which batch, under which protocol, and what changed since batch 3.
 > zero real respondents), the voice, and how to hand the work back.
 >
 > **Your batch is `docs/copy-deck.md`, Part 4 — "The /method page". Find it by the `MET-` id
-> prefix. 45 ids: 4 OPEN and 41 PART-LOCKED.** It is one page: the published account of how this
+> prefix. 48 ids: 4 OPEN and 44 PART-LOCKED.** *(45 and 41 when this was handed out; the page's
+> second reversal — the snack, 2026-09-23 — added three.)* It is one page: the published account of how this
 > project is run, told as what it refused and what each refusal cost.
 >
 > **This batch is mostly PART-LOCKED, and that is the whole character of it.** A PART-LOCKED block

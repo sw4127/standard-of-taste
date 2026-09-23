@@ -176,7 +176,9 @@ const COVERED = [
   //       `bought` and `price` where a refusal has two. I wrote 43 here by
   //       reasoning about blocks instead of counting fields, and this guard
   //       refused it.
-  { part: 4, name: "the /method page", ids: 45 },
+  // 45 -> 48 on 2026-09-23: the SECOND reversal, `reversal-d1-second-surface`
+  // (the snack), is three ids — `reversal`, `bought`, `price`.
+  { part: 4, name: "the /method page", ids: 48 },
 ];
 
 describe.each(COVERED)("Part $part, $name, shows the copy the product has", ({ part, ids }) => {
