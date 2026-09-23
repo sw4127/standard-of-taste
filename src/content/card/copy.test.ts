@@ -20,6 +20,7 @@
  * slices before this one.
  */
 import { CARVE_OUT_PATTERNS } from "@/content/carve-out";
+import { COMPARISON as SHARED_COMPARISON } from "@/content/register";
 import { describe, expect, it } from "vitest";
 import { observer, pCorrect, rng } from "@/analytics/observer";
 import {
@@ -125,14 +126,8 @@ const CAUSAL = [
 ];
 // The carve-out is one list, shared with every surface (RT-Z10 a, BA-5).
 const CLINICAL = CARVE_OUT_PATTERNS;
-const COMPARISON = [
-  /\bpercentile\b/i,
-  /\btop \d+%/i,
-  /\b(?:most|many|few) (?:listeners|people|readers|users)\b/i,
-  /\b(?:better|worse) than (?:average|most|others)\b/i,
-  /\bcompared (?:to|with) (?:others|everyone|most)\b/i,
-  /\bcohort\b/i,
-];
+// One no-comparison list for both surfaces that speak to a reader (N3).
+const COMPARISON = SHARED_COMPARISON;
 const COUNTING = /\b(?:the other two|all three|both axes|the remaining|your other)\b/i;
 
 function breaches(text: string, patterns: readonly RegExp[]): string[] {
