@@ -55,6 +55,12 @@ export const BLUEPRINT_COPIES: readonly BlueprintCopy[] = [
   { path: "docs/mrd-prompt-card-2026-09-16.md", id: "BP-F1", mode: "quoted" },
   // The front door's paraphrase of what incumbents lack (change list C).
   { path: "src/content/landing.ts", id: "BP-UNMET", mode: "derived", anchor: "export const LANDING_ALGORITHM" },
+  // The constitution's D3 amendment (BA-6) states the bridge verbatim and paraphrases the goal.
+  { path: "CLAUDE.md", id: "BP-BRIDGE", mode: "quoted" },
+  { path: "CLAUDE.md", id: "BP-GOAL", mode: "derived", anchor: "BP-GOAL asks that a reviewer can try the core" },
+  { path: "CLAUDE.md", id: "BP-UNMET", mode: "derived", anchor: "A listener's recent plays are read into lines" },
+  // The spec's stamp restating what replaced the thesis (change list B1).
+  { path: "vibe_check_mvp_spec.md", id: "BP-INSIGHT", mode: "derived", anchor: "*[BLUEPRINT OF RECORD 2026-09-23" },
   // Dated records.
   {
     path: "docs/preference-mock-2026-09-13.md",

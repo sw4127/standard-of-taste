@@ -44,6 +44,8 @@ software artifact about your taste that a human can read, disagree with, or argu
 *Why M1 and M2 are ASSUMED.* No study is cited. The claim is checkable against any consumer music
 product, and it has never been put to a user of this one.
 
+*[2026-09-23 — M2 survives, restated as BP-UNMET in `docs/blueprint.md`. Readable artifacts about a listener's taste now exist (Spotify Wrapped; daylist, since 2023-09-12), but none can be disagreed with or argued about, which is M2's claim in full. Label and number unchanged.]*
+
 ### 1.2 The assumption being challenged
 
 **M3 · ASSUMED — That taste is your history. It is not; it is your current discrimination and your
@@ -85,7 +87,7 @@ about timbre, timing and mix.
 - **Naming an artist does not work.** Guides tell users they must instead **decompose the sonic
   fingerprint** into descriptors.
 
-**That second line is this project's thesis restated by somebody else.** The documented number-one
+**That second line is this project's second challenged assumption (BP-CA2) restated by somebody else.** *[Word corrected 2026-09-23: it said "thesis". The thesis is BP-INSIGHT; BP-CA2 is one of its premises.]* The documented number-one
 obstacle to using the most widely used AI music tool is that people can only name artists and cannot
 decompose what they actually respond to. *People cannot describe their taste* is not a hunch here.
 It is the stated user failure of the adjacent product category, which is what M6 rests on.
@@ -125,6 +127,8 @@ said the premise does not hold for them. It is recorded in the README and it sta
 conversation is not research, and a disconfirming one is not a refutation either — it is a single
 observation pointing the wrong way, and it is on the record precisely so it cannot be forgotten.*
 
+*[2026-09-23 — the intended user of record is the listener in BP-DEMAND, reached through the host in BP-BUSINESS (`docs/blueprint.md`). The person in M12 is served by the prompt the reading ends in. Labels and numbers unchanged.]*
+
 ---
 
 ## 3 · The job to be done
@@ -135,7 +139,7 @@ observation pointing the wrong way, and it is on the record precisely so it cann
 Note what the job is **not**: it is not *tell me who I am*. See §6.
 
 *[SUPERSEDED IN PART 2026-09-23 — see §11. This job statement narrowed the product to damage
-vocabulary and left out the owner's thesis; §11 restores it. Kept verbatim per the keep-intact rule.]*
+vocabulary and left out the owner's thesis; §11 restores it. Kept verbatim per the keep-intact rule. The job of record is BP-DEMAND in docs/blueprint.md.]*
 
 ---
 
@@ -373,6 +377,8 @@ state and personality.** The spec cites Rentfrow & Gosling (2003) and Rentfrow, 
 replication is imperfect. *EVIDENCED because it rests on published work anyone can read; the
 citations were not re-read for this revision, and that is recorded rather than implied away.*
 
+*[2026-09-23 — two corrections to M14's evidence; label unchanged. The personality half is weaker than "modest": a meta-analysis of 28 studies and 263,196 participants found an average correlation of 0.058 (Schäfer & Mehlhorn 2017, Personality and Individual Differences 116). The emotional-state half is not supported by the two citations above, which concern preference dimensions and personality; it rests on the mood-management literature in BP-ARG-P1 and P2 (Knobloch & Zillmann 2002, Journal of Communication 52(2), doi:10.1111/j.1460-2466.2002.tb02549.x). The blueprint drops personality from the insight.]*
+
 **M15 · ASSUMED — Recent taste reads current state; durable taste reads the stable self.** The
 spec's timescale split (P4). It is the owner's "what is going on lately in their life". Recent and
 durable taste are both taste the reader holds now, so the split sits inside the owner's position that
@@ -392,6 +398,8 @@ one they can argue with — and a way to turn it into music about their own life
 readable, arguable artifact about taste exists) to the owner's ambition. The job, restated: *tell me
 what my taste has been saying lately, in words I can argue with, and give me a prompt for music
 about it.*
+
+*[2026-09-23 — §11.1 and §11.2 are superseded as a statement of the position by `docs/blueprint.md`: BP-ARG, BP-INSIGHT, BP-DEMAND. M15's timescale split no longer carries the insight, because the blueprint reads recent taste only. M16 survives as BP-ARG-P4. M17 is restated as BP-DEMAND, and "one they can argue with" moved to BP-UNMET: nothing shows people want to argue, while arguability is the answer to the Barnum objection (BP-ARG-REPLY). Labels and numbers unchanged.]*
 
 ### 11.3 The constraints the reading inherits
 
@@ -415,4 +423,6 @@ about it.*
 draws on the snack's answers, the instruments, or both; and whether "discussing" the reading means a
 conversation with a model — which today's rule, *the model never writes an assessment*, would have
 to be amended to allow.
+
+*[2026-09-23 — hold R1–R4. R1 asks the reader to tap what they have been reaching for, which is self-report, and BP-CA2 holds that people cannot describe their taste; BP-BUSINESS places the reading where recent listening is already held. The build that replaces R1–R4 follows the owner's ruling on the audit's options. **Superseded, same day:** the owner ruled (BA-6, BA-8, BA-10; `docs/rt-answers-2026-09-23-audit.md`) that the reading runs on three illustrative listeners' plays, templates only, and ends in a prompt and a labelled mock creation screen; R1–R4 are replaced by that build (`src/content/reading/`, `src/engine/reading/`, `/reading`), and neither of the two questions above is open: the reading draws on listening behaviour, and no model writes any of it.]*
 

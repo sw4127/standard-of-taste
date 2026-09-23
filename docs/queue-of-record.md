@@ -57,6 +57,28 @@ over any blueprint. **No fifth instrument is added.**
 
 ---
 
+## Phase 5 — the blueprint build (opened 2026-09-23)
+
+**Why.** The Cowork blueprint audit settled the project's goal, insight and argument, demand, unmet
+demand, challenged assumptions, bridge and business case as one canonical text, `docs/blueprint.md`,
+and found that the product's core — reading a listener's recent taste into words they can check,
+argue with and carry into a prompt — existed nowhere on the site. The owner ruled that the reading
+becomes the product. The twelve rulings are in **`docs/rt-answers-2026-09-23-audit.md`** (BA-1 to
+BA-12), which is now the newest rulings of record.
+
+| Part | What it is | Status |
+|---|---|---|
+| **1** | `docs/blueprint.md`, its parser, the copy registry and its guard | **done** 2026-09-23 |
+| **2** | Every document that states the ideas, stamped; the BA rulings recorded | **done** 2026-09-23 |
+| **3** | The snack retired, and every model-written sentence with it (BA-7, BA-10) | open |
+| **4** | The reading's content and engine: three illustrative listeners (BA-8) | open |
+| **5** | `/reading`: the reading, the prompt and the mock creation screen (BA-6, BA-11) | open |
+| **6** | `/company`: the business case, metric tree and test plan, illustrative (BA-9) | open |
+| **7** | The front door, the navigation, `/learn`, `/method` | open |
+| **8** | The public pages, and the PRD re-derived from the blueprint | open |
+
+---
+
 ## Opened during the 2026-09-13 session, and not in either blueprint
 
 | | What it is | Status |

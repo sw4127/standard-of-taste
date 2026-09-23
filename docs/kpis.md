@@ -10,6 +10,8 @@
 North star: **"an interviewer or admissions committee finds this project credible, rigorous, and
 alive."** (Serves memo C4 — resume-competitive identity; honesty caps per N3.)
 
+*[2026-09-23 — superseded as the goal by BP-GOAL (`docs/blueprint.md`). "Credible, rigorous, and alive" is how a reviewer should judge the project; BP-GOAL adds what the reviewer must be able to do: try the core as its user, and see why a company would fund it and how it would test that.]*
+
 **Hard internal deadline: artifact + data story interview-ready by 2026-09-15** (fall 2026
 recruiting + grad-app cycle). Confirmed by PM 2026-07-17.
 

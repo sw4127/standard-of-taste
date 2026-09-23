@@ -222,6 +222,8 @@ This split maps onto the report: recent taste feeds **Red Flags / current stress
 
 *[TERM FIXED 2026-09-23, RT-8 — ruled by engineering on the owner's delegation; the paragraph above is kept verbatim per the keep-intact rule. "Current" above means **recent**. The owner's challenged assumption uses it to mean **held now**: the product's value lies in taste a person holds now or is forming, and past taste — what they used to like — has no business value. Durable taste is held now, so it is current in that sense and not past; the timescale split survives inside the owner's claim, and the two do not conflict. The owner's claim is a value claim and is labelled ASSUMED.]*
 
+*[BLUEPRINT OF RECORD 2026-09-23 — Cowork blueprint audit, owner-approved. The thesis bullets above (lines 213–219) and "The claim we convert on" (line 221) are kept verbatim per the keep-intact rule. As the product's argument they are superseded by `docs/blueprint.md`: BP-INSIGHT and its argument BP-ARG. Two changes, both from published evidence. (1) The conclusion concerns recent feeling, not personality: a meta-analysis of 28 studies puts the average personality–music-preference correlation at 0.058 (Schäfer & Mehlhorn 2017), and this section's own honesty line forbids "your authentic self revealed". The durable→personality half of the timescale split goes with it. (2) The conclusion is narrowed to words for the pattern: mood drives music choice both toward music that matches it and toward music that changes it (Knobloch & Zillmann 2002), so a listening pattern cannot be decoded into one person's feeling; the reading names the pattern and the reader supplies the feeling. The numbering "P1–P4" was never in this section; it was assigned in `src/components/ResearchPanel.tsx`. "The Hume bit" above stands, as BP-CA3.]*
+
 ---
 
 ## 10. The quiz (v1)
@@ -522,6 +524,8 @@ The file had duplicate headers — two "Open questions" (`## 11` + `## 10`) and 
 ## 17. Behavioral strategy — cognitive reverb, P4 routing, paywall valuation
 
 *Embeds §9 (P1–P4) operationally; reconciles with §6 (engine), §7 (premium_report), §12 (monetization). Copy + routing decisions, no code. Locked decisions preserved: artists are flavor-only (§6); free=identity / paid=analysis firewall + no dark patterns (§12).*
+
+*[2026-09-23 — this section operationalises the thesis as it stood before `docs/blueprint.md`: a personality ("trait") lane and a paid report. The argument of record is BP-ARG; the paid report was withdrawn by the D4 amendment. The snack implemented this section's routing until it was retired on 2026-09-23 (BA-7, `docs/rt-answers-2026-09-23-audit.md`); that is recorded as a product finding, not corrected here. Kept verbatim.]*
 
 ### A. Cognitive reverb — land P3 ("you can't read your own pattern") DURING the quiz
 - Extend the per-tap confirm beat to ~900 ms and render a **deterministic, per-option reverb line** (copy stored beside each option; no LLM, no classification). It echoes the answer back with an implication and plants the recent/durable split (P4). Reverb lines are *questions about the self*, never verdicts (so they can't be "wrong").

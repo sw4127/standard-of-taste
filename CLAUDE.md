@@ -3,7 +3,7 @@
 ## Pivot of record (2026-07-11) — READ FIRST
 **`restructuring_decision_memo_2026-07-11.md` is the authoritative product strategy.** Approved by the PM/owner in session zero (2026-07-11). It SUPERSEDES the sections now parked under "Legacy (superseded — kept for history)" at the bottom of this file, plus the spec sections stamped `SUPERSEDED` in `vibe_check_mvp_spec.md`. The $3.99 viral-funnel model is concluded dead (memo §0, C1) — do not propose reviving, preserving, or incrementally fixing it.
 
-**What we're building now (memo D1–D6):** a **taste gym** — the product *evaluates and cultivates* taste against Hume's five criteria; it never predicts personality, mood, or psychological states (D1). **[D1 AMENDED 2026-09-16 — suspended for ONE named surface, the prompt card, and intact everywhere else. See "D1 amendment" below; this clause is kept verbatim per the keep-intact rule.]** **[AMENDED AGAIN 2026-09-23 — a second named surface, the five-tap snack. See "D1 amendment, second surface".]** Measurement = performance tasks where the user can be wrong, not self-report (D2). **v1 flagship = the Prestige-Bias Test**; the delicacy battery ships second but is *visible-and-locked* in v1 (D3). Free = the assessment + headline scores; paid = the training arc / progression (D4; pricing open, memo §9.1). **[D4 AMENDED 2026-08-14 — there is no paid tier. The arc is free and validity-gated. See "D4 amendment" below; this clause is kept verbatim per the keep-intact rule.]** Hume narrates each instrument — depth is unlocked, never buried (D5). Analytics = a psychometrics pipeline (IRT, signal detection, calibration/Brier); the proprietary asset is our self-generated response dataset (D6). Project identity: resume-competitive product artifact; revenue = proof of viability, not income (memo C4).
+**What we're building now (memo D1–D6):** a **taste gym** — the product *evaluates and cultivates* taste against Hume's five criteria; it never predicts personality, mood, or psychological states (D1). **[D1 AMENDED 2026-09-16 — suspended for ONE named surface, the prompt card, and intact everywhere else. See "D1 amendment" below; this clause is kept verbatim per the keep-intact rule.]** **[AMENDED AGAIN 2026-09-23 — a second named surface, the five-tap snack. See "D1 amendment, second surface".]** Measurement = performance tasks where the user can be wrong, not self-report (D2). **[D2 SCOPED 2026-09-23, owner ruling BA-4 — D2 governs instruments, what measures how well a person hears or judges; it does not govern the reading, which may start from listening behaviour. RT-H stands for the breadth instrument it refused and does not bind the reading. Kept verbatim per the keep-intact rule.]** **v1 flagship = the Prestige-Bias Test**; the delicacy battery ships second but is *visible-and-locked* in v1 (D3). **[D3 AMENDED 2026-09-23 — the flagship is the reading. See "D3 amendment" below; this clause is kept verbatim per the keep-intact rule.]** Free = the assessment + headline scores; paid = the training arc / progression (D4; pricing open, memo §9.1). **[D4 AMENDED 2026-08-14 — there is no paid tier. The arc is free and validity-gated. See "D4 amendment" below; this clause is kept verbatim per the keep-intact rule.]** Hume narrates each instrument — depth is unlocked, never buried (D5). Analytics = a psychometrics pipeline (IRT, signal detection, calibration/Brier); the proprietary asset is our self-generated response dataset (D6). Project identity: resume-competitive product artifact; revenue = proof of viability, not income (memo C4). **[GOAL RESTATED 2026-09-23 — see "Blueprint of record" below; this clause is kept verbatim per the keep-intact rule.]**
 
 **Standing rules (every session):**
 - Every proposal must cite the memo decision (D1–D6) or guardrail (N1–N3) it serves; if none applies, say so instead of proposing it.
@@ -76,6 +76,8 @@ Appended, not overwritten. It extends the 2026-09-16 suspension to **one more na
 
 **What changes.** D1 is also suspended for **the five-tap music snack**: `/music/quiz` and the reading it produces at `/music/result`. The snack was retired on 2026-09-23 (RT-2 a) and restored the same day (RT-4 c) because it is the part of the product that carried the owner's thesis. That thesis is the spec's §9, P1–P4: taste carries probabilistic cues about current feeling and the stable self, and the gap between what taste reveals and what a person knows is where insight lives. The instruments made the product testable; the snack is where it spoke to the reader.
 
+*[THESIS RESTATED 2026-09-23 — the paragraph above is kept verbatim. The thesis it names is superseded by BP-INSIGHT in `docs/blueprint.md`: the conclusion concerns recent feeling, not "the stable self", and the reading names the pattern while the reader supplies the feeling. The suspension of D1 for the named routes is not changed by this stamp.]*
+
 **Named routes** (machine-read by `src/app/site-d1.test.tsx`; this line, and only this line, is the list): `/music/quiz` · `/music/result`
 
 **Suspension is by name, never by category.** A future reading built from the thesis (RT-4 c, second half) is not covered by this text. It is named here when it ships, so that a guard can check a named route rather than interpret a description.
@@ -86,6 +88,8 @@ Appended, not overwritten. It extends the 2026-09-16 suspension to **one more na
 
 *[AMENDED 2026-09-23, PM ruling RT-7 (b): the snack is EXEMPT from the offer register. It keeps the playful verdict voice it was restored with, labelled at its door as having no measurement behind it. "Offer, do not assert" binds the card, and the reading when it ships. The carve-out below binds the snack as it binds everything. Kept above verbatim per the keep-intact rule.]*
 
+*[REOPENED 2026-09-23, owner ruling BA-3 — RT-7 (b) above is kept verbatim. No surface may assert a feeling. A reading names a pattern and offers what it might mean, because the same pattern can come from opposite feelings (BP-ARG-S1). The snack's exemption from the offer register no longer holds; the snack itself is retired by BA-7. Record: `docs/rt-answers-2026-09-23-audit.md`.]*
+
 **The carve-out stands, reaffirmed** (RT-Z10 (a), 2026-09-16; RT-6 (a), 2026-09-23): no assertion about trauma, abuse, or mental health, on any surface.
 
 **On-surface statement for the card, narrowed, and rendered VERBATIM.** "On this site" became false the moment a second surface could speak about the reader. `src/content/card/statement.test.ts` reads the LAST on-surface statement in this file, because the constitution is append-only and the newest amendment governs:
@@ -95,6 +99,24 @@ Appended, not overwritten. It extends the 2026-09-16 suspension to **one more na
 "The gym" means the four instruments and the pages that describe them. The snack sits beside it, not inside it.
 
 **What it cost, stated rather than glossed.** The pivot of 2026-07-11 concluded the five-tap verdict dead, and the product has mocked it in its own copy since — *five taps, a verdict, and no measurement behind it*. It is now hosted again, beside the instruments. The line between a reading about the person and a measurement of the performance is held only by naming surfaces, so every new surface must be named or it stays under D1. The price is published on `/method` as that page's **second reversal**.
+
+### D3 amendment — the reading is the flagship (owner-approved 2026-09-23, ruling BA-6)
+Appended, not overwritten. Amends **D3 only**; D1, D2, D4, D5, D6 and N1–N3 are untouched by it. The ruling: `docs/rt-answers-2026-09-23-audit.md`.
+
+**Was (memo D3), and it is still there to read — `restructuring_decision_memo_2026-07-11.md` §4:** *V1 flagship: Prestige-Bias Test — cheapest to build, self-controlled ground truth, most shareable statistic.*
+
+**Is now:** **the reading is the flagship and the front door.** A listener's recent plays are read into lines the reader can check, argue with and carry into a prompt (BP-INSIGHT, BP-UNMET in `docs/blueprint.md`). The four instruments — Prestige, Delicacy, Threshold, Ranking — become **the hearing section**, reached from the prompt through BP-BRIDGE: what you can hear decides which words in your prompt are worth spending. The instruments themselves are not changed by this amendment.
+
+**Why:** the blueprint audit found that the product's core — reading a listener's recent taste into words they can check, argue with and carry into a prompt — existed nowhere on the site, and BP-GOAL asks that a reviewer can try the core as its intended user within minutes.
+
+**What it cost, stated rather than glossed:** the Prestige Test stops being the first thing a visitor meets, and the one thing on the site that measures the visitor moves behind a section heading. The reading that replaces it at the door runs on three illustrative listeners (BA-8), so the front door now shows simulated plays, labelled, where it used to show a measurement of the person in front of it.
+
+### Blueprint of record (owner-approved 2026-09-23, Cowork blueprint audit)
+Appended, not overwritten. `docs/blueprint.md` holds the one canonical text of the project's goal (BP-GOAL), insight and its argument (BP-INSIGHT, BP-ARG), demand (BP-DEMAND), unmet demand (BP-UNMET), three challenged assumptions (BP-CA1–3), the bridge from hearing to the prompt (BP-BRIDGE) and business case (BP-BUSINESS). Every other statement of any of them, in a document, on a page or in a component, quotes it by ID verbatim or is registered as a derived line naming the ID it serves (`src/content/blueprint-copies.ts`). `src/content/blueprint.test.ts` fails the build if a quoted copy differs, a derived line loses its ID, or a superseded phrasing returns to the site.
+
+**Standing rule, added to the list above:** every proposal cites the BP statement it serves, alongside the D#/N#. A proposal that serves no BP statement says so.
+
+**Why this exists:** the founding ideas had been restated in at least nine places, in wording that drifted until two copies made different claims, and the four-part PRD was derived from the routes that existed rather than from the blueprint. The fix is one text and a guard, not a better paraphrase.
 
 ## Roles
 - **The user is the Product Manager.** They drive product and design decisions; they are newer to engineering, so explain tradeoffs in plain language and teach as you go. **[AMENDED 2026-09-16, PM ruling RT-Z11 (a) — the clause is kept verbatim per the keep-intact rule, and the CHARACTERISATION inside it is withdrawn. The owner is the owner of this project and an engineering student; describing anybody's level of expertise was never the working rule and is not one now. What is in force is the line below, which constrains the WRITER.]**
@@ -234,6 +256,7 @@ and the PM should push back on it.
 
 ## Result anchoring (credibility-critical)
 *[Re-scoped 2026-07-11: the principle — deterministic computation in code, LLM never classifies — carries into the memo's instruments (D2/D6, N3); the archetype/player-match specifics below describe the legacy product.]*
+*[TEMPLATES ONLY 2026-09-23, owner ruling BA-10 — kept verbatim above and below. No model writes any part of the reading, the prompt, or any other sentence a visitor reads. "The LLM only writes the reading" below no longer holds anywhere.]*
 The verdict (archetype, trait levels, player match) is computed by a **deterministic scoring engine in code** — quiz answers carry fixed point-weights → score vector → archetype + nearest player. The **LLM only writes** the reading for that pre-computed profile; it never classifies. Call the LLM at low temperature with a pinned model snapshot, enum-locked fields, and cache by input hash. See `vibe_check_mvp_spec.md` §6.
 
 ## Build sequence

@@ -12,6 +12,7 @@
 - **C2.** This is **not** generalized to "no distribution exists." The new goals face a different audience (recruiters, admissions committees, developers) through different channels (GitHub, HN/Reddit launches, technical write-ups) where the artifact itself is the marketing.
 - **C3.** The paid product itself was never tested (4 paywall views). Irrelevant now — the model pivots regardless.
 - **C4.** Project identity changes: from "beer-money side project" to **resume-competitive product artifact**. Monetization remains a goal but as *proof of commercial viability*, not income. Revenue expectations reset accordingly.
+  **[GOAL RESTATED 2026-09-23 — C4 is kept verbatim. The goal of record is BP-GOAL in `docs/blueprint.md`. C4's "proof of commercial viability" can never arrive in a product that is never distributed and earns nothing; BP-GOAL replaces the proof with an argued business case (BP-BUSINESS) and the test a company would run to check it.]**
 
 ## 1. North star & guardrails
 
@@ -32,6 +33,8 @@ The product **evaluates and cultivates taste** against Hume's five criteria (del
 
 ## 3. Measurement architecture — D2: performance tasks, not self-report
 
+**[D2 SCOPED 2026-09-23, owner ruling BA-4 — kept verbatim, nothing below is deleted. D2 governs instruments: what measures how well a person hears or judges. It does not govern the reading, which may start from listening behaviour. RT-H (2026-09-07) stands for the breadth instrument it refused and does not bind the reading. Record: `docs/rt-answers-2026-09-23-audit.md`.]**
+
 A 5–10 minute **testing session where the user can be wrong**. Perceived-friction management is the primary design challenge (precedent: 16Personalities ~10 min, 1B+ completions; effort legitimizes the score).
 
 **Instrument 1 — Prestige-Bias Test (freedom from prejudice).** Rate works blind → rate labeled (artist/acclaim). The blind-vs-labeled gap is a measured number; the user is their own control — no external ground truth needed. Nominative use of artist names (same legal footing as §30 KB). **Mandatory debrief screen** after any mislabeling (deception disclosure — also a strong product moment).
@@ -43,6 +46,8 @@ A 5–10 minute **testing session where the user can be wrong**. Perceived-frict
 **Confidence input (95/70/50, kept from §28):** attaches to **performance items only**. Confidence-vs-accuracy yields a **calibration curve** → operationalizes **good sense** as a computed number. Confidence never weights self-report in scoring again.
 
 ## 4. Sequencing — D3: one flagship, one visible locked tier
+
+**[D3 AMENDED 2026-09-23, owner ruling BA-6 — kept verbatim, nothing below is deleted. The flagship is the reading, not the Prestige Test; the four instruments become the hearing section. The amendment is in `CLAUDE.md` under "D3 amendment"; the ruling is `docs/rt-answers-2026-09-23-audit.md`.]**
 
 - **V1 flagship:** Prestige-Bias Test — cheapest to build, self-controlled ground truth, most shareable statistic ("my taste is __% label-driven").
 - **Delicacy battery:** built second; present in v1 as a **visible, locked tier** (a gym has equipment you can see before you're ready). Full five-criteria battery is roadmap, not v1.

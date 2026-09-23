@@ -12,6 +12,8 @@ scored on adoption, retention or revenue; there is none and there will be none. 
 what they demonstrate and how fast that is visible. Anything else would be a column of zeroes
 pretending to be analysis.
 
+*[2026-09-23 — this scoring rule conflicts with BP-GOAL in `docs/blueprint.md`, which asks that a reviewer see why a real company would fund the product and how it would test that. Scoring features only on "what they demonstrate" is the justification N2 names as resume theater. The scores below are kept as computed; the next revision scores features against BP-GOAL. The direction behind this rule (d468c9e, 2026-09-13) cannot be recovered and is reopened (BA-2).]*
+
 ---
 
 ## The two axes
