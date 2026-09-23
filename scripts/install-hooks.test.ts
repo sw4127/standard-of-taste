@@ -36,6 +36,30 @@ describe("pre-push hook wiring", () => {
     expect(hook).toMatch(/exit 1/);
   });
 
+  /**
+   * TRACK V/S3 — the push also refuses a stale generated file. Pinned here
+   * because a hook line nobody notices disappearing is the class this file
+   * exists for: remove it and every push passes with the decks nine days old.
+   */
+  it("re-runs every generator before pushing, after the suite", () => {
+    const hook = stripComments(read(".githooks/pre-push"));
+    const suite = hook.indexOf("vitest run");
+    const check = hook.indexOf("node scripts/check-generated.mjs");
+    expect(check, "pre-push no longer runs check-generated").toBeGreaterThan(suite);
+  });
+
+  it("checks every file the deck exporter writes, no fewer", async () => {
+    const exporter = read("scripts/export-copy-decks.mjs");
+    const written = [
+      ...exporter.matchAll(/file: "(docs\/[^"]+)"/g),
+      ...exporter.matchAll(/writeFileSync\("(docs\/[^"]+)"/g),
+    ].map((m) => m[1]);
+    // Absolute floor: seven on 2026-09-22.
+    expect(written.length).toBeGreaterThanOrEqual(7);
+    const { DECK_OUTPUTS } = await import("./check-generated.mjs");
+    expect([...DECK_OUTPUTS].sort()).toEqual([...new Set(written)].sort());
+  });
+
   it("never reaches the network for a package", () => {
     expect(read(".githooks/pre-push")).toMatch(/npx --no-install/);
   });

@@ -34,8 +34,16 @@ echo "pre-push: running the test suite before pushing..."
 
 # --no-install: never let a hook silently reach the network for a package.
 if npx --no-install vitest run; then
-  echo "pre-push: suite green — pushing."
-  exit 0
+  echo "pre-push: suite green — checking generated files..."
+  # A generated file is only as fresh as the last run of its generator
+  # (Track V/S3): re-run every one and refuse the push if a committed
+  # artefact differs from what its generator writes today.
+  if node scripts/check-generated.mjs; then
+    echo "pre-push: generated files fresh — pushing."
+    exit 0
+  fi
+  echo "pre-push: BLOCKED — commit the regenerated files listed above, then push again." >&2
+  exit 1
 fi
 
 cat >&2 <<'MSG'
