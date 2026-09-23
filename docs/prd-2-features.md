@@ -2,6 +2,8 @@
 
 **Status: slice 2 of 4.** Part 1 is `docs/prd-1-use-cases.md`. Brief: `docs/task-prd.md`.
 
+*[2026-09-23 — this part describes the product BEFORE the blueprint audit: the Prestige Test as flagship, the gym as the product, and the use-case numbers of the earlier inventory. The product of record is now the reading (BA-6, `docs/rt-answers-2026-09-23-audit.md`), and part 1 has been re-derived from `docs/blueprint.md` with new numbering. This part is revised next; until then, read it as the record of what was specified, not as the specification.]*
+
 **What this is for.** Two audiences with opposite needs. A reviewer at a larger company has ten
 minutes and wants to know which decisions here were hard. The owner wants a reusable method — which
 features earned their build cost, so the next project can be scoped by the same reasoning rather than

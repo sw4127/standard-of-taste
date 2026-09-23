@@ -3,6 +3,8 @@
 **Status: slice 3 of 4.** Parts 1 and 2: `docs/prd-1-use-cases.md`, `docs/prd-2-features.md`.
 Brief: `docs/task-prd.md`.
 
+*[2026-09-23 — this part describes the product BEFORE the blueprint audit: the Prestige Test as flagship, the gym as the product, and the use-case numbers of the earlier inventory. The product of record is now the reading (BA-6, `docs/rt-answers-2026-09-23-audit.md`), and part 1 has been re-derived from `docs/blueprint.md` with new numbering. This part is revised next; until then, read it as the record of what was specified, not as the specification.]*
+
 **This is the part engineering and QA read.** Every requirement names the exported symbol that
 implements it, so a reader can check the claim instead of trusting it — `prd-requirements.test.ts`
 opens each file and fails if a cited symbol is not exported. That is criterion 3 of the brief, and it

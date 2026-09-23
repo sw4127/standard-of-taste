@@ -3,6 +3,8 @@
 **Status: slice 4 of 4. The PRD is complete with this file.**
 Parts 1–3: `docs/prd-1-use-cases.md`, `docs/prd-2-features.md`, `docs/prd-3-requirements.md`.
 
+*[2026-09-23 — this part describes the product BEFORE the blueprint audit: the Prestige Test as flagship, the gym as the product, and the use-case numbers of the earlier inventory. The product of record is now the reading (BA-6, `docs/rt-answers-2026-09-23-audit.md`), and part 1 has been re-derived from `docs/blueprint.md` with new numbering. This part is revised next; until then, read it as the record of what was specified, not as the specification.]*
+
 ## Why this is measurements and not pictures, stated first
 
 A PRD normally carries wireframes. **This one carries measured geometry instead, and the substitution

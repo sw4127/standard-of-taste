@@ -83,6 +83,44 @@ describe("the PRD covers every route", () => {
 });
 
 /** Small words only — the summary spells the evidenced count. */
+/**
+ * DERIVED FROM THE BLUEPRINT, AND THE COUNT DERIVED FROM THE WALK (blueprint Part 8).
+ *
+ * The first version of this PRD walked the routes and wrote a use case for
+ * each, so it described what was built rather than what the blueprint asked
+ * for. The re-derivation makes two promises and these hold them: every use case
+ * names the BP statement it serves, and the sentence that counts the routes is
+ * computed here from the walk and the document's own sections — a route serving
+ * a use case, serving no BP statement, or out of scope, each exactly once.
+ */
+describe("the PRD is derived from the blueprint", () => {
+  const prd = readFileSync(PRD, "utf8");
+  const all = routes();
+  const sections = prd.split(NL + "## ").slice(1);
+  const routesIn = (text: string) => [...text.matchAll(/`(\/[^`\s]*)`/g)].map((m) => m[1]).filter((r) => all.includes(r));
+  const bucket = (pred: (heading: string) => boolean) =>
+    new Set(sections.filter((sec) => pred(sec.split(NL)[0])).flatMap((sec) => routesIn(sec)));
+  const noBp = bucket((h) => /serve no BP statement/.test(h));
+  const outOfScope = bucket((h) => /^Out of scope/.test(h));
+  const useCase = bucket((h) => !/serve no BP statement|^Out of scope|^How to read|^What this part/.test(h));
+
+  it("names a BP statement in every use case", () => {
+    const rows = prd.split(NL).filter((l) => l.startsWith("| **UC-"));
+    expect(rows.length, "no use-case rows found").toBeGreaterThanOrEqual(10);
+    expect(rows.filter((r) => !/\bBP-[A-Z]/.test(r)).map((r) => r.slice(0, 60))).toEqual([]);
+  });
+
+  it("places every route in exactly one bucket", () => {
+    const placed = all.map((r) => [r, [useCase.has(r), noBp.has(r), outOfScope.has(r)].filter(Boolean).length] as const);
+    expect(placed.filter(([, n]) => n !== 1).map(([r, n]) => `${r} in ${n} buckets`)).toEqual([]);
+  });
+
+  it("states the route count the walk finds, bucket by bucket", () => {
+    const sentence = `That is ${all.length} routes: ${useCase.size} serving a use case, ${noBp.size} serving no BP statement, ${outOfScope.size} out of scope.`;
+    expect(prd, `the count sentence should read: ${sentence}`).toContain(sentence);
+  });
+});
+
 function wordFor(n: number): string {
   return ["zero", "one", "two", "three", "four", "five", "six", "seven"][n] ?? String(n);
 }

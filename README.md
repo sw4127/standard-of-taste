@@ -1,8 +1,12 @@
 # Standard of Taste
 
-**A measurement instrument for aesthetic judgment.** It gives you a number about your own taste that you can be *wrong* about — scored deterministically from what you did, not from what you said about yourself.
+**A reading of a listener's recent taste, in lines they can check against the plays, argue with, and carry into a prompt** — and hearing tests that measure which of that prompt's words they can actually hear.
 
-**→ [Try it](https://vibe-check-app-sepia.vercel.app)** · [The Lab](https://vibe-check-app-sepia.vercel.app/lab) (the analytics layer, public) · [Reading room](https://vibe-check-app-sepia.vercel.app/learn) · [Method](https://vibe-check-app-sepia.vercel.app/method) (how it was decided, including what was killed)
+The insight, quoted from the blueprint of record, [`docs/blueprint.md`](docs/blueprint.md) (BP-INSIGHT): **Your recent taste carries cues about what you have been feeling, and because almost nobody can describe their own taste, putting its pattern into words gives you language for how those feelings show up in what you reach for.**
+
+The gap it fills (BP-UNMET): **Existing tools label your listening, turn your words into playlists, or turn a playlist into a song without showing you why; none gives you a readable account of your recent taste that you can check, argue with, and carry into a prompt.**
+
+**→ [Try the reading](https://vibe-check-app-sepia.vercel.app/reading)** · [The hearing tests](https://vibe-check-app-sepia.vercel.app/) (on the front door) · [The company view](https://vibe-check-app-sepia.vercel.app/company) (illustrative: why a streaming service would build it, and the test that would decide it) · [Why this exists](https://vibe-check-app-sepia.vercel.app/learn/why) · [Reading room](https://vibe-check-app-sepia.vercel.app/learn) · [The Lab](https://vibe-check-app-sepia.vercel.app/lab) · [Method](https://vibe-check-app-sepia.vercel.app/method) (how it was decided, including what was killed)
 
 ---
 
@@ -13,18 +17,19 @@ Pick the one that matches the time you have. Each is a complete answer on its ow
 | You have | Do this | What you learn |
 |---|---|---|
 | **60 seconds** | Read *What it refuses to do*, below | The one design constraint everything else follows from: the instrument has never been fielded, so it publishes no percentile, no norm and no comparison between people — and every synthetic figure is badged as synthetic |
-| **8 minutes** | [Take the Prestige Test](https://vibe-check-app-sepia.vercel.app/bias) | The product, doing the only thing it claims: rate sixteen clips blind, rate them again with artist names attached — two of them false — and get the gap between your own two judgments. No account, nothing stored off your device |
+| **2 minutes** | [Try the reading](https://vibe-check-app-sepia.vercel.app/reading) | The product: pick one of three illustrative listeners, read a month of their plays back as lines — each with the plays behind it and two offered readings — reject what doesn't fit, and watch the prompt at the end change. Three taps from the front door to a (labelled, mock) creation screen |
+| **8 minutes** | [Take the Prestige Test](https://vibe-check-app-sepia.vercel.app/bias) | The first hearing test: rate sixteen clips blind, rate them again with artist names attached — two of them false — and get the gap between your own two judgments. No account, nothing stored off your device |
 | **5 minutes, reading** | [The Lab](https://vibe-check-app-sepia.vercel.app/lab) → [what the instruments cannot do](https://vibe-check-app-sepia.vercel.app/lab/instrument-limits) → [hypotheses this project disproved](https://vibe-check-app-sepia.vercel.app/lab/falsified) | The evidence layer. Thirty-three entries of things this project believed and then measured its way out of, each citing the file that killed it |
 | **10 minutes, hiring** | [Method](https://vibe-check-app-sepia.vercel.app/method) | What was refused and what each refusal cost — a paid business model withdrawn, a ranked verdict killed by its own measurement at 30.5%, a human quality gate deleted and replaced with code |
 | **Reading the code** | [`ARCHITECTURE.md`](ARCHITECTURE.md), then [`src/engine/`](src/engine) | Deterministic scoring in pure TypeScript. Zero model calls anywhere in the measurement path |
 
-**The shortest honest summary.** Four instruments are live and work end to end. The analytics behind them are validated against simulated responses and labelled as such, because **no human has yet been fielded on it** — so nothing here is a percentile, and the project says so on every surface rather than in a footnote.
+**The shortest honest summary.** The reading runs on three illustrative listeners whose plays are generated and labelled as such — nobody's real listening history is read anywhere. Four hearing tests are live and work end to end. The analytics behind them are validated against simulated responses and labelled as such, because **no human has yet been fielded on it** — so nothing here is a percentile, and the project says so on every surface rather than in a footnote.
 
 ---
 
 In 1757 David Hume argued that taste is not arbitrary, and named five things a real judge needs: freedom from prejudice, delicacy, good sense, comparison, and practice. He never got to measure any of it.
 
-That's the project. Each criterion becomes a **performance task where you can be objectively wrong**, not a questionnaire. It predicts no personality, no mood, no psychological state. It measures whether a famous name moves your ratings, whether your ears can find damage nobody pointed at, and how small that damage can get before you lose it.
+That's the hearing section. Each criterion becomes a **performance task where you can be objectively wrong**, not a questionnaire. The hearing tests predict no personality, no mood, no psychological state. It measures whether a famous name moves your ratings, whether your ears can find damage nobody pointed at, and how small that damage can get before you lose it.
 
 **Who it's for.** People making music with AI tools — especially for game, video and film audio. The recurring problem is not that a generation sounds bad; it is that it sounds *wrong* in a way you cannot name, so you regenerate blind and hope. The kinds of damage these instruments measure are the ones that actually show up in generated audio: pitch drift (sour, seasick, nothing you can point at is off-key), timing smear (rubbery, the groove will not lock) and compression damage (cheap, underwater, brittle). Each has a name, a unit and a machine that measures it — [what each one is called and what it sounds like](https://vibe-check-app-sepia.vercel.app/learn/flaws).
 
@@ -70,7 +75,7 @@ This is the design constraint the whole codebase is organised around, and the re
 - **Everything synthetic is badged `SIMULATED`** — in the app, on every chart, in the docs. Responses generated from a known model to validate the estimators are never displayed as if they came from people who don't exist.
 - **The estimators were validated by parameter recovery before fielding**, which is the honest order: generate responses from *known* item and ability parameters, estimate as though they were unknown, and measure the error. [See it run](https://vibe-check-app-sepia.vercel.app/lab/recovery).
 - **Item difficulty is explicitly uncalibrated** and said so on every surface that touches it. Difficulty is a property of response data, and there is no response data.
-- **Zero LLM calls anywhere in the instrument.** Every displayed number is arithmetic over your raw taps, in pure TypeScript.
+- **Zero LLM calls anywhere on the site** (owner ruling BA-10). Every displayed number is arithmetic over your raw taps, in pure TypeScript, and every sentence is a template; `src/app/no-model-text.test.ts` fails the build if a page or API route reaches a model client.
 
 Findings get published even when they're unflattering. The delicacy pool's reliability under simulation is **α ≈ 0.49 against a 0.70 conventional floor** — Spearman-Brown puts that floor near 44 trials, roughly two and a half times the current length. That sits in the public metric dictionary, next to the metric it undermines, and the figure is pinned by a test against the live pool so it cannot quietly go stale.
 

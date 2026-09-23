@@ -41,6 +41,10 @@ export const BLUEPRINT_COPIES: readonly BlueprintCopy[] = [
   { path: "docs/index.html", id: "BP-F1", mode: "quoted" },
   { path: "docs/index.html", id: "BP-F2", mode: "quoted" },
   { path: "docs/index.html", id: "BP-UNMET", mode: "quoted" },
+  // Blueprint Part 8: the two public pages quote the insight, and the README the unmet demand.
+  { path: "docs/index.html", id: "BP-INSIGHT", mode: "quoted" },
+  { path: "README.md", id: "BP-INSIGHT", mode: "quoted" },
+  { path: "README.md", id: "BP-UNMET", mode: "quoted" },
   // The repository's front page (change list B8).
   { path: "README.md", id: "BP-F1", mode: "quoted" },
   { path: "README.md", id: "BP-F2", mode: "quoted" },

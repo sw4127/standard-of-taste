@@ -96,11 +96,12 @@ footer{border-top:1px solid var(--rule);padding-top:20px;font-size:14px;color:va
 <div class="wrap">
 
 <header>
-  <p class="kicker">Standard of Taste · an instrument, not a quiz</p>
-  <h1>What your ear <em>lets through</em></h1>
-  <p class="standfirst">A web instrument that measures which categories of audio flaw you catch and which get past you — in cents of pitch drift, milliseconds of timing error, kilobits per second. A number about your own taste that you can be wrong about.</p>
+  <p class="kicker">Standard of Taste · a reading you can argue with</p>
+  <h1>What a month of listening <em>says</em></h1>
+  <p class="standfirst">A reading of a listener's recent plays, in lines you can check against the plays, argue with, and carry into a prompt for a music generator — then hearing tests that measure, in cents, milliseconds and kilobits per second, which of that prompt's words you can actually hear.</p>
   <div class="cta">
-    <a class="btn solid" href="https://vibe-check-app-sepia.vercel.app/">Take a test</a>
+    <a class="btn solid" href="https://vibe-check-app-sepia.vercel.app/reading">Try the reading</a>
+    <a class="btn" href="https://vibe-check-app-sepia.vercel.app/company">The company view</a>
     <a class="btn" href="https://vibe-check-app-sepia.vercel.app/lab">The analytics lab</a>
     <a class="btn" href="https://vibe-check-app-sepia.vercel.app/method">Method</a>
     <a class="btn" href="https://github.com/sw4127/standard-of-taste">Source</a>
@@ -112,12 +113,14 @@ footer{border-top:1px solid var(--rule);padding-top:20px;font-size:14px;color:va
 <section>
   <p class="eyebrow">Why it exists</p>
   <h2>Two findings the incumbents cannot serve</h2>
+  <p>The insight of record (BP-INSIGHT, <a href="https://github.com/sw4127/standard-of-taste/blob/main/docs/blueprint.md">docs/blueprint.md</a>):</p>
+  <p><strong>Your recent taste carries cues about what you have been feeling, and because almost nobody can describe their own taste, putting its pattern into words gives you language for how those feelings show up in what you reach for.</strong></p>
   <p>The project began with user interviews conducted for a Columbia Business School product engagement with Tidal. Two of them did not fit the product being built, and became this one instead.</p>
   <ul>
     <li><strong>Past listening predicts less than present and forming taste.</strong> Recommendation systems are built almost entirely on play history — a record of who you were.</li>
     <li><strong>Almost nobody can describe their own taste in words.</strong> Nearest-neighbour and embedding models encode taste as coordinates. Those coordinates are machine-readable and not human-readable, so the system can act on your taste while you still cannot articulate it.</li>
   </ul>
-  <p>Both point at the same gap. <strong>Existing tools label your listening, turn your words into playlists, or turn a playlist into a song without showing you why; none gives you a readable account of your recent taste that you can check, argue with, and carry into a prompt.</strong></p>
+  <p>Both point at the same gap (BP-UNMET). <strong>Existing tools label your listening, turn your words into playlists, or turn a playlist into a song without showing you why; none gives you a readable account of your recent taste that you can check, argue with, and carry into a prompt.</strong></p>
 </section>
 
 <hr>
@@ -159,7 +162,7 @@ footer{border-top:1px solid var(--rule);padding-top:20px;font-size:14px;color:va
   <div class="lane">
     <div class="lane-head">If you have thirty seconds</div>
     <div class="lane-body">
-      <p>Open the Prestige Test and rate sixteen short music clips. The debrief at the end tells you which of the names you were shown were invented, and by how many points your own rating moved toward them. That moment is the product.</p>
+      <p>Open the reading and pick one of three illustrative listeners. A month of their plays comes back as lines, each pointing at the plays behind it and offering two things it might mean as questions. Reject a line and the prompt at the end changes; that argument is the product. In the hearing section, the Prestige Test has you rate sixteen short music clips twice, and its debrief — which of the names you were shown were invented — is the best minute.</p>
     </div>
   </div>
 
@@ -167,6 +170,7 @@ footer{border-top:1px solid var(--rule);padding-top:20px;font-size:14px;color:va
     <div class="lane-head">If you assess products</div>
     <div class="lane-body">
       <p>The interesting decisions are the deletions. A six-tier ranking was removed after it classified respondents correctly only <strong>30.5%</strong> of the time, replaced by an interval wide enough to be true. A priced tier was removed because charging for the training loop would have put the honest deliverable behind a wall. A predecessor product was discontinued on measured demand of <strong>29 visitors</strong>.</p>
+      <p>The <a href="https://vibe-check-app-sepia.vercel.app/company">company view</a> argues why a fictional streaming service would build the reading, names the metric it would move and the guardrails it would watch, and sizes the A/B test that would kill it — every number labelled a planning assumption.</p>
       <p>Every open decision was classified by severity and reversibility: reversible choices advanced on a stated default, while one-way doors — pricing, data schema, deletions — halted for explicit sign-off.</p>
     </div>
   </div>
@@ -183,7 +187,7 @@ footer{border-top:1px solid var(--rule);padding-top:20px;font-size:14px;color:va
   <div class="lane">
     <div class="lane-head">If you assess engineering</div>
     <div class="lane-body">
-      <p><strong>No language model touches a verdict.</strong> A fixed-weight scoring engine and an authored, version-controlled knowledge base compute every result in code; where a model is used at all it is confined to prose, enum-locked, at low temperature on a pinned snapshot, cached by input hash. Roughly 250 cached generations cover 3,456 result permutations, bounding worst-case lifetime inference cost near one dollar, with transient failures excluded from the cache so a fallback can never be pinned.</p>
+      <p><strong>No language model writes anything a visitor reads.</strong> Every result is computed in code and every sentence, the reading's included, is a template. The last model-written surface was removed with the retired quiz, and a test walks the import graph from every page and API route and fails the build if one reaches a model client.</p>
       <p>Share links carry the respondent's raw answers and every surface recomputes from them, so an edited URL can only display what the engine would genuinely conclude. All audio is public-domain or Creative Commons, each item carrying a captured licence proof and a SHA-256 of its source file; continuous integration fails if either is missing.</p>
     </div>
   </div>
@@ -205,7 +209,9 @@ footer{border-top:1px solid var(--rule);padding-top:20px;font-size:14px;color:va
     <table>
       <thead><tr><th>Element</th><th>State</th><th>What changes</th></tr></thead>
       <tbody>
-        <tr><td>Four instruments</td><td class="m"><span class="tag b">built</span></td><td>Live now</td></tr>
+        <tr><td>The reading</td><td class="m"><span class="tag b">built</span></td><td>The front door: a month of an illustrative listener's plays read into lines with receipts and offered readings, ending in a prompt and a labelled mock creation screen</td></tr>
+        <tr><td>The company view</td><td class="m"><span class="tag b">built</span></td><td>Illustrative: the business case, the metric tree and the A/B test that would decide it</td></tr>
+        <tr><td>Four instruments</td><td class="m"><span class="tag b">built</span></td><td>Live now, as the hearing section</td></tr>
         <tr><td>Plain-language readout</td><td class="m"><span class="tag b">built</span></td><td>Every result ends in sentences instead of a unit</td></tr>
         <tr><td>Expert view</td><td class="m"><span class="tag b">built</span></td><td>Per-family thresholds, trial record, calibration curve and critic-pair gaps, with no verdict attached — on all four instruments</td></tr>
         <tr><td>Calibration surfaced</td><td class="m"><span class="tag b">built</span></td><td>Computed all along; now a named line a person will read</td></tr>
@@ -227,7 +233,7 @@ footer{border-top:1px solid var(--rule);padding-top:20px;font-size:14px;color:va
   <p class="eyebrow">Constraints</p>
   <h2>What it refuses to do</h2>
   <ul>
-    <li><strong>No personality inference.</strong> It measures a performance and makes no claim about the person.</li>
+    <li><strong>No personality inference, and no asserted feeling.</strong> The hearing tests measure a performance and make no claim about the person. The reading names a pattern in the plays and offers what it might mean as a question; which reading is right, if either, is the reader's to say.</li>
     <li><strong>No percentiles.</strong> There is no cohort, so there is no honest rank to report.</li>
     <li><strong>No language model in the scoring path.</strong> Two respondents with the same answers get the same result, always.</li>
     <li><strong>No points, streaks or leaderboards.</strong> Refused by standing rule, not by oversight.</li>

@@ -1,13 +1,18 @@
 # PRD — Standard of Taste · Part 1: the use-case inventory
 
-**Status: part 1 of 4 — the PRD is complete.** The other three: `docs/prd-2-features.md` (what each feature proves and how fast a reviewer sees it), `docs/prd-3-requirements.md` (functional requirements, each citing the symbol that implements it), `docs/prd-4-screens.md` (measured screen specifications). Brief and definition of done: `docs/task-prd.md`. This part answers *what
-tasks can a person complete here* and labels each by the evidence behind it. Functional
-requirements, non-goals and wireframes are parts 2 to 4.
+**Status: part 1 of 4, re-derived from the blueprint on 2026-09-23.** The other three —
+`docs/prd-2-features.md`, `docs/prd-3-requirements.md`, `docs/prd-4-screens.md` — describe the
+product as it stood before the blueprint audit and are stamped to say so; they are revised next.
+Brief and definition of done: `docs/task-prd.md`.
 
-**Derived, not recalled.** The route list is walked from `src/app`; 38 routes render a page. Every
-one appears below or is listed as out of scope with a reason, which is criterion 1 of the brief.
+**Derived from the blueprint, then checked against the routes.** The first version of this part
+walked the routes in `src/app` and wrote a use case for each, so it described what had been built
+rather than what the blueprint asked for. This version starts from `docs/blueprint.md`: every use
+case below names the BP statement it serves. Then the routes are walked — 38 render a page — and
+every one is placed: as serving a use case, as serving **no** BP statement (listed, not hidden), or
+as out of scope with a reason.
 
-**Blueprint of record:** `docs/blueprint.md` (2026-09-23). This inventory was derived from the routes that exist and did not cite the blueprint; the next revision of this PRD derives its use cases from the blueprint and marks any route that serves no BP statement.
+*The use-case numbers below replace the earlier inventory's. Parts 2–4 cite the earlier numbers.*
 
 ---
 
@@ -15,78 +20,91 @@ one appears below or is listed as out of scope with a reason, which is criterion
 
 Every use case carries one, and the ratio is stated rather than buried.
 
-- **EVIDENCED** — traceable to something real: one of the two Tidal listener findings, a measured
-  result, or a behaviour somebody has actually performed.
-- **ASSUMED** — a plausible task nobody has confirmed anyone wants.
+- **EVIDENCED** — its direct basis is an evidenced BP statement: one of the two listener-interview
+  findings (BP-F1, BP-F2) or the premise built on them (BP-CA2). Evidenced *qualitatively*: the
+  interviews establish what listeners reported, not a measured effect.
+- **ASSUMED** — it rests on an assumed statement (BP-DEMAND above all: nobody has been observed
+  wanting any of this), an inference, or a philosophical position.
 
-**The count: 3 EVIDENCED, 16 ASSUMED.** That ratio is the most useful sentence in this document and
-it is not flattering. It is what a product with zero fielded users looks like when it is honest. The
-three evidenced ones rest on interviews conducted for a Columbia Business School engagement with
-Tidal, which produced two findings: that past listening predicts less than present and forming
-taste, and that **almost nobody can describe their own taste in words**.
+**The count: 3 EVIDENCED, 12 ASSUMED.** It is what a product with zero fielded users looks like when
+it is honest. The interviews behind the evidenced three were conducted for a Columbia Business
+School engagement with Tidal and produced two findings: that past listening predicts less than
+present and forming taste, and that **almost nobody can describe their own taste in words**.
 
-**One datum points the other way and is recorded here because it is the only primary research this
-product has on its stated audience.** Asked on 2026-09-13 whether sound quality is a problem he has
-when generating music with an AI tool, the owner — the one person who makes music this way and has
-been asked — said it is not. n = 1, unblinded, and the respondent owns the outcome. It is evidence
-against UC-2 and UC-3 and it is not ignored.
+**One datum points the other way, and it is recorded because it is the only primary research on
+the hearing section's audience.** Asked on 2026-09-13 whether sound quality is a problem when
+generating music with an AI tool, the owner — the one person who makes music that way and has been
+asked — said it is not. n = 1, unblinded, and the respondent owns the outcome. It is evidence
+against UC-6, and it is not ignored.
+
+**Relabelled in this revision, with the reason.** The earlier inventory marked the Prestige Test and
+the retest arc EVIDENCED. The Prestige Test's basis was BP-F2 (people cannot describe their taste),
+but what it serves in the blueprint is BP-CA3, which is a philosophical position, not evidence. The
+retest arc's basis was BP-F1, which is about taste changing, not about an ear improving. Both are
+ASSUMED here.
 
 ---
 
-## The instruments — what a person actually does
+## The core: the reading — BP-INSIGHT, BP-UNMET, BP-DEMAND, BP-CA1, BP-CA2
 
-| # | Use case | Route | Label | Rests on |
+| # | Use case | Route | Label | Serves |
 |---|---|---|---|---|
-| **UC-1** | Find out whether a famous name moves my judgment, by rating clips blind and then labelled | `/bias` → `/bias/result` | **EVIDENCED** | Finding 2: people cannot describe their own taste. This measures a gap between two of a person's own judgments and hands back a number they could not have self-reported |
-| **UC-2** | Find out how small an audio flaw I can still hear | `/delicacy` → `/delicacy/result` | **ASSUMED** | The flaw families map onto failure modes of generated audio. The mapping is an argument; no one in that audience has confirmed it, and the one asked said no |
-| **UC-3** | Get that as a threshold in physical units, not a score | `/threshold`, `/threshold/[slug]`, `/threshold/[slug]/result` | **ASSUMED** | Same as UC-2. It is the product's stated deliverable of record and its demand is unmeasured |
-| **UC-4** | Find out whether my judgments spread the way a critic's did, without being scored against him | `/spread` | **ASSUMED** | Derived from Hume's *comparison*, not from a user asking for it |
-| **UC-5** | Find out whether my ear moved between two sittings | the retest arc, on all result screens | **EVIDENCED** | Finding 1: past listening predicts less than present and forming taste. This is the only instrument that measures change rather than state |
-| **UC-6** | See every number behind my result, with no verdict attached | the expert panel, on all result screens | **ASSUMED** | Built on the engineer's diagnosis that experts reject standardised scores. Plausible, unconfirmed |
-| **UC-18** | Read what a month of recent plays shows, check each line against the plays, argue with it, and carry what survives into a prompt | `/reading` | **ASSUMED** | BP-INSIGHT and BP-UNMET in `docs/blueprint.md`. It runs on illustrative listeners and nobody has used it; this row was added when the route shipped, ahead of the re-derivation from the blueprint |
-| **UC-19** | See why a streaming company would build the reading, what it would measure, and the test that would decide it | `/company` | **ASSUMED** | BP-BUSINESS and BP-GOAL in `docs/blueprint.md`. Illustrative: the company is fictional and every number is a planning assumption |
-| **UC-7** | Share a result without it carrying my session's private detail | `/bias/result`, `/delicacy/result` share paths | **ASSUMED** | The share loop has never run; the funnel it was built for was measured at 29 visitors and concluded dead |
+| **UC-1** | Get words for what my recent listening shows, because I could not have described it myself | `/reading` | **EVIDENCED** | BP-INSIGHT, BP-CA2 (BP-F2) |
+| **UC-2** | Check each line against the plays that produced it | `/reading` (the receipts) | **ASSUMED** | BP-ARG-REPLY, BP-UNMET |
+| **UC-3** | Argue with a line: reject it, or choose which of two readings fits, or neither | `/reading` | **ASSUMED** | BP-UNMET, BP-ARG-S1 |
+| **UC-4** | See what I am reaching for now and starting to reach for, not my all-time favourites | `/reading` (new vs known, the drift line) | **EVIDENCED** | BP-CA1 (BP-F1) |
+| **UC-5** | Carry what survives into a prompt for music about my own life | `/reading` (the prompt and the mock creation screen) | **ASSUMED** | BP-DEMAND, BP-UNMET |
 
-## Understanding what the product measured
+## The bridge: the hearing section — BP-BRIDGE, BP-CA3
 
-| # | Use case | Route | Label | Rests on |
+| # | Use case | Route | Label | Serves |
 |---|---|---|---|---|
-| **UC-8** | Learn what a flaw is called and what it sounds like, so I have a word for it | `/learn/flaws` | **EVIDENCED** | Finding 2, directly. It is the one surface built to turn an inarticulate complaint into vocabulary |
-| **UC-9** | Read what each of Hume's five criteria means and how it is measured | `/learn`, `/learn/why`, `/learn/freedom-from-prejudice`, `/learn/delicacy`, `/learn/good-sense`, `/learn/comparison`, `/learn/practice`, `/learn/prestige-bias-test`, `/learn/ranking-test` | **ASSUMED** | A reading room nobody has been observed using |
-| **UC-10** | Check how the instruments work before trusting a number | `/learn/methodology` | **ASSUMED** | |
-| **UC-11** | Find out what the instruments cannot do | `/lab/instrument-limits` | **ASSUMED** | |
+| **UC-6** | Find out which of my prompt's words I can actually hear | `/threshold`, `/threshold/[slug]`, `/threshold/[slug]/result`, `/delicacy`, `/delicacy/result` | **ASSUMED** | BP-BRIDGE. The one datum above points against it |
+| **UC-7** | Learn what a flaw is called and what it sounds like, so I have a word for it | `/learn/flaws` | **EVIDENCED** | BP-BRIDGE, BP-CA2 (BP-F2) |
+| **UC-8** | Find out whether a famous name moves my judgment | `/bias`, `/bias/result` | **ASSUMED** | BP-CA3: bad judgment comes from defects that can be removed, prejudice among them |
+| **UC-9** | Find out whether my ratings spread where a critic's did, without being scored against the critic | `/spread` | **ASSUMED** | BP-CA3 |
+| **UC-10** | Find out whether my ear moved between two sittings | the retest arc, on the hearing results | **ASSUMED** | BP-CA3 (practice) |
+| **UC-11** | Read what each of Hume's criteria means and how it is measured | `/learn`, `/learn/freedom-from-prejudice`, `/learn/delicacy`, `/learn/good-sense`, `/learn/comparison`, `/learn/practice`, `/learn/prestige-bias-test`, `/learn/ranking-test` | **ASSUMED** | BP-CA3 |
 
-## Assessing the project rather than using it
+## The argument and the business case — BP-ARG, BP-GOAL, BP-BUSINESS
 
-These are the recruiter's and the reviewer's tasks. They are ASSUMED in the same sense as the rest —
-no reviewer has been observed — but they are the use cases the artifact was reorganised around.
+| # | Use case | Route | Label | Serves |
+|---|---|---|---|---|
+| **UC-12** | Read the argument the reading rests on, with its weakest step marked | `/learn/why` | **ASSUMED** | BP-ARG, BP-ARG-WEAK |
+| **UC-13** | See why a company would fund the reading and how it would test that | `/company` | **ASSUMED** | BP-BUSINESS, BP-GOAL |
+| **UC-14** | Try the core as its intended user within minutes | `/` | **ASSUMED** | BP-GOAL |
+| **UC-15** | Understand the product without using it | `/` | **ASSUMED** | BP-GOAL, BP-INSIGHT |
 
-| # | Use case | Route | Label |
-|---|---|---|---|
-| **UC-12** | Judge how this project is run, and what it refused | `/method` | **ASSUMED** |
-| **UC-13** | Check the analytics pipeline against data whose truth is known | `/lab`, `/lab/recovery`, `/lab/instrument-health` | **ASSUMED** |
-| **UC-14** | Read what the project believed and then disproved | `/lab/falsified` | **ASSUMED** |
-| **UC-15** | Find out what is stored about me and clear it | `/lab/data-model`, `/legal` | **ASSUMED** |
-| **UC-16** | Understand the product in under a minute without using it | `/` | **ASSUMED** |
-| **UC-17** | Read the code that computes a claim I have just read | the repository | **ASSUMED** |
+## Routes that serve no BP statement
+
+Listed rather than hidden. They are the project's credibility and its obligations, not its core, and
+the blueprint does not ask for them. Each stays for the reason given.
+
+| Routes | Why they stay |
+|---|---|
+| `/method` | How the product was built and what was refused (BA-12 puts the account of building with an AI engineer here, not in the product) |
+| `/lab`, `/lab/recovery`, `/lab/instrument-health`, `/lab/falsified`, `/lab/instrument-limits`, `/lab/data-model` | The analytics pipeline validated against simulated data, the measured limits, the falsified hypotheses and what is stored (N3, D6) |
+| `/learn/methodology` | How the hearing tests score, for a reader deciding whether to trust a number (N3) |
+| `/legal` | Terms and privacy |
 
 ## Out of scope, with reasons
 
 | Routes | Why |
 |---|---|
-| `/quiz`, `/result`, `/music/quiz`, `/music/result`, `/fan-verdict`, `/vs` | The legacy World-Cup funnel, and the music snack: retired 2026-09-23 (BA-7), redirect to the reading. Kept alive only so shared URLs do not 404 (`CLAUDE.md`, Legacy). No use case is specified for them and none should be |
+| `/quiz`, `/result`, `/music/quiz`, `/music/result`, `/fan-verdict`, `/vs` | The legacy World-Cup funnel, and the music snack: retired 2026-09-23 (BA-7); the snack's routes redirect to the reading, the rest to the front door. Kept alive only so shared URLs do not 404 (`CLAUDE.md`, Legacy) |
 | `/premium/preview`, `/premium/report` | The paid tier, withdrawn by the D4 amendment. There is no paid tier and none is coming |
 
-**That is 38 routes: 30 carrying use cases, 8 out of scope.**
+**That is 38 routes: 21 serving a use case, 9 serving no BP statement, 8 out of scope.**
 
 ---
 
 ## What this part establishes for the rest of the PRD
 
-1. **The product has one evidenced core and a large assumed periphery.** UC-1, UC-5 and UC-8 are the
-   three with something real behind them, and all three serve the same finding: people cannot say
-   what their taste is. Parts 2 to 4 should specify those first.
-2. **The audience question is unresolved and visible.** UC-2 and UC-3 are the deliverable of record
-   and carry a negative datum. A PRD cannot fix that; it can refuse to hide it.
-3. **The legacy routes are a liability in any document that lists them without a reason.** They are
-   listed with one.
+1. **The core is the reading, and its demand is assumed.** UC-1 and UC-4 rest on the interview
+   findings; everything that says people *want* the reading rests on BP-DEMAND, which nothing
+   supports yet. Parts 2 to 4, revised, should specify UC-1 to UC-5 first.
+2. **The hearing section is reached through an assumed bridge, with a negative datum.** UC-6 is
+   the only reason the instruments sit behind the reading, and the one person asked said the
+   problem it addresses is not theirs.
+3. **A route that serves no BP statement is named as one.** Nine do. They stay for stated reasons;
+   none of them is presented as the product.
