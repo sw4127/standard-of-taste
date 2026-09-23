@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { DELICACY_LIVE } from "./delicacy/items";
 import { LEARN_PAGES, learnPage } from "./learn";
@@ -294,18 +294,30 @@ describe("the secondary doors under the machines", () => {
     expect(SECONDARY_DOORS[0].href, "the creator reference is not the first door").toBe(
       "/learn/flaws",
     );
-    expect(SECONDARY_DOORS).toHaveLength(3);
+    // Absolute, and changed from 3 by RT-1 (2026-09-22) a: the reading-room
+    // door duplicated the header nav and was removed.
+    expect(SECONDARY_DOORS).toHaveLength(2);
   });
 
   /**
    * EVERY DOOR GOES SOMEWHERE. A reading-room href is checked against the
    * registry rather than against a string, so renaming a slug fails here
    * instead of shipping a 404 on the front door.
+   *
+   * EVERY door, since Track V/S1. The filter used to be `startsWith("/learn/")`,
+   * which `"/learn"` itself does not satisfy — so the door this track removed,
+   * and `/music/quiz`, were never checked by the one assertion about where the
+   * doors lead. Two of three were exempt from it. Anything outside the reading
+   * room is now checked against the App Router's own files.
    */
-  it("every reading-room door resolves to a registered page", () => {
-    const broken = SECONDARY_DOORS.filter((d) => d.href.startsWith("/learn/"))
-      .filter((d) => !learnPage(d.href.slice("/learn/".length)))
-      .map((d) => d.href);
+  it("every door resolves to a page that exists", () => {
+    const isAppRoute = (href: string) =>
+      existsSync(`src/app${href === "/" ? "" : href}/page.tsx`);
+    const broken = SECONDARY_DOORS.filter((d) =>
+      d.href.startsWith("/learn/")
+        ? !learnPage(d.href.slice("/learn/".length))
+        : !isAppRoute(d.href),
+    ).map((d) => d.href);
     expect(broken, `these front-door links point at no registered page: ${broken.join(", ")}`).toEqual(
       [],
     );

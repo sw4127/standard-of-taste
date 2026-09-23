@@ -907,7 +907,7 @@ The symptom is deliberately the complaint a person makes BEFORE they have the wo
 
 #### 4.4 The front door
 
-The lead is shown with the machine count interpolated; four is what ships today. The hint sits under the cards, and the three doors are the quiet rows beneath it.
+The lead is shown with the machine count interpolated; four is what ships today. The hint sits under the cards, and the two doors are the quiet rows beneath it.
 
 *The lead. The machine count is a slot — it was three, it is four, and a rewrite that spells it out will be wrong again:*
 
@@ -928,21 +928,16 @@ The lead is shown with the machine count interpolated; four is what ships today.
 
   *As rendered:* “Three kinds of damage, what each one is called, and which machine measures it.”
 
-*The door to `/learn` — its accented label is “Reading room.”, which is a source string too short for this deck to give an id; name it in prose if it is the part that is wrong. The line beneath it:*
-
-`INS-CREATOR-VOCABULARY-17` · OPEN
-> Hume's five criteria, and how we measure them.
-
 *The door to `/music/quiz` — its accented label is “Snack.”, which is a source string too short for this deck to give an id; name it in prose if it is the part that is wrong. The line beneath it:*
 
-`INS-CREATOR-VOCABULARY-18` · OPEN
+`INS-CREATOR-VOCABULARY-17` · OPEN
 > Five taps, a verdict, and no measurement behind it.
 
 #### 4.5 The route from a result to the reference
 
 One string, shown on both the Delicacy and Threshold results. It must stay true after a session that measured one family and after a session that measured three.
 
-`INS-CREATOR-VOCABULARY-19` · OPEN
+`INS-CREATOR-VOCABULARY-18` · OPEN
 > What each flaw is called, and what it sounds like
 
 #### 4.6 The delicacy explainer, now that the machine is open
@@ -951,7 +946,7 @@ These read the live flag and have a second form for the locked state, which is n
 
 *The index card:*
 
-`INS-CREATOR-VOCABULARY-20` · OPEN
+`INS-CREATOR-VOCABULARY-19` · OPEN
 > Machine 02: can your ears find the key in the wine?
 
 *Question:*
@@ -962,7 +957,7 @@ These read the live flag and have a second form for the locked state, which is n
 
 *Answer:*
 
-`INS-CREATOR-VOCABULARY-21` · OPEN
+`INS-CREATOR-VOCABULARY-20` · OPEN
 > Hume retells it from Don Quixote: two of Sancho's kinsmen were asked to judge a hogshead of wine. One found a faint taste of leather, the other of iron, and both were laughed at — until the cask was drained and an old key on a leathern thong was found at the bottom. Their perception was real and verifiable, and that is delicacy.
 
 *Question:*
@@ -973,19 +968,19 @@ These read the live flag and have a second form for the locked state, which is n
 
 *Answer:*
 
-`INS-CREATOR-VOCABULARY-22` · OPEN
+`INS-CREATOR-VOCABULARY-21` · OPEN
 > Public-domain and Creative-Commons recordings are damaged on purpose, by a known amount — ${FAMILY_LIST} — and you pick the original and name the flaw. Unlike a taste quiz, the answers are right or wrong, the difficulty is tunable, and the items can be calibrated with item-response theory.
 
   *As rendered:* “Public-domain and Creative-Commons recordings are damaged on purpose, by a known amount — pitch drift, timing smear and compression damage — and you pick the original and name the flaw. Unlike a taste quiz, the answers are right or wrong, the difficulty is tunable, and the items can be calibrated with item-response theory.”
 
 *Question:*
 
-`INS-CREATOR-VOCABULARY-23` · OPEN
+`INS-CREATOR-VOCABULARY-22` · OPEN
 > Where do the Delicacy Trials sit in the gym?
 
 *Answer:*
 
-`INS-CREATOR-VOCABULARY-24` · OPEN
+`INS-CREATOR-VOCABULARY-23` · OPEN
 > They are machine 02, and the door is open. They were built after the Prestige Test, on the principle that a gym leaves its equipment in plain view long before anyone is ready for it. This one is no longer roped off.
 
 ---
@@ -2199,5 +2194,5 @@ What happened next is the part that is harder to read, and this reading is mine 
 
 ---
 
-**238 sentences, each with an id.** Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.
+**237 sentences, each with an id.** Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.
 

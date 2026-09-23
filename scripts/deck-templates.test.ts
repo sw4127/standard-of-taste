@@ -153,7 +153,10 @@ describe("the copy deck keys sentences to templates", () => {
  * broke no test at all, because the section it sat in still had other ids.
  */
 const COVERED = [
-  { part: 2, name: "the instrument copy", ids: 49 },
+  // 49 -> 48 in Track V/S1: the front door's reading-room door (its line,
+  // "Hume's five criteria, and how we measure them.") was removed by
+  // RT-1 (2026-09-22) a because the header nav already offers that room.
+  { part: 2, name: "the instrument copy", ids: 48 },
   // 36 -> 38 in E20/S1: the fifth refusal, `refusal-composite-index`.
   // 38 -> 40 in E20: the sixth, `refusal-taste-gem`. Each refusal is two ids
   // because it is a `refusal` field and a `price` field.

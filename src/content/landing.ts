@@ -156,14 +156,23 @@ export interface SecondaryDoor {
  * already had two — not a redesign, and it names no audience.
  *
  * WHY THE NEW ONE IS FIRST. The order of a list is a claim about what matters.
- * Of the three, this is the only door that serves the person the blueprint is
- * written for, and the one it displaces describes itself, accurately, as having
- * no measurement behind it.
+ * Of the doors here when it arrived, it was the only one that served the person
+ * the blueprint is written for, and the one it displaced describes itself,
+ * accurately, as having no measurement behind it.
  *
  * WHY THEY MOVED OUT OF JSX AT ALL. Same reason as `landingLead` in E11/S2:
- * prose written into a component is outside the voice deck. Two of these three
- * lines have been on the busiest page in the product, ungated, since the gym
+ * prose written into a component is outside the voice deck. Two of the original
+ * lines had been on the busiest page in the product, ungated, since the gym
  * opened.
+ *
+ * THE READING-ROOM DOOR IS GONE (Track V/S1, PM ruling RT-1 (2026-09-22) a).
+ * It read "Reading room. Hume's five criteria, and how we measure them." and
+ * the header nav added in Phase 3 already said READING ROOM, so the front door
+ * offered one room twice. The owner kept the nav: it is the one shared frame
+ * (RT-Z3 a), it is the first thing on a phone screen where the door was ~1,900
+ * px down, and this list is for destinations the header does not carry.
+ * `src/app/site-doors.test.tsx` now fails if a door here and the header ever
+ * point at the same room again. Nothing in this comment counts the list.
  */
 export const SECONDARY_DOORS: SecondaryDoor[] = [
   {
@@ -172,11 +181,6 @@ export const SECONDARY_DOORS: SecondaryDoor[] = [
     line:
       `${flawFamilyCountWordLeading()} kinds of damage, what each one is called, and which ` +
       "machine measures it.",
-  },
-  {
-    href: "/learn",
-    label: "Reading room.",
-    line: "Hume's five criteria, and how we measure them.",
   },
   {
     href: "/music/quiz",

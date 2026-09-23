@@ -219,10 +219,11 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
 
         {/* Secondary doors — quiet rows, no bare underline/arrow links
             (PM 2026-07-17): the lead-in word carries the accent, hover lifts
-            the whole line. The three are DATA now (E11/S4): two of them had
-            been ungated JSX prose on the busiest page in the product since the
-            gym opened, which is exactly how the lead paragraph above went on
-            saying "Two machines" over three cards. */}
+            the whole line. They are DATA (E11/S4): two of them had been
+            ungated JSX prose on the busiest page in the product since the gym
+            opened, which is exactly how the lead paragraph above went on
+            saying "Two machines" over three cards. None of them may point
+            where the header already does (site-doors.test.tsx). */}
         <div className="mt-8 flex flex-col gap-2.5 text-sm">
           {SECONDARY_DOORS.map((d) => (
             <Link
