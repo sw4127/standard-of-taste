@@ -1,4 +1,3 @@
-/// <reference types="vite/client" />
 /**
  * EVERY DOOR LEADS SOMEWHERE, EVERY ROOM HAS A DOOR, NO DOOR LEADS BACK TO
  * ITSELF (Track V/S2).
@@ -26,24 +25,22 @@
  * the dynamic `[slug]` routes, whose inbound doors are counted but whose own
  * links are not rendered here.
  */
-import { createElement, type ComponentType, type ReactElement } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { beforeAll, describe, expect, it, vi } from "vitest";
+import {
+  ALL_LAYOUT_KEYS,
+  SECTION_LAYOUT_KEYS,
+  renderSite,
+  type RenderedSite,
+} from "@/test-utils/render-site";
 
-const nav = vi.hoisted(() => ({ path: "/" }));
 vi.mock("next/navigation", async (orig) => ({
   ...(await orig<typeof import("next/navigation")>()),
   useRouter: () => ({ push() {}, replace() {}, prefetch() {}, back() {}, forward() {}, refresh() {} }),
-  usePathname: () => nav.path,
+  usePathname: () => globalThis.__SITE_PATH ?? "/",
   useSearchParams: () => new URLSearchParams(),
 }));
-
-const PAGES = import.meta.glob<{ default: ComponentType<object> }>("./**/page.tsx");
-const LAYOUTS = import.meta.glob<{ default: ComponentType<{ children: React.ReactNode }> }>("./*/layout.tsx");
-
-const routeOf = (key: string) => key.replace(/^\./, "").replace(/\/?page\.tsx$/, "") || "/";
 
 /** Pages that redirect when rendered without a payload. Each must still redirect. */
 const NEEDS_A_PAYLOAD: Record<string, string> = {
@@ -79,23 +76,6 @@ interface Rendered {
 const ANCHOR = /<a\b[^>]*?\bhref="([^"]*)"[^>]*>([\s\S]*?)<\/a>/g;
 const textOf = (html: string) => html.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
 
-async function render(route: string, key: string): Promise<string> {
-  nav.path = route;
-  const Page = (await PAGES[key]()).default as unknown as (p: object) => unknown;
-  const props = { searchParams: Promise.resolve({}), params: Promise.resolve({}) };
-  // Server components may be async and must be awaited; client components use
-  // hooks and must be rendered as elements, not called.
-  let el: ReactElement =
-    Page.constructor.name === "AsyncFunction"
-      ? ((await Page(props)) as ReactElement)
-      : createElement(Page as ComponentType<object>, props);
-  const section = `./${route.split("/")[1]}/layout.tsx`;
-  if (route !== "/" && LAYOUTS[section]) {
-    el = createElement((await LAYOUTS[section]()).default, null, el);
-  }
-  return renderToStaticMarkup(el);
-}
-
 /** The path a link leads to, or null if it is in-page, external, or not a page. */
 function pathOf(href: string, from: string): { path: string; bare: boolean } | null {
   if (href.startsWith("#") || /^(mailto|tel):/.test(href)) return null;
@@ -118,37 +98,25 @@ function routeMatchers(dir = "src/app", prefix = ""): RegExp[] {
   return out;
 }
 
-const rendered: Rendered[] = [];
-const redirected: string[] = [];
-const failed: string[] = [];
-const staticRoutes: string[] = [];
+let site: RenderedSite;
+let rendered: Rendered[] = [];
 
 beforeAll(async () => {
-  for (const key of Object.keys(PAGES)) {
-    const route = routeOf(key);
-    if (route.includes("[")) continue;
-    staticRoutes.push(route);
-    try {
-      const html = await render(route, key);
-      rendered.push({
-        route,
-        anchors: [...html.matchAll(ANCHOR)].map((m) => ({ href: m[1], text: textOf(m[2]) })),
-      });
-    } catch (e) {
-      if (String(e).includes("NEXT_REDIRECT")) redirected.push(route);
-      else failed.push(`${route}: ${String(e).slice(0, 120)}`);
-    }
-  }
+  site = await renderSite();
+  rendered = site.pages.map((p) => ({
+    route: p.route,
+    anchors: [...p.html.matchAll(ANCHOR)].map((m) => ({ href: m[1], text: textOf(m[2]) })),
+  }));
 }, 60_000);
 
 describe("the site's doors, read from rendered pages", () => {
   it("rendered the site, so nothing below passes vacuously", () => {
-    expect(failed).toEqual([]);
+    expect(site.failed).toEqual([]);
     // Absolute floors, measured 2026-09-22: 27 pages render with 252 links
     // between them, and 6 redirect. A floor is a tripwire, not a count.
     expect(rendered.length).toBeGreaterThanOrEqual(27);
     expect(rendered.flatMap((r) => r.anchors).length).toBeGreaterThanOrEqual(200);
-    expect(redirected.sort()).toEqual(Object.keys(NEEDS_A_PAYLOAD).sort());
+    expect([...site.redirected].sort()).toEqual(Object.keys(NEEDS_A_PAYLOAD).sort());
   });
 
   /**
@@ -157,10 +125,10 @@ describe("the site's doors, read from rendered pages", () => {
    * pass without having seen them. So the assumption is asserted.
    */
   it("wraps every layout that can add a link", () => {
-    const all = Object.keys(import.meta.glob("./**/layout.tsx"));
-    expect(all.filter((k) => !(k in LAYOUTS)).sort(), "a layout this test does not render").toEqual([
-      "./layout.tsx",
-    ]);
+    expect(
+      ALL_LAYOUT_KEYS.filter((k) => !SECTION_LAYOUT_KEYS.includes(k)).sort(),
+      "a layout this test does not render",
+    ).toEqual(["../app/layout.tsx"]);
     // The root layout is the one exemption: it renders <html> and no links.
     expect(readFileSync("src/app/layout.tsx", "utf8")).not.toMatch(/href=|<Link/);
   });
@@ -185,7 +153,7 @@ describe("the site's doors, read from rendered pages", () => {
           .filter((p): p is string => !!p && p !== r.route),
       ),
     );
-    const orphans = new Set(staticRoutes.filter((r) => !inbound.has(r)));
+    const orphans = new Set(site.staticRoutes.filter((r) => !inbound.has(r)));
     const listed = new Set(Object.keys(ORPHAN_BY_DESIGN));
     expect(
       [...orphans].filter((r) => !listed.has(r)),

@@ -36,6 +36,24 @@
 
 import { DELICACY_ARC_FLOOR } from "@/content/delicacy/arc-floor";
 import { numberWord } from "@/content/vocabulary/numbers";
+import { MACHINES } from "@/components/OtherMachines";
+
+/**
+ * HOW MANY INSTRUMENTS ARE LIVE, COUNTED RATHER THAN TYPED (Track V/S4).
+ *
+ * Four sentences on this page typed the number. One of them — "it has built
+ * three working instruments" — had been false since the Ranking Test shipped
+ * (E17), in the present tense, on the page whose whole claim is that it does not
+ * say things the record cannot support. `site-counts.test.tsx` now reads the
+ * rendered page and fails when a count of instruments disagrees with this.
+ *
+ * ONE IS LEFT TYPED ON PURPOSE: "longer than all four shipped instruments
+ * together". That is a MEASURED comparison — eighty-four minutes against the
+ * four sittings that existed — and deriving the number would silently extend it
+ * to instruments nobody timed. Typed, it fails the count guard the day a fifth
+ * ships, which forces somebody to re-do the arithmetic. That is the point.
+ */
+const LIVE_INSTRUMENTS = MACHINES.filter((m) => m.live).length;
 import {
   PREFERENCE_SECONDS_PER_PAIR,
   PREFERENCE_SITTING_MINUTES,
@@ -343,7 +361,7 @@ export const METHOD_REFUSALS: MethodRefusal[] = [
     rule: "N3, and the arithmetic the proposal produced about itself",
     kind: "inferred",
     refusal:
-      "The four instruments here measure damage — whether you can hear detune, smear, a codec. None of them touches the thing listeners actually report, which is that they cannot say what they like. A fifth was specified for exactly that: you say what you prefer, then choose blind between two versions of the same passage differing in one respect, and the product is the moment your words and your ears disagree. It was approved, sized, and killed by the first slice that did its arithmetic. A preference has no right answer, so the only measurable thing is whether blind choices agree with each other — and that takes " +
+      `The ${numberWord(LIVE_INSTRUMENTS)} instruments here each have a right answer — damage you can or cannot hear, a label's pull, a critic's gaps. None of them touches the thing listeners actually report, which is that they cannot say what they like. Another was specified for exactly that: you say what you prefer, then choose blind between two versions of the same passage differing in one respect, and the product is the moment your words and your ears disagree. It was approved, sized, and killed by the first slice that did its arithmetic. A preference has no right answer, so the only measurable thing is whether blind choices agree with each other — and that takes ` +
       `${numberWord(PREFERENCE_SITTING_TRIALS)} of them per dimension from a decisive listener. Three dimensions is ${numberWord(PREFERENCE_SITTING_PAIRS)} pairs; at ${numberWord(PREFERENCE_SECONDS_PER_PAIR)} seconds a pair, ${numberWord(PREFERENCE_SITTING_MINUTES)} minutes — longer than all four shipped instruments together. It had been sized against a figure a quarter that size, which engineering stated without deriving. Run against the numbers in its own specification, two of its four findings did not survive, the contradiction it existed to deliver among them. Nothing further is added to this product on easier terms than these: an instrument arrives with the arithmetic for its own sitting length, or it does not arrive.`,
     price:
       "The largest one on this page, and it is unpaid rather than accepted. Two findings came out of listening to people: that past listening predicts less than present taste, and that almost nobody can describe their own taste in words. This product serves the first and does nothing at all for the second, which is the one with somebody in front of it. The refusal does not say that instrument was a bad idea — it says this design could not be built at a length anyone would sit, and no better design has been found. Somebody else may well find one.",
@@ -387,7 +405,7 @@ export const METHOD_REFUSALS: MethodRefusal[] = [
     rule: "the anti-clone clause, and the writing pass that made it unnecessary",
     kind: "inferred",
     refusal:
-      "A visual was held back until the product's sentences had been through a writer, on the rule that if the sentences landed the picture was decoration. Three batches of them have now been written, applied and shipped, and every result screen ends in prose rather than in a unit. The picture would add no fact the sentences do not already carry. What it would add is five facets, most of them dark for most people — because a reader has usually taken one instrument, not four — and a shape with slots to fill in is a completion meter however carefully it is drawn. This product refuses those by name.",
+      `A visual was held back until the product's sentences had been through a writer, on the rule that if the sentences landed the picture was decoration. Three batches of them have now been written, applied and shipped, and every result screen ends in prose rather than in a unit. The picture would add no fact the sentences do not already carry. What it would add is five facets, most of them dark for most people — because a reader has usually taken one instrument, not ${numberWord(LIVE_INSTRUMENTS)} — and a shape with slots to fill in is a completion meter however carefully it is drawn. This product refuses those by name.`,
     price:
       "The one thing the product will never have is an image a person can post without reading a word. Every result here has to be read to be understood, which costs the share loop most of its reach and is the second time that trade has been made deliberately: the ranked verdict went the same way. What it buys is that nothing on a result screen can be understood as a score out of five.",
     sources: [
@@ -705,7 +723,7 @@ export const METHOD_FINDINGS: MethodFinding[] = [
     finding:
       "What happened next is the part that is harder to read, and this reading is mine rather than a recorded ruling. Within the same week the project adopted a direction that made the avoided thing optional: Resume value cannot be hostage to a launch the owner has no energy to run, and after it, The 2026-09-15 deadline is not a live constraint. That argument is sound on its own terms. It is also, in sequence, a project noticing that it was avoiding something and then removing the requirement to do it.",
     consequence:
-      "I cannot tell from the record which of the two it was, and neither can a reader, so the page says so rather than choosing the flattering reading. The test that would settle it is not an argument: it is whether the instruments are ever put in front of strangers. Until they are, the honest description of this project is that it has built three working instruments and measured them against simulated respondents.",
+      `I cannot tell from the record which of the two it was, and neither can a reader, so the page says so rather than choosing the flattering reading. The test that would settle it is not an argument: it is whether the instruments are ever put in front of strangers. Until they are, the honest description of this project is that it has built ${numberWord(LIVE_INSTRUMENTS)} working instruments and measured them against simulated respondents.`,
     sources: [
       {
         path: "docs/artifact-pivot-2026-08-07.md",
