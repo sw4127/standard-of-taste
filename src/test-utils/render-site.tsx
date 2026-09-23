@@ -30,6 +30,20 @@ const routeOf = (key: string) => key.replace(/^\.\.\/app/, "").replace(/\/?page\
 export interface RenderedPage {
   route: string;
   html: string;
+  /**
+   * The strings in the page's `metadata` export — title, description, Open
+   * Graph text. A reader meets them in a search result or a link preview before
+   * the page, so they are a surface, and `renderToStaticMarkup` never draws them.
+   */
+  meta: string[];
+}
+
+/** Every string inside a metadata object, however nested. */
+function stringsIn(value: unknown): string[] {
+  if (typeof value === "string") return [value];
+  if (Array.isArray(value)) return value.flatMap(stringsIn);
+  if (value && typeof value === "object") return Object.values(value).flatMap(stringsIn);
+  return [];
 }
 
 export interface RenderedSite {
@@ -43,9 +57,10 @@ declare global {
   var __SITE_PATH: string | undefined;
 }
 
-async function render(route: string, key: string): Promise<string> {
+async function render(route: string, key: string): Promise<{ html: string; meta: string[] }> {
   globalThis.__SITE_PATH = route;
-  const Page = (await PAGES[key]()).default as unknown as (p: object) => unknown;
+  const mod = (await PAGES[key]()) as { default: unknown; metadata?: unknown };
+  const Page = mod.default as (p: object) => unknown;
   const props = { searchParams: Promise.resolve({}), params: Promise.resolve({}) };
   // Server components may be async and must be awaited; client components use
   // hooks and must be rendered as elements, not called.
@@ -57,7 +72,10 @@ async function render(route: string, key: string): Promise<string> {
   if (route !== "/" && LAYOUTS[section]) {
     el = createElement((await LAYOUTS[section]()).default, null, el);
   }
-  return renderToStaticMarkup(el);
+  const html = renderToStaticMarkup(el);
+  // Only strings a reader sees: `canonical` and the like are paths, not prose.
+  const meta = stringsIn(mod.metadata).filter((t) => /\s/.test(t));
+  return { html, meta };
 }
 
 let cached: Promise<RenderedSite> | null = null;
@@ -71,7 +89,7 @@ export function renderSite(): Promise<RenderedSite> {
       if (route.includes("[")) continue;
       site.staticRoutes.push(route);
       try {
-        site.pages.push({ route, html: await render(route, key) });
+        site.pages.push({ route, ...(await render(route, key)) });
       } catch (e) {
         if (String(e).includes("NEXT_REDIRECT")) site.redirected.push(route);
         else site.failed.push(`${route}: ${String(e).slice(0, 120)}`);
@@ -83,6 +101,13 @@ export function renderSite(): Promise<RenderedSite> {
 }
 
 const ENTITIES: Record<string, string> = { "&#x27;": "'", "&quot;": '"', "&amp;": "&", "&lt;": "<", "&gt;": ">", "&nbsp;": " " };
+
+/** Text a reader meets in attributes: image descriptions, labels, tooltips. */
+export function attributeText(html: string): string {
+  return [...html.matchAll(/\b(?:alt|aria-label|title|placeholder)="([^"]+)"/g)]
+    .map((m) => m[1].replace(/&#x27;|&quot;|&amp;|&lt;|&gt;|&nbsp;/g, (x) => ENTITIES[x]))
+    .join(".\n");
+}
 
 /** A page's text as a reader meets it: tags gone, entities decoded, whitespace collapsed. */
 export function textOf(html: string): string {
