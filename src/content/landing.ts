@@ -85,6 +85,7 @@ export const LANDING_OPENER =
  * of the same complaint, that nothing shows a person what they are being asked
  * to do. A headline is one sentence.
  */
+// serves BP-UNMET (docs/blueprint.md): a paraphrase of what existing tools lack.
 export const LANDING_ALGORITHM =
   "So does every algorithm that has ever recommended you a song. It just never " +
   "tells you, because what it knows about you is a row of numbers no person can read.";
