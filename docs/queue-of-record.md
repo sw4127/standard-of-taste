@@ -70,12 +70,16 @@ BA-12), which is now the newest rulings of record.
 |---|---|---|
 | **1** | `docs/blueprint.md`, its parser, the copy registry and its guard | **done** 2026-09-23 |
 | **2** | Every document that states the ideas, stamped; the BA rulings recorded | **done** 2026-09-23 |
-| **3** | The snack retired, and every model-written sentence with it (BA-7, BA-10) | open |
-| **4** | The reading's content and engine: three illustrative listeners (BA-8) | open |
-| **5** | `/reading`: the reading, the prompt and the mock creation screen (BA-6, BA-11) | open |
-| **6** | `/company`: the business case, metric tree and test plan, illustrative (BA-9) | open |
-| **7** | The front door, the navigation, `/learn`, `/method` | open |
-| **8** | The public pages, and the PRD re-derived from the blueprint | open |
+| **3** | The snack retired, and every model-written sentence with it (BA-7, BA-10) | **done** 2026-09-23 |
+| **4** | The reading's content and engine: three illustrative listeners (BA-8) | **done** 2026-09-23 |
+| **5** | `/reading`: the reading, the prompt and the mock creation screen (BA-6, BA-11) | **done** 2026-09-23 |
+| **6** | `/company`: the business case, metric tree and test plan, illustrative (BA-9) | **done** 2026-09-23 |
+| **7** | The front door, the navigation, `/learn`, `/method` | **done** 2026-09-23 |
+| **8** | The public pages, and the PRD re-derived from the blueprint | **done** 2026-09-23 |
+
+**Carried out of Phase 5** (`docs/handoff-2026-09-23b.md`): a writing pass on the new copy
+(`docs/copy-deck-reading.md`, part READ, none of it reviewed) · PRD parts 2–4 revised against the
+blueprint · dead legacy code (content/music, world-cup, premium components, llm/schema) removed.
 
 ---
 
