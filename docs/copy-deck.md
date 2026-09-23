@@ -907,7 +907,7 @@ The symptom is deliberately the complaint a person makes BEFORE they have the wo
 
 #### 4.4 The front door
 
-The lead is shown with the machine count interpolated; four is what ships today. The hint sits under the cards, and the two doors are the quiet rows beneath it.
+The lead is shown with the machine count interpolated; four is what ships today. The hint sits under the cards, and the one doors are the quiet rows beneath it.
 
 *The lead. The machine count is a slot — it was three, it is four, and a rewrite that spells it out will be wrong again:*
 
@@ -928,16 +928,11 @@ The lead is shown with the machine count interpolated; four is what ships today.
 
   *As rendered:* “Three kinds of damage, what each one is called, and which machine measures it.”
 
-*The door to `/music/quiz` — its accented label is “Snack.”, which is a source string too short for this deck to give an id; name it in prose if it is the part that is wrong. The line beneath it:*
-
-`INS-CREATOR-VOCABULARY-17` · OPEN
-> Five taps, a verdict, and no measurement behind it.
-
 #### 4.5 The route from a result to the reference
 
 One string, shown on both the Delicacy and Threshold results. It must stay true after a session that measured one family and after a session that measured three.
 
-`INS-CREATOR-VOCABULARY-18` · OPEN
+`INS-CREATOR-VOCABULARY-17` · OPEN
 > What each flaw is called, and what it sounds like
 
 #### 4.6 The delicacy explainer, now that the machine is open
@@ -946,7 +941,7 @@ These read the live flag and have a second form for the locked state, which is n
 
 *The index card:*
 
-`INS-CREATOR-VOCABULARY-19` · OPEN
+`INS-CREATOR-VOCABULARY-18` · OPEN
 > Machine 02: can your ears find the key in the wine?
 
 *Question:*
@@ -957,7 +952,7 @@ These read the live flag and have a second form for the locked state, which is n
 
 *Answer:*
 
-`INS-CREATOR-VOCABULARY-20` · OPEN
+`INS-CREATOR-VOCABULARY-19` · OPEN
 > Hume retells it from Don Quixote: two of Sancho's kinsmen were asked to judge a hogshead of wine. One found a faint taste of leather, the other of iron, and both were laughed at — until the cask was drained and an old key on a leathern thong was found at the bottom. Their perception was real and verifiable, and that is delicacy.
 
 *Question:*
@@ -968,19 +963,19 @@ These read the live flag and have a second form for the locked state, which is n
 
 *Answer:*
 
-`INS-CREATOR-VOCABULARY-21` · OPEN
+`INS-CREATOR-VOCABULARY-20` · OPEN
 > Public-domain and Creative-Commons recordings are damaged on purpose, by a known amount — ${FAMILY_LIST} — and you pick the original and name the flaw. Unlike a taste quiz, the answers are right or wrong, the difficulty is tunable, and the items can be calibrated with item-response theory.
 
   *As rendered:* “Public-domain and Creative-Commons recordings are damaged on purpose, by a known amount — pitch drift, timing smear and compression damage — and you pick the original and name the flaw. Unlike a taste quiz, the answers are right or wrong, the difficulty is tunable, and the items can be calibrated with item-response theory.”
 
 *Question:*
 
-`INS-CREATOR-VOCABULARY-22` · OPEN
+`INS-CREATOR-VOCABULARY-21` · OPEN
 > Where do the Delicacy Trials sit in the gym?
 
 *Answer:*
 
-`INS-CREATOR-VOCABULARY-23` · OPEN
+`INS-CREATOR-VOCABULARY-22` · OPEN
 > They are machine 02, and the door is open. They were built after the Prestige Test, on the principle that a gym leaves its equipment in plain view long before anyone is ready for it. This one is no longer roped off.
 
 ---
@@ -1385,7 +1380,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > What this is
 
 `PAGE-LEGAL-02` · OPEN
-> Standard of Taste measures how you hear music. Each instrument is a listening task with answers you can get objectively wrong, and every number is computed by a deterministic engine in code — no machine-learning model and no language model classifies you. It is not a psychological assessment, not a personality test, not medical or mental-health advice, and not a diagnosis of anything. The instruments in the gym do not predict your personality, your mood or your character, and never claim to. Two surfaces may speak to you about yourself — the prompt card and the five-tap snack. The card offers a reading rather than asserting one; the snack is a playful verdict with no measurement behind it, and says so at its door; and neither says anything about trauma, abuse or mental health.
+> Standard of Taste measures how you hear music. Each instrument is a listening task with answers you can get objectively wrong, and every number is computed by a deterministic engine in code — no machine-learning model and no language model classifies you. It is not a psychological assessment, not a personality test, not medical or mental-health advice, and not a diagnosis of anything. The instruments in the gym do not predict your personality, your mood or your character, and never claim to. One surface may speak to you about yourself — the prompt card. It offers a reading rather than asserting one, and it says nothing about trauma, abuse or mental health.
 
 > Terms of use
 
@@ -1407,15 +1402,12 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > Your sessions are stored on your device. When you finish an instrument we keep your raw answers in this browser's local storage — never a computed score, so nothing here can be edited into a better result. It is what lets a later session say whether your ear moved, and it is why the seven-day retest gate knows you. Switch device or clear your browsing data and it is gone; there is no copy anywhere else.
 
 `PAGE-LEGAL-08` · OPEN
-> The snack's answers live in the page URL, so a link you share carries them and nothing else does.
+> No sentence on this site is generated by a language model when you visit, and nothing you do here is sent to one. Every sentence is a fixed template and every result is computed here, in code.
 
 `PAGE-LEGAL-09` · OPEN
-> The snack's reading is written by a language model (Anthropic) from the answers you gave, and artist names you type there are sent with them, solely to write that reading. No instrument in the gym sends anything to a language model: every measured result is computed here, in code.
-
-`PAGE-LEGAL-10` · OPEN
 > We collect anonymised usage events (page views, session completion, shares) through Vercel Web Analytics and PostHog, to see whether the product works. No advertising trackers, no selling data.
 
-`PAGE-LEGAL-11` · OPEN
+`PAGE-LEGAL-10` · OPEN
 > Want anything else gone? There is no server-side record of you to delete, but the button below clears everything this browser holds, and you can contact us ({support ? support : "through the address on the repository"}) with any question about it.
 
 *4 further blocks on this page are filled entirely from content modules, so the words are reviewed in the earlier parts rather than here.*
@@ -1467,7 +1459,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 ---
 
-**93 blocks, roughly 4257 words, across 11 surfaces.**
+**92 blocks, roughly 4204 words, across 11 surfaces.**
 
 
 ---
@@ -2033,7 +2025,7 @@ Quality control was a person listening to each clip and approving it. It was abo
 
 ---
 
-### 4. The two reversals
+### 4. The three reversals
 
 Not a refusal. A constraint this project held and then deliberately relaxed. Three blocks rather than two: the reversal, what it bought, and what it cost — a relaxation with no stated gain is not a decision either, so both halves are required and a test refuses the shapes that mean nothing.
 
@@ -2059,17 +2051,17 @@ Everything else in the block is the engineer's own connective prose and is free.
 
 *The `reversal` field, which carries the verified words “D1 is suspended for the prompt card, and for nothing else”:*
 
-`MET-TWO-REVERSALS-01` · PART-LOCKED
+`MET-THREE-REVERSALS-01` · PART-LOCKED
 > Every reading on this site is a statement about a performance. That was a rule rather than a habit: it is written into the constitution as D1, and it is why a five-tap personality verdict with no measurement behind it was killed rather than improved. On 2026-09-16 the owner relaxed it, against the engineering recommendation on file. The card that turns a measured threshold into words a person can use may speak to the reader about themselves. The amendment's own wording was that D1 is suspended for the prompt card, and for nothing else; a second named surface followed a week later, recorded below. Every instrument readout on this site still says only what you did.
 
 *The `bought` field, free prose with no verified passage in it:*
 
-`MET-TWO-REVERSALS-02` · PART-LOCKED
+`MET-THREE-REVERSALS-02` · PART-LOCKED
 > The one thing here anybody would keep. The measurement ends in a threshold in cents, the number is evidence, and it had been standing in the position of the deliverable — which is why a technically sound instrument was neither enjoyable to use nor convincing to look at. A sentence that is only about a performance cannot be the thing somebody leaves with.
 
 *The `price` field, free prose with no verified passage in it:*
 
-`MET-TWO-REVERSALS-03` · PART-LOCKED
+`MET-THREE-REVERSALS-03` · PART-LOCKED
 > This project can no longer say that every sentence it shows is about performance. That was true, it was one of the plainest things the product could say about itself, and it is now false — the exception is real even though it is one surface wide. The constitution also gains an exception, which is complexity it did not have, and every surface built from here has to ask which side of it it falls on. The rule that survives is narrower and harder to hold: offer, do not assert.
 
 *The two together, which is how the page reads:*
@@ -2100,17 +2092,17 @@ Everything else in the block is the engineer's own connective prose and is free.
 
 *The `reversal` field, which carries the verified words “It extends the 2026-09-16 suspension to”:*
 
-`MET-TWO-REVERSALS-04` · PART-LOCKED
+`MET-THREE-REVERSALS-04` · PART-LOCKED
 > On the morning of 2026-09-23 the five-tap music snack was retired so that two sentences on this site would be true. The same day the owner restored it, on the argument that it was the part of the product carrying the product's own thesis — that taste carries cues about feeling, and that the gap between what a person's taste reveals and what they know about themselves is where insight lives. The constitution records the decision in one line: it extends the 2026-09-16 suspension to one more named surface. A reading built from that thesis later is not covered until it, too, is named.
 
 *The `bought` field, free prose with no verified passage in it:*
 
-`MET-TWO-REVERSALS-05` · PART-LOCKED
+`MET-THREE-REVERSALS-05` · PART-LOCKED
 > The part of the product people could enjoy, and the half of its thesis the instruments never reached. The instruments test whether a listener can hear; the snack is where the product speaks to what a listener might be going through — as a playful verdict that says at its own door there is no measurement behind it.
 
 *The `price` field, free prose with no verified passage in it:*
 
-`MET-TWO-REVERSALS-06` · PART-LOCKED
+`MET-THREE-REVERSALS-06` · PART-LOCKED
 > The pivot concluded the five-tap verdict dead, and the reversal above names it as the reason D1 exists. It is back, beside the instruments. The line between a reading about the person and a measurement of a performance is now held only by naming surfaces one at a time, and the card's own disclosure had to narrow from "on this site" to "in the gym". One line did not move: nothing on any surface asserts anything about trauma, abuse or mental health.
 
 *The two together, which is how the page reads:*
@@ -2119,13 +2111,54 @@ Everything else in the block is the engineer's own connective prose and is free.
 On the morning of 2026-09-23 the five-tap music snack was retired so that two sentences on this site would be true. The same day the owner restored it, on the argument that it was the part of the product carrying the product's own thesis — that taste carries cues about feeling, and that the gap between what a person's taste reveals and what they know about themselves is where insight lives. The constitution records the decision in one line: it extends the 2026-09-16 suspension to one more named surface. A reading built from that thesis later is not covered until it, too, is named. The part of the product people could enjoy, and the half of its thesis the instruments never reached. The instruments test whether a listener can hear; the snack is where the product speaks to what a listener might be going through — as a playful verdict that says at its own door there is no measurement behind it. The pivot concluded the five-tap verdict dead, and the reversal above names it as the reason D1 exists. It is back, beside the instruments. The line between a reading about the person and a measurement of a performance is now held only by naming surfaces one at a time, and the card's own disclosure had to narrow from "on this site" to "in the gym". One line did not move: nothing on any surface asserts anything about trauma, abuse or mental health.
 ```
 
+#### 23. `reversal-snack-retired-reading-flagship`
+
+**Kind:** QUOTED — the page presents this as the record speaking
+
+**Cites:** docs/rt-answers-2026-09-23-audit.md
+
+**Heading on screen (free prose):** The snack retired again, and the reading made the product
+
+**Rule line on screen (free prose):** Relaxed: D1 and D3 — the product describes what you did, and the Prestige Test was the flagship
+
+**Second paragraph opens:** “What it bought. …”
+
+**Third paragraph opens:** “What it cost. …”
+
+**LOAD-BEARING — these exact words are verified against the cited file and a test fails if they change:**
+
+- “No surface may assert a feeling”
+
+Everything else in the block is the engineer's own connective prose and is free.
+
+*The `reversal` field, which carries the verified words “No surface may assert a feeling”:*
+
+`MET-THREE-REVERSALS-07` · PART-LOCKED
+> Hours after the snack came back, on 2026-09-23, the owner retired it for good and withdrew its exemption from D1. Its questions asked people to describe their own taste, which is the one thing the interviews behind this project found almost nobody can do, and its verdict was written by a language model. The same ruling moved the flagship: the Prestige Test is no longer the front door. A reading of a listener's recent plays is, and the four instruments become the hearing section behind it. The ruling adds the rule the reading is built under: no surface may assert a feeling. And nothing on any surface asserts anything about trauma, abuse or mental health.
+
+*The `bought` field, free prose with no verified passage in it:*
+
+`MET-THREE-REVERSALS-08` · PART-LOCKED
+> A front door that shows the idea the project was started for: a listener's recent taste read into lines that can be checked against the plays, argued with, and carried into a prompt. And no sentence on this site is generated by a model when a visitor arrives any more, so every one of them is a fixed template a test can read.
+
+*The `price` field, free prose with no verified passage in it:*
+
+`MET-THREE-REVERSALS-09` · PART-LOCKED
+> The snack was the one part of the product a person could enjoy without headphones, and it is gone. The reading that replaces it at the door runs on three illustrative listeners, so the first thing a visitor meets is simulated plays, labelled as such, where it used to be a measurement of the visitor. And the reversal above now records a decision that lasted less than a day.
+
+*The two together, which is how the page reads:*
+
+```renders
+Hours after the snack came back, on 2026-09-23, the owner retired it for good and withdrew its exemption from D1. Its questions asked people to describe their own taste, which is the one thing the interviews behind this project found almost nobody can do, and its verdict was written by a language model. The same ruling moved the flagship: the Prestige Test is no longer the front door. A reading of a listener's recent plays is, and the four instruments become the hearing section behind it. The ruling adds the rule the reading is built under: no surface may assert a feeling. And nothing on any surface asserts anything about trauma, abuse or mental health. A front door that shows the idea the project was started for: a listener's recent taste read into lines that can be checked against the plays, argued with, and carried into a prompt. And no sentence on this site is generated by a model when a visitor arrives any more, so every one of them is a fixed template a test can read. The snack was the one part of the product a person could enjoy without headphones, and it is gone. The reading that replaces it at the door runs on three illustrative listeners, so the first thing a visitor meets is simulated plays, labelled as such, where it used to be a measurement of the visitor. And the reversal above now records a decision that lasted less than a day.
+```
+
 ---
 
 ### 5. The finding against the project itself
 
 Two blocks. The first is the record's own account; the second is my reading of what happened next, and renders under the inference label. **The distinction between them is the single most consequential thing on this page** — if a rewrite blurs which is which, it breaks the condition the page was approved under.
 
-#### 23. `finding-arc-mostly-refuses`
+#### 24. `finding-arc-mostly-refuses`
 
 **Kind:** QUOTED — the page presents this as the record speaking
 
@@ -2159,7 +2192,7 @@ Everything else in the block is the engineer's own connective prose and is free.
 Before the retest arc was allowed to tell anyone their ear had moved, the size of change it can resolve was measured: the whole hazard here is that subtracting two noisy numbers manufactures progress. Simulating the same unchanged person through two sessions at the shipped length puts the floor on the pitch ladder at roughly 3.5 times — the threshold has to more than halve before the difference can be told from ordinary run-to-run wobble. On the prestige test it is eight points of the scale. The delicacy trials cannot support an arc at all: six of their fifteen pairs would have to change hands. Most retests are therefore told, in as many words, that nothing changed the instrument could hear. That refusal is the ordinary output of this feature rather than its edge case, and the sentence names the floor in the reader's own units so it reads as a fact about the instrument rather than a verdict on them. The only thing that lowers the floor is returning: pooled across four sittings it falls to about two and a half times, which is the entire reward this product offers for coming back.
 ```
 
-#### 24. `finding-launch-avoidance`
+#### 25. `finding-launch-avoidance`
 
 **Kind:** QUOTED — the page presents this as the record speaking
 
@@ -2194,7 +2227,7 @@ Everything else in the block is the engineer's own connective prose and is free.
 A ruling had already been made: post the flagship instrument on its own, within one to two weeks, and do not let the second instrument gate it. The second instrument got built instead. The plan written that day says it without softening: Delicacy got built instead. That is the N2 launch-avoidance pattern, on the record. And directly above it, the diagnosis: Nothing is blocked by engineering. Everything is blocked by the launch not having happened. As of the revision date at the foot of this page, it still has not been posted. The product has had 29 real visitors, ever. There are Zero real responses, which is why every psychometric figure in the Lab is generated from a known model and badged as simulated — the dataset that was named as the project's proprietary asset does not exist. Building is the part that feels like progress, and it is the part that was never the constraint.
 ```
 
-#### 25. `finding-avoidance-then-ratified`
+#### 26. `finding-avoidance-then-ratified`
 
 **Kind:** INFERRED — renders under a visible “Inference — the engineer’s reading, not a recorded ruling” label
 
@@ -2231,10 +2264,10 @@ What happened next is the part that is harder to read, and this reading is mine 
 
 ---
 
-**25 numbered blocks.** Regenerate with `node scripts/export-method-deck.mjs > docs/copy-deck-method.md` after any ledger change.
+**26 numbered blocks.** Regenerate with `node scripts/export-method-deck.mjs > docs/copy-deck-method.md` after any ledger change.
 
 
 ---
 
-**239 sentences, each with an id.** Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.
+**240 sentences, each with an id.** Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.
 

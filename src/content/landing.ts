@@ -183,11 +183,6 @@ export const SECONDARY_DOORS: SecondaryDoor[] = [
       `${flawFamilyCountWordLeading()} kinds of damage, what each one is called, and which ` +
       "machine measures it.",
   },
-  // Restored 2026-09-23 (RT-4 (c)): retired that morning, back the same day as
-  // a named D1 surface (CLAUDE.md, "D1 amendment, second surface").
-  {
-    href: "/music/quiz",
-    label: "Snack.",
-    line: "Five taps, a verdict, and no measurement behind it.",
-  },
+  // The snack's door ("Snack." -> /music/quiz) was removed when the owner
+  // retired it for good, 2026-09-23 (BA-7).
 ];

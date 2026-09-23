@@ -15,12 +15,11 @@
  * "never reported as a fact about you" — are listed below with their reason,
  * exactly, both directions.
  *
- * EXEMPT BY NAME, AND ONLY BY NAME (2026-09-23). The snack — `/music/quiz` and
- * `/music/result` — was retired that morning (RT-2 a) and restored the same day
- * as a second surface where D1 is suspended (RT-4 c, RT-5 a). The routes are
- * read from the constitution's "Named routes" line, not listed here; the snack
- * is also this needle's live positive. The retired World Cup pages' sentence and
- * the removed Prestige bridge's sentence stay as FIXED SPECIMENS.
+ * EXEMPT BY NAME, AND ONLY BY NAME (2026-09-23). The routes are read from the
+ * constitution's last "Named routes" line, not listed here. The snack —
+ * `/music/quiz` and `/music/result` — was named there, then retired for good
+ * (BA-7) and its suspension withdrawn; its premise question joins the retired
+ * World Cup sentence and the removed Prestige bridge's as FIXED SPECIMENS.
  *
  * ONE OF THEM IS WHY THE NEEDLE GREW (Track V/S9). The Prestige Test's bridge
  * screen — between the blind and labelled passes, inside the flagship — pointed
@@ -40,6 +39,8 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { attributeText, renderSite, textOf, type RenderedSite } from "@/test-utils/render-site";
+// The RT-Z10 carve-out holds on every surface, the card included — one list (BA-5).
+import { CARVE_OUT } from "@/content/carve-out";
 
 vi.mock("next/navigation", async (orig) => ({
   ...(await orig<typeof import("next/navigation")>()),
@@ -52,12 +53,12 @@ vi.mock("next/navigation", async (orig) => ({
 const ABOUT_THE_PERSON =
   /\b(who you are|(what|which) (kind|type|sort) of (person|listener) you are|the (kind|type|sort) of (person|listener)|says about you|reveals about you|your (personality|temperament|character|psyche|soul|mood|identity|inner \w+)|you are (a|an|the|someone|somebody) \w+ (person|listener|type|soul)|you tend to|deep down|introvert|extrovert|personality)\b/i;
 
-/** The RT-Z10 carve-out holds on every surface, the card included. */
-const CARVE_OUT = /\b(trauma|traumatic|abuse|abused|mental[- ]health|depress\w*|anxiety|grief|unresolved loss)\b/i;
 
 /** What retired surfaces rendered, verbatim. Each must still trip the needle. */
 const RETIRED_SPECIMENS = [
   "I'll tell you what being their fan says about you.",
+  // The snack's premise question, rendered until it was retired for good (BA-7, 2026-09-23).
+  "Does your music taste actually say something about who you are?",
   "There's a shorter, sillier one next door — five taps on what you actually listen to, and it tells you which kind of listener you are.",
 ];
 
@@ -71,19 +72,22 @@ const RETIRED_SPECIMENS = [
  * (The prompt card is not a route of its own; it renders on payload pages this
  * test cannot reach, and its copy is guarded in `src/content/card/`.)
  */
-function namedSurfaces(): string[] {
+function namedSurfaces(): string[] | null {
   const text = readFileSync("CLAUDE.md", "utf8");
-  const at = text.lastIndexOf("### D1 amendment, second surface");
-  if (at < 0) return [];
-  // ONLY the amendment's "Named routes" line is the list. The first version read
-  // every backticked route in the section and picked up "/method", where the
-  // second reversal is published: prose that MENTIONS a route is not a ruling
-  // that NAMES one — the category-reading the amendment forbids.
-  const line = text.slice(at).split(String.fromCharCode(10)).find((l) => l.startsWith("**Named routes**"));
-  if (!line) return [];
-  return [...new Set([...line.matchAll(/`(\/[a-z0-9/-]+)`/g)].map((m) => m[1]))];
+  // ONLY a "Named routes" line is the list. The first version read every
+  // backticked route in the section and picked up "/method", where the second
+  // reversal is published: prose that MENTIONS a route is not a ruling that
+  // NAMES one — the category-reading the amendment forbids.
+  // THE LAST ONE (2026-09-23, BA-7). The constitution is append-only, so a later
+  // amendment that withdraws or names routes adds its own line and the newest
+  // governs — the rule `card/statement.test.ts` already reads the card's
+  // sentence by.
+  const lines = text.split(String.fromCharCode(10)).filter((l) => l.startsWith("**Named routes**"));
+  if (lines.length === 0) return null;
+  return [...new Set([...lines[lines.length - 1].matchAll(/`(\/[a-z0-9/-]+)`/g)].map((m) => m[1]))];
 }
-const NAMED = namedSurfaces();
+const NAMED_OR_NULL = namedSurfaces();
+const NAMED = NAMED_OR_NULL ?? [];
 
 /** Sentences that name the forbidden thing in order to refuse it. */
 const REFUSALS: Record<string, string> = {
@@ -94,8 +98,8 @@ const REFUSALS: Record<string, string> = {
   "Not a personality.": "the front door refusing D1's subject by name",
   "Don't abuse, reverse-engineer, or resell the service": "/legal terms of use — abuse of the service, not of a person",
   "nothing on any surface asserts anything about trauma, abuse or mental health":
-    "/method's second reversal stating the RT-Z10 carve-out, not breaking it",
-  "neither says anything about trauma, abuse or mental health": "/legal stating the RT-Z10 carve-out",
+    "/method's second and third reversals stating the RT-Z10 carve-out, not breaking it",
+  "it says nothing about trauma, abuse or mental health": "/legal stating the RT-Z10 carve-out",
 };
 
 interface Hit {
@@ -145,9 +149,10 @@ describe("no surface but the card speaks about the person (D1, as amended)", () 
   });
 
   it("reads the named surfaces from the constitution, and each is a real, rendered route", () => {
-    // Absolute, as ruled on 2026-09-23: the snack's quiz and its reading.
-    expect([...NAMED].sort()).toEqual(["/music/quiz", "/music/result"]);
-    expect(site.pages.map((p) => p.route)).toContain("/music/quiz");
+    expect(NAMED_OR_NULL, 'no "Named routes" line in CLAUDE.md, so the list was never read').not.toBeNull();
+    // Absolute, as ruled on 2026-09-23 (BA-7): the snack's suspension is withdrawn.
+    expect([...NAMED].sort()).toEqual([]);
+    for (const r of NAMED) expect(site.pages.map((p) => p.route)).toContain(r);
   });
 
   /**
@@ -159,14 +164,9 @@ describe("no surface but the card speaks about the person (D1, as amended)", () 
    */
   it("keeps /legal's statement of the boundary in step with the named surfaces", () => {
     const legal = textOf(site.pages.find((p) => p.route === "/legal")!.html).replace(/\s+/g, " ");
-    if (NAMED.some((r) => r.startsWith("/music/"))) expect(legal).toMatch(/five-tap snack/);
+    expect(legal, "/legal still describes the retired snack").not.toMatch(/snack/i);
     expect(legal).toMatch(/instruments in the gym do not predict your personality/);
     expect(legal).not.toMatch(/It does not predict your personality/);
-  });
-
-  it("the needle bites on real rendered text: the snack speaks about the reader", () => {
-    // The live positive. If this stops, the snack changed or the needle went blind.
-    expect(hits.filter((h) => h.route === "/music/quiz" && h.rule === "D1").length).toBeGreaterThan(0);
   });
 
   it("the needle bites on what the retired surfaces actually said", () => {
@@ -227,7 +227,7 @@ describe("no surface but the card speaks about the person (D1, as amended)", () 
     expect(files.length).toBeGreaterThanOrEqual(30);
     // A component that speaks about the person is exempt ONLY if every file that
     // imports it lives under a named surface's route directory — derived, not
-    // listed. `ResearchPanel` (the owner's P1–P4 argument) is the case today.
+    // listed. None today: `ResearchPanel` was the case until the snack retired (BA-7).
     const namedDirs = NAMED.map((r) => `src/app${r}/`);
     const everything = walk("src").filter((f) => /\.tsx?$/.test(f) && !f.includes(".test."));
     const onlyOnNamedSurfaces = (f: string) => {

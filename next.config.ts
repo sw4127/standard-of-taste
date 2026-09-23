@@ -33,10 +33,6 @@ const nextConfig: NextConfig = {
     "/product-image": ["./src/fonts/*.woff"],
     // Default OG unfurl image (brief §3.B4) reads the same fonts at runtime.
     "/opengraph-image": ["./src/fonts/*.woff"],
-    // The blueprint is read with fs by `src/content/blueprint.ts`. Prerendered
-    // pages read it at build; a dynamic route reads it at request time and needs
-    // the file in its function bundle, or it fails with ENOENT in production.
-    "/music/result": ["./docs/blueprint.md"],
   },
 };
 

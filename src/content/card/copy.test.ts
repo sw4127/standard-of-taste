@@ -19,6 +19,7 @@
  * at the rung tables, the damage field, the retired gates, and twice in the
  * slices before this one.
  */
+import { CARVE_OUT_PATTERNS } from "@/content/carve-out";
 import { describe, expect, it } from "vitest";
 import { observer, pCorrect, rng } from "@/analytics/observer";
 import {
@@ -122,13 +123,8 @@ const CAUSAL = [
   /\b(?:better|improved) (?:results|output|prompts?)\b/i,
   /\bget more out of\b/i,
 ];
-const CLINICAL = [
-  /\b(?:trauma|traumatic|traumatis(?:ed|ing))\b/i,
-  /\b(?:abuse|abused|abusive)\b/i,
-  /\b(?:depress(?:ed|ion)|anxiety|anxious|ptsd|adhd|autis(?:m|tic)|neurodiverg(?:ent|ence))\b/i,
-  /\byour (?:mental health|childhood|grief|loss)\b/i,
-  /\bunresolved\b/i,
-];
+// The carve-out is one list, shared with every surface (RT-Z10 a, BA-5).
+const CLINICAL = CARVE_OUT_PATTERNS;
 const COMPARISON = [
   /\bpercentile\b/i,
   /\btop \d+%/i,
@@ -139,7 +135,7 @@ const COMPARISON = [
 ];
 const COUNTING = /\b(?:the other two|all three|both axes|the remaining|your other)\b/i;
 
-function breaches(text: string, patterns: RegExp[]): string[] {
+function breaches(text: string, patterns: readonly RegExp[]): string[] {
   return patterns.filter((p) => p.test(text)).map((p) => String(p));
 }
 

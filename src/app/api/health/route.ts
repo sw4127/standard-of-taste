@@ -16,7 +16,6 @@ const REQUIRED = ["NEXT_PUBLIC_POSTHOG_KEY", "NEXT_PUBLIC_BASE_URL"] as const;
 /** Present = degraded-gracefully features light up; absent = fallbacks. */
 const OPTIONAL = [
   "NEXT_PUBLIC_POSTHOG_HOST",
-  "ANTHROPIC_API_KEY",
   "PAYMENTS_PROVIDER",
 ] as const;
 

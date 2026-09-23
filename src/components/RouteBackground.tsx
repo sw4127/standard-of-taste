@@ -18,7 +18,6 @@ import { useEffect } from "react";
 
 function bgFor(path: string): string {
   if (path === "/quiz") return "#E6E6DD"; // the bright tournament stage
-  if (path.startsWith("/music")) return "#0A0A11"; // music's deep base
   return "#08090d"; // app dark (landing, result, vs, premium…)
 }
 

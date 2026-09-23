@@ -1,8 +1,8 @@
 /**
  * Default OG image (2026-07-16 brief §3.B4 OG audit — serves C2: the launch
  * post links the HOMEPAGE, which had no unfurl image). File-convention OG for
- * every route that doesn't bring its own; the share surfaces (/bias/result,
- * /result, /vs, /fan-verdict, /music/result) override it with their dynamic
+ * every route that doesn't bring its own; the share surfaces (/bias/result, and
+ * the since-retired /result, /vs, /fan-verdict, /music/result) override it with their dynamic
  * cards via generateMetadata, verified in the §3.C8 raw-HTML audit.
  *
  * Typography-driven per the design bar: Fraunces, gym gold, no imagery.

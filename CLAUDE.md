@@ -100,6 +100,10 @@ Appended, not overwritten. It extends the 2026-09-16 suspension to **one more na
 
 **What it cost, stated rather than glossed.** The pivot of 2026-07-11 concluded the five-tap verdict dead, and the product has mocked it in its own copy since — *five taps, a verdict, and no measurement behind it*. It is now hosted again, beside the instruments. The line between a reading about the person and a measurement of the performance is held only by naming surfaces, so every new surface must be named or it stays under D1. The price is published on `/method` as that page's **second reversal**.
 
+*[WITHDRAWN 2026-09-23, owner ruling BA-7 — the section above is kept verbatim per the keep-intact rule. The snack is retired for good. Its questions asked people to describe their own taste, which BP-CA2 in `docs/blueprint.md` says almost nobody can do, and its verdict was written by a language model, which BA-10 ends. D1's suspension for `/music/quiz` and `/music/result` is withdrawn and both routes redirect. The prompt card's suspension (2026-09-16) is untouched. The price is published on `/method` as its third reversal. The list in force is the newest "Named routes" line in this file, which `src/app/site-d1.test.tsx` reads; the line below supersedes the one above. The reading is named in its own amendment when it ships (BA-6). Ruling: `docs/rt-answers-2026-09-23-audit.md`.]*
+
+**Named routes** (2026-09-23, BA-7 — the snack's are withdrawn; this line is the list until a later amendment adds one): none
+
 ### D3 amendment — the reading is the flagship (owner-approved 2026-09-23, ruling BA-6)
 Appended, not overwritten. Amends **D3 only**; D1, D2, D4, D5, D6 and N1–N3 are untouched by it. The ruling: `docs/rt-answers-2026-09-23-audit.md`.
 
@@ -256,7 +260,7 @@ and the PM should push back on it.
 
 ## Result anchoring (credibility-critical)
 *[Re-scoped 2026-07-11: the principle — deterministic computation in code, LLM never classifies — carries into the memo's instruments (D2/D6, N3); the archetype/player-match specifics below describe the legacy product.]*
-*[TEMPLATES ONLY 2026-09-23, owner ruling BA-10 — kept verbatim above and below. No model writes any part of the reading, the prompt, or any other sentence a visitor reads. "The LLM only writes the reading" below no longer holds anywhere.]*
+*[TEMPLATES ONLY 2026-09-23, owner ruling BA-10 — kept verbatim above and below. No model writes any part of the reading, the prompt, or any other sentence a visitor reads. "The LLM only writes the reading" below no longer holds anywhere. Enforced by `src/app/no-model-text.test.ts`, which fails the build if a page or API route reaches a model client.]*
 The verdict (archetype, trait levels, player match) is computed by a **deterministic scoring engine in code** — quiz answers carry fixed point-weights → score vector → archetype + nearest player. The **LLM only writes** the reading for that pre-computed profile; it never classifies. Call the LLM at low temperature with a pinned model snapshot, enum-locked fields, and cache by input hash. See `vibe_check_mvp_spec.md` §6.
 
 ## Build sequence

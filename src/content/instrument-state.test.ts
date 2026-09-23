@@ -297,8 +297,8 @@ describe("the secondary doors under the machines", () => {
     // Absolute. 3 -> 2 by RT-1 (2026-09-22) a: the reading-room door duplicated
     // the header nav. 2 -> 1 by RT-2 (2026-09-22) a: the "Snack." door led to the
     // retired personality quiz. 1 -> 2 by RT-4 (2026-09-23) c: the snack came
-    // back, as a named D1 surface.
-    expect(SECONDARY_DOORS).toHaveLength(2);
+    // back, as a named D1 surface. 2 -> 1 by BA-7 (2026-09-23): retired for good.
+    expect(SECONDARY_DOORS).toHaveLength(1);
   });
 
   /**

@@ -82,27 +82,19 @@ export const EVENT_SURFACES: EventSurface[] = [
     prefixes: ["spread_"],
   },
   {
-    id: "snack",
-    title: "The snack",
-    blurb:
-      "The five-tap music quiz and its reading, beside the instruments rather than inside them. Retired and restored on 2026-09-23; the one surface other than the prompt card allowed to speak about the reader.",
-    events: ["premise_view", "quiz_start", "quiz_complete", "result_view"],
-  },
-  {
     id: "legacy",
     title: "The legacy funnel",
     blurb:
       "What remains of the pre-pivot music quiz's paid path. Its pages were retired on 2026-09-23 and now redirect to the gym; these are still emitted by components and API routes left in the codebase.",
-    prefixes: ["fakedoor_"],
-    events: ["sharpen_read", "checkout_start", "purchase", "paid_calibration"],
+    events: ["checkout_start", "purchase"],
   },
   {
     id: "share",
     title: "Share primitives",
     blurb: "Fired by the share buttons themselves, whichever surface they sit on.",
-    // share_challenge was fired only by the retired pages; share_native came
-    // back with the snack's reading.
-    events: ["share_native", "share_download"],
+    // share_challenge was fired only by the retired pages, share_native only by
+    // the snack's reading (retired for good, BA-7).
+    events: ["share_download"],
   },
 ];
 

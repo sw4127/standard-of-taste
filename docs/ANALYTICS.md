@@ -56,6 +56,8 @@ rejects an unknown `ref` at runtime, deliberately; people paste and strip links,
 attribution would lose real traffic to tidiness. The discipline is on the half we control.
 
 ## Events (legacy funnel — WC/music)
+
+*[2026-09-23 — the music rows below (`premise_view`, `quiz_start`, `quiz_complete`, `result_view`, `sharpen_read`, `share_native`, `paid_calibration`, `fakedoor_*`) no longer fire: the snack was retired for good (BA-7, `docs/rt-answers-2026-09-23-audit.md`) and they were removed from `src/lib/events.ts`. Kept as the record of what the legacy funnel measured.]*
 | Event | Fires | Props |
 |---|---|---|
 | `landing_view` | `/` mount | attribution |

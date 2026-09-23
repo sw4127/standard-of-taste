@@ -50,4 +50,4 @@ export const LEGAL_LAST_UPDATED = "September 2026";
 // instruments, the two person-speaking surfaces named, the snack's data clauses
 // restored.
 // RT-7 (2026-09-23) b: the snack is a playful verdict, exempt from the offer register.
-export const LEGAL_COPY_FINGERPRINT = "a30ea8aac655b9ee";
+export const LEGAL_COPY_FINGERPRINT = "cd67035f00c84e9a";

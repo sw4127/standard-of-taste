@@ -54,24 +54,12 @@ export const KNOWN_EVENTS: Readonly<Record<string, string>> = {
   spread_start: "the Ranking Test's frame is dismissed and listening begins",
   spread_complete: "all six works are rated and the two spreads are computed",
 
-  // --- the snack: the five-tap music quiz, retired and restored 2026-09-23
-  // (RT-2 a, then RT-4 c) as a named D1 surface. ----------------------------
-  premise_view: "the snack's premise screen renders",
-  quiz_start: "the snack quiz begins",
-  quiz_complete: "the snack quiz is finished",
-  result_view: "the snack's reading renders",
-
   // --- legacy funnel. Its paid pages stay retired (RT-2 (2026-09-22) a); these
   // are still fired by components and API routes that remain in the codebase. -
-  sharpen_read: "the free-text sharpening step is used",
   checkout_start: "the unlock button starts a hosted checkout",
   purchase: "a purchase is confirmed on return",
-  paid_calibration: "the paid report's calibration section renders",
-  fakedoor_compat_click: "the compatibility fake-door is clicked (demand probe, ships nothing)",
-  fakedoor_date_click: "the date-night fake-door is clicked (demand probe, ships nothing)",
 
   // --- share primitives, fired by the shared buttons themselves -------------
-  share_native: "the OS share sheet was opened successfully",
   share_download: "a card image is downloaded",
 };
 

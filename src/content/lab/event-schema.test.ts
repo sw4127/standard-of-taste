@@ -39,7 +39,8 @@ describe("E15/S5 — the event schema", () => {
 
   it("derives the count rather than stating one", () => {
     expect(EVENT_COUNT).toBe(Object.keys(KNOWN_EVENTS).length);
-    expect(EVENT_COUNT).toBeGreaterThan(30);
+    // Measured 2026-09-23: 27, after the snack's and the fake doors' events retired (BA-7).
+    expect(EVENT_COUNT).toBeGreaterThan(24);
   });
 
   it("gives every surface at least one event and a reason to exist", () => {

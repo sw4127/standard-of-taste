@@ -160,7 +160,9 @@ const COVERED = [
   // and no measurement behind it.") went with the retired quiz, RT-2 (2026-09-22) a.
   // 47 -> 48 later on 2026-09-23: the "Snack." door returned with the snack
   // (RT-4 (c)), carrying its line back into the deck.
-  { part: 2, name: "the instrument copy", ids: 48 },
+  // 48 -> 47 later still, 2026-09-23: the snack retired for good (BA-7) and its
+  // door went with it, "Five taps, a verdict, and no measurement behind it."
+  { part: 2, name: "the instrument copy", ids: 47 },
   // 36 -> 38 in E20/S1: the fifth refusal, `refusal-composite-index`.
   // 38 -> 40 in E20: the sixth, `refusal-taste-gem`. Each refusal is two ids
   // because it is a `refusal` field and a `price` field.
@@ -180,7 +182,9 @@ const COVERED = [
   //       refused it.
   // 45 -> 48 on 2026-09-23: the SECOND reversal, `reversal-d1-second-surface`
   // (the snack), is three ids — `reversal`, `bought`, `price`.
-  { part: 4, name: "the /method page", ids: 48 },
+  // 48 -> 51 later on 2026-09-23: the THIRD reversal,
+  // `reversal-snack-retired-reading-flagship` (BA-7, BA-6), three ids.
+  { part: 4, name: "the /method page", ids: 51 },
 ];
 
 describe.each(COVERED)("Part $part, $name, shows the copy the product has", ({ part, ids }) => {

@@ -30,7 +30,6 @@ import { useCallback, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { THRESHOLD_VIOLET, THRESHOLD_VIOLET_GLOW, THRESHOLD_FIELD, THRESHOLD_BASE, THRESHOLD_PALETTE } from "@/content/instrument-accents";
 import FluidField from "@/components/FluidField";
-import Jump from "@/components/Jump";
 import ClipPlayer from "@/app/bias/ClipPlayer";
 import AbCompare from "@/app/delicacy/AbCompare";
 import { track } from "@/lib/analytics";
@@ -54,9 +53,6 @@ import {
   COOLDOWN_ALTERNATIVE,
   COOLDOWN_DEVICE_NOTE,
   MATERIAL_REUSE_NOTE,
-  SNACK_LEAD,
-  SNACK_LINE,
-  SNACK_CTA,
 } from "@/content/staircase/copy";
 import { cooldownDaysLeft, serverSnapshot, subscribeCooldown } from "@/lib/retest-cooldown";
 import { recordResult } from "@/lib/result-store";
@@ -267,23 +263,6 @@ export default function ThresholdFlow({ family }: { family: string }) {
           >
             {COOLDOWN_ALTERNATIVE}
           </Link>
-
-          {/* THE SNACK, IN THE GAP THE GATE CREATES (PM direction 2026-08-22;
-              removed with the quiz by RT-2 a, restored the same day by RT-4 c).
-              A person told to come back in seven days has time and nothing to
-              do with it, and the snack is quieter than the CTA above on
-              purpose: the instrument is still the point. */}
-          <div className="mt-10 border-t border-white/10 pt-6">
-            <p className="text-sm font-semibold">{SNACK_LEAD}</p>
-            <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted">{SNACK_LINE}</p>
-            <Jump
-              href="/music/quiz?ref=cooldown"
-              className="mt-4"
-              style={{ color: BRAND }}
-            >
-              {SNACK_CTA} &rarr;
-            </Jump>
-          </div>
         </div>
       </main>
     );
