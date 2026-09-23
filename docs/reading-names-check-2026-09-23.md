@@ -53,6 +53,9 @@ counted as hits unless the overlap was itself a music or company name.
   Evening, Seven Candles for Aune, Organ at Tullowmere, Stonevell Canticle, Brevellan Hymn, Lumen
   Tarry, Quire of Ashvel.
 
+**The host:** Tessavox — checked alone, with the exact phrase, on 2026-09-23, and re-checked before
+the Company view shipped the same day. No company, artist or product of that name was found.
+
 **Partial overlaps noted, not counted:** "Kestrel" (a common word), "Merrow" (a small artist; the
 exact "Merrow Yard" returned nothing), "Tin Bird Choir" (against "Tinbird Lope"), "Ondo" (an
 irrigation company, a place), "Tessavo.com" (a domain for sale) and "Tessa Fox" (a performer's

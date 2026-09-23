@@ -48,7 +48,7 @@ vi.mock("next/navigation", async (orig) => ({
 
 /** Sentences no deck or commission can see, per page, as measured on 2026-09-22. */
 const INVISIBLE: Record<string, number> = {
-  "/": 11,
+  "/": 12, // +1 2026-09-23: the nav gained THE COMPANY VIEW (blueprint Part 6)
   "/bias": 7,
   "/delicacy": 10,
   "/threshold": 12,
@@ -80,7 +80,9 @@ const INVISIBLE: Record<string, number> = {
   // Measured 2026-09-23 when the reading shipped (blueprint Part 5): its copy and
   // the argument rendered from docs/blueprint.md are in no deck yet. Part 7 decks
   // them and lowers this.
-  "/reading": 20,
+  "/reading": 21, // +1: the nav gained THE COMPANY VIEW
+  // The Company view (blueprint Part 6), measured when it shipped; Part 7 decks it.
+  "/company": 64,
 };
 
 const words = (s: string) =>

@@ -155,7 +155,7 @@ describe("the site's doors, read from rendered pages", () => {
       "a layout this test does not render",
     ).toEqual(["../app/layout.tsx"]);
     // The root layout is the one exemption: it renders <html> and no links.
-    expect(readFileSync("src/app/layout.tsx", "utf8")).not.toMatch(/href=|<Link/);
+    expect(readFileSync("src/app/layout.tsx", "utf8")).not.toMatch(/href=|<Link\b/);
   });
 
   it("links to no path that no route serves", () => {

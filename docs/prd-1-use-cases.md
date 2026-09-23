@@ -4,7 +4,7 @@
 tasks can a person complete here* and labels each by the evidence behind it. Functional
 requirements, non-goals and wireframes are parts 2 to 4.
 
-**Derived, not recalled.** The route list is walked from `src/app`; 36 routes render a page. Every
+**Derived, not recalled.** The route list is walked from `src/app`; 37 routes render a page. Every
 one appears below or is listed as out of scope with a reason, which is criterion 1 of the brief.
 
 **Blueprint of record:** `docs/blueprint.md` (2026-09-23). This inventory was derived from the routes that exist and did not cite the blueprint; the next revision of this PRD derives its use cases from the blueprint and marks any route that serves no BP statement.
@@ -19,7 +19,7 @@ Every use case carries one, and the ratio is stated rather than buried.
   result, or a behaviour somebody has actually performed.
 - **ASSUMED** — a plausible task nobody has confirmed anyone wants.
 
-**The count: 3 EVIDENCED, 15 ASSUMED.** That ratio is the most useful sentence in this document and
+**The count: 3 EVIDENCED, 16 ASSUMED.** That ratio is the most useful sentence in this document and
 it is not flattering. It is what a product with zero fielded users looks like when it is honest. The
 three evidenced ones rest on interviews conducted for a Columbia Business School engagement with
 Tidal, which produced two findings: that past listening predicts less than present and forming
@@ -44,6 +44,7 @@ against UC-2 and UC-3 and it is not ignored.
 | **UC-5** | Find out whether my ear moved between two sittings | the retest arc, on all result screens | **EVIDENCED** | Finding 1: past listening predicts less than present and forming taste. This is the only instrument that measures change rather than state |
 | **UC-6** | See every number behind my result, with no verdict attached | the expert panel, on all result screens | **ASSUMED** | Built on the engineer's diagnosis that experts reject standardised scores. Plausible, unconfirmed |
 | **UC-18** | Read what a month of recent plays shows, check each line against the plays, argue with it, and carry what survives into a prompt | `/reading` | **ASSUMED** | BP-INSIGHT and BP-UNMET in `docs/blueprint.md`. It runs on illustrative listeners and nobody has used it; this row was added when the route shipped, ahead of the re-derivation from the blueprint |
+| **UC-19** | See why a streaming company would build the reading, what it would measure, and the test that would decide it | `/company` | **ASSUMED** | BP-BUSINESS and BP-GOAL in `docs/blueprint.md`. Illustrative: the company is fictional and every number is a planning assumption |
 | **UC-7** | Share a result without it carrying my session's private detail | `/bias/result`, `/delicacy/result` share paths | **ASSUMED** | The share loop has never run; the funnel it was built for was measured at 29 visitors and concluded dead |
 
 ## Understanding what the product measured
@@ -76,7 +77,7 @@ no reviewer has been observed — but they are the use cases the artifact was re
 | `/quiz`, `/result`, `/music/quiz`, `/music/result`, `/fan-verdict`, `/vs` | The legacy World-Cup funnel, and the music snack: retired 2026-09-23 (BA-7), redirect to the reading. Kept alive only so shared URLs do not 404 (`CLAUDE.md`, Legacy). No use case is specified for them and none should be |
 | `/premium/preview`, `/premium/report` | The paid tier, withdrawn by the D4 amendment. There is no paid tier and none is coming |
 
-**That is 36 routes: 28 carrying use cases, 8 out of scope.**
+**That is 37 routes: 29 carrying use cases, 8 out of scope.**
 
 ---
 

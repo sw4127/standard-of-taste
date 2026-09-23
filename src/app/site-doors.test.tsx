@@ -120,6 +120,7 @@ describe("no page offers the same room from its chrome and its body", () => {
    */
   it("covers every file that renders the site header", () => {
     expect(headerConsumers("src").sort()).toEqual([
+      "src/app/company/page.tsx",
       "src/app/lab/layout.tsx",
       "src/app/learn/layout.tsx",
       "src/app/method/layout.tsx",
