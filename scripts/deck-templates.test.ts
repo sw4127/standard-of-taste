@@ -158,7 +158,9 @@ const COVERED = [
   // RT-1 (2026-09-22) a because the header nav already offers that room.
   // 48 -> 47 in Track V/S9: the "Snack." door (its line, "Five taps, a verdict,
   // and no measurement behind it.") went with the retired quiz, RT-2 (2026-09-22) a.
-  { part: 2, name: "the instrument copy", ids: 47 },
+  // 47 -> 48 later on 2026-09-23: the "Snack." door returned with the snack
+  // (RT-4 (c)), carrying its line back into the deck.
+  { part: 2, name: "the instrument copy", ids: 48 },
   // 36 -> 38 in E20/S1: the fifth refusal, `refusal-composite-index`.
   // 38 -> 40 in E20: the sixth, `refusal-taste-gem`. Each refusal is two ids
   // because it is a `refusal` field and a `price` field.

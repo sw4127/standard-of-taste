@@ -55,8 +55,11 @@ export default function LegalPage() {
           answers you can get objectively wrong, and every number is computed by a deterministic
           engine in code — no machine-learning model and no language model classifies you. It is
           not a psychological assessment, not a personality test, not medical or mental-health
-          advice, and not a diagnosis of anything. It does not predict your personality, your mood
-          or your character, and it never claims to.
+          advice, and not a diagnosis of anything. The instruments in the gym do not predict your
+          personality, your mood or your character, and never claim to. Two surfaces may speak to
+          you about yourself — the prompt card and the five-tap snack — and both follow one rule:
+          they offer a reading, they do not assert one, and neither says anything about trauma,
+          abuse or mental health. The snack is not a measurement, and says so.
         </p>
       </section>
 
@@ -107,8 +110,14 @@ export default function LegalPage() {
             device or clear your browsing data and it is gone; there is no copy anywhere else.
           </li>
           <li>
-            No instrument in the gym sends anything to a language model: every measured result is
-            computed here, in code.
+            The snack&apos;s answers live in the page URL, so a link you share carries them and
+            nothing else does.
+          </li>
+          <li>
+            The snack&apos;s reading is written by a language model (Anthropic) from the answers
+            you gave, and artist names you type there are sent with them, solely to write that
+            reading. No instrument in the gym sends anything to a language model: every measured
+            result is computed here, in code.
           </li>
           <li>
             We collect anonymised usage events (page views, session completion, shares) through

@@ -46,6 +46,7 @@ vi.mock("next/navigation", async (orig) => ({
 const NEEDS_A_PAYLOAD: Record<string, string> = {
   "/bias/result": "the Prestige result; the payload is the share code",
   "/delicacy/result": "the Delicacy result; the payload is the share code",
+  "/music/result": "the snack's reading; the payload is the quiz's answers",
 };
 
 /**
@@ -58,16 +59,17 @@ const RETIRED_TO_FRONT_DOOR = [
   "/result",
   "/vs",
   "/fan-verdict",
-  "/music/quiz",
-  "/music/result",
   "/premium/preview",
   "/premium/report",
 ];
+// /music/quiz and /music/result were retired and restored the same day
+// (RT-4 (2026-09-23) c): the snack is live again, as a named D1 surface.
 
 /** Routes no rendered page links to, on purpose. Exact: see the header. */
 const ORPHAN_BY_DESIGN: Record<string, string> = {
   "/bias/result": "reached by finishing the Prestige Test, or by a share link",
   "/delicacy/result": "reached by finishing the Delicacy Trials, or by a share link",
+  "/music/result": "reached by finishing the snack quiz, or by a share link",
 };
 
 interface Anchor {

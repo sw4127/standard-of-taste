@@ -76,6 +76,8 @@ Appended, not overwritten. It extends the 2026-09-16 suspension to **one more na
 
 **What changes.** D1 is also suspended for **the five-tap music snack**: `/music/quiz` and the reading it produces at `/music/result`. The snack was retired on 2026-09-23 (RT-2 a) and restored the same day (RT-4 c) because it is the part of the product that carried the owner's thesis. That thesis is the spec's §9, P1–P4: taste carries probabilistic cues about current feeling and the stable self, and the gap between what taste reveals and what a person knows is where insight lives. The instruments made the product testable; the snack is where it spoke to the reader.
 
+**Named routes** (machine-read by `src/app/site-d1.test.tsx`; this line, and only this line, is the list): `/music/quiz` · `/music/result`
+
 **Suspension is by name, never by category.** A future reading built from the thesis (RT-4 c, second half) is not covered by this text. It is named here when it ships, so that a guard can check a named route rather than interpret a description.
 
 **Where D1 still stands, unchanged:** every instrument readout — the Prestige, Delicacy, Threshold and Ranking results.

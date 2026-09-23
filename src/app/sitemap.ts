@@ -39,6 +39,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // E9/S5, RT-U(a). Same standing as /lab: a public artifact surface meant to
     // be found and read, not an internal note.
     page("/method", 0.8),
+    page("/music/quiz", 0.4), // the snack, restored 2026-09-23 (RT-4 (c))
     page("/legal", 0.1, "yearly"),
   ];
 }

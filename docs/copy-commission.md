@@ -6,7 +6,7 @@ This is the brief. The sentences themselves are in `docs/copy-deck.md`, which is
 
 ## What is being asked
 
-Rewrite the sentences a small web product shows its users. They were drafted by the engineer who built it, who is the weaker writer of the two tools on this project; that is the entire reason this document exists. **215 of 237 sentences are open to rewriting.** The rest are locked, for reasons given below that are about measurement rather than about taste.
+Rewrite the sentences a small web product shows its users. They were drafted by the engineer who built it, who is the weaker writer of the two tools on this project; that is the entire reason this document exists. **217 of 239 sentences are open to rewriting.** The rest are locked, for reasons given below that are about measurement rather than about taste.
 
 **Everything about the sentences is here. What this deck cannot carry is listed per surface.** That is a smaller promise than the one this brief used to make, and it is the true one: an exporter that enumerates strings will never contain a chart, a table or a layout, however good its adjacency data gets. Each surface names what renders alongside its sentences, in order, and names the non-text a reader sees that you cannot. Where that still leaves you guessing, say so — a brief that assumes knowledge the writer does not have is a defective brief, and this one has been wrong once already.
 
@@ -37,7 +37,7 @@ One more, narrower and absolute: **no leaderboard, no streak, no XP, no points, 
 
 Every sentence in the deck carries an id and one of these:
 
-- **OPEN** (171) — rewrite freely, within the rules listed under its section.
+- **OPEN** (173) — rewrite freely, within the rules listed under its section.
 - **PART-LOCKED** (44) — the prose is yours, but the block contains quoted words from a cited document, listed under LOAD-BEARING in that section. A test verifies them character for character; change one and the build fails, correctly, because the page would be putting words in the record's mouth.
 - **LOCKED** (14) — do not touch. These are the Prestige Test's clip blurbs, and they are not copy: they are the **independent variable**. The test measures how much a listener's rating moves when a blurb is attached. Editing one changes the experiment, invalidates every response already recorded against it, and breaks every share link keyed to the pool version.
 - **PASSED** (8) — already written, by you, in August 2026 under ruling RT-107a. Included for tone, not for rewriting. If it now reads worse than the rest, that is worth saying.
@@ -48,7 +48,7 @@ Every sentence in the deck carries an id and one of these:
 
 **This is a correction, and it is worth knowing why.** The first version of this brief told a writer that the braces in the deck were the product's slots. They were not — they came from a regex over rendered numbers, so a family name and a whole clause were printed as though they were literals, and a writer following the instruction exactly would have shipped "pitch drift" into a template that renders for three families. The deck now reads the templates from source. If a slot still looks wrong, say so rather than working around it.
 
-**Parts 1, 2 and 4 are keyed to templates. Part 3 is not, and the difference is measured rather than assumed.** `scripts/deck-source-trace.mjs` asks of every id whether a source string produces it, and Parts 2 and 4 are now 47 of 47 and 48 of 48: every block is the string the product has, slots intact, and a test refuses any deck that stops being true of them. Neither was, a day ago — between them, nine ids showed a RENDERING with the slots filled in, eleven glued two source strings under one id, and four were in no source file at all, two of those being a panel whose component had been deleted eight days earlier. **Part 3 cannot be measured by this tool**: its copy is written inline in JSX, which the extractor cannot parse. So in Part 3, treat repeated-looking sentences with suspicion and say so if you find a set that must be one string.
+**Parts 1, 2 and 4 are keyed to templates. Part 3 is not, and the difference is measured rather than assumed.** `scripts/deck-source-trace.mjs` asks of every id whether a source string produces it, and Parts 2 and 4 are now 48 of 48 and 48 of 48: every block is the string the product has, slots intact, and a test refuses any deck that stops being true of them. Neither was, a day ago — between them, nine ids showed a RENDERING with the slots filled in, eleven glued two source strings under one id, and four were in no source file at all, two of those being a panel whose component had been deleted eight days earlier. **Part 3 cannot be measured by this tool**: its copy is written inline in JSX, which the extractor cannot parse. So in Part 3, treat repeated-looking sentences with suspicion and say so if you find a set that must be one string.
 
 ## How to hand the work back
 
@@ -85,8 +85,8 @@ Take these one at a time. The single pass that worked on this project covered on
 | Order | Batch | Sentences | Open | Part-locked | Locked | Passed | Why it is where it is |
 |---|---|---|---|---|---|---|---|
 | 1 | The reading layer | 70 | 70 | 0 | 0 | 0 | The sentences each instrument says about a result. This is the product's actual voice: it is what a person reads at the moment they find out how they did, and it is the largest and least-written part of the whole thing. |
-| 2 | The pages | 72 | 72 | 0 | 0 | 0 | The reading room, the terms page, and the frame a listener reads before the Ranking Test starts. Long-form prose rather than one-line readouts, and the place a sceptical reader goes to decide whether any of this is serious. |
-| 3 | The instrument copy | 47 | 25 | 0 | 14 | 8 | Smaller batches around the instruments: the result title, the flaw line, the creator vocabulary, and the refusal to score you against a critic. Includes the clip blurbs, which are LOCKED, and the one batch already written, which is PASSED and here only for tone. |
+| 2 | The pages | 73 | 73 | 0 | 0 | 0 | The reading room, the terms page, and the frame a listener reads before the Ranking Test starts. Long-form prose rather than one-line readouts, and the place a sceptical reader goes to decide whether any of this is serious. |
+| 3 | The instrument copy | 48 | 26 | 0 | 14 | 8 | Smaller batches around the instruments: the result title, the flaw line, the creator vocabulary, and the refusal to score you against a critic. Includes the clip blurbs, which are LOCKED, and the one batch already written, which is PASSED and here only for tone. |
 | 4 | The methodology page | 48 | 4 | 44 | 0 | 0 | The published account of how the instruments work. Mostly PART-LOCKED: it quotes cited documents word for word and a test verifies the quotations, so the writing to be done is the connective prose around them. |
 
 Ids are prefixed by batch: `VOC-`, `PAGE-`, `INS-`, `MET-`. Find your batch in `docs/copy-deck.md` by that prefix.

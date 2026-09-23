@@ -63,9 +63,10 @@ describe("E7/S12 — the ?ref= registry covers what we ship", () => {
     expect(isKnownRef("hn")).toBe(true);
     expect(isKnownRef("hnn")).toBe(false);
     expect(isKnownRef("card")).toBe(true);
-    // `cooldown` was retired with the legacy quiz (RT-2 (2026-09-22) a): a tag no
-    // shipped link carries must stop being accepted.
-    expect(isKnownRef("cooldown")).toBe(false);
+    // `vs` went with the World Cup pages (RT-2 (2026-09-22) a): a tag no shipped
+    // link carries must stop being accepted. `cooldown` returned with the snack.
+    expect(isKnownRef("vs")).toBe(false);
+    expect(isKnownRef("cooldown")).toBe(true);
   });
 
   it("every registered tag says what it MEANS, not just that it exists", () => {

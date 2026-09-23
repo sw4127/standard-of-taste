@@ -337,7 +337,7 @@ The symptom is deliberately the complaint a person makes BEFORE they have the wo
 
 ### 4.4 The front door
 
-The lead is shown with the machine count interpolated; four is what ships today. The hint sits under the cards, and the one doors are the quiet rows beneath it.
+The lead is shown with the machine count interpolated; four is what ships today. The hint sits under the cards, and the two doors are the quiet rows beneath it.
 
 *The lead. The machine count is a slot — it was three, it is four, and a rewrite that spells it out will be wrong again:*
 
@@ -354,6 +354,10 @@ The lead is shown with the machine count interpolated; four is what ships today.
 > ${flawFamilyCountWordLeading()} kinds of damage, what each one is called, and which machine measures it.
 
   *As rendered:* “Three kinds of damage, what each one is called, and which machine measures it.”
+
+*The door to `/music/quiz` — its accented label is “Snack.”, which is a source string too short for this deck to give an id; name it in prose if it is the part that is wrong. The line beneath it:*
+
+> Five taps, a verdict, and no measurement behind it.
 
 ### 4.5 The route from a result to the reference
 

@@ -210,7 +210,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 > What this is
 
-> Standard of Taste measures how you hear music. Each instrument is a listening task with answers you can get objectively wrong, and every number is computed by a deterministic engine in code — no machine-learning model and no language model classifies you. It is not a psychological assessment, not a personality test, not medical or mental-health advice, and not a diagnosis of anything. It does not predict your personality, your mood or your character, and it never claims to.
+> Standard of Taste measures how you hear music. Each instrument is a listening task with answers you can get objectively wrong, and every number is computed by a deterministic engine in code — no machine-learning model and no language model classifies you. It is not a psychological assessment, not a personality test, not medical or mental-health advice, and not a diagnosis of anything. The instruments in the gym do not predict your personality, your mood or your character, and never claim to. Two surfaces may speak to you about yourself — the prompt card and the five-tap snack — and both follow one rule: they offer a reading, they do not assert one, and neither says anything about trauma, abuse or mental health. The snack is not a measurement, and says so.
 
 > Terms of use
 
@@ -226,7 +226,9 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 > Your sessions are stored on your device. When you finish an instrument we keep your raw answers in this browser's local storage — never a computed score, so nothing here can be edited into a better result. It is what lets a later session say whether your ear moved, and it is why the seven-day retest gate knows you. Switch device or clear your browsing data and it is gone; there is no copy anywhere else.
 
-> No instrument in the gym sends anything to a language model: every measured result is computed here, in code.
+> The snack's answers live in the page URL, so a link you share carries them and nothing else does.
+
+> The snack's reading is written by a language model (Anthropic) from the answers you gave, and artist names you type there are sent with them, solely to write that reading. No instrument in the gym sends anything to a language model: every measured result is computed here, in code.
 
 > We collect anonymised usage events (page views, session completion, shares) through Vercel Web Analytics and PostHog, to see whether the product works. No advertising trackers, no selling data.
 
@@ -274,4 +276,4 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 ---
 
-**92 blocks, roughly 4153 words, across 11 surfaces.**
+**93 blocks, roughly 4255 words, across 11 surfaces.**

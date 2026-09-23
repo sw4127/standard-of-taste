@@ -45,5 +45,8 @@ export const LEGAL_LAST_UPDATED = "September 2026";
  * it. It is not secret and not security: it is a tripwire on prose.
  */
 // 2026-09-23: the clauses about the retired legacy quizzes were removed
-// (RT-2 (2026-09-22) a) — substantive, and still September 2026.
-export const LEGAL_COPY_FINGERPRINT = "c2535718dee88661";
+// (RT-2 (2026-09-22) a) — substantive, and still September 2026. Later the same
+// day the snack returned (RT-4 c): the personality sentence narrowed to the
+// instruments, the two person-speaking surfaces named, the snack's data clauses
+// restored.
+export const LEGAL_COPY_FINGERPRINT = "05da500840e7ab25";

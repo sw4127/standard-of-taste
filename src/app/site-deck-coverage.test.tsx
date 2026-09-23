@@ -54,7 +54,9 @@ const INVISIBLE: Record<string, number> = {
   "/threshold": 12,
   "/spread": 5,
   "/lab": 163,
-  "/lab/data-model": 98, // 103 -> 98, 2026-09-23: twelve retired events left the page
+  // 103 -> 98 -> 102, 2026-09-23: twelve retired events left the page, then
+  // the snack's five came back with it (RT-4 c).
+  "/lab/data-model": 102,
   "/lab/falsified": 160,
   "/lab/instrument-health": 23,
   "/lab/instrument-limits": 45,
@@ -71,6 +73,8 @@ const INVISIBLE: Record<string, number> = {
   "/learn/ranking-test": 29,
   "/legal": 2,
   "/method": 8,
+  // The snack, restored 2026-09-23 (RT-4 c). Its copy has never been in a deck.
+  "/music/quiz": 2,
 };
 
 const words = (s: string) =>

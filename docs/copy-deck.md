@@ -907,7 +907,7 @@ The symptom is deliberately the complaint a person makes BEFORE they have the wo
 
 #### 4.4 The front door
 
-The lead is shown with the machine count interpolated; four is what ships today. The hint sits under the cards, and the one doors are the quiet rows beneath it.
+The lead is shown with the machine count interpolated; four is what ships today. The hint sits under the cards, and the two doors are the quiet rows beneath it.
 
 *The lead. The machine count is a slot — it was three, it is four, and a rewrite that spells it out will be wrong again:*
 
@@ -928,11 +928,16 @@ The lead is shown with the machine count interpolated; four is what ships today.
 
   *As rendered:* “Three kinds of damage, what each one is called, and which machine measures it.”
 
+*The door to `/music/quiz` — its accented label is “Snack.”, which is a source string too short for this deck to give an id; name it in prose if it is the part that is wrong. The line beneath it:*
+
+`INS-CREATOR-VOCABULARY-17` · OPEN
+> Five taps, a verdict, and no measurement behind it.
+
 #### 4.5 The route from a result to the reference
 
 One string, shown on both the Delicacy and Threshold results. It must stay true after a session that measured one family and after a session that measured three.
 
-`INS-CREATOR-VOCABULARY-17` · OPEN
+`INS-CREATOR-VOCABULARY-18` · OPEN
 > What each flaw is called, and what it sounds like
 
 #### 4.6 The delicacy explainer, now that the machine is open
@@ -941,7 +946,7 @@ These read the live flag and have a second form for the locked state, which is n
 
 *The index card:*
 
-`INS-CREATOR-VOCABULARY-18` · OPEN
+`INS-CREATOR-VOCABULARY-19` · OPEN
 > Machine 02: can your ears find the key in the wine?
 
 *Question:*
@@ -952,7 +957,7 @@ These read the live flag and have a second form for the locked state, which is n
 
 *Answer:*
 
-`INS-CREATOR-VOCABULARY-19` · OPEN
+`INS-CREATOR-VOCABULARY-20` · OPEN
 > Hume retells it from Don Quixote: two of Sancho's kinsmen were asked to judge a hogshead of wine. One found a faint taste of leather, the other of iron, and both were laughed at — until the cask was drained and an old key on a leathern thong was found at the bottom. Their perception was real and verifiable, and that is delicacy.
 
 *Question:*
@@ -963,19 +968,19 @@ These read the live flag and have a second form for the locked state, which is n
 
 *Answer:*
 
-`INS-CREATOR-VOCABULARY-20` · OPEN
+`INS-CREATOR-VOCABULARY-21` · OPEN
 > Public-domain and Creative-Commons recordings are damaged on purpose, by a known amount — ${FAMILY_LIST} — and you pick the original and name the flaw. Unlike a taste quiz, the answers are right or wrong, the difficulty is tunable, and the items can be calibrated with item-response theory.
 
   *As rendered:* “Public-domain and Creative-Commons recordings are damaged on purpose, by a known amount — pitch drift, timing smear and compression damage — and you pick the original and name the flaw. Unlike a taste quiz, the answers are right or wrong, the difficulty is tunable, and the items can be calibrated with item-response theory.”
 
 *Question:*
 
-`INS-CREATOR-VOCABULARY-21` · OPEN
+`INS-CREATOR-VOCABULARY-22` · OPEN
 > Where do the Delicacy Trials sit in the gym?
 
 *Answer:*
 
-`INS-CREATOR-VOCABULARY-22` · OPEN
+`INS-CREATOR-VOCABULARY-23` · OPEN
 > They are machine 02, and the door is open. They were built after the Prestige Test, on the principle that a gym leaves its equipment in plain view long before anyone is ready for it. This one is no longer roped off.
 
 ---
@@ -1380,7 +1385,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > What this is
 
 `PAGE-LEGAL-02` · OPEN
-> Standard of Taste measures how you hear music. Each instrument is a listening task with answers you can get objectively wrong, and every number is computed by a deterministic engine in code — no machine-learning model and no language model classifies you. It is not a psychological assessment, not a personality test, not medical or mental-health advice, and not a diagnosis of anything. It does not predict your personality, your mood or your character, and it never claims to.
+> Standard of Taste measures how you hear music. Each instrument is a listening task with answers you can get objectively wrong, and every number is computed by a deterministic engine in code — no machine-learning model and no language model classifies you. It is not a psychological assessment, not a personality test, not medical or mental-health advice, and not a diagnosis of anything. The instruments in the gym do not predict your personality, your mood or your character, and never claim to. Two surfaces may speak to you about yourself — the prompt card and the five-tap snack — and both follow one rule: they offer a reading, they do not assert one, and neither says anything about trauma, abuse or mental health. The snack is not a measurement, and says so.
 
 > Terms of use
 
@@ -1402,12 +1407,15 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > Your sessions are stored on your device. When you finish an instrument we keep your raw answers in this browser's local storage — never a computed score, so nothing here can be edited into a better result. It is what lets a later session say whether your ear moved, and it is why the seven-day retest gate knows you. Switch device or clear your browsing data and it is gone; there is no copy anywhere else.
 
 `PAGE-LEGAL-08` · OPEN
-> No instrument in the gym sends anything to a language model: every measured result is computed here, in code.
+> The snack's answers live in the page URL, so a link you share carries them and nothing else does.
 
 `PAGE-LEGAL-09` · OPEN
-> We collect anonymised usage events (page views, session completion, shares) through Vercel Web Analytics and PostHog, to see whether the product works. No advertising trackers, no selling data.
+> The snack's reading is written by a language model (Anthropic) from the answers you gave, and artist names you type there are sent with them, solely to write that reading. No instrument in the gym sends anything to a language model: every measured result is computed here, in code.
 
 `PAGE-LEGAL-10` · OPEN
+> We collect anonymised usage events (page views, session completion, shares) through Vercel Web Analytics and PostHog, to see whether the product works. No advertising trackers, no selling data.
+
+`PAGE-LEGAL-11` · OPEN
 > Want anything else gone? There is no server-side record of you to delete, but the button below clears everything this browser holds, and you can contact us ({support ? support : "through the address on the repository"}) with any question about it.
 
 *4 further blocks on this page are filled entirely from content modules, so the words are reviewed in the earlier parts rather than here.*
@@ -1459,7 +1467,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 ---
 
-**92 blocks, roughly 4153 words, across 11 surfaces.**
+**93 blocks, roughly 4255 words, across 11 surfaces.**
 
 
 ---
@@ -2228,5 +2236,5 @@ What happened next is the part that is harder to read, and this reading is mine 
 
 ---
 
-**237 sentences, each with an id.** Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.
+**239 sentences, each with an id.** Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.
 

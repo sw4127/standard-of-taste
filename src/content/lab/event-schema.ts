@@ -82,6 +82,13 @@ export const EVENT_SURFACES: EventSurface[] = [
     prefixes: ["spread_"],
   },
   {
+    id: "snack",
+    title: "The snack",
+    blurb:
+      "The five-tap music quiz and its reading, beside the instruments rather than inside them. Retired and restored on 2026-09-23; the one surface other than the prompt card allowed to speak about the reader.",
+    events: ["premise_view", "quiz_start", "quiz_complete", "result_view"],
+  },
+  {
     id: "legacy",
     title: "The legacy funnel",
     blurb:
@@ -93,8 +100,9 @@ export const EVENT_SURFACES: EventSurface[] = [
     id: "share",
     title: "Share primitives",
     blurb: "Fired by the share buttons themselves, whichever surface they sit on.",
-    // share_native and share_challenge were fired only by the retired pages.
-    events: ["share_download"],
+    // share_challenge was fired only by the retired pages; share_native came
+    // back with the snack's reading.
+    events: ["share_native", "share_download"],
   },
 ];
 

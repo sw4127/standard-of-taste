@@ -49,6 +49,13 @@ const NOT_YET_ON_THE_SHELL = [
   "src/app/threshold/ThresholdFlow.tsx",
   "src/app/threshold/ThresholdResult.tsx",
   "src/app/error.tsx",
+  /*
+   * THE SNACK, restored 2026-09-23 (RT-4 (c)) exactly as it was laid out, which
+   * predates the shell. Re-laying it out is design work nobody has ruled.
+   */
+  "src/app/music/quiz/page.tsx",
+  "src/app/music/result/page.tsx",
+  "src/app/music/result/loading.tsx",
 ];
 
 /**

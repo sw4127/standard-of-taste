@@ -33,6 +33,9 @@ import {
   cooldownBody,
   COOLDOWN_ALTERNATIVE,
   COOLDOWN_DEVICE_NOTE,
+  SNACK_LEAD,
+  SNACK_LINE,
+  SNACK_CTA,
   FAMILY_LABEL,
   NO_COHORT_FOOTNOTE,
   NO_COHORT_BADGE,
@@ -337,6 +340,9 @@ function shippingStrings(): VoiceString[] {
   }
   // The snack that sits beside the instrument (PM direction 2026-08-22). It is
   // cohort-facing copy on the Gym's own screen, so it is gated with the rest.
+  out.push({ surface: "staircase/snack/lead", text: SNACK_LEAD, intensity: "calm" });
+  out.push({ surface: "staircase/snack/line", text: SNACK_LINE, intensity: "calm" });
+  out.push({ surface: "staircase/snack/cta", text: SNACK_CTA, intensity: "calm" });
 
   /**
    * THE VOCABULARY LAYER (E8/S9). Every sentence the creator translation and the

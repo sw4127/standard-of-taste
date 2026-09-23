@@ -36,8 +36,11 @@ export const KNOWN_REFS: Readonly<Record<string, string>> = {
 
   // --- internal hops, one instrument or surface to another ----------------
   card: "a shared result card's link back into the product",
-  // `vs`, `fan` and `cooldown` tagged links into the legacy quizzes; they went
-  // with those pages (RT-2 (2026-09-22) a), so no shipped link carries them.
+  // `vs` and `fan` tagged links into the retired World Cup pages (RT-2 a), so
+  // no shipped link carries them. `cooldown` came back with the snack (RT-4 c).
+  cooldown:
+    "the Threshold flow's post-session snack link into the music quiz — the " +
+    "snack offered as a parallel thing to do during the seven-day wait, never as a warm-up for the gym",
 
   // --- excluded from counts ------------------------------------------------
   dev: "our own testing; excluded from the KPI counts (src/content/lab/metrics.ts)",
