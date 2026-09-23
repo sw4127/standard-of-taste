@@ -1385,7 +1385,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > What this is
 
 `PAGE-LEGAL-02` · OPEN
-> Standard of Taste measures how you hear music. Each instrument is a listening task with answers you can get objectively wrong, and every number is computed by a deterministic engine in code — no machine-learning model and no language model classifies you. It is not a psychological assessment, not a personality test, not medical or mental-health advice, and not a diagnosis of anything. The instruments in the gym do not predict your personality, your mood or your character, and never claim to. Two surfaces may speak to you about yourself — the prompt card and the five-tap snack — and both follow one rule: they offer a reading, they do not assert one, and neither says anything about trauma, abuse or mental health. The snack is not a measurement, and says so.
+> Standard of Taste measures how you hear music. Each instrument is a listening task with answers you can get objectively wrong, and every number is computed by a deterministic engine in code — no machine-learning model and no language model classifies you. It is not a psychological assessment, not a personality test, not medical or mental-health advice, and not a diagnosis of anything. The instruments in the gym do not predict your personality, your mood or your character, and never claim to. Two surfaces may speak to you about yourself — the prompt card and the five-tap snack. The card offers a reading rather than asserting one; the snack is a playful verdict with no measurement behind it, and says so at its door; and neither says anything about trauma, abuse or mental health.
 
 > Terms of use
 
@@ -1467,7 +1467,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 ---
 
-**93 blocks, roughly 4255 words, across 11 surfaces.**
+**93 blocks, roughly 4257 words, across 11 surfaces.**
 
 
 ---
@@ -2106,7 +2106,7 @@ Everything else in the block is the engineer's own connective prose and is free.
 *The `bought` field, free prose with no verified passage in it:*
 
 `MET-TWO-REVERSALS-05` · PART-LOCKED
-> The part of the product people could enjoy, and the half of its thesis the instruments never reached. The instruments test whether a listener can hear; the snack is where the product speaks to what a listener might be going through — in the register the card already follows: offer, do not assert.
+> The part of the product people could enjoy, and the half of its thesis the instruments never reached. The instruments test whether a listener can hear; the snack is where the product speaks to what a listener might be going through — as a playful verdict that says at its own door there is no measurement behind it.
 
 *The `price` field, free prose with no verified passage in it:*
 
@@ -2116,7 +2116,7 @@ Everything else in the block is the engineer's own connective prose and is free.
 *The two together, which is how the page reads:*
 
 ```renders
-On the morning of 2026-09-23 the five-tap music snack was retired so that two sentences on this site would be true. The same day the owner restored it, on the argument that it was the part of the product carrying the product's own thesis — that taste carries cues about feeling, and that the gap between what a person's taste reveals and what they know about themselves is where insight lives. The constitution records the decision in one line: it extends the 2026-09-16 suspension to one more named surface. A reading built from that thesis later is not covered until it, too, is named. The part of the product people could enjoy, and the half of its thesis the instruments never reached. The instruments test whether a listener can hear; the snack is where the product speaks to what a listener might be going through — in the register the card already follows: offer, do not assert. The pivot concluded the five-tap verdict dead, and the reversal above names it as the reason D1 exists. It is back, beside the instruments. The line between a reading about the person and a measurement of a performance is now held only by naming surfaces one at a time, and the card's own disclosure had to narrow from "on this site" to "in the gym". One line did not move: nothing on any surface asserts anything about trauma, abuse or mental health.
+On the morning of 2026-09-23 the five-tap music snack was retired so that two sentences on this site would be true. The same day the owner restored it, on the argument that it was the part of the product carrying the product's own thesis — that taste carries cues about feeling, and that the gap between what a person's taste reveals and what they know about themselves is where insight lives. The constitution records the decision in one line: it extends the 2026-09-16 suspension to one more named surface. A reading built from that thesis later is not covered until it, too, is named. The part of the product people could enjoy, and the half of its thesis the instruments never reached. The instruments test whether a listener can hear; the snack is where the product speaks to what a listener might be going through — as a playful verdict that says at its own door there is no measurement behind it. The pivot concluded the five-tap verdict dead, and the reversal above names it as the reason D1 exists. It is back, beside the instruments. The line between a reading about the person and a measurement of a performance is now held only by naming surfaces one at a time, and the card's own disclosure had to narrow from "on this site" to "in the gym". One line did not move: nothing on any surface asserts anything about trauma, abuse or mental health.
 ```
 
 ---

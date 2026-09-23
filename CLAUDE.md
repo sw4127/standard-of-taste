@@ -84,6 +84,8 @@ Appended, not overwritten. It extends the 2026-09-16 suspension to **one more na
 
 **The register is the card's: OFFER, DO NOT ASSERT** (RT-Z5, MRD §6.3). The snack is also not a measurement and says so at its own door (*"no measurement behind it"*).
 
+*[AMENDED 2026-09-23, PM ruling RT-7 (b): the snack is EXEMPT from the offer register. It keeps the playful verdict voice it was restored with, labelled at its door as having no measurement behind it. "Offer, do not assert" binds the card, and the reading when it ships. The carve-out below binds the snack as it binds everything. Kept above verbatim per the keep-intact rule.]*
+
 **The carve-out stands, reaffirmed** (RT-Z10 (a), 2026-09-16; RT-6 (a), 2026-09-23): no assertion about trauma, abuse, or mental health, on any surface.
 
 **On-surface statement for the card, narrowed, and rendered VERBATIM.** "On this site" became false the moment a second surface could speak about the reader. `src/content/card/statement.test.ts` reads the LAST on-surface statement in this file, because the constitution is append-only and the newest amendment governs:

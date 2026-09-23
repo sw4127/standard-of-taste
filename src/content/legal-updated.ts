@@ -49,4 +49,5 @@ export const LEGAL_LAST_UPDATED = "September 2026";
 // day the snack returned (RT-4 c): the personality sentence narrowed to the
 // instruments, the two person-speaking surfaces named, the snack's data clauses
 // restored.
-export const LEGAL_COPY_FINGERPRINT = "05da500840e7ab25";
+// RT-7 (2026-09-23) b: the snack is a playful verdict, exempt from the offer register.
+export const LEGAL_COPY_FINGERPRINT = "a30ea8aac655b9ee";

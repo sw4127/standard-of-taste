@@ -57,9 +57,9 @@ export default function LegalPage() {
           not a psychological assessment, not a personality test, not medical or mental-health
           advice, and not a diagnosis of anything. The instruments in the gym do not predict your
           personality, your mood or your character, and never claim to. Two surfaces may speak to
-          you about yourself — the prompt card and the five-tap snack — and both follow one rule:
-          they offer a reading, they do not assert one, and neither says anything about trauma,
-          abuse or mental health. The snack is not a measurement, and says so.
+          you about yourself — the prompt card and the five-tap snack. The card offers a reading
+          rather than asserting one; the snack is a playful verdict with no measurement behind it,
+          and says so at its door; and neither says anything about trauma, abuse or mental health.
         </p>
       </section>
 

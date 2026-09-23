@@ -210,7 +210,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 > What this is
 
-> Standard of Taste measures how you hear music. Each instrument is a listening task with answers you can get objectively wrong, and every number is computed by a deterministic engine in code — no machine-learning model and no language model classifies you. It is not a psychological assessment, not a personality test, not medical or mental-health advice, and not a diagnosis of anything. The instruments in the gym do not predict your personality, your mood or your character, and never claim to. Two surfaces may speak to you about yourself — the prompt card and the five-tap snack — and both follow one rule: they offer a reading, they do not assert one, and neither says anything about trauma, abuse or mental health. The snack is not a measurement, and says so.
+> Standard of Taste measures how you hear music. Each instrument is a listening task with answers you can get objectively wrong, and every number is computed by a deterministic engine in code — no machine-learning model and no language model classifies you. It is not a psychological assessment, not a personality test, not medical or mental-health advice, and not a diagnosis of anything. The instruments in the gym do not predict your personality, your mood or your character, and never claim to. Two surfaces may speak to you about yourself — the prompt card and the five-tap snack. The card offers a reading rather than asserting one; the snack is a playful verdict with no measurement behind it, and says so at its door; and neither says anything about trauma, abuse or mental health.
 
 > Terms of use
 
@@ -276,4 +276,4 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 ---
 
-**93 blocks, roughly 4255 words, across 11 surfaces.**
+**93 blocks, roughly 4257 words, across 11 surfaces.**
