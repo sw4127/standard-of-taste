@@ -56,11 +56,12 @@ describe("E15/S5 — the event schema", () => {
   });
 
   /**
-   * THE NEEDLE MUST SEE WHAT IT FORBIDS. `share_vs` is the trap: it begins with
-   * "share_" and belongs to the World Cup surface, so a `share_` PREFIX on the
-   * share-primitives surface would claim it twice. That surface therefore
-   * lists its three events by name. If someone ever "simplifies" it to a
-   * prefix, the module-load check fires — this asserts the check can.
+   * THE NEEDLE MUST SEE WHAT IT FORBIDS. The trap used to be `share_vs`: it
+   * began with "share_" and belonged to the World Cup surface, so a `share_`
+   * PREFIX on the share-primitives surface would have claimed it twice. That
+   * surface was retired with the legacy pages (RT-2 (2026-09-22) a); the share
+   * surface still lists by name, and this proves the double-claim check with a
+   * live event instead.
    */
   it("refuses an event claimed by two surfaces", () => {
     const claimants = (event: string) =>
@@ -69,14 +70,14 @@ describe("E15/S5 — the event schema", () => {
           (s.events?.includes(event) ?? false) ||
           (s.prefixes?.some((p) => event.startsWith(p)) ?? false),
       );
-    expect(claimants("share_vs")).toHaveLength(1);
-    expect(claimants("share_vs")[0].id).toBe("world-cup");
+    expect(claimants("share_download")).toHaveLength(1);
+    expect(claimants("share_download")[0].id).toBe("share");
     // The same predicate, shown finding a double claim, so the shape of the
     // check is proven rather than assumed.
-    const doubled = [{ events: ["share_vs"] }, { prefixes: ["share_"] }].filter(
+    const doubled = [{ events: ["share_download"] }, { prefixes: ["share_"] }].filter(
       (s) =>
-        ((s as { events?: string[] }).events?.includes("share_vs") ?? false) ||
-        ((s as { prefixes?: string[] }).prefixes?.some((p) => "share_vs".startsWith(p)) ?? false),
+        ((s as { events?: string[] }).events?.includes("share_download") ?? false) ||
+        ((s as { prefixes?: string[] }).prefixes?.some((p) => "share_download".startsWith(p)) ?? false),
     );
     expect(doubled).toHaveLength(2);
   });

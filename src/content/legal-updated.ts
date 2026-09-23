@@ -44,4 +44,6 @@ export const LEGAL_LAST_UPDATED = "September 2026";
  * Fingerprint of the terms as of that date, maintained by the test that checks
  * it. It is not secret and not security: it is a tripwire on prose.
  */
-export const LEGAL_COPY_FINGERPRINT = "b679e0d27ba4cb85";
+// 2026-09-23: the clauses about the retired legacy quizzes were removed
+// (RT-2 (2026-09-22) a) — substantive, and still September 2026.
+export const LEGAL_COPY_FINGERPRINT = "c2535718dee88661";

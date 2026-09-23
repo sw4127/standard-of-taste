@@ -85,30 +85,16 @@ export const EVENT_SURFACES: EventSurface[] = [
     id: "legacy",
     title: "The legacy funnel",
     blurb:
-      "The music-taste quiz and its paywall, from before the taste-gym pivot. Kept emitting so the historical record stays readable rather than becoming a gap.",
-    prefixes: ["quiz_", "fakedoor_"],
-    events: [
-      "result_view",
-      "premise_view",
-      "sharpen_read",
-      "paywall_view",
-      "checkout_start",
-      "purchase",
-      "paid_calibration",
-    ],
-  },
-  {
-    id: "world-cup",
-    title: "The World Cup verdict",
-    blurb: "The player-match card and its head-to-head comparison, also pre-pivot.",
-    prefixes: ["fan_verdict_"],
-    events: ["vs_view", "share_vs"],
+      "What remains of the pre-pivot music quiz's paid path. Its pages were retired on 2026-09-23 and now redirect to the gym; these are still emitted by components and API routes left in the codebase.",
+    prefixes: ["fakedoor_"],
+    events: ["sharpen_read", "checkout_start", "purchase", "paid_calibration"],
   },
   {
     id: "share",
     title: "Share primitives",
     blurb: "Fired by the share buttons themselves, whichever surface they sit on.",
-    events: ["share_native", "share_challenge", "share_download"],
+    // share_native and share_challenge were fired only by the retired pages.
+    events: ["share_download"],
   },
 ];
 

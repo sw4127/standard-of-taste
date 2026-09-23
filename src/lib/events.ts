@@ -29,7 +29,6 @@ export const KNOWN_EVENTS: Readonly<Record<string, string>> = {
   bias_start: "the blind pass begins",
   bias_session_restored: "an interrupted session is resumed from its saved ratings",
   bias_blind_complete: "the final blind rating is given and the pass ends",
-  bias_bridge_diversion: "the bridge screen's alternate path is taken instead of continuing",
   bias_labeled_complete: "the final labelled rating is given; the verdict is computed",
   bias_result: "the verdict is computed — the interim D6 record, carrying the raw ratings",
   bias_debrief_view: "the mandatory debrief is shown, disclosing the swapped labels",
@@ -55,29 +54,16 @@ export const KNOWN_EVENTS: Readonly<Record<string, string>> = {
   spread_start: "the Ranking Test's frame is dismissed and listening begins",
   spread_complete: "all six works are rated and the two spreads are computed",
 
-  // --- legacy music / World Cup funnel (RT-125a keeps this alive) -----------
-  quiz_start: "the legacy quiz begins",
-  quiz_complete: "the legacy quiz is finished",
-  result_view: "the legacy result page renders",
-  premise_view: "the premise screen renders",
+  // --- legacy funnel. Its pages were retired (RT-2 (2026-09-22) a); these are
+  // still fired by components and API routes that remain in the codebase. -----
   sharpen_read: "the free-text sharpening step is used",
-  paywall_view: "the paywall is shown",
   checkout_start: "the unlock button starts a hosted checkout",
   purchase: "a purchase is confirmed on return",
   paid_calibration: "the paid report's calibration section renders",
   fakedoor_compat_click: "the compatibility fake-door is clicked (demand probe, ships nothing)",
   fakedoor_date_click: "the date-night fake-door is clicked (demand probe, ships nothing)",
 
-  // --- World Cup fan verdict + head-to-head ---------------------------------
-  fan_verdict_view: "the fan-verdict page renders",
-  fan_verdict_picker: "a player is chosen in the fan-verdict picker",
-  fan_verdict_share: "the fan verdict is shared",
-  vs_view: "a head-to-head /vs page renders",
-  share_vs: "a /vs comparison is shared",
-
   // --- share primitives, fired by the shared buttons themselves -------------
-  share_native: "the OS share sheet was opened successfully",
-  share_challenge: "a challenge link is shared",
   share_download: "a card image is downloaded",
 };
 

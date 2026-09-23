@@ -46,22 +46,28 @@ vi.mock("next/navigation", async (orig) => ({
 const NEEDS_A_PAYLOAD: Record<string, string> = {
   "/bias/result": "the Prestige result; the payload is the share code",
   "/delicacy/result": "the Delicacy result; the payload is the share code",
-  "/music/result": "legacy quiz result (RT-3c)",
-  "/result": "legacy World Cup result (RT-3c)",
-  "/premium/report": "legacy paid report; redirects to its preview when unpaid",
-  "/vs": "legacy head-to-head; needs two archetypes",
 };
+
+/**
+ * THE RETIRED PRE-PIVOT PRODUCT — PM ruling RT-2 (2026-09-22) a. Every one of
+ * these must keep redirecting, and to the front door specifically: an old shared
+ * link resolves and lands on the gym. Exact in both directions.
+ */
+const RETIRED_TO_FRONT_DOOR = [
+  "/quiz",
+  "/result",
+  "/vs",
+  "/fan-verdict",
+  "/music/quiz",
+  "/music/result",
+  "/premium/preview",
+  "/premium/report",
+];
 
 /** Routes no rendered page links to, on purpose. Exact: see the header. */
 const ORPHAN_BY_DESIGN: Record<string, string> = {
   "/bias/result": "reached by finishing the Prestige Test, or by a share link",
   "/delicacy/result": "reached by finishing the Delicacy Trials, or by a share link",
-  "/music/result": "legacy; reached by finishing the music quiz",
-  "/result": "legacy; reached by finishing the World Cup quiz",
-  "/premium/preview": "legacy paywall, reached from the legacy result",
-  "/quiz": "legacy; only a referred ?from= arrival is pointed at it (page.tsx)",
-  "/vs": "legacy head-to-head, reached from a shared legacy result",
-  "/fan-verdict": "legacy World Cup page, reached by its own share links",
 };
 
 interface Anchor {
@@ -112,11 +118,20 @@ beforeAll(async () => {
 describe("the site's doors, read from rendered pages", () => {
   it("rendered the site, so nothing below passes vacuously", () => {
     expect(site.failed).toEqual([]);
-    // Absolute floors, measured 2026-09-22: 27 pages render with 252 links
-    // between them, and 6 redirect. A floor is a tripwire, not a count.
-    expect(rendered.length).toBeGreaterThanOrEqual(27);
-    expect(rendered.flatMap((r) => r.anchors).length).toBeGreaterThanOrEqual(200);
-    expect([...site.redirected].sort()).toEqual(Object.keys(NEEDS_A_PAYLOAD).sort());
+    // Absolute floors, measured 2026-09-23 after the legacy routes retired:
+    // 23 pages render and 10 redirect. A floor is a tripwire, not a count.
+    expect(rendered.length).toBeGreaterThanOrEqual(23);
+    expect(rendered.flatMap((r) => r.anchors).length).toBeGreaterThanOrEqual(150);
+    expect([...site.redirected].sort()).toEqual(
+      [...Object.keys(NEEDS_A_PAYLOAD), ...RETIRED_TO_FRONT_DOOR].sort(),
+    );
+  });
+
+  it("sends every retired route to the front door, and nowhere else", () => {
+    const astray = RETIRED_TO_FRONT_DOOR.filter((r) => site.redirectTo[r] !== "/").map(
+      (r) => `${r} -> ${site.redirectTo[r] ?? "(does not redirect)"}`,
+    );
+    expect(astray).toEqual([]);
   });
 
   /**
@@ -153,7 +168,10 @@ describe("the site's doors, read from rendered pages", () => {
           .filter((p): p is string => !!p && p !== r.route),
       ),
     );
-    const orphans = new Set(site.staticRoutes.filter((r) => !inbound.has(r)));
+    // A retired route redirects by design and is meant to have no door.
+    const orphans = new Set(
+      site.staticRoutes.filter((r) => !inbound.has(r) && !RETIRED_TO_FRONT_DOOR.includes(r)),
+    );
     const listed = new Set(Object.keys(ORPHAN_BY_DESIGN));
     expect(
       [...orphans].filter((r) => !listed.has(r)),

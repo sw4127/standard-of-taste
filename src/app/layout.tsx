@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { SITE_DESCRIPTION, SITE_NAME } from "@/content/site";
 import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
@@ -32,12 +33,19 @@ const fraunces = localFont({
 export const metadata: Metadata = {
   // §3.B4: resolves every relative canonical/OG URL against the real origin.
   metadataBase: new URL(baseUrl()),
-  title: "Vibe Check — Which footballer matches your vibe?",
-  description:
-    "A 7-tap quiz reads your vibe and matches you to a footballer's style. Free, shareable.",
+  /*
+   * THE DEFAULTS EVERY PAGE INHERITS NAMED THE RETIRED PRODUCT until Track V/S9
+   * (2026-09-23): "Vibe Check — Which footballer matches your vibe?", and the
+   * iOS home-screen name "Vibe Check". A page without its own title showed it,
+   * and so did the legacy routes while they streamed their redirect. No guard
+   * saw it, because they read page metadata and never the layout's.
+   * `site-terms.test.tsx` now reads these.
+   */
+  title: SITE_NAME,
+  description: SITE_DESCRIPTION,
   // §23.F (PWA-light) — installable, iOS standalone home-screen app.
-  applicationName: "Vibe Check",
-  appleWebApp: { capable: true, title: "Vibe Check", statusBarStyle: "black-translucent" },
+  applicationName: SITE_NAME,
+  appleWebApp: { capable: true, title: SITE_NAME, statusBarStyle: "black-translucent" },
 };
 
 export const viewport: Viewport = {

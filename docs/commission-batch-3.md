@@ -16,8 +16,9 @@ batch 2.
 > zero real respondents), the voice, and how to hand the work back.
 >
 > **Your batch is `docs/copy-deck.md`, Part 2 — "The instrument copy". Find it by the `INS-` id
-> prefix. 48 ids: 26 OPEN, 14 LOCKED, 8 PASSED.** *(49 and 27 when this was handed out; the
-> front door's reading-room door was removed on 2026-09-22 under RT-1 (2026-09-22) a.)* It is the smaller copy around the instruments —
+> prefix. 47 ids: 25 OPEN, 14 LOCKED, 8 PASSED.** *(49 and 27 when this was handed out; the
+> front door's reading-room door was removed on 2026-09-22 under RT-1 (2026-09-22) a, and its
+> "Snack." door on 2026-09-23 under RT-2 (2026-09-22) a.)* It is the smaller copy around the instruments —
 > the Prestige result's title, the delicacy flaw line, the creator vocabulary that names three kinds
 > of audio damage, and the one-sentence refusal to score anyone against a critic.
 >

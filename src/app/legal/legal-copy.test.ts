@@ -72,7 +72,7 @@ describe("the legal page claims no personality reading (D1)", () => {
 
 describe("the legal page names the product that ships", () => {
   it("is branded the gym, not the legacy name", () => {
-    // The football disclaimer is kept — /quiz and /fan-verdict are still routed
+    // The legacy quizzes were retired (RT-2 (2026-09-22) a); the product name is the gym's.
     // — but the page itself must not be branded as the old product.
     expect(rendered()).toContain("Standard of Taste");
     expect(rendered().includes("VIBE CHECK")).toBe(false);

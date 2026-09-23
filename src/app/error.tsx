@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { track } from "@/lib/analytics";
+import { ERROR_RECOVERY_LINE, SITE_WORDMARK } from "@/content/site";
 
 /**
  * §23.A (G4) — route-level error boundary. The $0 interim monitoring: failures
@@ -26,10 +27,10 @@ export default function ErrorPage({
 
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col items-center justify-center px-6 text-center">
-      <p className="text-xs font-bold tracking-[0.4em] text-accent">VIBE CHECK</p>
+      <p className="text-xs font-bold tracking-[0.4em] text-accent">{SITE_WORDMARK}</p>
       <h1 className="mt-6 font-display text-4xl font-black leading-tight">The needle skipped.</h1>
       <p className="mt-3 text-sm leading-relaxed text-muted">
-        Something broke on our side — your answers are safe in this page&apos;s link.
+        Something broke on our side. {ERROR_RECOVERY_LINE}
       </p>
       <button
         type="button"

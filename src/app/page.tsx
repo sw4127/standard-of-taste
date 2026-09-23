@@ -13,10 +13,9 @@ import GymFloor, { type Machine } from "./GymFloor";
 import Track from "@/components/Track";
 import SiteHeader from "@/components/SiteHeader";
 import { SHELL_MAIN, PROSE_MEASURE } from "@/content/shell";
-import { worldCup } from "@/content/world-cup";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
 import { landingLead, LANDING_OPENER, LANDING_ALGORITHM, LANDING_TURN, SECONDARY_DOORS } from "@/content/landing";
-import { PRESTIGE_GOLD, PRESTIGE_FIELD, DELICACY_ICE, DELICACY_FIELD, THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE, SPREAD_ROSE, SPREAD_FIELD, SPREAD_BASE, GYM_INK } from "@/content/instrument-accents";
+import { PRESTIGE_GOLD, PRESTIGE_FIELD, DELICACY_ICE, DELICACY_FIELD, THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE, SPREAD_ROSE, SPREAD_FIELD, SPREAD_BASE } from "@/content/instrument-accents";
 
 /**
  * The taste-gym landing (RT-3c, memo §9.7 RESOLVED 2026-07-11): /bias is the
@@ -155,40 +154,24 @@ const MACHINES: Machine[] = [
   },
 ];
 
-type SearchParams = Promise<Record<string, string | string[] | undefined>>;
-
 const HEADER_LINKS = [
   { href: "/learn", label: "READING ROOM" },
   { href: "/lab", label: "THE LAB" },
   { href: "/method", label: "THE METHOD" },
 ] as const;
 
-export default async function Home({ searchParams }: { searchParams: SearchParams }) {
-  // Legacy WC share links land here with ?from=<archetypeId> — greet them and
-  // point at the game they were actually sent (Track 5: legacy, not featured).
-  const sp = await searchParams;
-  const fromId = typeof sp.from === "string" ? sp.from : undefined;
-  const friendArchetype = fromId
-    ? worldCup.archetypes.centroids.find((c) => c.id === fromId)?.label
-    : undefined;
-
+/*
+ * The `?from=<archetype>` greeting that pointed referred World Cup arrivals at
+ * /quiz went with that game: PM ruling RT-2 (2026-09-22) a. A legacy link still
+ * lands here; it is simply greeted by the gym.
+ */
+export default function Home() {
   return (
     <main className={`${SHELL_MAIN} justify-center`}>
       <Track event="landing_view" props={{ variant: "gym" }} />
       <GymStage machines={MACHINES}>
       <div className="relative z-10">
         <SiteHeader links={HEADER_LINKS} />
-
-        {friendArchetype ? (
-          <p className="mt-5 inline-block rounded-full border border-white/10 px-4 py-1.5 text-sm text-muted">
-            Your friend is <span className="font-semibold" style={{ color: GYM_INK }}>{friendArchetype}</span> on
-            the pitch — that game lives{" "}
-            <Link href="/quiz" className="underline underline-offset-4" style={{ color: GYM_INK }}>
-              here
-            </Link>
-            . The gym is what&apos;s new.
-          </p>
-        ) : null}
 
         <h1 className={`mt-7 ${PROSE_MEASURE} font-display text-[2rem] font-semibold leading-[1.06] tracking-tight sm:text-5xl sm:leading-[1.02]`}>
           {LANDING_OPENER}

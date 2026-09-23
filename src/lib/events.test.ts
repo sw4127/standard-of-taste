@@ -50,7 +50,8 @@ describe("E7/S13 — every event the code fires is one we wrote down", () => {
     // The tripwire. Both checks below pass trivially if the scan stops matching
     // — the same vacuity that let the claims sweep miss fifteen files while
     // reporting success.
-    expect(emittedEvents().size, "the scan found almost no events — a pattern broke").toBeGreaterThan(35);
+    // Measured 2026-09-23 after the legacy pages retired: 31 distinct events.
+    expect(emittedEvents().size, "the scan found almost no events — a pattern broke").toBeGreaterThan(28);
   });
 
   it("no event name is built at runtime", () => {

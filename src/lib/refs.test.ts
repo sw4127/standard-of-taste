@@ -53,7 +53,8 @@ describe("E7/S12 — the ?ref= registry covers what we ship", () => {
     // files while reporting success.
     let found = 0;
     for (const { text } of shippedFiles()) found += [...text.matchAll(/[?&]ref=([a-z0-9_-]+)/gi)].length;
-    expect(found, "the sweep found no ref tags at all — the pattern is broken").toBeGreaterThan(8);
+    // Measured 2026-09-23 after the legacy pages retired: 8 tags in shipped files.
+    expect(found, "the sweep found no ref tags at all — the pattern is broken").toBeGreaterThan(6);
   });
 
   it("would catch a plausible typo", () => {
@@ -61,7 +62,10 @@ describe("E7/S12 — the ?ref= registry covers what we ship", () => {
     // one character off a real channel.
     expect(isKnownRef("hn")).toBe(true);
     expect(isKnownRef("hnn")).toBe(false);
-    expect(isKnownRef("cooldown")).toBe(true);
+    expect(isKnownRef("card")).toBe(true);
+    // `cooldown` was retired with the legacy quiz (RT-2 (2026-09-22) a): a tag no
+    // shipped link carries must stop being accepted.
+    expect(isKnownRef("cooldown")).toBe(false);
   });
 
   it("every registered tag says what it MEANS, not just that it exists", () => {

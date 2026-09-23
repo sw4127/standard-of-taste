@@ -13,7 +13,9 @@
  * ceilings below total 751. The whole Lab (six pages, 526 with metadata), the
  * instrument start pages (/bias, /delicacy, /threshold), most of the
  * reading-room index and much of the front door have never been in front of a
- * writer. That is recorded here as a CEILING per page, not fixed: wiring those
+ * writer. (2026-09-23: 720, after the legacy routes retired — 26 of their
+ * sentences left with them — and five event descriptions left /lab/data-model.)
+ * That is recorded here as a CEILING per page, not fixed: wiring those
  * surfaces into the deck machinery is unruled work, the same work batch 6
  * names for the card.
  *
@@ -52,7 +54,7 @@ const INVISIBLE: Record<string, number> = {
   "/threshold": 12,
   "/spread": 5,
   "/lab": 163,
-  "/lab/data-model": 103,
+  "/lab/data-model": 98, // 103 -> 98, 2026-09-23: twelve retired events left the page
   "/lab/falsified": 160,
   "/lab/instrument-health": 23,
   "/lab/instrument-limits": 45,
@@ -69,11 +71,6 @@ const INVISIBLE: Record<string, number> = {
   "/learn/ranking-test": 29,
   "/legal": 2,
   "/method": 8,
-  // The pre-pivot product, alive by RT-3c and not being written for.
-  "/music/quiz": 2,
-  "/quiz": 2,
-  "/fan-verdict": 2,
-  "/premium/preview": 20,
 };
 
 const words = (s: string) =>
@@ -152,7 +149,7 @@ describe("rendered copy the copy system cannot see is held at its measured ceili
       .map(([route, ceiling]) =>
         counts[route].invisible > ceiling
           ? `${route}: ${counts[route].invisible} invisible sentences, ceiling ${ceiling} — put the new copy in a deck, or raise the ceiling on purpose`
-          : `${route}: ${counts[route].invisible} invisible, ceiling ${ceiling} — copy was decked; lower the ceiling to hold the gain`,
+          : `${route}: ${counts[route].invisible} invisible, ceiling ${ceiling} — copy was decked or removed; lower the ceiling to hold the gain`,
       );
     expect(moved).toEqual([]);
   });

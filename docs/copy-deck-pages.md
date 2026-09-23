@@ -210,15 +210,13 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 > What this is
 
-> Standard of Taste measures how you hear music. Each instrument is a listening task with answers you can get objectively wrong, and every number is computed by a deterministic engine in code — no machine-learning model and no language model classifies you. It is not a psychological assessment, not a personality test, not medical or mental-health advice, and not a diagnosis of anything. It does not predict your personality, your mood or your character, and it never claims to. Older readings still reachable here — the music and football quizzes — are entertainment and were never measurements.
+> Standard of Taste measures how you hear music. Each instrument is a listening task with answers you can get objectively wrong, and every number is computed by a deterministic engine in code — no machine-learning model and no language model classifies you. It is not a psychological assessment, not a personality test, not medical or mental-health advice, and not a diagnosis of anything. It does not predict your personality, your mood or your character, and it never claims to.
 
 > Terms of use
 
 > Everything here is free. There is no paid tier, no subscription and nothing to buy. The only gate is a seven-day wait before repeating an instrument, and that exists because a retest taken sooner measures your memory of the clips rather than your ear.
 
 > Don't use any result here to make decisions about employment, credit, insurance, housing, or anything else that matters that much. It measures how you heard a handful of short clips on one afternoon.
-
-> Footballer names appear only to describe public playing styles. Standard of Taste is not affiliated with, endorsed by, or connected to FIFA, any club, league, or player.
 
 > Don't abuse, reverse-engineer, or resell the service. Be normal.
 
@@ -228,9 +226,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 > Your sessions are stored on your device. When you finish an instrument we keep your raw answers in this browser's local storage — never a computed score, so nothing here can be edited into a better result. It is what lets a later session say whether your ear moved, and it is why the seven-day retest gate knows you. Switch device or clear your browsing data and it is gone; there is no copy anywhere else.
 
-> Quiz answers in the older music and football readings live in the page URL, so a link you share carries them and nothing else does.
-
-> Artist names you type into the older music reading are sent to our AI provider (Anthropic) solely to write that reading. No instrument in the gym sends anything to a language model: every measured result is computed here, in code.
+> No instrument in the gym sends anything to a language model: every measured result is computed here, in code.
 
 > We collect anonymised usage events (page views, session completion, shares) through Vercel Web Analytics and PostHog, to see whether the product works. No advertising trackers, no selling data.
 
@@ -278,4 +274,4 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 ---
 
-**94 blocks, roughly 4244 words, across 11 surfaces.**
+**92 blocks, roughly 4153 words, across 11 surfaces.**

@@ -19,7 +19,6 @@ import { SHELL_MAIN, PROSE_MEASURE } from "@/content/shell";
 import OtherMachines from "@/components/OtherMachines";
 import { readableOn } from "@/lib/readable-on";
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import FluidField from "@/components/FluidField";
 import { track } from "@/lib/analytics";
 import {
@@ -425,27 +424,12 @@ export default function BiasFlow() {
             changes. A couple stay blank on purpose. Rate what you hear.
           </p>
 
-          <div
-            className="mt-7 rounded-2xl border p-5"
-            style={{ borderColor: "hsl(42 60% 55% / 0.3)", background: "rgba(255,255,255,0.03)" }}
-          >
-            <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: GOLD }}>
-              WHILE YOU&rsquo;RE HERE
-            </p>
-            <p className="mt-2 text-sm leading-relaxed text-neutral-300">
-              There&rsquo;s a shorter, sillier one next door — five taps on what you actually listen
-              to, and it tells you which kind of listener you are. No scoring, no ears required.
-              Your ten ratings are saved; come back whenever.
-            </p>
-            <Link
-              href="/music/quiz"
-              onClick={() => track("bias_bridge_diversion", {})}
-              className="mt-4 inline-block rounded-full border px-5 py-2.5 text-sm font-bold transition hover:bg-white/[0.06]"
-              style={{ borderColor: GOLD, color: GOLD }}
-            >
-              Take the five-tap one &rarr;
-            </Link>
-          </div>
+          {/* THE "WHILE YOU'RE HERE" DIVERSION IS GONE (RT-2 (2026-09-22) a). It
+              sent a listener, mid-instrument, to the retired personality quiz,
+              promising it "tells you which kind of listener you are" — a D1
+              claim inside the flagship — and said "Your ten ratings are saved"
+              over a sixteen-clip pool. Neither was visible to the site-wide
+              guards: this screen exists only between the two passes. */}
 
           <button
             type="button"

@@ -32,7 +32,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
-import type { ReactElement } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 // The gym floor calls `useRouter`, which needs a mounted App Router. Only its
@@ -57,9 +56,8 @@ interface Surface {
 
 /** Every surface that renders `SiteHeader`, rendered whole — layout and page. */
 async function surfaces(): Promise<Surface[]> {
-  const home = (await Home({ searchParams: Promise.resolve({}) })) as ReactElement;
   return [
-    { path: "/", html: renderToStaticMarkup(home) },
+    { path: "/", html: renderToStaticMarkup(<Home />) },
     { path: "/learn", html: renderToStaticMarkup(<LearnLayout><LearnIndex /></LearnLayout>) },
     { path: "/lab", html: renderToStaticMarkup(<LabLayout><LabIndex /></LabLayout>) },
     { path: "/method", html: renderToStaticMarkup(<MethodLayout><MethodPage /></MethodLayout>) },

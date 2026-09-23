@@ -28,8 +28,12 @@ export const metadata: Metadata = {
  *     psychological states. The legal page asserted the one thing the pivot
  *     exists to refuse.
  *
- * The football clause stays: /quiz and /fan-verdict are still routed, so the
- * trademark disclaimer still describes something a reader can reach.
+ * THE OLDER READINGS ARE GONE (PM ruling RT-2 (2026-09-22) a). The music and
+ * football quizzes were retired and their routes redirect to the front door, so
+ * the clauses describing them — that they were "still reachable here", how their
+ * answers were stored, and that the music reading sent artist names to a model
+ * provider — would now describe things no reader can reach. They were removed
+ * rather than left as history: a terms page is read as the present tense.
  */
 export default function LegalPage() {
   const support = process.env.NEXT_PUBLIC_SUPPORT_EMAIL;
@@ -52,8 +56,7 @@ export default function LegalPage() {
           engine in code — no machine-learning model and no language model classifies you. It is
           not a psychological assessment, not a personality test, not medical or mental-health
           advice, and not a diagnosis of anything. It does not predict your personality, your mood
-          or your character, and it never claims to. Older readings still reachable here — the
-          music and football quizzes — are entertainment and were never measurements.
+          or your character, and it never claims to.
         </p>
       </section>
 
@@ -70,10 +73,6 @@ export default function LegalPage() {
             Don&apos;t use any result here to make decisions about employment, credit, insurance,
             housing, or anything else that matters that much. It measures how you heard a handful of
             short clips on one afternoon.
-          </li>
-          <li>
-            Footballer names appear only to describe public playing styles. Standard of Taste is not
-            affiliated with, endorsed by, or connected to FIFA, any club, league, or player.
           </li>
           <li>Don&apos;t abuse, reverse-engineer, or resell the service. Be normal.</li>
           <li>Not directed at children under 13.</li>
@@ -108,13 +107,8 @@ export default function LegalPage() {
             device or clear your browsing data and it is gone; there is no copy anywhere else.
           </li>
           <li>
-            Quiz answers in the older music and football readings live in the page URL, so a link
-            you share carries them and nothing else does.
-          </li>
-          <li>
-            Artist names you type into the older music reading are sent to our AI provider
-            (Anthropic) solely to write that reading. No instrument in the gym sends anything to a
-            language model: every measured result is computed here, in code.
+            No instrument in the gym sends anything to a language model: every measured result is
+            computed here, in code.
           </li>
           <li>
             We collect anonymised usage events (page views, session completion, shares) through

@@ -294,9 +294,10 @@ describe("the secondary doors under the machines", () => {
     expect(SECONDARY_DOORS[0].href, "the creator reference is not the first door").toBe(
       "/learn/flaws",
     );
-    // Absolute, and changed from 3 by RT-1 (2026-09-22) a: the reading-room
-    // door duplicated the header nav and was removed.
-    expect(SECONDARY_DOORS).toHaveLength(2);
+    // Absolute. 3 -> 2 by RT-1 (2026-09-22) a: the reading-room door duplicated
+    // the header nav. 2 -> 1 by RT-2 (2026-09-22) a: the "Snack." door led to the
+    // retired personality quiz.
+    expect(SECONDARY_DOORS).toHaveLength(1);
   });
 
   /**

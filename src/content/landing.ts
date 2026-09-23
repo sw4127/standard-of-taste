@@ -182,9 +182,4 @@ export const SECONDARY_DOORS: SecondaryDoor[] = [
       `${flawFamilyCountWordLeading()} kinds of damage, what each one is called, and which ` +
       "machine measures it.",
   },
-  {
-    href: "/music/quiz",
-    label: "Snack.",
-    line: "Five taps, a verdict, and no measurement behind it.",
-  },
 ];

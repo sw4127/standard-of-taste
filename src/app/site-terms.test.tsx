@@ -25,6 +25,9 @@
  */
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { renderSite, textOf, type RenderedSite } from "@/test-utils/render-site";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_WORDMARK } from "@/content/site";
 import { MACHINES } from "@/components/OtherMachines";
 import { DEGRADATION_FAMILIES } from "@/engine/delicacy";
 
@@ -34,6 +37,9 @@ vi.mock("next/navigation", async (orig) => ({
   usePathname: () => globalThis.__SITE_PATH ?? "/",
   useSearchParams: () => new URLSearchParams(),
 }));
+// The root layout loads fonts at module scope; only its metadata is read here.
+vi.mock("next/font/google", () => ({ Geist: () => ({ variable: "" }), Geist_Mono: () => ({ variable: "" }) }));
+vi.mock("next/font/local", () => ({ default: () => ({ variable: "" }) }));
 
 /** The registry's names, without the article: "Prestige Test". */
 const CANONICAL = new Set(MACHINES.map((m) => m.title.replace(/^The /, "")));
@@ -124,3 +130,56 @@ describe("no engine slug reaches a reader outside the Lab", () => {
     expect(cells.some((c) => slug.test(c))).toBe(true);
   });
 });
+
+/**
+ * THE DEFAULTS EVERY PAGE INHERITS NAME THE PRODUCT THAT SHIPS (Track V/S9).
+ *
+ * Found in the browser on 2026-09-23, not by any guard: the root layout still
+ * titled the site "Vibe Check — Which footballer matches your vibe?" and gave
+ * the iOS home screen the name "Vibe Check", two months after the pivot. Every
+ * check above reads PAGE metadata; none read the layout's, which is what a page
+ * without its own title — and a phone's home screen — actually shows.
+ */
+describe("the inherited metadata names the product that ships", () => {
+  const RETIRED_NAMES = /vibe check|footballer|world cup|which .* matches your vibe/i;
+
+  it("gives the site, the app and the home screen the product's name", async () => {
+    const { metadata } = await import("./layout");
+    const apple = metadata.appleWebApp as { title?: string };
+    expect(metadata.title).toBe("Standard of Taste");
+    expect(metadata.applicationName).toBe("Standard of Taste");
+    expect(apple.title).toBe("Standard of Taste");
+  });
+
+  it("carries no name of the retired product, in the layout or in any page's metadata", async () => {
+    const { metadata } = await import("./layout");
+    const strings = (v: unknown): string[] =>
+      typeof v === "string" ? [v] : v && typeof v === "object" ? Object.values(v).flatMap(strings) : [];
+    const leaks = [
+      ...strings(metadata).map((t) => ["layout", t]),
+      ...site.pages.flatMap((p) => p.meta.map((t) => [p.route, t])),
+    ].filter(([, t]) => RETIRED_NAMES.test(t));
+    expect(leaks).toEqual([]);
+    // The needle, shown biting on the title that shipped until 2026-09-23.
+    expect(RETIRED_NAMES.test("Vibe Check — Which footballer matches your vibe?")).toBe(true);
+  });
+
+  it("names the product in the web-app manifest and on both error pages", async () => {
+    const manifest = (await import("./manifest")).default();
+    expect([manifest.name, manifest.short_name]).toEqual([SITE_NAME, SITE_NAME]);
+    expect(manifest.description).toBe(SITE_DESCRIPTION);
+    const ErrorPage = (await import("./error")).default;
+    const GlobalError = (await import("./global-error")).default;
+    const props = { error: Object.assign(new Error("x"), { digest: "d" }), reset: () => {} };
+    for (const html of [
+      renderToStaticMarkup(createElement(ErrorPage, props)),
+      renderToStaticMarkup(createElement(GlobalError, props)),
+    ]) {
+      expect(html).toContain(SITE_WORDMARK);
+      expect(RETIRED_NAMES.test(textOf(html)), textOf(html).slice(0, 120)).toBe(false);
+      // The old promise was true of the retired quiz's URLs, not of the gym.
+      expect(html).not.toMatch(/safe in this page/i);
+    }
+  });
+});
+

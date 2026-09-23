@@ -464,35 +464,10 @@ export function thresholdShareText(result: StaircaseResult): string {
   return `${thresholdCardFigure(result)} — ${thresholdCardCaption(result)}. Measured, not guessed. Your turn.`;
 }
 
-/**
- * THE SNACK, BESIDE THE INSTRUMENT (PM direction, 2026-08-22).
- *
- * The legacy music read is a SIDE PRODUCT and it stays (PM ruling RT-125a). The
- * PM's framing is that it should read as a snack sitting PARALLEL to the Gym —
- * not a warm-up for it, and not a paywall bolted to the end of it.
- *
- * The homepage called it "Warm-up", which makes it a lesser thing you do first,
- * and `/fan-verdict` funnels into it as an upsell. Only `BiasFlow` had it right
- * already: "a shorter, sillier one next door".
- *
- * IT OWNS THAT IT MEASURES NOTHING, and that is the whole trick. Next to an
- * instrument that reports cents of detune with an interval, a taste read that
- * quietly implied the same rigour would be the dishonest kind of fun. Saying
- * out loud that there is no measurement behind it is what makes it safe to
- * enjoy — and it is the only framing that does not spend the Gym's credibility
- * to sell the snack (N3).
- *
- * PLACED IN THE COOLDOWN GAP because that is the one pause the product creates
- * on purpose: a person told to come back in seven days has time and nothing to
- * do with it.
+/*
+ * The five-tap "snack" copy that sat here (PM direction 2026-08-22) was removed
+ * with the legacy quiz it pointed at: PM ruling RT-2 (2026-09-22) a.
  */
-export const SNACK_LEAD = "Something lighter while you wait.";
-
-export const SNACK_LINE =
-  "Five taps on what you actually listen to, and a verdict with no measurement behind it. " +
-  "No clips, no ears, no interval — the opposite of this, on purpose.";
-
-export const SNACK_CTA = "Take the five-tap one";
 
 /**
  * HOW BIG THE CARD'S HERO FIGURE CAN BE (E6/S25).

@@ -1,5 +1,6 @@
 "use client";
 
+import { ERROR_RECOVERY_LINE, SITE_WORDMARK } from "@/content/site";
 /**
  * §23.A (G4) — root-layout error boundary. Must render its own <html>/<body>
  * (it replaces the root layout), so styling is inline and dependency-free.
@@ -29,12 +30,12 @@ export default function GlobalError({
         }}
       >
         <p style={{ fontSize: 12, letterSpacing: "0.4em", fontWeight: 700, color: "#7c6cff" }}>
-          VIBE CHECK
+          {SITE_WORDMARK}
         </p>
         <h1 style={{ fontSize: 32, fontWeight: 800, margin: "16px 0 8px" }}>The needle skipped.</h1>
         <p style={{ fontSize: 14, color: "#8b91a3", maxWidth: 360 }}>
-          Something broke on our side{error.digest ? ` (ref ${error.digest})` : ""}. Your answers
-          are safe in this page&apos;s link.
+          Something broke on our side{error.digest ? ` (ref ${error.digest})` : ""}.{" "}
+          {ERROR_RECOVERY_LINE}
         </p>
         <button
           type="button"

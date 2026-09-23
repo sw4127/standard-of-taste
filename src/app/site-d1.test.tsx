@@ -15,12 +15,20 @@
  * "never reported as a fact about you" — are listed below with their reason,
  * exactly, both directions.
  *
- * THE LEGACY ROUTES ARE EXEMPT BY RULING, NOT BY OVERSIGHT. `/music/quiz`,
- * `/fan-verdict` and the World Cup quiz are the pre-pivot personality product,
- * kept alive so old shares do not 404 (RT-3c). They violate D1 by construction,
- * and they are the specimen that proves this needle bites on real rendered text:
- * the test REQUIRES them to trip it. If they are ever retired, that requirement
- * fails and this list must be revisited rather than quietly outliving them.
+ * NO ROUTE IS EXEMPT ANY MORE. The pre-pivot personality product — `/music/quiz`,
+ * `/fan-verdict`, the World Cup quiz — was exempt by ruling (RT-3c) and was this
+ * needle's live specimen until it was retired (RT-2 (2026-09-22) a). Its routes
+ * now redirect to the front door. The sentences those surfaces actually rendered
+ * are kept below as FIXED SPECIMENS the needle must still catch, so a needle that
+ * goes blind still fails even though no page carries such a sentence.
+ *
+ * ONE OF THEM IS WHY THE NEEDLE GREW (Track V/S9). The Prestige Test's bridge
+ * screen — between the blind and labelled passes, inside the flagship — pointed
+ * at the quiz saying it "tells you which kind of listener you are". The needle
+ * matched "what kind of…" and "the kind of…" and would not have caught "which".
+ * That screen also never renders in a static render, which is why no rendered
+ * check saw it; the source scan at the end of this file now reads the gym's
+ * interactive screens for exactly that reason.
  *
  * WHAT IT CANNOT SEE: the card itself (it renders only with a payload — it is
  * guarded in `src/content/card/`), the instrument result screens (payload
@@ -28,6 +36,8 @@
  * A green run means none of THESE phrasings renders, not that no page speaks
  * about the person.
  */
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { attributeText, renderSite, textOf, type RenderedSite } from "@/test-utils/render-site";
 
@@ -40,13 +50,17 @@ vi.mock("next/navigation", async (orig) => ({
 
 /** Phrasings that claim something about the person rather than the performance. */
 const ABOUT_THE_PERSON =
-  /\b(who you are|what kind of (person|listener) you are|the (kind|type|sort) of (person|listener)|says about you|reveals about you|your (personality|temperament|character|psyche|soul|mood|identity|inner \w+)|you are (a|an|the|someone|somebody) \w+ (person|listener|type|soul)|you tend to|deep down|introvert|extrovert|personality)\b/i;
+  /\b(who you are|(what|which) (kind|type|sort) of (person|listener) you are|the (kind|type|sort) of (person|listener)|says about you|reveals about you|your (personality|temperament|character|psyche|soul|mood|identity|inner \w+)|you are (a|an|the|someone|somebody) \w+ (person|listener|type|soul)|you tend to|deep down|introvert|extrovert|personality)\b/i;
 
 /** The RT-Z10 carve-out holds on every surface, the card included. */
 const CARVE_OUT = /\b(trauma|traumatic|abuse|abused|mental[- ]health|depress\w*|anxiety|grief|unresolved loss)\b/i;
 
-/** The pre-pivot product, alive by RT-3c. Each must still trip the needle. */
-const LEGACY_BY_RULING = ["/music/quiz", "/fan-verdict"];
+/** What the retired surfaces rendered, verbatim. Each must still trip the needle. */
+const RETIRED_SPECIMENS = [
+  "Be honest — does your music taste actually say something about who you are?",
+  "I'll tell you what being their fan says about you.",
+  "There's a shorter, sillier one next door — five taps on what you actually listen to, and it tells you which kind of listener you are.",
+];
 
 /** Sentences that name the forbidden thing in order to refuse it. */
 const REFUSALS: Record<string, string> = {
@@ -100,24 +114,19 @@ beforeAll(async () => {
 describe("no surface but the card speaks about the person (D1, as amended)", () => {
   it("read the site, so nothing below passes vacuously", () => {
     expect(site.failed).toEqual([]);
-    expect(site.pages.length).toBeGreaterThanOrEqual(27);
-    for (const route of LEGACY_BY_RULING) {
-      expect(site.pages.map((p) => p.route), `${route} did not render`).toContain(route);
+    // Measured 2026-09-23 after the legacy routes retired: 23 pages render.
+    expect(site.pages.length).toBeGreaterThanOrEqual(23);
+  });
+
+  it("the needle bites on what the retired surfaces actually said", () => {
+    for (const sentence of RETIRED_SPECIMENS) {
+      expect(scan("/retired", sentence).filter((h) => h.rule === "D1"), sentence).toHaveLength(1);
     }
   });
 
-  it("the needle bites on real rendered text: every legacy route trips it", () => {
-    for (const route of LEGACY_BY_RULING) {
-      expect(
-        hits.filter((h) => h.route === route && h.rule === "D1").length,
-        `${route} no longer trips the D1 needle — retired, or the needle went blind`,
-      ).toBeGreaterThan(0);
-    }
-  });
-
-  it("finds no claim about the person outside the legacy routes", () => {
+  it("finds no claim about the person on any rendered page", () => {
     const found = hits
-      .filter((h) => h.rule === "D1" && !LEGACY_BY_RULING.includes(h.route) && !refused(h))
+      .filter((h) => h.rule === "D1" && !refused(h))
       .map((h) => `${h.route}: "${h.sentence.slice(0, 140)}"`);
     expect(found).toEqual([]);
   });
@@ -141,6 +150,39 @@ describe("no surface but the card speaks about the person (D1, as amended)", () 
       "It does not predict your personality, your mood or your character, but it knows who you are.",
     );
     expect(smuggled.filter((h) => !refused(h))).toHaveLength(1);
+  });
+
+  /**
+   * THE SCREENS A STATIC RENDER NEVER REACHES, READ FROM SOURCE (Track V/S9).
+   *
+   * The instruments are client flows; their mid-session screens — the Prestige
+   * bridge between passes, the Threshold cooldown — exist only in React state.
+   * The bridge carried a D1 claim ("which kind of listener you are") and nothing
+   * above could see it. So the gym's flows and every shared component are read
+   * as source, comments stripped, with the same needle. Source is the right
+   * surface here for the reason 8(i) gives: copy that never renders statically
+   * has no rendered output to read.
+   */
+  it("finds no claim about the person in the gym's interactive screens, read from source", () => {
+    const walk = (d: string): string[] =>
+      readdirSync(d, { withFileTypes: true }).flatMap((e) =>
+        e.isDirectory() ? walk(join(d, e.name)) : [join(d, e.name).replace(/\\/g, "/")],
+      );
+    const files = [
+      ...["bias", "delicacy", "threshold", "spread"].flatMap((d) => walk(`src/app/${d}`)),
+      ...walk("src/components"),
+    ].filter((f) => f.endsWith(".tsx") && !f.includes(".test."));
+    // Absolute floor, measured 2026-09-23: 36 files.
+    expect(files.length).toBeGreaterThanOrEqual(30);
+    const found = files.flatMap((f) => {
+      const src = readFileSync(f, "utf8")
+        .replace(/\/\*[\s\S]*?\*\//g, " ")
+        .replace(/^\s*\/\/.*$/gm, " ");
+      return scan(f, src)
+        .filter((h) => h.rule === "D1" && !refused(h))
+        .map((h) => `${f}: "${h.sentence.trim().slice(0, 120)}"`);
+    });
+    expect(found).toEqual([]);
   });
 
   it("lists no refusal whose sentence is gone", () => {

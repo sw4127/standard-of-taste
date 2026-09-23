@@ -180,7 +180,8 @@ const exempt = (h: Hit) => Object.keys(NOT_THE_PRODUCT_SET).some((f) => h.senten
 describe("every rendered count of a product set is the set's size", () => {
   it("read the site and found counts, so nothing below passes vacuously", () => {
     expect(site.failed).toEqual([]);
-    expect(site.pages.length).toBeGreaterThanOrEqual(27);
+    // 23 pages render since the legacy routes retired (2026-09-23).
+    expect(site.pages.length).toBeGreaterThanOrEqual(23);
     // Absolute floors, measured 2026-09-22: 42 counts across all 8 nouns.
     expect(hits.length).toBeGreaterThanOrEqual(40);
     expect(new Set(hits.map((h) => h.noun)).size).toBe(8);

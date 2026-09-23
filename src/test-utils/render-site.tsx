@@ -49,6 +49,8 @@ function stringsIn(value: unknown): string[] {
 export interface RenderedSite {
   pages: RenderedPage[];
   redirected: string[];
+  /** Where each redirecting page sends the reader, read from Next's redirect digest. */
+  redirectTo: Record<string, string>;
   failed: string[];
   staticRoutes: string[];
 }
@@ -83,7 +85,7 @@ let cached: Promise<RenderedSite> | null = null;
 /** Render every static page once per test file. */
 export function renderSite(): Promise<RenderedSite> {
   cached ??= (async () => {
-    const site: RenderedSite = { pages: [], redirected: [], failed: [], staticRoutes: [] };
+    const site: RenderedSite = { pages: [], redirected: [], redirectTo: {}, failed: [], staticRoutes: [] };
     for (const key of Object.keys(PAGES)) {
       const route = routeOf(key);
       if (route.includes("[")) continue;
@@ -91,7 +93,12 @@ export function renderSite(): Promise<RenderedSite> {
       try {
         site.pages.push({ route, ...(await render(route, key)) });
       } catch (e) {
-        if (String(e).includes("NEXT_REDIRECT")) site.redirected.push(route);
+        if (String(e).includes("NEXT_REDIRECT")) {
+          site.redirected.push(route);
+          // The digest is "NEXT_REDIRECT;<type>;<url>;<status>;".
+          const digest = String((e as { digest?: string }).digest ?? "");
+          site.redirectTo[route] = digest.split(";")[2] ?? "";
+        }
         else site.failed.push(`${route}: ${String(e).slice(0, 120)}`);
       }
     }

@@ -48,22 +48,7 @@ const NOT_YET_ON_THE_SHELL = [
   "src/app/threshold/page.tsx",
   "src/app/threshold/ThresholdFlow.tsx",
   "src/app/threshold/ThresholdResult.tsx",
-  "src/app/quiz/page.tsx",
-  "src/app/music/quiz/page.tsx",
-  "src/app/music/result/page.tsx",
-  "src/app/fan-verdict/page.tsx",
-  "src/app/vs/page.tsx",
-  "src/app/premium/preview/page.tsx",
-  "src/app/premium/report/page.tsx",
   "src/app/error.tsx",
-  /*
-   * THE LEGACY MUSIC/WORLD-CUP FUNNEL. Superseded by the taste gym and kept
-   * alive only so shared URLs do not 404 (CLAUDE.md, Legacy). Re-laying it out
-   * would be work on a surface the project has concluded is dead.
-   */
-  "src/app/result/page.tsx",
-  "src/app/result/loading.tsx",
-  "src/app/music/result/loading.tsx",
 ];
 
 /**
