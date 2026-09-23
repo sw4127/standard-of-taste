@@ -1,5 +1,6 @@
 import Link from "next/link";
 import SiteHeader from "@/components/SiteHeader";
+import UnlessHere from "@/components/UnlessHere";
 import { SHELL_MAIN, PROSE_MEASURE } from "@/content/shell";
 import FluidField from "@/components/FluidField";
 import { GYM_FIELD, FIELD_READING } from "@/content/instrument-accents";
@@ -36,10 +37,12 @@ export default function LearnLayout({ children }: { children: React.ReactNode })
         <SiteHeader links={HEADER_LINKS} />
         <div className={PROSE_MEASURE}>{children}</div>
         <p className="mt-14 text-[11px] text-muted/70">
-          <Link href="/learn" className="transition hover:text-white">
-            Reading room
-          </Link>{" "}
-          ·{" "}
+          <UnlessHere href="/learn">
+            <Link href="/learn" className="transition hover:text-white">
+              Reading room
+            </Link>{" "}
+            ·{" "}
+          </UnlessHere>
           <Link href="/bias" className="transition hover:text-white">
             Take the Prestige Test
           </Link>{" "}
