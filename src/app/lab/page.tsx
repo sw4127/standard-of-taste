@@ -4,7 +4,7 @@ import SourceBadge from "@/components/lab/SourceBadge";
 import { METRICS, type MetricDefinition } from "@/content/lab/metrics";
 import { LAB_PANELS, LIVE_PANELS, PENDING_PANELS } from "@/content/lab/panels";
 import { FUNNEL_SPEC, sessionsForPrecision, stepTrigger } from "@/content/lab/funnel-spec";
-import { DEMO_ARRIVALS, DEMO_REPLICATIONS, demoRecovery } from "@/content/lab/funnel-demo";
+import { DEMO_ARRIVALS, DEMO_DATA_SOURCE, DEMO_REPLICATIONS, demoRecovery } from "@/content/lab/funnel-demo";
 import { GYM_INK } from "@/content/instrument-accents";
 
 /**
@@ -83,6 +83,7 @@ export default function LabIndex() {
           <SourceBadge source="SIMULATED" />
           <SourceBadge source="REAL" />
           <SourceBadge source="MIXED" />
+          <SourceBadge source="MEASURED" />
         </div>
         <p className="mt-4 text-sm leading-relaxed text-neutral-300">
           Every panel that shows data carries one of these badges. Right now the instrument has
@@ -90,7 +91,9 @@ export default function LabIndex() {
           exists</strong> and nothing here is a percentile. Numbers generated from a known model to
           validate the pipeline are labelled <span className="font-mono text-xs">SIMULATED</span>{" "}
           wherever they appear. When real responses arrive they flow through the identical
-          pipeline — the only thing that changes is the badge.
+          pipeline — the only thing that changes is the badge. Figures taken off the audio files
+          themselves, which involve nobody, are labelled{" "}
+          <span className="font-mono text-xs">MEASURED</span>.
         </p>
       </div>
 
@@ -351,7 +354,7 @@ export default function LabIndex() {
             <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: INK }}>
               THE ESTIMATOR, DEMONSTRATED
             </p>
-            <SourceBadge source="SIMULATED" />
+            <SourceBadge source={DEMO_DATA_SOURCE} />
           </div>
           <p className="mt-3 text-sm leading-relaxed text-neutral-300">
             The panel is absent because there is no traffic. The ANALYSIS is not absent, and this

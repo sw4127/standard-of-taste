@@ -149,7 +149,7 @@ export default function InstrumentHealthPanel() {
       <section className="mt-14">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
           <h2 className="font-display text-2xl font-semibold tracking-tight">Layer A — manipulation magnitude</h2>
-          <SourceBadge source="REAL" />
+          <SourceBadge source="MEASURED" />
         </div>
         <p className="mt-2 max-w-2xl text-sm text-muted">
           Measured off the shipped audio files by the render pipeline. Each item&rsquo;s manipulation is
@@ -211,7 +211,7 @@ export default function InstrumentHealthPanel() {
       <section className="mt-16">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
           <h2 className="font-display text-2xl font-semibold tracking-tight">Layer B — difficulty & discrimination</h2>
-          <SourceBadge source="SIMULATED" />
+          <SourceBadge source={stats.dataSource} />
         </div>
 
         <div className="mt-4 rounded-2xl border border-dashed border-white/20 bg-white/[0.02] p-5">

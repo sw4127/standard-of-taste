@@ -22,7 +22,25 @@ import { PRESTIGE_GOLD, tint } from "@/content/instrument-accents";
  */
 const GOLD_INK = "hsl(42 80% 72%)";
 
-const STYLES: Record<DataSource, { className: string; style?: React.CSSProperties; note: string }> = {
+/**
+ * WHAT A NUMBER WAS MEASURED FROM, which is wider than who answered.
+ *
+ * `DataSource` describes RESPONSES — generated, real, or both. MEASURED is the
+ * one badge that is not about responses at all: a figure taken off the shipped
+ * audio files by the render pipeline. It exists because, until Track V/S7, the
+ * Lab badged those figures REAL, and the REAL badge's own note says "measured
+ * from real respondents" — on a page of a product with zero respondents, whose
+ * legend says no real cohort exists. The audio figures are real. They are not
+ * about people, and a badge that implies they are is the N3 failure it was
+ * built to prevent.
+ */
+export type BadgeSource = DataSource | "MEASURED";
+
+const STYLES: Record<BadgeSource, { className: string; style?: React.CSSProperties; note: string }> = {
+  MEASURED: {
+    className: "border-solid border-white/35 text-neutral-300",
+    note: "measured off the shipped audio files — no people involved",
+  },
   SIMULATED: {
     className: "border-dashed border-white/35 text-muted",
     note: "generated from a known model — not measured from people",
@@ -39,7 +57,7 @@ const STYLES: Record<DataSource, { className: string; style?: React.CSSPropertie
   },
 };
 
-export default function SourceBadge({ source, className = "" }: { source: DataSource; className?: string }) {
+export default function SourceBadge({ source, className = "" }: { source: BadgeSource; className?: string }) {
   const s = STYLES[source];
   return (
     <span

@@ -98,7 +98,7 @@ export default function RecoveryPanel() {
         <h1 className="font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl">
           Does the estimator work?
         </h1>
-        <SourceBadge source="SIMULATED" />
+        <SourceBadge source={report.dataSource} />
       </div>
 
       <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-neutral-300">

@@ -14,6 +14,7 @@
  */
 import { FUNNEL_SPEC } from "./funnel-spec";
 import { recoverFunnel, type FunnelRecoveryRow, type FunnelStep } from "@/analytics/funnel";
+import type { DataSource } from "@/analytics/estimate";
 
 /** Enough that the estimator should be tight; small enough to run at build time. */
 export const DEMO_ARRIVALS = 4000;
@@ -46,6 +47,13 @@ export const DEMO_STEPS: FunnelStep[] = FUNNEL_SPEC.map((step, i) => ({
  * the suite from roughly 120 to 199 seconds of test time, and unrelated tests
  * began failing under the contention.
  */
+/**
+ * WHERE THESE ROWS COME FROM, declared beside the generator rather than typed
+ * on the page that shows them (Track V/S7). Every arrival here is drawn from a
+ * seeded model; the Lab reads its badge from this.
+ */
+export const DEMO_DATA_SOURCE: DataSource = "SIMULATED";
+
 let cached: FunnelRecoveryRow[] | null = null;
 
 export function demoRecovery(): FunnelRecoveryRow[] {
