@@ -1,5 +1,6 @@
 import Link from "next/link";
 import SiteHeader from "@/components/SiteHeader";
+import { SITE_NAV } from "@/content/site-nav";
 import UnlessHere from "@/components/UnlessHere";
 import { SHELL_MAIN, PROSE_MEASURE } from "@/content/shell";
 import FluidField from "@/components/FluidField";
@@ -24,10 +25,8 @@ import { GYM_FIELD, FIELD_READING } from "@/content/instrument-accents";
 // The neutral chrome colour this paragraph is about now lives in SiteHeader.
 const FLUID = GYM_FIELD;
 
-const HEADER_LINKS = [
-  { href: "/method", label: "THE METHOD" },
-  { href: "/", label: "THE GYM FLOOR" },
-] as const;
+// The shared nav, minus this section (blueprint Part 7).
+const HEADER_LINKS = SITE_NAV.filter((l) => l.href !== "/learn");
 
 export default function LearnLayout({ children }: { children: React.ReactNode }) {
   return (

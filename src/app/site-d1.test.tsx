@@ -96,6 +96,8 @@ const REFUSALS: Record<string, string> = {
   "do not predict your personality, your mood or your character": "/legal refusing D1's subject by name, for the instruments",
   "why a five-tap personality verdict with no measurement behind it was killed": "/method recording why D1 exists",
   "Not a personality.": "the front door refusing D1's subject by name",
+  "Journal of Personality and Social Psychology":
+    "a journal's name in the citation for BP-ARG-OPEN (Wilson & Schooler 1991), not a claim about the reader",
   "Don't abuse, reverse-engineer, or resell the service": "/legal terms of use — abuse of the service, not of a person",
   "nothing on any surface asserts anything about trauma, abuse or mental health":
     "/method's second and third reversals stating the RT-Z10 carve-out, not breaking it",

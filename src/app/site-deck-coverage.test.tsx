@@ -48,41 +48,48 @@ vi.mock("next/navigation", async (orig) => ({
 
 /** Sentences no deck or commission can see, per page, as measured on 2026-09-22. */
 const INVISIBLE: Record<string, number> = {
-  "/": 12, // +1 2026-09-23: the nav gained THE COMPANY VIEW (blueprint Part 6)
+  // BLUEPRINT PART 7 (2026-09-23), measured, not chosen. Every page with the
+  // shared header went up by one: the header gained THE READING, HEARING and
+  // THE COMPANY VIEW, and each page drops its own label, so no one deck line
+  // matches every page's header even though every label is in the reading deck.
+  // The reading, the Company view and /legal came DOWN (21 -> 4, 64 -> 10,
+  // 7 -> 2) when their copy was decked in docs/copy-deck-reading.md.
+  "/learn/why": 9,
+  "/": 13, // +1 2026-09-23: the nav gained THE COMPANY VIEW (blueprint Part 6)
   "/bias": 7,
   "/delicacy": 10,
   "/threshold": 12,
   "/spread": 5,
-  "/lab": 163,
+  "/lab": 164,
   // 103 -> 98 -> 102, 2026-09-23: twelve retired events left the page, then
   // the snack's five came back with it (RT-4 c).
   // 102 -> 94 on 2026-09-23: the snack and fake-door event rows retired (BA-7);
   // 94 -> 98 the same day: the reading's tab-scoped entity (blueprint Part 5).
-  "/lab/data-model": 98,
-  "/lab/falsified": 160,
-  "/lab/instrument-health": 23,
-  "/lab/instrument-limits": 45,
-  "/lab/recovery": 32,
-  "/learn": 20,
-  "/learn/comparison": 20,
-  "/learn/delicacy": 4,
-  "/learn/flaws": 9,
-  "/learn/freedom-from-prejudice": 10,
-  "/learn/good-sense": 11,
-  "/learn/methodology": 15,
-  "/learn/practice": 9,
-  "/learn/prestige-bias-test": 17,
-  "/learn/ranking-test": 29,
+  "/lab/data-model": 99,
+  "/lab/falsified": 161,
+  "/lab/instrument-health": 24,
+  "/lab/instrument-limits": 46,
+  "/lab/recovery": 33,
+  "/learn": 22,
+  "/learn/comparison": 21,
+  "/learn/delicacy": 5,
+  "/learn/flaws": 10,
+  "/learn/freedom-from-prejudice": 11,
+  "/learn/good-sense": 12,
+  "/learn/methodology": 16,
+  "/learn/practice": 10,
+  "/learn/prestige-bias-test": 18,
+  "/learn/ranking-test": 30,
   // 2 -> 7 on 2026-09-23: the reading named as a surface, its generated plays, and
   // its session storage (blueprint Part 5). Part 7 decks /legal's new copy.
-  "/legal": 7,
+  "/legal": 2,
   "/method": 8,
   // Measured 2026-09-23 when the reading shipped (blueprint Part 5): its copy and
   // the argument rendered from docs/blueprint.md are in no deck yet. Part 7 decks
   // them and lowers this.
-  "/reading": 21, // +1: the nav gained THE COMPANY VIEW
+  "/reading": 4, // +1: the nav gained THE COMPANY VIEW
   // The Company view (blueprint Part 6), measured when it shipped; Part 7 decks it.
-  "/company": 64,
+  "/company": 10,
 };
 
 const words = (s: string) =>

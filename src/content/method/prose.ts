@@ -45,8 +45,11 @@ export const METHOD_HEADLINE = "What this project refused, and what each refusal
 export const METHOD_LEDE: MethodParagraph[] = [
   {
     text:
-      "The instruments on this site are the visible part. The part worth reading about is the " +
-      "operating model that produced them — a written constitution, two review protocols, and a " +
+      // Blueprint Part 7 (F13, BA-12): the product first, the method second. It said
+      // "The part worth reading about is the operating model", which sent a reader
+      // past the product to the process.
+      "Start with the reading; it is the product. This page is for afterwards: how it was built — " +
+      "by one owner and an AI engineer, under a written constitution, two review protocols, and a " +
       "decision record that has repeatedly deleted finished work for being untrue rather than for " +
       "being broken.",
   },
@@ -62,9 +65,11 @@ export const METHOD_LEDE: MethodParagraph[] = [
   },
 ];
 
+// One level deeper than the header, which now carries the reading room and the
+// Lab (blueprint Part 7): a closing link to the same rooms would offer them twice.
 export const METHOD_CLOSING_LINKS: ProseLink[] = [
-  { label: "reading room", href: "/learn" },
-  { label: "the Lab", href: "/lab" },
+  { label: "why the product exists", href: "/learn/why" },
+  { label: "a page listing what the instruments cannot do", href: "/lab/instrument-limits" },
 ];
 
 /**
@@ -73,8 +78,8 @@ export const METHOD_CLOSING_LINKS: ProseLink[] = [
  */
 export function methodClosing(asOf: string): string {
   return (
-    `Standing facts on this page last checked ${asOf}. The instruments themselves are in the ` +
-    "reading room; the measurements behind them are in the Lab, including a page listing what the " +
+    `Standing facts on this page last checked ${asOf}. The reading room argues why the product exists; ` +
+    "the Lab holds the measurements behind the hearing tests, including a page listing what the " +
     "instruments cannot do."
   );
 }

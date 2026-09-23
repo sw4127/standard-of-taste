@@ -1,4 +1,4 @@
-import { numberWord, numberWordLeading } from "@/content/vocabulary/numbers";
+import { numberWord } from "@/content/vocabulary/numbers";
 import {
   BIAS_CLIP_COUNT,
   BIAS_SESSION_MINUTES,
@@ -15,7 +15,20 @@ import SiteHeader from "@/components/SiteHeader";
 import { SITE_NAV } from "@/content/site-nav";
 import { SHELL_MAIN, PROSE_MEASURE } from "@/content/shell";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
-import { landingLead, LANDING_OPENER, LANDING_ALGORITHM, LANDING_TURN, SECONDARY_DOORS } from "@/content/landing";
+import {
+  landingLead,
+  LANDING_HEADLINE,
+  LANDING_ALGORITHM,
+  LANDING_READING_TURN,
+  LANDING_CARDS_LEAD,
+  HEARING_KICKER,
+  HEARING_HEADING,
+  SECONDARY_DOORS,
+} from "@/content/landing";
+import ListenerCards from "@/components/ListenerCards";
+import { LISTENERS } from "@/content/reading/listeners";
+import { readingFor } from "@/content/reading/reading";
+import { bp } from "@/content/blueprint";
 import { PRESTIGE_GOLD, PRESTIGE_FIELD, DELICACY_ICE, DELICACY_FIELD, THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE, SPREAD_ROSE, SPREAD_FIELD, SPREAD_BASE } from "@/content/instrument-accents";
 
 /**
@@ -25,15 +38,16 @@ import { PRESTIGE_GOLD, PRESTIGE_FIELD, DELICACY_ICE, DELICACY_FIELD, THRESHOLD_
  * existing route or shared URL 404s — this page only changed its content.
  */
 
+// Blueprint Part 7 (BA-6): the reading is the front door; the Prestige Test is in the hearing section.
 export const metadata: Metadata = {
-  title: "Standard of Taste — do you hear the music, or the name?",
+  title: "Standard of Taste — a month of listening, read back in words you can argue with",
   description:
-    `Your taste has a number. The Prestige Test measures how far a famous name can move your ratings. ${numberWordLeading(BIAS_CLIP_COUNT)} clips, rated twice — the gap is your number.`,
+    "A reading of a listener's recent plays: each line points at the plays behind it, offers what it might mean, and ends in a prompt you can carry into a music generator. Then find out which of its words you can actually hear.",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Standard of Taste — do you hear the music, or the name?",
+    title: "Standard of Taste — a month of listening, read back in words you can argue with",
     description:
-      "Your taste has a number. The Prestige Test measures how far a famous name can move your ratings.",
+      "A reading of a listener's recent plays, in lines you can check, argue with, and carry into a prompt.",
     siteName: "Standard of Taste",
     type: "website",
   },
@@ -155,8 +169,10 @@ const MACHINES: Machine[] = [
   },
 ];
 
-// The shared nav, the reading first (D3 amendment, BA-6).
-const HEADER_LINKS = SITE_NAV;
+// The shared nav. On the front door the reading's door is the listener cards
+// themselves, so the nav skips it rather than offer one room twice (RT-1 a,
+// site-doors.test.tsx); the hearing link is this page's own section.
+const HEADER_LINKS = SITE_NAV.filter((l) => l.href !== "/reading" && l.href !== "/#hearing");
 
 /*
  * The `?from=<archetype>` greeting that pointed referred World Cup arrivals at
@@ -172,18 +188,32 @@ export default function Home() {
         <SiteHeader links={HEADER_LINKS} />
 
         <h1 className={`mt-7 ${PROSE_MEASURE} font-display text-[2rem] font-semibold leading-[1.06] tracking-tight sm:text-5xl sm:leading-[1.02]`}>
-          {LANDING_OPENER}
+          {LANDING_HEADLINE}
         </h1>
         <p className={`mt-5 ${PROSE_MEASURE} text-lg leading-relaxed text-muted`}>
           {LANDING_ALGORITHM}
         </p>
         <p className={`mt-4 ${PROSE_MEASURE} font-display text-xl leading-snug sm:text-2xl`}>
-          {LANDING_TURN}
+          {LANDING_READING_TURN}
         </p>
-        <p className={`mt-5 ${PROSE_MEASURE} text-base leading-relaxed text-muted`}>
-          {landingLead(MACHINES.length)}{" "}
-          <span className="text-foreground">You can be wrong, and that is the point.</span>
-        </p>
+
+        {/* THE PRIMARY ACTION: the reading (D3 amendment, BA-6). */}
+        <p className={`mt-8 text-[0.65rem] font-bold tracking-[0.3em] text-muted`}>{LANDING_CARDS_LEAD.toUpperCase()}</p>
+        <div className={`mt-3 ${PROSE_MEASURE}`}>
+          <ListenerCards readings={LISTENERS.map(readingFor)} />
+        </div>
+
+        {/* THE HEARING SECTION: the four instruments, unchanged, reached through BP-BRIDGE. */}
+        <section id="hearing" className="mt-16 scroll-mt-8 border-t border-white/10 pt-10">
+          <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">{HEARING_KICKER}</p>
+          <h2 className={`mt-2 ${PROSE_MEASURE} font-display text-2xl font-semibold leading-tight sm:text-3xl`}>
+            {HEARING_HEADING}
+          </h2>
+          <p className={`mt-3 ${PROSE_MEASURE} text-base leading-relaxed text-neutral-300`}>{bp("BP-BRIDGE").text}</p>
+          <p className={`mt-4 ${PROSE_MEASURE} text-base leading-relaxed text-muted`}>
+            {landingLead(MACHINES.length)}{" "}
+            <span className="text-foreground">You can be wrong, and that is the point.</span>
+          </p>
 
         <GymFloor
           machines={MACHINES}
@@ -219,6 +249,8 @@ export default function Home() {
             </Link>
           ))}
         </div>
+
+        </section>
 
         <p className="mt-8 text-[11px] text-muted/70">
           <Link href="/legal" className="transition hover:text-white">

@@ -13,7 +13,7 @@
  */
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { LANDING_OPENER, LANDING_ALGORITHM, LANDING_TURN } from "./landing";
+import { LANDING_HEADLINE, LANDING_ALGORITHM, LANDING_READING_TURN } from "./landing";
 
 const NL = String.fromCharCode(10);
 const DECK = "docs/copy-deck.md";
@@ -145,9 +145,9 @@ describe("the batch-5 note quotes the product's actual first sentences", () => {
   it("quotes each of the three exactly as the product renders it", () => {
     const wrong: string[] = [];
     for (const [name, text] of [
-      ["LANDING_OPENER", LANDING_OPENER],
+      ["LANDING_HEADLINE", LANDING_HEADLINE],
       ["LANDING_ALGORITHM", LANDING_ALGORITHM],
-      ["LANDING_TURN", LANDING_TURN],
+      ["LANDING_READING_TURN", LANDING_READING_TURN],
     ] as const) {
       if (note.indexOf(text) === -1) wrong.push(`${name}: ${text.slice(0, 70)}`);
     }

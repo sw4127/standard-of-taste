@@ -191,11 +191,13 @@ describe("the D1 amendment names what it repeals, where, and what it cost", () =
       flatBrief,
       "the brief still states D1 as absolute and says nothing about the exception. A writer reading " +
         "it would be told the prompt card may not do the one thing the amendment requires it to do.",
-    ).toContain("d1 has one exception");
+      // Two since 2026-09-23: the prompt card and the reading (D1 amendment, third surface).
+    ).toContain("d1 has two exceptions");
     expect(
       flatBrief,
       "the brief names no surface for the exception. An unbounded exception is a repeal.",
     ).toContain("prompt card");
+    expect(flatBrief, "the brief does not name the reading as the second exception").toContain("the reading");
     expect(
       flatBrief,
       "the brief does not say the OTHER surfaces are unchanged, which is the half that keeps the " +

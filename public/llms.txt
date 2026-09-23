@@ -20,8 +20,11 @@ never their order. All scoring is deterministic code — no AI classifies the us
 
 ## Core pages
 
-- [Standard of Taste (home)](https://vibe-check-app-sepia.vercel.app/): what the gym is; the four machines
-- [The Prestige Test](https://vibe-check-app-sepia.vercel.app/bias): the flagship instrument — about eight minutes, free, no sign-up
+- [Standard of Taste (home)](https://vibe-check-app-sepia.vercel.app/): the front door — three illustrative listeners to read, then the hearing section's four instruments
+- [The reading](https://vibe-check-app-sepia.vercel.app/reading): the flagship — four weeks of an illustrative listener's plays, read into lines you can check against the plays, argue with, and carry into a prompt; ends in a labelled mock of a fictional host's creation screen
+- [The company view](https://vibe-check-app-sepia.vercel.app/company): illustrative — why a fictional streaming service would build the reading, its metrics, and the A/B test that would decide it; every number a planning assumption
+- [Why this exists](https://vibe-check-app-sepia.vercel.app/learn/why): the argument behind the reading, step by step and labelled, with its weakest step marked
+- [The Prestige Test](https://vibe-check-app-sepia.vercel.app/bias): a hearing test — about eight minutes, free, no sign-up
 - [The Delicacy Trials](https://vibe-check-app-sepia.vercel.app/delicacy): three practice trials with answers shown, then fifteen scored pairs
 - [The Threshold Test](https://vibe-check-app-sepia.vercel.app/threshold): an adaptive staircase reporting a sensitivity threshold in physical units
 - [The Ranking Test](https://vibe-check-app-sepia.vercel.app/spread): six critic-ranked works, forty seconds each — whether your rating gaps vary where a critic's rankings vary

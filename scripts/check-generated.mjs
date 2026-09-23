@@ -42,6 +42,7 @@ export const DECK_OUTPUTS = [
   "docs/copy-deck-instruments.md",
   "docs/copy-deck-pages.md",
   "docs/copy-deck-method.md",
+  "docs/copy-deck-reading.md",
   "docs/copy-review-ledger.md",
   "docs/copy-commission.md",
 ];

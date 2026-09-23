@@ -75,9 +75,16 @@ export function countWordCapitalised(n: number): string {
  * do; the product's own promise stays what it was — what your ears did, in
  * words, and you can be wrong about it.
  */
-export const LANDING_OPENER =
-  "The music that got you understood something you could not say.";
-
+/*
+ * REPLACED 2026-09-23 (blueprint Part 7; BA-6). The opener above introduced a
+ * gym: "The music that got you understood something you could not say" read two
+ * ways (the music understood you / you understood something), and the turn below
+ * it promised "a number you can read" as the deliverable, where the blueprint
+ * promises words for the pattern (BP-INSIGHT). The reading is now the front door.
+ */
+// serves BP-INSIGHT (docs/blueprint.md): the pattern exists; the reading puts it into words.
+export const LANDING_HEADLINE =
+  "Your last month of listening holds a pattern you have probably never put into words.";
 /**
  * THE SECOND BEAT. Split out of the headline after reading the rendered page:
  * all three sentences as one `h1` ran to seven lines of display type at 1280px
@@ -91,29 +98,19 @@ export const LANDING_ALGORITHM =
   "tells you, because what it knows about you is a row of numbers no person can read.";
 
 /**
- * THE TURN, AND IT CARRIES THE WORD THE PRODUCT IS SELLING (RT-P3 a, amended by
- * the PM the same day).
- *
- * IT SAID "This gives it back in words you can use." That promised the thing
- * the product does NOT have — a preference instrument that turns taste into
- * language — so RT-P3 ruled to narrow it. My narrowing was "what your ears
- * actually do, in words", and the owner's objection was immediate and correct:
- * it dropped the word UNDERSTANDING, which is the value being sold and the
- * reason the two lines above it exist at all. An honest sentence that throws
- * away the product's only felt promise is not the honest option, it is a
- * different kind of failure.
- *
- * SO THE DIRECTION FLIPS RATHER THAN THE PROMISE SHRINKING. The recommender
- * understands you and will not say; here, YOU do the understanding. That keeps
- * the word, it is a claim about the reader's activity rather than about the
- * reader's self — which is what D1 forbids — and every noun in it ships today:
- * the instruments report a number, and the vocabulary layer already turns every
- * result into sentences. What it does NOT promise is words for your taste,
- * which is the unbuilt part.
+ * THE TURN, NOW TOWARD THE READING (blueprint Part 7). The recommender holds the
+ * pattern and will not say; here it is read back. The old turn promised "a number
+ * you can read" and was removed (it contradicted BP-INSIGHT, change list C).
  */
-export const LANDING_TURN =
-  "Here the understanding runs the other way: what your own ears do, " +
-  "in a number you can read and a sentence you can repeat.";
+// serves BP-UNMET (docs/blueprint.md): check it, argue with it, carry it into a prompt.
+export const LANDING_READING_TURN =
+  "Here it is read back to you, line by line, with the plays behind each line: " +
+  "keep what fits, reject what doesn't, and carry what is left into a prompt.";
+
+export const LANDING_CARDS_LEAD = "Try it on a month that isn't yours.";
+
+export const HEARING_KICKER = "THE HEARING TESTS";
+export const HEARING_HEADING = "Then find out which of those words you can actually hear.";
 
 export function landingLead(machineCount: number): string {
   return (

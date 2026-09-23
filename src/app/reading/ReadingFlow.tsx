@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import SourceBadge from "@/components/lab/SourceBadge";
+import ListenerCards from "@/components/ListenerCards";
 import { LISTENERS, listener as findListener } from "@/content/reading/listeners";
 import { readingFor, type Reading } from "@/content/reading/reading";
 import { NEITHER, type ReadingLine } from "@/content/reading/lines";
@@ -67,22 +68,8 @@ function Picker() {
     <section className="mt-10">
       <h2 className="font-display text-2xl font-semibold">{C.PICK_HEADING}</h2>
       <p className="mt-2 text-[15px] leading-relaxed text-neutral-300">{C.PICK_LINE}</p>
-      <div className="mt-6 flex flex-col gap-3">
-        {readings.map((r) => (
-          <Link
-            key={r.listener.id}
-            href={`/reading?l=${r.listener.id}`}
-            className="group rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition hover:border-white/30"
-          >
-            <p className="font-display text-2xl font-semibold group-hover:text-white">{r.listener.name}</p>
-            <p className="mt-1 text-sm text-neutral-300">
-              {C.listenerFacts(r.plays.length, new Set(r.plays.map((p) => p.trackId)).size)}
-            </p>
-            <div className="mt-3">
-              <Badge l={r.listener} />
-            </div>
-          </Link>
-        ))}
+      <div className="mt-6">
+        <ListenerCards readings={readings} />
       </div>
     </section>
   );

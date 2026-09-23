@@ -10,7 +10,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { checkVoice, formatVoiceReport, type VoiceString } from "./voice";
 import { flawFamilies, FLAWS_INTRO, FLAWS_LIMITS, FLAWS_INVITE } from "./flaw-families";
-import { landingLead, landingHint, LANDING_OPENER, LANDING_ALGORITHM, LANDING_TURN, SECONDARY_DOORS } from "./landing";
+import { landingLead, landingHint, LANDING_HEADLINE, LANDING_ALGORITHM, LANDING_READING_TURN, LANDING_CARDS_LEAD, HEARING_HEADING, SECONDARY_DOORS } from "./landing";
 import { BIAS_NO_READING, VERDICT_COPY, biasCardSwayLine, biasCardCta, shareText as biasShareText, resultTitleFragment } from "./bias/copy";
 import {
   CALIBRATION_PHASE_LINE,
@@ -184,9 +184,11 @@ function shippingStrings(): VoiceString[] {
    * them. That is the tier's stated purpose, not a downgrade to get past a
    * check.
    */
-  out.push({ surface: "learn/landing/opener", text: LANDING_OPENER, intensity: "pointed" });
+  out.push({ surface: "learn/landing/headline", text: LANDING_HEADLINE, intensity: "pointed" });
   out.push({ surface: "learn/landing/algorithm", text: LANDING_ALGORITHM, intensity: "pointed" });
-  out.push({ surface: "learn/landing/turn", text: LANDING_TURN, intensity: "pointed" });
+  out.push({ surface: "learn/landing/turn", text: LANDING_READING_TURN, intensity: "pointed" });
+  out.push({ surface: "learn/landing/cards-lead", text: LANDING_CARDS_LEAD, intensity: "calm" });
+  out.push({ surface: "learn/landing/hearing", text: HEARING_HEADING, intensity: "calm" });
 
   out.push({ surface: "method/prose/headline", text: METHOD_HEADLINE, intensity: "calm" });
   METHOD_LEDE.forEach((paragraph, at) => {

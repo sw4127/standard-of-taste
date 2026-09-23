@@ -16,6 +16,7 @@ export { LISTENER_LABEL };
 export const HOST_NAME = "Tessavox";
 
 export const READING_KICKER = "THE READING";
+// serves BP-UNMET (docs/blueprint.md): readable, arguable.
 export const READING_TITLE = "What a month of listening says, in words you can argue with.";
 
 export const PICK_HEADING = "Pick a listener.";

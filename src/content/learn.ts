@@ -80,6 +80,35 @@ export interface LearnPage {
 }
 
 export const LEARN_PAGES: LearnPage[] = [
+  /*
+   * WHY THIS EXISTS (blueprint Part 7; BP-ARG, BP-CA1, BP-CA2-PUBLIC, BP-CA3,
+   * BP-BRIDGE). First, because it is the argument the product rests on. The page
+   * renders every blueprint statement from docs/blueprint.md; only the FAQ below
+   * is written here.
+   */
+  {
+    slug: "why",
+    title: "Why this exists",
+    metaTitle: "Why this exists — Standard of Taste",
+    description:
+      "The argument behind the reading, step by step and labelled with what supports each step, the three common-sense assumptions it rejects, and the bridge from hearing to the prompt.",
+    teaser: "The argument the reading rests on, with the weakest step marked.",
+    faq: [
+      {
+        q: "Is the reading telling me how I feel?",
+        a: "No. It names a pattern in the plays and offers two things it might mean, as questions. The same pattern can come from opposite feelings, so which one is right, if either, is yours to say.",
+      },
+      {
+        q: "Whose plays does it read?",
+        a: "Three illustrative listeners who do not exist. Their plays are generated from habits written for them, and nothing on this site reads anybody's real listening history.",
+      },
+      {
+        // serves BP-ARG-WEAK (docs/blueprint.md): where the argument is weakest.
+        q: "Where is the argument weakest?",
+        a: "At the fourth premise, which nothing supports yet, and at the step from naming a pattern to saying anything about a feeling. That step is why the reading offers and the reader decides.",
+      },
+    ],
+  },
   {
     slug: "prestige-bias-test",
     title: "What is the Prestige Test?",

@@ -18,6 +18,7 @@ export const COMPANY_KICKER = "THE COMPANY VIEW";
 export const COMPANY_TITLE = `Why ${HOST_NAME} would build the reading, and how it would find out if it was wrong.`;
 
 export const CASE_HEADING = "The business case";
+// The first line paraphrases BP-CA2 and names it; the lines serve BP-BUSINESS.
 export const FIT_LINES: readonly string[] = [
   `${HOST_NAME} already holds what the reading needs: every listener's recent plays. Nobody is asked to describe their taste, which the blueprint holds almost nobody can do (BP-CA2).`,
   `The prompt the reading ends in is pasted into ${HOST_NAME}'s own creation tool, trained on music it has licensed. The reading is the way in; the tool is what it feeds.`,

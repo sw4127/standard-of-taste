@@ -1,5 +1,6 @@
 import Link from "next/link";
 import SiteHeader from "@/components/SiteHeader";
+import { SITE_NAV } from "@/content/site-nav";
 import { SHELL_MAIN } from "@/content/shell";
 import { MACHINES } from "@/components/OtherMachines";
 import FluidField from "@/components/FluidField";
@@ -27,10 +28,8 @@ import { GYM_FIELD, FIELD_READING } from "@/content/instrument-accents";
 // The neutral chrome colour this paragraph is about now lives in SiteHeader.
 const FLUID = GYM_FIELD;
 
-const HEADER_LINKS = [
-  { href: "/method", label: "THE METHOD" },
-  { href: "/", label: "THE GYM FLOOR" },
-] as const;
+// The shared nav, minus this section (blueprint Part 7).
+const HEADER_LINKS = SITE_NAV.filter((l) => l.href !== "/lab");
 
 export default function LabLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -40,10 +39,8 @@ export default function LabLayout({ children }: { children: React.ReactNode }) {
         <SiteHeader links={HEADER_LINKS} />
         {children}
         <p className="mt-14 text-[11px] text-muted/70">
-          <Link href="/learn" className="transition hover:text-white">
-            Reading room
-          </Link>{" "}
-          ·{" "}
+          {/* "Reading room" went to the shared header (blueprint Part 7); a footer
+              link to the same room would offer it twice (site-doors.test.tsx). */}
           <Link href="/learn/methodology" className="transition hover:text-white">
             Methodology
           </Link>{" "}

@@ -4,7 +4,7 @@
 tasks can a person complete here* and labels each by the evidence behind it. Functional
 requirements, non-goals and wireframes are parts 2 to 4.
 
-**Derived, not recalled.** The route list is walked from `src/app`; 37 routes render a page. Every
+**Derived, not recalled.** The route list is walked from `src/app`; 38 routes render a page. Every
 one appears below or is listed as out of scope with a reason, which is criterion 1 of the brief.
 
 **Blueprint of record:** `docs/blueprint.md` (2026-09-23). This inventory was derived from the routes that exist and did not cite the blueprint; the next revision of this PRD derives its use cases from the blueprint and marks any route that serves no BP statement.
@@ -52,7 +52,7 @@ against UC-2 and UC-3 and it is not ignored.
 | # | Use case | Route | Label | Rests on |
 |---|---|---|---|---|
 | **UC-8** | Learn what a flaw is called and what it sounds like, so I have a word for it | `/learn/flaws` | **EVIDENCED** | Finding 2, directly. It is the one surface built to turn an inarticulate complaint into vocabulary |
-| **UC-9** | Read what each of Hume's five criteria means and how it is measured | `/learn`, `/learn/freedom-from-prejudice`, `/learn/delicacy`, `/learn/good-sense`, `/learn/comparison`, `/learn/practice`, `/learn/prestige-bias-test`, `/learn/ranking-test` | **ASSUMED** | A reading room nobody has been observed using |
+| **UC-9** | Read what each of Hume's five criteria means and how it is measured | `/learn`, `/learn/why`, `/learn/freedom-from-prejudice`, `/learn/delicacy`, `/learn/good-sense`, `/learn/comparison`, `/learn/practice`, `/learn/prestige-bias-test`, `/learn/ranking-test` | **ASSUMED** | A reading room nobody has been observed using |
 | **UC-10** | Check how the instruments work before trusting a number | `/learn/methodology` | **ASSUMED** | |
 | **UC-11** | Find out what the instruments cannot do | `/lab/instrument-limits` | **ASSUMED** | |
 
@@ -77,7 +77,7 @@ no reviewer has been observed — but they are the use cases the artifact was re
 | `/quiz`, `/result`, `/music/quiz`, `/music/result`, `/fan-verdict`, `/vs` | The legacy World-Cup funnel, and the music snack: retired 2026-09-23 (BA-7), redirect to the reading. Kept alive only so shared URLs do not 404 (`CLAUDE.md`, Legacy). No use case is specified for them and none should be |
 | `/premium/preview`, `/premium/report` | The paid tier, withdrawn by the D4 amendment. There is no paid tier and none is coming |
 
-**That is 37 routes: 29 carrying use cases, 8 out of scope.**
+**That is 38 routes: 30 carrying use cases, 8 out of scope.**
 
 ---
 

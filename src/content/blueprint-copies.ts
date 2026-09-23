@@ -61,6 +61,17 @@ export const BLUEPRINT_COPIES: readonly BlueprintCopy[] = [
   { path: "CLAUDE.md", id: "BP-UNMET", mode: "derived", anchor: "A listener's recent plays are read into lines" },
   // The spec's stamp restating what replaced the thesis (change list B1).
   { path: "vibe_check_mvp_spec.md", id: "BP-INSIGHT", mode: "derived", anchor: "*[BLUEPRINT OF RECORD 2026-09-23" },
+  // Blueprint Part 7: the front door, the reading, the Company view, /learn/why.
+  { path: "src/content/landing.ts", id: "BP-INSIGHT", mode: "derived", anchor: "export const LANDING_HEADLINE" },
+  { path: "src/content/landing.ts", id: "BP-UNMET", mode: "derived", anchor: "export const LANDING_READING_TURN" },
+  { path: "src/content/reading/copy.ts", id: "BP-UNMET", mode: "derived", anchor: "export const READING_TITLE" },
+  { path: "src/content/company/copy.ts", id: "BP-CA2", mode: "derived", anchor: "export const FIT_LINES" },
+  { path: "src/content/learn.ts", id: "BP-ARG-WEAK", mode: "derived", anchor: 'q: "Where is the argument weakest?"' },
+  { path: "docs/commission-batch-5.md", id: "BP-INSIGHT", mode: "derived", anchor: "The three sentences, verbatim" },
+  // The writing commission quotes three statements, parsed from the blueprint by its exporter.
+  { path: "docs/copy-commission.md", id: "BP-INSIGHT", mode: "quoted" },
+  { path: "docs/copy-commission.md", id: "BP-UNMET", mode: "quoted" },
+  { path: "docs/copy-commission.md", id: "BP-BRIDGE", mode: "quoted" },
   // Dated records.
   {
     path: "docs/preference-mock-2026-09-13.md",

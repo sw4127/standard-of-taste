@@ -74,6 +74,15 @@ const DECKS = [
       "Every claim on the published methodology page. Read this one against the live page: much " +
       "of it is quotation, and the quoted words are fixed by a test.",
   },
+  {
+    file: "docs/copy-deck-reading.md",
+    script: "scripts/export-reading-deck.mjs",
+    title: "The reading, the front door and the Company view",
+    blurb:
+      "Everything the blueprint build added (2026-09-23): the reading and its lines, the front " +
+      "door, the nav and the Company view. None of it has had a writing pass. The blueprint " +
+      "statements at the end are printed and locked.",
+  },
 ];
 
 /**
@@ -94,7 +103,7 @@ const DECKS = [
  * the number it produced.
  */
 /** Short, stable part codes for the sentence ids. */
-const PART_CODES = ["VOC", "INS", "PAGE", "MET"];
+const PART_CODES = ["VOC", "INS", "PAGE", "MET", "READ"];
 
 /**
  * A SURFACE HEADING BECOMES A SLUG FOR THE ID.
