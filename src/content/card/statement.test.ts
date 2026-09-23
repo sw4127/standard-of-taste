@@ -34,7 +34,14 @@ const MARKER = "**On-surface statement";
  * card to a rule that no longer applies.
  */
 function statementInConstitution(text: string): string | null {
-  const at = text.lastIndexOf(MARKER);
+  // THE LAST MARKER FOR THE CARD (2026-09-23): the reading's amendment added its
+  // own "On-surface statement for the reading", which a plain lastIndexOf would
+  // now find instead of the card's.
+  let at = -1;
+  for (let i = text.indexOf(MARKER); i !== -1; i = text.indexOf(MARKER, i + 1)) {
+    const line = text.slice(i, text.indexOf(NL, i));
+    if (line.includes("card") && !line.includes("for the reading")) at = i;
+  }
   if (at === -1) return null;
   const lines = text.slice(at).split(NL);
   const quoted: string[] = [];

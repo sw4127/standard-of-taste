@@ -12,6 +12,7 @@ import GymStage from "./GymStage";
 import GymFloor, { type Machine } from "./GymFloor";
 import Track from "@/components/Track";
 import SiteHeader from "@/components/SiteHeader";
+import { SITE_NAV } from "@/content/site-nav";
 import { SHELL_MAIN, PROSE_MEASURE } from "@/content/shell";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
 import { landingLead, LANDING_OPENER, LANDING_ALGORITHM, LANDING_TURN, SECONDARY_DOORS } from "@/content/landing";
@@ -154,11 +155,8 @@ const MACHINES: Machine[] = [
   },
 ];
 
-const HEADER_LINKS = [
-  { href: "/learn", label: "READING ROOM" },
-  { href: "/lab", label: "THE LAB" },
-  { href: "/method", label: "THE METHOD" },
-] as const;
+// The shared nav, the reading first (D3 amendment, BA-6).
+const HEADER_LINKS = SITE_NAV;
 
 /*
  * The `?from=<archetype>` greeting that pointed referred World Cup arrivals at

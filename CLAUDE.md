@@ -104,6 +104,25 @@ Appended, not overwritten. It extends the 2026-09-16 suspension to **one more na
 
 **Named routes** (2026-09-23, BA-7 — the snack's are withdrawn; this line is the list until a later amendment adds one): none
 
+### D1 amendment, third surface — the reading (owner-approved 2026-09-23, rulings BA-3 / BA-6 / BA-7)
+Appended, not overwritten. It names **one more surface** where D1 is suspended, by name, as the second-surface amendment requires; **N3 is not relaxed by it**. The rulings: `docs/rt-answers-2026-09-23-audit.md`.
+
+**What changes.** D1 is suspended for **the reading** at `/reading`: the product's flagship (BA-6), where a listener's recent plays are read into lines that may speak to the reader about what those plays might mean for them. **The snack's suspension is withdrawn** (BA-7) — recorded in the stamp above, and restated here so the three surfaces' history reads in one place.
+
+**Named routes** (machine-read by `src/app/site-d1.test.tsx`; the newest "Named routes" line in this file is the list): `/reading`
+
+**The register is BA-3's, and it is stricter than the card's.** No surface may assert a feeling. A line names a pattern — what the plays show, with a receipt pointing at the plays — and offers two readings of what it might mean, as questions, plus "neither", because the same pattern can come from opposite feelings (BP-ARG-S1). `src/content/register.ts` holds it; `src/content/reading/lines.test.ts` proves it on every template with planted specimens.
+
+**Where D1 still stands, unchanged:** every instrument readout — the Prestige, Delicacy, Threshold and Ranking results, which are now the hearing section (D3 amendment).
+
+**The carve-out stands** (RT-Z10 a, RT-6 a, BA-5): no assertion about trauma, abuse or mental health, on any surface, the reading's prompt words included.
+
+**On-surface statement for the reading, rendered VERBATIM.** `src/content/reading/statement.test.ts` reads the last statement marked for the reading and fails the build if `/reading` renders anything else:
+
+> This reading speaks to you about what your recent plays might mean for you. It names patterns and offers readings; which one is right, if either, is yours to say. The hearing tests describe only what you did.
+
+**What it cost, stated rather than glossed.** The product's front door now speaks about the person, where for two months it only measured them, and the one kind of sentence this project could once say it never printed — a sentence about who you might be — is now its main surface. It is held by a register and a test rather than by the absence of the thing, which is a weaker kind of guarantee. And the person it speaks to is fictional: the reading runs on three illustrative listeners (BA-8), so what a reviewer tries is the core as its intended user would meet it, on plays that belong to nobody.
+
 ### D3 amendment — the reading is the flagship (owner-approved 2026-09-23, ruling BA-6)
 Appended, not overwritten. Amends **D3 only**; D1, D2, D4, D5, D6 and N1–N3 are untouched by it. The ruling: `docs/rt-answers-2026-09-23-audit.md`.
 

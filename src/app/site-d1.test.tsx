@@ -99,7 +99,7 @@ const REFUSALS: Record<string, string> = {
   "Don't abuse, reverse-engineer, or resell the service": "/legal terms of use — abuse of the service, not of a person",
   "nothing on any surface asserts anything about trauma, abuse or mental health":
     "/method's second and third reversals stating the RT-Z10 carve-out, not breaking it",
-  "it says nothing about trauma, abuse or mental health": "/legal stating the RT-Z10 carve-out",
+  "neither says anything about trauma, abuse or mental health": "/legal stating the RT-Z10 carve-out",
 };
 
 interface Hit {
@@ -150,8 +150,9 @@ describe("no surface but the card speaks about the person (D1, as amended)", () 
 
   it("reads the named surfaces from the constitution, and each is a real, rendered route", () => {
     expect(NAMED_OR_NULL, 'no "Named routes" line in CLAUDE.md, so the list was never read').not.toBeNull();
-    // Absolute, as ruled on 2026-09-23 (BA-7): the snack's suspension is withdrawn.
-    expect([...NAMED].sort()).toEqual([]);
+    // Absolute, as ruled on 2026-09-23: the snack's suspension withdrawn (BA-7),
+    // the reading named (BA-6, D1 amendment, third surface).
+    expect([...NAMED].sort()).toEqual(["/reading"]);
     for (const r of NAMED) expect(site.pages.map((p) => p.route)).toContain(r);
   });
 
@@ -165,6 +166,7 @@ describe("no surface but the card speaks about the person (D1, as amended)", () 
   it("keeps /legal's statement of the boundary in step with the named surfaces", () => {
     const legal = textOf(site.pages.find((p) => p.route === "/legal")!.html).replace(/\s+/g, " ");
     expect(legal, "/legal still describes the retired snack").not.toMatch(/snack/i);
+    if (NAMED.includes("/reading")) expect(legal, "/legal does not name the reading as a surface that speaks about you").toMatch(/the prompt card and the reading/);
     expect(legal).toMatch(/instruments in the gym do not predict your personality/);
     expect(legal).not.toMatch(/It does not predict your personality/);
   });

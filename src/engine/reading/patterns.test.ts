@@ -25,8 +25,8 @@ import { allFacts, pickFacts, STRENGTH_FLOOR, type FactKind } from "./patterns";
 const facts = (l: Listener) =>
   Object.fromEntries(
     allFacts(generatePlays(l), l).map((f) => {
-      const { trackIds: _prompt, ...receipt } = f;
-      return [f.kind, JSON.stringify(receipt)];
+      // JSON.stringify drops an undefined field, which removes trackIds from the comparison.
+      return [f.kind, JSON.stringify({ ...f, trackIds: undefined })];
     }),
   );
 const withHabit = (l: Listener, h: Partial<Habits>): Listener => ({ ...l, habits: { ...l.habits, ...h } });

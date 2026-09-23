@@ -124,6 +124,7 @@ describe("no page offers the same room from its chrome and its body", () => {
       "src/app/learn/layout.tsx",
       "src/app/method/layout.tsx",
       "src/app/page.tsx",
+      "src/app/reading/page.tsx",
     ]);
   });
 

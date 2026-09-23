@@ -32,6 +32,12 @@ export interface Offer {
   words: string[];
 }
 
+/** What a kept line tells the generator: one direction, labelled, derived from the pattern. */
+export interface Cue {
+  label: string;
+  text: string;
+}
+
 export interface ReadingLine {
   id: string;
   kind: Fact["kind"];
@@ -42,6 +48,8 @@ export interface ReadingLine {
   playIds: number[];
   /** (c) two offered readings, as questions. "Neither" is offered by the page. */
   offers: [Offer, Offer];
+  /** The line's own contribution to the prompt, so rejecting it always changes the prompt. */
+  cue: Cue;
   /** The sound this line is about: its tracks, and the cluster most of them share. */
   trackIds: string[];
   cluster: string;
@@ -76,7 +84,7 @@ function mainCluster(trackIds: string[], k: Lookup): string {
   return [...n].sort((a, b) => b[1] - a[1])[0][0];
 }
 
-type Parts = Pick<ReadingLine, "pattern" | "receipt" | "offers">;
+type Parts = Pick<ReadingLine, "pattern" | "receipt" | "offers" | "cue">;
 
 function parts(f: Fact, k: Lookup): Parts {
   switch (f.kind) {
@@ -89,6 +97,7 @@ function parts(f: Fact, k: Lookup): Parts {
             { id: "a", question: "Are these holding something in place, so nothing new has to be chosen?", words: ["steady", "circling", "familiar"] },
             { id: "b", question: "Or are you still inside them, listening for something you have not found yet?", words: ["searching", "returning", "close"] },
           ],
+          cue: { label: "Form", text: "a loop that circles back, made to be replayed" },
         };
       return {
         pattern: `You played ${f.distinct} different tracks, and the three you played most took ${pct(f.topPlays, f.total)} of your ${f.total} plays between them.`,
@@ -97,6 +106,7 @@ function parts(f: Fact, k: Lookup): Parts {
           { id: "a", question: "Is variety the point right now, so that no one thing settles in?", words: ["wandering", "open", "moving"] },
           { id: "b", question: "Or has nothing caught hold yet?", words: ["drifting", "light", "passing"] },
         ],
+        cue: { label: "Form", text: "through-composed, no section repeats for long" },
       };
     case "lateNight":
       if (f.direction === "high")
@@ -107,6 +117,7 @@ function parts(f: Fact, k: Lookup): Parts {
             { id: "a", question: "Is late at night the one time that is yours?", words: ["late-night", "private", "unhurried"] },
             { id: "b", question: "Or is this the music that gets you to sleep, or puts it off?", words: ["drowsy", "low-lit", "slow"] },
           ],
+          cue: { label: "Setting", text: "late at night, quiet enough for headphones" },
         };
       return {
         pattern: `${f.late} of your ${f.total} plays started between 11 at night and 4 in the morning.`,
@@ -115,6 +126,7 @@ function parts(f: Fact, k: Lookup): Parts {
           { id: "a", question: "Is music part of how the day gets done?", words: ["daylight", "busy", "forward"] },
           { id: "b", question: "Or are the nights kept quiet on purpose?", words: ["clear", "awake", "open-air"] },
         ],
+        cue: { label: "Setting", text: "daytime, on the move" },
       };
     case "newShare": {
       if (f.direction === "high") {
@@ -129,6 +141,7 @@ function parts(f: Fact, k: Lookup): Parts {
             { id: "a", question: "Are you looking for something you do not have a name for yet?", words: ["searching", "new", "unfamiliar"] },
             { id: "b", question: "Or has what you used to play stopped fitting?", words: ["changing", "shedding", "fresh"] },
           ],
+          cue: { label: "Familiarity", text: "unfamiliar, nothing borrowed from the usual" },
         };
       }
       const known = f.total - f.newPlays;
@@ -139,6 +152,7 @@ function parts(f: Fact, k: Lookup): Parts {
           { id: "a", question: "Is what you already know doing the job right now?", words: ["familiar", "trusted", "worn-in"] },
           { id: "b", question: "Or is there no room at the moment for anything new?", words: ["full", "close", "sheltered"] },
         ],
+        cue: { label: "Familiarity", text: "familiar shapes, nothing that surprises" },
       };
     }
     case "drift": {
@@ -152,6 +166,7 @@ function parts(f: Fact, k: Lookup): Parts {
           { id: "a", question: `Is music built on ${to} somewhere you are heading?`, words: ["arriving", "turning", "new-found"] },
           { id: "b", question: `Or was music built on ${from} something you needed then, and need less now?`, words: ["after", "lighter", "moving on"] },
         ],
+        cue: { label: "Arc", text: `starts near ${from} and ends on ${to}` },
       };
     }
     case "earlySkip": {
@@ -166,6 +181,7 @@ function parts(f: Fact, k: Lookup): Parts {
             { id: "a", question: "Do you know within seconds what you are not looking for?", words: ["decisive", "sharp", "certain"] },
             { id: "b", question: "Or are you trying things on to see what still fits?", words: ["curious", "trying", "unfinished"] },
           ],
+          cue: { label: "Intro", text: "gets to the point inside 30 seconds" },
         };
       }
       return {
@@ -175,6 +191,7 @@ function parts(f: Fact, k: Lookup): Parts {
           { id: "a", question: "Are you giving new things time right now?", words: ["patient", "open", "unhurried"] },
           { id: "b", question: "Or were these chosen with care before you pressed play?", words: ["deliberate", "careful", "chosen"] },
         ],
+        cue: { label: "Intro", text: "takes its time to arrive" },
       };
     }
   }

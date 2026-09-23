@@ -18,6 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     page("/", 1, "weekly"),
+    page("/reading", 1, "weekly"), // the flagship (D3 amendment, BA-6)
     page("/bias", 0.9, "weekly"),
     // The second machine enters the map only when its pool of record is live.
     ...(DELICACY_LIVE ? [page("/delicacy", 0.9, "weekly")] : []),

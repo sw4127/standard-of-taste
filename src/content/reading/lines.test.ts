@@ -26,6 +26,7 @@ const LATE = new Set([23, 0, 1, 2, 3]);
 function sentences(line: ReadingLine): { what: "pattern" | "receipt" | "offer"; text: string }[] {
   return [
     { what: "pattern", text: line.pattern },
+    { what: "pattern", text: line.cue.text },
     { what: "receipt", text: line.receipt },
     ...line.offers.map((o) => ({ what: "offer" as const, text: o.question })),
   ];
@@ -154,6 +155,7 @@ describe("every template holds the register, the carve-out and the no-comparison
     const found = all.flatMap((l) => [
       ...patternBreaches(l.pattern).map((b) => `${l.id} pattern: ${b} :: ${l.pattern}`),
       ...l.offers.flatMap((o) => offerBreaches(o.question).map((b) => `${l.id} offer: ${b} :: ${o.question}`)),
+      ...patternBreaches(l.cue.text).map((b) => `${l.id} cue: ${b} :: ${l.cue.text}`),
     ]);
     expect(found).toEqual([]);
   });

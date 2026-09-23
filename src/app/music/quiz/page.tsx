@@ -9,9 +9,9 @@ import { redirect } from "next/navigation";
  * retired it and made the reading — built from listening, not self-report —
  * the product. D1's suspension for this route is withdrawn (CLAUDE.md).
  *
- * An old shared link still resolves. The page's code is in git history
- * (before this commit). `src/app/site-links.test.tsx` holds the redirect.
+ * An old shared link still resolves, and lands on the reading that replaced it.
+ * The page's code is in git history. `src/app/site-links.test.tsx` holds the redirect.
  */
 export default function Retired(): never {
-  redirect("/");
+  redirect("/reading");
 }

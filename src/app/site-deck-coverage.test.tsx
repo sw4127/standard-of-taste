@@ -56,7 +56,9 @@ const INVISIBLE: Record<string, number> = {
   "/lab": 163,
   // 103 -> 98 -> 102, 2026-09-23: twelve retired events left the page, then
   // the snack's five came back with it (RT-4 c).
-  "/lab/data-model": 94, // 102 -> 94 on 2026-09-23: the snack and fake-door event rows retired (BA-7)
+  // 102 -> 94 on 2026-09-23: the snack and fake-door event rows retired (BA-7);
+  // 94 -> 98 the same day: the reading's tab-scoped entity (blueprint Part 5).
+  "/lab/data-model": 98,
   "/lab/falsified": 160,
   "/lab/instrument-health": 23,
   "/lab/instrument-limits": 45,
@@ -71,8 +73,14 @@ const INVISIBLE: Record<string, number> = {
   "/learn/practice": 9,
   "/learn/prestige-bias-test": 17,
   "/learn/ranking-test": 29,
-  "/legal": 2,
+  // 2 -> 7 on 2026-09-23: the reading named as a surface, its generated plays, and
+  // its session storage (blueprint Part 5). Part 7 decks /legal's new copy.
+  "/legal": 7,
   "/method": 8,
+  // Measured 2026-09-23 when the reading shipped (blueprint Part 5): its copy and
+  // the argument rendered from docs/blueprint.md are in no deck yet. Part 7 decks
+  // them and lowers this.
+  "/reading": 20,
 };
 
 const words = (s: string) =>

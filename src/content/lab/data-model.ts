@@ -34,6 +34,7 @@ import { PERSISTENT_PREFIX } from "@/lib/forget-device";
 import { ARM_KEY, PB_KEY, VOICE_KEY } from "@/lib/experiment";
 import { ATTR_KEY } from "@/lib/analytics";
 import { MAX_POOLED } from "@/engine/arc";
+import { READING_STATE_KEY } from "@/content/reading/state";
 
 /** Where a record lives, which is the fact that decides everything else. */
 export type StoreMedium =
@@ -168,6 +169,23 @@ export const DATA_ENTITIES: DataEntity[] = [
     limit:
       "One tab only, and gone when it closes. Nothing here is a profile and none of it is joined " +
       "to a session record.",
+  },
+  {
+    id: "reading",
+    title: "Your argument with a reading",
+    medium: "tab",
+    key: READING_STATE_KEY,
+    definedIn: "src/content/reading/state.ts",
+    purpose:
+      "Which lines of a reading you rejected and which offered reading you chose, per illustrative " +
+      "listener, so the prompt stays as you left it if you follow the link to a hearing test and come back.",
+    fields: [
+      { name: "<listener>.rejected", meaning: "the lines you rejected; they drop out of the prompt" },
+      { name: "<listener>.chosen", meaning: "per line, the reading you picked: a, b, or neither" },
+    ],
+    limit:
+      "One tab only, and gone when it closes. It records choices about a fictional listener's plays, " +
+      "never your own listening, and nothing here leaves the browser.",
   },
 ];
 

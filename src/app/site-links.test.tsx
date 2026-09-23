@@ -60,12 +60,13 @@ const RETIRED_TO_FRONT_DOOR = [
   "/fan-verdict",
   "/premium/preview",
   "/premium/report",
-  // The snack: retired and restored on 2026-09-23 (RT-2 a, RT-4 c), then retired
-  // for good the same day (BA-7). Its reading's replacement, /reading, becomes the
-  // target once it ships.
-  "/music/quiz",
-  "/music/result",
 ];
+
+/**
+ * THE SNACK: retired and restored on 2026-09-23 (RT-2 a, RT-4 c), then retired
+ * for good the same day (BA-7). Its links land on the reading that replaced it.
+ */
+const RETIRED_TO_READING = ["/music/quiz", "/music/result"];
 
 /** Routes no rendered page links to, on purpose. Exact: see the header. */
 const ORPHAN_BY_DESIGN: Record<string, string> = {
@@ -126,7 +127,7 @@ describe("the site's doors, read from rendered pages", () => {
     expect(rendered.length).toBeGreaterThanOrEqual(23);
     expect(rendered.flatMap((r) => r.anchors).length).toBeGreaterThanOrEqual(150);
     expect([...site.redirected].sort()).toEqual(
-      [...Object.keys(NEEDS_A_PAYLOAD), ...RETIRED_TO_FRONT_DOOR].sort(),
+      [...Object.keys(NEEDS_A_PAYLOAD), ...RETIRED_TO_FRONT_DOOR, ...RETIRED_TO_READING].sort(),
     );
   });
 
@@ -135,6 +136,12 @@ describe("the site's doors, read from rendered pages", () => {
       (r) => `${r} -> ${site.redirectTo[r] ?? "(does not redirect)"}`,
     );
     expect(astray).toEqual([]);
+  });
+
+  it("sends the snack's routes to the reading that replaced it (BA-7)", () => {
+    expect(RETIRED_TO_READING.map((r) => `${r} -> ${site.redirectTo[r]}`)).toEqual(
+      RETIRED_TO_READING.map((r) => `${r} -> /reading`),
+    );
   });
 
   /**
@@ -173,7 +180,7 @@ describe("the site's doors, read from rendered pages", () => {
     );
     // A retired route redirects by design and is meant to have no door.
     const orphans = new Set(
-      site.staticRoutes.filter((r) => !inbound.has(r) && !RETIRED_TO_FRONT_DOOR.includes(r)),
+      site.staticRoutes.filter((r) => !inbound.has(r) && !RETIRED_TO_FRONT_DOOR.includes(r) && !RETIRED_TO_READING.includes(r)),
     );
     const listed = new Set(Object.keys(ORPHAN_BY_DESIGN));
     expect(

@@ -5,6 +5,7 @@ import { EXPERT_PANEL } from "./vocabulary/expert";
 import { COOLDOWN_DEVICE_NOTE, MATERIAL_REUSE_NOTE } from "./staircase/copy";
 import { FORGET } from "./forget";
 import { ARC_DEVICE_NOTE } from "./vocabulary/arc";
+import { BRIDGE_DEVICE_NOTE } from "./reading/copy";
 
 /**
  * E13/S3 (Track G2, RT-G b) — WHEREVER THE PRODUCT CLAIMS TO REMEMBER YOU, IT
@@ -108,6 +109,15 @@ const SURFACES: Surface[] = [
     disclosure: () => FORGET.body + " " + FORGET.limit,
     mustSay: [["this browser"], ["other browser", "another browser"], ["account", "accounts"]],
     rendersConstant: "{FORGET.limit}",
+  },
+  {
+    // Blueprint Part 5 (BP-BRIDGE): the prompt marks which words a stored
+    // Threshold sitting says this person can hear.
+    file: "src/app/reading/ReadingFlow.tsx",
+    claims: "which of the prompt's flaw families this device has measured, and what the sitting said",
+    disclosure: () => BRIDGE_DEVICE_NOTE,
+    mustSay: [["this browser"], ["no account", "no accounts"], ["another device"]],
+    rendersConstant: "{C.BRIDGE_DEVICE_NOTE}",
   },
 ];
 
