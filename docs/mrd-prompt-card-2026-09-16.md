@@ -49,6 +49,12 @@ product, and it has never been put to a user of this one.
 **M3 · ASSUMED — That taste is your history. It is not; it is your current discrimination and your
 intent.**
 
+*[Restated 2026-09-23, RT-8 — the owner's position, which the line above misstates as a claim about
+what taste is. The owner's claim is about value: only the taste a person holds now or is forming has
+business value; past taste — what they used to like — has none.
+The neighbouring prediction claim (past listening predicts less than present and forming taste) is
+the Tidal interview finding the PRD cites; its notes are not in this repository.]*
+
 **M4 · ASSUMED — Every deployed system infers taste from what you have already consumed.** That
 inference is backward-looking by construction and it fails in the one situation that now matters
 commercially: a person sitting in front of a generator, trying to make something that **does not
@@ -368,8 +374,12 @@ replication is imperfect. *EVIDENCED because it rests on published work anyone c
 citations were not re-read for this revision, and that is recorded rather than implied away.*
 
 **M15 · ASSUMED — Recent taste reads current state; durable taste reads the stable self.** The
-spec's timescale split (P4). It is the owner's "what is going on lately in their life", and it is
-also why the product does not claim that only present taste matters: the split is the claim.
+spec's timescale split (P4). It is the owner's "what is going on lately in their life". Recent and
+durable taste are both taste the reader holds now, so the split sits inside the owner's position that
+past taste has no business value (M3, restated) rather than against it. *[Corrected 2026-09-23, RT-8:
+this sentence first said the split was "why the product does not claim that only present taste
+matters", which set the spec's word "current" (meaning recent) against the owner's (meaning held now)
+and so contradicted the owner.]*
 
 **M16 · ASSUMED — The gap between what a person's taste reveals and what they consciously know is
 where new insight lives.** The spec's P3. It is the reason a reading is worth having: it says

@@ -39,7 +39,7 @@ against UC-2 and UC-3 and it is not ignored.
 | **UC-2** | Find out how small an audio flaw I can still hear | `/delicacy` → `/delicacy/result` | **ASSUMED** | The flaw families map onto failure modes of generated audio. The mapping is an argument; no one in that audience has confirmed it, and the one asked said no |
 | **UC-3** | Get that as a threshold in physical units, not a score | `/threshold`, `/threshold/[slug]`, `/threshold/[slug]/result` | **ASSUMED** | Same as UC-2. It is the product's stated deliverable of record and its demand is unmeasured |
 | **UC-4** | Find out whether my judgments spread the way a critic's did, without being scored against him | `/spread` | **ASSUMED** | Derived from Hume's *comparison*, not from a user asking for it |
-| **UC-5** | Find out whether my ear moved between two sittings | the retest arc, on all result screens | **EVIDENCED** | Finding 1: present and forming taste matters more than listening history. This is the only instrument that measures change rather than state |
+| **UC-5** | Find out whether my ear moved between two sittings | the retest arc, on all result screens | **EVIDENCED** | Finding 1: past listening predicts less than present and forming taste. This is the only instrument that measures change rather than state |
 | **UC-6** | See every number behind my result, with no verdict attached | the expert panel, on all result screens | **ASSUMED** | Built on the engineer's diagnosis that experts reject standardised scores. Plausible, unconfirmed |
 | **UC-7** | Share a result without it carrying my session's private detail | `/bias/result`, `/delicacy/result` share paths | **ASSUMED** | The share loop has never run; the funnel it was built for was measured at 29 visitors and concluded dead |
 

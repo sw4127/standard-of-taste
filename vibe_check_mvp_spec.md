@@ -220,6 +220,8 @@ This split maps onto the report: recent taste feeds **Red Flags / current stress
 
 **The claim we convert on (selection-vs-treatment clarification — approved).** We do NOT assert "only your current taste matters." That contradicts the P4 timescale split and the engine, which reads stable personality from *durable* taste. The defensible, differentiated claim is the **split itself**: *recent* taste catches your **current state** (self-verifiable against your last few weeks), *durable* taste reveals your **stable self**. Onboarding/marketing must never collapse these into "your current taste = who you are" — true for mood, false for personality, and the kind of "diagnosis" the §9 honesty line forbids. Conversion leans on the *recent→state* read because **recognition disarms skeptics faster than argument**; the *durable→trait* read gives the paid report its spine. Stand behind the split, not "only-now." (Whether the premise *persuades* skeptics or only *selects* believers is an empirical question — see §10.A.)
 
+*[TERM FIXED 2026-09-23, RT-8 — ruled by engineering on the owner's delegation; the paragraph above is kept verbatim per the keep-intact rule. "Current" above means **recent**. The owner's challenged assumption uses it to mean **held now**: the product's value lies in taste a person holds now or is forming, and past taste — what they used to like — has no business value. Durable taste is held now, so it is current in that sense and not past; the timescale split survives inside the owner's claim, and the two do not conflict. The owner's claim is a value claim and is labelled ASSUMED.]*
+
 ---
 
 ## 10. The quiz (v1)
