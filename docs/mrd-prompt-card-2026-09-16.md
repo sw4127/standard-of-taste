@@ -4,7 +4,7 @@
 public document, deliberately, because the position taken here is part of what the repository is for.
 It contains market claims, and a repository whose public page publishes its refusals cannot absorb a
 file full of unsupported ones. The PRD already solved that: every use case there carries **EVIDENCED**
-or **ASSUMED**. The same labels are used below and they are load-bearing — **5 EVIDENCED, 8 ASSUMED**.
+or **ASSUMED**. The same labels are used below and they are load-bearing — **6 EVIDENCED, 11 ASSUMED**.
 A reader is entitled to see which is which, and the ratio is the point rather than an embarrassment.
 **The count is not typed.** `src/content/mrd-labels.test.ts` recounts the labels on every run and
 fails the build if this sentence and the claims below it disagree, if a claim loses its label, or
@@ -127,6 +127,9 @@ observation pointing the wrong way, and it is on the record precisely so it cann
 > paste into the box I am already looking at.*
 
 Note what the job is **not**: it is not *tell me who I am*. See §6.
+
+*[SUPERSEDED IN PART 2026-09-23 — see §11. This job statement narrowed the product to damage
+vocabulary and left out the owner's thesis; §11 restores it. Kept verbatim per the keep-intact rule.]*
 
 ---
 
@@ -343,3 +346,63 @@ STILL OPEN:
         Default if silent: (a). It should not disappear by omission.
 == END DECISIONS ==
 ```
+
+---
+
+## 11 · Revision (2026-09-23) — the insight this document left out
+
+**Why this section exists.** This MRD was written by engineering on 2026-09-16 and it narrowed the
+product to one job: turn measured damage into prompt vocabulary (§3, *"not tell me who I am"*). The
+owner's thesis — stated in the product spec, `vibe_check_mvp_spec.md` §9, and restated by the owner
+on 2026-09-23 — is wider, and the prompt card built on this document carries only its narrow half.
+The owner's rulings of 2026-09-23 (RT-4 c, RT-5 a, RT-6 a) restored the snack as a second surface
+that may speak about the reader and commissioned a reading built from the thesis. This section
+states that thesis as a position, with the same labels as the rest of the document.
+
+### 11.1 The insight: taste carries feeling
+
+**M14 · EVIDENCED — Music preferences carry real but modest, probabilistic cues about emotional
+state and personality.** The spec cites Rentfrow & Gosling (2003) and Rentfrow, Goldberg & Levitin
+(2011), and keeps the caveat in writing: effects are *real but modest*, samples skew Western,
+replication is imperfect. *EVIDENCED because it rests on published work anyone can read; the
+citations were not re-read for this revision, and that is recorded rather than implied away.*
+
+**M15 · ASSUMED — Recent taste reads current state; durable taste reads the stable self.** The
+spec's timescale split (P4). It is the owner's "what is going on lately in their life", and it is
+also why the product does not claim that only present taste matters: the split is the claim.
+
+**M16 · ASSUMED — The gap between what a person's taste reveals and what they consciously know is
+where new insight lives.** The spec's P3. It is the reason a reading is worth having: it says
+something the reader did not already have words for.
+
+### 11.2 The demand, restated with the feeling layer
+
+**M17 · ASSUMED — People want a readable account of what their taste has been saying about them —
+one they can argue with — and a way to turn it into music about their own life.** This joins M2 (no
+readable, arguable artifact about taste exists) to the owner's ambition. The job, restated: *tell me
+what my taste has been saying lately, in words I can argue with, and give me a prompt for music
+about it.*
+
+### 11.3 The constraints the reading inherits
+
+- **Offer, do not assert** (RT-Z5 b; MRD §6.3), and **no assertion about trauma, abuse or mental
+  health** (RT-Z10 a, reaffirmed by RT-6 a on 2026-09-23).
+- **Suspension is by name.** The reading is not covered by the snack's amendment; it is named in the
+  constitution when it ships.
+- **N3.** A reading is not a measurement and does not present itself as one; the instruments'
+  thresholds may feed it, and are cited in their own units when they do.
+
+### 11.4 The build, pre-registered — each slice with its proof, before any code
+
+| # | Slice | Done when |
+|---|---|---|
+| R1 | **The state questions.** A few taps on what the reader has been reaching for lately (the LATELY lane), deterministic, no model. | Every answer path maps to a state reading; a test enumerates them. |
+| R2 | **The reading, assembled.** Templates join the state lane, the stable lane, and any instrument thresholds the reader has, in the offer register. The engine computes; templates render. | Rendered for at least three contrasting answer sets; the register and carve-out checks pass on every template, each proved by a planted specimen. |
+| R3 | **The prompt.** The reading ends in a prompt for music about what it described, in generic generator vocabulary (RT-Z8 a). | Every reading produces a prompt; no generator is named. |
+| R4 | **The surface, named.** A route, named in the constitution's "Named routes" line, with its on-surface statement. | `site-d1.test.tsx` reads the new route from the constitution; the reading's statement is derived from it. |
+
+**Two questions only the owner can settle, recorded rather than guessed:** whether the reading
+draws on the snack's answers, the instruments, or both; and whether "discussing" the reading means a
+conversation with a model — which today's rule, *the model never writes an assessment*, would have
+to be amended to allow.
+
