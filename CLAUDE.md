@@ -305,6 +305,7 @@ No UI is "done" until it passes all of these. On any UI work, audit each item ex
 ## Payments update (supersedes the Stripe/$2.99 mentions in §Stack)
 *[2026-07-11: the MoR constraint below still stands; the $3.99 price and the stateless verify-on-return design are superseded — progression-tier pricing/auth are open questions, memo §9.1–9.2.]*
 The seller is a mainland-China tax resident and **cannot use Stripe**. Payments are now a **Merchant-of-Record (Dodo Payments)** behind a provider-agnostic adapter (`src/lib/payments/`, `PAYMENTS_PROVIDER` env). Hosted redirect checkout at **$3.99**, stateless verify-on-return (no DB), webview-survivable. The MoR is the legal seller (handles tax/refunds/disputes). Full design + the test-mode items to verify live: **spec §24**.
+*[2026-09-24: `src/lib/payments/` and `/api/checkout` were removed with the retired paid-tier code; the D4 amendment says there is no paid tier. The paragraph above is kept verbatim as history. Restoring them is a revert of that commit.]*
 
 ## Build log (append-only — detail in spec)
 - **World Cup quiz refresh (shipped, main):** +9 breakout footballers as playing-style archetypes + host-nation colour cues (USA/CAN/MEX +4) via the IP-safe `NATIONS` card system. Trademark-safe (§13.D), playing-style-only (§3). Detail: **spec §25**.

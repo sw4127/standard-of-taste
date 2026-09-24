@@ -14,10 +14,7 @@ export const dynamic = "force-dynamic";
 const REQUIRED = ["NEXT_PUBLIC_POSTHOG_KEY", "NEXT_PUBLIC_BASE_URL"] as const;
 
 /** Present = degraded-gracefully features light up; absent = fallbacks. */
-const OPTIONAL = [
-  "NEXT_PUBLIC_POSTHOG_HOST",
-  "PAYMENTS_PROVIDER",
-] as const;
+const OPTIONAL = ["NEXT_PUBLIC_POSTHOG_HOST"] as const;
 
 export function GET() {
   const present = (k: string) => Boolean(process.env[k]);
