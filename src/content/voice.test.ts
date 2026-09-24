@@ -32,6 +32,7 @@ import {
   cooldownTitle,
   cooldownBody,
   COOLDOWN_ALTERNATIVE,
+  COOLDOWN_READING,
   COOLDOWN_DEVICE_NOTE,
   FAMILY_LABEL,
   NO_COHORT_FOOTNOTE,
@@ -332,6 +333,7 @@ function shippingStrings(): VoiceString[] {
     out.push({ surface: `staircase/cooldown/body/${days}`, text: cooldownBody(days), intensity: "calm" });
   }
   out.push({ surface: "staircase/cooldown/alternative", text: COOLDOWN_ALTERNATIVE, intensity: "calm" });
+  out.push({ surface: "staircase/cooldown/reading", text: COOLDOWN_READING, intensity: "calm" });
   out.push({ surface: "staircase/cooldown/device-note", text: COOLDOWN_DEVICE_NOTE, intensity: "calm" });
   // E13/S4 — the clear control. Destructive, so every word of it is deck copy.
   for (const [k, text] of Object.entries(FORGET)) {

@@ -515,4 +515,49 @@ A product that measures how far a famous name moves your ratings cannot also giv
 
 ---
 
+## 7. The Threshold cooldown screen — added 2026-09-24, never written by a writer
+
+**Where it renders.** `/threshold/<flaw>` when this browser measured that flaw in the last seven days. It replaces the instrument's frame, so it is the whole screen.
+
+**Its job.** Refuse a retest that would measure memory rather than hearing, say where the refusal's memory lives, and offer two ways out: another flaw, or the reading.
+
+**Rules this copy must keep:**
+
+- It does not scold: coming back was right, only early.
+- The device note states where the memory lives and does not teach how to clear it.
+- The reading link promises no mark on the prompt: a sitting that resolved no fineness marks nothing.
+- This is a gym screen: it describes only what the reader did (D1).
+
+The title, per flaw, then the body at each distance from the end of the wait:
+
+*Reached at pitch-drift, timing-smear, lossy-artifact:*
+
+> You measured your ${familyLabel(family).toLowerCase()} this week.
+
+  *As rendered:* “You measured your pitch drift this week.”  ·  “You measured your compression damage this week.”  · …and 1 between them
+
+*Reached at one day left, 2 days left, 7 days left:*
+
+> Run it again now and the staircase will find a smaller rung — not because you hear better, but because you remember the recordings. ${when} that memory has faded and the number means your ear again.
+
+  *As rendered:* “Run it again now and the staircase will find a smaller rung — not because you hear better, but because you remember the recordings. Tomorrow that memory has faded and the number means your ear again.”  ·  “Run it again now and the staircase will find a smaller rung — not because you hear better, but because you remember the recordings. In 7 days that memory has faded and the number means your ear again.”  · …and 1 between them
+
+*The device note:*
+
+> Remembered in this browser only — no account, nothing on a server. Another device, or cleared browsing data, and the gym has never met you.
+
+*The first way out (a button):*
+
+> Measure a different flaw instead
+
+  *No id: this string is under the deck's 40-character floor. Name it in prose if it is what needs changing.*
+
+*The second way out (a quieter link, to /reading):*
+
+> Try the reading while you wait
+
+  *No id: this string is under the deck's 40-character floor. Name it in prose if it is what needs changing.*
+
+---
+
 **16 clips listed, of which 6 are the ones the standing note names.** Regenerate with `node scripts/export-instrument-deck.mjs > docs/copy-deck-instruments.md` after any change.

@@ -48,6 +48,7 @@ import { delicacyResults } from "@/content/vocabulary/fixtures";
 import { detectionBand } from "@/engine/delicacy";
 import { flawFamilies, FLAWS_INTRO, FLAWS_LIMITS, FLAWS_INVITE } from "@/content/flaw-families";
 import { CRITIC_CONTRADICTION } from "@/content/critic-refusal";
+import { FAMILY_LABEL, cooldownTitle, cooldownBody, COOLDOWN_ALTERNATIVE, COOLDOWN_READING, COOLDOWN_DEVICE_NOTE } from "@/content/staircase/copy";
 import { landingLead, landingHint, SECONDARY_DOORS } from "@/content/landing";
 import { MACHINES } from "@/components/OtherMachines";
 import { learnPage } from "@/content/learn";
@@ -105,6 +106,13 @@ describe("export", () => {
           PROVISIONAL_FOOTNOTE_PARTS[1] === CALIBRATION_PHASE_LINE,
       },
       criticContradiction: CRITIC_CONTRADICTION,
+      cooldown: {
+        titles: Object.keys(FAMILY_LABEL).map((k) => [k, cooldownTitle(k)]),
+        bodies: [1, 2, 7].map((n) => [n === 1 ? "one day left" : n + " days left", cooldownBody(n)]),
+        alternative: COOLDOWN_ALTERNATIVE,
+        reading: COOLDOWN_READING,
+        deviceNote: COOLDOWN_DEVICE_NOTE,
+      },
       flawsIntro: FLAWS_INTRO,
       flawsLimits: FLAWS_LIMITS,
       flawsInvite: FLAWS_INVITE,
@@ -708,6 +716,35 @@ w("```");
 w(d.criticContradiction);
 w("```");
 w();
+/* ---------------------------------------------------------------- COOLDOWN */
+w("---");
+w();
+w("## 7. The Threshold cooldown screen — added 2026-09-24, never written by a writer");
+w();
+w(
+  "**Where it renders.** `/threshold/<flaw>` when this browser measured that flaw in the last seven " +
+    "days. It replaces the instrument's frame, so it is the whole screen.",
+);
+w();
+w(
+  "**Its job.** Refuse a retest that would measure memory rather than hearing, say where the " +
+    "refusal's memory lives, and offer two ways out: another flaw, or the reading.",
+);
+w();
+w("**Rules this copy must keep:**");
+w();
+w("- It does not scold: coming back was right, only early.");
+w("- The device note states where the memory lives and does not teach how to clear it.");
+w("- The reading link promises no mark on the prompt: a sitting that resolved no fineness marks nothing.");
+w("- This is a gym screen: it describes only what the reader did (D1).");
+w();
+w("The title, per flaw, then the body at each distance from the end of the wait:");
+w();
+templateGroups(d.cooldown.titles, null);
+templateGroups(d.cooldown.bodies, null);
+template([d.cooldown.deviceNote], "*The device note:*");
+template([d.cooldown.alternative], "*The first way out (a button):*");
+template([d.cooldown.reading], "*The second way out (a quieter link, to /reading):*");
 w("---");
 w();
 w(

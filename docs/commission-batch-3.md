@@ -16,10 +16,11 @@ batch 2.
 > zero real respondents), the voice, and how to hand the work back.
 >
 > **Your batch is `docs/copy-deck.md`, Part 2 — "The instrument copy". Find it by the `INS-` id
-> prefix. 47 ids: 25 OPEN, 14 LOCKED, 8 PASSED.** *(49 and 27 when this was handed out; the
+> prefix. 50 ids: 28 OPEN, 14 LOCKED, 8 PASSED.** *(49 and 27 when this was handed out; the
 > front door's reading-room door was removed on 2026-09-22 under RT-1 (2026-09-22) a, and its
 > "Snack." door on 2026-09-23 under RT-2 (2026-09-22) a — restored the same day under RT-4 (c),
-> and removed for good the same day under BA-7.)* It is the smaller copy around the instruments —
+> and removed for good the same day under BA-7. Three ids were ADDED on 2026-09-24: section 7, the
+> Threshold cooldown screen, which had been in no deck.)* It is the smaller copy around the instruments —
 > the Prestige result's title, the delicacy flaw line, the creator vocabulary that names three kinds
 > of audio damage, and the one-sentence refusal to score anyone against a critic.
 >

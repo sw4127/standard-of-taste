@@ -326,6 +326,20 @@ export function cooldownBody(daysLeft: number): string {
 export const COOLDOWN_ALTERNATIVE = "Measure a different flaw instead";
 
 /**
+ * THE SECOND WAY OUT: THE READING (2026-09-24; D3 amendment, BP-BRIDGE).
+ *
+ * The snack sat here until BA-7 retired it, and the screen offered one way out
+ * after that. The reading is the product's front door, and the one person who
+ * reaches this screen has, by definition, a Threshold sitting stored in this
+ * browser, which the reading's prompt step reads for its "which of these words
+ * can you hear" marks. It PROMISES no mark: a sitting that resolved no fineness
+ * marks nothing, and "not enough to tell" is common (timing 30%, compression
+ * 16%, `docs/queue-of-record.md` Track T). Quieter than the line above on
+ * purpose: this is a gym screen, and measuring is still its point.
+ */
+export const COOLDOWN_READING = "Try the reading while you wait";
+
+/**
  * WHERE THE GATE'S MEMORY LIVES, SAID ON THE SCREEN THAT USES IT (E13/S3,
  * Track G2, RT-G b).
  *

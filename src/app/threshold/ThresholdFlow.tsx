@@ -30,6 +30,7 @@ import { useCallback, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { THRESHOLD_VIOLET, THRESHOLD_VIOLET_GLOW, THRESHOLD_FIELD, THRESHOLD_BASE, THRESHOLD_PALETTE } from "@/content/instrument-accents";
 import FluidField from "@/components/FluidField";
+import Jump from "@/components/Jump";
 import ClipPlayer from "@/app/bias/ClipPlayer";
 import AbCompare from "@/app/delicacy/AbCompare";
 import { track } from "@/lib/analytics";
@@ -51,6 +52,7 @@ import {
   cooldownTitle,
   cooldownBody,
   COOLDOWN_ALTERNATIVE,
+  COOLDOWN_READING,
   COOLDOWN_DEVICE_NOTE,
   MATERIAL_REUSE_NOTE,
 } from "@/content/staircase/copy";
@@ -263,6 +265,14 @@ export default function ThresholdFlow({ family }: { family: string }) {
           >
             {COOLDOWN_ALTERNATIVE}
           </Link>
+          {/* The second way out (COOLDOWN_READING). In its own block so it sits
+              under the button rather than beside it, and a <Jump> because it is
+              a text link (jump-affordance.test.ts). */}
+          <div className="mt-3">
+            <Jump href="/reading" accent={ICE} className="text-muted">
+              {COOLDOWN_READING}
+            </Jump>
+          </div>
         </div>
       </main>
     );

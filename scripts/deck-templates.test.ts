@@ -162,7 +162,10 @@ const COVERED = [
   // (RT-4 (c)), carrying its line back into the deck.
   // 48 -> 47 later still, 2026-09-23: the snack retired for good (BA-7) and its
   // door went with it, "Five taps, a verdict, and no measurement behind it."
-  { part: 2, name: "the instrument copy", ids: 47 },
+  // 47 -> 50 on 2026-09-24: section 7, the Threshold cooldown screen, which was
+  // in no deck at all: its title, its body and its device note. Its two links
+  // are under the 40-character floor and mint none.
+  { part: 2, name: "the instrument copy", ids: 50 },
   // 36 -> 38 in E20/S1: the fifth refusal, `refusal-composite-index`.
   // 38 -> 40 in E20: the sixth, `refusal-taste-gem`. Each refusal is two ids
   // because it is a `refusal` field and a `price` field.
