@@ -10,7 +10,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-describe("the reading flow's effects", () => {
+describe("the reading flow's effects and step changes", () => {
   const src = readFileSync("src/app/reading/ReadingFlow.tsx", "utf8");
 
   it("has effects to check (a floor)", () => {
@@ -19,6 +19,21 @@ describe("the reading flow's effects", () => {
 
   it("gives every effect a block body, so nothing is returned as a cleanup", () => {
     expect(src.match(/useEffect\(\(\)\s*=>\s*[^{\s]/g) ?? []).toEqual([]);
+  });
+
+  /*
+   * STEP CHANGES ARE HISTORY ENTRIES, NOT ROUTER NAVIGATIONS. With `router.push`,
+   * a direct load or reload of `?step=prompt` followed by a real click on
+   * "Paste it into Tessavox" was undone — a push, then Next replacing the URL
+   * back — and every later push did nothing (browser pane, 2026-09-23). Next 16
+   * syncs `useSearchParams` with `history.pushState`, which needs no navigation.
+   */
+  it("changes steps with history.pushState, never with the router", () => {
+    expect(src).not.toMatch(/\buseRouter\b/);
+    expect(src).not.toMatch(/router\.(push|replace)\(/);
+    expect(src).toContain("window.history.pushState(null, \"\", ");
+    // A <Link> to a step is a router navigation too.
+    expect(src.match(/<Link[^>]*step=/g) ?? []).toEqual([]);
   });
 
   /*

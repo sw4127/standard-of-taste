@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import SourceBadge from "@/components/lab/SourceBadge";
 import ListenerCards from "@/components/ListenerCards";
 import { LISTENERS, listener as findListener } from "@/content/reading/listeners";
@@ -79,9 +79,19 @@ function Picker() {
 function ListenerReading({ l, phase }: { l: Listener; phase: Phase }) {
   const r = useMemo(() => readingFor(l), [l]);
   const [state, setState] = useState<ReaderState>(EMPTY_STATE);
-  const router = useRouter();
+  /*
+   * A STEP CHANGE IS CLIENT STATE, SO IT IS A HISTORY ENTRY AND NOT A ROUTER
+   * NAVIGATION. Next 16 patches `history.pushState` to sync `useSearchParams`,
+   * so the step still has its own URL and Back still walks the flow — without
+   * a server request per step. `router.push` was used first; after a direct
+   * load or reload of `?step=prompt`, a real click on "Paste it into Tessavox"
+   * was undone (a push, then Next replacing the URL back) and later pushes did
+   * nothing. Seen in the browser pane on 2026-09-23 and not confirmed in an
+   * ordinary browser; the cause inside Next was not found. The step change
+   * needs no navigation either way.
+   */
   const setPhase = (p: Phase) =>
-    router.push(p === "read" ? `/reading?l=${l.id}` : `/reading?l=${l.id}&step=${p}`, { scroll: false });
+    window.history.pushState(null, "", p === "read" ? `/reading?l=${l.id}` : `/reading?l=${l.id}&step=${p}`);
   const promptRef = useRef<HTMLElement>(null);
 
   // Stored choices arrive after mount: the page is prerendered with none.
