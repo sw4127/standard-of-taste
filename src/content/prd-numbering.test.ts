@@ -11,13 +11,17 @@
  * WHAT IT HOLDS:
  * 1. Every `UC-n` in parts 2–4 is a use case in part 1's tables.
  * 2. Every use case in part 1 is served by at least one scored feature in
- *    part 2, so no use case is ranked by nothing.
+ *    part 2 and by at least one requirement in part 3, so no use case is
+ *    specified by nothing.
  * 3. Every scored feature in part 2 says what it serves, or says "none".
+ * 4. Part 3 specifies the core first: its first requirement serves a use case
+ *    in part 1's "The core" section (part 1: "Parts 2 to 4, revised, should
+ *    specify UC-1 to UC-5 first").
  *
  * WHAT IT CANNOT CHECK: that a citation is the RIGHT use case. It can see that
- * UC-8 exists and that a feature cites it; whether the Prestige Test is what
- * UC-8 describes is a judgment. That failure is exactly the one that happened,
- * and the defence against it is a reader.
+ * UC-8 exists and that a requirement cites it; whether the Prestige Test is
+ * what UC-8 describes is a judgment. That failure is exactly the one that
+ * happened, and the defence against it is point 4 plus a reader.
  */
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
@@ -98,4 +102,17 @@ describe("the PRD's use-case numbers are part 1's", () => {
     expect(silent.map((f) => f.name)).toEqual([]);
   });
 
+  it("serves every use case with at least one requirement in part 3", () => {
+    const served = new Set(requirements().flatMap((r) => r.serves));
+    expect(known.filter((u) => !served.has(u)), "no requirement in part 3 serves these").toEqual([]);
+  });
+
+  it("specifies the core first", () => {
+    const first = requirements()[0];
+    expect(
+      first.serves.some((u) => core().includes(u)),
+      `${first.id} is part 3's first requirement and serves ${first.serves.join(", ") || "nothing"}, ` +
+        `none of which is in part 1's core (${core().join(", ")}).`,
+    ).toBe(true);
+  });
 });

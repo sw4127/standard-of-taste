@@ -35,17 +35,28 @@ interface Citation {
  */
 function citations(doc: string): Citation[] {
   const out: Citation[] = [];
-  const code = new RegExp(TICK + "([A-Za-z_][A-Za-z0-9_]*)" + TICK, "g");
-  const path = new RegExp(TICK + "(src/[A-Za-z0-9_/.-]+\\.ts)" + TICK);
+  /*
+   * EACH SYMBOL BELONGS TO THE FILE THAT FOLLOWS IT ("`a`, `b` in `x.ts`; `c`
+   * in `y.ts`"), or to the line's last file if none follows. The first version
+   * gave every symbol on a line to the line's FIRST file, so a line naming two
+   * files checked `c` against `x.ts` — a false failure at best, and a false
+   * pass whenever `x.ts` happened to export a `c` of its own.
+   */
+  const token = new RegExp(TICK + "(src/[A-Za-z0-9_/.-]+\\.ts|[A-Za-z_][A-Za-z0-9_]*)" + TICK, "g");
   for (const line of doc.split(NL)) {
-    const file = path.exec(line);
-    if (!file) continue;
-    for (const hit of line.matchAll(code)) {
-      const symbol = hit[1];
-      // Skip the path's own capture and obvious prose words in backticks.
-      if (symbol.indexOf("/") !== -1 || symbol.indexOf(".") !== -1) continue;
-      out.push({ symbol, file: file[1] });
+    const tokens = [...line.matchAll(token)].map((m) => m[1]);
+    const paths = tokens.filter((t) => t.startsWith("src/"));
+    if (paths.length === 0) continue;
+    let pending: string[] = [];
+    for (const t of tokens) {
+      if (!t.startsWith("src/")) {
+        pending.push(t);
+        continue;
+      }
+      out.push(...pending.map((symbol) => ({ symbol, file: t })));
+      pending = [];
     }
+    out.push(...pending.map((symbol) => ({ symbol, file: paths[paths.length - 1] })));
   }
   return out;
 }

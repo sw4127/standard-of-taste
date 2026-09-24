@@ -79,7 +79,14 @@ function published(doc: string, heading: string): string[] {
 }
 
 describe("the PRD's rankings match its own scores", () => {
-  const doc = readFileSync(PRD, "utf8");
+  /*
+   * LINE ENDINGS NORMALISED ON READ. This repository is checked out with
+   * core.autocrlf=true on the owner's machine, so a file git has touched there
+   * arrives with CRLF — and the list parser below ends a list at a blank line,
+   * "\n\n", which a CRLF file never contains. Found 2026-09-23 when a file
+   * rewritten with Windows endings made all three rankings "wrong".
+   */
+  const doc = readFileSync(PRD, "utf8").replace(/\r\n/g, NL);
   const scored = features(doc);
 
   it("parsed a real table, so nothing below passes vacuously", () => {
