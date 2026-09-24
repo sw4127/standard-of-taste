@@ -78,3 +78,13 @@ export const BACK_TO_READING = "Back to the reading";
 export const WHY_HEADING = "Why this works, and where it might not";
 export const WHY_LEAD =
   "The reading rests on an argument. Here it is in full, each step labelled with what supports it.";
+
+/**
+ * What a link to the front door says when it is pasted somewhere: the homepage's
+ * og:description and the default preview image (`src/app/opengraph-image.tsx`).
+ * Moved here from `page.tsx`'s metadata, unchanged, so the two cannot drift.
+ * LAST IN THE FILE on purpose: deck ids are numbered by position, and adding
+ * it higher up renumbered ten ids a writing pass may already cite.
+ */
+export const READING_SHARE_LINE =
+  "A reading of a listener's recent plays, in lines you can check, argue with, and carry into a prompt.";

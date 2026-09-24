@@ -6,7 +6,7 @@ This is the brief. The sentences themselves are in `docs/copy-deck.md`, which is
 
 ## What is being asked
 
-Rewrite the sentences a small web product shows its users. They were drafted by the engineer who built it, who is the weaker writer of the two tools on this project; that is the entire reason this document exists. **328 of 350 sentences are open to rewriting.** The rest are locked, for reasons given below that are about measurement rather than about taste.
+Rewrite the sentences a small web product shows its users. They were drafted by the engineer who built it, who is the weaker writer of the two tools on this project; that is the entire reason this document exists. **329 of 351 sentences are open to rewriting.** The rest are locked, for reasons given below that are about measurement rather than about taste.
 
 **Everything about the sentences is here. What this deck cannot carry is listed per surface.** That is a smaller promise than the one this brief used to make, and it is the true one: an exporter that enumerates strings will never contain a chart, a table or a layout, however good its adjacency data gets. Each surface names what renders alongside its sentences, in order, and names the non-text a reader sees that you cannot. Where that still leaves you guessing, say so — a brief that assumes knowledge the writer does not have is a defective brief, and this one has been wrong once already.
 
@@ -49,7 +49,7 @@ One more, narrower and absolute: **no leaderboard, no streak, no XP, no points, 
 
 Every sentence in the deck carries an id and one of these:
 
-- **OPEN** (281) — rewrite freely, within the rules listed under its section.
+- **OPEN** (282) — rewrite freely, within the rules listed under its section.
 - **PART-LOCKED** (47) — the prose is yours, but the block contains quoted words from a cited document, listed under LOAD-BEARING in that section. A test verifies them character for character; change one and the build fails, correctly, because the page would be putting words in the record's mouth.
 - **LOCKED** (14) — do not touch. These are the Prestige Test's clip blurbs, and they are not copy: they are the **independent variable**. The test measures how much a listener's rating moves when a blurb is attached. Editing one changes the experiment, invalidates every response already recorded against it, and breaks every share link keyed to the pool version.
 - **PASSED** (8) — already written, by you, in August 2026 under ruling RT-107a. Included for tone, not for rewriting. If it now reads worse than the rest, that is worth saying.

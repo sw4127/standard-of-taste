@@ -18,7 +18,8 @@ export const metadata: Metadata = {
     title: "The Prestige Test — do you hear the music, or the name?",
     description:
       `Rate ${numberWord(BIAS_CLIP_COUNT)} clips with just your ears. Rate them again with the names attached. The gap is your number.`,
-    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
+    // No `images`: `./opengraph-image.tsx` is this page's own card (the site's
+    // default is the reading's since BA-6), and the file convention supplies it.
   },
 };
 

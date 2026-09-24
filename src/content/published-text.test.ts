@@ -43,7 +43,7 @@ import { expertStrings, EXPERT_SECTIONS } from "./vocabulary/expert";
  * WHAT THIS DELIBERATELY DOES NOT GUARD, so nobody assumes it does:
  *
  *  - THE SESSION LENGTH IN MINUTES. "~8 min" is hand-typed in three separate
- *    places (`BiasFlow.tsx`, `page.tsx`, `opengraph-image.tsx`) and derived
+ *    places (`BiasFlow.tsx`, `page.tsx`, `bias/opengraph-image.tsx`) and derived
  *    from nothing, so there is no source of truth for a test to compare
  *    against. Pinning it here would only assert that one hardcoded string
  *    equals another. It stays a known hole rather than a fake guard.

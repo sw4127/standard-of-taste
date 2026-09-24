@@ -28,6 +28,7 @@ import {
 import ListenerCards from "@/components/ListenerCards";
 import { LISTENERS } from "@/content/reading/listeners";
 import { readingFor } from "@/content/reading/reading";
+import { READING_SHARE_LINE } from "@/content/reading/copy";
 import { bp } from "@/content/blueprint";
 import { PRESTIGE_GOLD, PRESTIGE_FIELD, DELICACY_ICE, DELICACY_FIELD, THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE, SPREAD_ROSE, SPREAD_FIELD, SPREAD_BASE } from "@/content/instrument-accents";
 
@@ -46,8 +47,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   openGraph: {
     title: "Standard of Taste — a month of listening, read back in words you can argue with",
-    description:
-      "A reading of a listener's recent plays, in lines you can check, argue with, and carry into a prompt.",
+    description: READING_SHARE_LINE,
     siteName: "Standard of Taste",
     type: "website",
   },

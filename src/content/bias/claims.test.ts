@@ -63,7 +63,7 @@ const NUMBER_WORDS: Record<number, string> = {
  * three this file's own docblock names as the reason it exists:
  *
  *   src/app/page.tsx            the homepage       "Ten clips" · "~5 min · 10 clips"
- *   src/app/opengraph-image.tsx the default OG PNG "Ten clips" · "Free · five minutes"
+ *   src/app/opengraph-image.tsx the default OG PNG (since 2026-09-24 at src/app/bias/) "Ten clips" · "Free · five minutes"
  *   src/content/learn.ts        the FAQPage JSON-LD "the same ten clips" · "eight
  *                                                    with artist names" · "Three
  *                                                    of the eight labels"
@@ -311,7 +311,7 @@ describe("E6/S12 — hardcoded Prestige Test claims still match the pool", () =>
       // the list, not new to the sin — the sweep simply could not see them
       // (see the pathspec note above). They are the two surfaces this file's
       // docblock names as its reason for existing, which is the whole point.
-      "src/app/opengraph-image.tsx", // the default share PNG — nobody reads a PNG
+      "src/app/bias/opengraph-image.tsx", // the Prestige share PNG (the site default until 2026-09-24) — nobody reads a PNG
       "src/content/learn.ts", // the FAQPage JSON-LD — nobody reads structured data either
       // E7/S25: the event dictionary. It states the pool size while explaining
       // why a number there goes stale — which is exactly the sentence that
