@@ -56,6 +56,8 @@ export const BLUEPRINT_COPIES: readonly BlueprintCopy[] = [
   // The PRD and the MRD cite the interview findings.
   { path: "docs/prd-1-use-cases.md", id: "BP-F1", mode: "quoted" },
   { path: "docs/prd-1-use-cases.md", id: "BP-F2", mode: "quoted" },
+  // Part 2 scores every feature against the goal's clauses (BA-2), so it quotes the goal.
+  { path: "docs/prd-2-features.md", id: "BP-GOAL", mode: "quoted" },
   { path: "docs/mrd-prompt-card-2026-09-16.md", id: "BP-F1", mode: "quoted" },
   // The front door's paraphrase of what incumbents lack (change list C).
   { path: "src/content/landing.ts", id: "BP-UNMET", mode: "derived", anchor: "export const LANDING_ALGORITHM" },

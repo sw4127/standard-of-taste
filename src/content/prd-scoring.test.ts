@@ -1,16 +1,23 @@
 /**
  * THE PRD'S RANKINGS ARE COMPUTED FROM ITS OWN TABLE (E20, PRD part 2).
  *
- * WHY THIS EXISTS, MEASURED. Part 2 scores sixteen features on two axes and
- * lists the top five under three weightings. I wrote those lists by reading the
- * table and thinking. Recomputing them found **five of fifteen positions
- * wrong** — including a claim in the analysis that the Prestige Test reaches
- * the top five only under the recruiter weighting, which the arithmetic denies.
+ * WHY THIS EXISTS, MEASURED. Part 2 scores its features on two axes and lists
+ * the top five under three weightings. The first version's lists were written
+ * by reading the table and thinking; recomputing them found **five of fifteen
+ * positions wrong**, including a claim in the analysis the arithmetic denied.
  *
  * A DOCUMENT THAT DISAGREES WITH ITS OWN NUMBERS IS WORSE THAN ONE WITHOUT
  * NUMBERS. The scores are subjective and say so; the rankings are arithmetic
  * over them and have no excuse. This recomputes and compares, so a score edited
  * later cannot leave a stale order standing underneath it.
+ *
+ * THE AXES ARE BP-GOAL'S CLAUSES (revised 2026-09-23, BA-2). The first version
+ * scored CRAFT and LEGIBILITY: what building a feature proved. The owner
+ * reopened that rule because it conflicts with BP-GOAL, and part 2 now scores
+ * TRY (a reviewer can try the core) and FUND (a reviewer can see why a company
+ * would fund it and how it would test that). The arithmetic is unchanged; the
+ * headings it reads are the new ones, and a heading from the old axes is
+ * refused so the replaced rule cannot come back beside the new one.
  *
  * WHAT IT CANNOT CHECK: whether a score is right. That is a judgment the
  * document defends in prose, and no test can hold it.
@@ -23,16 +30,19 @@ const PRD = "docs/prd-2-features.md";
 
 interface Scored {
   name: string;
-  craft: number;
-  legibility: number;
+  try: number;
+  fund: number;
 }
 
 /** The weightings the document publishes, with the heading each appears under. */
 const WEIGHTINGS = [
-  { craft: 0.5, legibility: 0.5, heading: "**50 / 50" },
-  { craft: 0.7, legibility: 0.3, heading: "**70 CRAFT" },
-  { craft: 0.3, legibility: 0.7, heading: "**30 CRAFT" },
+  { tryW: 0.5, fundW: 0.5, heading: "**50 / 50" },
+  { tryW: 0.7, fundW: 0.3, heading: "**70 TRY / 30 FUND" },
+  { tryW: 0.3, fundW: 0.7, heading: "**30 TRY / 70 FUND" },
 ];
+
+/** The replaced rule's axes (BA-2). Neither may head a column or a weighting again. */
+const REPLACED_AXES = ["CRAFT", "LEGIBILITY"];
 
 /** Every scored row of the feature table. */
 function features(doc: string): Scored[] {
@@ -41,10 +51,10 @@ function features(doc: string): Scored[] {
     if (!line.startsWith("| ")) continue;
     const cells = line.split("|").map((c) => c.trim());
     if (cells.length < 5) continue;
-    const craft = Number(cells[2]);
-    const legibility = Number(cells[3]);
-    if (!Number.isInteger(craft) || !Number.isInteger(legibility)) continue;
-    out.push({ name: cells[1], craft, legibility });
+    const tryScore = Number(cells[2]);
+    const fund = Number(cells[3]);
+    if (!Number.isInteger(tryScore) || !Number.isInteger(fund)) continue;
+    out.push({ name: cells[1], try: tryScore, fund });
   }
   return out;
 }
@@ -75,15 +85,25 @@ describe("the PRD's rankings match its own scores", () => {
   it("parsed a real table, so nothing below passes vacuously", () => {
     expect(scored.length, "no scored features parsed").toBeGreaterThan(10);
     for (const f of scored) {
-      expect(f.craft, f.name).toBeGreaterThan(0);
-      expect(f.legibility, f.name).toBeGreaterThan(0);
+      expect(f.try, f.name).toBeGreaterThan(0);
+      expect(f.fund, f.name).toBeGreaterThan(0);
+      expect(f.try, f.name).toBeLessThanOrEqual(5);
+      expect(f.fund, f.name).toBeLessThanOrEqual(5);
     }
   });
 
-  it.each(WEIGHTINGS)("ranks correctly at $craft / $legibility", ({ craft, legibility, heading }) => {
+  it("scores on BP-GOAL's clauses, not on the axes BA-2 replaced", () => {
+    const header = doc.split(NL).find((l) => l.startsWith("| Feature |")) ?? "";
+    expect(header, "no feature table header found").toContain("| TRY | FUND |");
+    // A weighting heading reads "**70 TRY / 30 FUND"; the history section may still NAME the old axes.
+    const heads = REPLACED_AXES.filter((a) => header.indexOf(a) !== -1 || new RegExp("\\*\\*\\d+ " + a).test(doc));
+    expect(heads, "a replaced axis heads a column or a weighting again (BA-2)").toEqual([]);
+  });
+
+  it.each(WEIGHTINGS)("ranks correctly at $tryW / $fundW", ({ tryW, fundW, heading }) => {
     const ranked = [...scored]
       .sort((a, b) => {
-        const diff = b.craft * craft + b.legibility * legibility - (a.craft * craft + a.legibility * legibility);
+        const diff = b.try * tryW + b.fund * fundW - (a.try * tryW + a.fund * fundW);
         return diff !== 0 ? diff : a.name.localeCompare(b.name);
       })
       .slice(0, 5)

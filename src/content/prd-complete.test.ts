@@ -22,6 +22,10 @@ import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { SHELL_WIDTH } from "@/content/shell";
 import { BIAS_SCALE_MAX } from "@/engine/bias";
+import { MAX_LINES, MIN_LINES } from "@/engine/reading/patterns";
+import { LISTENERS } from "@/content/reading/listeners";
+import { GUARDRAILS, STAKEHOLDERS, SUPPORTING } from "@/content/company/copy";
+import { METHOD_REFUSALS, METHOD_REVERSALS } from "@/content/method/claims";
 
 const NL = String.fromCharCode(10);
 
@@ -83,6 +87,37 @@ describe("the PRD is complete", () => {
       screens.indexOf(`${points} buttons, one row`),
       `the scale has ${points} points and part 4 does not specify one row of ${points}. The row ` +
         "count is the specification — a wrapped scale reads as a grid rather than a line.",
+    ).toBeGreaterThan(-1);
+  });
+});
+
+/*
+ * PART 2'S COUNTS ARE THE PRODUCT'S (PRD revision, 2026-09-23). Part 2 describes
+ * each feature with a count — three listeners, three or four lines, seven
+ * refusals — and every one of them is a number a later change moves without
+ * touching this document. Each is built here from the constant the product
+ * renders from, and the phrase must appear.
+ */
+const WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+const word = (n: number) => WORDS[n] ?? String(n);
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+describe("part 2 states the counts the product has", () => {
+  const features = readFileSync("docs/prd-2-features.md", "utf8");
+  const phrases = [
+    `${cap(word(LISTENERS.length))} illustrative listeners`,
+    `${cap(word(MIN_LINES))} or ${word(MAX_LINES)} lines`,
+    `${word(SUPPORTING.length)} supporting metrics`,
+    `${word(GUARDRAILS.length)} guardrails`,
+    `The ${word(STAKEHOLDERS.length)} stakeholder notes`,
+    `${cap(word(METHOD_REFUSALS.length))} things refused and ${word(METHOD_REVERSALS.length)} reversals`,
+  ];
+
+  it.each(phrases)("says %s", (phrase) => {
+    expect(
+      features.indexOf(phrase),
+      `part 2 should say "${phrase}", which is what the product has. A count typed into a ` +
+        "specification goes stale the day the product changes and nothing else notices.",
     ).toBeGreaterThan(-1);
   });
 });
