@@ -21,8 +21,8 @@ export const READING_TITLE = "What a month of listening says, in words you can a
 
 export const PICK_HEADING = "Pick a listener.";
 export const PICK_LINE =
-  "Each is four weeks of plays by someone who does not exist. Read one as if the plays were yours. " +
-  "Every line below is computed from those plays, and every line shows the plays it counted.";
+  "Each is four weeks of plays by someone who does not exist. Read one as if the plays were yours: " +
+  "every line is computed from them, and every line shows the plays it counted.";
 
 /** A listener card's one factual line: counts only, derived from the plays. */
 export function listenerFacts(plays: number, tracks: number): string {
@@ -37,10 +37,10 @@ export const SHOW_PLAYS = "Show the plays";
 export const HIDE_PLAYS = "Hide the plays";
 export const OFFER_LEAD = "What might it mean?";
 export const REJECT_LINE = "This isn't right";
-export const REJECTED_NOTE = "Rejected. It is out of your prompt.";
+export const REJECTED_NOTE = "Rejected. It won't be in your prompt.";
 export const RESTORE_LINE = "Put it back";
-export const SKIPPED_MARK = "abandoned inside 30 s";
-export const KEPT_MARK = "kept past 30 s";
+export const SKIPPED_MARK = "skipped within 30 s";
+export const KEPT_MARK = "played past 30 s";
 
 export const TO_PROMPT = "Turn what you kept into a prompt";
 export const OTHER_LISTENER = "Read another listener";
@@ -55,7 +55,7 @@ export const COPIED_PROMPT = "Copied";
 
 /** BP-BRIDGE: what the hearing tests say about each family's words. */
 export const BRIDGE_HEADING = "Which of these words can you hear?";
-export const BRIDGE_CAN_HEAR = "you can hear this";
+export const BRIDGE_CAN_HEAR = "you heard this in the test";
 export const BRIDGE_MAY_NOT = "at your threshold you may not tell";
 export const BRIDGE_TUNE = "Tune these with the hearing tests";
 /** Where the marks above come from (device-local-disclosure.test.ts). */

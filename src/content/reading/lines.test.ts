@@ -122,7 +122,7 @@ describe("every receipt equals a recomputation from the plays", () => {
         } else {
           const firsts = plays.filter((p) => p.first && isNew.has(p.trackId));
           const skipped = firsts.filter((p) => p.skippedEarly).length;
-          expected = line.pattern.startsWith("You abandoned")
+          expected = line.pattern.startsWith("You skipped")
             ? `${skipped} of ${firsts.length} first plays`
             : `${firsts.length - skipped} of ${firsts.length} first plays`;
           expect(got).toEqual(ids(firsts));
@@ -131,7 +131,7 @@ describe("every receipt equals a recomputation from the plays", () => {
         // Found by reading the rendered lines: a receipt of "261 of 294" once listed 33 plays.
         const stated = line.receipt.match(/\d+/g)!.map(Number);
         // Drift lists its sound's plays in both weeks; the skip receipt lists every
-        // first play it is "of", each marked kept or abandoned, so both halves show.
+        // first play it is "of", each marked played past or skipped within 30 s, so both halves show.
         const listed = line.kind === "drift" ? stated[0] + stated[2] : line.kind === "earlySkip" ? stated[1] : stated[0];
         expect(line.playIds.length, "the receipt lists a different number of plays than it states").toBe(listed);
         // The pattern's first number is the receipt's, as a count or a share.
@@ -188,5 +188,21 @@ describe("every template holds the register, the carve-out and the no-comparison
     expect(offerBreaches("Is this music for staying in a feeling, or for getting out of one?")).toEqual([]);
     expect(matches("You repeat more than most listeners.", COMPARISON)).not.toEqual([]);
     expect(carveOutBreaches("Headphones are cheaper than therapy.")).not.toEqual([]);
+  });
+});
+
+/**
+ * THE DRIFT OFFERS PUT "the" IN FRONT OF A TEXTURE (Cowork copy return, 2026-09-24).
+ *
+ * "Are you moving toward the ${to}?" reads for every texture in the pools
+ * today, checked by rendering all nine. It stops reading the day a texture
+ * carries its own article ("the a wall of guitars"), so that is refused here.
+ */
+describe("every texture takes the drift offers' article", () => {
+  const textures = LISTENERS.flatMap((l) => l.clusters.map((c) => `${l.name}/${c.id}: ${c.sound.texture}`));
+
+  it("reads all nine, and none starts with an article of its own", () => {
+    expect(textures.length).toBe(9);
+    expect(textures.filter((t) => /^(a|an|the)\s/i.test(t.split(": ")[1]))).toEqual([]);
   });
 });

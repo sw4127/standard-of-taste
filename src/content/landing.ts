@@ -104,13 +104,13 @@ export const LANDING_ALGORITHM =
  */
 // serves BP-UNMET (docs/blueprint.md): check it, argue with it, carry it into a prompt.
 export const LANDING_READING_TURN =
-  "Here it is read back to you, line by line, with the plays behind each line: " +
-  "keep what fits, reject what doesn't, and carry what is left into a prompt.";
+  "Here a month of someone's listening is read back line by line, with the plays behind every line. " +
+  "Keep what fits, reject what doesn't, and carry what is left into a prompt.";
 
 export const LANDING_CARDS_LEAD = "Try it on a month that isn't yours.";
 
 export const HEARING_KICKER = "THE HEARING TESTS";
-export const HEARING_HEADING = "Then find out which of those words you can actually hear.";
+export const HEARING_HEADING = "Then find out which words in a prompt you can actually hear.";
 
 export function landingLead(machineCount: number): string {
   return (

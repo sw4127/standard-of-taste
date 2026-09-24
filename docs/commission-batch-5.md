@@ -47,15 +47,16 @@ the least-tested copy in the project and the most-read.
 > **The three sentences, verbatim** *(replaced 2026-09-23, blueprint Part 7: the reading became the
 > product (BA-6), so the first and third sentences now introduce it. The explanation below this block
 > describes the earlier pair and is kept as it was written; the new pair serve BP-INSIGHT and
-> BP-UNMET in `docs/blueprint.md`.)*:
+> BP-UNMET in `docs/blueprint.md`. The third was rewritten 2026-09-24 by the Cowork copy return: it had
+> said "your" month, and the month is an illustrative listener's.)*:
 >
 > > Your last month of listening holds a pattern you have probably never put into words.
 > >
 > > So does every algorithm that has ever recommended you a song. It just never tells you, because
 > > what it knows about you is a row of numbers no person can read.
 > >
-> > Here it is read back to you, line by line, with the plays behind each line: keep what fits,
-> > reject what doesn't, and carry what is left into a prompt.
+> > Here a month of someone's listening is read back line by line, with the plays behind every
+> > line. Keep what fits, reject what doesn't, and carry what is left into a prompt.
 >
 > **What these three are doing, so you can judge whether they do it.** The product measures what a
 > listener's ears actually did — whether a famous name moved their ratings, how small a flaw they can

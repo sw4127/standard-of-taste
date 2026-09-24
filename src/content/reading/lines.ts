@@ -94,7 +94,7 @@ function parts(f: Fact, k: Lookup): Parts {
           pattern: `Three tracks took ${pct(f.topPlays, f.total)} of your ${f.total} plays: ${list(f.top.map((t) => k.title(t.trackId)))}.`,
           receipt: `${f.topPlays} of ${f.total} plays`,
           offers: [
-            { id: "a", question: "Are these holding something in place, so nothing new has to be chosen?", words: ["steady", "circling", "familiar"] },
+            { id: "a", question: "Are these keeping something steady, so nothing new has to be chosen?", words: ["steady", "circling", "familiar"] },
             { id: "b", question: "Or are you still inside them, listening for something you have not found yet?", words: ["searching", "returning", "close"] },
           ],
           cue: { label: "Form", text: "a loop that circles back, made to be replayed" },
@@ -149,7 +149,7 @@ function parts(f: Fact, k: Lookup): Parts {
         pattern: `${pct(known, f.total)} of your plays were tracks you already knew before these four weeks began.`,
         receipt: `${known} of ${f.total} plays`,
         offers: [
-          { id: "a", question: "Is what you already know doing the job right now?", words: ["familiar", "trusted", "worn-in"] },
+          { id: "a", question: "Is the familiar what you need right now?", words: ["familiar", "trusted", "worn-in"] },
           { id: "b", question: "Or is there no room at the moment for anything new?", words: ["full", "close", "sheltered"] },
         ],
         cue: { label: "Familiarity", text: "familiar shapes, nothing that surprises" },
@@ -162,9 +162,11 @@ function parts(f: Fact, k: Lookup): Parts {
         pattern: `Music built on ${to} went from ${pct(f.to.week1, f.week1Total)} of your plays in week one to ${pct(f.to.week4, f.week4Total)} in week four. Music built on ${from} went from ${pct(f.from.week1, f.week1Total)} to ${pct(f.from.week4, f.week4Total)}.`,
         receipt: `${f.to.week1} of ${f.week1Total} plays in week one; ${f.to.week4} of ${f.week4Total} in week four`,
         offers: [
-          // (3) "Is <a plural texture> somewhere..." did not parse; the sound is now the subject.
-          { id: "a", question: `Is music built on ${to} somewhere you are heading?`, words: ["arriving", "turning", "new-found"] },
-          { id: "b", question: `Or was music built on ${from} something you needed then, and need less now?`, words: ["after", "lighter", "moving on"] },
+          // (3) "Is <a plural texture> somewhere..." did not parse. Since 2026-09-24 (Cowork copy return) the
+          // listener is the subject and the sound takes "the", so a texture must carry no article of its
+          // own: lines.test.ts holds every cluster to that.
+          { id: "a", question: `Are you moving toward the ${to}?`, words: ["arriving", "turning", "new-found"] },
+          { id: "b", question: `Or did the ${from} do something for you then that you need less now?`, words: ["after", "lighter", "moving on"] },
         ],
         cue: { label: "Arc", text: `starts near ${from} and ends on ${to}` },
       };
@@ -172,10 +174,10 @@ function parts(f: Fact, k: Lookup): Parts {
     case "earlySkip": {
       if (f.direction === "high") {
         const kept = f.keptCluster
-          ? ` More of the ones that got past 30 seconds were built on ${k.texture(f.keptCluster)} than on anything else.`
+          ? ` Of the ones you let play longer, more were built on ${k.texture(f.keptCluster)} than on anything else.`
           : "";
         return {
-          pattern: `You abandoned ${f.skipped} of the ${f.tried} new tracks you tried inside their first 30 seconds.${kept}`,
+          pattern: `You skipped ${f.skipped} of the ${f.tried} new tracks you tried within their first 30 seconds.${kept}`,
           receipt: `${f.skipped} of ${f.tried} first plays`,
           offers: [
             { id: "a", question: "Do you know within seconds what you are not looking for?", words: ["decisive", "sharp", "certain"] },

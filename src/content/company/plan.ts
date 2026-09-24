@@ -33,7 +33,7 @@ export const BASELINE: Assumption = {
   value: 0.2,
   shown: "20%",
   reason:
-    "No service publishes this rate, so nothing measured stands behind it. It is a round number chosen to make the arithmetic visible, and the sample size is shown for two others beside it.",
+    "We found no published rate, so nothing measured stands behind it. It is a round number chosen to make the arithmetic visible, and the sample size is shown for two others beside it.",
 };
 
 export const MIN_LIFT: Assumption = {
@@ -42,7 +42,7 @@ export const MIN_LIFT: Assumption = {
   value: 0.02,
   shown: "2 percentage points",
   reason:
-    "The reading adds screens before creation, and screens cost attention and maintenance. A lift smaller than a tenth of the baseline would not pay for them, so the test is sized to see one that size and not smaller.",
+    "The reading adds screens before creation, and screens cost attention and maintenance. The assumption is that a lift smaller than a tenth of the baseline would not pay for them, so the test is sized to see one that size and not smaller.",
 };
 
 export const ALPHA: Assumption = {

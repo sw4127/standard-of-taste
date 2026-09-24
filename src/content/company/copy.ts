@@ -18,11 +18,12 @@ export const COMPANY_KICKER = "THE COMPANY VIEW";
 export const COMPANY_TITLE = `Why ${HOST_NAME} would build the reading, and how it would find out if it was wrong.`;
 
 export const CASE_HEADING = "The business case";
-// The first line paraphrases BP-CA2 and names it; the lines serve BP-BUSINESS.
+// The first line paraphrases BP-CA2, attributed as BP-CA2-PUBLIC attributes that half: to the
+// interviews (BP-F2). The ID stays in this comment, not on the page. The lines serve BP-BUSINESS.
 export const FIT_LINES: readonly string[] = [
-  `${HOST_NAME} already holds what the reading needs: every listener's recent plays. Nobody is asked to describe their taste, which the blueprint holds almost nobody can do (BP-CA2).`,
+  `${HOST_NAME} already holds what the reading needs: every listener's recent plays. Nobody is asked to describe their taste, which the interviews behind this project found almost nobody can do.`,
   `The prompt the reading ends in is pasted into ${HOST_NAME}'s own creation tool, trained on music it has licensed. The reading is the way in; the tool is what it feeds.`,
-  "What a listener rejects and what they choose is a signal no recommender has: a person correcting a description of their own listening.",
+  "What a listener rejects and what they choose is a signal a recommender does not collect: a person correcting a description of their own listening.",
 ];
 
 export const METRICS_HEADING = "What it would measure";
@@ -52,7 +53,8 @@ export const GUARDRAILS: readonly Metric[] = [
   {
     name: "Rejection rate, per template",
     definition: "For each line template, rejections over showings.",
-    why: "High means the template is wrong. Near zero is its own warning: a line nobody ever rejects may be true of everyone, which is the Barnum effect the receipts exist to prevent (BP-ARG-OBJECTION).",
+    // Serves BP-ARG-OBJECTION; the ID stays here, not on the page.
+    why: "High means the template is wrong. Near zero is its own warning: a line nobody ever rejects may be true of everyone, which is the Barnum effect the receipts exist to prevent.",
   },
   {
     name: "Carve-out hits",
@@ -120,7 +122,7 @@ export const STAKEHOLDERS: readonly Stakeholder[] = [
     team: "Trust & safety",
     question: "Are we inferring how people feel from what they play?",
     answer:
-      "No, and the design refuses it on purpose. No surface asserts a feeling: a line names a pattern and offers two readings as questions, because the same pattern can come from opposite feelings. No model writes any sentence, and nothing on any surface asserts anything about trauma, abuse or mental health. The public objected, loudly, to a streaming service claiming it could detect a listener's emotional state.",
+      "We don't infer it, and the design refuses to. A line names a pattern and offers two readings as questions, because the same pattern can come from opposite feelings; the listener says which, if either. No model writes any sentence, and nothing on any surface asserts anything about trauma, abuse or mental health. In 2021 a streaming service's patent for detecting a listener's emotional state from their voice drew a public campaign against it.",
     cites: "BA-3, BP-ARG-S1, BA-10, RT-Z10 (a)",
     source: ACCESS_NOW,
   },
@@ -140,7 +142,7 @@ export const STAKEHOLDERS: readonly Stakeholder[] = [
   {
     team: "Label partnerships",
     question: "Will labels see this as a tool that competes with their artists?",
-    answer: `The prompt feeds ${HOST_NAME}'s licensed tool, which is the direction the industry has taken in public: a streaming service building AI music products with the labels rather than around them.`,
+    answer: `The prompt feeds ${HOST_NAME}'s licensed tool, which is the direction the industry has taken in public: in October 2025 a major streaming service announced AI music products built with the labels rather than around them.`,
     cites: "BP-BUSINESS",
     source: SPOTIFY_AI,
   },
