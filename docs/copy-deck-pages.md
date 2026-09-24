@@ -122,7 +122,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 > 2. The user is their own control. Wherever possible the design is within-subject: your labeled ratings are compared to your blind ratings, your retest to your baseline. This removes the need for an external ground truth about which music is good — the instrument never has to take a side in that argument to measure your movement within it. The Prestige Test additionally carries unlabeled control clips, rated in both passes and labeled in neither: they measure each user's plain second-pass drift (memory, familiarity, regression), and the headline score subtracts the residual that drift would leave in it.
 
-> 3. Deterministic scoring, in code. Every number is computed by a scoring engine whose rules are fixed and inspectable — same responses, same score, every time. No language model classifies you, no black box guesses. Where an AI writes narrative around a result, it narrates a number that was already computed and cannot change it.
+> 3. Deterministic scoring, in code. Every number is computed by a scoring engine whose rules are fixed and inspectable — same responses, same score, every time. No language model classifies you, no black box guesses. Every sentence you read is a fixed template filled in with numbers the engine has already computed; no language model writes any of it when you visit.
 
 > 4. No number the data can't back. Until a real calibration cohort exists, results carry a provisional label and no percentile appears anywhere in the product. As sessions accumulate, the psychometrics are standard and open about their assumptions: item-response theory for item difficulty and discrimination, signal-detection analysis for the trials, calibration curves and Brier scores for confidence, reliability checks before any norm is published — always with its N attached.
 
@@ -290,4 +290,4 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 ---
 
-**97 blocks, roughly 4308 words, across 12 surfaces.**
+**97 blocks, roughly 4315 words, across 12 surfaces.**

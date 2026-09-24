@@ -39,8 +39,9 @@ export default function Page() {
       <p>
         <strong>3. Deterministic scoring, in code.</strong> Every number is computed by a scoring
         engine whose rules are fixed and inspectable — same responses, same score, every time. No
-        language model classifies you, no black box guesses. Where an AI writes narrative around a
-        result, it narrates a number that was already computed and cannot change it.
+        language model classifies you, no black box guesses. Every sentence you read is a fixed
+        template filled in with numbers the engine has already computed; no language model writes
+        any of it when you visit.
       </p>
       <p>
         <strong>4. No number the data can&apos;t back.</strong> Until a real calibration cohort

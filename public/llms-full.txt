@@ -132,8 +132,8 @@ deterministic template keyed to the measured family, not generated prose.
 2. Within-subject control: blind-vs-labeled and baseline-vs-retest comparisons remove the need for
    external ground truth about musical quality.
 3. Deterministic scoring in code: same responses, same score, always; scoring rules are
-   inspectable. Where AI writes narrative, it narrates an already-computed number and cannot
-   change it.
+   inspectable. Every sentence the product shows is a fixed template filled in with numbers the
+   engine has already computed; no language model writes any of it when a visitor arrives.
 4. No number the data can't back: until a real calibration cohort exists, all results are labeled
    provisional and no percentiles are shown anywhere. Published statistics state their N. The
    psychometrics pipeline uses item-response theory, signal-detection analysis, calibration/Brier
