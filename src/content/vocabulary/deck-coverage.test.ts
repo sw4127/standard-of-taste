@@ -271,12 +271,16 @@ describe("the page extractor has not gone partially blind", () => {
  * exists fails too.
  */
 describe("the review ledger accounts for every surface", () => {
-  const DECK_FILES = [
-    "docs/copy-deck-vocabulary.md",
-    "docs/copy-deck-instruments.md",
-    "docs/copy-deck-pages.md",
-    "docs/copy-deck-method.md",
-  ];
+  // Read from the directory, not typed (2026-09-24): the typed list missed the
+  // fifth deck, docs/copy-deck-reading.md, for a day, and so did the ledger.
+  const DECK_FILES = readdirSync("docs")
+    .filter((f) => /^copy-deck-.+\.md$/.test(f))
+    .map((f) => "docs/" + f);
+
+  it("reads every per-part deck, the reading's included", () => {
+    expect(DECK_FILES).toContain("docs/copy-deck-reading.md");
+    expect(DECK_FILES.length).toBeGreaterThanOrEqual(5);
+  });
 
   const surfaces = DECK_FILES.flatMap((file) =>
     readFileSync(file, "utf8")

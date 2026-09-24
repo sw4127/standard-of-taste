@@ -28,7 +28,7 @@
  *
  *   node scripts/export-review-ledger.mjs > docs/copy-review-ledger.md
  */
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 
 const NL = String.fromCharCode(10);
 
@@ -37,7 +37,19 @@ const DECKS = [
   { file: "docs/copy-deck-instruments.md", part: "2 · The instrument copy" },
   { file: "docs/copy-deck-pages.md", part: "3 · The page copy" },
   { file: "docs/copy-deck-method.md", part: "4 · The /method page" },
+  // Added 2026-09-24. The fifth deck shipped with the blueprint build on 2026-09-23 and
+  // this list was never told, so none of its surfaces had a row, and the guard on the
+  // other side read the same four files. Both now refuse a deck they do not name.
+  { file: "docs/copy-deck-reading.md", part: "5 · The reading" },
 ];
+
+const UNLISTED = readdirSync("docs")
+  .filter((f) => /^copy-deck-.+\.md$/.test(f))
+  .map((f) => "docs/" + f)
+  .filter((f) => !DECKS.some((d) => d.file === f));
+if (UNLISTED.length > 0) {
+  throw new Error("export-review-ledger: these decks have no part in DECKS, so their surfaces would have no row: " + UNLISTED.join(", "));
+}
 
 /**
  * EVERY PASS THAT HAS ACTUALLY HAPPENED. One, at the time of writing.
@@ -49,6 +61,18 @@ const DECKS = [
 const BATCH_ONE = {
   pass: "Cowork, batch 1, returned 2026-09-06",
   brief: "docs/copy-return-VOC-2026-09-06.md",
+};
+
+/**
+ * THE READING'S PASS (Cowork, 2026-09-24). Twenty strings rewritten, two defects
+ * returned (the reading statement, ruled by the owner; the Fidelity group), and
+ * the library rename. The return document is untracked, so the tracked record
+ * is the commits that applied it. Section 6 is LOCKED (the blueprint's own text,
+ * changed only by owner ruling) and is not a pass surface, so it stays "never".
+ */
+const READING_PASS = {
+  pass: "Cowork, the reading's copy return, 2026-09-24",
+  brief: "untracked; applied in 00f667b, 7edb693, 8ba2bcd, 83d55c4",
 };
 
 const PASSES = [
@@ -74,6 +98,11 @@ const PASSES = [
   { surface: "5. The retest arc — “DID YOUR EAR MOVE”", ...BATCH_ONE },
   { surface: "6. Combined view — “ACROSS YOUR SESSIONS”", ...BATCH_ONE },
   { surface: "7. The expert panel — “THE RAW RECORD”", ...BATCH_ONE },
+  { surface: "1. The front door — `src/content/landing.ts`", ...READING_PASS },
+  { surface: "2. The shared navigation — `src/content/site-nav.ts`", ...READING_PASS },
+  { surface: "3. The reading page — `src/content/reading/copy.ts`, `statement.ts`", ...READING_PASS },
+  { surface: "4. The lines the three listeners render — `src/content/reading/lines.ts`", ...READING_PASS },
+  { surface: "5. The Company view — `src/content/company/copy.ts`, `plan.ts`", ...READING_PASS },
 ];
 
 /**
