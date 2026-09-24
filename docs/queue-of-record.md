@@ -78,8 +78,10 @@ BA-12), which is now the newest rulings of record.
 | **8** | The public pages, and the PRD re-derived from the blueprint | **done** 2026-09-23 |
 
 **Carried out of Phase 5** (`docs/handoff-2026-09-23b.md`): a writing pass on the new copy
-(`docs/copy-deck-reading.md`, part READ, none of it reviewed) · PRD parts 2–4 revised against the
-blueprint · dead legacy code (content/music, world-cup, premium components, llm/schema) removed.
+(`docs/copy-deck-reading.md`, part READ, none of it reviewed) · ~~PRD parts 2–4 revised against the
+blueprint~~ **done 2026-09-23** (part 2 scored against BP-GOAL per BA-2; part 3 specifies the reading
+first; part 4 re-measured on a production build) · dead legacy code (content/music, world-cup,
+premium components, llm/schema) removed.
 
 ---
 
@@ -92,7 +94,7 @@ blueprint · dead legacy code (content/music, world-cup, premium components, llm
 | **RT-P3 (a)** | Narrow the front door's promise to what ships | Done, then amended the same day to keep the word *understanding* |
 | **batch 6** | A writing pass on the PROMPT CARD — 29 strings on the product's newest surface | **OPEN, note written** (`docs/commission-batch-6.md`, PM ruling RT-AB1 a), not yet handed over. Commissioned as a document: the card's strings are assembled templates but sit outside the deck's vocabulary-layer machinery, and wiring them in is unruled work. The note is pinned to the modules by `commission-note.test.ts`, so it cannot go stale in silence. **This is the largest gap between what shipped and what a reader would call finished** |
 | **batch 5** | A writing pass on the README, the pitch page and the three front-door sentences | **OPEN, note written** (`docs/commission-batch-5.md`), not yet handed over. Commissioned as documents rather than deck ids — these are long-form prose, not assembled strings |
-| **the PRD** | A product requirements document for a reviewer at a larger company. Brief: `docs/task-prd.md` | **COMPLETE — all four parts** — `docs/prd-1-use-cases.md`, the use-case inventory, 17 cases labelled 3 EVIDENCED / 14 ASSUMED, every one of 35 routes accounted for. Part 2 is `docs/prd-2-features.md` — sixteen features scored on craft and legibility, ranked under three weightings, rankings recomputed by test. Part 3 is `docs/prd-3-requirements.md` — functional requirements per instrument, each citing an exported symbol a test verifies, plus the non-goals assembled from the six refusals. Part 4 is `docs/prd-4-screens.md` — measured screen specifications rather than pictures, because the repository has no headless browser and adding one is a 300 MB dependency for a docs artifact. It carries a capture list if images are ever wanted. **The PRD is done** |
+| **the PRD** | A product requirements document for a reviewer at a larger company. Brief: `docs/task-prd.md` | **COMPLETE — all four parts** — `docs/prd-1-use-cases.md`, the use-case inventory, 17 cases labelled 3 EVIDENCED / 14 ASSUMED, every one of 35 routes accounted for. Part 2 is `docs/prd-2-features.md` — sixteen features scored on craft and legibility, ranked under three weightings, rankings recomputed by test. Part 3 is `docs/prd-3-requirements.md` — functional requirements per instrument, each citing an exported symbol a test verifies, plus the non-goals assembled from the six refusals. Part 4 is `docs/prd-4-screens.md` — measured screen specifications rather than pictures, because the repository has no headless browser and adding one is a 300 MB dependency for a docs artifact. It carries a capture list if images are ever wanted. **The PRD is done** — and **revised 2026-09-23 against `docs/blueprint.md`**: the features rescored on BP-GOAL's clauses (BA-2), the reading's requirements first, the screens re-measured with the blueprint build's pictures linked. The description above is the first version's |
 | **five conversations** | Ask people who generate audio whether the flaw vocabulary is a problem they have | **OPEN, owner's to run.** The audience claim rests on a positioning decision and one negative data point |
 
 ## Owner actions, carried

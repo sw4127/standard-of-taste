@@ -1,8 +1,9 @@
 # PRD — Standard of Taste · Part 1: the use-case inventory
 
-**Status: part 1 of 4, re-derived from the blueprint on 2026-09-23.** `docs/prd-2-features.md`
-and `docs/prd-3-requirements.md` have been revised against it. `docs/prd-4-screens.md` describes the
-product as it stood before the blueprint audit and is stamped to say so; it is revised next.
+**Status: part 1 of 4, re-derived from the blueprint on 2026-09-23.** The other three —
+`docs/prd-2-features.md`, `docs/prd-3-requirements.md`, `docs/prd-4-screens.md` — were revised
+against it the same day: features scored against BP-GOAL, the reading's requirements first, and
+its screens measured on a production build.
 Brief and definition of done: `docs/task-prd.md`.
 
 **Derived from the blueprint, then checked against the routes.** The first version of this part
@@ -12,7 +13,7 @@ case below names the BP statement it serves. Then the routes are walked — 38 r
 every one is placed: as serving a use case, as serving **no** BP statement (listed, not hidden), or
 as out of scope with a reason.
 
-*The use-case numbers below replace the earlier inventory's. Parts 2 and 3 cite these; part 4 still cites the earlier numbers until it is revised. `prd-numbering.test.ts` checks that every number cited exists here.*
+*The use-case numbers below replace the earlier inventory's. Parts 2 and 3 cite these, and part 4 follows part 3's order. `prd-numbering.test.ts` checks that every number cited exists here.*
 
 ---
 
