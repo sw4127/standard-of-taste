@@ -14,6 +14,7 @@ import { FLAW_FAMILIES, type FlawFamily, type Listener, type Play } from "@/cont
 import * as C from "@/content/reading/copy";
 import { recallThreshold } from "@/lib/result-recall";
 import { promptCard } from "@/engine/prompt-card";
+import { createScrollTop } from "./create-scroll";
 
 /**
  * THE READING FLOW (blueprint Part 5): pick a listener -> the reading -> the
@@ -84,8 +85,8 @@ function ListenerReading({ l, phase }: { l: Listener; phase: Phase }) {
   const promptRef = useRef<HTMLElement>(null);
 
   // Stored choices arrive after mount: the page is prerendered with none.
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- reading browser storage, which the server cannot
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- reading browser storage, which the server cannot
     setState(loadState(l.id));
   }, [l.id]);
   useEffect(() => {
@@ -316,15 +317,28 @@ function PromptPanel({
 }
 
 function CreateMock({ text, onBack }: { text: string; onBack: () => void }) {
+  const labelRef = useRef<HTMLParagraphElement>(null);
+  const noteRef = useRef<HTMLParagraphElement>(null);
   // A block body, never `() => window.scrollTo(...)`: an effect's return value is
   // taken as its cleanup, and in some browsers scrollTo returns a value — which
   // crashed this screen on the first rendered run (reading-flow.test.ts guards it).
+  // Opens at the top unless that leaves "Generate" below the fold (createScrollTop).
   useEffect(() => {
-    window.scrollTo({ top: 0 });
+    const label = labelRef.current;
+    const note = noteRef.current;
+    const top =
+      label && note
+        ? createScrollTop({
+            labelTop: label.getBoundingClientRect().top + window.scrollY,
+            noteBottom: note.getBoundingClientRect().bottom + window.scrollY,
+            viewport: window.innerHeight,
+          })
+        : 0;
+    window.scrollTo({ top });
   }, []);
   return (
     <section className="mt-10">
-      <p className="rounded-lg border border-dashed border-white/35 px-3 py-2 text-xs leading-relaxed text-muted">
+      <p ref={labelRef} className="rounded-lg border border-dashed border-white/35 px-3 py-2 text-xs leading-relaxed text-muted">
         {C.CREATE_LABEL}
       </p>
       <div className="mt-4 overflow-hidden rounded-2xl border border-white/15 bg-[#101014]">
@@ -346,7 +360,7 @@ function CreateMock({ text, onBack }: { text: string; onBack: () => void }) {
           <button type="button" disabled className={`${BUTTON} mt-3 w-full cursor-not-allowed bg-white/15 text-neutral-400`}>
             {C.GENERATE}
           </button>
-          <p className="mt-2 text-center text-xs text-muted">{C.GENERATE_NOTE}</p>
+          <p ref={noteRef} className="mt-2 text-center text-xs text-muted">{C.GENERATE_NOTE}</p>
         </div>
       </div>
       <button type="button" onClick={onBack} className="mt-6 text-xs font-bold tracking-[0.2em] text-muted hover:text-white">

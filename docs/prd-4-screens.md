@@ -97,11 +97,16 @@ Three taps from the front door, **at both widths**. FR-8.2's limit is three.
 |---|---|---|
 | The illustrative label's top edge | 305 px | 492 px |
 | The prompt | in the host's text field, 10 lines | same |
-| "Generate" | 696 px from the top, disabled | **902 px, below the fold**, disabled |
+| "Generate" | 696 px from the top, disabled | 426 px from the top, disabled |
+| Opens at | the top of the page | the mock's label, 16 px from the top |
 
-**The phone fold is recorded rather than rounded.** On a phone the label that says this is a mock
-is on the first screen, and "Generate" with its note, "No audio is generated", is one scroll below
-it: the page's title and statement take the first 492 px, and the mock itself is 454 px tall.
+**The screen opens at the top when the whole mock fits, and at the mock when it does not**
+(`createScrollTop`). Measured first with the page always opening at the top: on a phone the page's
+title and statement took the first 492 px, so "Generate" sat at 902 px, below an 812 px fold, and
+its note, "No audio is generated", further down. The page now opens with the mock's label at 16 px
+and the note ending at 494 px. At 1280 × 820 nothing changed. At 1280 × 720, where the note would
+end at 764 px, the page opens at the mock too. The title and statement are one scroll up; the
+reader passed them on the way in.
 
 ## S-5 · The Company view `/company`
 

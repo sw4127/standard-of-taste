@@ -20,4 +20,21 @@ describe("the reading flow's effects", () => {
   it("gives every effect a block body, so nothing is returned as a cleanup", () => {
     expect(src.match(/useEffect\(\(\)\s*=>\s*[^{\s]/g) ?? []).toEqual([]);
   });
+
+  /*
+   * The creation mock's opening position is decided by `createScrollTop`, whose
+   * cases are unit-tested; this holds the component to it, so the tested rule
+   * cannot be bypassed by a scroll written inline (PRD part 4, S-4).
+   */
+  it("opens the creation mock where createScrollTop says, and scrolls it nowhere else", () => {
+    // Comment lines dropped: the one above the effect names `window.scrollTo(...)` as a warning.
+    const mock = src
+      .slice(src.indexOf("function CreateMock"))
+      .split(/\r?\n/)
+      .filter((l) => !l.trim().startsWith("//"))
+      .join("\n");
+    expect(mock).toContain("createScrollTop({");
+    expect(mock.match(/window\.scrollTo\(/g) ?? []).toHaveLength(1);
+    expect(mock).toContain("window.scrollTo({ top });");
+  });
 });
