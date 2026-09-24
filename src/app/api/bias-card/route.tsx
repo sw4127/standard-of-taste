@@ -6,8 +6,8 @@
  * the verdict in-process — a pure function of its query params, so it's
  * CDN-cacheable AND unforgeable: no query string can make the card claim a
  * number the engine wouldn't compute (N3). Typography-driven, no imagery,
- * Satori CSS subset only (flexbox, bundled Fraunces) — same contract as
- * /api/card.
+ * Satori CSS subset only (flexbox, bundled Fraunces) — the contract the
+ * retired /api/card set.
  */
 import { readFileSync } from "node:fs";
 import { join } from "node:path";

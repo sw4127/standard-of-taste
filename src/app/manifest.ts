@@ -3,9 +3,9 @@ import { SITE_DESCRIPTION, SITE_NAME } from "@/content/site";
 
 /**
  * §23.F (PWA-light) — installable app-feel (Add to Home Screen), zero store cut,
- * no review. Next auto-links this at /manifest.webmanifest. Icons are sigil-
- * generated PNGs (see app/icons/[size]). No service worker by decision — a
- * one-shot quiz→share→pay flow needs neither offline nor push.
+ * no review. Next auto-links this at /manifest.webmanifest. Icons are PNGs
+ * drawn by Satori (see app/icons/[size] and lib/icon). No service worker by
+ * decision: nothing on the site needs to work offline or send a push.
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {

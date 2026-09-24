@@ -83,6 +83,9 @@ blueprint~~ **done 2026-09-23** (part 2 scored against BP-GOAL per BA-2; part 3 
 first; part 4 re-measured on a production build) · ~~dead legacy code (content/music, world-cup,
 premium components, llm/schema) removed~~ **done 2026-09-24**: 54 files, 372 tests of the removed
 modules with them; `world-cup/design.ts` stays because the live `/api/card` renders from it.
+**Superseded 2026-09-24:** `/api/card` printed its query string onto a PNG under this domain, so it
+now redirects every request to the default preview image, and `world-cup/design.ts`, the sigil and
+`/product-image` (the removed checkout's image) are gone.
 
 ---
 

@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from "vitest";
-import { baseUrl, cardPath } from "./site";
+import { baseUrl } from "./site";
 
 const ENV_KEYS = ["NEXT_PUBLIC_BASE_URL", "VERCEL_PROJECT_PRODUCTION_URL", "VERCEL_URL"] as const;
 
@@ -12,10 +12,10 @@ describe("baseUrl scheme normalization (§16 share loop)", () => {
   it("forces https:// on a scheme-less NEXT_PUBLIC_BASE_URL (the doubling bug)", () => {
     vi.stubEnv("NEXT_PUBLIC_BASE_URL", "vibe-check-app-sepia.vercel.app");
     expect(baseUrl()).toBe("https://vibe-check-app-sepia.vercel.app");
-    // og = baseUrl()+cardPath() must be absolute so Next never resolves it
-    // relative to an inferred metadataBase (→ https://host/host/api/card).
-    expect(baseUrl() + cardPath({ format: "og", archetype: "X" })).toMatch(
-      /^https:\/\/vibe-check-app-sepia\.vercel\.app\/api\/card\?/,
+    // og = baseUrl()+path must be absolute so Next never resolves it relative
+    // to an inferred metadataBase (the host/host doubling this test was written for).
+    expect(baseUrl() + "/api/bias-card?format=og").toMatch(
+      /^https:\/\/vibe-check-app-sepia\.vercel\.app\/api\/bias-card\?/,
     );
   });
 

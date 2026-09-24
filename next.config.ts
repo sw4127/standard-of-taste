@@ -22,15 +22,13 @@ if (missingEnv.length > 0) {
 }
 
 const nextConfig: NextConfig = {
-  // Ensure the bundled display-font files are traced into the card route's
-  // serverless function (it reads them with fs at runtime for Satori).
+  // Ensure the bundled display-font files are traced into each Satori route's
+  // serverless function (they read them with fs at runtime).
   outputFileTracingIncludes: {
-    "/api/card": ["./src/fonts/*.woff"],
     // §23.F app icons render the Fraunces wordmark via Satori too.
     "/icon": ["./src/fonts/*.woff"],
     "/apple-icon": ["./src/fonts/*.woff"],
     "/icons/[size]": ["./src/fonts/*.woff"],
-    "/product-image": ["./src/fonts/*.woff"],
     // Default OG unfurl image (brief §3.B4) reads the same fonts at runtime.
     "/opengraph-image": ["./src/fonts/*.woff"],
   },

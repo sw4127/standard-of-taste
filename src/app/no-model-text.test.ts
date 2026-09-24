@@ -74,7 +74,7 @@ describe("no page or API route reaches a model (BA-10)", () => {
     // Measured 2026-09-23 after the model routes were deleted: 40 entries; 57 on
     // 2026-09-24, counting the metadata routes the first walker missed.
     expect(all.length).toBeGreaterThanOrEqual(35);
-    expect(all.some((f) => f.endsWith("/api/card/route.tsx"))).toBe(true);
+    expect(all.some((f) => f.endsWith("/api/bias-card/route.tsx"))).toBe(true);
     // Next's metadata routes and the global error page are entries too (2026-09-24:
     // the first walker missed them, so a model called from the share image passed).
     for (const f of ["src/app/opengraph-image.tsx", "src/app/icon.tsx", "src/app/sitemap.ts", "src/app/global-error.tsx"]) {
