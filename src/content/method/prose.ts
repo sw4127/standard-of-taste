@@ -78,7 +78,7 @@ export const METHOD_CLOSING_LINKS: ProseLink[] = [
  */
 export function methodClosing(asOf: string): string {
   return (
-    `Standing facts on this page last checked ${asOf}. The reading room argues why the product exists; ` +
+    `Standing facts on this page last checked ${asOf}. The library argues why the product exists; ` +
     "the Lab holds the measurements behind the hearing tests, including a page listing what the " +
     "instruments cannot do."
   );

@@ -28,7 +28,7 @@ never their order. All scoring is deterministic code — no AI classifies the us
 - [The Delicacy Trials](https://vibe-check-app-sepia.vercel.app/delicacy): three practice trials with answers shown, then fifteen scored pairs
 - [The Threshold Test](https://vibe-check-app-sepia.vercel.app/threshold): an adaptive staircase reporting a sensitivity threshold in physical units
 - [The Ranking Test](https://vibe-check-app-sepia.vercel.app/spread): six critic-ranked works, forty seconds each — whether your rating gaps vary where a critic's rankings vary
-- [Reading room](https://vibe-check-app-sepia.vercel.app/learn): all explainers — the five criteria, the instruments, the methodology
+- [The library](https://vibe-check-app-sepia.vercel.app/learn): all explainers — the five criteria, the instruments, the methodology
 - [Naming what went wrong](https://vibe-check-app-sepia.vercel.app/learn/flaws): the three flaw families the instruments measure — what each sounds like in a render, the unit it is measured in, and which machine measures it
 - [What is the Prestige Test?](https://vibe-check-app-sepia.vercel.app/learn/prestige-bias-test): the design, the sanctioned deception, the debrief
 - [The Ranking Test explained](https://vibe-check-app-sepia.vercel.app/learn/ranking-test): what the two numbers are, why agreement is never scored, and why the clips are forty seconds

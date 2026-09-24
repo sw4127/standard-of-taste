@@ -157,7 +157,7 @@ ad-tech cookies.
 - The reading (the flagship): https://vibe-check-app-sepia.vercel.app/reading
 - The company view (illustrative): https://vibe-check-app-sepia.vercel.app/company
 - Why this exists (the argument): https://vibe-check-app-sepia.vercel.app/learn/why
-- Reading room index: https://vibe-check-app-sepia.vercel.app/learn
+- The library index: https://vibe-check-app-sepia.vercel.app/learn
 - Naming what went wrong (flaw reference): https://vibe-check-app-sepia.vercel.app/learn/flaws
 - What is the Prestige Test?: https://vibe-check-app-sepia.vercel.app/learn/prestige-bias-test
 - Delicacy: https://vibe-check-app-sepia.vercel.app/learn/delicacy

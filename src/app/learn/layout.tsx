@@ -38,7 +38,7 @@ export default function LearnLayout({ children }: { children: React.ReactNode })
         <p className="mt-14 text-[11px] text-muted/70">
           <UnlessHere href="/learn">
             <Link href="/learn" className="transition hover:text-white">
-              Reading room
+              The library
             </Link>{" "}
             ·{" "}
           </UnlessHere>

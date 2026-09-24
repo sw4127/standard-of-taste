@@ -6,7 +6,7 @@ The insight, quoted from the blueprint of record, [`docs/blueprint.md`](docs/blu
 
 The gap it fills (BP-UNMET): **Existing tools label your listening, turn your words into playlists, or turn a playlist into a song without showing you why; none gives you a readable account of your recent taste that you can check, argue with, and carry into a prompt.**
 
-**→ [Try the reading](https://vibe-check-app-sepia.vercel.app/reading)** · [The hearing tests](https://vibe-check-app-sepia.vercel.app/) (on the front door) · [The company view](https://vibe-check-app-sepia.vercel.app/company) (illustrative: why a streaming service would build it, and the test that would decide it) · [Why this exists](https://vibe-check-app-sepia.vercel.app/learn/why) · [Reading room](https://vibe-check-app-sepia.vercel.app/learn) · [The Lab](https://vibe-check-app-sepia.vercel.app/lab) · [Method](https://vibe-check-app-sepia.vercel.app/method) (how it was decided, including what was killed)
+**→ [Try the reading](https://vibe-check-app-sepia.vercel.app/reading)** · [The hearing tests](https://vibe-check-app-sepia.vercel.app/) (on the front door) · [The company view](https://vibe-check-app-sepia.vercel.app/company) (illustrative: why a streaming service would build it, and the test that would decide it) · [Why this exists](https://vibe-check-app-sepia.vercel.app/learn/why) · [The library](https://vibe-check-app-sepia.vercel.app/learn) · [The Lab](https://vibe-check-app-sepia.vercel.app/lab) · [Method](https://vibe-check-app-sepia.vercel.app/method) (how it was decided, including what was killed)
 
 ---
 

@@ -89,7 +89,7 @@ export default function Explainer({
           "@type": "BreadcrumbList",
           itemListElement: [
             { "@type": "ListItem", position: 1, name: "Standard of Taste", item: base },
-            { "@type": "ListItem", position: 2, name: "Reading room", item: `${base}/learn` },
+            { "@type": "ListItem", position: 2, name: "The library", item: `${base}/learn` },
             { "@type": "ListItem", position: 3, name: page.title, item: url },
           ],
         }}

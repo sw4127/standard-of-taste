@@ -81,7 +81,7 @@ export default function Page() {
         the two are separate on purpose, and{" "}<Link href="/legal">the terms</Link>{" "}say which
         is which. It exists so the instruments can be calibrated honestly, and that&apos;s the whole
         job. The criteria these rules serve are in
-        the reading room — start with{" "}
+        the library — start with{" "}
         <Link href="/learn/freedom-from-prejudice">freedom from prejudice</Link> — or skip the
         theory and <Link href="/bias">take the Prestige Test</Link>.
       </p>

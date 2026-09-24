@@ -94,7 +94,12 @@ const INVISIBLE: Record<string, number> = {
   // them and lowers this.
   "/reading": 4, // +1: the nav gained THE COMPANY VIEW
   // The Company view (blueprint Part 6), measured when it shipped; Part 7 decks it.
-  "/company": 10,
+  // 10 -> 11 on 2026-09-24, measured: HEARING and READING ROOM became THE HEARING
+  // TESTS and THE LIBRARY (Cowork copy return, part C). Link texts reach the
+  // matcher run together ("THE READINGTHE HEARING TESTS..."), and the old run
+  // split into five words, under the six-word floor; the new one is eight, so
+  // /company's header now counts, as every other page's already did.
+  "/company": 11,
 };
 
 const words = (s: string) =>

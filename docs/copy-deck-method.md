@@ -43,9 +43,9 @@ If a locked passage is what makes a sentence bad, say so. The fix is either to r
 
 **Closing line.** The date is a slot -- it is a standing fact with its own constant, and resolving it here is what made this line untraceable to source:
 
-> Standing facts on this page last checked ${asOf}. The reading room argues why the product exists; the Lab holds the measurements behind the hearing tests, including a page listing what the instruments cannot do.
+> Standing facts on this page last checked ${asOf}. The library argues why the product exists; the Lab holds the measurements behind the hearing tests, including a page listing what the instruments cannot do.
 
-  *As rendered:* “Standing facts on this page last checked 2026-08-27. The reading room argues why the product exists; the Lab holds the measurements behind the hearing tests, including a page listing what the instruments cannot do.”
+  *As rendered:* “Standing facts on this page last checked 2026-08-27. The library argues why the product exists; the Lab holds the measurements behind the hearing tests, including a page listing what the instruments cannot do.”
 
 ---
 

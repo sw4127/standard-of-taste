@@ -23,6 +23,7 @@
  * reader-facing pages. Both are plain English, the choice is a writer's, and it
  * is carried to the writing pass rather than settled by a regex.
  */
+import { readFileSync } from "node:fs";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { renderSite, textOf, type RenderedSite } from "@/test-utils/render-site";
 import { createElement } from "react";
@@ -202,5 +203,26 @@ describe("the retired price renders only as /method's record of it", () => {
       .filter((p) => p.text.includes("$3.99"));
     expect(hits.map((p) => p.route)).toEqual(["/method"]);
     expect(hits[0].text.replace(REFUSAL, "")).not.toContain("$3.99");
+  });
+});
+
+/**
+ * "READING ROOM" IS GONE FROM EVERY SURFACE (Cowork copy return, part C, 2026-09-24).
+ *
+ * The nav said THE READING and READING ROOM, two "reading"s meaning the product
+ * and the library. The library is "The library" everywhere a reader or a
+ * crawler meets it: page text, metadata, structured data, the README and the
+ * llms files. Code comments keep the old name; nobody reads them on the site.
+ */
+describe("the library has one name", () => {
+  it("renders nowhere as 'reading room', in text, metadata or structured data", () => {
+    const hits = site.pages.filter((p) => /reading room/i.test(p.html + "\n" + p.meta.join("\n"))).map((p) => p.route);
+    expect(hits).toEqual([]);
+  });
+
+  it("is not called the reading room in the README or the llms files", () => {
+    for (const f of ["README.md", "public/llms.txt", "public/llms-full.txt"]) {
+      expect(readFileSync(f, "utf8"), f).not.toMatch(/reading room/i);
+    }
   });
 });

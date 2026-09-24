@@ -130,7 +130,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 > {degreesConvergenceLine()} That last number is the comparison reading, and it is the only place in this product where a professional's scale appears beside your own. It is a reference point and never a target: agreement with a critic is not scored here, because the Prestige Test measures being moved by a prestigious name. {CRITIC_CONTRADICTION}
 
-> The analytics dataset behind this — a different store from the one on your device — is self-generated and boring by design: anonymized response vectors under a random session id, carrying ratings, listen times, item-pool version and the scores computed from them. No accounts, no names, no ad-tech. Your browser keeps only your raw answers, never a score; the two are separate on purpose, and the terms say which is which. It exists so the instruments can be calibrated honestly, and that's the whole job. The criteria these rules serve are in the reading room — start with freedom from prejudice — or skip the theory and take the Prestige Test.
+> The analytics dataset behind this — a different store from the one on your device — is self-generated and boring by design: anonymized response vectors under a random session id, carrying ratings, listen times, item-pool version and the scores computed from them. No accounts, no names, no ad-tech. Your browser keeps only your raw answers, never a score; the two are separate on purpose, and the terms say which is which. It exists so the instruments can be calibrated honestly, and that's the whole job. The criteria these rules serve are in the library — start with freedom from prejudice — or skip the theory and take the Prestige Test.
 
 *2 further blocks on this page are filled entirely from content modules, so the words are reviewed in the earlier parts rather than here.*
 
@@ -290,4 +290,4 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 ---
 
-**97 blocks, roughly 4315 words, across 12 surfaces.**
+**97 blocks, roughly 4314 words, across 12 surfaces.**
