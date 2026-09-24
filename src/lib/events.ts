@@ -54,11 +54,6 @@ export const KNOWN_EVENTS: Readonly<Record<string, string>> = {
   spread_start: "the Ranking Test's frame is dismissed and listening begins",
   spread_complete: "all six works are rated and the two spreads are computed",
 
-  // --- legacy funnel. Its paid pages stay retired (RT-2 (2026-09-22) a); these
-  // are still fired by components and API routes that remain in the codebase. -
-  checkout_start: "the unlock button starts a hosted checkout",
-  purchase: "a purchase is confirmed on return",
-
   // --- share primitives, fired by the shared buttons themselves -------------
   share_download: "a card image is downloaded",
 };

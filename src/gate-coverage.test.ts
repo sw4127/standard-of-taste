@@ -43,7 +43,6 @@ const GATES: { file: string; floor: number; guards: string }[] = [
   { file: "src/engine/confidence.test.ts", floor: 3, guards: "the confidence level and its multiplier cannot drift apart" },
   { file: "src/engine/staircase-shipping.test.ts", floor: 3, guards: "no reachable clip missing from the deploy (RT-88a), and nothing unreachable swept in" },
   { file: "src/lib/readable-on.test.ts", floor: 11, guards: "button ink clears AA, and BRAND_ACCENT tracks the stylesheet" },
-  { file: "src/app/fan-verdict/accent-contrast.test.ts", floor: 6, guards: "all twenty nation accents stay readable" },
   { file: "src/app/threshold/share-links.test.ts", floor: 4, guards: "one builder for the share payload; a card cannot describe a different session than its page" },
   { file: "src/app/bias/clip-player-errors.test.ts", floor: 4, guards: "an interrupted play is not a failed clip, and a real failure still locks the gate" },
   { file: "src/content/delicacy/card-lines.test.ts", floor: 3, guards: "the delicacy card's figure fits the card at the size it renders" },

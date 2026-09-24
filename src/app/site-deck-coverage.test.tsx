@@ -14,7 +14,10 @@
  * instrument start pages (/bias, /delicacy, /threshold), most of the
  * reading-room index and much of the front door have never been in front of a
  * writer. (2026-09-23: 720, after the legacy routes retired — 26 of their
- * sentences left with them — and five event descriptions left /lab/data-model.)
+ * sentences left with them — and five event descriptions left /lab/data-model.
+ * 2026-09-24: the map below sums to 758 — it had reached 762 through Blueprint
+ * Part 7's measured rises, which this total was not updated for — after the
+ * legacy funnel's group and its two payment events left /lab/data-model.)
  * That is recorded here as a CEILING per page, not fixed: wiring those
  * surfaces into the deck machinery is unruled work, the same work batch 6
  * names for the card.
@@ -65,7 +68,9 @@ const INVISIBLE: Record<string, number> = {
   // the snack's five came back with it (RT-4 c).
   // 102 -> 94 on 2026-09-23: the snack and fake-door event rows retired (BA-7);
   // 94 -> 98 the same day: the reading's tab-scoped entity (blueprint Part 5).
-  "/lab/data-model": 99,
+  // 99 -> 95 on 2026-09-24: the legacy funnel group (checkout_start, purchase)
+  // left with the paid-tier components that fired them.
+  "/lab/data-model": 95,
   "/lab/falsified": 161,
   "/lab/instrument-health": 24,
   "/lab/instrument-limits": 46,

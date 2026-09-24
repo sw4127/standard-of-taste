@@ -81,13 +81,8 @@ export const EVENT_SURFACES: EventSurface[] = [
       "The critic-ranked listening set. These two events are the only record of a sitting that leaves the device; the answers themselves stay in the browser that gave them.",
     prefixes: ["spread_"],
   },
-  {
-    id: "legacy",
-    title: "The legacy funnel",
-    blurb:
-      "What remains of the pre-pivot music quiz's paid path. Its pages were retired on 2026-09-23 and now redirect to the gym; these are still emitted by components and API routes left in the codebase.",
-    events: ["checkout_start", "purchase"],
-  },
+  // The legacy funnel's group (checkout_start, purchase) was removed on
+  // 2026-09-23 with the paid-tier components that fired them; D4 has no paid tier.
   {
     id: "share",
     title: "Share primitives",

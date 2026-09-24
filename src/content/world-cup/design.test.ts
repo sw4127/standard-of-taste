@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildCardDesign, NATIONS, POSITION_INFO } from "./design";
-import { worldCup, playerMeta } from "./index";
+import { buildCardDesign, NATIONS } from "./design";
 
 describe("buildCardDesign", () => {
   it("uses the nationality accent on a neutral base (no clash)", () => {
@@ -30,13 +29,3 @@ describe("buildCardDesign", () => {
   });
 });
 
-describe("playerMeta coverage", () => {
-  it("has position + valid nation for every roster player", () => {
-    for (const c of worldCup.roster.centroids) {
-      const m = playerMeta[c.id];
-      expect(m, `missing meta for ${c.id}`).toBeTruthy();
-      expect(POSITION_INFO[m.position]).toBeTruthy();
-      expect(NATIONS[m.nation], `unknown nation ${m.nation} for ${c.id}`).toBeTruthy();
-    }
-  });
-});

@@ -92,10 +92,7 @@ const named = (name: string, text: string) => new RegExp(`\\b${name}\\b`).test(t
  * Reached by a path no exported composer shows, each with its reason. Exact in
  * both directions: an entry that becomes reachable, or stops existing, fails.
  */
-const REACHED_OTHERWISE: Record<string, string> = {
-  "src/content/music/index.ts themeForArchetypeLabel":
-    "legacy paid report (RT-3c); redirects without a payload, so NO test renders it — carried",
-};
+const REACHED_OTHERWISE: Record<string, string> = {};
 
 describe("every copy template in src/content can be reached by a test", () => {
   const fns = [...exported(), ...exportedConsts()];
