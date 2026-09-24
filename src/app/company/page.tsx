@@ -57,7 +57,10 @@ export default function CompanyPage() {
             <h2 className={H2}>{C.CASE_HEADING}</h2>
             <blockquote className="mt-4 border-l-2 border-white/30 pl-4 text-[17px] leading-relaxed text-neutral-100">
               {business.text}
-              <span className="mt-2 block text-xs text-muted">BP-BUSINESS · {business.label}</span>
+              {/* The label, not the ID (2026-09-24, RT-1 a): "BP-BUSINESS" is the repository's
+                  name for this statement and means nothing on the page; ASSUMED / EVIDENCED is
+                  what tells a reader how far to trust it (N3). */}
+              <span className="mt-2 block text-xs text-muted">{business.label}</span>
             </blockquote>
             <ul className={`mt-5 flex list-disc flex-col gap-2 pl-5 ${BODY}`}>
               {C.FIT_LINES.map((l) => (
@@ -140,7 +143,9 @@ export default function CompanyPage() {
                   <p className={KICK}>{s.team.toUpperCase()}</p>
                   <p className="mt-2 font-semibold text-neutral-100">{s.question}</p>
                   <p className={`mt-2 ${BODY}`}>{s.answer}</p>
-                  <p className="mt-2 text-xs text-muted">Serves {s.cites}</p>
+                  {/* `s.cites` stays in the data and its test, not on the page (RT-1 a):
+                      statement IDs are repository jargon to a reviewer, and BA-12 keeps the
+                      process pitch in the repository and on /method. */}
                   {s.source ? (
                     <p className="mt-2 text-xs leading-relaxed text-muted">
                       {s.source.what}, {s.source.date}.{" "}

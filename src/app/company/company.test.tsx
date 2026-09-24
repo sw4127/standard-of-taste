@@ -100,6 +100,13 @@ describe("the company view", () => {
     expect(text).toContain("16 October 2025");
   });
 
+  it("renders no statement ID: they stay in the code (RT-1 a, 2026-09-24)", () => {
+    expect(text.match(/\b(?:BP|BA|RT)-[A-Z0-9]+/g) ?? []).toEqual([]);
+    // The honesty labels the IDs used to sit beside are still on the page (N3).
+    expect(text).toContain("ASSUMED");
+    expect(text).toContain("assumed, not shown");
+  });
+
   it("names the host only as fictional and the host was checked (docs/reading-names-check-2026-09-23.md)", () => {
     const record = readFileSync("docs/reading-names-check-2026-09-23.md", "utf8");
     expect(record).toMatch(/\*\*The host:\*\* Tessavox/);

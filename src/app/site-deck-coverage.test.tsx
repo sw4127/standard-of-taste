@@ -99,7 +99,9 @@ const INVISIBLE: Record<string, number> = {
   // matcher run together ("THE READINGTHE HEARING TESTS..."), and the old run
   // split into five words, under the six-word floor; the new one is eight, so
   // /company's header now counts, as every other page's already did.
-  "/company": 11,
+  // 11 -> 8 the same day (RT-1 a): the stakeholder answers' "Serves BP-…" lines
+  // left the page, and three of them were long enough to count.
+  "/company": 8,
 };
 
 const words = (s: string) =>
