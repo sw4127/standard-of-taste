@@ -103,7 +103,8 @@ mark · every combination of choices on every listener, checked against the carv
 - **FR-4.3** A chosen reading contributes its words to the prompt's mood. "Neither", or no choice
   yet, contributes none.
 - **FR-4.4** The sound is grouped by the three flaw families the hearing tests measure: tuning,
-  timing and dynamics (BP-BRIDGE).
+  timing and fidelity (BP-BRIDGE; fidelity, not dynamic range, since 2026-09-24: the third family is
+  codec damage in kbps).
 - **FR-4.5** The prompt uses generic generator vocabulary and names no generator (RT-Z8 a).
 - **FR-4.6** If every line is rejected, the prompt is empty and the screen says so, rather than
   showing a blank box.

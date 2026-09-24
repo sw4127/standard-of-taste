@@ -55,6 +55,8 @@ it("exports", () => {
         offers: x.offers.map((o) => [o.question, o.words.join(", ")]),
         cue: x.cue.label + ": " + x.cue.text,
       })),
+      // The prompt's sound words per flaw family (BP-BRIDGE), authored in listeners.ts.
+      families: l.clusters.map((c) => [c.id, c.family.tuning, c.family.timing, c.family.compression]),
     })),
     company: strings(companyCopy).filter(([k]) => k !== "HOST_NAME"),
     companyLists: {
@@ -146,6 +148,13 @@ for (const l of d.lines) {
     quote(x.cue);
     w();
   }
+  // Unquoted on purpose: quoted lines take positional ids, and these are all under the id floor.
+  w("*The prompt's sound words, by family (`listeners.ts`; the bridge marks each group against a Threshold sitting):*");
+  w();
+  for (const [id, tuning, timing, fidelity] of l.families) {
+    w("- `" + id + "` · Tuning: " + tuning + " · Timing: " + timing + " · Fidelity: " + fidelity);
+  }
+  w();
 }
 
 w("## 5. The Company view — `src/content/company/copy.ts`, `plan.ts`");

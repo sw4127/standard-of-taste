@@ -47,7 +47,7 @@ const MIRA_CLUSTERS: Cluster[] = [
       voice: "no vocals",
       production: "close-miked and dry",
     },
-    family: { tuning: "a felt piano, a little out of tune", timing: "rubato, off the grid", compression: "wide, quiet dynamics" },
+    family: { tuning: "a felt piano, a little out of tune", timing: "rubato, off the grid", compression: "clean and close, room hiss left in" },
   },
   {
     id: "haze",
@@ -57,7 +57,7 @@ const MIRA_CLUSTERS: Cluster[] = [
       voice: "a low, breathy vocal",
       production: "tape-saturated",
     },
-    family: { tuning: "warbling, detuned pads", timing: "lazy, behind-the-beat drums", compression: "soft, saturated" },
+    family: { tuning: "warbling, detuned pads", timing: "lazy, behind-the-beat drums", compression: "tape-worn, soft top end" },
   },
   {
     id: "pulse",
@@ -67,7 +67,7 @@ const MIRA_CLUSTERS: Cluster[] = [
       voice: "a bright, doubled vocal",
       production: "polished and wide",
     },
-    family: { tuning: "a pitch-corrected vocal", timing: "tight to the grid", compression: "loud and limited" },
+    family: { tuning: "a pitch-corrected vocal", timing: "tight to the grid", compression: "glossy, fully polished" },
   },
 ];
 
@@ -111,7 +111,7 @@ const TEO_CLUSTERS: Cluster[] = [
       voice: "a dry, conversational vocal",
       production: "roomy, barely processed",
     },
-    family: { tuning: "horns that sit a little sharp", timing: "a loose swing", compression: "natural dynamics" },
+    family: { tuning: "horns that sit a little sharp", timing: "a loose swing", compression: "a live-room recording, unpolished" },
   },
   {
     id: "bright",
@@ -121,7 +121,7 @@ const TEO_CLUSTERS: Cluster[] = [
       voice: "pitched-up vocal chops",
       production: "loud and glossy",
     },
-    family: { tuning: "hard-tuned vocals", timing: "quantised, machine-tight", compression: "heavily limited" },
+    family: { tuning: "hard-tuned vocals", timing: "quantised, machine-tight", compression: "crisp, digital, bright top end" },
   },
   {
     id: "drone",
@@ -131,7 +131,7 @@ const TEO_CLUSTERS: Cluster[] = [
       voice: "no vocals",
       production: "a cavernous reverb",
     },
-    family: { tuning: "pure-interval drones", timing: "free time", compression: "very wide dynamics" },
+    family: { tuning: "pure-interval drones", timing: "free time", compression: "pristine, full detail" },
   },
 ];
 
@@ -176,7 +176,7 @@ const LIN_CLUSTERS: Cluster[] = [
       voice: "a shouted, double-tracked vocal",
       production: "dense and loud",
     },
-    family: { tuning: "drop-tuned guitars", timing: "tight, pushed drums", compression: "brickwalled, no dynamics" },
+    family: { tuning: "drop-tuned guitars", timing: "tight, pushed drums", compression: "gritty, lo-fi edges" },
   },
   {
     id: "acoustic",
@@ -186,7 +186,7 @@ const LIN_CLUSTERS: Cluster[] = [
       voice: "a quiet, close vocal",
       production: "intimate and dry",
     },
-    family: { tuning: "open tunings, a little loose", timing: "human, slightly uneven", compression: "light, breathing dynamics" },
+    family: { tuning: "open tunings, a little loose", timing: "human, slightly uneven", compression: "warm and analog, a little hiss" },
   },
   {
     id: "choir",
@@ -196,7 +196,7 @@ const LIN_CLUSTERS: Cluster[] = [
       voice: "choral harmony",
       production: "a church-hall reverb",
     },
-    family: { tuning: "pure, stacked harmony", timing: "free, paced by breath", compression: "wide dynamics" },
+    family: { tuning: "pure, stacked harmony", timing: "free, paced by breath", compression: "clean and airy, every breath audible" },
   },
 ];
 

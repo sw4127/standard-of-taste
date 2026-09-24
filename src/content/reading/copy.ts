@@ -63,7 +63,7 @@ export const BRIDGE_DEVICE_NOTE =
   "Any mark here is read from a Threshold sitting stored in this browser. There is no account; " +
   "on another device, or after clearing site data, the marks are gone.";
 export const BRIDGE_LINE =
-  "Tuning, timing and dynamics are the three things the hearing tests measure. " +
+  "Tuning, timing and fidelity are the three kinds of damage the Threshold Test measures. " +
   "A word for a difference you cannot hear is a word the generator can ignore without you noticing.";
 
 export const TO_CREATE = `Paste it into ${HOST_NAME}`;

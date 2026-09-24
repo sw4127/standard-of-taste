@@ -13,8 +13,8 @@
  * - a CHOSEN reading contributes its words; "neither", or no choice yet,
  *   contributes none. The reader's side of the argument is the mood.
  *
- * THE SOUND IS GROUPED BY FLAW FAMILY (BP-BRIDGE). Tuning, timing and dynamics
- * words are exactly what the hearing tests measure, so a reader who has sat
+ * THE SOUND IS GROUPED BY FLAW FAMILY (BP-BRIDGE). Tuning, timing and fidelity
+ * words are exactly what the Threshold Test measures, so a reader who has sat
  * one can see which of their prompt's words they can actually hear.
  *
  * Templates only (BA-10). NOT YET THROUGH A WRITING PASS.
@@ -50,7 +50,7 @@ export interface Prompt {
 export const FAMILY_LABEL: Record<FlawFamily, string> = {
   tuning: "Tuning",
   timing: "Timing",
-  compression: "Dynamics",
+  compression: "Fidelity",
 };
 
 const unique = (xs: string[]) => [...new Set(xs)];

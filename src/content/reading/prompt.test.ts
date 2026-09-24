@@ -9,7 +9,7 @@ import { describe, expect, it } from "vitest";
 import { carveOutBreaches } from "@/content/carve-out";
 import { listenerFacts, HOST_NAME } from "./copy";
 import { LISTENERS } from "./listeners";
-import { buildPrompt, EMPTY_STATE, type Choice, type ReaderState } from "./prompt";
+import { buildPrompt, EMPTY_STATE, FAMILY_LABEL, type Choice, type ReaderState } from "./prompt";
 import { readingFor } from "./reading";
 
 const readings = LISTENERS.map(readingFor);
@@ -61,7 +61,7 @@ describe("the prompt", () => {
   it("groups its sound by the three flaw families and names no generator (RT-Z8 a)", () => {
     for (const r of readings) {
       const t = buildPrompt(r, EMPTY_STATE).text;
-      for (const label of ["Tuning:", "Timing:", "Dynamics:"]) expect(t).toContain(label);
+      for (const label of ["Tuning:", "Timing:", "Fidelity:"]) expect(t).toContain(label);
       expect(t).not.toMatch(/suno|udio|stable audio|musicgen|lyria|tessavox/i);
     }
   });
@@ -83,5 +83,28 @@ describe("the prompt", () => {
   it("states a listener card's counts", () => {
     expect(listenerFacts(294, 28)).toBe("294 plays · 28 tracks · four weeks");
     expect(HOST_NAME).toBe("Tessavox");
+  });
+});
+
+/**
+ * THE THIRD GROUP IS FIDELITY, NOT DYNAMIC RANGE (Cowork copy return A2, 2026-09-24).
+ *
+ * The Threshold Test's third family is codec damage, measured in kbps. The
+ * group was labelled "Dynamics" and its words described dynamic-range
+ * compression ("loud and limited", "brickwalled"), so a reader with a good kbps
+ * threshold was told they could hear loudness and limiting, which no test
+ * measured. One word, two meanings; this keeps the second one out.
+ */
+describe("the compression family speaks about fidelity, which the test measures", () => {
+  const DYNAMIC_RANGE = /\bdynamic|\blimit|brickwall|\bloud|\bsquash|\bpunch/i;
+
+  it("labels the group Fidelity", () => {
+    expect(FAMILY_LABEL.compression).toBe("Fidelity");
+  });
+
+  it("uses no dynamic-range word in any listener's compression descriptor", () => {
+    const words = LISTENERS.flatMap((l) => l.clusters.map((c) => `${l.name}/${c.id}: ${c.family.compression}`));
+    expect(words.length).toBe(9);
+    expect(words.filter((w) => DYNAMIC_RANGE.test(w.split(": ")[1]))).toEqual([]);
   });
 });
