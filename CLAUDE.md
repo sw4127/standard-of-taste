@@ -45,6 +45,16 @@ RT-59a's actual constraint — that the Floor stays a short fixed set with no ac
 staircase stays in the Gym — is **unchanged**. What changed is one number inside it, and it is recorded here
 rather than left to contradict the shipped product (N3).
 
+*[FIGURES CORRECTED 2026-09-24 — the paragraph above is kept verbatim per the keep-intact rule. Its figures
+were measured at `39dc85f`. The same day, E7/S8 (`4c5bff0`, RT-139a) replaced the three swapped labels, which
+reshuffles the simulation, and re-measured; the paragraph was never updated. The figures below are the ones
+`src/analytics/prestige-budget.test.ts` regenerates into `docs/analytics/e6-prestige.txt` on every run, and that
+test fails if this line and its own table disagree. The conclusion stands: ~8 minutes, bought for precision.]*
+
+**Prestige precision, as measured:** at 8 scored clips SD 3.73 points, verdict agreement 89.0%, near-the-line
+73.0%; at 14 scored clips SD 2.57 points, verdict agreement 92.7%, near-the-line 79.9%. Simulated, zero real
+responses (N3).
+
 **Why (N2/N3):** revenue was never the point (memo C4 — revenue = proof of viability, not income), and a paywall on the training loop would have made the honest deliverable — *does your ear actually move* — the thing behind the wall. Any user-facing copy still promising a paid tier is a false claim and must be fixed on sight (this ruling's first casualty was `CALIBRATION_PHASE_LINE`).
 
 ### D1 amendment — a SCOPED suspension, for one named surface (owner-approved 2026-09-16, PM rulings RT-Z5 (b) / RT-Z9 (a) / RT-Z10 (a))
@@ -122,6 +132,17 @@ Appended, not overwritten. It names **one more surface** where D1 is suspended, 
 > This reading speaks to you about what your recent plays might mean for you. It names patterns and offers readings; which one is right, if either, is yours to say. The hearing tests describe only what you did.
 
 **What it cost, stated rather than glossed.** The product's front door now speaks about the person, where for two months it only measured them, and the one kind of sentence this project could once say it never printed — a sentence about who you might be — is now its main surface. It is held by a register and a test rather than by the absence of the thing, which is a weaker kind of guarantee. And the person it speaks to is fictional: the reading runs on three illustrative listeners (BA-8), so what a reviewer tries is the core as its intended user would meet it, on plays that belong to nobody.
+
+*[STATEMENT AMENDED 2026-09-24, owner ruling on the Cowork copy return's A1 — the statement above is kept
+verbatim per the keep-intact rule. It said "what your recent plays might mean for you", and the plays are not
+the visitor's: they belong to one of three illustrative listeners (BA-8), as the paragraph above says. A
+sentence whose only job is to say truthfully what the surface does was false (N3). The suspension of D1 for
+`/reading` is not changed by this stamp; the statement below governs, because
+`src/content/reading/statement.test.ts` reads the LAST statement marked for the reading.]*
+
+**On-surface statement for the reading, amended 2026-09-24, rendered VERBATIM:**
+
+> This reading speaks to you about what a listener's recent plays might mean. It names patterns and offers readings; which one is right, if either, is yours to say. The hearing tests describe only what you did.
 
 ### D3 amendment — the reading is the flagship (owner-approved 2026-09-23, ruling BA-6)
 Appended, not overwritten. Amends **D3 only**; D1, D2, D4, D5, D6 and N1–N3 are untouched by it. The ruling: `docs/rt-answers-2026-09-23-audit.md`.

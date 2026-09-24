@@ -70,7 +70,7 @@ BA-12), which is now the newest rulings of record.
 |---|---|---|
 | **1** | `docs/blueprint.md`, its parser, the copy registry and its guard | **done** 2026-09-23 |
 | **2** | Every document that states the ideas, stamped; the BA rulings recorded | **done** 2026-09-23 |
-| **3** | The snack retired, and every model-written sentence with it (BA-7, BA-10) | **done** 2026-09-23 |
+| **3** | The snack retired, and every model-written sentence with it (BA-7, BA-10) | **done** 2026-09-23. **One exemption, owner ruling 2026-09-24 (option a):** the brief's done-when says no "$3.99" renders anywhere, and `/method`'s refusal "The $3.99 consumer product" does. It is the record of the killed product, not an offer, and stays. `site-terms.test.tsx` holds the price to that refusal and nowhere else |
 | **4** | The reading's content and engine: three illustrative listeners (BA-8) | **done** 2026-09-23 |
 | **5** | `/reading`: the reading, the prompt and the mock creation screen (BA-6, BA-11) | **done** 2026-09-23 |
 | **6** | `/company`: the business case, metric tree and test plan, illustrative (BA-9) | **done** 2026-09-23 |

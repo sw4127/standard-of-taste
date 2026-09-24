@@ -42,6 +42,11 @@
  *      n= 8 scored  5.1 min  SD 3.65  agree 89.2%  near-line 72.8%
  *      n=14 scored  8.1 min  SD 2.58  agree 92.7%  near-line 80.0%
  *
+ * Those two lines are the 39dc85f run. E7/S8 (RT-139a) replaced the swapped
+ * labels the same day and the current run reads SD 3.73 / 89.0% / 73.0% at 8
+ * and 2.57 / 92.7% / 79.9% at 14; `docs/analytics/e6-prestige.txt` is the
+ * record, and CLAUDE.md's figures are held to it below (2026-09-24).
+ *
  * BETTER THAN THE EXTRAPOLATION PREDICTED. 11.02/sqrt(14) forecast SD 2.94; the
  * measurement is 2.58, and the fitted constant over the longer curve is 10.30
  * rather than 11.02. The old projections are kept above rather than edited,
@@ -75,7 +80,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { BIAS_CLIPS } from "@/content/bias/items";
 import { BIAS_SWAYED_AT, BIAS_CONTRARIAN_AT, computeBiasResult } from "@/engine/bias";
 import { assignBiasParams, simulateBias, simulatePersons, DEFAULT_PERSON_MODEL } from "./simulate";
@@ -242,6 +247,24 @@ describe("E6/S6 — minutes in, verdict accuracy out [SIMULATED]", () => {
         }),
       ].join(NL),
     );
+
+    // CLAUDE.md PRINTS THESE FIGURES, AND PRINTED STALE ONES FOR A MONTH (2026-09-24).
+    // The Floor-length amendment quoted the 39dc85f run; E7/S8 re-measured the
+    // same day and nothing compared the two. The constitution's newest figures
+    // live on one marked line, and they must be this table's rows at 8 and 14.
+    const constitution = readFileSync("CLAUDE.md", "utf8");
+    const marker = "**Prestige precision, as measured:**";
+    const at = constitution.lastIndexOf(marker);
+    expect(at, `CLAUDE.md has no "${marker}" line`).toBeGreaterThan(-1);
+    const printed = constitution.slice(at + marker.length, constitution.indexOf("Simulated", at)).match(/\d+(?:\.\d+)?/g);
+    const row = (n: number) => rows.find((r) => r.n === n)!;
+    const measured = [8, 14].flatMap((n) => [
+      String(n),
+      row(n).sd.toFixed(2),
+      (row(n).agree * 100).toFixed(1),
+      (row(n).near * 100).toFixed(1),
+    ]);
+    expect(printed, "CLAUDE.md's Prestige precision figures differ from docs/analytics/e6-prestige.txt").toEqual(measured);
 
     // ---- the conclusions, pinned ----
 

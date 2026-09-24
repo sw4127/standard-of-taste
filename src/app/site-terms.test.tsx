@@ -183,3 +183,24 @@ describe("the inherited metadata names the product that ships", () => {
   });
 });
 
+
+/**
+ * "$3.99" RENDERS IN ONE PLACE, AND IT IS A RECORD (owner ruling 2026-09-24, option a).
+ *
+ * The blueprint build's Part 3 was done when no "$3.99" rendered anywhere. One
+ * does, on `/method`: the refusal that records the killed consumer product by
+ * its price. It is history, not an offer, and the owner ruled it stays; the
+ * exemption is recorded on Part 3's row in `docs/queue-of-record.md`. This holds
+ * the exemption to exactly that refusal, so a price cannot return anywhere else.
+ */
+describe("the retired price renders only as /method's record of it", () => {
+  const REFUSAL = /the \$3\.99 consumer product|a \$3\.99 impulse product/gi;
+
+  it("appears on /method, inside the refusal, and nowhere else on the site", () => {
+    const hits = site.pages
+      .map((p) => ({ route: p.route, text: [textOf(p.html), ...p.meta].join("\n") }))
+      .filter((p) => p.text.includes("$3.99"));
+    expect(hits.map((p) => p.route)).toEqual(["/method"]);
+    expect(hits[0].text.replace(REFUSAL, "")).not.toContain("$3.99");
+  });
+});

@@ -8,4 +8,4 @@
  * lives by. To change it, change the amendment.
  */
 export const READING_STATEMENT =
-  "This reading speaks to you about what your recent plays might mean for you. It names patterns and offers readings; which one is right, if either, is yours to say. The hearing tests describe only what you did.";
+  "This reading speaks to you about what a listener's recent plays might mean. It names patterns and offers readings; which one is right, if either, is yours to say. The hearing tests describe only what you did.";
