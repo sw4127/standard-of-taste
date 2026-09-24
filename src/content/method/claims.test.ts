@@ -1,5 +1,7 @@
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   METHOD_CLAIMS,
@@ -349,16 +351,27 @@ describe("the verifier catches what it exists to catch", () => {
   /**
    * The specimen that motivated the tracked-file rule: a real, correct,
    * readable document that exists on this machine and is not in the repository.
+   *
+   * WRITTEN BY THE TEST, NOT BORROWED (2026-09-24). The first specimen was
+   * docs/redirection-blueprint-2026-08-26.md, a document untracked on purpose —
+   * so it exists only on the owner's machine, and on a fresh clone this test
+   * failed for everybody else, a reviewer running the suite included. The
+   * pre-push gate never saw it, because it runs where the file is.
    */
   it("catches a citation to a real but untracked file", () => {
-    const untracked = "docs/redirection-blueprint-2026-08-26.md";
-    expect(existsSync(untracked), "specimen missing — pick another untracked doc").toBe(true);
-    expect(tracked.has(untracked), "specimen is tracked now — the rule needs a new specimen").toBe(
-      false,
-    );
-    expect(check({ ...real, sources: [{ path: untracked, anchor: "Redirection Blueprint" }] })).toContain(
-      "unciteable-source",
-    );
+    const dir = mkdtempSync(join(tmpdir(), "claims-specimen-"));
+    const untracked = join(dir, "redirection-blueprint.md").split("\\").join("/");
+    try {
+      writeFileSync(untracked, "# Redirection Blueprint\n\nA real document, correct and readable, not in the repository.\n");
+      expect(existsSync(untracked)).toBe(true);
+      expect(tracked.has(untracked)).toBe(false);
+      const found = check({ ...real, sources: [{ path: untracked, anchor: "Redirection Blueprint" }] });
+      expect(found).toContain("unciteable-source");
+      // The anchor IS in the file: what the rule catches is where it lives, not what it says.
+      expect(flat(readFileSync(untracked, "utf8")).includes(flat("Redirection Blueprint"))).toBe(true);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 
   it("reads across a line break, because the documents hard-wrap", () => {

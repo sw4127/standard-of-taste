@@ -9,7 +9,8 @@
     "lint": "eslint",
     "prepare": "node scripts/install-hooks.mjs",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:fresh": "node scripts/fresh-clone-check.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
