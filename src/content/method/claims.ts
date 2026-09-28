@@ -701,6 +701,9 @@ export function verifiableEntries(): MethodClaim[] {
       text: `${r.what} ${r.reversal} ${r.bought} ${r.price}`,
       sources: r.sources,
     })),
+    // How the agents are run: the lede and each tool, checked like every other entry.
+    METHOD_AGENTS_LEDE,
+    ...METHOD_AGENTS.map((t) => ({ id: t.id, kind: t.kind, text: `${t.name} ${t.text}`, sources: t.sources })),
   ];
 }
 
@@ -880,3 +883,122 @@ export function sectionClaims(section: MethodSection): MethodClaim[] {
     return claim;
   });
 }
+
+/**
+ * HOW THE AGENTS ARE RUN (2026-09-28, AI tooling brief Part 6; serves BA-12).
+ *
+ * BA-12 put the account of building with an AI engineer in the repository and on
+ * this page, not in the product. Until now this page described the rules and
+ * never showed the machinery that enforces them. Each entry here names a tracked
+ * file AND one commit whose message shows the thing in use, because a tool that
+ * exists and was never used is decoration (N2).
+ *
+ * THE SAME LEDGER, NOT A SECOND ONE. Every entry, and the lede, joins
+ * `verifiableEntries()`, so the verifier that checks every other citation on this
+ * page checks these: the file is tracked, the passage is in it, and a quoted entry
+ * shows its quotation. `claims.test.ts` adds one check only these carry: the
+ * commit exists and its message contains the passage named, whitespace collapsed.
+ *
+ * PATHS AND HASHES, NOT URLS, by this page's own rule (see `page.tsx`): a named
+ * file and a commit hash resolve in any clone, and a link to a host can 404.
+ */
+export interface MethodAgentTool {
+  id: string;
+  /** The heading: what the thing is, in plain words. */
+  name: string;
+  kind: ClaimKind;
+  text: string;
+  sources: ClaimSource[];
+  /**
+   * One commit whose message shows it at work on a slice, and a passage from that
+   * message. Not the commit that created it: a tool's birth is not its use
+   * (red-team subagent). `sameCommitAsAdded` is the one honest exception, for a part
+   * whose first use is the commit that added it; the page then says "added and first
+   * used", and `claims.test.ts` checks the flag against git either way.
+   */
+  inUse: { commit: string; anchor: string; sameCommitAsAdded?: true };
+}
+
+export const METHOD_AGENTS_HEADING = "How the agents are run";
+
+export const METHOD_AGENTS_LEDE: MethodClaim = {
+  id: "agents-lede",
+  kind: "quoted",
+  text:
+    "This project is built with an AI engineer, and the owner ruled where that story is told: the \"I harness AI\" pitch lives in the repository and on /method, not in the product. These are the five working parts, each with the file that holds it and one later commit whose message shows it at work.",
+  sources: [
+    {
+      path: "docs/rt-answers-2026-09-23-audit.md",
+      anchor: "The \"I harness AI\" pitch lives in the repository and on /method, not in the product",
+    },
+  ],
+};
+
+export const METHOD_AGENTS: MethodAgentTool[] = [
+  {
+    id: "agents-constitution",
+    name: "A constitution the engineer is held to",
+    kind: "quoted",
+    text:
+      "Every session starts from one written constitution, and its first standing rule is about the engineer: every proposal must cite the memo decision (D1–D6) or guardrail (N1–N3) it serves.",
+    sources: [
+      {
+        path: "CLAUDE.md",
+        anchor: "Every proposal must cite the memo decision (D1–D6) or guardrail (N1–N3) it serves",
+      },
+    ],
+    inUse: { commit: "ef33160", anchor: "Serves BA-12, the Blueprint of record" },
+  },
+  {
+    id: "agents-hooks",
+    name: "Hooks that enforce the loop",
+    kind: "quoted",
+    text:
+      "Git refuses a code commit that does not carry the slice's north star, three red-team findings and a confession. It checks presence, not honesty. A second hook, run by Claude Code, is the stop between slices: a git commit arms the latch, and file edits are refused until the owner replies. It stands down while the owner's standing auto-advance is in force.",
+    sources: [
+      { path: ".githooks/commit-msg", anchor: "It checks PRESENCE, not honesty." },
+      { path: ".claude/hooks/slice-latch.py", anchor: "a `git commit` ARMS the latch" },
+    ],
+    inUse: { commit: "9523984", anchor: "Confession: the mixed-note rule is pinned, not fixed." },
+  },
+  {
+    id: "agents-skills",
+    name: "Skills that quote their rules",
+    kind: "quoted",
+    text:
+      "Three skills load a procedure into a session at the moment it is needed. The red-team skill packages a procedure every session here already follows from prose; the session close packages the closing rules; the blueprint check packages the blueprint rule of record.",
+    sources: [
+      {
+        path: ".claude/skills/red-team-slice/SKILL.md",
+        anchor: "Packages a procedure every session here already follows from prose.",
+      },
+      { path: ".claude/skills/close-session/SKILL.md", anchor: "Packages the closing rules" },
+      { path: ".claude/skills/blueprint-check/SKILL.md", anchor: "Packages the blueprint rule of record." },
+    ],
+    inUse: { commit: "9523984", anchor: "Skill: red-team-slice (invoked; step 2 dispatched the subagent on this diff)" },
+  },
+  {
+    id: "agents-reviewer",
+    name: "A reviewer that cannot edit",
+    kind: "quoted",
+    text:
+      "The red-team skill hands a slice's staged change to a second agent, which returns up to three findings and cannot change the code: you report; the main session fixes. It has no tool that writes because a hook meant to keep it read-only was tested and did not fire, and a guard that did not fire cannot be the thing that makes a reviewer read-only.",
+    sources: [
+      { path: ".claude/agents/red-team-reviewer.md", anchor: "You report; the main session fixes." },
+      {
+        path: ".claude/agents/red-team-reviewer.md",
+        anchor: "A guard that did not fire cannot be the thing that makes a reviewer read-only",
+      },
+    ],
+    inUse: { commit: "9523984", anchor: "Red-team: (subagent) the constitution's own citation forms were not on the list" },
+  },
+  {
+    id: "agents-record-server",
+    name: "A server that quotes the record",
+    kind: "quoted",
+    text:
+      "A small read-only server answers a session's questions about the blueprint, the rulings and the abandoned hypotheses with the files' own words, because a tool that returns the file's own text cannot paraphrase it.",
+    sources: [{ path: "packages/record-mcp/README.md", anchor: "A tool that returns the file's own text cannot paraphrase it." }],
+    inUse: { commit: "ef33160", anchor: "MCP: suite_status called over stdio", sameCommitAsAdded: true },
+  },
+];

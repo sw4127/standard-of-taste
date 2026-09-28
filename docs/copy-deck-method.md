@@ -744,4 +744,133 @@ What happened next is the part that is harder to read, and this reading is mine 
 
 ---
 
-**26 numbered blocks.** Regenerate with `node scripts/export-method-deck.mjs > docs/copy-deck-method.md` after any ledger change.
+## 6. How the agents are run
+
+The account of building with an AI engineer, which BA-12 puts here rather than in the product. The heading is free prose. The lede and each part are QUOTED blocks: each part also names one commit, and a test opens that commit and checks its message says what the page implies.
+
+**Section heading:**
+
+> How the agents are run
+
+### 27. `agents-lede` (the section's lede)
+
+**Kind:** QUOTED — the page presents this as the record speaking
+
+**Cites:** docs/rt-answers-2026-09-23-audit.md
+
+**LOAD-BEARING — these exact words are verified against the cited file and a test fails if they change:**
+
+- “The "I harness AI" pitch lives in the repository and on /method, not in the product”
+
+Everything else in the block is the engineer's own connective prose and is free.
+
+```
+This project is built with an AI engineer, and the owner ruled where that story is told: the "I harness AI" pitch lives in the repository and on /method, not in the product. These are the five working parts, each with the file that holds it and one later commit whose message shows it at work.
+```
+
+### 28. `agents-constitution`
+
+**Kind:** QUOTED — the page presents this as the record speaking
+
+**Cites:** CLAUDE.md
+
+**Heading on screen (free prose):** A constitution the engineer is held to
+
+**Line under the sources:** at work in commit ef33160 (its message must contain “Serves BA-12, the Blueprint of record”)
+
+**LOAD-BEARING — these exact words are verified against the cited file and a test fails if they change:**
+
+- “Every proposal must cite the memo decision (D1–D6) or guardrail (N1–N3) it serves”
+
+Everything else in the block is the engineer's own connective prose and is free.
+
+```
+Every session starts from one written constitution, and its first standing rule is about the engineer: every proposal must cite the memo decision (D1–D6) or guardrail (N1–N3) it serves.
+```
+
+### 29. `agents-hooks`
+
+**Kind:** QUOTED — the page presents this as the record speaking
+
+**Cites:** .githooks/commit-msg · .claude/hooks/slice-latch.py
+
+**Heading on screen (free prose):** Hooks that enforce the loop
+
+**Line under the sources:** at work in commit 9523984 (its message must contain “Confession: the mixed-note rule is pinned, not fixed.”)
+
+**LOAD-BEARING — these exact words are verified against the cited file and a test fails if they change:**
+
+- “It checks PRESENCE, not honesty”
+
+Everything else in the block is the engineer's own connective prose and is free.
+
+```
+Git refuses a code commit that does not carry the slice's north star, three red-team findings and a confession. It checks presence, not honesty. A second hook, run by Claude Code, is the stop between slices: a git commit arms the latch, and file edits are refused until the owner replies. It stands down while the owner's standing auto-advance is in force.
+```
+
+### 30. `agents-skills`
+
+**Kind:** QUOTED — the page presents this as the record speaking
+
+**Cites:** .claude/skills/red-team-slice/SKILL.md · .claude/skills/close-session/SKILL.md · .claude/skills/blueprint-check/SKILL.md
+
+**Heading on screen (free prose):** Skills that quote their rules
+
+**Line under the sources:** at work in commit 9523984 (its message must contain “Skill: red-team-slice (invoked; step 2 dispatched the subagent on this diff)”)
+
+**LOAD-BEARING — these exact words are verified against the cited file and a test fails if they change:**
+
+- “Packages a procedure every session here already follows from prose”
+- “Packages the closing rules”
+- “Packages the blueprint rule of record”
+
+Everything else in the block is the engineer's own connective prose and is free.
+
+```
+Three skills load a procedure into a session at the moment it is needed. The red-team skill packages a procedure every session here already follows from prose; the session close packages the closing rules; the blueprint check packages the blueprint rule of record.
+```
+
+### 31. `agents-reviewer`
+
+**Kind:** QUOTED — the page presents this as the record speaking
+
+**Cites:** .claude/agents/red-team-reviewer.md
+
+**Heading on screen (free prose):** A reviewer that cannot edit
+
+**Line under the sources:** at work in commit 9523984 (its message must contain “Red-team: (subagent) the constitution's own citation forms were not on the list”)
+
+**LOAD-BEARING — these exact words are verified against the cited file and a test fails if they change:**
+
+- “You report; the main session fixes”
+- “A guard that did not fire cannot be the thing that makes a reviewer read-only”
+
+Everything else in the block is the engineer's own connective prose and is free.
+
+```
+The red-team skill hands a slice's staged change to a second agent, which returns up to three findings and cannot change the code: you report; the main session fixes. It has no tool that writes because a hook meant to keep it read-only was tested and did not fire, and a guard that did not fire cannot be the thing that makes a reviewer read-only.
+```
+
+### 32. `agents-record-server`
+
+**Kind:** QUOTED — the page presents this as the record speaking
+
+**Cites:** packages/record-mcp/README.md
+
+**Heading on screen (free prose):** A server that quotes the record
+
+**Line under the sources:** added and first used in commit ef33160 (its message must contain “MCP: suite_status called over stdio”)
+
+**LOAD-BEARING — these exact words are verified against the cited file and a test fails if they change:**
+
+- “A tool that returns the file's own text cannot paraphrase it”
+
+Everything else in the block is the engineer's own connective prose and is free.
+
+```
+A small read-only server answers a session's questions about the blueprint, the rulings and the abandoned hypotheses with the files' own words, because a tool that returns the file's own text cannot paraphrase it.
+```
+
+---
+
+**32 numbered blocks.** Regenerate with `node scripts/export-method-deck.mjs > docs/copy-deck-method.md` after any ledger change.

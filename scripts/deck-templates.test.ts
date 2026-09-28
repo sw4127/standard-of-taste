@@ -187,7 +187,8 @@ const COVERED = [
   // (the snack), is three ids — `reversal`, `bought`, `price`.
   // 48 -> 51 later on 2026-09-23: the THIRD reversal,
   // `reversal-snack-retired-reading-flagship` (BA-7, BA-6), three ids.
-  { part: 4, name: "the /method page", ids: 51 },
+  // 51 -> 57 (2026-09-28): "How the agents are run" added six ids, measured by this test (BA-12).
+  { part: 4, name: "the /method page", ids: 57 },
 ];
 
 describe.each(COVERED)("Part $part, $name, shows the copy the product has", ({ part, ids }) => {

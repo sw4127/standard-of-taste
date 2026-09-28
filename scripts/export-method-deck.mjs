@@ -32,6 +32,9 @@ const QUOTE_CLOSE = String.fromCharCode(8221);
  */
 const script = `
 import {
+  METHOD_AGENTS,
+  METHOD_AGENTS_HEADING,
+  METHOD_AGENTS_LEDE,
   METHOD_CLAIMS,
   METHOD_FINDINGS,
   METHOD_REFUSALS,
@@ -58,6 +61,7 @@ describe("export", () => {
       findings: METHOD_FINDINGS,
       sections: METHOD_SECTIONS,
       asOf: METHOD_AS_OF,
+      agents: { heading: METHOD_AGENTS_HEADING, lede: METHOD_AGENTS_LEDE, tools: METHOD_AGENTS },
       // Spelled where the content modules are in scope. The exporter itself is
       // plain .mjs and cannot import TypeScript behind a path alias.
       refusalCount: numberWord(METHOD_REFUSALS.length),
@@ -94,7 +98,7 @@ if (!match) {
   console.error(raw.slice(-4000));
   throw new Error("export-method-deck: the ledger produced no deck");
 }
-const { claims, refusals, reversals, findings, sections, asOf, prose, refusalCount, reversalCount } =
+const { claims, refusals, reversals, findings, sections, asOf, prose, refusalCount, reversalCount, agents } =
   JSON.parse(match[1]);
 
 const L = [];
@@ -423,6 +427,35 @@ for (const f of findings) {
   pairBlock(n, `\`${f.id}\``, f, [["finding", f.finding], ["consequence", f.consequence]], [
     ["Date line on screen (free prose)", `${f.date} · broke ${f.rule}`],
     ["Second paragraph opens", "“Since then. …”"],
+  ]);
+}
+
+w("---");
+w();
+
+/*
+ * HOW THE AGENTS ARE RUN (2026-09-28, BA-12). Appended, not inserted: deck ids
+ * are positional, so a section added mid-file would renumber every block after it.
+ */
+w(`## 6. ${agents.heading}`);
+w();
+w(
+  "The account of building with an AI engineer, which BA-12 puts here rather than in the product. " +
+    "The heading is free prose. The lede and each part are QUOTED blocks: each part also names one " +
+    "commit, and a test opens that commit and checks its message says what the page implies.",
+);
+w();
+template([agents.heading], "**Section heading:**");
+n += 1;
+block(n, `\`${agents.lede.id}\` (the section's lede)`, agents.lede, agents.lede.text, []);
+for (const t of agents.tools) {
+  n += 1;
+  block(n, `\`${t.id}\``, t, t.text, [
+    ["Heading on screen (free prose)", t.name],
+    [
+      "Line under the sources",
+      `${t.inUse.sameCommitAsAdded ? "added and first used in commit" : "at work in commit"} ${t.inUse.commit} (its message must contain “${t.inUse.anchor}”)`,
+    ],
   ]);
 }
 

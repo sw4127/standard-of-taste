@@ -1,9 +1,11 @@
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
+  METHOD_AGENTS,
+  METHOD_AGENTS_LEDE,
   METHOD_CLAIMS,
   METHOD_FINDINGS,
   METHOD_SECTIONS,
@@ -308,6 +310,74 @@ describe("the /method claim ledger", () => {
         "was reworded — update the anchor deliberately — or the claim is now unsupported " +
         "and must come off the page:\n" + missing.join("\n"),
     ).toEqual([]);
+  });
+
+  /**
+   * "IN USE" IS A CLAIM ABOUT A COMMIT, AND THE COMMIT IS OPENED (2026-09-28).
+   *
+   * Each tool in "How the agents are run" names one commit whose message shows it
+   * used. The hash must resolve in this clone and the message must contain the
+   * passage, whitespace collapsed (commit messages wrap). A hash that was rebased
+   * away, or a message that never said it, fails here rather than on the page.
+   */
+  // A shallow clone holds no history to open. Said, rather than failed or passed.
+  const shallow = execFileSync("git", ["rev-parse", "--is-shallow-repository"], { encoding: "utf8" }).trim() === "true";
+
+  it.skipIf(shallow)("opens every commit the agents section names and finds its passage", () => {
+    expect(METHOD_AGENTS.length).toBe(5);
+    const bad: string[] = [];
+    for (const t of METHOD_AGENTS) {
+      let body = "";
+      try {
+        body = execFileSync("git", ["log", "-1", "--format=%B", `${t.inUse.commit}^{commit}`], { encoding: "utf8" });
+      } catch {
+        bad.push(`${t.id}: commit ${t.inUse.commit} is not in this repository`);
+        continue;
+      }
+      if (!flat(body).includes(flat(t.inUse.anchor))) bad.push(`${t.id}: ${t.inUse.commit}'s message lacks "${t.inUse.anchor}"`);
+    }
+    expect(bad).toEqual([]);
+  });
+
+  /*
+   * A TOOL'S BIRTH IS NOT ITS USE (2026-09-28, red-team subagent). Four of five
+   * entries first cited the commit that created the tool. The commit named must not
+   * be the one that added the entry's first source, unless the entry says so
+   * (`sameCommitAsAdded`), in which case the page says "added and first used".
+   */
+  it.skipIf(shallow)("names a commit that shows use, not the one that created the tool, unless it says so", () => {
+    const bad: string[] = [];
+    for (const t of METHOD_AGENTS) {
+      const added = execFileSync("git", ["log", "--diff-filter=A", "--format=%h", "--", t.sources[0].path], { encoding: "utf8" })
+        .trim()
+        .split(/\r?\n/)
+        .at(-1)!;
+      const same = added.startsWith(t.inUse.commit) || t.inUse.commit.startsWith(added);
+      if (same !== !!t.inUse.sameCommitAsAdded) {
+        bad.push(`${t.id}: ${t.sources[0].path} was added in ${added}; cites ${t.inUse.commit}; sameCommitAsAdded ${!!t.inUse.sameCommitAsAdded}`);
+      }
+    }
+    expect(bad).toEqual([]);
+  });
+
+  /*
+   * EVERY SOURCE AN AGENTS ENTRY CITES IS QUOTED IN IT. The ledger's own rule is
+   * "some source", which let a sentence about a switched-off latch ride on a
+   * neighbouring quotation (red-team subagent). This section holds the stricter rule.
+   */
+  it("quotes, in each agents entry, every source it cites", () => {
+    const bad = [METHOD_AGENTS_LEDE, ...METHOD_AGENTS].flatMap((t) =>
+      t.sources
+        .filter((s) => !flat(t.text).toLowerCase().includes(flat(s.anchor).replace(/[.,;:]+$/, "").toLowerCase()))
+        .map((s) => `${t.id} cites ${s.path} but does not quote "${s.anchor}"`),
+    );
+    expect(bad).toEqual([]);
+  });
+
+  it("says the number of skills the repository holds", () => {
+    const skills = readdirSync(".claude/skills").filter((d) => existsSync(join(".claude/skills", d, "SKILL.md")));
+    const entry = METHOD_AGENTS.find((t) => t.id === "agents-skills")!;
+    expect(entry.text).toMatch(new RegExp(`^${["Zero", "One", "Two", "Three", "Four", "Five"][skills.length]} skills`));
   });
 });
 

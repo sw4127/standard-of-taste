@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
+  METHOD_AGENTS,
   METHOD_CLAIMS,
   METHOD_FINDINGS,
   METHOD_REFUSALS,
@@ -56,6 +57,8 @@ const RENDERED = [
    * the record as easily as a quotation of it.
    */
   { collection: "METHOD_REVERSALS", mapExpr: "METHOD_REVERSALS.map(", binding: "r", prose: "reversal", entries: METHOD_REVERSALS.length },
+  /* How the agents are run (2026-09-28): every part is quoted today, and carries the mark anyway. */
+  { collection: "METHOD_AGENTS", mapExpr: "METHOD_AGENTS.map(", binding: "t", prose: "text", entries: METHOD_AGENTS.length },
 ];
 
 describe("the /method page marks every inference it renders", () => {

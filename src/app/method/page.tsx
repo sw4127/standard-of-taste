@@ -11,6 +11,9 @@ import {
   type ProseLink,
 } from "@/content/method/prose";
 import {
+  METHOD_AGENTS,
+  METHOD_AGENTS_HEADING,
+  METHOD_AGENTS_LEDE,
   METHOD_AS_OF,
   METHOD_FINDINGS,
   METHOD_SECTIONS,
@@ -289,6 +292,30 @@ export default function MethodPage() {
                 {f.consequence}
               </p>
               <Sources sources={f.sources} />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* How the agents are run (BA-12). Each part names its file and one commit
+          that shows it in use: paths and hashes, never URLs, by this page's rule. */}
+      <section className="mt-14">
+        <h2 className="font-display text-2xl font-semibold" style={{ color: INK }}>
+          {METHOD_AGENTS_HEADING}
+        </h2>
+        {METHOD_AGENTS_LEDE.kind === "inferred" ? <InferenceMark /> : null}
+        <p className="mt-4 text-[15px] leading-relaxed text-neutral-300">{METHOD_AGENTS_LEDE.text}</p>
+        <Sources sources={METHOD_AGENTS_LEDE.sources} />
+        <div className="mt-6 space-y-10">
+          {METHOD_AGENTS.map((t) => (
+            <div key={t.id} className="border-l-2 border-white/12 pl-5">
+              <h3 className="font-display text-lg font-semibold text-white">{t.name}</h3>
+              {t.kind === "inferred" ? <InferenceMark /> : null}
+              <p className="mt-3 text-[15px] leading-relaxed text-neutral-300">{t.text}</p>
+              <Sources sources={t.sources} />
+              <p className="mt-1 font-mono text-[11px] leading-relaxed text-muted">
+                {t.inUse.sameCommitAsAdded ? "added and first used in commit" : "at work in commit"} {t.inUse.commit}
+              </p>
             </div>
           ))}
         </div>

@@ -6,7 +6,7 @@ The writing pass is **Cowork's**, not the PM's and not engineering's. The decks 
 
 ## The state of it
 
-**13 of 39 surfaces in the decks have been through a pass.** Everything else below is the engineer's first draft, shipped and live.
+**13 of 40 surfaces in the decks have been through a pass.** Everything else below is the engineer's first draft, shipped and live.
 
 | Part | Surface | Pass |
 |---|---|---|
@@ -43,6 +43,7 @@ The writing pass is **Cowork's**, not the PM's and not engineering's. The decks 
 | 4 · The /method page | 3. The seven refusals | **never** |
 | 4 · The /method page | 4. The three reversals | **never** |
 | 4 · The /method page | 5. The finding against the project itself | **never** |
+| 4 · The /method page | 6. How the agents are run | **never** |
 | 5 · The reading | 1. The front door — `src/content/landing.ts` | Cowork, the reading's copy return, 2026-09-24 (`untracked; applied in 00f667b, 7edb693, 8ba2bcd, 83d55c4`) |
 | 5 · The reading | 2. The shared navigation — `src/content/site-nav.ts` | Cowork, the reading's copy return, 2026-09-24 (`untracked; applied in 00f667b, 7edb693, 8ba2bcd, 83d55c4`) |
 | 5 · The reading | 3. The reading page — `src/content/reading/copy.ts`, `statement.ts` | Cowork, the reading's copy return, 2026-09-24 (`untracked; applied in 00f667b, 7edb693, 8ba2bcd, 83d55c4`) |
