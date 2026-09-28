@@ -314,7 +314,7 @@ export default function MethodPage() {
               <p className="mt-3 text-[15px] leading-relaxed text-neutral-300">{t.text}</p>
               <Sources sources={t.sources} />
               <p className="mt-1 font-mono text-[11px] leading-relaxed text-muted">
-                {t.inUse.sameCommitAsAdded ? "added and first used in commit" : "at work in commit"} {t.inUse.commit}
+                at work in commit {t.inUse.commit}
               </p>
             </div>
           ))}

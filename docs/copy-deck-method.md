@@ -765,7 +765,7 @@ The account of building with an AI engineer, which BA-12 puts here rather than i
 Everything else in the block is the engineer's own connective prose and is free.
 
 ```
-This project is built with an AI engineer, and the owner ruled where that story is told: the "I harness AI" pitch lives in the repository and on /method, not in the product. These are the five working parts, each with the file that holds it and one later commit whose message shows it at work.
+This project is built with an AI engineer, and the owner ruled where that story is told: the "I harness AI" pitch lives in the repository and on /method, not in the product. These are the five working parts, each with the file that holds it and one later commit whose message shows it at work. A commit message proves the use was recorded, not that it happened; the files are there to check against.
 ```
 
 ### 28. `agents-constitution`
@@ -859,7 +859,7 @@ The red-team skill hands a slice's staged change to a second agent, which return
 
 **Heading on screen (free prose):** A server that quotes the record
 
-**Line under the sources:** added and first used in commit ef33160 (its message must contain “MCP: suite_status called over stdio”)
+**Line under the sources:** at work in commit b8c024f (its message must contain “MCP: rulings called for "BA-12", which returned the ruling verbatim”)
 
 **LOAD-BEARING — these exact words are verified against the cited file and a test fails if they change:**
 

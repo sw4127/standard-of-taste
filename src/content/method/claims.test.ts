@@ -342,19 +342,18 @@ describe("the /method claim ledger", () => {
   /*
    * A TOOL'S BIRTH IS NOT ITS USE (2026-09-28, red-team subagent). Four of five
    * entries first cited the commit that created the tool. The commit named must not
-   * be the one that added the entry's first source, unless the entry says so
-   * (`sameCommitAsAdded`), in which case the page says "added and first used".
+   * be the one that added the entry's first source, for any entry: the lede says
+   * every part has a later commit, and an exception would make that false.
    */
-  it.skipIf(shallow)("names a commit that shows use, not the one that created the tool, unless it says so", () => {
+  it.skipIf(shallow)("names a commit that shows use, never the one that created the tool", () => {
     const bad: string[] = [];
     for (const t of METHOD_AGENTS) {
       const added = execFileSync("git", ["log", "--diff-filter=A", "--format=%h", "--", t.sources[0].path], { encoding: "utf8" })
         .trim()
         .split(/\r?\n/)
         .at(-1)!;
-      const same = added.startsWith(t.inUse.commit) || t.inUse.commit.startsWith(added);
-      if (same !== !!t.inUse.sameCommitAsAdded) {
-        bad.push(`${t.id}: ${t.sources[0].path} was added in ${added}; cites ${t.inUse.commit}; sameCommitAsAdded ${!!t.inUse.sameCommitAsAdded}`);
+      if (added.startsWith(t.inUse.commit) || t.inUse.commit.startsWith(added)) {
+        bad.push(`${t.id}: cites ${t.inUse.commit}, the commit that added ${t.sources[0].path}`);
       }
     }
     expect(bad).toEqual([]);
@@ -372,6 +371,12 @@ describe("the /method claim ledger", () => {
         .map((s) => `${t.id} cites ${s.path} but does not quote "${s.anchor}"`),
     );
     expect(bad).toEqual([]);
+  });
+
+  it("says, in the lede, the number of parts it lists", () => {
+    // The refusals heading once said four above a list of six; this lede counts too.
+    const word = ["zero", "one", "two", "three", "four", "five", "six", "seven"][METHOD_AGENTS.length];
+    expect(METHOD_AGENTS_LEDE.text).toMatch(new RegExp(`\\bthe ${word} working parts\\b`));
   });
 
   it("says the number of skills the repository holds", () => {

@@ -911,12 +911,10 @@ export interface MethodAgentTool {
   sources: ClaimSource[];
   /**
    * One commit whose message shows it at work on a slice, and a passage from that
-   * message. Not the commit that created it: a tool's birth is not its use
-   * (red-team subagent). `sameCommitAsAdded` is the one honest exception, for a part
-   * whose first use is the commit that added it; the page then says "added and first
-   * used", and `claims.test.ts` checks the flag against git either way.
+   * message. Never the commit that created it: a tool's birth is not its use
+   * (red-team subagent), and `claims.test.ts` compares the two for every entry.
    */
-  inUse: { commit: string; anchor: string; sameCommitAsAdded?: true };
+  inUse: { commit: string; anchor: string };
 }
 
 export const METHOD_AGENTS_HEADING = "How the agents are run";
@@ -925,7 +923,7 @@ export const METHOD_AGENTS_LEDE: MethodClaim = {
   id: "agents-lede",
   kind: "quoted",
   text:
-    "This project is built with an AI engineer, and the owner ruled where that story is told: the \"I harness AI\" pitch lives in the repository and on /method, not in the product. These are the five working parts, each with the file that holds it and one later commit whose message shows it at work.",
+    "This project is built with an AI engineer, and the owner ruled where that story is told: the \"I harness AI\" pitch lives in the repository and on /method, not in the product. These are the five working parts, each with the file that holds it and one later commit whose message shows it at work. A commit message proves the use was recorded, not that it happened; the files are there to check against.",
   sources: [
     {
       path: "docs/rt-answers-2026-09-23-audit.md",
@@ -999,6 +997,6 @@ export const METHOD_AGENTS: MethodAgentTool[] = [
     text:
       "A small read-only server answers a session's questions about the blueprint, the rulings and the abandoned hypotheses with the files' own words, because a tool that returns the file's own text cannot paraphrase it.",
     sources: [{ path: "packages/record-mcp/README.md", anchor: "A tool that returns the file's own text cannot paraphrase it." }],
-    inUse: { commit: "ef33160", anchor: "MCP: suite_status called over stdio", sameCommitAsAdded: true },
+    inUse: { commit: "b8c024f", anchor: "MCP: rulings called for \"BA-12\", which returned the ruling verbatim" },
   },
 ];

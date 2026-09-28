@@ -454,7 +454,7 @@ for (const t of agents.tools) {
     ["Heading on screen (free prose)", t.name],
     [
       "Line under the sources",
-      `${t.inUse.sameCommitAsAdded ? "added and first used in commit" : "at work in commit"} ${t.inUse.commit} (its message must contain “${t.inUse.anchor}”)`,
+      `at work in commit ${t.inUse.commit} (its message must contain “${t.inUse.anchor}”)`,
     ],
   ]);
 }
