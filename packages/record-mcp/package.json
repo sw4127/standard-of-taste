@@ -1,0 +1,10 @@
+{
+  "name": "record-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A read-only stdio MCP server over this repository's project record: the blueprint, the rulings, the falsified-hypotheses registry and the last recorded suite count.",
+  "bin": { "record-mcp": "src/server.ts" },
+  "engines": { "node": ">=24" },
+  "$comment": "Dependencies are the root package's (@modelcontextprotocol/sdk, zod): this package runs from inside the repository it reads, and is never published."
+}

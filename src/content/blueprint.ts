@@ -21,64 +21,17 @@
 import { readFileSync } from "node:fs";
 import { isAbsolute, join } from "node:path";
 
-export const BLUEPRINT_PATH = "docs/blueprint.md";
-export const BEGIN_MARKER = "<!-- BLUEPRINT:BEGIN";
-export const END_MARKER = "<!-- BLUEPRINT:END -->";
-
-export type BpId = `BP-${string}`;
-
-/** The label N3 requires a reader to see beside each premise. */
-export type BpLabel = "EVIDENCED" | "ASSUMED" | "INFERENCE";
-
-export interface BpStatement {
-  id: BpId;
-  text: string;
-  /** The italic lines under the statement, asterisks removed, one entry per line. */
-  noteLines: string[];
-  /** `noteLines` joined by a space; "" when there is none. */
-  note: string;
-  /** The first of EVIDENCED / ASSUMED / INFERENCE the note names, or null (a ruling, a position). */
-  label: BpLabel | null;
-  /**
-   * The label as the note words it, qualifier included ("EVIDENCED, qualitatively"),
-   * or null. What a reader sees: a bare "EVIDENCED" beside a premise resting on
-   * interviews reads as the same standard as one resting on a journal (N3).
-   */
-  labelText: string | null;
-}
-
-export interface Blueprint {
-  statements: BpStatement[];
-  BP: Record<BpId, string>;
-}
-
-const LINE = /^\*\*(BP-[A-Z0-9-]+)\*\* · (.+)$/;
-/** An italic line: opens and closes on one asterisk. A markdown bullet ("* item") is not one. */
-const NOTE_LINE = /^\*[^*\s].*\*$/;
-const LABEL_TEXT = /\b(EVIDENCED|ASSUMED|INFERENCE)(, [a-z]+(?=[.;:)]))?/;
-
-/** Pure: the statements between the markers of a blueprint file's text. */
-export function parseBlueprint(source: string): Blueprint {
-  const lines = source.split(/\r?\n/);
-  const begin = lines.findIndex((l) => l.startsWith(BEGIN_MARKER));
-  const end = lines.findIndex((l) => l.startsWith(END_MARKER));
-  const statements: BpStatement[] = [];
-  if (begin < 0 || end < begin) return { statements, BP: {} };
-  for (let i = begin + 1; i < end; i++) {
-    const m = LINE.exec(lines[i]);
-    if (!m) continue;
-    const noteLines: string[] = [];
-    for (let j = i + 1; j < end && NOTE_LINE.test(lines[j]); j++) {
-      noteLines.push(lines[j].replace(/^\*|\*$/g, "").trim());
-    }
-    const note = noteLines.join(" ");
-    const found = LABEL_TEXT.exec(note);
-    const label = (found?.[1] ?? null) as BpLabel | null;
-    statements.push({ id: m[1] as BpId, text: m[2].trim(), noteLines, note, label, labelText: found?.[0] ?? null });
-  }
-  const BP = Object.fromEntries(statements.map((s) => [s.id, s.text])) as Record<BpId, string>;
-  return { statements, BP };
-}
+export {
+  BLUEPRINT_PATH,
+  BEGIN_MARKER,
+  END_MARKER,
+  parseBlueprint,
+  type Blueprint,
+  type BpId,
+  type BpLabel,
+  type BpStatement,
+} from "./blueprint-parse";
+import { BLUEPRINT_PATH, parseBlueprint, type Blueprint, type BpId, type BpStatement } from "./blueprint-parse";
 
 export function loadBlueprint(path = BLUEPRINT_PATH): Blueprint {
   return parseBlueprint(readFileSync(isAbsolute(path) ? path : join(process.cwd(), path), "utf8"));

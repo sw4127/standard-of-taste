@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "project-record": {
+      "command": "node",
+      "args": [
+        "--disable-warning=MODULE_TYPELESS_PACKAGE_JSON",
+        "--import",
+        "./packages/record-mcp/src/no-network.mjs",
+        "packages/record-mcp/src/server.ts"
+      ]
+    }
+  }
+}

@@ -118,7 +118,9 @@ node scripts/clip-pipeline/index.mjs validate    # Layer A over every shipped pa
 
 `npm install` also points git at `.githooks/`, so the suite runs before any push.
 
-Audio rendering needs `ffmpeg` (vendored via `ffmpeg-static`). Nothing requires an API key to run the instruments — the LLM is used only by legacy narrative routes, never by the measurement path.
+Audio rendering needs `ffmpeg` (vendored via `ffmpeg-static`). Nothing requires an API key: no page or route calls a language model, and `src/app/no-model-text.test.ts` fails the build if one does.
+
+`packages/record-mcp/` is a read-only MCP server over the project record (the blueprint, the rulings, the falsified registry, the last suite count). Claude Code finds it in `.mcp.json`; [its README](packages/record-mcp/README.md) has the one entry to add for the Claude desktop app.
 
 ## State of play
 

@@ -70,7 +70,7 @@ describe("Claude Code hooks", () => {
     // `git init` in the suite's temp dir re-initialised the REAL repository as bare,
     // breaking every checkout. Reproduced on a decoy with the same shape (a linked
     // worktree, extensions.worktreeConfig), never on this repository.
-    const clean = Object.fromEntries(Object.entries(process.env).filter(([k]) => !k.startsWith("GIT_")));
+    const clean = Object.fromEntries(Object.entries(process.env).filter(([k]) => !k.startsWith("GIT_"))) as NodeJS.ProcessEnv;
     const dir = mkdtempSync(join(tmpdir(), "decoy-"));
     const git = (...a: string[]) =>
       execFileSync("git", a, { cwd: dir, env: clean, encoding: "utf8" }).trim();
