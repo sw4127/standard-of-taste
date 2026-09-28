@@ -150,7 +150,9 @@ p();
  * `src/content/blueprint.test.ts` holds the quoted statements to the file.
  */
 const BLUEPRINT = {};
-for (const line of readFileSync("docs/blueprint.md", "utf8").split(String.fromCharCode(10))) {
+// Split on CRLF too, as blueprint.ts does: a Windows checkout (core.autocrlf) ends
+// every line in \r, which `.+$` cannot match, and every statement went missing.
+for (const line of readFileSync("docs/blueprint.md", "utf8").split(/\r?\n/)) {
   const m = /^[*][*](BP-[A-Z0-9-]+)[*][*] · (.+)$/.exec(line);
   if (m) BLUEPRINT[m[1]] = m[2].trim();
 }
