@@ -33,6 +33,16 @@ LATCH_HOOK = os.path.join(HERE, "slice-latch.py")
 TRACKER_HOOK = os.path.join(HERE, "context-tracker.py")
 SESSION = "regression-encoding-0001"
 
+# NO INHERITED GIT ENVIRONMENT (2026-09-28). This suite runs inside `npm test`, and
+# the pre-push hook runs `npm test` with GIT_DIR (and friends) exported by git. Every
+# `git` this file spawns, directly in make_repo or through the hooks under test,
+# then targeted the REAL repository instead of its throwaway one: `git init` in a
+# temp directory re-initialised the real repository as bare (core.bare = true),
+# breaking every checkout, and the push was blocked. Dropped here, once, before any
+# subprocess starts, so no case can reach the repository that is running it.
+for _key in [k for k in os.environ if k.startswith("GIT_")]:
+    del os.environ[_key]
+
 # THE SHAPE OF THE PM'S REPLY, NOT ITS TEXT. The observed prompt carried an
 # @-attachment path from the owner's machine and a quoted sentence from a private
 # document; this repository is public, so neither is reproduced. What made it a

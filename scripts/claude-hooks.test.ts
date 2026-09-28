@@ -22,8 +22,8 @@
  */
 import { describe, expect, it } from "vitest";
 import { execFileSync, spawnSync } from "node:child_process";
-import { readFileSync } from "node:fs";
-import { homedir, userInfo } from "node:os";
+import { mkdtempSync, readFileSync } from "node:fs";
+import { homedir, tmpdir, userInfo } from "node:os";
 import { fileURLToPath } from "node:url";
 import { dirname, join, resolve } from "node:path";
 
@@ -64,6 +64,32 @@ describe("Claude Code hooks", () => {
     // "0 failed", so the count of PASS lines is held as a floor.
     expect(out.match(/^PASS /gm)?.length ?? 0).toBeGreaterThanOrEqual(15);
   }, 60_000);
+
+  it("cannot reach the repository running it, even with git's hook variables inherited", () => {
+    // 2026-09-28: the pre-push hook runs this suite with GIT_DIR exported, and a
+    // `git init` in the suite's temp dir re-initialised the REAL repository as bare,
+    // breaking every checkout. Reproduced on a decoy with the same shape (a linked
+    // worktree, extensions.worktreeConfig), never on this repository.
+    const clean = Object.fromEntries(Object.entries(process.env).filter(([k]) => !k.startsWith("GIT_")));
+    const dir = mkdtempSync(join(tmpdir(), "decoy-"));
+    const git = (...a: string[]) =>
+      execFileSync("git", a, { cwd: dir, env: clean, encoding: "utf8" }).trim();
+    git("init", "-q", "main");
+    git("-C", "main", "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-q", "--allow-empty", "-m", "seed");
+    git("-C", "main", "config", "extensions.worktreeConfig", "true");
+    git("-C", "main", "worktree", "add", "-q", "-b", "wt", join(dir, "wt"));
+    const gitDir = git("-C", "wt", "rev-parse", "--absolute-git-dir");
+    expect(git("-C", "main", "config", "core.bare")).toBe("false");
+
+    const run = spawnSync(python(), [".claude/hooks/test_hook_encoding.py"], {
+      cwd: repoRoot,
+      env: { ...clean, GIT_DIR: gitDir },
+      encoding: "utf8",
+      timeout: 60_000,
+    });
+    expect(run.status, ((run.stdout ?? "") + (run.stderr ?? "")).slice(-600)).toBe(0);
+    expect(git("-C", "main", "config", "core.bare"), "the suite turned the decoy repository bare").toBe("false");
+  }, 90_000);
 
   it("settings.json wires only tracked hooks, from the project root, and grants nothing", () => {
     const files = tracked(".claude/hooks/");

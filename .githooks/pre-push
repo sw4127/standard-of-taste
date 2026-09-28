@@ -32,6 +32,13 @@ fi
 
 echo "pre-push: running the test suite before pushing..."
 
+# Git exports the variables that locate a repository to every hook. A test that
+# runs `git` in a throwaway directory inherits them and acts on THIS repository
+# instead: on 2026-09-28 a `git init` in a temp dir re-initialised it as bare and
+# broke every checkout. The suite runs from the repository root, where git finds
+# the repository on its own, so none of these is needed below.
+unset GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE GIT_COMMON_DIR GIT_OBJECT_DIRECTORY GIT_ALTERNATE_OBJECT_DIRECTORIES GIT_PREFIX GIT_CONFIG_PARAMETERS
+
 # --no-install: never let a hook silently reach the network for a package.
 if npx --no-install vitest run; then
   echo "pre-push: suite green — checking generated files..."
