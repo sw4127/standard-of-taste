@@ -10,8 +10,8 @@
  *     Claude Code enforces the list, which is why it carries the guarantee;
  *   - NOT the frontmatter hook. The first version had Bash behind
  *     `.claude/hooks/read-only-bash.py` (the latch's allowlist). Probed on
- *     2026-09-28, the reviewer wrote a file through Bash: the hook never ran for
- *     the subagent. The hook stays attached against Bash returning, and the
+ *     2026-09-28, the reviewer wrote a file through Bash: the hook did not deny
+ *     it (whether it ran at all, that probe cannot tell). The hook stays attached against Bash returning, and the
  *     agent file says it is unproven; this test pins that Bash is absent.
  *
  * It also holds the directory to that one agent. Three generic definitions

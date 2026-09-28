@@ -59,7 +59,7 @@ Nothing here needs inventing. It needs assembling.
   `/spread`, each with a flow, a result and a share path; plus `/learn`, `/lab`, `/method`, `/legal`.
 - **Functional behaviour** — `src/engine/` holds every computation as a pure function, and each has
   tests naming its boundary cases.
-- **What the product refuses** — `/method`'s five refusals and `/lab/falsified`'s 33 entries. A PRD
+- **What the product refuses** — `/method`'s five refusals and every entry on `/lab/falsified`. A PRD
   section on non-goals can be assembled from these rather than argued.
 - **Copy and states** — `docs/copy-deck.md` enumerates every sentence any surface can render, by id.
 - **Constraints** — `CLAUDE.md` (D1-D6, N1-N3), and the anti-clone clause: never a leaderboard, XP,

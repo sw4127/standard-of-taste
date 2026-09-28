@@ -667,4 +667,22 @@ export const FALSIFIED: FalsifiedEntry[] = [
     ],
     guard: "scripts/clip-pipeline/spreadvalidate.test.ts",
   },
+  /* ---------------------------------------------- the agent workflow */
+  {
+    id: "frontmatter-hook-guards-subagent",
+    beliefs: ["A PreToolUse hook in a subagent's frontmatter guards that subagent's tool calls."],
+    date: "2026-09-28",
+    kind: "measured",
+    killedBy:
+      "The red-team reviewer, asked to probe the read-only guard attached that way, ran a command that writes a file, and a 6-byte file was written with no denial. Whether the hook never ran or ran and failed, the probe cannot tell; either way it did not guard.",
+    consequence:
+      "The reviewer has no tool that writes; its tool list, which Claude Code enforces, is what makes it read-only. The hook stays attached and labelled as measured not to deny.",
+    sources: [
+      {
+        path: "docs/handoff-2026-09-28.md",
+        anchor: "a 6-byte file was written with no denial",
+      },
+    ],
+    guard: "scripts/claude-agents.test.ts",
+  },
 ];

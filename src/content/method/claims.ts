@@ -980,12 +980,12 @@ export const METHOD_AGENTS: MethodAgentTool[] = [
     name: "A reviewer that cannot edit",
     kind: "quoted",
     text:
-      "The red-team skill hands a slice's staged change to a second agent, which returns up to three findings and cannot change the code: you report; the main session fixes. It has no tool that writes because a hook meant to keep it read-only was tested and did not fire, and a guard that did not fire cannot be the thing that makes a reviewer read-only.",
+      "The red-team skill hands a slice's staged change to a second agent, which returns up to three findings and cannot change the code: you report; the main session fixes. It has no tool that writes because a hook meant to keep it read-only was tested and did not deny a write, and a guard that did not deny a write cannot be the thing that makes a reviewer read-only.",
     sources: [
       { path: ".claude/agents/red-team-reviewer.md", anchor: "You report; the main session fixes." },
       {
         path: ".claude/agents/red-team-reviewer.md",
-        anchor: "A guard that did not fire cannot be the thing that makes a reviewer read-only",
+        anchor: "A guard that did not deny a write cannot be the thing that makes a reviewer read-only",
       },
     ],
     inUse: { commit: "9523984", anchor: "Red-team: (subagent) the constitution's own citation forms were not on the list" },

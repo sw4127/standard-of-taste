@@ -2436,13 +2436,13 @@ Three skills load a procedure into a session at the moment it is needed. The red
 **LOAD-BEARING — these exact words are verified against the cited file and a test fails if they change:**
 
 - “You report; the main session fixes”
-- “A guard that did not fire cannot be the thing that makes a reviewer read-only”
+- “A guard that did not deny a write cannot be the thing that makes a reviewer read-only”
 
 Everything else in the block is the engineer's own connective prose and is free.
 
 ```
 `MET-HOW-AGENTS-05` · PART-LOCKED
-The red-team skill hands a slice's staged change to a second agent, which returns up to three findings and cannot change the code: you report; the main session fixes. It has no tool that writes because a hook meant to keep it read-only was tested and did not fire, and a guard that did not fire cannot be the thing that makes a reviewer read-only.
+The red-team skill hands a slice's staged change to a second agent, which returns up to three findings and cannot change the code: you report; the main session fixes. It has no tool that writes because a hook meant to keep it read-only was tested and did not deny a write, and a guard that did not deny a write cannot be the thing that makes a reviewer read-only.
 ```
 
 #### 32. `agents-record-server`

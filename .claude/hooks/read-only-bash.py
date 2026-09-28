@@ -23,12 +23,14 @@ does not look inside `$(...)`, and does not split on a newline.
 Exit 2 denies, with the reason on stderr. Anything that is not a Bash call
 passes: the reviewer has no other tool that writes.
 
-MEASURED NOT TO FIRE (2026-09-28). Attached through the subagent's frontmatter,
-this hook did not run: the reviewer, asked to probe it, wrote a file through
-Bash. So the reviewer no longer has Bash at all, and its tool list is what makes
-it read-only. This file stays, tested, and stays attached so that restoring Bash
-to the reviewer cannot happen without its guard; nothing relies on it firing
-until a probe shows that it does.
+MEASURED NOT TO DENY (2026-09-28). Attached through the subagent's frontmatter,
+this hook did not deny a write: the reviewer, asked to probe it, wrote a file
+through Bash. Whether the hook never ran, or ran and failed (a non-blocking
+error lets the call through), that probe cannot tell; a frontmatter hook whose
+whole command is `exit 2` would. So the reviewer no longer has Bash at all, and
+its tool list is what makes it read-only. This file stays, tested, and stays
+attached so that restoring Bash to the reviewer cannot happen without its guard;
+nothing relies on it until a probe shows it denying.
 """
 import sys
 

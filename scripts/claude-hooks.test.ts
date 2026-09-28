@@ -102,8 +102,8 @@ describe("Claude Code hooks", () => {
     }
     // Every tracked hook script is wired by settings.json. Two named exceptions: the
     // test file, and the reviewer's read-only guard, which is ATTACHED through the
-    // subagent's frontmatter and was measured NOT to fire there (2026-09-28). Counting
-    // frontmatter as wiring would call that hook running; the exception says it is not.
+    // subagent's frontmatter and was measured NOT to deny a write there (2026-09-28). Counting
+    // frontmatter as wiring would call that hook working; the exception says it is not.
     const ATTACHED_NOT_PROVEN = [".claude/hooks/read-only-bash.py"];
     const wired = new Set(cmds.map((c) => c.match(/(\.claude\/hooks\/[\w.-]+\.py)/)![1]));
     for (const f of files.filter((f) => f.endsWith(".py") && !f.includes("/test_"))) {
@@ -112,7 +112,7 @@ describe("Claude Code hooks", () => {
     }
     for (const f of ATTACHED_NOT_PROVEN) {
       expect(read(".claude/agents/red-team-reviewer.md"), `${f} is excepted as attached, but nothing attaches it`).toContain(f);
-      expect(read(f), `${f} is excepted as unproven, and must say so itself`).toContain("MEASURED NOT TO FIRE");
+      expect(read(f), `${f} is excepted as unproven, and must say so itself`).toContain("MEASURED NOT TO DENY");
     }
     expect(settings().permissions, "permissions belong in settings.local.json").toBeUndefined();
   });

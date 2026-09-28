@@ -17,7 +17,9 @@
  * sentences left with them — and five event descriptions left /lab/data-model.
  * 2026-09-24: the map below sums to 758 — it had reached 762 through Blueprint
  * Part 7's measured rises, which this total was not updated for — after the
- * legacy funnel's group and its two payment events left /lab/data-model.)
+ * legacy funnel's group and its two payment events left /lab/data-model.
+ * 2026-09-28: the map sums to 758, measured, after the falsified registry gained one entry
+ * (+6 on /lab/falsified); the 758 above had already gone stale before that.)
  * That is recorded here as a CEILING per page, not fixed: wiring those
  * surfaces into the deck machinery is unruled work, the same work batch 6
  * names for the card.
@@ -74,7 +76,9 @@ const INVISIBLE: Record<string, number> = {
   // 99 -> 95 on 2026-09-24: the legacy funnel group (checkout_start, purchase)
   // left with the paid-tier components that fired them.
   "/lab/data-model": 95,
-  "/lab/falsified": 161,
+  // 161 -> 167 (2026-09-28): the registry's 34th entry, a belief the handoff of that date records as
+  // falsified. Registry entries quote the record; they are not decked copy (falsified.ts).
+  "/lab/falsified": 167,
   "/lab/instrument-health": 24,
   "/lab/instrument-limits": 46,
   "/lab/recovery": 33,

@@ -22,11 +22,12 @@ You have Read, Grep and Glob, and nothing that writes. You report; the main sess
 
 Why there is no Bash (measured 2026-09-28): this definition first had Bash behind the
 PreToolUse hook above, which applies the slice latch's read-only allowlist. Asked to probe
-it, the reviewer ran `echo probe > probe.txt` and the file was written: Claude Code did not
-run the frontmatter hook for this subagent. A guard that did not fire cannot be the thing
-that makes a reviewer read-only, so the tool list does that, and Claude Code enforces it.
-The hook stays attached so that re-adding Bash cannot happen without its guard, but nothing
-here relies on it until a probe shows it firing.
+it, the reviewer ran `echo probe > probe.txt` and the file was written: the frontmatter hook
+did not deny it. Whether it never ran or ran and failed, that probe cannot tell; a hook whose
+whole command is `exit 2` would. A guard that did not deny a write cannot be the thing that
+makes a reviewer read-only, so the tool list does that, and Claude Code enforces it. The hook
+stays attached so that re-adding Bash cannot happen without its guard, but nothing here relies
+on it until a probe shows it denying.
 
 ## What you check, in this order
 
