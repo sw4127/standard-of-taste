@@ -47,7 +47,7 @@ describe("commit-msg hook wiring", () => {
   it("is scoped to commits that touch code, so documentation is not made to recite", () => {
     const src = hook();
     expect(src).toMatch(/diff --cached --name-only/);
-    expect(src).toMatch(/\^\(src\|scripts\)\//);
+    expect(src).toMatch(/\^\(src\|scripts\|packages\|\\\.claude\)\//);
   });
 
   it("keeps the escape hatch visible in the log rather than pushing it to --no-verify", () => {

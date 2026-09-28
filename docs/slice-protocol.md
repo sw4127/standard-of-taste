@@ -96,7 +96,9 @@ Red-team: <finding, and what was done about it>
 Confession: <what is stubbed, unverified, assumed, or knowingly left broken>
 ```
 
-`.githooks/commit-msg` **refuses a commit touching `src/` or `scripts/` without them**. The hook
+`.githooks/commit-msg` **refuses a commit touching `src/` or `scripts/` without them** (since
+2026-09-27 also `packages/` and `.claude/`: the MCP server is code, and the hooks, skills and
+subagent are the machinery that runs every other slice). The hook
 checks that they are present and non-trivial; it cannot check that they are honest, and nobody
 should imagine otherwise. Its value is that skipping the loop now takes a deliberate act rather than
 a lapse of attention — the same reason the latch exists.

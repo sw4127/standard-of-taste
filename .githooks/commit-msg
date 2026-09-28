@@ -33,7 +33,10 @@ case "$head_line" in
 esac
 
 # Only code commits. The index is staged by the time commit-msg runs.
-if ! git diff --cached --name-only | grep -Eq '^(src|scripts)/'; then
+# packages/ and .claude/ joined src/ and scripts/ on 2026-09-27: the project-record
+# MCP server is code, and the Claude Code hooks, skills and subagent are the
+# machinery that runs every other slice. A change to the guard is a slice too.
+if ! git diff --cached --name-only | grep -Eq '^(src|scripts|packages|\.claude)/'; then
   exit 0
 fi
 
@@ -44,7 +47,7 @@ fi
 fail() {
   echo "commit-msg: $1" >&2
   echo "" >&2
-  echo "This commit touches src/ or scripts/, so it must carry the slice loop." >&2
+  echo "This commit touches src/, scripts/, packages/ or .claude/, so it must carry the slice loop." >&2
   echo "See docs/slice-protocol.md, 'Standing auto-advance'. Required trailers:" >&2
   echo "" >&2
   echo "  North-star: <what advantage this slice serves, or that it serves none>" >&2

@@ -1,0 +1,68 @@
+{
+  "$comment": "Tracked hooks only (2026-09-27). Permissions stay in the untracked settings.local.json. What each hook does and why: .claude/hooks/*.py; tests: .claude/hooks/test_hook_encoding.py, run by scripts/claude-hooks.test.ts.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/context-tracker.py\"",
+            "timeout": 10,
+            "statusMessage": "context: recording the size before this turn"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/slice-latch.py\"",
+            "timeout": 10,
+            "statusMessage": "slice protocol: clearing the latch"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/context-tracker.py\"",
+            "timeout": 10,
+            "statusMessage": "context: estimating what this turn used"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/slice-latch.py\"",
+            "timeout": 10,
+            "statusMessage": "slice protocol: checking for a commit"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|NotebookEdit|MultiEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/slice-latch.py\"",
+            "timeout": 10,
+            "statusMessage": "slice protocol: latch check"
+          }
+        ]
+      }
+    ]
+  }
+}
