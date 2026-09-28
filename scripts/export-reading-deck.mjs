@@ -31,7 +31,7 @@ import { READING_STATEMENT } from "@/content/reading/statement";
 import { LISTENERS } from "@/content/reading/listeners";
 import { readingFor } from "@/content/reading/reading";
 import { NEITHER } from "@/content/reading/lines";
-import { BP_STATEMENTS } from "@/content/blueprint";
+import { BP_STATEMENTS, caption } from "@/content/blueprint";
 
 const strings = (mod) => Object.entries(mod).filter(([, v]) => typeof v === "string");
 
@@ -66,7 +66,7 @@ it("exports", () => {
       stakeholders: companyCopy.STAKEHOLDERS,
       assumptions: ASSUMPTIONS.map((a) => [a.label, a.shown, a.reason]),
     },
-    blueprint: BP_STATEMENTS.map((s) => [s.id, s.text]),
+    blueprint: BP_STATEMENTS.map((s) => [s.id, s.text, caption(s)]),
   };
   console.log("DECK_START" + JSON.stringify(out) + "DECK_END");
 });
@@ -196,11 +196,17 @@ w("## 6. LOCKED — the blueprint statements the pages render — `docs/blueprin
 w();
 w("*Printed so a writer sees what is on the page. Not editable here or in any component: they change only in `docs/blueprint.md`, by owner ruling (BA-1).*");
 w();
-for (const [id, text] of d.blueprint) {
+for (const [id, text, shown] of d.blueprint) {
   w(`*${id}:*`);
   w();
   quote(text);
   w();
+  // The line a page prints under it: its label and any published source, never a
+  // cross-reference (`caption` in blueprint.ts). On the page, so in the deck.
+  if (shown) {
+    w(`*Under it, where a page shows it:* ${shown}`);
+    w();
+  }
 }
 
 process.stdout.write(L.join(String.fromCharCode(10)) + String.fromCharCode(10));

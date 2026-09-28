@@ -5,6 +5,12 @@ project's goal, insight, demand, unmet demand, challenged assumptions and busine
 insight's argument. Every other statement of them quotes this file by ID, verbatim, or is registered
 as a derived line that names the ID it serves. `src/content/blueprint.test.ts` enforces it.
 
+Notes (owner-approved 2026-09-28). The italic lines under a statement are its notes, and a statement
+may have more than one. Each line is judged on its own: a line that names anything internal to this
+repository (a BP- ID, the spec, the MRD, a ruling) stays in this file, and a line that names only
+published sources may be shown to a reader. Put a public citation on its own line, apart from any
+cross-reference, or the page cannot show it.
+
 <!-- BLUEPRINT:BEGIN v1 2026-09-23 -->
 
 ### The goal
@@ -36,9 +42,11 @@ as a derived line that names the ID it serves. `src/content/blueprint.test.ts` e
 *Label: EVIDENCED, qualitatively. Two sources, kept apart: BP-F2 (interviews) supports "almost nobody can describe their own taste in words"; "beyond naming genres and artists" rests on published prompt guides for music generators (MRD M8). Public copies use BP-CA2-PUBLIC, which attributes each half to its source.*
 
 **BP-CA2-PUBLIC** · In the interviews behind this project, almost nobody could describe their own taste in words; the published prompt guides for music generators report the same failure, that people name artists and genres and cannot break down the sound.
+*Label: EVIDENCED, qualitatively.*
 
 **BP-CA3** · Common sense: there's no accounting for taste. Rejected: taste is subjective but still has a standard, because bad judgment comes from defects that can be removed (Hume).
-*Kind: a philosophical position (Hume, "Of the Standard of Taste", 1757), not an empirical claim. It connects to the rest of the set only through BP-BRIDGE.*
+*Kind: a philosophical position (Hume, "Of the Standard of Taste", 1757), not an empirical claim.*
+*It connects to the rest of the set only through BP-BRIDGE.*
 
 **BP-BRIDGE** · What you can hear decides which words in your prompt are worth spending.
 *Label: ASSUMED (an inference; the mapping of measured flaw families to prompt axes is MRD §4.1).*

@@ -19,7 +19,16 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { BLUEPRINT_PATH, loadBlueprint, publicSource, type BpId, type BpStatement } from "./blueprint";
+import {
+  BLUEPRINT_PATH,
+  caption,
+  loadBlueprint,
+  parseBlueprint,
+  publicCitation,
+  publicSource,
+  type BpId,
+  type BpStatement,
+} from "./blueprint";
 import { BLUEPRINT_COPIES } from "./blueprint-copies";
 
 /** Pointed at by mutation (d): an empty file here must fail the count floor. */
@@ -146,7 +155,7 @@ describe("a reader is never shown the blueprint's internal cross-references", ()
    * reference, so removing any one alternative fails at least one case (the RT
    * alternative fails three: a numbered, a Z-series and a lettered ruling).
    */
-  const specimen = (note: string): BpStatement => ({ id: "BP-X", text: "x", note, label: null });
+  const specimen = (...lines: string[]) => parsed(...lines.map((l) => `*${l}*`));
   it.each([
     ["a ruling", "Label: ASSUMED (RT-8)."],
     ["a Z-series ruling", "Carve-out: RT-Z10 a."],
@@ -165,16 +174,90 @@ describe("a reader is never shown the blueprint's internal cross-references", ()
   ])("drops a note whose only internal reference is %s", (_, note) => {
     expect(publicSource(specimen(note))).toBeNull();
   });
-  it("drops a note WHOLE when a published source shares it with a cross-reference", () => {
-    // The contract is "a published citation, or nothing", so a mixed note renders
-    // nothing: BP-CA3's Hume citation is not shown today for this reason. Pinned so
-    // the behaviour is a stated rule, not a surprise; splitting such notes into a
-    // public source and a cross-reference is a change to docs/blueprint.md.
+  it("drops a LINE whole when a published source shares it with a cross-reference", () => {
+    // Fails closed within a line: the filter cannot tell where a citation ends and
+    // a cross-reference begins, so a mixed line shows nothing. The blueprint's
+    // format rule (owner-approved 2026-09-28) puts a citation on a line of its own.
     expect(publicSource(specimen("Hume (1757). Connects only through BP-BRIDGE."))).toBeNull();
+  });
+
+  it("shows the published line of a note and keeps its cross-reference line off the page", () => {
+    const s = specimen("Hume (1757), a position.", "Connects only through BP-BRIDGE.");
+    expect(publicSource(s)).toBe("Hume (1757), a position.");
   });
 
   it("keeps a published citation that carries no internal reference", () => {
     expect(publicSource(specimen("Forer (1949), J. Abnorm. Soc. Psychol."))).toBe("Forer (1949), J. Abnorm. Soc. Psychol.");
+  });
+
+  it("never shows an amendment stamp, which names no ID (red-team, 2026-09-28)", () => {
+    const s = specimen("Label: ASSUMED.", "[AMENDED 2026-10-02 — the statement above is kept verbatim.]");
+    expect(s.noteLines).toHaveLength(2);
+    expect(publicSource(s)).toBe("Label: ASSUMED.");
+  });
+
+  it("does not read a markdown bullet under a statement as a note", () => {
+    expect(parsed("* a list item, not a note").noteLines).toEqual([]);
+  });
+});
+
+/** One statement parsed from a minimal blueprint, so a specimen has exactly the fields a real one has. */
+function parsed(...under: string[]): BpStatement {
+  return parseBlueprint(["<!-- BLUEPRINT:BEGIN", "**BP-X** · x", ...under, "<!-- BLUEPRINT:END -->"].join("\n"))
+    .statements[0];
+}
+
+describe("the blueprint's own notes reach the page as the owner split them (2026-09-28)", () => {
+  const get = (id: BpId) => BP_STATEMENTS_FOR_TEST.find((s) => s.id === id)!;
+
+  it("parses every italic line under a statement, not only the first", () => {
+    expect(get("BP-CA3").noteLines).toHaveLength(2);
+    expect(get("BP-CA3").note).toMatch(/BP-BRIDGE/);
+  });
+
+  it("shows BP-CA3's Hume citation, and not its cross-reference", () => {
+    expect(publicSource(get("BP-CA3"))).toMatch(/Hume, "Of the Standard of Taste", 1757/);
+    expect(publicSource(get("BP-CA3"))).not.toMatch(/BP-BRIDGE/);
+  });
+
+  it("labels BP-CA2-PUBLIC as the evidence it is, and says so on the page (N3)", () => {
+    expect(get("BP-CA2-PUBLIC").label).toBe("EVIDENCED");
+    expect(caption(get("BP-CA2-PUBLIC"))).toBe("EVIDENCED, qualitatively.");
+  });
+
+  it("still shows nothing for BP-ARG-REPLY, whose note cites only the repository", () => {
+    expect(publicSource(get("BP-ARG-REPLY"))).toBeNull();
+  });
+
+  it("shows the premises' published sources without repeating their label", () => {
+    expect(publicCitation(get("BP-ARG-P1"))).toMatch(/^Knobloch & Zillmann \(2002\)/);
+    expect(publicCitation(get("BP-ARG-P4"))).toBeNull(); // "ASSUMED." and nothing else
+  });
+
+  it("keeps the qualifier on a label whose line is hidden (P3: interviews, not a journal)", () => {
+    // P3's only line also names BP-CA2, so it is off the page; its label must not
+    // read as the same standard of evidence as P1's and P2's citations (red-team).
+    expect(publicSource(get("BP-ARG-P3"))).toBeNull();
+    expect(get("BP-ARG-P3").labelText).toBe("EVIDENCED, qualitatively");
+  });
+
+  it("keeps every note it had: a note detached by a blank line would unlabel its statement", () => {
+    // BP-ARG-WEAK and BP-CHAIN have never had one. Every other statement has.
+    const bare = BP_STATEMENTS_FOR_TEST.filter((s) => s.noteLines.length === 0).map((s) => s.id);
+    expect(bare).toEqual(["BP-ARG-WEAK", "BP-CHAIN"]);
+  });
+});
+
+describe("the line a page prints under a statement", () => {
+  it.each([
+    ["a label and no public note", parsed("*Label: ASSUMED (RT-8).*"), "ASSUMED"],
+    ["no note", parsed(), null],
+    ["a kind line, capitalised", parsed("*Kind: a position (Hume, 1757).*"), "A position (Hume, 1757)."],
+    ["a label line that keeps its qualifier", parsed("*Label: EVIDENCED, qualitatively.*"), "EVIDENCED, qualitatively."],
+    ["a hidden line whose qualifier survives", parsed("*EVIDENCED, qualitatively. See BP-F1.*"), "EVIDENCED, qualitatively"],
+    ["a citation that does not name its label", parsed("*EVIDENCED. Forer (1949).*"), "EVIDENCED · Forer (1949)."],
+  ])("%s", (_, s, expected) => {
+    expect(caption(s)).toBe(expected);
   });
 });
 

@@ -1,7 +1,7 @@
 import Explainer, { explainerMetadata } from "../Explainer";
 import BlueprintArgument from "@/components/BlueprintArgument";
 import { learnPage } from "@/content/learn";
-import { bp, publicSource, type BpId } from "@/content/blueprint";
+import { bp, caption, type BpId } from "@/content/blueprint";
 import { GYM_INK_BRIGHT } from "@/content/instrument-accents";
 
 /**
@@ -19,16 +19,18 @@ import { GYM_INK_BRIGHT } from "@/content/instrument-accents";
 const page = learnPage("why")!;
 export const metadata = explainerMetadata(page);
 
+/*
+ * The line under each statement comes from its note in the blueprint, never from
+ * this file: a typed fallback here once labelled BP-CA2-PUBLIC, an evidenced
+ * claim, "a position, not an empirical claim" (N3).
+ */
 function Statement({ id }: { id: BpId }) {
   const s = bp(id);
-  const source = publicSource(s);
+  const line = caption(s);
   return (
     <blockquote>
       {s.text}
-      <span className="mt-1 block text-xs not-italic text-muted">
-        {s.label ?? "A POSITION, NOT AN EMPIRICAL CLAIM"}
-        {source ? ` · ${source}` : ""}
-      </span>
+      {line ? <span className="mt-1 block text-xs not-italic text-muted">{line}</span> : null}
     </blockquote>
   );
 }

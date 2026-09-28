@@ -57,7 +57,10 @@ const INVISIBLE: Record<string, number> = {
   // matches every page's header even though every label is in the reading deck.
   // The reading, the Company view and /legal came DOWN (21 -> 4, 64 -> 10,
   // 7 -> 2) when their copy was decked in docs/copy-deck-reading.md.
-  "/learn/why": 9,
+  // 9 -> 7 on 2026-09-28, measured: the reading deck now prints the line each
+  // blueprint statement shows under it, which decks the Forer and Wilson &
+  // Schooler citations the page already rendered, and the new ones it gained.
+  "/learn/why": 7,
   "/": 13, // +1 2026-09-23: the nav gained THE COMPANY VIEW (blueprint Part 6)
   "/bias": 7,
   "/delicacy": 10,
@@ -92,7 +95,9 @@ const INVISIBLE: Record<string, number> = {
   // Measured 2026-09-23 when the reading shipped (blueprint Part 5): its copy and
   // the argument rendered from docs/blueprint.md are in no deck yet. Part 7 decks
   // them and lowers this.
-  "/reading": 4, // +1: the nav gained THE COMPANY VIEW
+  // +1: the nav gained THE COMPANY VIEW. 4 -> 2 on 2026-09-28, as /learn/why: the
+  // argument's citations are decked with the statements they sit under.
+  "/reading": 2,
   // The Company view (blueprint Part 6), measured when it shipped; Part 7 decks it.
   // 10 -> 11 on 2026-09-24, measured: HEARING and READING ROOM became THE HEARING
   // TESTS and THE LIBRARY (Cowork copy return, part C). Link texts reach the

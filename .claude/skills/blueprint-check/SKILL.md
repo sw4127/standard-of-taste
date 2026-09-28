@@ -17,7 +17,7 @@ Packages the blueprint rule of record. Every quote is checked against its source
 > **Standing rule, added to the list above:** every proposal cites the BP statement it serves, alongside the D#/N#. A proposal that serves no BP statement says so.
 
 <!-- source: src/content/blueprint.ts -->
-> THE FORMAT IS THE FILE'S OWN. Between the two markers, each statement is one line `**BP-ID** · text`; the italic line under it carries its label (or its kind) and its sources, and is not part of the quoted text.
+> THE FORMAT IS THE FILE'S OWN. Between the two markers, each statement is one line `**BP-ID** · text`; the italic lines under it carry its label (or its kind), its sources and its cross-references, and are not part of the quoted text. Each italic line is judged on its own for the page (`publicSource`), so a published citation shares no line with a cross-reference (owner-approved 2026-09-28).
 
 <!-- source: src/content/blueprint-copies.ts -->
 > - `derived` — the file keeps its own wording, and the token `BP-<ID>` sits within five lines of `anchor` (a comment is enough), so every paraphrase names the statement it serves.

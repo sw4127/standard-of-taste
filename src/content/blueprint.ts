@@ -8,8 +8,11 @@
  * how the nine earlier copies drifted until two of them made different claims.
  *
  * THE FORMAT IS THE FILE'S OWN. Between the two markers, each statement is one
- * line `**BP-ID** · text`; the italic line under it carries its label (or its
- * kind) and its sources, and is not part of the quoted text.
+ * line `**BP-ID** · text`; the italic lines under it carry its label (or its
+ * kind), its sources and its cross-references, and are not part of the quoted
+ * text. Each italic line is judged on its own for the page (`publicSource`), so
+ * a published citation shares no line with a cross-reference (owner-approved
+ * 2026-09-28).
  *
  * SERVER-ONLY. It reads the file with `fs`, so a client component must receive
  * the strings as props. Every page that uses it is prerendered, so the read
@@ -30,10 +33,18 @@ export type BpLabel = "EVIDENCED" | "ASSUMED" | "INFERENCE";
 export interface BpStatement {
   id: BpId;
   text: string;
-  /** The italic line under the statement, asterisks removed; "" when there is none. */
+  /** The italic lines under the statement, asterisks removed, one entry per line. */
+  noteLines: string[];
+  /** `noteLines` joined by a space; "" when there is none. */
   note: string;
   /** The first of EVIDENCED / ASSUMED / INFERENCE the note names, or null (a ruling, a position). */
   label: BpLabel | null;
+  /**
+   * The label as the note words it, qualifier included ("EVIDENCED, qualitatively"),
+   * or null. What a reader sees: a bare "EVIDENCED" beside a premise resting on
+   * interviews reads as the same standard as one resting on a journal (N3).
+   */
+  labelText: string | null;
 }
 
 export interface Blueprint {
@@ -42,6 +53,9 @@ export interface Blueprint {
 }
 
 const LINE = /^\*\*(BP-[A-Z0-9-]+)\*\* · (.+)$/;
+/** An italic line: opens and closes on one asterisk. A markdown bullet ("* item") is not one. */
+const NOTE_LINE = /^\*[^*\s].*\*$/;
+const LABEL_TEXT = /\b(EVIDENCED|ASSUMED|INFERENCE)(, [a-z]+(?=[.;:)]))?/;
 
 /** Pure: the statements between the markers of a blueprint file's text. */
 export function parseBlueprint(source: string): Blueprint {
@@ -53,10 +67,14 @@ export function parseBlueprint(source: string): Blueprint {
   for (let i = begin + 1; i < end; i++) {
     const m = LINE.exec(lines[i]);
     if (!m) continue;
-    const next = lines[i + 1] ?? "";
-    const note = /^\*[^*]/.test(next) ? next.replace(/^\*|\*$/g, "").trim() : "";
-    const label = (/\b(EVIDENCED|ASSUMED|INFERENCE)\b/.exec(note)?.[1] ?? null) as BpLabel | null;
-    statements.push({ id: m[1] as BpId, text: m[2].trim(), note, label });
+    const noteLines: string[] = [];
+    for (let j = i + 1; j < end && NOTE_LINE.test(lines[j]); j++) {
+      noteLines.push(lines[j].replace(/^\*|\*$/g, "").trim());
+    }
+    const note = noteLines.join(" ");
+    const found = LABEL_TEXT.exec(note);
+    const label = (found?.[1] ?? null) as BpLabel | null;
+    statements.push({ id: m[1] as BpId, text: m[2].trim(), noteLines, note, label, labelText: found?.[0] ?? null });
   }
   const BP = Object.fromEntries(statements.map((s) => [s.id, s.text])) as Record<BpId, string>;
   return { statements, BP };
@@ -97,11 +115,37 @@ export const INTERNAL_REFERENCE =
   /\bBP-[A-Z]|\bspec §|\bMRD\b|\bRT-[A-Z0-9]|\bBA-\d|\b[DNPS]\d\b|\bmemo §|\bdocs\/|\bPM-\d/;
 
 /**
- * The note as a reader may see it: a published citation, or nothing. A note that
+ * The note as a reader may see it: its published lines, or nothing. A line that
  * points inside this repository ("spec §20.B", "MRD M8", another BP- ID) is a
  * cross-reference for the people maintaining it, and on a page it reads as noise.
+ * The judgment is per LINE and fails closed: a line mixing a citation with a
+ * cross-reference is dropped whole, so a citation reaches the page only when the
+ * blueprint gives it a line of its own. A stamp ("[AMENDED 2026-…]", the form
+ * every amendment in this repository takes) is a record for maintainers and is
+ * never shown, whether or not it names an ID.
  */
 export function publicSource(s: BpStatement): string | null {
-  if (!s.note || INTERNAL_REFERENCE.test(s.note)) return null;
-  return s.note;
+  const shown = s.noteLines.filter((l) => l && !l.startsWith("[") && !INTERNAL_REFERENCE.test(l));
+  return shown.length ? shown.join(" ") : null;
+}
+
+/**
+ * The public note without the words a page already shows beside it: a leading
+ * field name ("Label: ", "Kind: ") and a leading bare label ("EVIDENCED. ").
+ * "EVIDENCED, qualitatively." keeps its label, because the qualifier is the point.
+ */
+export function publicCitation(s: BpStatement): string | null {
+  const bare = (publicSource(s) ?? "")
+    .replace(/^(Label|Kind): /, "")
+    .replace(/^(EVIDENCED|ASSUMED|INFERENCE)\.\s*/, "")
+    .trim();
+  return bare ? bare.charAt(0).toUpperCase() + bare.slice(1) : null;
+}
+
+/** The one line a page prints under a statement: its label, its citation, both, or nothing. */
+export function caption(s: BpStatement): string | null {
+  const citation = publicCitation(s);
+  if (!citation) return s.labelText;
+  if (!s.labelText || citation.includes(s.labelText)) return citation;
+  return `${s.labelText} · ${citation}`;
 }
