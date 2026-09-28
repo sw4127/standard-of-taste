@@ -315,6 +315,52 @@ def case_edit_denied_until_disarmed():
     )
 
 
+READONLY_HOOK = os.path.join(HERE, "read-only-bash.py")
+
+
+def case_reviewer_bash_is_read_only():
+    """
+    THE RED-TEAM REVIEWER CANNOT WRITE (2026-09-27, brief Part 3).
+
+    read-only-bash.py guards the reviewer subagent's Bash with the latch's own
+    allowlist. Reading a diff passes; a redirect, a commit, a sed -i and an
+    unreadable payload are denied; a tool that is not Bash is not its business.
+    """
+    tmp = tempfile.mkdtemp(prefix="ro-")
+    def bash(cmd):
+        return run(READONLY_HOOK, {"hook_event_name": "PreToolUse", "tool_name": "Bash",
+                                   "tool_input": {"command": cmd}}, tmp).returncode
+    got = (
+        bash("git diff --cached 2>&1 | head -200"),
+        bash("git show HEAD --stat"),
+        bash("echo planted > src/x.ts"),
+        bash("git commit -qam fix"),
+        bash("sed -i s/a/b/ src/x.ts"),
+        run(READONLY_HOOK, None, tmp, raw=b'{"tool_name": "Bash", ').returncode,
+        run(READONLY_HOOK, {"tool_name": "Read", "tool_input": {"file_path": "x"}}, tmp).returncode,
+    )
+    check(
+        "reviewer Bash: reads pass; redirect, commit, sed -i and garbage denied; Read untouched",
+        got == (0, 0, 2, 2, 2, 2, 0),
+        repr(got),
+    )
+    # THE SIX THE REVIEWER'S OWN RED-TEAM GOT THROUGH THE FIRST VERSION (2026-09-28):
+    # the latch's list passes a push and a branch delete, and the segmenter does not
+    # look inside $(...) or split on a newline.
+    bypasses = ["git push origin main", "git branch -D main", "npx eslint --fix src",
+                "sort -o src/x.ts src/x.ts", "cat $(touch pwned)", "cat `touch pwned`",
+                "cat a" + chr(10) + "touch pwned"]
+    # Each specimen starts with a reader the list allows, so it is the substitution or
+    # the newline that is refused. "echo $(...)" was denied for starting with echo and
+    # survived the mutation that deleted the substitution rule.
+    through = [c for c in bypasses if bash(c) != 2]
+    check("reviewer Bash: push, branch -D, eslint --fix, sort -o, $(...), backticks and a newline are denied",
+          not through, repr(through))
+    cache = os.path.join(HERE, "__pycache__")
+    check("the reviewer guard writes no bytecode cache (it held this machine's path)",
+          not os.path.exists(cache), cache)
+
+
 if __name__ == "__main__":
     case_specimen_is_a_specimen()
     case_end_to_end()
@@ -331,5 +377,6 @@ if __name__ == "__main__":
     case_unreadable_reply_still_clears()
     case_unreadable_write_denied_while_armed()
     case_tracker_reads_utf8()
+    case_reviewer_bash_is_read_only()
     print("\n%d failed" % len(FAILURES))
     sys.exit(1 if FAILURES else 0)

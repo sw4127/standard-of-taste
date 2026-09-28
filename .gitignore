@@ -95,3 +95,8 @@ audio/delicacy/proof-*
 # unreferenced afterwards and GitHub garbage-collects them, so history keeps exactly
 # one audio commit.
 audio/staircase/
+
+# Python bytecode. The hooks under .claude/hooks/ are Python, and a cache compiled
+# from them holds this machine's absolute path; the repository is public (2026-09-28).
+__pycache__/
+*.pyc

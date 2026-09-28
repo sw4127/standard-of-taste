@@ -34,23 +34,29 @@ so if one stops matching, the rule moved and this skill must follow it.
 
 1. **Read the diff, not your memory of it.** `git diff --cached --stat`, then the full
    staged diff. A finding about code you did not re-read is a guess.
-2. **Find the three worst,** ranked by what a hostile
+2. **Get an independent pass.** Write the change where the reviewer can read it
+   (`git diff --cached > .git/red-team.diff`, or `git show <sha>` for one commit), then
+   dispatch the `red-team-reviewer` subagent (`.claude/agents/red-team-reviewer.md`). It
+   has Read, Grep and Glob only and returns three findings; it never edits. Its findings
+   are candidates: check each against the code before accepting it.
+3. **Find the three worst,** yours and the reviewer's together, ranked by what a hostile
    reviewer would lead with. A finding must name a concrete failure (input, state, wrong
    output), not a mood. "Could be cleaner" is not a finding. A compliment is not a finding.
-3. **Fix all three inside this slice**, then re-run the proof. A fix that was not re-proven
+4. **Fix all three inside this slice**, then re-run the proof. A fix that was not re-proven
    is a fourth thing to confess.
-4. **Run the mutation for every guard the slice added or changed.** Break the thing the
+5. **Run the mutation for every guard the slice added or changed.** Break the thing the
    guard protects, run the guard, paste the red result, restore, paste the green.
-5. **Confess.** What is stubbed, hardcoded, assumed, skipped or not verified. If the slice
+6. **Confess.** What is stubbed, hardcoded, assumed, skipped or not verified. If the slice
    is riskier than the last one and the confession is shorter, say so: that is the
    laziness signal the closing rules name.
-6. **Write it twice.** In the reply, and as commit trailers:
+7. **Write it twice.** In the reply, and as commit trailers:
 
 <!-- source: docs/slice-protocol.md -->
 > Red-team: <finding, and what was done about it>
 
-   Record the skill itself as a `Skill: red-team-slice` line.
-7. **Decisions block.** Only a one-way door, a product decision the code cannot settle, an
+   Mark a finding the reviewer raised as `Red-team: (subagent) ...`, and record the skill
+   itself as a `Skill: red-team-slice` line.
+8. **Decisions block.** Only a one-way door, a product decision the code cannot settle, an
    unfixable SHIP-RISK, or a collapsed premise. Everything else is engineering's call and
    goes in the prose.
 

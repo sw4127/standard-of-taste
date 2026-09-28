@@ -74,10 +74,19 @@ describe("Claude Code hooks", () => {
       expect(m, `not a project-rooted python hook: ${cmd}`).not.toBeNull();
       expect(files, `${m![1]} is wired but not tracked`).toContain(m![1]);
     }
-    // Every tracked hook script is wired; the test file is the only exception.
+    // Every tracked hook script is wired by settings.json. Two named exceptions: the
+    // test file, and the reviewer's read-only guard, which is ATTACHED through the
+    // subagent's frontmatter and was measured NOT to fire there (2026-09-28). Counting
+    // frontmatter as wiring would call that hook running; the exception says it is not.
+    const ATTACHED_NOT_PROVEN = [".claude/hooks/read-only-bash.py"];
     const wired = new Set(cmds.map((c) => c.match(/(\.claude\/hooks\/[\w.-]+\.py)/)![1]));
     for (const f of files.filter((f) => f.endsWith(".py") && !f.includes("/test_"))) {
+      if (ATTACHED_NOT_PROVEN.includes(f)) continue;
       expect(wired, `${f} is tracked but nothing runs it`).toContain(f);
+    }
+    for (const f of ATTACHED_NOT_PROVEN) {
+      expect(read(".claude/agents/red-team-reviewer.md"), `${f} is excepted as attached, but nothing attaches it`).toContain(f);
+      expect(read(f), `${f} is excepted as unproven, and must say so itself`).toContain("MEASURED NOT TO FIRE");
     }
     expect(settings().permissions, "permissions belong in settings.local.json").toBeUndefined();
   });
