@@ -1,0 +1,35 @@
+{
+  "listener": "lin",
+  "brief": "v2",
+  "drafter": "claude-opus-5-5 via Claude Code subagent (general-purpose), no tools used",
+  "agentId": "a925c718d2d569bf7",
+  "lines": [
+    {
+      "fact": "drift",
+      "pattern": "In week one, 43 of your 68 plays were distorted guitars in a wall of sound and 12 were fingerpicked nylon guitar. By week four it had turned around: 35 of your 58 plays were fingerpicked nylon guitar and 7 were the wall of sound.",
+      "receipt": "Week one: 43 of 68 plays wall of sound (63%), 12 of 68 nylon guitar (18%). Week four: 7 of 58 wall of sound (12%), 35 of 58 nylon guitar (60%).",
+      "offers": [
+        "Did these four weeks feel settled enough that you stopped wanting the noise?",
+        "Or did so much get loud around you that you wanted your music to be the quiet part?"
+      ]
+    },
+    {
+      "fact": "newShare",
+      "pattern": "45 of your 251 plays were of tracks new to you, and the other 206 went to tracks you had already played. One new track, Lumen Tarry, is picking up, with 4 plays in the last week.",
+      "receipt": "45 of 251 plays (18%) on new tracks, 206 of 251 on tracks already played; Lumen Tarry, 4 plays in the last week.",
+      "offers": [
+        "Has the music you already know been enough, so you had no reason to go looking?",
+        "Or has there been so little room for anything new that only something like Lumen Tarry got through?"
+      ]
+    },
+    {
+      "fact": "repetition",
+      "pattern": "Your 251 plays went to 25 tracks, and three of them took 108: Fennow Letter 47 times, Tamsel Lullaby 31 and Cindergrist 30.",
+      "receipt": "108 of 251 plays (43%) on 3 of 25 tracks: Fennow Letter 47, Tamsel Lullaby 31, Cindergrist 30.",
+      "offers": [
+        "Do you go back to these three because you know exactly what they will give you?",
+        "Or is there something in Fennow Letter you haven't finished hearing yet, and you keep going back to find it?"
+      ]
+    }
+  ]
+}

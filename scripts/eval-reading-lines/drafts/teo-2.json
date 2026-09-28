@@ -1,0 +1,44 @@
+{
+  "listener": "teo",
+  "brief": "v1",
+  "drafter": "claude-opus-5-5 via Claude Code subagent (general-purpose), no tools used",
+  "agentId": "ab07b84c134cebb2f",
+  "lines": [
+    {
+      "fact": "earlySkip",
+      "pattern": "Teo tried 17 new tracks and skipped 13 of them inside the first 30 seconds of their first play. The sound that most often got past those 30 seconds was live bass and brushed drums.",
+      "receipt": "13 of 17 new tracks skipped inside 30 seconds (76%)",
+      "offers": [
+        "Could skipping that fast be certainty, knowing within seconds that a track isn't yours and the live bass and brushed drums are?",
+        "Or could it be impatience, a search that keeps moving on before a new track has had time to land?"
+      ]
+    },
+    {
+      "fact": "lateNight",
+      "pattern": "Over the 28 days, 14 of Teo's 384 plays fell between 11 at night and 4 in the morning.",
+      "receipt": "14 of 384 plays (about 4%) between 23:00 and 03:59",
+      "offers": [
+        "Could the late hours feel calm enough that there is nothing music needs to fill?",
+        "Or could music be kept away from the night on purpose, because at that hour it would stir up more than you want?"
+      ]
+    },
+    {
+      "fact": "drift",
+      "pattern": "In week one, 48 of 88 plays were live bass and brushed drums and 18 were chopped vocal samples and bright synths. By week four the order had flipped: 44 of 98 plays were chopped vocal samples and bright synths, against 41 for live bass and brushed drums.",
+      "receipt": "Chopped vocal samples and bright synths: 18 of 88 plays in week one (20%) to 44 of 98 in week four (45%). Live bass and brushed drums: 48 of 88 (55%) to 41 of 98 (42%).",
+      "offers": [
+        "Could the move toward bright synths and chopped vocals be reaching for more lift and energy than a few weeks ago?",
+        "Or could it be a step back from the warmer, closer sound of live bass and brushed drums, keeping things at a brighter distance for now?"
+      ]
+    },
+    {
+      "fact": "newShare",
+      "pattern": "254 of Teo's 384 plays were of new tracks. One of them, “Upright in Vell”, was played 8 times in the final week.",
+      "receipt": "254 of 384 plays (66%) were new tracks; “Upright in Vell”: 8 plays in the final week",
+      "offers": [
+        "Could all this new music be curiosity, the pleasure of finding things you haven't heard yet?",
+        "Or could it be a search for something the familiar tracks stopped giving you, with “Upright in Vell” the first one to come close?"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "listener": "mira",
+  "brief": "v1",
+  "drafter": "claude-opus-5-5 via Claude Code subagent (general-purpose), no tools used",
+  "agentId": "a1350299dc79c53be",
+  "lines": [
+    {
+      "fact": "newShare",
+      "pattern": "Of 294 plays over the 28 days, 33 went to new tracks and 261 went to tracks that were not new. One new track, Sistrum Weather, was played once in week four.",
+      "receipt": "33 of 294 plays (11%) on new tracks; 261 of 294 on the rest; Sistrum Weather: 1 play in week four",
+      "offers": [
+        "Could what you already have still feel like enough right now, so there has been no pull to go looking?",
+        "Or has reaching for something new asked for more energy than these weeks had to spare?"
+      ]
+    },
+    {
+      "fact": "repetition",
+      "pattern": "Three of the 28 distinct tracks took 151 of the 294 plays: Velvetine Drift 67, Tallowfen 61 and Ostrelle, Late 23.",
+      "receipt": "151 of 294 plays (51%) on the top three of 28 distinct tracks",
+      "offers": [
+        "Do these three hold something you want to stay close to, a comfort you go back to because it keeps holding?",
+        "Or are you going round them to wear something out, playing them until they stop pulling at you?"
+      ]
+    },
+    {
+      "fact": "drift",
+      "pattern": "In week one, sparse piano and room hiss had 42 of 76 plays and washed-out synth pads had 26. In week four, the piano had 23 of 79 and the synth pads had 50.",
+      "receipt": "Week one: 42 of 76 (55%) piano, 26 of 76 (34%) pads. Week four: 23 of 79 (29%) piano, 50 of 79 (63%) pads",
+      "offers": [
+        "Has the close, bare sound of the piano become harder to sit with, so a softer blur is easier company?",
+        "Or have you been reaching for more space around you, wanting something wider after a closer, quieter stretch?"
+      ]
+    },
+    {
+      "fact": "lateNight",
+      "pattern": "162 of the 294 plays fell between 11 at night and 4 in the morning (23:00-03:59).",
+      "receipt": "162 of 294 plays (55%) between 23:00 and 03:59",
+      "offers": [
+        "Are those the hours that feel most your own, quiet enough to listen with nothing asking for you?",
+        "Or is the music company on nights when you are awake later than you would like to be?"
+      ]
+    }
+  ]
+}

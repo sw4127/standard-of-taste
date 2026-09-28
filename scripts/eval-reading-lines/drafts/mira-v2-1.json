@@ -1,0 +1,44 @@
+{
+  "listener": "mira",
+  "brief": "v2",
+  "drafter": "claude-opus-5-5 via Claude Code subagent (general-purpose), no tools used",
+  "agentId": "a089670de44d434a5",
+  "lines": [
+    {
+      "fact": "newShare",
+      "pattern": "Of your 294 plays over these 28 days, 33 went to tracks that were new to you and the other 261 went to tracks that were not. One new track, Sistrum Weather, was played once in week four.",
+      "receipt": "33 of 294 plays (11%) on new tracks; 261 of 294 on tracks that were not new; Sistrum Weather: 1 play in week four.",
+      "offers": [
+        "Have the tracks you already know been somewhere steady to come back to while other things were changing?",
+        "Or have you simply been content with what you have, with no pull to go looking for more?"
+      ]
+    },
+    {
+      "fact": "repetition",
+      "pattern": "Your 294 plays went to 28 different tracks, and three of them took 151 of those plays: Velvetine Drift 67, Tallowfen 61 and Ostrelle, Late 23.",
+      "receipt": "151 of 294 plays (51%) on 3 of 28 tracks: 67 + 61 + 23.",
+      "offers": [
+        "Do you love these tracks so much that each play still gives you something new?",
+        "Or have they become a steady backdrop for days when choosing anything else feels like too much?"
+      ]
+    },
+    {
+      "fact": "drift",
+      "pattern": "In week one, 42 of your 76 plays were sparse piano and room hiss and 26 were washed-out synth pads. In week four that turned around: 50 of your 79 plays were washed-out synth pads and 23 were sparse piano and room hiss.",
+      "receipt": "Sparse piano and room hiss: 42 of 76 plays (55%) in week one, 23 of 79 (29%) in week four. Washed-out synth pads: 26 of 76 (34%) in week one, 50 of 79 (63%) in week four.",
+      "offers": [
+        "Did the washed-out pads give you somewhere to drift away to when the bare piano sat too close?",
+        "Or did the piano's quiet run its course, and the pads feel like a lighter, more open place you were ready for?"
+      ]
+    },
+    {
+      "fact": "lateNight",
+      "pattern": "162 of your 294 plays were between 11 at night and 4 in the morning.",
+      "receipt": "162 of 294 plays (55%) between 23:00 and 03:59.",
+      "offers": [
+        "Are those late hours the one stretch of the day that feels like your own, something you look forward to?",
+        "Or is the music keeping you company on nights that feel long?"
+      ]
+    }
+  ]
+}

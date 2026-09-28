@@ -1,0 +1,35 @@
+{
+  "listener": "lin",
+  "brief": "v1",
+  "drafter": "claude-opus-5-5 via Claude Code subagent (general-purpose), no tools used",
+  "agentId": "a5fa1d015c1cd4a0b",
+  "lines": [
+    {
+      "fact": "drift",
+      "pattern": "In week one, 43 of Lin's 68 plays were distorted guitars in a wall of sound and 12 were fingerpicked nylon guitar. In week four it had flipped: 35 of 58 plays were fingerpicked nylon guitar and 7 were the distorted guitars.",
+      "receipt": "Week one: 43 of 68 plays (63%) distorted guitars, 12 of 68 (18%) nylon guitar. Week four: 7 of 58 (12%) distorted guitars, 35 of 58 (60%) nylon guitar.",
+      "offers": [
+        "Did Lin's weeks grow calmer, so the quiet nylon guitar just fit better?",
+        "Was Lin worn out by the noise and looking for something gentle to lean on?"
+      ]
+    },
+    {
+      "fact": "newShare",
+      "pattern": "Of Lin's 251 plays, 45 went to new tracks and the other 206 went to tracks that weren't new, so fewer than one play in five was of a new track. One new track, Lumen Tarry, was played 4 times in the last week.",
+      "receipt": "45 of 251 plays (18%) on new tracks; 206 of 251 on tracks that weren't new; Lumen Tarry, 4 plays in the last week.",
+      "offers": [
+        "Were the tracks Lin already had a steady place to stand in a month that asked a lot?",
+        "Was Lin simply happy with the rotation, and choosy enough that Lumen Tarry had to earn its way in?"
+      ]
+    },
+    {
+      "fact": "repetition",
+      "pattern": "Lin played 25 different tracks across 251 plays. Three of them took 108 of those plays: Fennow Letter 47 times, Tamsel Lullaby 31 times and Cindergrist 30 times.",
+      "receipt": "108 of 251 plays (43%) went to 3 of 25 tracks: Fennow Letter 47, Tamsel Lullaby 31, Cindergrist 30.",
+      "offers": [
+        "Was Lin turning something over, with these three tracks playing while Lin did?",
+        "Was Lin just delighted by three tracks and glad to hear them again and again?"
+      ]
+    }
+  ]
+}

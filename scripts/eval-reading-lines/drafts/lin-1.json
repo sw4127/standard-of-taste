@@ -1,0 +1,35 @@
+{
+  "listener": "lin",
+  "brief": "v1",
+  "drafter": "claude-opus-5-5 via Claude Code subagent (general-purpose), no tools used",
+  "agentId": "a9f77024030662a3d",
+  "lines": [
+    {
+      "fact": "drift",
+      "pattern": "In week one, distorted guitars in a wall of sound took 43 of 68 plays and fingerpicked nylon guitar took 12. By week four, the wall of sound was down to 7 of 58 plays and the nylon guitar was up to 35.",
+      "receipt": "Distorted guitars: 43 of 68 week-one plays (63%) to 7 of 58 week-four plays (12%). Fingerpicked nylon guitar: 12 of 68 (18%) to 35 of 58 (60%).",
+      "offers": [
+        "Did the quieter guitar arrive with a calmer stretch, something settling in that no longer needed the noise?",
+        "Or did the wall of sound start to feel like too much, so the softer guitar was a way to keep things low while you were worn out?"
+      ]
+    },
+    {
+      "fact": "newShare",
+      "pattern": "Of 251 plays, 45 were of new tracks and 206 were of tracks that were not new. One new track, Lumen Tarry, was played 4 times in week four.",
+      "receipt": "45 of 251 plays (18%) on new tracks; 206 of 251 (82%) on tracks that were not new; Lumen Tarry 4 plays in week four.",
+      "offers": [
+        "Were the familiar tracks doing exactly what you wanted, so there was little reason to look further?",
+        "Or has there been little room lately for anything unfamiliar, and is Lumen Tarry, 4 plays in week four, the first time that room opened up?"
+      ]
+    },
+    {
+      "fact": "repetition",
+      "pattern": "Of 251 plays across 25 distinct tracks, 108 went to three of them: Fennow Letter 47 times, Tamsel Lullaby 31 times and Cindergrist 30 times.",
+      "receipt": "108 of 251 plays (43%) on 3 of 25 tracks: Fennow Letter 47, Tamsel Lullaby 31, Cindergrist 30.",
+      "offers": [
+        "Do these three still give you something every time, so going back is a way of getting more of it?",
+        "Or were they something steady to hold on to through a month that felt restless?"
+      ]
+    }
+  ]
+}

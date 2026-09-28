@@ -1,0 +1,44 @@
+{
+  "listener": "mira",
+  "brief": "v2",
+  "drafter": "claude-opus-5-5 via Claude Code subagent (general-purpose), no tools used",
+  "agentId": "a45bd5c47f5ce928d",
+  "lines": [
+    {
+      "fact": "newShare",
+      "pattern": "Of your 294 plays over the 28 days, 33 went to new tracks and the other 261 went back to tracks you had heard before. One new track, Sistrum Weather, was played once in the last week.",
+      "receipt": "33 of 294 plays (11%) were new tracks; 261 of 294 (89%) were not. Sistrum Weather: 1 play in the last week.",
+      "offers": [
+        "Could it be that what you already have is enough right now, and you are content to stay with it?",
+        "Or could new music feel like more effort than you have to spare at the moment, with Sistrum Weather as a small exception?"
+      ]
+    },
+    {
+      "fact": "repetition",
+      "pattern": "Your 294 plays went to 28 different tracks, and three of them took 151 of those plays: Velvetine Drift, Tallowfen and Ostrelle, Late.",
+      "receipt": "151 of 294 plays (51%) on 3 of 28 tracks: Velvetine Drift 67, Tallowfen 61, Ostrelle, Late 23.",
+      "offers": [
+        "Do you return to these three for the comfort of knowing exactly what comes next?",
+        "Or is there something in them you haven't finished with yet, a pull that brings you back each time?"
+      ]
+    },
+    {
+      "fact": "drift",
+      "pattern": "In week one, 42 of your 76 plays were sparse piano and room hiss and 26 were washed-out synth pads. In week four, 50 of your 79 plays were washed-out synth pads and 23 were sparse piano and room hiss.",
+      "receipt": "Sparse piano and room hiss: 42 of 76 plays in week one (55%), 23 of 79 in week four (29%). Washed-out synth pads: 26 of 76 in week one (34%), 50 of 79 in week four (63%).",
+      "offers": [
+        "Has something drawn you toward the synth pads, an ease or warmth you wanted more of?",
+        "Or has the bare piano started to feel too exposed, so the pads are a way to step back from it?"
+      ]
+    },
+    {
+      "fact": "lateNight",
+      "pattern": "Over the 28 days, 162 of your 294 plays fell between 11 at night and 4 in the morning.",
+      "receipt": "162 of 294 plays (55%) between 23:00 and 03:59.",
+      "offers": [
+        "Are those late hours the one stretch of the day that feels fully your own?",
+        "Or do those hours come with a restlessness that the music helps to fill?"
+      ]
+    }
+  ]
+}

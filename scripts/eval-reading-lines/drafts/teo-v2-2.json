@@ -1,0 +1,44 @@
+{
+  "listener": "teo",
+  "brief": "v2",
+  "drafter": "claude-opus-5-5 via Claude Code subagent (general-purpose), no tools used",
+  "agentId": "a23ee1c3421ea7c49",
+  "lines": [
+    {
+      "fact": "earlySkip",
+      "pattern": "You started 17 new tracks over the 28 days and left 13 of them inside their first 30 seconds. Among the new tracks you let play on, live bass and brushed drums came up most.",
+      "receipt": "13 of 17 new tracks skipped inside 30 seconds (76%)",
+      "offers": [
+        "Do you know within a few seconds whether a track is for you, and trust that call enough to move on?",
+        "Are you searching for something new and not finding it yet, so each try gets only a few seconds before you look again?"
+      ]
+    },
+    {
+      "fact": "lateNight",
+      "pattern": "Over 28 days, 14 of your 384 plays fell between 11 at night and 4 in the morning.",
+      "receipt": "14 of 384 plays (3.6%) between 23:00 and 03:59",
+      "offers": [
+        "Do your late hours belong to quiet, and is that quiet something you like keeping?",
+        "When you are up late, does music feel like too much to let in at that hour?"
+      ]
+    },
+    {
+      "fact": "drift",
+      "pattern": "In week one, 18 of your 88 plays were chopped vocal samples and bright synths; in week four, 44 of your 98 plays were. Over the same weeks, live bass and brushed drums went from 48 plays to 41.",
+      "receipt": "chopped vocal samples and bright synths: 18 of 88 plays in week one (20%), 44 of 98 in week four (45%); live bass and brushed drums: 48 of 88 (55%) to 41 of 98 (42%)",
+      "offers": [
+        "Does the brighter sound match a lift you already feel, with weeks that have more going on in them?",
+        "Are you reaching for bright synths to lift weeks that feel heavier than you would like?"
+      ]
+    },
+    {
+      "fact": "newShare",
+      "pattern": "254 of your 384 plays over the 28 days went to new tracks. One of them, Upright in Vell, got 8 plays in the last week.",
+      "receipt": "254 of 384 plays of new tracks (66%); Upright in Vell: 8 plays last week",
+      "offers": [
+        "Are you enjoying the chase right now, glad of how much fresh music there is to find?",
+        "Have the songs you used to return to stopped landing for you, so you keep looking for one that will, perhaps Upright in Vell?"
+      ]
+    }
+  ]
+}

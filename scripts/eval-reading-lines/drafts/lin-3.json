@@ -1,0 +1,35 @@
+{
+  "listener": "lin",
+  "brief": "v1",
+  "drafter": "claude-opus-5-5 via Claude Code subagent (general-purpose), no tools used",
+  "agentId": "a84a2158dbc442a6d",
+  "lines": [
+    {
+      "fact": "drift",
+      "pattern": "In week one, 43 of Lin's 68 plays were distorted guitars in a wall of sound and 12 were fingerpicked nylon guitar. By week four the two had swapped places: 7 of 58 plays went to the wall of sound and 35 to the nylon guitar.",
+      "receipt": "Week one: 43 of 68 plays (63%) wall of sound, 12 of 68 (18%) nylon guitar. Week four: 7 of 58 plays (12%) wall of sound, 35 of 58 (60%) nylon guitar.",
+      "offers": [
+        "After a loud stretch, did Lin want the noise turned down, so the nylon guitar felt like rest?",
+        "Or had the loud records simply run their course, and the nylon guitar is a new curiosity Lin is keen to follow?"
+      ]
+    },
+    {
+      "fact": "newShare",
+      "pattern": "Of Lin's 251 plays across the four weeks, 45 were of tracks Lin had not played before and the other 206 were of tracks already known. One new track, Lumen Tarry, was played 4 times in the last week.",
+      "receipt": "45 of 251 plays (18%) new tracks; 206 of 251 (82%) known tracks; Lumen Tarry: 4 plays in the last week.",
+      "offers": [
+        "Has Lin wanted the familiar lately, because a known track asks for nothing and a new one asks for attention?",
+        "Or is Lin content with what is already there, and happy to let a new track like Lumen Tarry earn its place slowly?"
+      ]
+    },
+    {
+      "fact": "repetition",
+      "pattern": "Lin's 251 plays went to 25 different tracks, and three of them took 108 of those plays: Fennow Letter 47 times, Tamsel Lullaby 31 times and Cindergrist 30 times.",
+      "receipt": "108 of 251 plays (43%) went to 3 of 25 tracks; Fennow Letter alone had 47 of 251 (19%).",
+      "offers": [
+        "Is coming back to these three tracks a comfort for Lin, something that stays the same each time?",
+        "Or is it fascination: is Lin still taking them apart, playing Fennow Letter 47 times because each listen turns up something new?"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "listener": "mira",
+  "brief": "v1",
+  "drafter": "claude-opus-5-5 via Claude Code subagent (general-purpose), no tools used",
+  "agentId": "afd83abebd2f17e47",
+  "lines": [
+    {
+      "fact": "newShare",
+      "pattern": "Of Mira's 294 plays across the 28 days, 33 were of tracks new to her and the other 261 went to tracks she had already heard. One new track, Sistrum Weather, was played once in week four.",
+      "receipt": "33 of 294 plays (11%) on new tracks; 261 of 294 (89%) on familiar ones; Sistrum Weather: 1 play in week four",
+      "offers": [
+        "Could staying with the familiar feel like contentment for Mira, as if she has already found what works and has no need to go looking?",
+        "Or might the familiar tracks be something steady to hold on to, while anything new feels like more than she wants to take on right now?"
+      ]
+    },
+    {
+      "fact": "repetition",
+      "pattern": "Mira played 28 different tracks, and three of them took 151 of her 294 plays: Velvetine Drift 67 times, Tallowfen 61 times and Ostrelle, Late 23 times.",
+      "receipt": "151 of 294 plays (51%) on 3 of 28 tracks (67 + 61 + 23)",
+      "offers": [
+        "Could going back to these three be a pleasure for Mira, like walking into a room she knows well?",
+        "Or might she be circling something in them that hasn't settled yet, a pull that keeps asking for one more listen?"
+      ]
+    },
+    {
+      "fact": "drift",
+      "pattern": "In week one, 42 of Mira's 76 plays were sparse piano and room hiss and 26 were washed-out synth pads. In week four the order had reversed: 23 of 79 plays were the piano and 50 of 79 were the pads.",
+      "receipt": "Sparse piano and room hiss: 42 of 76 plays (55%) in week one, 23 of 79 (29%) in week four. Washed-out synth pads: 26 of 76 (34%) in week one, 50 of 79 (63%) in week four",
+      "offers": [
+        "Could the move away from the bare piano mean Mira has less need for quiet, close sound than she did a month ago?",
+        "Or might the washed-out pads offer more cover, something to sink into when the plainer sound feels too exposed?"
+      ]
+    },
+    {
+      "fact": "lateNight",
+      "pattern": "162 of Mira's 294 plays fell between 11 at night and 4 in the morning.",
+      "receipt": "162 of 294 plays (55%) between 23:00 and 03:59",
+      "offers": [
+        "Is late night the unclaimed time Mira keeps for herself, when the music gets her full attention?",
+        "Or might the music be keeping restless hours company, when the day has not quite let go of her?"
+      ]
+    }
+  ]
+}

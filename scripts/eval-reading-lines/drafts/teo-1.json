@@ -1,0 +1,44 @@
+{
+  "listener": "teo",
+  "brief": "v1",
+  "drafter": "claude-opus-5-5 via Claude Code subagent (general-purpose), no tools used",
+  "agentId": "ad0a2a186dbc14470",
+  "lines": [
+    {
+      "fact": "earlySkip",
+      "pattern": "Of the 17 new tracks Teo tried, 13 were dropped inside their first 30 seconds. Among the tracks that were kept, live bass and brushed drums came up more than any other sound.",
+      "receipt": "13 of 17 new tracks skipped inside 30 seconds (76%)",
+      "offers": [
+        "Could Teo already know the sound being looked for, so that 30 seconds is enough to tell a track isn't it?",
+        "Could Teo be restless, reaching for something new while nothing new quite lands?"
+      ]
+    },
+    {
+      "fact": "lateNight",
+      "pattern": "Across the 28 days, 14 of Teo's 384 plays fell between 11 at night and 4 in the morning.",
+      "receipt": "14 of 384 plays (3.6%) between 23:00 and 03:59",
+      "offers": [
+        "Could the late hours be a time Teo keeps quiet on purpose, with music left to the day?",
+        "Could the late hours be taken up by something else, so that listening gets squeezed out rather than set aside?"
+      ]
+    },
+    {
+      "fact": "drift",
+      "pattern": "Chopped vocal samples and bright synths went from 18 of 88 plays in week one to 44 of 98 in week four. Over the same weeks, live bass and brushed drums went from 48 plays to 41.",
+      "receipt": "Chopped vocal samples and bright synths: 18 of 88 plays in week one (20%), 44 of 98 in week four (45%). Live bass and brushed drums: 48 of 88 (55%) to 41 of 98 (42%).",
+      "offers": [
+        "Could the shift be a move toward something, more energy or more lift than the weeks before had?",
+        "Could it be a move away, with the live bass and brushed drums asking for a stillness that doesn't fit right now?"
+      ]
+    },
+    {
+      "fact": "newShare",
+      "pattern": "254 of Teo's 384 plays were of new tracks. One of them, \"Upright in Vell\", was played 8 times in the last week.",
+      "receipt": "254 of 384 plays (66%) were new tracks; \"Upright in Vell\": 8 plays in the last week",
+      "offers": [
+        "Could this be appetite, the pleasure of hunting for the next thing and finding some of it, like \"Upright in Vell\"?",
+        "Could it be that the old favourites have stopped doing what they used to, and the searching is for a replacement?"
+      ]
+    }
+  ]
+}

@@ -26,8 +26,9 @@ import { appEntries, closure, isTest, walk } from "@/test-utils/import-graph";
  */
 const TEST_INFRASTRUCTURE: Record<string, string> = {
   "src/content/blueprint-copies.ts": "the registry of blueprint copies that blueprint.test.ts holds to their modes",
-  "src/content/carve-out.ts": "the carve-out patterns every site scan and template test applies (RT-Z10 a, BA-5)",
-  "src/content/register.ts": "the offer register and no-comparison rule the reading's templates are tested against (BA-3)",
+  // carve-out.ts and register.ts left this list on 2026-09-28: the reading-lines eval
+  // (scripts/eval-reading-lines/harness.ts) scores model drafts with them, so a script
+  // reaches them and they are no longer test-only.
   "src/content/delicacy/gates.ts": "the Delicacy pool contract, proven both ways against the real pool and broken fixtures",
   "src/content/staircase/fixtures.ts": "staircase results the card and copy tests render",
   "src/lib/pixel-contrast.ts": "the contrast measurement the accent and card tests use",
