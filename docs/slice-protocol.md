@@ -62,6 +62,11 @@ which is gitignored. **It therefore protects this machine only.** A session on a
 this paragraph and nothing else — which is the situation that produced the violation, so treat the
 paragraph as the weaker half.
 
+*[SUPERSEDED 2026-09-27 (`aa19746`) — the paragraph above is kept as history. The hooks are now
+tracked in `.claude/hooks/` and wired by the tracked `.claude/settings.json`, so a fresh clone arms
+the latch; only the permission grants stay in the untracked `settings.local.json`. Their tests run in
+the suite through `scripts/claude-hooks.test.ts`.]*
+
 
 ## Standing auto-advance (owner-approved 2026-09-07) — IN FORCE
 
