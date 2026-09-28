@@ -86,11 +86,22 @@ export const BP_ARG = BP_ARG_ORDER.map((id) => bp(id));
 export const BP_ARG_DEFENCE = (["BP-ARG-OBJECTION", "BP-ARG-REPLY", "BP-ARG-OPEN"] as const).map((id) => bp(id));
 
 /**
+ * Every citation form this repository uses for itself, and no published source uses.
+ * Widened 2026-09-28 after the red-team subagent showed the old pattern let through
+ * every lettered ruling series but none (`\bRT-\d` missed RT-Z10, RT-H, RT-AV), owner
+ * rulings (BA-3), the memo's decisions and guardrails (D2, N3), memo sections, argument
+ * steps (P1, S1), repository paths and PM rulings. A session/slice ID (E7/S8) is caught
+ * by its slice half; a separate alternative for it survived its own mutation and was cut.
+ */
+export const INTERNAL_REFERENCE =
+  /\bBP-[A-Z]|\bspec §|\bMRD\b|\bRT-[A-Z0-9]|\bBA-\d|\b[DNPS]\d\b|\bmemo §|\bdocs\/|\bPM-\d/;
+
+/**
  * The note as a reader may see it: a published citation, or nothing. A note that
  * points inside this repository ("spec §20.B", "MRD M8", another BP- ID) is a
  * cross-reference for the people maintaining it, and on a page it reads as noise.
  */
 export function publicSource(s: BpStatement): string | null {
-  if (!s.note || /\bBP-[A-Z]|\bspec §|\bMRD\b|\bRT-\d/.test(s.note)) return null;
+  if (!s.note || INTERNAL_REFERENCE.test(s.note)) return null;
   return s.note;
 }

@@ -19,7 +19,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { BLUEPRINT_PATH, loadBlueprint, publicSource, type BpId } from "./blueprint";
+import { BLUEPRINT_PATH, loadBlueprint, publicSource, type BpId, type BpStatement } from "./blueprint";
 import { BLUEPRINT_COPIES } from "./blueprint-copies";
 
 /** Pointed at by mutation (d): an empty file here must fail the count floor. */
@@ -136,6 +136,45 @@ describe("a reader is never shown the blueprint's internal cross-references", ()
     expect(reply.note).toMatch(/BP-UNMET/);
     expect(publicSource(reply)).toBeNull();
     expect(publicSource(objection)).toMatch(/Forer \(1949\)/);
+  });
+
+  /*
+   * ONE SPECIMEN PER ALTERNATIVE (2026-09-28). The case above cannot fail if the
+   * filter loses its RT-, MRD or spec alternative: the real note it checks is nulled
+   * by "BP-UNMET" alone. The red-team subagent showed a planted commit removing
+   * `RT-\d` would have passed. Each specimen carries exactly one internal
+   * reference, so removing any one alternative fails at least one case (the RT
+   * alternative fails three: a numbered, a Z-series and a lettered ruling).
+   */
+  const specimen = (note: string): BpStatement => ({ id: "BP-X", text: "x", note, label: null });
+  it.each([
+    ["a ruling", "Label: ASSUMED (RT-8)."],
+    ["a Z-series ruling", "Carve-out: RT-Z10 a."],
+    ["a lettered ruling with no digit", "Kind: owner ruling (RT-H)."],
+    ["a memo decision", "Label: ASSUMED (D2)."],
+    ["a guardrail", "Held to N3."],
+    ["a memo section", "See memo §8.1."],
+    ["an argument step", "INFERENCE from P1 and P2."],
+    ["a repository path", "Ruling: docs/rt-answers-2026-09-23-audit.md."],
+    ["a PM ruling", "Decided in PM-3a."],
+    ["a session slice", "Measured in E7/S8."],
+    ["an owner ruling", "Kind: owner ruling (BA-3)."],
+    ["the MRD", "See MRD M8."],
+    ["the spec", "Source: spec §20.B."],
+    ["another statement", "Supporting finding: BP-F1."],
+  ])("drops a note whose only internal reference is %s", (_, note) => {
+    expect(publicSource(specimen(note))).toBeNull();
+  });
+  it("drops a note WHOLE when a published source shares it with a cross-reference", () => {
+    // The contract is "a published citation, or nothing", so a mixed note renders
+    // nothing: BP-CA3's Hume citation is not shown today for this reason. Pinned so
+    // the behaviour is a stated rule, not a surprise; splitting such notes into a
+    // public source and a cross-reference is a change to docs/blueprint.md.
+    expect(publicSource(specimen("Hume (1757). Connects only through BP-BRIDGE."))).toBeNull();
+  });
+
+  it("keeps a published citation that carries no internal reference", () => {
+    expect(publicSource(specimen("Forer (1949), J. Abnorm. Soc. Psychol."))).toBe("Forer (1949), J. Abnorm. Soc. Psychol.");
   });
 });
 
