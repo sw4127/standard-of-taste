@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { tint } from "@/content/instrument-accents";
+import { localHref, type Locale } from "@/lib/locale";
+import { tFor } from "@/lib/i18n";
+import SPREAD_ZH from "@/content/zh/copy/spread";
 
 /**
  * ONE CARD FOR AN INSTRUMENT, WRITTEN ONCE (E10/S2, Track F3).
@@ -66,14 +69,18 @@ export default function MachineCard({
   machine,
   size,
   onPick,
+  locale = "en",
 }: {
   machine: MachineRef;
   size: MachineCardSize;
   onPick?: (id: string) => void;
+  /** The page's language (bilingual Part 2); the card's title and line follow it. */
+  locale?: Locale;
 }) {
+  const t = tFor(locale, SPREAD_ZH);
   return (
     <Link
-      href={machine.href}
+      href={localHref(locale, machine.href)}
       /*
        * THE CONDITIONAL IS LOAD-BEARING, NOT TIDINESS. `OtherMachines` wrote
        * `onClick={() => onPick?.(m.id)}` — an inline function, always created.
@@ -88,9 +95,9 @@ export default function MachineCard({
       style={{ borderColor: tint(machine.accent), background: "rgba(255,255,255,0.03)" }}
     >
       <p className={`font-display ${TITLE_SIZE[size]} font-semibold`} style={{ color: machine.accent }}>
-        {machine.title}
+        {t(machine.title)}
       </p>
-      <p className="mt-1 text-sm leading-relaxed text-muted">{machine.line}</p>
+      <p className="mt-1 text-sm leading-relaxed text-muted">{t(machine.line)}</p>
     </Link>
   );
 }

@@ -1,0 +1,119 @@
+/**
+ * 跨测试汇总 · The across-sessions panel in Chinese (bilingual Part 2; D1, N3).
+ *
+ * One function per English function in `src/content/vocabulary/across.ts`,
+ * branch for branch, in the same order `acrossLines` emits them, and the copy
+ * of the forget control (`src/content/forget.ts`). Every sentence is about what
+ * the instruments measured, never about the person (D1), and nothing adds the
+ * instruments up into one score. DRAFT: not yet through the owner's writing pass.
+ */
+import type { Dict } from "@/lib/i18n";
+import type { AcrossInput } from "@/content/vocabulary/across";
+import type { ReplicationCheck } from "@/engine/replication";
+import type { StaircaseResult } from "@/engine/staircase-session";
+import { quantity, shortUnit } from "@/content/staircase/copy";
+import { thresholdClaim } from "@/engine/evidence";
+
+/** The Threshold Test's three families (`FAMILY_LABEL` in staircase/copy.ts). */
+export const FAMILY_LABEL_ZH: Record<string, string> = {
+  "pitch-drift": "音高漂移",
+  "timing-smear": "节拍模糊",
+  "lossy-artifact": "压缩损伤",
+};
+const label = (family: string) => FAMILY_LABEL_ZH[family] ?? family;
+
+/** A unit as Chinese names it: 音分 for cents; ms and kbps stay as written. */
+export function unitZh(unit: string): string {
+  const u = shortUnit(unit);
+  return u === "cents" ? "音分" : u;
+}
+/** `quantity`, with the unit in Chinese. */
+export function quantityZh(value: number, unit: string): string {
+  return quantity(value, unit).replace(/ cents$/, " 音分");
+}
+/** `onSource`, in Chinese: the recording a lossy number was measured on. */
+export function onSourceZh(result: Pick<StaircaseResult, "sourceId">): string {
+  return result.sourceId ? `（录音 ${result.sourceId}）` : "";
+}
+
+export function dossierLineZh(input: AcrossInput): string | null {
+  const parts: string[] = [];
+  if (input.bias) parts.push("一个名字会不会改变你听到的东西");
+  if (input.delicacy) parts.push("你能不能分辨损坏的和完好的，并说出损坏是什么");
+  if (input.thresholds.length > 0) parts.push("瑕疵要小到什么程度你才听不出");
+  if (input.spread) parts.push("你的评分是否在评论家判断拉开的地方拉开");
+  if (parts.length < 2) return null;
+  return (
+    `你已经回答了 ${parts.length} 个关于你耳朵的不同问题：${parts.join("；")}。` +
+    `它们并非同一件事的 ${parts.length} 个分数，也不能相加：每一个都以自己的单位测量。`
+  );
+}
+
+export function replicationLineZh(check: ReplicationCheck): string {
+  const tested = check.agree + check.disagree;
+  const what = `你的${label(check.family)}（单位：${unitZh(check.unit)}）`;
+  const material = check.crossMaterial ? "，而且用的是不同的录音，这比任何一次单独测试都更难" : "";
+  if (check.disagree === 0) {
+    return (
+      `两次独立的测试用不同的方法测了${what}，${tested} 项检查全部一致${material}。` +
+      "这是这里最接近证据的东西，说明这个数字确有其事，并非一个下午的偶然。"
+    );
+  }
+  if (check.agree === 0) {
+    return (
+      `两次独立的测试测了${what}，${tested} 项检查全部不一致${material}。` +
+      "两次中有一次没有描述你的耳朵，这比一个从未测过第二次的数字更有价值。"
+    );
+  }
+  return (
+    `两次独立的测试测了${what}，${tested} 项检查中有 ${check.agree} 项一致${material}。` +
+    "两次短测试部分一致是常见的结果；再做第三次，范围会收窄。"
+  );
+}
+
+export function coverageLineZh(input: AcrossInput): string | null {
+  if (input.unmeasured.length === 0) {
+    return "阶梯测试能跑的每一条梯级，在这台设备上都有测试记录。现在能让数字变化的，是两次测试之间隔开的时间。";
+  }
+  const names = input.unmeasured.map(label);
+  const list = names.length === 1 ? names[0] : `${names.slice(0, -1).join("、")}和${names[names.length - 1]}`;
+  return `这台设备上还没测过：${list}。这里对你在${names.length === 1 ? "这一项" : "这些项目"}上的表现，什么也说不出。`;
+}
+
+export function thresholdRosterZh(input: AcrossInput): string[] {
+  return input.thresholds
+    .map((t) => {
+      const claim = thresholdClaim(t);
+      if (!claim.ok) return null;
+      const say = claim.value;
+      if (say.wide || say.heardAt === null) return `${label(t.family)}：本次没有定下来`;
+      return `${label(t.family)}：听出于 ${quantityZh(say.heardAt, t.unit)}${onSourceZh(t)}`;
+    })
+    .filter((l): l is string => l !== null);
+}
+
+/** The Chinese of `acrossLines`: the same parts, the same silence under two instruments. */
+export function acrossLinesZh(input: AcrossInput, count: number): string[] {
+  if (count < 2) return [];
+  const dossier = dossierLineZh(input);
+  const coverage = coverageLineZh(input);
+  return [...(dossier ? [dossier] : []), ...input.replications.map(replicationLineZh), ...(coverage ? [coverage] : [])];
+}
+
+const ACROSS: Dict = {
+  "ACROSS YOUR SESSIONS": "跨测试汇总",
+  "Read from this browser only — there are no accounts, so another device starts empty.":
+    "只读自本浏览器：没有账户，所以换一台设备就从空白开始。",
+  // The forget control (src/content/forget.ts).
+  "Forget this browser": "让本浏览器忘掉一切",
+  "This removes everything the gym has kept in this browser: the sessions you have finished and the answers behind them, the seven-day retest gate that goes with them, the language you chose, and the in-flight state of anything open right now.":
+    "这会删去本站在本浏览器里保存的一切：你完成的测试和背后的作答、随之而来的七天重测限制、你选择的语言，以及此刻打开着的任何未完成的状态。",
+  "It cannot undo usage events already sent to our analytics, and it changes nothing in any other browser — there was never an account to change.":
+    "它无法撤回已经发送到我们统计工具的使用事件，也不会改变任何其他浏览器里的东西：本来就没有账户可改。",
+  "Yes, forget it": "确定，全部删去",
+  "Keep it": "保留",
+  "Cleared. Nothing measured on this browser is left, and the gym has never met you.":
+    "已清除。本浏览器上测得的一切都不在了，本站也从未认识过你。",
+};
+
+export default ACROSS;

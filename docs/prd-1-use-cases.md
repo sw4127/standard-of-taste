@@ -75,7 +75,7 @@ ASSUMED here.
 | **UC-13** | See why a company would fund the reading and how it would test that | `/company` | **ASSUMED** | BP-BUSINESS, BP-GOAL |
 | **UC-14** | Try the core as its intended user within minutes | `/` | **ASSUMED** | BP-GOAL |
 | **UC-15** | Understand the product without using it | `/` | **ASSUMED** | BP-GOAL, BP-INSIGHT |
-| **UC-16** | Read the product in Chinese, with the English one button away (added 2026-09-29, bilingual brief) | `/zh`, `/zh/company`, `/zh/learn/why`, `/zh/reading` | **ASSUMED** | BP-GOAL |
+| **UC-16** | Read the product in Chinese, with the English one button away (added 2026-09-29, bilingual brief) | `/zh`, `/zh/company`, `/zh/learn/why`, `/zh/reading`, `/zh/spread` | **ASSUMED** | BP-GOAL |
 
 ## Routes that serve no BP statement
 
@@ -96,7 +96,7 @@ the blueprint does not ask for them. Each stays for the reason given.
 | `/quiz`, `/result`, `/music/quiz`, `/music/result`, `/fan-verdict`, `/vs` | The legacy World-Cup funnel, and the music snack: retired 2026-09-23 (BA-7); the snack's routes redirect to the reading, the rest to the front door. Kept alive only so shared URLs do not 404 (`CLAUDE.md`, Legacy) |
 | `/premium/preview`, `/premium/report` | The paid tier, withdrawn by the D4 amendment. There is no paid tier and none is coming |
 
-**That is 42 routes: 25 serving a use case, 9 serving no BP statement, 8 out of scope.**
+**That is 43 routes: 26 serving a use case, 9 serving no BP statement, 8 out of scope.**
 
 ---
 

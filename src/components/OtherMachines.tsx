@@ -8,6 +8,9 @@ import {
   SPREAD_ROSE,
 } from "@/content/instrument-accents";
 import MachineCard, { type MachineRef } from "./MachineCard";
+import { tFor } from "@/lib/i18n";
+import type { Locale } from "@/lib/locale";
+import SPREAD_ZH from "@/content/zh/copy/spread";
 
 export type { MachineRef };
 
@@ -73,19 +76,23 @@ export const MACHINES: MachineRef[] = [
 export default function OtherMachines({
   from,
   onPick,
+  locale = "en",
 }: {
   /** The instrument the reader has just finished. */
   from: string;
   onPick?: (id: string) => void;
+  /** The page's language (bilingual Part 2). */
+  locale?: Locale;
 }) {
+  const t = tFor(locale, SPREAD_ZH);
   const others = MACHINES.filter((m) => m.id !== from && m.live);
   if (others.length === 0) return null;
 
   return (
     <div className="mt-8 flex flex-col gap-3">
-      <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">THE OTHER MACHINES</p>
+      <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">{t("THE OTHER MACHINES")}</p>
       {others.map((m) => (
-        <MachineCard key={m.id} machine={m} size="reveal" onPick={onPick} />
+        <MachineCard key={m.id} machine={m} size="reveal" onPick={onPick} locale={locale} />
       ))}
     </div>
   );

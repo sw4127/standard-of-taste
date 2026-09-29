@@ -45,7 +45,7 @@ export const LAYOUT_ORDERS: Record<string, readonly LayoutOrder[]> = {
   expert: [
     {
       file: "src/components/ExpertPanel.tsx",
-      symbols: ["{PANEL.blurb}", "{body}"],
+      symbols: ["{t(PANEL.blurb)}", "{body}"],
       claim: "the blurb sits in the summary, above the one instrument body the panel renders",
     },
     {

@@ -120,6 +120,7 @@ const INVISIBLE: Record<string, number> = {
   "/zh/company": 79,
   "/zh/learn/why": 41,
   "/zh/reading": 31,
+  "/zh/spread": 16,
 };
 
 /*

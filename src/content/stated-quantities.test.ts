@@ -95,7 +95,9 @@ function sourcesUnder(dir: string, ext: string): string[] {
 const SURFACES = [
   ...sourcesUnder("src/app", ".tsx"),
   ...sourcesUnder("src/components", ".tsx"),
-  ...sourcesUnder("src/content", ".ts"),
+  // Not the Chinese dictionaries: their keys repeat the English they translate, and the
+  // Chinese values are held to their keys' numbers by site-zh.test.tsx (bilingual Part 2).
+  ...sourcesUnder("src/content", ".ts").filter((f) => !f.startsWith("src/content/zh/")),
 ];
 
 const BIAS_PAGES = SURFACES;

@@ -30,6 +30,9 @@
  */
 
 import { useEffect, useRef, useState } from "react";
+import { useLocale } from "@/lib/use-locale";
+import { tFor } from "@/lib/i18n";
+import SPREAD_ZH from "@/content/zh/copy/spread";
 import { type InstrumentPalette } from "@/content/instrument-accents";
 
 export const MIN_LISTEN_MS = 5000;
@@ -117,6 +120,8 @@ export default function ClipPlayer({
    */
   palette: InstrumentPalette;
 }) {
+  // The player's own words in the page's language (bilingual Part 2).
+  const t = tFor(useLocale(), SPREAD_ZH);
   const placeholder = isPlaceholderSrc(src);
   const [playing, setPlaying] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -375,7 +380,7 @@ export default function ClipPlayer({
         <button
           type="button"
           onClick={() => (placeholder ? playTone() : void toggleAudio())}
-          aria-label={playing ? `Stop ${label ?? `clip ${index + 1}`}` : `Play ${label ?? `clip ${index + 1}`}`}
+          aria-label={t(playing ? "Stop {label}" : "Play {label}", { label: label ?? t("clip {n}", { n: index + 1 }) })}
           className="absolute inset-1 flex items-center justify-center rounded-full border text-2xl transition active:scale-95"
           style={
             playing
@@ -387,9 +392,9 @@ export default function ClipPlayer({
         </button>
       </div>
       <div>
-        <p className="font-display text-lg font-semibold">{label ?? `Clip ${index + 1}`}</p>
+        <p className="font-display text-lg font-semibold">{label ?? t("Clip {n}", { n: index + 1 })}</p>
         <p className="text-xs text-muted">
-          {failed ? "clip failed to load — tap to retry" : caption}
+          {failed ? t("clip failed to load — tap to retry") : caption}
         </p>
       </div>
     </div>

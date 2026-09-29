@@ -205,8 +205,9 @@ describe("the control's copy names everything it takes", () => {
 
   it("says what goes BEFORE the destructive tap, not after it", () => {
     const source = readFileSync("src/components/ForgetThisBrowser.tsx", "utf8");
-    const bodyAt = source.indexOf("{FORGET.body}");
-    const confirmAt = source.indexOf("{FORGET.confirm}");
+    // Rendered bare or through the language lookup, `{t(FORGET.body)}` (bilingual Part 2).
+    const bodyAt = source.search(/\{(t\()?FORGET\.body\)?\}/);
+    const confirmAt = source.search(/\{(t\()?FORGET\.confirm\)?\}/);
     expect(bodyAt).toBeGreaterThan(-1);
     expect(confirmAt).toBeGreaterThan(-1);
     expect(bodyAt).toBeLessThan(confirmAt);

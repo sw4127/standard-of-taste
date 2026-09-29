@@ -63,7 +63,7 @@ const LANDING: Dict = {
   "The Ranking Test": "排序测试（Ranking Test）",
   "Comparison · heard": "比较 · 凭耳朵",
   "A critic ranked {count} works against each other. Rate them with your ears alone and find out whether your gaps fall where his did — agreeing with him is not the point, and is not measured.":
-    "一位评论家给 {count} 部作品排过先后。只凭耳朵给它们打分，看你听出的差距是否落在他听出的地方；和他意见一致并非目的，也不会被测量。",
+    "一位评论家给 {count} 部作品排过先后。只凭耳朵给它们打分，看你的评分差距是否落在他拉开的地方；和他意见一致并非目的，也不会被测量。",
   "~{minutes} min · {works} works, {seconds} seconds each": "约 {minutes} 分钟 · {works} 部作品，每段 {seconds} 秒",
 
   // The floor (src/app/GymFloor.tsx).

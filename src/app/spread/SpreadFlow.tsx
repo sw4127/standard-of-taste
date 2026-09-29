@@ -42,6 +42,12 @@ import OtherMachines from "@/components/OtherMachines";
 import AcrossSessions from "@/components/AcrossSessions";
 import ExpertPanel from "@/components/ExpertPanel";
 import { SPREAD_PALETTE } from "@/content/instrument-accents";
+import { useLocale } from "@/lib/use-locale";
+import { localHref } from "@/lib/locale";
+import { rich, tFor } from "@/lib/i18n";
+import SPREAD_ZH from "@/content/zh/copy/spread";
+import LanguageBar from "@/components/LanguageBar";
+import { RECOGNITION_DISCLOSURE_ZH, spreadLinesZh } from "@/content/zh/copy/spread-lines";
 
 import { BIAS_SCALE_MAX } from "@/engine/bias";
 import { SHELL_WIDTH } from "@/content/shell";
@@ -68,6 +74,9 @@ const { accent, soft, glow } = SPREAD_PALETTE;
 const MIN_LISTEN_MS = 12_000;
 
 type Phase = "frame" | "rate" | "reveal";
+
+/** Where the language button shows: before anything has been rated, and nowhere after. */
+export const languageBarPhases: readonly Phase[] = ["frame"];
 
 /**
  * THE SITTING, ONTO THIS DEVICE (E18/S2, PM ruling RT-O2 a).
@@ -103,6 +112,14 @@ function remember(ratings: Record<string, number>, recognised: readonly string[]
 }
 
 export default function SpreadFlow() {
+  /*
+   * THE PAGE'S LANGUAGE (bilingual Part 2). English counts in the frame are words
+   * ("six pieces"), Chinese ones digits; the reading comes from the Chinese
+   * templates on a Chinese page. Nothing about the measurement changes.
+   */
+  const locale = useLocale();
+  const zh = locale === "zh";
+  const t = tFor(locale, SPREAD_ZH);
   const [phase, setPhase] = useState<Phase>("frame");
   const [idx, setIdx] = useState(0);
   const [ratings, setRatings] = useState<Record<string, number>>({});
@@ -152,31 +169,44 @@ export default function SpreadFlow() {
 
   if (phase === "frame") {
     return (
+      <>
+      {/*
+        THE LANGUAGE BUTTON LIVES ON THE OPENING SCREEN ONLY (red-team, bilingual Part 2).
+        The sitting is held in this component's state, so switching mid-sitting would throw
+        the ratings away, and a retry would then be honestly spoiled: the visitor now knows
+        the clips. `languageBarPhases` says where it shows; spread-flow.test.ts holds it.
+      */}
+      {languageBarPhases.includes(phase) ? <LanguageBar locale={locale} /> : null}
       <main className="mx-auto max-w-xl px-5 py-14">
         <p className="text-xs uppercase tracking-[0.2em]" style={{ color: accent }}>
-          The Ranking Test
+          {t("The Ranking Test")}
         </p>
         <h1 className="mt-3 text-3xl font-bold leading-tight">
-          A critic ranked these works. Do your gaps fall where his did?
+          {t("A critic ranked these works. Do your gaps fall where his did?")}
         </h1>
         <div className="mt-6 space-y-4 text-sm leading-relaxed text-muted">
           <p>
-            {numberWordLeading(SPREAD_WORK_COUNT)} pieces of music, {numberWord(SPREAD_CLIP_SECONDS)} seconds
-            each. Rate what you hear, and nothing else. A
-            published critic once ranked all of these against each other — some he placed far
-            apart, some he bracketed together.
+            {t(
+              "{count} pieces of music, {seconds} seconds each. Rate what you hear, and nothing else. A published critic once ranked all of these against each other — some he placed far apart, some he bracketed together.",
+              {
+                count: zh ? SPREAD_WORK_COUNT : numberWordLeading(SPREAD_WORK_COUNT),
+                seconds: zh ? SPREAD_CLIP_SECONDS : numberWord(SPREAD_CLIP_SECONDS),
+              },
+            )}
           </p>
           <p>
-            What comes out is two numbers: how far apart your ratings fell on the pairs he
-            separated, and how far apart they fell on the pairs he did not.{" "}
-            <strong className="text-fg">
-              Agreeing with him is not the point and is not measured.
-            </strong>{" "}
-            Nothing here can even see which of two works he ranked higher.
+            {rich(
+              t(
+                "What comes out is two numbers: how far apart your ratings fell on the pairs he separated, and how far apart they fell on the pairs he did not. {strong} Nothing here can even see which of two works he ranked higher.",
+              ),
+              { strong: <strong className="text-fg">{t("Agreeing with him is not the point and is not measured.")}</strong> },
+            )}
           </p>
-          <p>{RECOGNITION_DISCLOSURE}</p>
+          <p>{zh ? RECOGNITION_DISCLOSURE_ZH : RECOGNITION_DISCLOSURE}</p>
           <p className="text-xs">
-            About {numberWord(SPREAD_SESSION_MINUTES)} minutes of listening. Headphones help.
+            {t("About {minutes} minutes of listening. Headphones help.", {
+              minutes: zh ? SPREAD_SESSION_MINUTES : numberWord(SPREAD_SESSION_MINUTES),
+            })}
           </p>
         </div>
         <button
@@ -188,9 +218,10 @@ export default function SpreadFlow() {
           className="mt-8 w-full rounded-2xl py-4 text-sm font-bold transition active:scale-[0.98]"
           style={{ background: soft, color: accent, boxShadow: `0 0 0 1.5px ${accent}` }}
         >
-          Start listening
+          {t("Start listening")}
         </button>
       </main>
+      </>
     );
   }
 
@@ -207,14 +238,14 @@ export default function SpreadFlow() {
     return (
       <main className={`mx-auto w-full ${SHELL_WIDTH} px-5 py-10`}>
         <p className="text-xs uppercase tracking-[0.2em] text-muted">
-          Clip {idx + 1} of {SPREAD_POOL.length}
+          {t("Clip {n} of {total}", { n: idx + 1, total: SPREAD_POOL.length })}
         </p>
         <ClipPlayer
           key={clip.id}
           src={audioUrl(`spread/${clip.id}.mp3`)}
           index={idx}
-          label={`Clip ${idx + 1}`}
-          caption="Listen, then say whether you know it — and only then rate it."
+          label={t("Clip {n}", { n: idx + 1 })}
+          caption={t("Listen, then say whether you know it — and only then rate it.")}
           minListenMs={MIN_LISTEN_MS}
           onArmed={() => setHeard(true)}
           onProgress={() => {}}
@@ -226,7 +257,7 @@ export default function SpreadFlow() {
           rating, the answer is contaminated by the rating it is meant to filter.
         */}
         <div className="mt-8">
-          <p className="text-sm font-semibold">Had you heard this before?</p>
+          <p className="text-sm font-semibold">{t("Had you heard this before?")}</p>
           <div className="mt-3 grid grid-cols-2 gap-3">
             {[
               { value: true, label: "Yes, I know it" },
@@ -244,12 +275,12 @@ export default function SpreadFlow() {
                     : { borderColor: "rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.02)" }
                 }
               >
-                {option.label}
+                {t(option.label)}
               </button>
             ))}
           </div>
           <p className="mt-2 text-[0.65rem] text-muted">
-            Saying yes leaves the clip out of the result. It is never counted against you.
+            {t("Saying yes leaves the clip out of the result. It is never counted against you.")}
           </p>
         </div>
 
@@ -270,7 +301,7 @@ export default function SpreadFlow() {
           a comment quoting the thing a text guard forbids reproduces it.
         */}
         <div className={said === null ? "mt-8 opacity-40" : "mt-8"}>
-          <p className="text-sm font-semibold">How good is it?</p>
+          <p className="text-sm font-semibold">{t("How good is it?")}</p>
           {/*
             SIX COLUMNS ON A PHONE, ELEVEN ON A DESKTOP.
             Measured at 375px: `grid-cols-11` gave 27px-wide targets, and the
@@ -293,7 +324,7 @@ export default function SpreadFlow() {
                 type="button"
                 disabled={said === null}
                 onClick={() => rate(v)}
-                aria-label={`Rate ${v}`}
+                aria-label={t("Rate {v}", { v })}
                 className="h-12 rounded-xl border text-sm font-bold transition active:scale-95 disabled:cursor-not-allowed"
                 style={{ borderColor: "rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.02)" }}
               >
@@ -302,8 +333,8 @@ export default function SpreadFlow() {
             ))}
           </div>
           <div className="mt-2 flex justify-between text-[0.65rem] text-muted">
-            <span>Nothing there</span>
-            <span>As good as this gets</span>
+            <span>{t("Nothing there")}</span>
+            <span>{t("As good as this gets")}</span>
           </div>
         </div>
       </main>
@@ -314,21 +345,23 @@ export default function SpreadFlow() {
   return (
     <main className="mx-auto max-w-xl px-5 py-14">
       <p className="text-xs uppercase tracking-[0.2em]" style={{ color: accent }}>
-        The Ranking Test
+        {t("The Ranking Test")}
       </p>
-      <h1 className="mt-3 text-3xl font-bold leading-tight">Where your gaps fell</h1>
+      <h1 className="mt-3 text-3xl font-bold leading-tight">{t("Where your gaps fell")}</h1>
 
       {result.refusal === null ? (
         <div className="mt-8 grid grid-cols-2 gap-4">
           <Figure
             value={result.far.meanGap}
-            caption="across works he placed far apart"
+            caption={t("across works he placed far apart")}
             baseline={result.spreadIfIndifferent}
+            note={t("Rating at random gives {value} on both.", { value: result.spreadIfIndifferent.toFixed(1) })}
           />
           <Figure
             value={result.close.meanGap}
-            caption="across works he bracketed together"
+            caption={t("across works he bracketed together")}
             baseline={result.spreadIfIndifferent}
+            note={t("Rating at random gives {value} on both.", { value: result.spreadIfIndifferent.toFixed(1) })}
           />
         </div>
       ) : null}
@@ -340,7 +373,7 @@ export default function SpreadFlow() {
         in a function stops reaching its callers.
       */}
       <div className="mt-8 space-y-4 text-sm leading-relaxed text-muted">
-        {spreadLines(result).map((line) => (
+        {(zh ? spreadLinesZh(result) : spreadLines(result)).map((line) => (
           <p key={line.slice(0, 32)}>{line}</p>
         ))}
       </div>
@@ -388,11 +421,11 @@ export default function SpreadFlow() {
       />
 
       <div className="mt-10">
-        <OtherMachines from="spread" />
+        <OtherMachines from="spread" locale={locale} />
       </div>
       <p className="mt-8 text-xs text-muted">
-        <Link href="/learn/methodology" className="underline">
-          How this is measured
+        <Link href={localHref(locale, "/learn/methodology")} className="underline">
+          {t("How this is measured")}
         </Link>
       </p>
     </main>
@@ -407,11 +440,13 @@ export default function SpreadFlow() {
 function Figure({
   value,
   caption,
-  baseline,
+  note,
 }: {
   value: number | null;
   caption: string;
   baseline: number;
+  /** "Rating at random gives … on both", in the page's language. */
+  note: string;
 }) {
   if (value === null) return null;
   return (
@@ -424,7 +459,7 @@ function Figure({
       </p>
       <p className="mt-2 text-xs leading-snug text-muted">{caption}</p>
       <p className="mt-3 text-[0.65rem] text-muted">
-        Rating at random gives {baseline.toFixed(1)} on both.
+        {note}
       </p>
     </div>
   );

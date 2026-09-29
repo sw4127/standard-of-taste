@@ -59,6 +59,16 @@ import {
   EXPERT_VALUES as VAL,
   brierNote,
 } from "@/content/vocabulary/expert";
+import { useLocale } from "@/lib/use-locale";
+import { tFor, type T } from "@/lib/i18n";
+import EXPERT_ZH, { brierNoteZh } from "@/content/zh/copy/expert";
+
+/*
+ * THE PANEL IN THE PAGE'S LANGUAGE (bilingual Part 2). Every label goes through
+ * the panel's dictionary; numbers, units and clip ids pass through untouched. The
+ * translator is threaded down as `t` rather than read in each body, so one panel
+ * cannot mix languages.
+ */
 
 type Instrument =
   | { kind: "delicacy" }
@@ -162,7 +172,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
  * twice has no rate (N3, `MIN_BIN_N`), and a point at the origin would read as
  * "you got none of them right" rather than "there is nothing to say".
  */
-function CalibrationCurveChart({ c, accent }: { c: CalibrationCurve; accent: string }) {
+function CalibrationCurveChart({ c, accent, t, zh }: { c: CalibrationCurve; accent: string; t: T; zh: boolean }) {
   const shown = c.points.filter((p) => p.observedPct !== null);
   const PAD = 26;
   const SIZE = 150;
@@ -176,9 +186,11 @@ function CalibrationCurveChart({ c, accent }: { c: CalibrationCurve; accent: str
           viewBox={`0 0 ${SIZE + PAD * 2} ${SIZE + PAD * 2}`}
           className="mt-3 w-full max-w-[260px]"
           role="img"
-          aria-label={`Calibration: ${shown
-            .map((p) => `claimed ${p.claimedPct}%, delivered ${Math.round(p.observedPct!)}%`)
-            .join("; ")}`}
+          aria-label={t("Calibration: {points}", {
+            points: shown
+              .map((p) => t("claimed {c}%, delivered {d}%", { c: p.claimedPct, d: Math.round(p.observedPct!) }))
+              .join(zh ? String.fromCharCode(0xff1b) : "; "),
+          })}
         >
           <rect x={PAD} y={PAD} width={SIZE} height={SIZE} fill="none" stroke="rgba(255,255,255,0.12)" />
           {/* Perfect calibration. Everything is read as distance from this. */}
@@ -201,102 +213,102 @@ function CalibrationCurveChart({ c, accent }: { c: CalibrationCurve; accent: str
           ))}
           <text x={PAD} y={SIZE + PAD + 14} fill="rgba(255,255,255,0.45)" fontSize="9">0%</text>
           <text x={x(100) - 14} y={SIZE + PAD + 14} fill="rgba(255,255,255,0.45)" fontSize="9">100%</text>
-          <text x={PAD} y={PAD - 8} fill="rgba(255,255,255,0.45)" fontSize="9">delivered</text>
-          <text x={x(100) - 30} y={SIZE + PAD + 24} fill="rgba(255,255,255,0.45)" fontSize="9">claimed</text>
+          <text x={PAD} y={PAD - 8} fill="rgba(255,255,255,0.45)" fontSize="9">{t("delivered")}</text>
+          <text x={x(100) - 30} y={SIZE + PAD + 24} fill="rgba(255,255,255,0.45)" fontSize="9">{t("claimed")}</text>
         </svg>
       ) : null}
       <Table
-        head={[COL.youSaid, COL.right, COL.of, COL.delivered, COL.versusClaim]}
+        head={[COL.youSaid, COL.right, COL.of, COL.delivered, COL.versusClaim].map((h) => t(h))}
         rows={c.points.map((p) => [
           `${p.claimedPct}%`,
           String(p.correct),
           String(p.n),
-          p.observedPct === null ? VAL.tooFewToSay : `${Math.round(p.observedPct)}%`,
+          p.observedPct === null ? t(VAL.tooFewToSay) : `${Math.round(p.observedPct)}%`,
           p.observedPct === null
-            ? VAL.none
-            : `${Math.round(p.observedPct) - p.claimedPct > 0 ? "+" : ""}${Math.round(p.observedPct) - p.claimedPct} pts`,
+            ? t(VAL.none)
+            : t("{n} pts", { n: `${Math.round(p.observedPct) - p.claimedPct > 0 ? "+" : ""}${Math.round(p.observedPct) - p.claimedPct}` }),
         ])}
       />
       <p className="mt-2 text-[0.65rem] leading-relaxed text-muted">
-        {brierNote(c.brier, c.n, c.brierChance)}
+        {zh ? brierNoteZh(c.brier, c.n, c.brierChance) : brierNote(c.brier, c.n, c.brierChance)}
       </p>
     </>
   );
 }
 
-function DelicacyBody({ d, accent }: { d: DelicacyExpert; accent: string }) {
+function DelicacyBody({ d, accent, t, zh }: { d: DelicacyExpert; accent: string; t: T; zh: boolean }) {
   return (
     <>
-      <Section title={SEC.delicacyByFamily}>
+      <Section title={t(SEC.delicacyByFamily)}>
         <Table
-          head={[COL.family, COL.caught, COL.shown]}
+          head={[COL.family, COL.caught, COL.shown].map((h) => t(h))}
           rows={d.perFamily.map((f) => [FLAW_LABELS[f.family].label, String(f.correct), String(f.n)])}
         />
       </Section>
-      <Section title={SEC.delicacyByRung}>
+      <Section title={t(SEC.delicacyByRung)}>
         <Table
-          head={[COL.rung, COL.caught, COL.shown]}
+          head={[COL.rung, COL.caught, COL.shown].map((h) => t(h))}
           rows={d.perMagnitude.map((m) => [String(m.magnitude), String(m.correct), String(m.n)])}
         />
       </Section>
-      <Section title={SEC.delicacyCalibration}>
-        <CalibrationCurveChart c={d.calibration} accent={accent} />
+      <Section title={t(SEC.delicacyCalibration)}>
+        <CalibrationCurveChart c={d.calibration} accent={accent} t={t} zh={zh} />
       </Section>
-      <Section title={SEC.delicacyTrials}>
+      <Section title={t(SEC.delicacyTrials)}>
         <Table
-          head={[COL.index, COL.family, COL.rung, COL.original, COL.youPicked, COL.flawNamed, COL.said]}
-          rows={d.trials.map((t) => [
-            String(t.index),
-            FLAW_LABELS[t.family].label,
-            t.value === null ? `rung ${t.magnitude}` : `${t.value} ${t.unit}`,
-            t.originalSide.toUpperCase(),
-            `${t.pickedSide.toUpperCase()} ${t.correct ? "✓" : "✗"}`,
-            t.flawCorrect === null ? VAL.none : `${FLAW_LABELS[t.flawPick].label} ${t.flawCorrect ? "✓" : "✗"}`,
-            `${t.confidence}%`,
+          head={[COL.index, COL.family, COL.rung, COL.original, COL.youPicked, COL.flawNamed, COL.said].map((h) => t(h))}
+          rows={d.trials.map((tr) => [
+            String(tr.index),
+            FLAW_LABELS[tr.family].label,
+            tr.value === null ? t("rung {n}", { n: tr.magnitude }) : `${tr.value} ${tr.unit}`,
+            tr.originalSide.toUpperCase(),
+            `${tr.pickedSide.toUpperCase()} ${tr.correct ? "✓" : "✗"}`,
+            tr.flawCorrect === null ? t(VAL.none) : `${FLAW_LABELS[tr.flawPick].label} ${tr.flawCorrect ? "✓" : "✗"}`,
+            `${tr.confidence}%`,
           ])}
         />
         <p className="mt-2 text-[0.65rem] leading-relaxed text-muted">
-  {NOTE.timingRungs}
+  {t(NOTE.timingRungs)}
         </p>
       </Section>
     </>
   );
 }
 
-function ThresholdBody({ t }: { t: ThresholdExpert }) {
-  const u = shortUnit(t.unit);
+function ThresholdBody({ t: th, tx: t }: { t: ThresholdExpert; tx: T }) {
+  const u = shortUnit(th.unit);
   return (
     <>
-      <Section title={SEC.thresholdSession}>
+      <Section title={t(SEC.thresholdSession)}>
         <Stats
           items={[
-            [STAT.trials, String(t.trials)],
-            [STAT.outcome, t.kind],
-            [STAT.caughtAt, t.heardAt === null ? VAL.none : quantity(t.heardAt, t.unit)],
-            [STAT.missedAt, t.missedAt === null ? VAL.none : quantity(t.missedAt, t.unit)],
-            [STAT.fittedPoint, t.point === null ? VAL.notEarned : quantity(t.point, t.unit)],
+            [t(STAT.trials), String(th.trials)],
+            [t(STAT.outcome), th.kind],
+            [t(STAT.caughtAt), th.heardAt === null ? t(VAL.none) : quantity(th.heardAt, th.unit)],
+            [t(STAT.missedAt), th.missedAt === null ? t(VAL.none) : quantity(th.missedAt, th.unit)],
+            [t(STAT.fittedPoint), th.point === null ? t(VAL.notEarned) : quantity(th.point, th.unit)],
             [
-              STAT.interval,
-              t.ci95 === null ? VAL.none : `${quantity(t.ci95[0], t.unit)} – ${quantity(t.ci95[1], t.unit)}`,
+              t(STAT.interval),
+              th.ci95 === null ? t(VAL.none) : `${quantity(th.ci95[0], th.unit)} – ${quantity(th.ci95[1], th.unit)}`,
             ],
           ]}
         />
       </Section>
-      <Section title={`${SEC.thresholdRungs} · ${u}`}>
+      <Section title={`${t(SEC.thresholdRungs)} · ${u}`}>
         <Table
-          head={[COL.rung, COL.right, COL.shown, COL.where]}
-          rows={t.rungs.map((r) => [
-            quantity(r.label, t.unit),
+          head={[COL.rung, COL.right, COL.shown, COL.where].map((h) => t(h))}
+          rows={th.rungs.map((r) => [
+            quantity(r.label, th.unit),
             String(r.correct),
             String(r.shown),
-            r.isHeard ? VAL.caught : r.isMissed ? VAL.guessed : r.inBand ? VAL.inBand : "",
+            r.isHeard ? t(VAL.caught) : r.isMissed ? t(VAL.guessed) : r.inBand ? t(VAL.inBand) : "",
           ])}
         />
       </Section>
-      {t.limits.length > 0 ? (
-        <Section title={SEC.thresholdLimits}>
+      {th.limits.length > 0 ? (
+        <Section title={t(SEC.thresholdLimits)}>
           <ul className="mt-3 flex flex-col gap-2">
-            {t.limits.map((l, i) => (
+            {th.limits.map((l, i) => (
               <li key={i} className="text-xs leading-relaxed text-neutral-300">
                 {l.statement}
               </li>
@@ -308,41 +320,41 @@ function ThresholdBody({ t }: { t: ThresholdExpert }) {
   );
 }
 
-function BiasBody({ b }: { b: BiasExpert }) {
+function BiasBody({ b, t }: { b: BiasExpert; t: T }) {
   return (
     <>
-      <Section title="The session">
+      <Section title={t("The session")}>
         <Stats
           items={[
-            [STAT.beforeCorrection, `${b.rawPct > 0 ? "+" : ""}${b.rawPct}%`],
-            [STAT.afterCorrection, `${b.pct > 0 ? "+" : ""}${b.pct}%`],
-            [STAT.controlDrift, b.controlDriftPts === null ? VAL.none : `${b.controlDriftPts} pts`],
-            [STAT.movedWithLabel, `${b.movedCount} of ${b.movableCount}`],
-            [STAT.atScaleEdge, String(b.edgeCount)],
-            [STAT.swappedOnly, b.swappedPct === null ? VAL.none : `${b.swappedPct > 0 ? "+" : ""}${b.swappedPct}%`],
+            [t(STAT.beforeCorrection), `${b.rawPct > 0 ? "+" : ""}${b.rawPct}%`],
+            [t(STAT.afterCorrection), `${b.pct > 0 ? "+" : ""}${b.pct}%`],
+            [t(STAT.controlDrift), b.controlDriftPts === null ? t(VAL.none) : t("{n} pts", { n: b.controlDriftPts })],
+            [t(STAT.movedWithLabel), t("{a} of {b}", { a: b.movedCount, b: b.movableCount })],
+            [t(STAT.atScaleEdge), String(b.edgeCount)],
+            [t(STAT.swappedOnly), b.swappedPct === null ? t(VAL.none) : `${b.swappedPct > 0 ? "+" : ""}${b.swappedPct}%`],
           ]}
         />
         <p className="mt-2 text-[0.65rem] leading-relaxed text-muted">
-          {NOTE.balancedPool}
+          {t(NOTE.balancedPool)}
         </p>
       </Section>
-      <Section title={SEC.biasItems}>
+      <Section title={t(SEC.biasItems)}>
         <Table
-          head={[COL.clip, COL.blind, COL.labelled, COL.towardLabel, COL.roomToMove, COL.label]}
+          head={[COL.clip, COL.blind, COL.labelled, COL.towardLabel, COL.roomToMove, COL.label].map((h) => t(h))}
           rows={b.items.map((i) => [
             i.id,
             String(i.blind),
             String(i.labeled),
             `${i.towardLabel > 0 ? "+" : ""}${i.towardLabel}`,
             String(i.headroom),
-            i.labelIsTrue ? VAL.trueLabel : VAL.fictionalLabel,
+            t(i.labelIsTrue ? VAL.trueLabel : VAL.fictionalLabel),
           ])}
         />
       </Section>
       {b.controls.length > 0 ? (
-        <Section title={SEC.biasControls}>
+        <Section title={t(SEC.biasControls)}>
           <Table
-            head={[COL.clip, COL.first, COL.second, COL.drift]}
+            head={[COL.clip, COL.first, COL.second, COL.drift].map((h) => t(h))}
             rows={b.controls.map((c) => [
               c.id,
               String(c.first),
@@ -378,9 +390,9 @@ function BiasBody({ b }: { b: BiasExpert }) {
  * arrive as null from the engine and there is no branch here that could print
  * one; what the branch decides is whether to explain their absence.
  */
-function SpreadBody({ s }: { s: SpreadExpert }) {
+function SpreadBody({ s, t }: { s: SpreadExpert; t: T }) {
   const work = (id: string) => SPREAD_POOL.find((item) => item.id === id)?.work ?? id;
-  const gap = (v: number | null) => (v === null ? VAL.tooFewToSay : v.toFixed(2));
+  const gap = (v: number | null) => (v === null ? t(VAL.tooFewToSay) : v.toFixed(2));
   /*
    * PAIRS ARE LABELLED BY THE CLIP NUMBER FROM THE TABLE ABOVE, NOT BY TITLE.
    * Spelled out, one pair cell reads "Eroica Variations, Op. 35 · Piano Sonata
@@ -394,23 +406,23 @@ function SpreadBody({ s }: { s: SpreadExpert }) {
 
   return (
     <>
-      <Section title={SEC.spreadSession}>
+      <Section title={t(SEC.spreadSession)}>
         <Stats
           items={[
-            [STAT.clipsCounted, String(s.ratedCount)],
-            [STAT.clipsSetAside, String(s.setAsideCount)],
-            [STAT.widelySpacedPairs, String(s.farCount)],
-            [STAT.closelySpacedPairs, String(s.closeCount)],
-            [STAT.meanGapWide, gap(s.farMeanGap)],
-            [STAT.meanGapClose, gap(s.closeMeanGap)],
-            [STAT.atRandom, s.ifIndifferent.toFixed(2)],
+            [t(STAT.clipsCounted), String(s.ratedCount)],
+            [t(STAT.clipsSetAside), String(s.setAsideCount)],
+            [t(STAT.widelySpacedPairs), String(s.farCount)],
+            [t(STAT.closelySpacedPairs), String(s.closeCount)],
+            [t(STAT.meanGapWide), gap(s.farMeanGap)],
+            [t(STAT.meanGapClose), gap(s.closeMeanGap)],
+            [t(STAT.atRandom), s.ifIndifferent.toFixed(2)],
           ]}
         />
         {s.refusal !== null ? (
-          <p className="mt-2 text-[0.65rem] leading-relaxed text-muted">{NOTE.spreadNoMean}</p>
+          <p className="mt-2 text-[0.65rem] leading-relaxed text-muted">{t(NOTE.spreadNoMean)}</p>
         ) : null}
       </Section>
-      <Section title={SEC.spreadClips}>
+      <Section title={t(SEC.spreadClips)}>
         {/*
           THE WARNING GOES ABOVE THE TABLE, NOT UNDER IT (E18/S4, found by
           reading the rendered panel). It said "reading this list is the end of
@@ -419,28 +431,28 @@ function SpreadBody({ s }: { s: SpreadExpert }) {
           flow itself refuses when it asks "heard this before?" before the
           rating rather than after. A reader meets the cost before they pay it.
         */}
-        <p className="mt-3 text-[0.65rem] leading-relaxed text-muted">{NOTE.spreadNowKnown}</p>
+        <p className="mt-3 text-[0.65rem] leading-relaxed text-muted">{t(NOTE.spreadNowKnown)}</p>
         <Table
-          head={[COL.index, COL.work, COL.yourRating, COL.counted]}
+          head={[COL.index, COL.work, COL.yourRating, COL.counted].map((h) => t(h))}
           rows={s.clips.map((c, i) => [
             String(i + 1),
             work(c.id),
-            c.rating === null ? VAL.none : String(c.rating),
-            c.setAside ? VAL.setAside : VAL.countedIn,
+            c.rating === null ? t(VAL.none) : String(c.rating),
+            t(c.setAside ? VAL.setAside : VAL.countedIn),
           ])}
         />
       </Section>
-      <Section title={SEC.spreadPairs}>
+      <Section title={t(SEC.spreadPairs)}>
         <Table
-          head={[COL.pair, COL.inHisRanking, COL.positionsApart, COL.yourGap]}
+          head={[COL.pair, COL.inHisRanking, COL.positionsApart, COL.yourGap].map((h) => t(h))}
           rows={s.pairs.map((p) => [
             `${number(p.a)} · ${number(p.b)}`,
-            p.kind === "far" ? VAL.farSpacing : VAL.closeSpacing,
+            t(p.kind === "far" ? VAL.farSpacing : VAL.closeSpacing),
             String(p.distance),
             String(p.gap),
           ])}
         />
-        <p className="mt-2 text-[0.65rem] leading-relaxed text-muted">{NOTE.spreadDistanceOnly}</p>
+        <p className="mt-2 text-[0.65rem] leading-relaxed text-muted">{t(NOTE.spreadDistanceOnly)}</p>
       </Section>
     </>
   );
@@ -460,24 +472,29 @@ export default function ExpertPanel({
   instrument: Instrument;
 }) {
   const sig = useSyncExternalStore(subscribeResults, signature, serverSignature);
+  const locale = useLocale();
+  const zh = locale === "zh";
+  const t = tFor(locale, EXPERT_ZH);
 
   const body = useMemo(() => {
     if (sig === "" || !isOwnResult(own)) return null;
     if (instrument.kind === "delicacy") {
       const r = recallDelicacy();
-      return r ? <DelicacyBody d={delicacyExpert(r.result)} accent={accent} /> : null;
+      return r ? <DelicacyBody d={delicacyExpert(r.result)} accent={accent} t={t} zh={zh} /> : null;
     }
     if (instrument.kind === "bias") {
       const r = recallBias();
-      return r ? <BiasBody b={biasExpert(r.result)} /> : null;
+      return r ? <BiasBody b={biasExpert(r.result)} t={t} /> : null;
     }
     if (instrument.kind === "spread") {
       const r = recallSpread();
-      return r ? <SpreadBody s={spreadExpert(r.result)} /> : null;
+      return r ? <SpreadBody s={spreadExpert(r.result)} t={t} /> : null;
     }
     const r = recallThreshold(instrument.slug);
-    return r ? <ThresholdBody t={thresholdExpert(r.result)} /> : null;
-  }, [sig, own, instrument, accent]);
+    return r ? <ThresholdBody t={thresholdExpert(r.result)} tx={t} /> : null;
+    // `t` and `zh` follow `locale`, which is in the list.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sig, own, instrument, accent, locale]);
 
   if (!body) return null;
 
@@ -485,11 +502,11 @@ export default function ExpertPanel({
     <details className="group mt-7 w-full rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-left">
       <summary className="cursor-pointer list-none">
         <span className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: accent }}>
-          {PANEL.eyebrow}
+          {t(PANEL.eyebrow)}
         </span>
-        <span className="ml-2 text-[0.65rem] text-muted group-open:hidden">{PANEL.show}</span>
-        <span className="ml-2 hidden text-[0.65rem] text-muted group-open:inline">{PANEL.hide}</span>
-        <p className="mt-2 text-xs leading-relaxed text-muted">{PANEL.blurb}</p>
+        <span className="ml-2 text-[0.65rem] text-muted group-open:hidden">{t(PANEL.show)}</span>
+        <span className="ml-2 hidden text-[0.65rem] text-muted group-open:inline">{t(PANEL.hide)}</span>
+        <p className="mt-2 text-xs leading-relaxed text-muted">{t(PANEL.blurb)}</p>
       </summary>
       <div className="mt-5 border-t border-white/10 pt-5">{body}</div>
     </details>

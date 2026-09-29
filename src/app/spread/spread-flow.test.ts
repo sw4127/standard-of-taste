@@ -167,3 +167,24 @@ describe("(d) the sitting is recorded, and only the answers are", () => {
     expect(/poolVersion:\s*\d/.test(CODE)).toBe(false);
   });
 });
+
+/*
+ * THE LANGUAGE BUTTON SHOWS BEFORE ANYTHING IS RATED, AND NOWHERE AFTER (red-team,
+ * bilingual Part 2). The sitting lives in this component's state: a switch mid-sitting
+ * threw the ratings away, and the retry was then honestly spoiled, because the visitor
+ * knew the clips. So the bar renders only through `languageBarPhases`, from inside the
+ * flow, and the page itself renders none.
+ */
+import { languageBarPhases } from "./SpreadFlow";
+
+describe("the language button and the sitting", () => {
+  it("shows on the opening screen only", () => {
+    expect([...languageBarPhases]).toEqual(["frame"]);
+  });
+
+  it("is rendered by the flow, once, through that list, and not by the page", () => {
+    expect(FLOW.split("<LanguageBar").length - 1).toBe(1);
+    expect(FLOW).toContain("languageBarPhases.includes(phase) ? <LanguageBar");
+    expect(readFileSync("src/app/spread/page.tsx", "utf8")).not.toContain("<LanguageBar");
+  });
+});

@@ -47,8 +47,8 @@ vi.mock("next/navigation", async (orig) => ({
 // 2026-09-29: 2 in Part 1 (the two notes); 243 after Part 2's first slice (the chrome, the
 // Company view, the D1 statements, the Chinese blueprint and one rendered page); 655 after
 // the reading (its copy, its line templates read from source, the sound words, /zh/reading); 745
-// after the front door (/zh).
-const ZH_CORPUS_FLOOR = 745;
+// after the front door (/zh); 1101 after /learn/why and the Ranking Test.
+const ZH_CORPUS_FLOOR = 1101;
 
 const CJK = /[　-〿一-鿿＀-￯]/;
 
@@ -192,6 +192,7 @@ const BANNED_SPECIMENS: readonly string[] = [
   "这是解读而非测量。",
   "这并非测量，而是解读。",
   "与其说是偏好，不如说是习惯。",
+  "你的评分反而拉得更开。",
   "这恰恰说明问题。",
   "阈值——也就是最小可听差异。",
   "还有很多……",

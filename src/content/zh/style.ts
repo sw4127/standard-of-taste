@@ -29,6 +29,8 @@ export const ZH_BANS: readonly ZhBan[] = [
   // The frame, not only its words: 并非X，而是Y rebuilds 不是X，而是Y with the
   // negation this file recommends, so 而是 itself is refused (red-team, Part 1).
   { pattern: /而非|而是|与其说[^。？]*不如说/, why: "a contrast frame of the 而不是 family; say what the thing is" },
+  // 反而 ("contrary to expectation") states an expectation the English never does (red-team, Part 2).
+  { pattern: /反而/, why: "反而 implies an expectation the source does not state; say what happened" },
   { pattern: /恰恰/, why: "恰恰 is a crutch (owner)" },
   { pattern: /[—―–]/, why: "no dashes: 破折号 carries an aside, and the professional register has none" },
   { pattern: /…|\.\.\.|。。。/, why: "no ellipses: nothing trails off" },

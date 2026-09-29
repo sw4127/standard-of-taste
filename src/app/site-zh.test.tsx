@@ -173,7 +173,8 @@ describe("every dictionary entry keeps its English's numbers", () => {
   const EN_WORDS: Record<string, number> = {
     zero: 0, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10,
     eleven: 11, twelve: 12, fifteen: 15, twenty: 20, thirty: 30, forty: 40, fifty: 50, hundred: 100,
-    thousand: 1000, third: 3, fourth: 4, fifth: 5, sixth: 6, tenth: 10, twice: 2, double: 2, pair: 2, once: 1,
+    thousand: 1000, second: 2, third: 3, fourth: 4, fifth: 5, sixth: 6, tenth: 10, twice: 2, double: 2, pair: 2,
+    once: 1, both: 2,
   };
   const enWords = (s: string) =>
     s.replace(new RegExp(`\\b(${Object.keys(EN_WORDS).join("|")})\\b`, "gi"), (m) => String(EN_WORDS[m.toLowerCase()]));
@@ -195,6 +196,8 @@ describe("every dictionary entry keeps its English's numbers", () => {
   const zhWords = (s: string) =>
     s
       .replace(/百分(?=点|比|位)/g, " ")
+      // A unit's prefix is part of its name: 千比特 is kilobits, not a thousand of something.
+      .replace(/千(?=比特|赫)/g, " ")
       .replace(/十分(?!之)/g, " ")
       .replace(/[零〇一二两三四五六七八九十百千]+/g, (run) => (run === "一" ? " " : ` ${zhNumber(run)} `));
   const digits = (s: string) =>

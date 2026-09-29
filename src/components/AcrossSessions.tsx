@@ -35,6 +35,9 @@ import type { DegradationFamily } from "@/engine/delicacy";
 import { SHARED_AXIS_FAMILIES } from "@/engine/evidence";
 import { acrossLines, instrumentCount, thresholdRoster, type AcrossInput } from "@/content/vocabulary/across";
 import { THRESHOLD_SLUGS, familyForSlug } from "@/app/threshold/families";
+import { useLocale } from "@/lib/use-locale";
+import { tFor } from "@/lib/i18n";
+import ACROSS_ZH, { acrossLinesZh, thresholdRosterZh } from "@/content/zh/copy/across";
 
 /**
  * A cheap, stable description of what is stored. Recomputing the whole dossier
@@ -103,16 +106,19 @@ export default function AcrossSessions({ accent, own }: { accent: string; own: S
   // Keyed on the signature so it recomputes when — and only when — a session is
   // recorded, including one recorded in another tab.
   const input = useMemo(() => (sig === "" || !isOwnResult(own) ? null : buildInput()), [sig, own]);
+  // In the page's language (bilingual Part 2): the Chinese templates mirror the English, part for part.
+  const locale = useLocale();
+  const t = tFor(locale, ACROSS_ZH);
 
   if (!input || instrumentCount(input) < 2) return null;
-  const lines = acrossLines(input);
+  const lines = locale === "zh" ? acrossLinesZh(input, instrumentCount(input)) : acrossLines(input);
   if (lines.length === 0) return null;
-  const roster = thresholdRoster(input);
+  const roster = locale === "zh" ? thresholdRosterZh(input) : thresholdRoster(input);
 
   return (
     <section className="mt-7 w-full rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-left">
       <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: accent }}>
-        ACROSS YOUR SESSIONS
+        {t("ACROSS YOUR SESSIONS")}
       </p>
       <div className="mt-3 flex flex-col gap-3">
         {lines.map((line) => (
@@ -137,7 +143,7 @@ export default function AcrossSessions({ accent, own }: { accent: string; own: S
         retest cooldown, and the same honesty about what that buys (N3).
       */}
       <p className="mt-4 text-[0.65rem] leading-relaxed text-muted">
-        Read from this browser only — there are no accounts, so another device starts empty.
+        {t("Read from this browser only — there are no accounts, so another device starts empty.")}
       </p>
       {/* AND A WAY OUT, IN THE SAME PLACE AS THE ADMISSION (E13/S4, Track G3).
           This block is where the product shows what it remembers about you, so

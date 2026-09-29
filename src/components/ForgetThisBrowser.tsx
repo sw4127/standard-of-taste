@@ -20,16 +20,22 @@
 import { useState } from "react";
 import { FORGET } from "@/content/forget";
 import { forgetThisBrowser } from "@/lib/forget-device";
+import { useLocale } from "@/lib/use-locale";
+import { tFor } from "@/lib/i18n";
+import ACROSS_ZH from "@/content/zh/copy/across";
 
 type Phase = "idle" | "asking" | "done";
 
 export default function ForgetThisBrowser({ accent }: { accent?: string }) {
   const [phase, setPhase] = useState<Phase>("idle");
+  // In the page's language (bilingual Part 2).
+  const locale = useLocale();
+  const t = tFor(locale, ACROSS_ZH);
 
   if (phase === "done") {
     return (
       <p className="mt-4 text-xs leading-relaxed text-muted" role="status">
-        {FORGET.done}
+        {t(FORGET.done)}
       </p>
     );
   }
@@ -41,7 +47,7 @@ export default function ForgetThisBrowser({ accent }: { accent?: string }) {
         onClick={() => setPhase("asking")}
         className="mt-4 min-h-[44px] rounded-full border border-white/15 px-5 py-2.5 text-xs font-semibold text-muted transition hover:border-white/35 hover:text-white active:scale-[0.98]"
       >
-        {FORGET.ask}
+        {t(FORGET.ask)}
       </button>
     );
   }
@@ -49,10 +55,10 @@ export default function ForgetThisBrowser({ accent }: { accent?: string }) {
   return (
     <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.02] p-4 text-left">
       <p className="text-xs font-bold tracking-[0.25em]" style={accent ? { color: accent } : undefined}>
-        {FORGET.heading.toUpperCase()}
+        {locale === "en" ? FORGET.heading.toUpperCase() : t(FORGET.heading)}
       </p>
-      <p className="mt-2 text-xs leading-relaxed text-neutral-300">{FORGET.body}</p>
-      <p className="mt-2 text-xs leading-relaxed text-muted">{FORGET.limit}</p>
+      <p className="mt-2 text-xs leading-relaxed text-neutral-300">{t(FORGET.body)}</p>
+      <p className="mt-2 text-xs leading-relaxed text-muted">{t(FORGET.limit)}</p>
       <div className="mt-4 flex flex-wrap gap-2">
         <button
           type="button"
@@ -62,7 +68,7 @@ export default function ForgetThisBrowser({ accent }: { accent?: string }) {
           }}
           className="min-h-[44px] rounded-full border border-white/25 px-5 py-2.5 text-xs font-semibold text-white transition hover:border-white/50 active:scale-[0.98]"
         >
-          {FORGET.confirm}
+          {t(FORGET.confirm)}
         </button>
         <button
           type="button"
