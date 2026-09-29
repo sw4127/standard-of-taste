@@ -18,7 +18,9 @@
  * was refused, and the same commit went through once they were there.
  */
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { execFileSync, spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { dirname, join, resolve } from "node:path";
 
@@ -98,6 +100,7 @@ describe("pre-commit hook wiring", () => {
       "docs/experience-bank-composed-2026-09-14.md",
       "docs/activation-2026-09-16-tracks-U-T.md",
       "docs/activation-2026-09-22-track-V-consistency.md",
+      // The draft guide, until its style rules are approved and tracked as docs/style-zh.md.
     ];
     const text = hook();
     const missing = RULED_OUT.filter((f) => !text.includes(f));
@@ -121,6 +124,34 @@ describe("pre-commit hook wiring", () => {
 
   it("keeps the escape hatch, and says so", () => {
     expect(hook()).toContain("--no-verify");
+  });
+
+  /*
+   * BEHAVIOUR, ONCE, because wiring could not see this defect (2026-09-29). The
+   * became two words and "Claude" matched "Claude": every file in that folder
+   * was refused, named or not, and the message printed the path in pieces. A
+   * hook that refuses the wrong files teaches --no-verify. This runs the real hook in a
+   * throwaway repository. Inherited GIT_* variables are dropped first: under
+   * `git push` they point at the real repository, and a test that forgot that
+   * once turned it bare (handoff 2026-09-28, finding 1).
+   */
+  it("refuses a staged path that contains a space, and passes an ordinary one", () => {
+    const tmp = mkdtempSync(join(tmpdir(), "precommit-"));
+    const env = Object.fromEntries(Object.entries(process.env).filter(([k]) => !k.startsWith("GIT_"))) as NodeJS.ProcessEnv;
+    const git = (...args: string[]) => execFileSync("git", args, { cwd: tmp, env, stdio: "pipe" });
+    try {
+      git("init", "-q");
+      mkdirSync(join(tmp, "Claude outputs"));
+      writeFileSync(join(tmp, "Claude outputs", "unnamed.md"), "x");
+      const run = () => spawnSync("sh", [join(repoRoot, ".githooks", "pre-commit")], { cwd: tmp, env, encoding: "utf8" });
+      // A file in the same folder that the list does not name is not refused.
+      git("add", "Claude outputs/unnamed.md");
+      expect(run().status).toBe(0);
+      const refused = run();
+      expect(refused.status).toBe(1);
+    } finally {
+      rmSync(tmp, { recursive: true, force: true });
+    }
   });
 });
 

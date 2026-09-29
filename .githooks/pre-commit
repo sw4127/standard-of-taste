@@ -44,6 +44,16 @@ docs/activation-2026-09-16-tracks-U-T.md
 docs/activation-2026-09-22-track-V-consistency.md
 "
 
+# PATHS MAY CONTAIN SPACES ("Claude outputs/..."), so both lists are split on
+# newlines only. With the default IFS both lists split such a path into words,
+# and the word "Claude" matched itself: every file under "Claude outputs/" was
+# refused, named or not, and the refusal printed the path in pieces. A rule that
+# refuses the wrong files gets bypassed with --no-verify, which is how it would
+# have stopped protecting the right ones. Found 2026-09-29, when the first such
+# path was added.
+IFS='
+'
+
 # ADDED files only. A tracked file being modified is ordinary work; this is
 # about a file ENTERING the repository.
 staged=$(git diff --cached --name-only --diff-filter=A)
@@ -68,7 +78,7 @@ if [ -n "$offenders" ]; then
   echo "  This repository is PUBLIC. Tracking a file publishes it, and publishing"
   echo "  cannot be undone once pushed. blueprint-phase-2/3 and the redirection"
   echo "  blueprint are RT-M:c / RT-X:c; Q3 — whether to bind them — is still the"
-  echo "  owner's open decision. The rest have never been ruled on at all."
+  echo "  on at all."
   echo ""
   echo "  If the owner HAS ruled one of them in, delete its line from the list in"
   echo "  .githooks/pre-commit in this same commit. That edit is the record."
