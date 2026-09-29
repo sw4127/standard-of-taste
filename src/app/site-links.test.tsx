@@ -200,7 +200,8 @@ describe("the site's doors, read from rendered pages", () => {
           const p = pathOf(a.href, r.route);
           return p?.bare && p.path === r.route;
         })
-        .filter((a) => !(r.route === "/" && a.text === "STANDARD OF TASTE"))
+        // The Chinese front door's wordmark is the same exemption, in Chinese (bilingual Part 2).
+        .filter((a) => !(r.route === "/" && a.text === "STANDARD OF TASTE") && !(r.route === "/zh" && a.text === "鉴衡论品味的标准"))
         .map((a) => `${r.route} links to itself as "${a.text}"`),
     );
     expect(self).toEqual([]);

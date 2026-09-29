@@ -10,6 +10,7 @@
  * search is recorded in `docs/reading-names-check-2026-09-23.md`.
  */
 import { LISTENER_LABEL } from "./listeners";
+import { fill, type T } from "@/lib/i18n";
 
 export { LISTENER_LABEL };
 
@@ -24,10 +25,14 @@ export const PICK_LINE =
   "Each is four weeks of plays by someone who does not exist. Read one as if the plays were yours: " +
   "every line is computed from them, and every line shows the plays it counted.";
 
-/** A listener card's one factual line: counts only, derived from the plays. */
-export function listenerFacts(plays: number, tracks: number): string {
-  return `${plays} plays · ${tracks} tracks · four weeks`;
+/** A listener card's one factual line: counts only, derived from the plays. Slots, so the Chinese keeps them. */
+export const LISTENER_FACTS = "{plays} plays · {tracks} tracks · four weeks";
+export function listenerFacts(plays: number, tracks: number, t: T = fill): string {
+  return t(LISTENER_FACTS, { plays, tracks });
 }
+
+/** One play in a receipt's list. */
+export const PLAY_LINE = "Day {day} · {time} · {title} — {artist}{mark}";
 
 export const READ_LEAD =
   "Each line names a pattern in the plays and offers two things it might mean. Keep a line or reject it; " +

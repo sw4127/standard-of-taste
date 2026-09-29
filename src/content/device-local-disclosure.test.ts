@@ -199,7 +199,10 @@ describe("every surface that claims to remember you says where that memory lives
   it.each(
     SURFACES.filter((s) => s.rendersConstant).map((s) => [s.file, s.rendersConstant!] as const),
   )("%s actually renders %s", (file, braced) => {
-    expect(readFileSync(file, "utf8").includes(braced)).toBe(true);
+    // Rendered through the language lookup counts too (bilingual Part 2): `{t(C.X)}`
+    // shows the constant on an English page and its Chinese on a Chinese one.
+    const source = readFileSync(file, "utf8");
+    expect(source.includes(braced) || source.includes(`{t(${braced.slice(1, -1)})}`)).toBe(true);
   });
 });
 

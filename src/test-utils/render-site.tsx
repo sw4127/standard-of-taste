@@ -66,6 +66,8 @@ export interface RenderedSite {
 
 declare global {
   var __SITE_PATH: string | undefined;
+  /** The query `useSearchParams` returns, for tests that render a flow's later steps. */
+  var __SITE_SEARCH: string | undefined;
 }
 
 async function render(route: string, key: string): Promise<{ html: string; meta: string[] }> {
@@ -94,6 +96,25 @@ async function render(route: string, key: string): Promise<{ html: string; meta:
 }
 
 let cached: Promise<RenderedSite> | null = null;
+
+/**
+ * A PAGE AT A GIVEN QUERY, e.g. the reading at `?l=mira&step=prompt` (bilingual
+ * Part 2, red-team). `renderSite` draws each route once with no query, so a flow's
+ * later steps (a listener's lines, the prompt, the creation screen) were never
+ * read by any guard. A test that mocks `useSearchParams` to read
+ * `globalThis.__SITE_SEARCH` can render them here. Kept apart from `renderSite`,
+ * so the site-wide counts and ceilings keep meaning one render per route.
+ */
+export async function renderState(route: string, search: string): Promise<RenderedPage> {
+  const key = Object.keys(PAGES).find((k) => routeOf(k) === route);
+  if (!key) throw new Error(`no page for ${route}`);
+  globalThis.__SITE_SEARCH = search;
+  try {
+    return { route: `${route}?${search}`, ...(await render(route, key)) };
+  } finally {
+    globalThis.__SITE_SEARCH = undefined;
+  }
+}
 
 /** Render every static page once per test file. */
 export function renderSite(): Promise<RenderedSite> {

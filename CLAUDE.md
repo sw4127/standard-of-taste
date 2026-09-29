@@ -157,6 +157,10 @@ Appended, not overwritten; nothing above is amended by it. The bilingual brief (
 
 > 这份解读（the reading）谈的是，一位听者近来的播放记录（plays）可能意味着什么。它说出规律（pattern），提示几种读法；哪一种对，或者都不对，由你来说。听辨测试（hearing tests）只描述你做了什么。
 
+*[AMENDED 2026-09-29, the same session, after the red-team of bilingual Part 2 — the paragraph above that says "This stamp suspends D1 on no new route" is kept verbatim. The owner's bilingual brief asks for the Chinese reading through to its creation screen, and the Chinese reading shows the same offers the English one does. Rendering them on a route this file does not name would suspend D1 by category, which the second-surface amendment forbids. So the route is named on the line below, **pending the owner's approval**, and `src/app/site-d1.test.tsx` now fails if the reading's offers render on any route missing from the newest "Named routes" line. If the owner rules against it, delete the line below: that test then fails until the offers come off `/zh/reading`.]*
+
+**Named routes** (zh rendering, pending owner approval, 2026-09-29; machine-read by `src/app/site-d1.test.tsx`, which reads the newest such line): `/reading` · `/zh/reading`
+
 ### D3 amendment — the reading is the flagship (owner-approved 2026-09-23, ruling BA-6)
 Appended, not overwritten. Amends **D3 only**; D1, D2, D4, D5, D6 and N1–N3 are untouched by it. The ruling: `docs/rt-answers-2026-09-23-audit.md`.
 

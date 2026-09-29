@@ -218,6 +218,10 @@ export function contentFiles(dir = "src/content") {
   const out = [];
   for (const name of readdirSync(dir)) {
     const path = dir + "/" + name;
+    // The Chinese dictionaries are keyed by the English they translate, so every key
+    // repeats an English source string; read here, each would look like a second
+    // source for its line (bilingual Part 2). The Chinese deck reads them instead.
+    if (path === "src/content/zh") continue;
     if (statSync(path).isDirectory()) out.push(...contentFiles(path));
     else if (name.endsWith(".ts") && !name.endsWith(".test.ts") && name !== "fixtures.ts") out.push(path);
   }

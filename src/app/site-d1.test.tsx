@@ -39,6 +39,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { attributeText, renderSite, textOf, type RenderedSite } from "@/test-utils/render-site";
+import { renderReadingStates } from "@/test-utils/reading-states";
 // The RT-Z10 carve-out holds on every surface, the card included — one list (BA-5).
 import { CARVE_OUT } from "@/content/carve-out";
 // The Chinese needle (bilingual Part 2): a Chinese page is held to D1 as the English one is.
@@ -48,7 +49,7 @@ vi.mock("next/navigation", async (orig) => ({
   ...(await orig<typeof import("next/navigation")>()),
   useRouter: () => ({ push() {}, replace() {}, prefetch() {}, back() {}, forward() {}, refresh() {} }),
   usePathname: () => globalThis.__SITE_PATH ?? "/",
-  useSearchParams: () => new URLSearchParams(),
+  useSearchParams: () => new URLSearchParams(globalThis.__SITE_SEARCH ?? ""),
 }));
 
 /** Phrasings that claim something about the person rather than the performance. */
@@ -106,6 +107,7 @@ const REFUSALS: Record<string, string> = {
   "neither says anything about trauma, abuse or mental health": "/legal stating the RT-Z10 carve-out",
   // The Chinese pages' renderings of the refusals above, each with the same reason.
   "任何页面都不对创伤、虐待或心理健康作出任何断言": "/zh/company stating the RT-Z10 carve-out, not breaking it",
+  "测的并非人格，也并非氛围": "the Chinese front door refusing D1's subject by name, as the English \"Not a personality.\" does",
 };
 
 interface Hit {
@@ -140,14 +142,19 @@ const refused = (h: Hit) => {
 
 let site: RenderedSite;
 let hits: Hit[] = [];
+let states: RenderedSite["pages"] = [];
+/** A rendered route without its query: `/zh/reading?l=mira` is the route `/zh/reading`. */
+const bare = (route: string) => route.split("?")[0];
 
 beforeAll(async () => {
   site = await renderSite();
+  // The reading's later steps in both languages: its lines are where it speaks to the reader.
+  states = await renderReadingStates();
   // Body text, attribute text and metadata: all three are read by somebody.
-  hits = site.pages.flatMap((p) =>
+  hits = [...site.pages, ...states].flatMap((p) =>
     scan(p.route, [textOf(p.html), attributeText(p.html), p.meta.join(".\n")].join("\n")),
   );
-}, 60_000);
+}, 180_000);
 
 describe("no surface but the card speaks about the person (D1, as amended)", () => {
   it("read the site, so nothing below passes vacuously", () => {
@@ -160,7 +167,7 @@ describe("no surface but the card speaks about the person (D1, as amended)", () 
     expect(NAMED_OR_NULL, 'no "Named routes" line in CLAUDE.md, so the list was never read').not.toBeNull();
     // Absolute, as ruled on 2026-09-23: the snack's suspension withdrawn (BA-7),
     // the reading named (BA-6, D1 amendment, third surface).
-    expect([...NAMED].sort()).toEqual(["/reading"]);
+    expect([...NAMED].sort()).toEqual(["/reading", "/zh/reading"]);
     for (const r of NAMED) expect(site.pages.map((p) => p.route)).toContain(r);
   });
 
@@ -218,6 +225,21 @@ describe("no surface but the card speaks about the person (D1, as amended)", () 
     expect(parts.filter((p) => !ZH_SPECIMENS.some((s) => new RegExp(p).test(s)))).toEqual([]);
   });
 
+  /*
+   * THE OFFERS ARE WHERE THE READING SPEAKS TO THE READER, SO THEY RENDER ONLY
+   * ON A NAMED ROUTE (red-team, bilingual Part 2). The Chinese offers passed the
+   * needle, because none uses its phrases, and that is not the same as D1
+   * standing. So the test is by name, as the amendment requires: any rendered
+   * page showing an offer's lead must be a route the constitution names.
+   */
+  it("shows the reading's offers only on a route the constitution names", () => {
+    const LEADS = ["WHAT MIGHT IT MEAN?", "它可能意味着什么？"];
+    const offering = [...site.pages, ...states].filter((p) => LEADS.some((l) => textOf(p.html).includes(l)));
+    // A floor: the English and the Chinese reading both render offers in their states.
+    expect(offering.map((p) => bare(p.route)).filter((r, i, a) => a.indexOf(r) === i).sort()).toEqual(["/reading", "/zh/reading"]);
+    expect(offering.filter((p) => !NAMED.includes(bare(p.route))).map((p) => p.route)).toEqual([]);
+  });
+
   it("the needle bites on what the retired surfaces actually said", () => {
     for (const sentence of RETIRED_SPECIMENS) {
       expect(scan("/retired", sentence).filter((h) => h.rule === "D1"), sentence).toHaveLength(1);
@@ -226,7 +248,7 @@ describe("no surface but the card speaks about the person (D1, as amended)", () 
 
   it("finds no claim about the person on any rendered page the constitution does not name", () => {
     const found = hits
-      .filter((h) => h.rule === "D1" && !NAMED.includes(h.route) && !refused(h))
+      .filter((h) => h.rule === "D1" && !NAMED.includes(bare(h.route)) && !refused(h))
       .map((h) => `${h.route}: "${h.sentence.slice(0, 140)}"`);
     expect(found).toEqual([]);
   });

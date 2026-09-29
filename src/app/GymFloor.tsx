@@ -27,6 +27,10 @@ import { useRouter } from "next/navigation";
 import { tint } from "@/content/instrument-accents";
 import { landingHint } from "@/content/landing";
 import { useMachineSelection } from "./GymStage";
+import { useLocale } from "@/lib/use-locale";
+import { localHref } from "@/lib/locale";
+import { tFor } from "@/lib/i18n";
+import LANDING_ZH from "@/content/zh/copy/landing";
 
 export interface Machine {
   id: string;
@@ -41,10 +45,15 @@ export interface Machine {
   criterion: string;
   blurb: string;
   meta: string;
+  /** Counts the text's `{slots}` take (bilingual Part 2); filled before the floor sees the machine. */
+  slots?: Record<string, number>;
 }
 
 export default function GymFloor({ machines, locked }: { machines: Machine[]; locked?: React.ReactNode }) {
   const router = useRouter();
+  const locale = useLocale();
+  // The floor's own words in the page's language (bilingual Part 2); the cards' text arrives translated.
+  const t = tFor(locale, LANDING_ZH);
   const { selected, select } = useMachineSelection();
   const chosen = machines.find((m) => m.id === selected) ?? null;
 
@@ -63,8 +72,8 @@ export default function GymFloor({ machines, locked }: { machines: Machine[]; lo
   // Prefetch on selection: the second tap should feel instant, since by then
   // the person has already decided.
   useEffect(() => {
-    if (chosen) router.prefetch(chosen.href);
-  }, [chosen, router]);
+    if (chosen) router.prefetch(localHref(locale, chosen.href));
+  }, [chosen, router, locale]);
 
   return (
     <div>
@@ -83,8 +92,8 @@ export default function GymFloor({ machines, locked }: { machines: Machine[]; lo
               key={m.id}
               type="button"
               aria-pressed={isSelected}
-              aria-label={isSelected ? `Start ${m.title}` : `Choose ${m.title}`}
-              onClick={() => (isSelected ? router.push(m.href) : select(m.id))}
+              aria-label={t(isSelected ? "Start {title}" : "Choose {title}", { title: m.title })}
+              onClick={() => (isSelected ? router.push(localHref(locale, m.href)) : select(m.id))}
               className="group flex flex-col rounded-2xl border p-5 text-left transition duration-300 active:scale-[0.99]"
               style={{
                 borderColor: isSelected ? m.accent : tint(m.accent),
@@ -97,7 +106,7 @@ export default function GymFloor({ machines, locked }: { machines: Machine[]; lo
               }}
             >
               <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: m.accent }}>
-                MACHINE {m.n} · {isSelected ? "SELECTED" : "OPEN"}
+                {t(isSelected ? "MACHINE {n} · SELECTED" : "MACHINE {n} · OPEN", { n: m.n })}
               </p>
               <p className="mt-1.5 font-display text-xl font-semibold">{m.title}</p>
               <p className="mt-0.5 text-xs font-semibold tracking-wide text-muted">{m.criterion}</p>
@@ -108,7 +117,7 @@ export default function GymFloor({ machines, locked }: { machines: Machine[]; lo
                   className="font-bold transition-transform group-hover:translate-x-0.5"
                   style={{ color: m.accent }}
                 >
-                  {isSelected ? "Tap again to start →" : "Choose"}
+                  {t(isSelected ? "Tap again to start →" : "Choose")}
                 </span>
               </p>
             </button>
@@ -119,8 +128,8 @@ export default function GymFloor({ machines, locked }: { machines: Machine[]; lo
 
       <p className="mt-4 text-xs text-muted">
         {chosen
-          ? "Tap it again when you're ready. Nothing has started yet."
-          : landingHint()}
+          ? t("Tap it again when you're ready. Nothing has started yet.")
+          : t(landingHint())}
       </p>
     </div>
   );

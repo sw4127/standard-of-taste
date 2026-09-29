@@ -29,6 +29,7 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { attributeText, renderSite, textOf, type RenderedSite } from "@/test-utils/render-site";
+import { renderReadingStates } from "@/test-utils/reading-states";
 import { ZH_ROUTES, chinesePath, hasChinese, localeOfPath } from "@/lib/locale";
 import { ZH_TRANSLATION_NOTE } from "@/content/zh/style";
 import { SWITCH_TO_ZH } from "@/content/zh/copy/chrome";
@@ -37,7 +38,7 @@ vi.mock("next/navigation", async (orig) => ({
   ...(await orig<typeof import("next/navigation")>()),
   useRouter: () => ({ push() {}, replace() {}, prefetch() {}, back() {}, forward() {}, refresh() {} }),
   usePathname: () => globalThis.__SITE_PATH ?? "/",
-  useSearchParams: () => new URLSearchParams(),
+  useSearchParams: () => new URLSearchParams(globalThis.__SITE_SEARCH ?? ""),
 }));
 
 const CJK = /[　-〿一-鿿＀-￯]/;
@@ -65,13 +66,17 @@ function anchors(html: string): string[] {
 let site: RenderedSite;
 const misses = new Set<string>();
 
+let states: RenderedSite["pages"] = [];
+
 beforeAll(async () => {
   globalThis.__ZH_MISSES = misses;
   site = await renderSite();
-}, 120_000);
+  // Every listener's lines, prompt and creation screen, in both languages (red-team, Part 2).
+  states = await renderReadingStates();
+}, 180_000);
 
-const zhPages = () => site.pages.filter((p) => localeOfPath(p.route) === "zh");
-const enPages = () => site.pages.filter((p) => localeOfPath(p.route) === "en");
+const zhPages = () => [...site.pages, ...states].filter((p) => localeOfPath(p.route) === "zh");
+const enPages = () => [...site.pages, ...states].filter((p) => localeOfPath(p.route) === "en");
 const allText = (p: RenderedSite["pages"][number]) => [textOf(p.html), attributeText(p.html), ...p.meta].join("\n");
 
 describe("the route list is the file system", () => {
@@ -123,7 +128,7 @@ describe("every Chinese page says it is a translation and offers the way back", 
 
   it("offers EN, linking to the English page", () => {
     const missing = zhPages().filter((p) => {
-      const en = p.route.slice(3) || "/";
+      const en = p.route.split("?")[0].slice(3) || "/";
       return !new RegExp(`<a\\b[^>]*href="${en.replace(/[/]/g, "\\/")}"[^>]*>EN</a>`).test(p.html);
     });
     expect(missing.map((p) => p.route)).toEqual([]);
@@ -131,8 +136,8 @@ describe("every Chinese page says it is a translation and offers the way back", 
 
   it("every English page with a Chinese counterpart offers the switch to it", () => {
     const missing = enPages()
-      .filter((p) => hasChinese(p.route))
-      .filter((p) => !p.html.includes(`href="${chinesePath(p.route)}"`) || !p.html.includes(`>${SWITCH_TO_ZH}</a>`));
+      .filter((p) => hasChinese(p.route.split("?")[0]))
+      .filter((p) => !p.html.includes(`href="${chinesePath(p.route.split("?")[0])}"`) || !p.html.includes(`>${SWITCH_TO_ZH}</a>`));
     expect(missing.map((p) => p.route)).toEqual([]);
   });
 });
@@ -140,7 +145,7 @@ describe("every Chinese page says it is a translation and offers the way back", 
 describe("a Chinese page links to Chinese pages wherever they exist", () => {
   it("sends no internal link to an English page that has a Chinese counterpart, except the switch", () => {
     const hits = zhPages().flatMap((p) => {
-      const back = p.route.slice(3) || "/";
+      const back = p.route.split("?")[0].slice(3) || "/";
       return anchors(p.html)
         .filter((h) => h.startsWith("/") && !h.startsWith("//") && localeOfPath(h) === "en" && h !== back && hasChinese(h))
         .map((h) => `${p.route} → ${h}`);

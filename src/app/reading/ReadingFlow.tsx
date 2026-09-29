@@ -15,6 +15,12 @@ import * as C from "@/content/reading/copy";
 import { recallThreshold } from "@/lib/result-recall";
 import { promptCard } from "@/engine/prompt-card";
 import { createScrollTop } from "./create-scroll";
+import ZhTerms from "@/components/ZhTerms";
+import { useLocale } from "@/lib/use-locale";
+import { localHref, type Locale } from "@/lib/locale";
+import { tFor, type T } from "@/lib/i18n";
+import READING_ZH from "@/content/zh/copy/reading";
+import { NEITHER_ZH } from "@/content/zh/copy/reading-lines";
 
 /**
  * THE READING FLOW (blueprint Part 5): pick a listener -> the reading -> the
@@ -45,39 +51,58 @@ const CHIP =
 const BUTTON =
   "inline-flex min-h-[44px] items-center justify-center rounded-full px-6 py-3 text-sm font-bold transition active:scale-[0.98]";
 
+/*
+ * ONE FLOW, TWO LANGUAGES (bilingual Part 2). The language comes from the page's
+ * address; every sentence goes through the reading's dictionary, the lines come
+ * from the Chinese templates on a Chinese page, and every address the flow writes
+ * stays under /zh there. `caps` sets an English kicker in capitals; Chinese has none.
+ */
+interface Lang {
+  locale: Locale;
+  t: T;
+  caps: (s: string) => string;
+}
+function lang(locale: Locale): Lang {
+  const t = tFor(locale, READING_ZH);
+  return { locale, t, caps: (s) => (locale === "en" ? s.toUpperCase() : t(s)) };
+}
+
 export default function ReadingFlow() {
   const params = useSearchParams();
   const id = params.get("l");
   const l = id ? findListener(id) : undefined;
   const step = params.get("step");
   const phase: Phase = PHASES.includes(step as Phase) ? (step as Phase) : "read";
-  return l ? <ListenerReading key={l.id} l={l} phase={phase} /> : <Picker />;
+  const lg = lang(useLocale());
+  return l ? <ListenerReading key={l.id} l={l} phase={phase} lg={lg} /> : <Picker lg={lg} />;
 }
 
-function Badge({ l }: { l: Listener }) {
+function Badge({ l, lg }: { l: Listener; lg: Lang }) {
   return (
     <p className="flex flex-wrap items-center gap-2 text-xs text-muted">
-      <SourceBadge source={l.dataSource} />
-      <span>{C.LISTENER_LABEL}</span>
+      <SourceBadge source={l.dataSource} locale={lg.locale} />
+      <span>{lg.t(C.LISTENER_LABEL)}</span>
     </p>
   );
 }
 
-function Picker() {
-  const readings = useMemo(() => LISTENERS.map(readingFor), []);
+function Picker({ lg }: { lg: Lang }) {
+  const readings = useMemo(() => LISTENERS.map((l) => readingFor(l, lg.locale)), [lg.locale]);
   return (
     <section className="mt-10">
-      <h2 className="font-display text-2xl font-semibold">{C.PICK_HEADING}</h2>
-      <p className="mt-2 text-[15px] leading-relaxed text-neutral-300">{C.PICK_LINE}</p>
+      <h2 className="font-display text-2xl font-semibold">{lg.t(C.PICK_HEADING)}</h2>
+      <p className="mt-2 text-[15px] leading-relaxed text-neutral-300">{lg.t(C.PICK_LINE)}</p>
       <div className="mt-6">
-        <ListenerCards readings={readings} />
+        <ListenerCards readings={readings} locale={lg.locale} />
       </div>
     </section>
   );
 }
 
-function ListenerReading({ l, phase }: { l: Listener; phase: Phase }) {
-  const r = useMemo(() => readingFor(l), [l]);
+function ListenerReading({ l, phase, lg }: { l: Listener; phase: Phase; lg: Lang }) {
+  const { t, caps } = lg;
+  const base = localHref(lg.locale, "/reading");
+  const r = useMemo(() => readingFor(l, lg.locale), [l, lg.locale]);
   const [state, setState] = useState<ReaderState>(EMPTY_STATE);
   /*
    * A STEP CHANGE IS CLIENT STATE, SO IT IS A HISTORY ENTRY AND NOT A ROUTER
@@ -91,7 +116,7 @@ function ListenerReading({ l, phase }: { l: Listener; phase: Phase }) {
    * needs no navigation either way.
    */
   const setPhase = (p: Phase) =>
-    window.history.pushState(null, "", p === "read" ? `/reading?l=${l.id}` : `/reading?l=${l.id}&step=${p}`);
+    window.history.pushState(null, "", p === "read" ? `${base}?l=${l.id}` : `${base}?l=${l.id}&step=${p}`);
   const promptRef = useRef<HTMLElement>(null);
 
   // Stored choices arrive after mount: the page is prerendered with none.
@@ -107,22 +132,22 @@ function ListenerReading({ l, phase }: { l: Listener; phase: Phase }) {
     setState(next);
     saveState(l.id, next);
   };
-  const prompt = useMemo(() => buildPrompt(r, state), [r, state]);
+  const prompt = useMemo(() => buildPrompt(r, state, lg.locale), [r, state, lg.locale]);
 
-  if (phase === "create") return <CreateMock text={prompt.text} onBack={() => setPhase("prompt")} />;
+  if (phase === "create") return <CreateMock text={prompt.text} lg={lg} onBack={() => setPhase("prompt")} />;
 
   return (
     <section className="mt-10">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="font-display text-3xl font-semibold">{l.name}</h2>
-        <Link href="/reading" className="text-xs font-bold tracking-[0.2em] text-muted hover:text-white">
-          {C.OTHER_LISTENER.toUpperCase()}
+        <Link href={base} className="text-xs font-bold tracking-[0.2em] text-muted hover:text-white">
+          {caps(C.OTHER_LISTENER)}
         </Link>
       </div>
       <div className="mt-2">
-        <Badge l={l} />
+        <Badge l={l} lg={lg} />
       </div>
-      <p className="mt-5 text-[15px] leading-relaxed text-neutral-300">{C.READ_LEAD}</p>
+      <p className="mt-5 text-[15px] leading-relaxed text-neutral-300">{t(C.READ_LEAD)}</p>
 
       <ol className="mt-6 flex flex-col gap-4">
         {r.lines.map((line) => (
@@ -130,6 +155,7 @@ function ListenerReading({ l, phase }: { l: Listener; phase: Phase }) {
             key={line.id}
             line={line}
             reading={r}
+            lg={lg}
             rejected={state.rejected.includes(line.id)}
             choice={state.chosen[line.id]}
             onReject={() => update({ ...state, rejected: [...state.rejected, line.id] })}
@@ -141,26 +167,27 @@ function ListenerReading({ l, phase }: { l: Listener; phase: Phase }) {
 
       {phase === "read" ? (
         <button type="button" onClick={() => setPhase("prompt")} className={`${BUTTON} mt-8 bg-white text-black`}>
-          {C.TO_PROMPT}
+          {t(C.TO_PROMPT)}
         </button>
       ) : (
-        <PromptPanel ref={promptRef} text={prompt.text} families={prompt.families} onCreate={() => setPhase("create")} />
+        <PromptPanel ref={promptRef} lg={lg} text={prompt.text} families={prompt.families} onCreate={() => setPhase("create")} />
       )}
     </section>
   );
 }
 
-function playLine(p: Play, r: Reading, withSkip: boolean): string {
-  const t = r.listener.tracks.find((x) => x.id === p.trackId)!;
+function playLine(p: Play, r: Reading, withSkip: boolean, t: T): string {
+  const track = r.listener.tracks.find((x) => x.id === p.trackId)!;
   const hh = String(p.hour).padStart(2, "0");
   const mm = String(p.minute).padStart(2, "0");
-  const mark = withSkip ? ` · ${p.skippedEarly ? C.SKIPPED_MARK : C.KEPT_MARK}` : "";
-  return `Day ${p.day + 1} · ${hh}:${mm} · ${t.title} — ${t.artist}${mark}`;
+  const mark = withSkip ? ` · ${t(p.skippedEarly ? C.SKIPPED_MARK : C.KEPT_MARK)}` : "";
+  return t(C.PLAY_LINE, { day: p.day + 1, time: `${hh}:${mm}`, title: track.title, artist: track.artist, mark });
 }
 
 function LineCard(props: {
   line: ReadingLine;
   reading: Reading;
+  lg: Lang;
   rejected: boolean;
   choice: Choice | undefined;
   onReject: () => void;
@@ -168,6 +195,7 @@ function LineCard(props: {
   onChoose: (c: Choice) => void;
 }) {
   const { line, reading, rejected, choice } = props;
+  const { t, caps } = props.lg;
   const [open, setOpen] = useState(false);
   const plays = useMemo(() => {
     const ids = new Set(line.playIds);
@@ -187,15 +215,15 @@ function LineCard(props: {
       <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted">
         <span className="font-mono">{line.receipt}</span>
         <button type="button" onClick={() => setOpen(!open)} className="font-bold tracking-[0.15em] hover:text-white" aria-expanded={open}>
-          {(open ? C.HIDE_PLAYS : C.SHOW_PLAYS).toUpperCase()}
+          {caps(open ? C.HIDE_PLAYS : C.SHOW_PLAYS)}
         </button>
       </div>
       {open ? (
         <div className="mt-3">
-          <SourceBadge source={reading.listener.dataSource} />
+          <SourceBadge source={reading.listener.dataSource} locale={props.lg.locale} />
           <ul className="mt-2 max-h-64 overflow-y-auto rounded-lg border border-white/10 p-3 font-mono text-[11px] leading-relaxed text-neutral-400">
             {plays.map((p) => (
-              <li key={p.id}>{playLine(p, reading, line.kind === "earlySkip")}</li>
+              <li key={p.id}>{playLine(p, reading, line.kind === "earlySkip", t)}</li>
             ))}
           </ul>
         </div>
@@ -203,14 +231,14 @@ function LineCard(props: {
 
       {rejected ? (
         <p className="mt-4 text-sm text-muted">
-          {C.REJECTED_NOTE}{" "}
+          {t(C.REJECTED_NOTE)}{" "}
           <button type="button" onClick={props.onRestore} className="font-bold text-neutral-200 underline-offset-4 hover:underline">
-            {C.RESTORE_LINE}
+            {t(C.RESTORE_LINE)}
           </button>
         </p>
       ) : (
         <>
-          <p className="mt-5 text-[0.65rem] font-bold tracking-[0.3em] text-muted">{C.OFFER_LEAD.toUpperCase()}</p>
+          <p className="mt-5 text-[0.65rem] font-bold tracking-[0.3em] text-muted">{caps(C.OFFER_LEAD)}</p>
           <div className="mt-2 flex flex-col gap-2">
             {line.offers.map((o) => (
               <button
@@ -230,10 +258,10 @@ function LineCard(props: {
                 onClick={() => props.onChoose("neither")}
                 className={`${CHIP} ${choice === "neither" ? "border-white bg-white text-black" : "border-white/20 text-neutral-300 hover:border-white/50"}`}
               >
-                {NEITHER}
+                {props.lg.locale === "zh" ? NEITHER_ZH : NEITHER}
               </button>
               <button type="button" onClick={props.onReject} className={`${CHIP} border-dashed border-white/20 text-muted hover:text-white`}>
-                {C.REJECT_LINE}
+                {t(C.REJECT_LINE)}
               </button>
             </div>
           </div>
@@ -245,11 +273,13 @@ function LineCard(props: {
 
 function PromptPanel({
   ref,
+  lg,
   text,
   families,
   onCreate,
 }: {
   ref: React.Ref<HTMLElement>;
+  lg: Lang;
   text: string;
   families: Record<FlawFamily, string[]>;
   onCreate: () => void;
@@ -280,53 +310,55 @@ function PromptPanel({
     }
   };
   const unmeasured = FLAW_FAMILIES.some((f) => spend[f] == null);
+  const { t, caps } = lg;
 
   return (
     <section ref={ref} className="mt-10 scroll-mt-6 border-t border-white/10 pt-8">
-      <h3 className="font-display text-2xl font-semibold">{C.PROMPT_HEADING}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-muted">{C.PROMPT_NOTE}</p>
+      <h3 className="font-display text-2xl font-semibold"><ZhTerms>{t(C.PROMPT_HEADING)}</ZhTerms></h3>
+      <p className="mt-2 text-sm leading-relaxed text-muted">{t(C.PROMPT_NOTE)}</p>
       {text ? (
         <>
           <pre className="mt-4 whitespace-pre-wrap rounded-xl border border-white/15 bg-black/40 p-4 font-mono text-[13px] leading-relaxed text-neutral-100">
             {text}
           </pre>
           <button type="button" onClick={copy} className="mt-2 text-xs font-bold tracking-[0.2em] text-muted hover:text-white">
-            {(copied ? C.COPIED_PROMPT : C.COPY_PROMPT).toUpperCase()}
+            {caps(copied ? C.COPIED_PROMPT : C.COPY_PROMPT)}
           </button>
 
           <div className="mt-8">
-            <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">{C.BRIDGE_HEADING.toUpperCase()}</p>
-            <p className="mt-2 text-sm leading-relaxed text-neutral-300">{C.BRIDGE_LINE}</p>
+            <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">{caps(C.BRIDGE_HEADING)}</p>
+            <p className="mt-2 text-sm leading-relaxed text-neutral-300">{t(C.BRIDGE_LINE)}</p>
             <ul className="mt-4 flex flex-col gap-3">
               {FLAW_FAMILIES.map((f) => (
                 <li key={f} className="text-sm leading-relaxed">
-                  <span className="font-bold text-neutral-100">{FAMILY_LABEL[f]}</span>
-                  <span className="text-neutral-300"> — {families[f].join("; ")}</span>
-                  {spend[f] === true ? <span className="ml-2 text-xs text-muted">({C.BRIDGE_CAN_HEAR})</span> : null}
-                  {spend[f] === false ? <span className="ml-2 text-xs text-muted">({C.BRIDGE_MAY_NOT})</span> : null}
+                  <span className="font-bold text-neutral-100">{t(FAMILY_LABEL[f])}</span>
+                  <span className="text-neutral-300">{lg.locale === "zh" ? "\uFF1A" : " — "}{families[f].join(t("; "))}</span>
+                  {spend[f] === true ? <span className="ml-2 text-xs text-muted">{bracket(lg.locale, t(C.BRIDGE_CAN_HEAR))}</span> : null}
+                  {spend[f] === false ? <span className="ml-2 text-xs text-muted">{bracket(lg.locale, t(C.BRIDGE_MAY_NOT))}</span> : null}
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-xs leading-relaxed text-muted">{C.BRIDGE_DEVICE_NOTE}</p>
+            <p className="mt-3 text-xs leading-relaxed text-muted">{t(C.BRIDGE_DEVICE_NOTE)}</p>
             {unmeasured ? (
-              <Link href="/threshold" className="mt-4 inline-block text-sm font-bold text-neutral-100 underline underline-offset-4">
-                {C.BRIDGE_TUNE}
+              <Link href={localHref(lg.locale, "/threshold")} className="mt-4 inline-block text-sm font-bold text-neutral-100 underline underline-offset-4">
+                {t(C.BRIDGE_TUNE)}
               </Link>
             ) : null}
           </div>
 
           <button type="button" onClick={onCreate} className={`${BUTTON} mt-8 bg-white text-black`}>
-            {C.TO_CREATE}
+            {t(C.TO_CREATE)}
           </button>
         </>
       ) : (
-        <p className="mt-4 text-[15px] text-neutral-300">{C.PROMPT_EMPTY}</p>
+        <p className="mt-4 text-[15px] text-neutral-300">{t(C.PROMPT_EMPTY)}</p>
       )}
     </section>
   );
 }
 
-function CreateMock({ text, onBack }: { text: string; onBack: () => void }) {
+function CreateMock({ text, lg, onBack }: { text: string; lg: Lang; onBack: () => void }) {
+  const { t, caps } = lg;
   const labelRef = useRef<HTMLParagraphElement>(null);
   const noteRef = useRef<HTMLParagraphElement>(null);
   // A block body, never `() => window.scrollTo(...)`: an effect's return value is
@@ -349,16 +381,16 @@ function CreateMock({ text, onBack }: { text: string; onBack: () => void }) {
   return (
     <section className="mt-10">
       <p ref={labelRef} className="rounded-lg border border-dashed border-white/35 px-3 py-2 text-xs leading-relaxed text-muted">
-        {C.CREATE_LABEL}
+        {t(C.CREATE_LABEL)}
       </p>
       <div className="mt-4 overflow-hidden rounded-2xl border border-white/15 bg-[#101014]">
         <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
           <span className="font-display text-lg font-semibold">{C.HOST_NAME}</span>
-          <span className="text-xs text-muted">{C.CREATE_HEADING}</span>
+          <span className="text-xs text-muted">{t(C.CREATE_HEADING)}</span>
         </div>
         <div className="p-4">
           <label className="text-[0.65rem] font-bold tracking-[0.3em] text-muted" htmlFor="mock-prompt">
-            {C.CREATE_FIELD.toUpperCase()}
+            {caps(C.CREATE_FIELD)}
           </label>
           <textarea
             id="mock-prompt"
@@ -368,14 +400,19 @@ function CreateMock({ text, onBack }: { text: string; onBack: () => void }) {
             className="mt-2 w-full resize-none rounded-lg border border-white/10 bg-black/40 p-3 font-mono text-[13px] leading-relaxed text-neutral-100"
           />
           <button type="button" disabled className={`${BUTTON} mt-3 w-full cursor-not-allowed bg-white/15 text-neutral-400`}>
-            {C.GENERATE}
+            {t(C.GENERATE)}
           </button>
-          <p ref={noteRef} className="mt-2 text-center text-xs text-muted">{C.GENERATE_NOTE}</p>
+          <p ref={noteRef} className="mt-2 text-center text-xs text-muted">{t(C.GENERATE_NOTE)}</p>
         </div>
       </div>
       <button type="button" onClick={onBack} className="mt-6 text-xs font-bold tracking-[0.2em] text-muted hover:text-white">
-        {C.BACK_TO_READING.toUpperCase()}
+        {caps(C.BACK_TO_READING)}
       </button>
     </section>
   );
+}
+
+/** "(note)" in English, the same note in full-width brackets in Chinese. */
+function bracket(locale: Locale, note: string): string {
+  return locale === "zh" ? `${String.fromCharCode(0xff08)}${note}${String.fromCharCode(0xff09)}` : `(${note})`;
 }

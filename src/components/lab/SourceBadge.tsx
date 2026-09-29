@@ -1,5 +1,8 @@
 import type { DataSource } from "@/analytics/estimate";
 import { PRESTIGE_GOLD, tint } from "@/content/instrument-accents";
+import { tFor } from "@/lib/i18n";
+import type { Locale } from "@/lib/locale";
+import READING_ZH from "@/content/zh/copy/reading";
 
 /**
  * Data-provenance badge (artifact pivot §2/§4 — N3 made visible).
@@ -57,17 +60,27 @@ const STYLES: Record<BadgeSource, { className: string; style?: React.CSSProperti
   },
 };
 
-export default function SourceBadge({ source, className = "" }: { source: BadgeSource; className?: string }) {
+export default function SourceBadge({
+  source,
+  className = "",
+  locale = "en",
+}: {
+  source: BadgeSource;
+  className?: string;
+  locale?: Locale;
+}) {
   const s = STYLES[source];
+  // On a Chinese page the word and its explanation are Chinese (bilingual Part 2).
+  const t = tFor(locale, READING_ZH);
   return (
     <span
       // `title` carries the explanation to anyone who hovers; the visible word
       // carries it to everyone else. Neither is optional.
-      title={s.note}
+      title={t(s.note)}
       className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[0.6rem] font-bold tracking-[0.18em] ${s.className} ${className}`}
       style={s.style}
     >
-      {source}
+      {t(source)}
     </span>
   );
 }

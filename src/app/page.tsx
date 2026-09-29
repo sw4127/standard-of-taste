@@ -12,6 +12,7 @@ import GymStage from "./GymStage";
 import GymFloor, { type Machine } from "./GymFloor";
 import Track from "@/components/Track";
 import SiteHeader from "@/components/SiteHeader";
+import ZhTerms from "@/components/ZhTerms";
 import { SITE_NAV } from "@/content/site-nav";
 import { SHELL_MAIN, PROSE_MEASURE } from "@/content/shell";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
@@ -29,7 +30,10 @@ import ListenerCards from "@/components/ListenerCards";
 import { LISTENERS } from "@/content/reading/listeners";
 import { readingFor } from "@/content/reading/reading";
 import { READING_SHARE_LINE } from "@/content/reading/copy";
-import { bp } from "@/content/blueprint";
+import { bpIn } from "@/content/blueprint";
+import { tFor, type Slots } from "@/lib/i18n";
+import type { Locale } from "@/lib/locale";
+import LANDING_ZH, { landingLeadZh } from "@/content/zh/copy/landing";
 import { PRESTIGE_GOLD, PRESTIGE_FIELD, DELICACY_ICE, DELICACY_FIELD, THRESHOLD_VIOLET, THRESHOLD_FIELD, THRESHOLD_BASE, SPREAD_ROSE, SPREAD_FIELD, SPREAD_BASE } from "@/content/instrument-accents";
 
 /**
@@ -83,9 +87,11 @@ const MACHINES: Machine[] = [
     surface: "#0B0A08",
     title: "The Prestige Test",
     criterion: "Freedom from prejudice",
+    // Templates with slots since bilingual Part 2: `machinesIn` fills them in the page's language.
     blurb:
-      `Rate ${numberWord(BIAS_CLIP_COUNT)} clips blind, then again with the famous names attached — asked a different way, in a different order. Your number is the gap.`,
-    meta: `~${BIAS_SESSION_MINUTES} min · ${BIAS_CLIP_COUNT} clips`,
+      "Rate {count} clips blind, then again with the famous names attached — asked a different way, in a different order. Your number is the gap.",
+    meta: "~{minutes} min · {clips} clips",
+    slots: { count: BIAS_CLIP_COUNT, minutes: BIAS_SESSION_MINUTES, clips: BIAS_CLIP_COUNT },
   },
   ...(DELICACY_LIVE
     ? [
@@ -164,10 +170,26 @@ const MACHINES: Machine[] = [
     title: "The Ranking Test",
     criterion: "Comparison · heard",
     blurb:
-      `A critic ranked ${numberWord(SPREAD_WORK_COUNT)} works against each other. Rate them with your ears alone and find out whether your gaps fall where his did — agreeing with him is not the point, and is not measured.`,
-    meta: `~${SPREAD_SESSION_MINUTES} min · ${SPREAD_WORK_COUNT} works, ${SPREAD_CLIP_SECONDS} seconds each`,
+      "A critic ranked {count} works against each other. Rate them with your ears alone and find out whether your gaps fall where his did — agreeing with him is not the point, and is not measured.",
+    meta: "~{minutes} min · {works} works, {seconds} seconds each",
+    slots: { count: SPREAD_WORK_COUNT, minutes: SPREAD_SESSION_MINUTES, works: SPREAD_WORK_COUNT, seconds: SPREAD_CLIP_SECONDS },
   },
 ];
+
+/**
+ * THE MACHINES IN THE PAGE'S LANGUAGE (bilingual Part 2). Each text field is an
+ * English template; `count` is written as a word in English prose ("sixteen
+ * clips") and every other slot, and every slot in Chinese, as a digit. The
+ * English this produces is what the page rendered before the change.
+ */
+function machinesIn(locale: Locale): Machine[] {
+  const t = tFor(locale, LANDING_ZH);
+  return MACHINES.map((m) => {
+    const s = m.slots ?? {};
+    const words: Slots = locale === "en" && "count" in s ? { ...s, count: numberWord(s.count) } : s;
+    return { ...m, title: t(m.title), criterion: t(m.criterion), blurb: t(m.blurb, words), meta: t(m.meta, s) };
+  });
+}
 
 // The shared nav. On the front door the reading's door is the listener cards
 // themselves, so the nav skips it rather than offer one room twice (RT-1 a,
@@ -179,44 +201,48 @@ const HEADER_LINKS = SITE_NAV.filter((l) => l.href !== "/reading" && l.href !== 
  * /quiz went with that game: PM ruling RT-2 (2026-09-22) a. A legacy link still
  * lands here; it is simply greeted by the gym.
  */
-export default function Home() {
+export default function Home({ locale = "en" }: { locale?: Locale }) {
+  // `/zh` renders this same page in Chinese (bilingual Part 2); English is the default.
+  const t = tFor(locale, LANDING_ZH);
+  const machines = machinesIn(locale);
   return (
     <main className={`${SHELL_MAIN} justify-center`}>
       <Track event="landing_view" props={{ variant: "gym" }} />
-      <GymStage machines={MACHINES}>
+      <GymStage machines={machines}>
       <div className="relative z-10">
-        <SiteHeader links={HEADER_LINKS} />
+        <SiteHeader locale={locale} links={HEADER_LINKS} />
 
         <h1 className={`mt-7 ${PROSE_MEASURE} font-display text-[2rem] font-semibold leading-[1.06] tracking-tight sm:text-5xl sm:leading-[1.02]`}>
-          {LANDING_HEADLINE}
+          <ZhTerms>{t(LANDING_HEADLINE)}</ZhTerms>
         </h1>
         <p className={`mt-5 ${PROSE_MEASURE} text-lg leading-relaxed text-muted`}>
-          {LANDING_ALGORITHM}
+          {t(LANDING_ALGORITHM)}
         </p>
         <p className={`mt-4 ${PROSE_MEASURE} font-display text-xl leading-snug sm:text-2xl`}>
-          {LANDING_READING_TURN}
+          <ZhTerms>{t(LANDING_READING_TURN)}</ZhTerms>
         </p>
 
         {/* THE PRIMARY ACTION: the reading (D3 amendment, BA-6). */}
-        <p className={`mt-8 text-[0.65rem] font-bold tracking-[0.3em] text-muted`}>{LANDING_CARDS_LEAD.toUpperCase()}</p>
+        <p className={`mt-8 text-[0.65rem] font-bold tracking-[0.3em] text-muted`}>{locale === "en" ? LANDING_CARDS_LEAD.toUpperCase() : t(LANDING_CARDS_LEAD)}</p>
         <div className={`mt-3 ${PROSE_MEASURE}`}>
-          <ListenerCards readings={LISTENERS.map(readingFor)} />
+          <ListenerCards locale={locale} readings={LISTENERS.map((l) => readingFor(l, locale))} />
         </div>
 
         {/* THE HEARING SECTION: the four instruments, unchanged, reached through BP-BRIDGE. */}
         <section id="hearing" className="mt-16 scroll-mt-8 border-t border-white/10 pt-10">
-          <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">{HEARING_KICKER}</p>
+          <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">{t(HEARING_KICKER)}</p>
           <h2 className={`mt-2 ${PROSE_MEASURE} font-display text-2xl font-semibold leading-tight sm:text-3xl`}>
-            {HEARING_HEADING}
+            <ZhTerms>{t(HEARING_HEADING)}</ZhTerms>
           </h2>
-          <p className={`mt-3 ${PROSE_MEASURE} text-base leading-relaxed text-neutral-300`}>{bp("BP-BRIDGE").text}</p>
+          <p className={`mt-3 ${PROSE_MEASURE} text-base leading-relaxed text-neutral-300`}>{bpIn(locale, "BP-BRIDGE").text}</p>
           <p className={`mt-4 ${PROSE_MEASURE} text-base leading-relaxed text-muted`}>
-            {landingLead(MACHINES.length)}{" "}
-            <span className="text-foreground">You can be wrong, and that is the point.</span>
+            {locale === "zh" ? landingLeadZh(machines.length) : landingLead(machines.length)}
+            {locale === "zh" ? "" : " "}
+            <span className="text-foreground">{t("You can be wrong, and that is the point.")}</span>
           </p>
 
         <GymFloor
-          machines={MACHINES}
+          machines={machines}
           locked={
             DELICACY_LIVE ? null : (
               <div className="rounded-2xl border border-dashed border-white/20 p-5">
@@ -243,9 +269,10 @@ export default function Home() {
               className="group text-muted transition-colors hover:text-white"
             >
               <span className="font-semibold text-[hsl(225_8%_78%)] transition-colors group-hover:text-[hsl(225_8%_90%)]">
-                {d.label}
-              </span>{" "}
-              {d.line}
+                {t(d.label)}
+              </span>
+              {locale === "en" ? " " : ""}
+              {t(d.line)}
             </Link>
           ))}
         </div>
@@ -254,7 +281,7 @@ export default function Home() {
 
         <p className="mt-8 text-[11px] text-muted/70">
           <Link href="/legal" className="transition hover:text-white">
-            Terms · Privacy
+            {t("Terms · Privacy")}
           </Link>
         </p>
       </div>

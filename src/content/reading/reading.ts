@@ -7,6 +7,8 @@
 import { generatePlays } from "@/engine/reading/generate";
 import { allFacts, pickFacts, type Fact } from "@/engine/reading/patterns";
 import { readingLine, type ReadingLine } from "./lines";
+import { readingLineZh } from "@/content/zh/copy/reading-lines";
+import type { Locale } from "@/lib/locale";
 import type { Listener, Play } from "./types";
 
 export interface Reading {
@@ -16,8 +18,10 @@ export interface Reading {
   lines: ReadingLine[];
 }
 
-export function readingFor(l: Listener): Reading {
+/** The same plays and facts in either language; only the sentences differ (bilingual Part 2). */
+export function readingFor(l: Listener, locale: Locale = "en"): Reading {
   const plays = generatePlays(l);
   const facts = pickFacts(allFacts(plays, l));
-  return { listener: l, plays, facts, lines: facts.map((f) => readingLine(f, l)) };
+  const line = locale === "zh" ? readingLineZh : readingLine;
+  return { listener: l, plays, facts, lines: facts.map((f) => line(f, l)) };
 }

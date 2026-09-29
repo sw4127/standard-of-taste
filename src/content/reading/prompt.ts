@@ -20,6 +20,10 @@
  * Templates only (BA-10). NOT YET THROUGH A WRITING PASS.
  */
 import type { ReadingLine } from "./lines";
+import { tFor } from "@/lib/i18n";
+import type { Locale } from "@/lib/locale";
+import READING_ZH from "@/content/zh/copy/reading";
+import SOUND_ZH from "@/content/zh/copy/reading-sound";
 import type { Reading } from "./reading";
 import { FLAW_FAMILIES, type FlawFamily } from "./types";
 
@@ -55,7 +59,14 @@ export const FAMILY_LABEL: Record<FlawFamily, string> = {
 
 const unique = (xs: string[]) => [...new Set(xs)];
 
-export function buildPrompt(r: Reading, s: ReaderState): Prompt {
+/**
+ * In Chinese (bilingual Part 2) the labels come from the reading's dictionary and
+ * the sound words from `reading-sound.ts`; a kept line's cue and a chosen reading's
+ * words are already Chinese, because the line was built by the Chinese templates.
+ */
+export function buildPrompt(r: Reading, s: ReaderState, locale: Locale = "en"): Prompt {
+  const t = tFor(locale, READING_ZH);
+  const w = tFor(locale, SOUND_ZH);
   const kept = r.lines.filter((l) => !s.rejected.includes(l.id));
   const byId = new Map(r.listener.clusters.map((c) => [c.id, c]));
   // The sound of the kept lines, the first-kept line's cluster leading.
@@ -67,7 +78,7 @@ export function buildPrompt(r: Reading, s: ReaderState): Prompt {
     }),
   );
   const families = Object.fromEntries(
-    FLAW_FAMILIES.map((f) => [f, unique(clusters.map((c) => c.family[f]))]),
+    FLAW_FAMILIES.map((f) => [f, unique(clusters.map((c) => w(c.family[f])))]),
   ) as Record<FlawFamily, string[]>;
 
   if (clusters.length === 0) {
@@ -75,19 +86,19 @@ export function buildPrompt(r: Reading, s: ReaderState): Prompt {
   }
   const [lead, ...rest] = clusters;
   const style = [
-    `${lead.sound.texture}, ${lead.sound.tempo}`,
-    ...rest.map((c) => `with touches of ${c.sound.texture}`),
-  ].join("; ");
-  const vocals = lead.sound.voice;
-  const production = lead.sound.production;
+    t("{texture}, {tempo}", { texture: w(lead.sound.texture), tempo: w(lead.sound.tempo) }),
+    ...rest.map((c) => t("with touches of {texture}", { texture: w(c.sound.texture) })),
+  ].join(t("; "));
+  const vocals = w(lead.sound.voice);
+  const production = w(lead.sound.production);
   const lines = [
-    `Style: ${style}.`,
-    `Vocals: ${vocals}.`,
-    `Production: ${production}.`,
+    t("Style: {style}.", { style }),
+    t("Vocals: {vocals}.", { vocals }),
+    t("Production: {production}.", { production }),
     // Each kept line's own direction, in reading order: rejecting a line always removes one.
-    ...kept.map((l) => `${l.cue.label}: ${l.cue.text}.`),
-    ...FLAW_FAMILIES.map((f) => `${FAMILY_LABEL[f]}: ${families[f].join("; ")}.`),
-    ...(mood.length ? [`Mood: ${mood.join(", ")}.`] : []),
+    ...kept.map((l) => t("{label}: {text}.", { label: l.cue.label, text: l.cue.text })),
+    ...FLAW_FAMILIES.map((f) => t("{label}: {text}.", { label: t(FAMILY_LABEL[f]), text: families[f].join(t("; ")) })),
+    ...(mood.length ? [t("Mood: {mood}.", { mood: mood.join(t(", ")) })] : []),
   ];
   return { kept, style, vocals, production, mood, families, text: lines.join("\n") };
 }

@@ -12,7 +12,7 @@ import { LISTENERS } from "./listeners";
 import { buildPrompt, EMPTY_STATE, FAMILY_LABEL, type Choice, type ReaderState } from "./prompt";
 import { readingFor } from "./reading";
 
-const readings = LISTENERS.map(readingFor);
+const readings = LISTENERS.map((l) => readingFor(l));
 
 /** Every combination of reject / a / b / neither / unchosen over a reading's lines. */
 function* allStates(ids: string[]): Generator<ReaderState> {

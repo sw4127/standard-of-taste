@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { LOCALE_STORAGE_KEY, counterpart, localeOfPath, type Locale } from "@/lib/locale";
 import { tr } from "@/lib/i18n";
 import CHROME, { SWITCH_TO_ZH } from "@/content/zh/copy/chrome";
@@ -21,15 +21,28 @@ import CHROME, { SWITCH_TO_ZH } from "@/content/zh/copy/chrome";
  */
 export default function LanguageSwitch() {
   const path = usePathname() ?? "/";
+  const router = useRouter();
   const here: Locale = localeOfPath(path);
   const target = counterpart(path);
   if (!target) return null;
   const to: Locale = here === "zh" ? "en" : "zh";
-  const remember = () => {
+  /*
+   * IN PLACE MEANS THE SAME STEP. The reading keeps its listener and step in the
+   * query (`?l=mira&step=create`), which `usePathname` does not carry, so the
+   * plain href would drop a visitor mid-reading back at the picker. The click
+   * reads the query and hash as they are now; the href without them is what a
+   * crawler or a visitor without scripts follows.
+   */
+  const remember = (e: React.MouseEvent<HTMLAnchorElement>) => {
     try {
       window.localStorage.setItem(LOCALE_STORAGE_KEY, to);
     } catch {
       // Storage blocked: the link still switches this page.
+    }
+    const extra = window.location.search + window.location.hash;
+    if (extra && !e.metaKey && !e.ctrlKey && !e.shiftKey && e.button === 0) {
+      e.preventDefault();
+      router.push(target + extra);
     }
   };
   return (

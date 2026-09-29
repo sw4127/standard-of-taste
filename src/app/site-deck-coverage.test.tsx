@@ -116,7 +116,9 @@ const INVISIBLE: Record<string, number> = {
   // THE CHINESE PAGES (bilingual Part 2, 2026-09-29). Every Chinese sentence is invisible to
   // the English decks by construction; the Chinese deck (bilingual Part 6) is where they are
   // seen, and each ceiling is lowered when it lands.
+  "/zh": 44,
   "/zh/company": 80,
+  "/zh/reading": 31,
 };
 
 /*

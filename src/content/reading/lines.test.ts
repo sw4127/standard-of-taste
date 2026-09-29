@@ -19,7 +19,7 @@ import { NEITHER, readingLine, type ReadingLine } from "./lines";
 import { readingFor } from "./reading";
 import type { Listener, Play } from "./types";
 
-const readings = LISTENERS.map(readingFor);
+const readings = LISTENERS.map((l) => readingFor(l));
 const LATE = new Set([23, 0, 1, 2, 3]);
 
 /** Every sentence a line can show, with what it is. */
