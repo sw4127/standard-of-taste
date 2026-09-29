@@ -1,7 +1,7 @@
 # PRD — Part 2: the feature breakdown, scored against the goal and ranked three ways
 
 **Status: part 2 of 4, revised against the blueprint on 2026-09-23.** Part 1 is
-`docs/prd-1-use-cases.md` (the use cases, UC-1 to UC-15). Parts 3 and 4 are
+`docs/prd-1-use-cases.md` (the use cases, UC-1 to UC-16). Parts 3 and 4 are
 `docs/prd-3-requirements.md` and `docs/prd-4-screens.md`. Brief: `docs/task-prd.md`.
 
 **What this is for.** Two audiences. A reviewer at a larger company has ten minutes and wants to
@@ -69,6 +69,7 @@ rather than one.
 | The falsified-hypotheses registry | 1 | 2 | none | Beliefs this project measured its way out of, each citing the file that killed it |
 | The refusals and reversals on `/method` | 1 | 2 | none | Seven things refused and three reversals, each with what it cost |
 | The psychometrics pipeline | 1 | 1 | none | Clip validation against a transparency anchor, CTT estimators, 2PL IRT and parameter recovery |
+| The Chinese site, one button away | 3 | 1 | UC-16 | Every page with a Chinese counterpart offers it from the header, at its own `/zh` address; the Chinese is authored before the build and held to the same guards as the English. Added 2026-09-29 |
 
 ## The rankings
 

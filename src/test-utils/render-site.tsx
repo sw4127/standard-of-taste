@@ -21,9 +21,18 @@ const PAGES = import.meta.glob<{ default: ComponentType<object> }>("../app/**/pa
 const LAYOUTS = import.meta.glob<{ default: ComponentType<{ children: React.ReactNode }> }>(
   "../app/*/layout.tsx",
 );
+/*
+ * THE CHINESE SECTIONS (bilingual Part 2). A page under `/zh/learn/...` is drawn
+ * inside `zh/learn/layout.tsx` and then `zh/layout.tsx`, the way the English
+ * page is drawn inside `learn/layout.tsx`, so the Chinese header and footer are
+ * read by every guard that reads the English ones.
+ */
+const ZH_SECTIONS = import.meta.glob<{ default: ComponentType<{ children: React.ReactNode }> }>(
+  "../app/zh/*/layout.tsx",
+);
 /** Every layout below the root, so a caller can assert none is left unrendered. */
 export const ALL_LAYOUT_KEYS = Object.keys(import.meta.glob("../app/**/layout.tsx"));
-export const SECTION_LAYOUT_KEYS = Object.keys(LAYOUTS);
+export const SECTION_LAYOUT_KEYS = [...Object.keys(LAYOUTS), ...Object.keys(ZH_SECTIONS)];
 
 const routeOf = (key: string) => key.replace(/^\.\.\/app/, "").replace(/\/?page\.tsx$/, "") || "/";
 
@@ -70,6 +79,10 @@ async function render(route: string, key: string): Promise<{ html: string; meta:
     Page.constructor.name === "AsyncFunction"
       ? ((await Page(props)) as ReactElement)
       : createElement(Page as ComponentType<object>, props);
+  const zhSection = `../app/zh/${route.split("/")[2]}/layout.tsx`;
+  if (route.startsWith("/zh/") && ZH_SECTIONS[zhSection]) {
+    el = createElement((await ZH_SECTIONS[zhSection]()).default, null, el);
+  }
   const section = `../app/${route.split("/")[1]}/layout.tsx`;
   if (route !== "/" && LAYOUTS[section]) {
     el = createElement((await LAYOUTS[section]()).default, null, el);

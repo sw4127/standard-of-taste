@@ -21,6 +21,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   BLUEPRINT_PATH,
+  BLUEPRINT_ZH_PATH,
   caption,
   loadBlueprint,
   parseBlueprint,
@@ -70,6 +71,7 @@ function namesItsSource(file: string, anchor: string, id: string): boolean {
 }
 
 const blueprint = loadBlueprint(SOURCE);
+const BP_ZH = loadBlueprint(BLUEPRINT_ZH_PATH).BP;
 const BP = blueprint.BP;
 const BP_STATEMENTS_FOR_TEST = blueprint.statements;
 
@@ -115,8 +117,11 @@ describe("every registered copy holds to its mode", () => {
       expect(BP[row.id], `${row.id} is not in the blueprint`).toBeTruthy();
       const file = readFileSync(row.path, "utf8");
       if (row.mode === "quoted") {
+        // A Chinese copy quotes the Chinese blueprint (bilingual Part 3).
+        const source = row.lang === "zh" ? BP_ZH[row.id] : BP[row.id];
+        expect(source, `${row.id} is not in the ${row.lang === "zh" ? "Chinese " : ""}blueprint`).toBeTruthy();
         expect(
-          quotes(file, BP[row.id]),
+          quotes(file, source),
           `${row.path} no longer quotes ${row.id} verbatim. The blueprint is the source: copy it from ` +
             `docs/blueprint.md, or register the line as derived and name the ID beside it.`,
         ).toBe(true);

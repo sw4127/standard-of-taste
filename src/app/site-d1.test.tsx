@@ -41,6 +41,8 @@ import { beforeAll, describe, expect, it, vi } from "vitest";
 import { attributeText, renderSite, textOf, type RenderedSite } from "@/test-utils/render-site";
 // The RT-Z10 carve-out holds on every surface, the card included — one list (BA-5).
 import { CARVE_OUT } from "@/content/carve-out";
+// The Chinese needle (bilingual Part 2): a Chinese page is held to D1 as the English one is.
+import { ABOUT_THE_PERSON_ZH } from "@/content/zh/guards";
 
 vi.mock("next/navigation", async (orig) => ({
   ...(await orig<typeof import("next/navigation")>()),
@@ -102,6 +104,8 @@ const REFUSALS: Record<string, string> = {
   "nothing on any surface asserts anything about trauma, abuse or mental health":
     "/method's second and third reversals stating the RT-Z10 carve-out, not breaking it",
   "neither says anything about trauma, abuse or mental health": "/legal stating the RT-Z10 carve-out",
+  // The Chinese pages' renderings of the refusals above, each with the same reason.
+  "任何页面都不对创伤、虐待或心理健康作出任何断言": "/zh/company stating the RT-Z10 carve-out, not breaking it",
 };
 
 interface Hit {
@@ -112,8 +116,9 @@ interface Hit {
 
 function scan(route: string, text: string): Hit[] {
   const hits: Hit[] = [];
-  for (const sentence of text.replace(/\s+/g, " ").split(/(?<=[.!?])\s+/)) {
-    if (ABOUT_THE_PERSON.test(sentence)) hits.push({ route, sentence, rule: "D1" });
+  // Chinese sentences end in 。？！； with no space after them.
+  for (const sentence of text.replace(/\s+/g, " ").split(/(?<=[.!?])\s+|(?<=[。？！；])/)) {
+    if (ABOUT_THE_PERSON.test(sentence) || ABOUT_THE_PERSON_ZH.test(sentence)) hits.push({ route, sentence, rule: "D1" });
     if (CARVE_OUT.test(sentence)) hits.push({ route, sentence, rule: "carve-out" });
   }
   return hits;
@@ -129,7 +134,8 @@ const refused = (h: Hit) => {
   const fragment = Object.keys(REFUSALS).find((f) => h.sentence.includes(f));
   if (!fragment) return false;
   const rest = h.sentence.replace(fragment, " ");
-  return !(h.rule === "D1" ? ABOUT_THE_PERSON : CARVE_OUT).test(rest);
+  if (h.rule === "carve-out") return !CARVE_OUT.test(rest);
+  return !ABOUT_THE_PERSON.test(rest) && !ABOUT_THE_PERSON_ZH.test(rest);
 };
 
 let site: RenderedSite;
@@ -171,6 +177,45 @@ describe("no surface but the card speaks about the person (D1, as amended)", () 
     if (NAMED.includes("/reading")) expect(legal, "/legal does not name the reading as a surface that speaks about you").toMatch(/the prompt card and the reading/);
     expect(legal).toMatch(/instruments in the gym do not predict your personality/);
     expect(legal).not.toMatch(/It does not predict your personality/);
+  });
+
+  /*
+   * THE CHINESE NEEDLE IS PROVEN THE SAME WAY (red-team, bilingual Part 2). Nothing
+   * rendered in Chinese trips it today, so without planted specimens it could be
+   * replaced by a pattern that matches nothing and every test would stay green.
+   * Each top-level alternative must be hit by a specimen, and each specimen must
+   * produce exactly one D1 hit through the same scan the pages go through.
+   */
+  it("the Chinese needle bites on every one of its alternatives", () => {
+    const ZH_SPECIMENS = [
+      "你是什么样的人。",
+      "你属于哪类的听者？",
+      "你是谁。",
+      "这暴露了你。",
+      "这是你的性格。",
+      "你往往会回头。",
+      "内心深处。",
+      "你偏内向。",
+      "你偏外向。",
+      "这关乎性格。",
+      "这关乎人格。",
+    ];
+    for (const s of ZH_SPECIMENS) expect(scan("/zh/x", s).filter((h) => h.rule === "D1"), s).toHaveLength(1);
+    // Split the needle at its top-level bars and require each part to catch a specimen.
+    const parts: string[] = [];
+    let depth = 0;
+    let cur = "";
+    for (const ch of ABOUT_THE_PERSON_ZH.source) {
+      if (ch === "(") depth++;
+      if (ch === ")") depth--;
+      if (ch === "|" && depth === 0) {
+        parts.push(cur);
+        cur = "";
+      } else cur += ch;
+    }
+    parts.push(cur);
+    expect(parts.length).toBeGreaterThanOrEqual(10);
+    expect(parts.filter((p) => !ZH_SPECIMENS.some((s) => new RegExp(p).test(s)))).toEqual([]);
   });
 
   it("the needle bites on what the retired surfaces actually said", () => {
@@ -226,7 +271,9 @@ describe("no surface but the card speaks about the person (D1, as amended)", () 
     const files = [
       ...["bias", "delicacy", "threshold", "spread"].flatMap((d) => walk(`src/app/${d}`)),
       ...walk("src/components"),
-    ].filter((f) => f.endsWith(".tsx") && !f.includes(".test."));
+      // Every Chinese sentence, rendered statically or not, lives here (bilingual Part 2).
+      ...walk("src/content/zh/copy"),
+    ].filter((f) => /\.tsx?$/.test(f) && !f.includes(".test."));
     // Absolute floor, measured 2026-09-23: 36 files.
     expect(files.length).toBeGreaterThanOrEqual(30);
     // A component that speaks about the person is exempt ONLY if every file that

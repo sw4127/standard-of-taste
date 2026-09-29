@@ -1,0 +1,16 @@
+/**
+ * D1 的页面声明，中文版 · The D1 on-surface statements in Chinese (bilingual Part 2).
+ *
+ * Copies of the sentences in CLAUDE.md's "D1 on-surface statements in Chinese"
+ * stamp, which `zh/statements.test.ts` extracts on every run and compares with
+ * these, as the English statements are held. To change one, change the stamp.
+ * Pending the owner's approval; the English statements govern.
+ */
+
+/** The Chinese of `READING_STATEMENT` (src/content/reading/statement.ts). */
+export const READING_STATEMENT_ZH =
+  "这份解读（the reading）谈的是，一位听者近来的播放记录（plays）可能意味着什么。它说出规律（pattern），提示几种读法；哪一种对，或者都不对，由你来说。听辨测试（hearing tests）只描述你做了什么。";
+
+/** The Chinese of the prompt card's statement (src/content/card/). */
+export const CARD_STATEMENT_ZH =
+  "这张卡片谈的是，这次解读（the reading）对你可能意味着什么。听辨测试（hearing tests）里的其余内容，只描述你做了什么。";

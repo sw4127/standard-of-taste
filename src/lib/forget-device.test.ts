@@ -5,6 +5,7 @@ import { recordResult, readHistory, readResult } from "./result-store";
 import { POOL_VERSIONS } from "./result-recall";
 import { LEGACY_KEY_PREFIX, cooldownFor } from "./retest-cooldown";
 import { FORGET } from "@/content/forget";
+import { LOCALE_STORAGE_KEY } from "./locale";
 
 /**
  * E13/S4 (Track G3, PM ruling RT-G1 a) — "FORGET THIS BROWSER" HAS TO ACTUALLY
@@ -253,7 +254,19 @@ describe("the namespace sweep is enough to be called forgetting", () => {
       "Only the session store may persist to localStorage, or the namespace sweep in " +
         "forget-device.ts stops being a complete answer. Found: " +
         writers.join(", "),
-    ).toEqual(["src/lib/result-store.ts"]);
+    ).toEqual(["src/components/LanguageSwitch.tsx", "src/lib/result-store.ts"]);
+  });
+
+  /*
+   * THE ONE OTHER WRITER, ADMITTED ON A CONDITION (bilingual Part 2, 2026-09-29).
+   * The language switch remembers a choice of language. It is allowed because
+   * its key sits inside the swept namespace, and this proves the sweep takes it.
+   */
+  it("sweeps the language choice with everything else", () => {
+    expect(LOCALE_STORAGE_KEY.startsWith(PERSISTENT_PREFIX)).toBe(true);
+    local.setItem(LOCALE_STORAGE_KEY, "zh");
+    forgetThisBrowser();
+    expect(local.getItem(LOCALE_STORAGE_KEY)).toBeNull();
   });
 
   it("sweeps the namespace both known writers use", () => {

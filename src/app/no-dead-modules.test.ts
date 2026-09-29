@@ -34,8 +34,8 @@ const TEST_INFRASTRUCTURE: Record<string, string> = {
   "src/lib/pixel-contrast.ts": "the contrast measurement the accent and card tests use",
   "src/lib/refs.ts": "the registry of shipped ?ref= entry tags, checked by refs.test.ts",
   "src/content/zh/glossary.ts": "the approved Chinese glossary as data, which zh-style.test.ts holds every Chinese string to",
-  // Leaves this list in bilingual Part 2, when the Chinese shell renders its note.
-  "src/content/zh/style.ts": "the Chinese perma-bans and the translation note, read by zh-style.test.ts",
+  // Leaves this list when /zh/reading renders it (bilingual Part 2, the reading slice).
+  "src/content/zh/copy/statements.ts": "the Chinese D1 statements, held to CLAUDE.md by zh/statements.test.ts",
 };
 
 describe("every source module is reachable, or is named test infrastructure", () => {

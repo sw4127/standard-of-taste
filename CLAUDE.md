@@ -144,6 +144,19 @@ sentence whose only job is to say truthfully what the surface does was false (N3
 
 > This reading speaks to you about what a listener's recent plays might mean. It names patterns and offers readings; which one is right, if either, is yours to say. The hearing tests describe only what you did.
 
+### D1 on-surface statements in Chinese (zh rendering, pending owner approval, 2026-09-29)
+Appended, not overwritten; nothing above is amended by it. The bilingual brief (Cowork, 2026-09-29, Part 2) asks for a Chinese site, and a surface where D1 is suspended must say so on itself in either language. These are the Chinese renderings of the two statements in force above. **They are drafts for the owner's writing pass and ruling**; until the owner rules, they are what the Chinese pages render, derived by `src/content/zh/statements.test.ts` exactly as the English statements are derived, and the English above governs (the Chinese site says so on every page). They follow the owner's Chinese rules: no 不是 in any form, no contrast frame, and each glossary term in 中文（English） form at first use.
+
+**This stamp suspends D1 on no new route.** `/zh/reading` is not named: the newest "Named routes" line above is unchanged, so the Chinese reading is held to D1's needle until the owner names it. Whether to name it is in the decisions block of the session that wrote this.
+
+**zh rendering of the on-surface statement for the card (pending owner approval):**
+
+> 这张卡片谈的是，这次解读（the reading）对你可能意味着什么。听辨测试（hearing tests）里的其余内容，只描述你做了什么。
+
+**zh rendering of the on-surface statement for the reading (pending owner approval):**
+
+> 这份解读（the reading）谈的是，一位听者近来的播放记录（plays）可能意味着什么。它说出规律（pattern），提示几种读法；哪一种对，或者都不对，由你来说。听辨测试（hearing tests）只描述你做了什么。
+
 ### D3 amendment — the reading is the flagship (owner-approved 2026-09-23, ruling BA-6)
 Appended, not overwritten. Amends **D3 only**; D1, D2, D4, D5, D6 and N1–N3 are untouched by it. The ruling: `docs/rt-answers-2026-09-23-audit.md`.
 

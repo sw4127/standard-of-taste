@@ -68,3 +68,27 @@ export function offerBreaches(text: string): string[] {
     ...matches(text, COMPARISON),
   ];
 }
+
+/*
+ * THE SAME RULES IN CHINESE (bilingual Part 2, 2026-09-29). The patterns live in
+ * `zh/guards.ts`; the rules are these two functions, the same as the English
+ * ones: a pattern sentence names no feeling and asserts nothing, and an offer is
+ * a question (it ends in the full-width question mark) that asserts nothing.
+ */
+import { ASSERTIONS_ZH, COMPARISON_ZH, FEELING_WORDS_ZH } from "./zh/guards";
+
+export function patternBreachesZh(text: string): string[] {
+  return [
+    ...(FEELING_WORDS_ZH.test(text) ? [`names a feeling: ${FEELING_WORDS_ZH.exec(text)![0]}`] : []),
+    ...matches(text, ASSERTIONS_ZH),
+    ...matches(text, COMPARISON_ZH),
+  ];
+}
+
+export function offerBreachesZh(text: string): string[] {
+  return [
+    ...(text.trim().endsWith("\uFF1F") ? [] : ["is not a question"]),
+    ...matches(text, ASSERTIONS_ZH),
+    ...matches(text, COMPARISON_ZH),
+  ];
+}

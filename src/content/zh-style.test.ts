@@ -43,8 +43,9 @@ vi.mock("next/navigation", async (orig) => ({
 }));
 
 /** Strings last read. Raise it in the same commit that adds Chinese copy. */
-// 2026-09-29, Part 1: the two notes in zh/style.ts; no dictionary, document or page yet.
-const ZH_CORPUS_FLOOR = 2;
+// 2026-09-29: 2 in Part 1 (the two notes); 243 after Part 2's first slice (the chrome, the
+// Company view, the D1 statements, the Chinese blueprint and one rendered page).
+const ZH_CORPUS_FLOOR = 243;
 
 const CJK = /[　-〿一-鿿＀-￯]/;
 
@@ -52,14 +53,37 @@ const CJK = /[　-〿一-鿿＀-￯]/;
 
 /*
  * THE READ ZONE AND THE EXEMPT ZONE ARE ONE SET (red-team, Part 1). Chinese may
- * appear in source only in `zh/copy/**` (read here, at any depth), `zh/glossary.ts`
- * (the alternates, which are refused, not rendered) and `zh/style.ts` (the two
- * notes, read here). A module anywhere else under `zh/` would have been exempt
- * from the stray check and read by nothing.
+ * appear in source only in `zh/copy/**` (read here, at any depth, both as values
+ * and as source literals), `zh/glossary.ts` (the alternates, which are refused,
+ * not rendered), `zh/guards.ts` (the patterns the other guards refuse or parse
+ * with, never rendered) and `zh/style.ts` (the two notes, read here). A module
+ * anywhere else under `zh/` would have been exempt from the stray check and read
+ * by nothing.
  */
 const DICTIONARIES = import.meta.glob<{ default: Record<string, string> }>("./zh/copy/**/*.ts", { eager: true });
 const MAY_HOLD_CHINESE = (f: string) =>
-  f.startsWith("src/content/zh/copy/") || f === "src/content/zh/glossary.ts" || f === "src/content/zh/style.ts";
+  f.startsWith("src/content/zh/copy/") ||
+  ["src/content/zh/glossary.ts", "src/content/zh/guards.ts", "src/content/zh/style.ts"].includes(f);
+
+/**
+ * Every Chinese string literal in `zh/copy/**`, read from the SOURCE, so a
+ * sentence in a template function or a named export is scanned even when no
+ * test renders it. A template literal is split at its `${...}` slots.
+ */
+export function sourceLiterals(source: string): string[] {
+  const out: string[] = [];
+  for (const m of source.matchAll(/"((?:[^"\\\n]|\\.)*)"|'((?:[^'\\\n]|\\.)*)'|`((?:[^`\\]|\\.)*)`/g)) {
+    const body = m[1] ?? m[2] ?? m[3] ?? "";
+    for (const part of body.split(/\$\{[^}]*\}/)) if (CJK.test(part)) out.push(part);
+  }
+  return out;
+}
+
+function copySourceStrings(): ZhString[] {
+  return walk("src/content/zh/copy")
+    .filter((f) => /\.tsx?$/.test(f))
+    .flatMap((f) => sourceLiterals(readFileSync(f, "utf8").replace(/\/\*[\s\S]*?\*\/|(^|\s)\/\/.*$/gm, "$1")).map((text) => ({ where: `${f} (source)`, text })));
+}
 
 interface ZhString {
   where: string;
@@ -68,7 +92,7 @@ interface ZhString {
 
 function dictionaryStrings(): ZhString[] {
   return Object.entries(DICTIONARIES).flatMap(([file, mod]) =>
-    Object.entries(mod.default).map(([key, text]) => ({ where: `${file} :: ${key.slice(0, 60)}`, text })),
+    Object.entries(mod.default ?? {}).map(([key, text]) => ({ where: `${file} :: ${key.slice(0, 60)}`, text })),
   );
 }
 
@@ -201,6 +225,7 @@ beforeAll(async () => {
 function corpus(): ZhString[] {
   return [
     ...dictionaryStrings(),
+    ...copySourceStrings(),
     { where: "zh/style.ts :: ZH_TRANSLATION_NOTE", text: ZH_TRANSLATION_NOTE },
     { where: "zh/style.ts :: ZH_DOC_NOTE", text: ZH_DOC_NOTE },
     ...documentStrings(),
@@ -260,7 +285,8 @@ describe("every Chinese string on the site and in the documents keeps the rules"
     expect(site.failed).toEqual([]);
     const hits = zhPages.flatMap((p) => {
       // Bans and alternates: header, navigation, attributes and metadata too.
-      const all = [textOf(p.html), attributeText(p.html), ...p.meta].join("\n");
+      // attributeText joins with an English ".\n", which would read as a stray full stop.
+      const all = [textOf(p.html), ...attributeText(p.html).split(".\n"), ...p.meta].join("\n");
       const chinese = all.split("\n").filter((l) => CJK.test(l)).join("\n");
       return [
         ...firstUseBreaches(bodyOf(p.html)).map((b) => `${p.route}: ${b}`),

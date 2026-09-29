@@ -110,6 +110,12 @@ export default function LegalPage() {
             device or clear your browsing data and it is gone; there is no copy anywhere else.
           </li>
           <li>
+            If you press the language button, the language you chose is kept in this browser&apos;s
+            local storage, so an English page you later open from outside this site takes you to its
+            Chinese version, where there is one. Nothing else about you goes with it, and the button
+            below clears it with everything else.
+          </li>
+          <li>
             If you argue with a reading, which lines you rejected and which readings you chose are
             kept in this tab&apos;s session storage so the prompt stays as you left it. They are gone
             when the tab closes and never leave the browser.

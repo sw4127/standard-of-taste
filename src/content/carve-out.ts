@@ -15,7 +15,9 @@
  * WHAT IT CANNOT DO: judge a sentence that makes the claim in words not listed
  * here. A green run means none of THESE phrasings appears.
  */
-export const CARVE_OUT_PATTERNS: readonly RegExp[] = [
+import { CARVE_OUT_ZH_PATTERNS } from "./zh/guards";
+
+const CARVE_OUT_EN: readonly RegExp[] = [
   /\b(?:trauma|traumatic|traumatis(?:ed|ing))\b/i,
   /\b(?:abuse|abused|abusive)\b/i,
   /\b(?:depress(?:ed|ion|ive)?|anxiety|anxious|ptsd|adhd|autis(?:m|tic)|neurodiverg(?:ent|ence))\b/i,
@@ -30,6 +32,15 @@ export const CARVE_OUT_PATTERNS: readonly RegExp[] = [
   // fires on refusals trains everyone to exempt it.
   /\b(?:clinical(?:ly)?|disorder|medicat(?:ed|ion)|self[- ]harm|suicid\w*)\b/i,
 ];
+
+/*
+ * ONE LIST IN TWO LANGUAGES (bilingual Part 2, 2026-09-29). A Chinese page that
+ * slipped past the carve-out would be the same defect as the model text the
+ * English list once could not see. The Chinese patterns live in `zh/guards.ts`,
+ * the one file of Chinese patterns, and join this list, so every check that
+ * reads the carve-out reads both.
+ */
+export const CARVE_OUT_PATTERNS: readonly RegExp[] = [...CARVE_OUT_EN, ...CARVE_OUT_ZH_PATTERNS];
 
 /** Every pattern the text trips, as strings (empty when it is clean). */
 export function carveOutBreaches(text: string): string[] {

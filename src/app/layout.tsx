@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 import EnvBanner from "@/components/EnvBanner";
+import LocalePreference from "@/components/LocalePreference";
 import JsonLd from "@/components/JsonLd";
 import RouteBackground from "@/components/RouteBackground";
 import { baseUrl } from "@/lib/site";
@@ -64,6 +65,8 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <RouteBackground>{children}</RouteBackground>
+        {/* A visitor who chose Chinese is sent to the Chinese page, where one exists (bilingual Part 2). */}
+        <LocalePreference />
         <EnvBanner />
         {/* §3.B5 site-wide schema — GEO only; SERP expectation zero. */}
         <JsonLd

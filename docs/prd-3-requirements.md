@@ -1,7 +1,7 @@
 # PRD — Part 3: functional requirements and non-goals
 
 **Status: part 3 of 4, revised against the blueprint on 2026-09-23.** Part 1 is
-`docs/prd-1-use-cases.md` (the use cases, UC-1 to UC-15); part 2 is `docs/prd-2-features.md`;
+`docs/prd-1-use-cases.md` (the use cases, UC-1 to UC-16); part 2 is `docs/prd-2-features.md`;
 part 4 is `docs/prd-4-screens.md`. Brief: `docs/task-prd.md`.
 
 **This is the part engineering and QA read.** Every requirement names the exported symbol that
@@ -349,6 +349,24 @@ stopped at either end of the ladder.
 - **FR-18.3** The expert panel is read from local storage, so a shared link carries none of it.
 - **FR-18.4** A person can clear what the device holds, from a control they can find.
 
+## FR-19 · The Chinese site
+
+| | |
+|---|---|
+| **Serves** | UC-16 (ASSUMED) |
+| **Implemented by** | `ZH_ROUTES`, `localHref`, `LOCALE_STORAGE_KEY` in `src/lib/locale.ts`; `tr` in `src/lib/i18n.ts` |
+| **Statement** | `ZH_TRANSLATION_NOTE` in `src/content/zh/style.ts` |
+
+- **FR-19.1** One button in the shared header switches the page in place between English and
+  Chinese. It shows only where the other language has a page.
+- **FR-19.2** A Chinese page has its own address under `/zh`, so it can be sent as a link.
+- **FR-19.3** The choice is remembered in this browser, inside the namespace "forget this browser"
+  clears, and the site works when storage is blocked.
+- **FR-19.4** Every Chinese page says, near the top, that the site was written in English and the
+  English governs.
+- **FR-19.5** The Chinese is authored before the build and held to the owner's rules and to every
+  guard the English is held to. Nothing is translated when a visitor arrives (BA-10).
+
 ---
 
 ## Non-goals
@@ -373,6 +391,7 @@ Assembled from the seven refusals on `/method`, the falsified registry and the b
 | A seeded cohort | A friends-sized sample sits below the noisy end of the pipeline's own recovery sweep |
 | Track recommendation | Needs a licensed catalogue the audio rule forbids |
 | A fifth instrument, to turn preference into words | Costed at 84 pairs and 84 minutes, and killed (RT-3 a); `/method`'s seventh refusal |
+| Machine translation when a visitor arrives | The Chinese is written before the build and reviewed; no sentence is made at run time (BA-10) |
 
 ## Constraints that bind every requirement
 

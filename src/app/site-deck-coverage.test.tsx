@@ -94,7 +94,9 @@ const INVISIBLE: Record<string, number> = {
   "/learn/ranking-test": 30,
   // 2 -> 7 on 2026-09-23: the reading named as a surface, its generated plays, and
   // its session storage (blueprint Part 5). Part 7 decks /legal's new copy.
-  "/legal": 2,
+  // 2 -> 4 on 2026-09-29 (bilingual Part 2), on purpose: /legal now discloses the language
+  // choice the switch keeps in local storage. Decked in bilingual Part 6.
+  "/legal": 4,
   "/method": 8,
   // Measured 2026-09-23 when the reading shipped (blueprint Part 5): its copy and
   // the argument rendered from docs/blueprint.md are in no deck yet. Part 7 decks
@@ -111,13 +113,25 @@ const INVISIBLE: Record<string, number> = {
   // 11 -> 8 the same day (RT-1 a): the stakeholder answers' "Serves BP-…" lines
   // left the page, and three of them were long enough to count.
   "/company": 8,
+  // THE CHINESE PAGES (bilingual Part 2, 2026-09-29). Every Chinese sentence is invisible to
+  // the English decks by construction; the Chinese deck (bilingual Part 6) is where they are
+  // seen, and each ceiling is lowered when it lands.
+  "/zh/company": 80,
 };
 
+/*
+ * A CHINESE CHARACTER IS A WORD HERE (bilingual Part 2, 2026-09-29). Words were
+ * split on spaces and everything but a-z was dropped, so a Chinese sentence
+ * counted as nothing: 3 of the Chinese Company view's sentences were visible to
+ * this guard, and none of its paragraphs. Each CJK character now counts as one
+ * token, so five-character runs are matched against the decks like five-word runs.
+ */
 const words = (s: string) =>
   s
     .toLowerCase()
     .replace(/\$\{[^}]*\}/g, " ")
-    .replace(/[^a-z\s]/g, " ")
+    .replace(/[一-鿿]/g, (c) => ` ${c} `)
+    .replace(/[^a-z\s一-鿿]/g, " ")
     .split(/\s+/)
     .filter(Boolean);
 const grams = (w: string[], n = 5) =>
@@ -144,7 +158,8 @@ const sentences = (html: string, meta: string[]) => [
     [textOf(html), ...meta]
       .join("\n")
       .split("\n")
-      .flatMap((l) => l.split(/(?<=[.!?])\s+/))
+      // Chinese sentences end in 。？！ with no space after them.
+      .flatMap((l) => l.split(/(?<=[.!?])\s+|(?<=[。？！])/))
       .map((s) => s.trim())
       .filter((s) => words(s).length >= 6),
   ),

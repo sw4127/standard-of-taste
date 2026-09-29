@@ -46,8 +46,10 @@ export const ZH_BANS: readonly ZhBan[] = [
   { pattern: /进行|开展|实现|提升|推动|助力|赋能|打造|构建|落地|深耕|聚焦|围绕|致力于|旨在|对齐/, why: "an empty verb (guide §2): it can be swapped for 进行 without changing the meaning; choose the verb last" },
   // Quotation: 「」 only, and only for a verbatim quote or a button label.
   { pattern: /[“”‘’"]/, why: "quote marks are 「」, used only for a verbatim quotation or a button label" },
-  // The full-width bracket rule: Chinese prose takes （）, never ASCII.
-  { pattern: /[()]/, why: "brackets in Chinese are full-width （）" },
+  // The full-width bracket rule: Chinese prose takes （）, never ASCII. An ASCII
+  // bracket that touches or encloses Chinese is prose; one inside a formula is
+  // mathematics, and a rule that refused the formula would be switched off.
+  { pattern: /[一-鿿，。；：？、][()]|[()][一-鿿，。；：？、]|\([^()]*[一-鿿][^()]*\)/, why: "brackets in Chinese are full-width （）" },
   { pattern: /\s（|（\s|\s）/, why: "no space inside or before a full-width bracket: 阈值（threshold）" },
   // Full-width punctuation beside Chinese.
   { pattern: /[一-鿿）」][,;:?](?!\/)|[,;:?][一-鿿（「]/, why: "punctuation beside Chinese is full-width: ，；：？" },

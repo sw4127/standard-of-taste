@@ -29,6 +29,11 @@ export interface BlueprintCopy {
   /** derived: a string in the file the `BP-<ID>` token must sit within five lines of. */
   anchor?: string;
   /**
+   * "zh": a quoted row matches the Chinese blueprint (`docs/blueprint.zh.md`),
+   * because a Chinese document quotes the Chinese statement (bilingual Part 3).
+   */
+  lang?: "zh";
+  /**
    * historical: why this copy is exempt, with its date (YYYY-MM-DD). A historical
    * row also carries an `anchor` that must still be in the file, so the row cannot
    * outlive the record it exempts.

@@ -27,7 +27,7 @@ Every use case carries one, and the ratio is stated rather than buried.
 - **ASSUMED** — it rests on an assumed statement (BP-DEMAND above all: nobody has been observed
   wanting any of this), an inference, or a philosophical position.
 
-**The count: 3 EVIDENCED, 12 ASSUMED.** It is what a product with zero fielded users looks like when
+**The count: 3 EVIDENCED, 13 ASSUMED.** It is what a product with zero fielded users looks like when
 it is honest. The interviews behind the evidenced three were conducted for a Columbia Business
 School engagement with Tidal and produced two findings: that past listening predicts less than
 present and forming taste, and that **almost nobody can describe their own taste in words**.
@@ -75,6 +75,7 @@ ASSUMED here.
 | **UC-13** | See why a company would fund the reading and how it would test that | `/company` | **ASSUMED** | BP-BUSINESS, BP-GOAL |
 | **UC-14** | Try the core as its intended user within minutes | `/` | **ASSUMED** | BP-GOAL |
 | **UC-15** | Understand the product without using it | `/` | **ASSUMED** | BP-GOAL, BP-INSIGHT |
+| **UC-16** | Read the product in Chinese, with the English one button away (added 2026-09-29, bilingual brief) | `/zh/company` | **ASSUMED** | BP-GOAL |
 
 ## Routes that serve no BP statement
 
@@ -95,7 +96,7 @@ the blueprint does not ask for them. Each stays for the reason given.
 | `/quiz`, `/result`, `/music/quiz`, `/music/result`, `/fan-verdict`, `/vs` | The legacy World-Cup funnel, and the music snack: retired 2026-09-23 (BA-7); the snack's routes redirect to the reading, the rest to the front door. Kept alive only so shared URLs do not 404 (`CLAUDE.md`, Legacy) |
 | `/premium/preview`, `/premium/report` | The paid tier, withdrawn by the D4 amendment. There is no paid tier and none is coming |
 
-**That is 38 routes: 21 serving a use case, 9 serving no BP statement, 8 out of scope.**
+**That is 39 routes: 22 serving a use case, 9 serving no BP statement, 8 out of scope.**
 
 ---
 

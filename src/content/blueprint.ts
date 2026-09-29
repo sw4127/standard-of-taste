@@ -102,3 +102,67 @@ export function caption(s: BpStatement): string | null {
   if (!s.labelText || citation.includes(s.labelText)) return citation;
   return `${s.labelText} · ${citation}`;
 }
+
+/*
+ * THE CHINESE BLUEPRINT (bilingual Parts 2–3, 2026-09-29).
+ *
+ * `docs/blueprint.zh.md` carries the same markers and IDs, one Chinese line per
+ * statement, and its header records the English file's sha256 (`blueprint-zh.test.ts`
+ * fails when the English changes and the Chinese does not). Chinese pages render
+ * statements from here, as English pages render them from the English file, so a
+ * Chinese page holds no statement text of its own either.
+ *
+ * Its notes word the label in Chinese (`ZH_LABEL` in zh/guards.ts), and keep the sources in
+ * their original language; the caption rules below are the English ones in that
+ * wording. DRAFT until the owner's writing pass rules on it.
+ */
+import { ZH_LABEL, ZH_LABEL_TAIL, ZH_NOTE_FIELD } from "./zh/guards";
+
+export const BLUEPRINT_ZH_PATH = "docs/blueprint.zh.md";
+
+const LOADED_ZH = loadBlueprint(BLUEPRINT_ZH_PATH);
+export const BP_STATEMENTS_ZH: readonly BpStatement[] = LOADED_ZH.statements;
+
+/** One Chinese statement, or a loud failure, as `bp`. */
+export function bpZh(id: BpId): BpStatement {
+  const s = BP_STATEMENTS_ZH.find((x) => x.id === id);
+  if (!s) throw new Error(`${id} is not in ${BLUEPRINT_ZH_PATH}`);
+  return s;
+}
+
+export const BP_ARG_ZH = BP_ARG_ORDER.map((id) => bpZh(id));
+export const BP_ARG_DEFENCE_ZH = (["BP-ARG-OBJECTION", "BP-ARG-REPLY", "BP-ARG-OPEN"] as const).map((id) => bpZh(id));
+
+const LABEL_ZH = ZH_LABEL;
+
+export function labelTextZh(s: BpStatement): string | null {
+  return LABEL_ZH.exec(s.note)?.[0] ?? null;
+}
+
+/** `publicCitation`, for a Chinese note: its published lines, less the field name and the label. */
+export function publicCitationZh(s: BpStatement): string | null {
+  const bare = (publicSource(s) ?? "")
+    .replace(ZH_NOTE_FIELD, "")
+    .replace(new RegExp(`^${LABEL_ZH.source}${ZH_LABEL_TAIL}`), "")
+    .trim();
+  return bare || null;
+}
+
+/** `caption`, for a Chinese statement. */
+export function captionZh(s: BpStatement): string | null {
+  const label = labelTextZh(s);
+  const citation = publicCitationZh(s);
+  if (!citation) return label;
+  if (!label || citation.includes(label)) return citation;
+  return `${label} · ${citation}`;
+}
+
+/** The statement in `locale`, for components that render either. */
+export function bpIn(locale: "en" | "zh", id: BpId): { text: string; caption: string | null; label: string | null } {
+  if (locale === "zh") {
+    const s = bpZh(id);
+    return { text: s.text, caption: captionZh(s), label: labelTextZh(s) };
+  }
+  const s = bp(id);
+  return { text: s.text, caption: caption(s), label: s.labelText };
+}

@@ -58,3 +58,32 @@ body {
     animation: none;
   }
 }
+
+/*
+ * CHINESE PAGES (bilingual Part 2). Wide tracking is how this site sets English
+ * capitals; Chinese has no capitals, and the same spacing pulls a term apart from
+ * the English it carries in brackets. So under lang="zh-Hans" every tracked
+ * class is narrowed, and CJK text gets a system font that has the glyphs instead
+ * of falling through Fraunces and Geist, which have none.
+ */
+[lang="zh-Hans"] {
+  font-family: var(--font-sans), "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", system-ui, sans-serif;
+}
+/* Fraunces keeps the Latin; the Chinese falls to a bold sans, because the serif
+   CJK faces Windows ships (SimSun) are hairline at display sizes. */
+[lang="zh-Hans"] .font-display {
+  font-family: var(--font-display), "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+}
+[lang="zh-Hans"] [class*="tracking-[0.3em]"],
+[lang="zh-Hans"] [class*="tracking-[0.4em]"],
+[lang="zh-Hans"] [class*="tracking-[0.18em]"] {
+  letter-spacing: 0.08em;
+}
+/* The English a term carries in a heading, set down a size (`ZhTerms`). */
+.zh-term-en {
+  font-size: 0.55em;
+  font-weight: 500;
+  letter-spacing: 0;
+  vertical-align: 0.15em;
+  opacity: 0.75;
+}

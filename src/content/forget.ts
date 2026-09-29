@@ -27,8 +27,8 @@ export const FORGET = {
    */
   body:
     "This removes everything the gym has kept in this browser: the sessions you have finished and " +
-    "the answers behind them, the seven-day retest gate that goes with them, and the in-flight " +
-    "state of anything open right now.",
+    "the answers behind them, the seven-day retest gate that goes with them, the language you " +
+    "chose, and the in-flight state of anything open right now.",
 
   limit:
     "It cannot undo usage events already sent to our analytics, and it changes nothing in any " +

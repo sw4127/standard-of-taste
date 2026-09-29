@@ -53,3 +53,36 @@ describe("the carve-out list", () => {
     expect(carveOutBreaches("cheaper than therapy").length).toBe(1);
   });
 });
+
+/*
+ * THE CHINESE HALF (bilingual Part 2, 2026-09-29). One specimen per Chinese
+ * pattern, the brief's own words first, and the negatives a broad pattern would
+ * wrongly catch: 无障碍 (accessibility) and a pattern sentence about late plays.
+ */
+const MUST_TRIP_ZH = [
+  "这种听法像是创伤留下的痕迹。",
+  "反复听关于虐待的歌。",
+  "深夜这样听，可能是抑郁的信号。",
+  "值得问问你的心理健康。",
+  "这里面有你的童年。",
+  "这读起来像悲痛。",
+  "一段未解决的往事。",
+  "耳机比心理咨询便宜。",
+  "从临床上看，这是反刍。",
+];
+const MUST_PASS_ZH = [
+  "页面提供无障碍说明。",
+  "你有 38% 的播放发生在夜里 11 点到凌晨 4 点之间。",
+  "深夜是只属于你的那段时间吗？",
+];
+
+describe("the carve-out list, in Chinese", () => {
+  it("trips on every Chinese specimen, one per pattern", () => {
+    expect(MUST_TRIP_ZH.filter((s) => carveOutBreaches(s).length === 0)).toEqual([]);
+    expect(MUST_TRIP_ZH.filter((s) => !CARVE_OUT.test(s))).toEqual([]);
+  });
+
+  it("does not fire on accessibility, a pattern sentence or an offer", () => {
+    expect(MUST_PASS_ZH.filter((s) => carveOutBreaches(s).length > 0)).toEqual([]);
+  });
+});
