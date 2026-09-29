@@ -1,56 +1,11 @@
-import Link from "next/link";
-import SiteHeader from "@/components/SiteHeader";
-import { SITE_NAV } from "@/content/site-nav";
-import UnlessHere from "@/components/UnlessHere";
-import { SHELL_MAIN, PROSE_MEASURE } from "@/content/shell";
-import FluidField from "@/components/FluidField";
-import { GYM_FIELD, FIELD_READING } from "@/content/instrument-accents";
+import LearnShell from "./LearnShell";
 
 /**
- * Reading-room shell (2026-07-16 brief §3.C7 — serves C2/N1, voice per D5).
- * Server-rendered static prose: AI crawlers don't run JS, so every word here
- * lands in raw HTML (§3.C8). Same gold/dark system as the gym (design bar:
- * consistency).
+ * The library in English. The shell, its header and its footer live in
+ * `LearnShell`, which `zh/learn/layout.tsx` renders in Chinese (bilingual Part 2).
+ * The bare underline-and-arrow rule of 2026-07-17 (no bare underline or arrow
+ * links; they read cheap) is kept there, with the footer it governs.
  */
-
-/**
- * BRAND CHROME IS NEUTRAL, NOT GOLD (PM user-testing, 2026-08-08).
- *
- * "STANDARD OF TASTE" used to render in the same gold as the Prestige Test's own
- * accent, so the brand read as that instrument and the Delicacy Trials looked
- * like a guest in someone else's house. Gold now belongs to Prestige, ice to
- * Delicacy, and the gym itself is neutral — which is the only arrangement in
- * which two instruments can actually be peers.
- */
-// The neutral chrome colour this paragraph is about now lives in SiteHeader.
-const FLUID = GYM_FIELD;
-
-// The shared nav, minus this section (blueprint Part 7).
-const HEADER_LINKS = SITE_NAV.filter((l) => l.href !== "/learn");
-
 export default function LearnLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <main className={SHELL_MAIN}>
-      <FluidField colors={FLUID} intensity={FIELD_READING} scrim={false} vignette />
-      <div className="relative z-10">
-        <SiteHeader links={HEADER_LINKS} />
-        <div className={PROSE_MEASURE}>{children}</div>
-        <p className="mt-14 text-[11px] text-muted/70">
-          <UnlessHere href="/learn">
-            <Link href="/learn" className="transition hover:text-white">
-              The library
-            </Link>{" "}
-            ·{" "}
-          </UnlessHere>
-          <Link href="/bias" className="transition hover:text-white">
-            Take the Prestige Test
-          </Link>{" "}
-          ·{" "}
-          <Link href="/legal" className="transition hover:text-white">
-            Terms · Privacy
-          </Link>
-        </p>
-      </div>
-    </main>
-  );
+  return <LearnShell locale="en">{children}</LearnShell>;
 }

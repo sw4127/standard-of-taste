@@ -48,7 +48,7 @@ export const metadata: Metadata = {
   title: "Standard of Taste — a month of listening, read back in words you can argue with",
   description:
     "A reading of a listener's recent plays: each line points at the plays behind it, offers what it might mean, and ends in a prompt you can carry into a music generator. Then find out which of its words you can actually hear.",
-  alternates: { canonical: "/" },
+  alternates: { canonical: "/", languages: { en: "/", "zh-Hans": "/zh" } },
   openGraph: {
     title: "Standard of Taste — a month of listening, read back in words you can argue with",
     description: READING_SHARE_LINE,

@@ -29,7 +29,7 @@ const READING: Dict = {
   "Hide the plays": "收起播放记录",
   "What might it mean?": "它可能意味着什么？",
   "This isn't right": "这条不对",
-  "Rejected. It won't be in your prompt.": "已删去，它不会进入你的提示词。",
+  "Rejected. It won't be in your prompt.": "已删去。它不会进入你的提示词。",
   "Put it back": "放回来",
   "skipped within 30 s": "30 秒内跳过",
   "played past 30 s": "播放超过 30 秒",

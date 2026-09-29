@@ -115,7 +115,7 @@ const COMPANY: Dict = {
   "Listening history Tessavox already holds, read inside Tessavox. The prompt goes only to Tessavox's own licensed creation tool, never to a third-party generator, and it names no artist. What that tool was trained on is its own licensing question, not the reading's.":
     "只碰 Tessavox 本来就有的播放记录，并且只在 Tessavox 内部读取。提示词只送进 Tessavox 自有、已获授权的创作工具，从不交给第三方生成工具，也不点任何艺人的名字。那个工具用什么训练，属于它自己的授权问题，与解读无关。",
   Growth: "增长",
-  "Which number does it move, and how would we know it didn't?": "它会让哪个数变化？没变的话，我们怎么知道？",
+  "Which number does it move, and how would we know it didn't?": "它会让哪个数变化，没变的话我们又怎么知道？",
   "Creation starts, tested against today's plain prompt box, with the result that kills it written down before the test runs. The demand underneath is assumed, not shown: nobody has yet been observed wanting this.":
     "开始创作的次数，与今天普通的提示词输入框对照测试；终止条件在测试开始前就写下来。背后的需求（demand）只是假设，还没有证据：至今没有观察到任何人想要它。",
   "Label partnerships": "唱片公司合作",

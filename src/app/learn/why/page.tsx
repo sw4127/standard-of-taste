@@ -1,8 +1,11 @@
 import Explainer, { explainerMetadata } from "../Explainer";
 import BlueprintArgument from "@/components/BlueprintArgument";
 import { learnPage } from "@/content/learn";
-import { bp, caption, type BpId } from "@/content/blueprint";
+import { bpIn, type BpId } from "@/content/blueprint";
 import { GYM_INK_BRIGHT } from "@/content/instrument-accents";
+import { rich, tFor } from "@/lib/i18n";
+import type { Locale } from "@/lib/locale";
+import LEARN_ZH from "@/content/zh/copy/learn";
 
 /**
  * /learn/why — WHY THIS EXISTS (blueprint Part 7; serves BP-INSIGHT).
@@ -14,6 +17,9 @@ import { GYM_INK_BRIGHT } from "@/content/instrument-accents";
  * its label, so this page cannot drift from the argument of record. The public
  * form of the second assumption (BP-CA2-PUBLIC) is used, because it attributes
  * each half to its source.
+ *
+ * `/zh/learn/why` renders this page with `locale="zh"` (bilingual Part 2): the
+ * statements come from `docs/blueprint.zh.md`, by the same IDs.
  */
 
 const page = learnPage("why")!;
@@ -24,35 +30,38 @@ export const metadata = explainerMetadata(page);
  * this file: a typed fallback here once labelled BP-CA2-PUBLIC, an evidenced
  * claim, "a position, not an empirical claim" (N3).
  */
-function Statement({ id }: { id: BpId }) {
-  const s = bp(id);
-  const line = caption(s);
+function Statement({ id, locale }: { id: BpId; locale: Locale }) {
+  const s = bpIn(locale, id);
   return (
     <blockquote>
       {s.text}
-      {line ? <span className="mt-1 block text-xs not-italic text-muted">{line}</span> : null}
+      {s.caption ? <span className="mt-1 block text-xs not-italic text-muted">{s.caption}</span> : null}
     </blockquote>
   );
 }
 
-export default function Page() {
+export default function Page({ locale = "en" }: { locale?: Locale }) {
+  const t = tFor(locale, LEARN_ZH);
   return (
-    <Explainer page={page} kicker="THE READING · THE ARGUMENT">
+    <Explainer page={page} kicker="THE READING · THE ARGUMENT" locale={locale}>
       <p>
-        <strong>The argument.</strong> Each step is labelled with what supports it: evidence, an assumption, or an
-        inference from the steps before.
+        {rich(t("{lead} Each step is labelled with what supports it: evidence, an assumption, or an inference from the steps before."), {
+          lead: <strong>{t("The argument.")}</strong>,
+        })}
       </p>
-      <BlueprintArgument accent={GYM_INK_BRIGHT} />
+      <BlueprintArgument accent={GYM_INK_BRIGHT} locale={locale} />
       <p>
-        <strong>Three things common sense says, and the project rejects.</strong>
+        <strong>{t("Three things common sense says, and the project rejects.")}</strong>
       </p>
-      <Statement id="BP-CA1" />
-      <Statement id="BP-CA2-PUBLIC" />
-      <Statement id="BP-CA3" />
+      <Statement id="BP-CA1" locale={locale} />
+      <Statement id="BP-CA2-PUBLIC" locale={locale} />
+      <Statement id="BP-CA3" locale={locale} />
       <p>
-        <strong>The bridge.</strong> Why the reading ends where the hearing tests begin.
+        {rich(t("{lead} Why the reading ends where the hearing tests begin."), {
+          lead: <strong>{t("The bridge.")}</strong>,
+        })}
       </p>
-      <Statement id="BP-BRIDGE" />
+      <Statement id="BP-BRIDGE" locale={locale} />
     </Explainer>
   );
 }

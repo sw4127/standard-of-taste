@@ -215,6 +215,21 @@ describe("every dictionary entry keeps its English's numbers", () => {
     expect(entries.filter((e) => slots(e.en).join() !== slots(e.zh).join()).map((e) => `${e.file}: ${e.en.slice(0, 50)}`)).toEqual([]);
   });
 
+  /*
+   * AS MANY SENTENCES AS ITS ENGLISH (red-team, bilingual Part 2). Slots and
+   * digits cannot see an added sentence: one with no number passed every check,
+   * and the first one added was there to satisfy a guard rather than to
+   * translate. A Chinese value now ends as many sentences as its English key does.
+   * An English full stop inside an abbreviation or a number is not a sentence end.
+   */
+  const englishEnds = (s: string) =>
+    s.replace(/\b(No|Op)\.(?=\s*\d)|\b(vs|e\.g|i\.e|St|Dr|Mr|Ms)\./g, "$1$2").match(/[.?!](?=\s|$|["')\]])/g)?.length ?? 0;
+  const chineseEnds = (s: string) => s.match(/[。？！]/g)?.length ?? 0;
+  it("ends as many sentences as its key", () => {
+    const bad = entries.filter((e) => englishEnds(e.en) !== chineseEnds(e.zh));
+    expect(bad.map((e) => `${e.file}: ${englishEnds(e.en)} vs ${chineseEnds(e.zh)} :: ${e.en.slice(0, 70)}`)).toEqual([]);
+  });
+
   it("states no digit its key does not", () => {
     const bad = entries.filter((e) => digits(e.zh).some((d) => !digits(e.en).includes(d)));
     expect(bad.map((e) => `${e.file}: ${e.en.slice(0, 50)} → ${digits(e.zh).join(",")}`)).toEqual([]);
@@ -238,5 +253,31 @@ describe("every literal the source looks up has its Chinese", () => {
         .map((k) => `${f.replace(/\\/g, "/")}: ${k.slice(0, 60)}`),
     );
     expect(missing).toEqual([]);
+  });
+});
+
+/*
+ * EVERY PAGE WITH A CHINESE VERSION NAMES THE PAIR, IN BOTH LANGUAGES (red-team,
+ * bilingual Part 2). A search engine honours hreflang only when each page links
+ * to the other; /learn/why and / named the pair on the Chinese side only.
+ * render-site keeps only metadata strings with spaces, so this reads the modules.
+ */
+describe("every English page and its Chinese version name each other", () => {
+  const PAGES = import.meta.glob<{ metadata?: { alternates?: { languages?: Record<string, string> } } }>(
+    "./**/page.tsx",
+    { eager: true },
+  );
+  const fileOf = (route: string) => `.${route === "/" ? "" : route}/page.tsx`;
+  it("declares the same pair on both sides, for every route in ZH_ROUTES", () => {
+    const wrong = ZH_ROUTES.filter((r) => !r.includes("[")).flatMap((r) => {
+      const want = { en: r, "zh-Hans": chinesePath(r) };
+      const en = PAGES[fileOf(r)]?.metadata?.alternates?.languages;
+      const zh = PAGES[fileOf(chinesePath(r))]?.metadata?.alternates?.languages;
+      return [
+        ...(JSON.stringify(en) === JSON.stringify(want) ? [] : [`${r}: ${JSON.stringify(en)}`]),
+        ...(JSON.stringify(zh) === JSON.stringify(want) ? [] : [`${chinesePath(r)}: ${JSON.stringify(zh)}`]),
+      ];
+    });
+    expect(wrong).toEqual([]);
   });
 });

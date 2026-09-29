@@ -122,7 +122,7 @@ describe("no page offers the same room from its chrome and its body", () => {
     expect(headerConsumers("src").sort()).toEqual([
       "src/app/company/CompanyView.tsx",
       "src/app/lab/layout.tsx",
-      "src/app/learn/layout.tsx",
+      "src/app/learn/LearnShell.tsx",
       "src/app/method/layout.tsx",
       "src/app/page.tsx",
       "src/app/reading/ReadingView.tsx",
