@@ -119,6 +119,7 @@ const INVISIBLE: Record<string, number> = {
   "/zh": 43,
   "/zh/company": 79,
   "/zh/learn/why": 41,
+  "/zh/method": 212,
   "/zh/reading": 31,
   "/zh/spread": 16,
 };

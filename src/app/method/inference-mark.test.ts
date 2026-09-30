@@ -56,9 +56,11 @@ const RENDERED = [
    * mark for the same reason the others do: a reversal can be a reading of
    * the record as easily as a quotation of it.
    */
-  { collection: "METHOD_REVERSALS", mapExpr: "METHOD_REVERSALS.map(", binding: "r", prose: "reversal", entries: METHOD_REVERSALS.length },
+  // Its own binding since bilingual Part 2 (red-team): sharing `r` with the refusals meant the
+  // refusals' mark satisfied both checks, and deleting this ledger's mark stayed green.
+  { collection: "METHOD_REVERSALS", mapExpr: "METHOD_REVERSALS.map(", binding: "v", prose: "reversal", entries: METHOD_REVERSALS.length },
   /* How the agents are run (2026-09-28): every part is quoted today, and carries the mark anyway. */
-  { collection: "METHOD_AGENTS", mapExpr: "METHOD_AGENTS.map(", binding: "t", prose: "text", entries: METHOD_AGENTS.length },
+  { collection: "METHOD_AGENTS", mapExpr: "METHOD_AGENTS.map(", binding: "a", prose: "text", entries: METHOD_AGENTS.length },
 ];
 
 describe("the /method page marks every inference it renders", () => {
@@ -102,6 +104,8 @@ describe("the /method page marks every inference it renders", () => {
        * they do not have. `method-prose.test.tsx` is what holds them instead.
        */
       "METHOD_LEDE.map(",
+      // The closing's two link labels, looked up in the page's language (bilingual Part 2).
+      "METHOD_CLOSING_LINKS.map(",
     ];
     const known = [...RENDERED.map((r) => r.mapExpr), ...NON_LEDGER];
     const maps = [...source.matchAll(/[\w.()]+\.map\(/g)].map((m) => m[0]);
@@ -115,7 +119,8 @@ describe("the /method page marks every inference it renders", () => {
 
   it("guards each rendered ledger with the inference mark", () => {
     for (const { collection, binding } of RENDERED) {
-      const guard = `${binding}.kind === "inferred" ? <InferenceMark />`;
+      // The mark takes the page's translator since bilingual Part 2; the guard is the same.
+      const guard = `${binding}.kind === "inferred" ? <InferenceMark t={t} />`;
       expect(
         source.includes(guard),
         `${PAGE} maps over ${collection} but has no "${guard}". An inferred entry in that ` +
@@ -133,8 +138,8 @@ describe("the /method page marks every inference it renders", () => {
    */
   it("places the mark ahead of the passage it qualifies, not after it", () => {
     for (const { binding, prose: proseField } of RENDERED) {
-      const mark = source.indexOf(`${binding}.kind === "inferred" ? <InferenceMark />`);
-      const prose = source.indexOf(`{${binding}.${proseField}}`);
+      const mark = source.indexOf(`${binding}.kind === "inferred" ? <InferenceMark t={t} />`);
+      const prose = source.indexOf(`{t(${binding}.${proseField})}`);
       expect(mark, `no mark found for "${binding}"`).toBeGreaterThan(-1);
       expect(prose, `no passage found for "${binding}"`).toBeGreaterThan(-1);
       expect(mark, `the mark for "${binding}" renders after the passage it qualifies`).toBeLessThan(

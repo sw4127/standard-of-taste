@@ -172,12 +172,18 @@ describe("every dictionary entry keeps its English's numbers", () => {
    */
   const EN_WORDS: Record<string, number> = {
     zero: 0, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10,
-    eleven: 11, twelve: 12, fifteen: 15, twenty: 20, thirty: 30, forty: 40, fifty: 50, hundred: 100,
+    eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17,
+    eighteen: 18, nineteen: 19, twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70,
+    eighty: 80, ninety: 90, hundred: 100, quarter: 4,
     thousand: 1000, second: 2, third: 3, fourth: 4, fifth: 5, sixth: 6, tenth: 10, twice: 2, double: 2, pair: 2,
     once: 1, both: 2,
   };
+  // A compound first ("twenty-eight" is 28, not 20 and 8), then single words.
   const enWords = (s: string) =>
-    s.replace(new RegExp(`\\b(${Object.keys(EN_WORDS).join("|")})\\b`, "gi"), (m) => String(EN_WORDS[m.toLowerCase()]));
+    s
+      .replace(/\b(twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)-(one|two|three|four|five|six|seven|eight|nine)\b/gi,
+        (_m, tens: string, unit: string) => String(EN_WORDS[tens.toLowerCase()] + EN_WORDS[unit.toLowerCase()]))
+      .replace(new RegExp(`\\b(${Object.keys(EN_WORDS).join("|")})\\b`, "gi"), (m) => String(EN_WORDS[m.toLowerCase()]));
   const ZH_DIGIT: Record<string, number> = { 零: 0, 〇: 0, 一: 1, 二: 2, 两: 2, 三: 3, 四: 4, 五: 5, 六: 6, 七: 7, 八: 8, 九: 9 };
   const ZH_UNIT: Record<string, number> = { 十: 10, 百: 100, 千: 1000 };
   function zhNumber(run: string): number {

@@ -43,7 +43,8 @@ export const ZH_BANS: readonly ZhBan[] = [
   // 也许是 and 或许是 are how an offer is phrased (BA-3) and must pass.
   { pattern: /滥觞|厚颜|遂|罢|(?<![也或])许是/, why: "classical register (guide §3)" },
   { pattern: /趣味/, why: "owner ruling 2026-09-29: 趣味 is the wrong sense of taste; use 口味 or 品味" },
-  { pattern: /杀掉|收据|模式/, why: "a loan translation (guide §3): cut, 依据, 规律" },
+  // 商业模式 is the ordinary word for a business model, and no loan translation.
+  { pattern: /杀掉|收据|(?<!商业)模式/, why: "a loan translation (guide §3): cut, 依据, 规律" },
   // The avoid-verbs (guide §2). Each fails the substitution test by construction.
   { pattern: /进行|开展|实现|提升|推动|助力|赋能|打造|构建|落地|深耕|聚焦|围绕|致力于|旨在|对齐/, why: "an empty verb (guide §2): it can be swapped for 进行 without changing the meaning; choose the verb last" },
   // Quotation: 「」 only, and only for a verbatim quote or a button label.

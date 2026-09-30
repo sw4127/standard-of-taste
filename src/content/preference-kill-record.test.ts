@@ -230,7 +230,14 @@ describe("the page's own heading counts the refusals it renders", () => {
   const page = readFileSync("src/app/method/page.tsx", "utf8");
 
   it("slots the count from the array instead of typing it", () => {
-    expect(flat(page)).toContain("{numberWordLeading(METHOD_REFUSALS.length)} refusals");
+    // Through the language lookup since bilingual Part 2: the English count is still the array's.
+    // Both halves of the ternary, and the reversals too (red-team): a typed Chinese count failed nothing.
+    expect(flat(page)).toContain(
+      't("{count} refusals", { count: locale === "en" ? numberWordLeading(METHOD_REFUSALS.length) : METHOD_REFUSALS.length })',
+    );
+    expect(flat(page)).toContain(
+      'count: locale === "en" ? numberWordLeading(METHOD_REVERSALS.length) : METHOD_REVERSALS.length,',
+    );
   });
 
   it("types no number-word before the word 'refusals' anywhere on the page", () => {

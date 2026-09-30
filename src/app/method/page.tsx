@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import {
+  METHOD_CLOSING,
   METHOD_CLOSING_LINKS,
   METHOD_HEADLINE,
   METHOD_KICKER,
@@ -24,6 +25,10 @@ import {
 } from "@/content/method/claims";
 import { GYM_INK } from "@/content/instrument-accents";
 import { numberWordLeading } from "@/content/vocabulary/numbers";
+import ZhTerms from "@/components/ZhTerms";
+import { localHref, type Locale } from "@/lib/locale";
+import { tFor, type T } from "@/lib/i18n";
+import METHOD_ZH from "@/content/zh/copy/method";
 
 /**
  * `/method` — how this project is run, with the product as its evidence
@@ -48,19 +53,31 @@ import { numberWordLeading } from "@/content/vocabulary/numbers";
  * cited repositories returned 404. Nothing on this page can 404.
  */
 
-export const metadata: Metadata = {
-  title: "The method — Standard of Taste",
-  description:
-    "How this project is run: the rules it refuses work under, what each refusal cost, and the worst finding it has recorded against itself. Every claim cites a document in the repository.",
-  alternates: { canonical: "/method" },
-  openGraph: {
-    title: "The method — Standard of Taste",
-    description:
-      "The rules, the refusals, the price each one carried, and the finding this project recorded against itself.",
-    type: "article",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
-  },
-};
+/*
+ * ONE PAGE, TWO LANGUAGES (bilingual Part 2). `/zh/method` renders this page with
+ * `locale="zh"`: every string goes through the Chinese dictionary, the sources stay
+ * as paths, and the tests that hold the English claims to their documents are unchanged.
+ */
+export function methodMetadata(locale: Locale): Metadata {
+  const t = tFor(locale, METHOD_ZH);
+  return {
+    title: t("The method — Standard of Taste"),
+    description: t(
+      "How this project is run: the rules it refuses work under, what each refusal cost, and the worst finding it has recorded against itself. Every claim cites a document in the repository.",
+    ),
+    alternates: { canonical: localHref(locale, "/method"), languages: { en: "/method", "zh-Hans": "/zh/method" } },
+    openGraph: {
+      title: t("The method — Standard of Taste"),
+      description: t(
+        "The rules, the refusals, the price each one carried, and the finding this project recorded against itself.",
+      ),
+      type: "article",
+      images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
+    },
+  };
+}
+
+export const metadata = methodMetadata("en");
 
 /* /method belongs to no instrument (RT-AG, RT-AR:a). */
 const INK = GYM_INK;
@@ -105,10 +122,10 @@ function Sources({ sources }: { sources: ClaimSource[] }) {
  * label names the role, which is the thing that makes it weigh less than a
  * quotation.
  */
-function InferenceMark() {
+function InferenceMark({ t }: { t: T }) {
   return (
     <p className="mt-3 text-[0.6rem] font-bold uppercase tracking-[0.28em] text-[hsl(28_75%_66%)]">
-      Inference — the engineer&apos;s reading, not a recorded ruling
+      {t("Inference — the engineer's reading, not a recorded ruling")}
     </p>
   );
 }
@@ -138,7 +155,7 @@ function withEmphasis(paragraph: MethodParagraph) {
 
 const PROSE_LINK = "text-[hsl(225_8%_78%)] transition hover:text-[hsl(225_8%_90%)]";
 
-function withLinks(text: string, links: readonly ProseLink[]): ReactNode[] {
+function withLinks(text: string, links: readonly ProseLink[], locale: Locale = "en"): ReactNode[] {
   const out: ReactNode[] = [];
   let rest = text;
   for (const link of links) {
@@ -146,7 +163,7 @@ function withLinks(text: string, links: readonly ProseLink[]): ReactNode[] {
     if (at === -1) continue;
     out.push(rest.slice(0, at));
     out.push(
-      <Link key={link.href} href={link.href} className={PROSE_LINK}>
+      <Link key={link.href} href={localHref(locale, link.href)} className={PROSE_LINK}>
         {link.label}
       </Link>,
     );
@@ -156,19 +173,25 @@ function withLinks(text: string, links: readonly ProseLink[]): ReactNode[] {
   return out;
 }
 
-export default function MethodPage() {
+export default function MethodPage({ locale = "en" }: { locale?: Locale }) {
+  const t = tFor(locale, METHOD_ZH);
   return (
     <article>
       <p className="mt-10 text-[0.65rem] font-bold tracking-[0.3em] text-muted">
-        {METHOD_KICKER}
+        {t(METHOD_KICKER)}
       </p>
       <h1 className="mt-2 font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl">
-        {METHOD_HEADLINE}
+        <ZhTerms>{t(METHOD_HEADLINE)}</ZhTerms>
       </h1>
 
       <div className="mt-7 space-y-5 text-[15px] leading-relaxed text-neutral-300">
         {METHOD_LEDE.map((paragraph) => (
-          <p key={paragraph.text.slice(0, 32)}>{withEmphasis(paragraph)}</p>
+          <p key={paragraph.text.slice(0, 32)}>
+            {withEmphasis({
+              text: t(paragraph.text),
+              ...(paragraph.emphasis ? { emphasis: t(paragraph.emphasis) } : {}),
+            })}
+          </p>
         ))}
       </div>
 
@@ -178,17 +201,17 @@ export default function MethodPage() {
       {METHOD_SECTIONS.map((section) => (
         <section key={section.id} className="mt-14">
           <p className="text-[0.62rem] font-bold uppercase tracking-[0.28em] text-muted">
-            {section.audience}
+            {t(section.audience)}
           </p>
           <h2 className="mt-2 font-display text-2xl font-semibold" style={{ color: INK }}>
-            {section.heading}
+            {t(section.heading)}
           </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-neutral-300">{section.lede}</p>
+          <p className="mt-4 text-[15px] leading-relaxed text-neutral-300">{t(section.lede)}</p>
           <div className="mt-6 space-y-7">
             {sectionClaims(section).map((c) => (
               <div key={c.id} className="border-l-2 border-white/12 pl-5">
-                {c.kind === "inferred" ? <InferenceMark /> : null}
-                <p className="text-[15px] leading-relaxed text-neutral-300">{c.text}</p>
+                {c.kind === "inferred" ? <InferenceMark t={t} /> : null}
+                <p className="text-[15px] leading-relaxed text-neutral-300">{t(c.text)}</p>
                 <Sources sources={c.sources} />
               </div>
             ))}
@@ -209,20 +232,20 @@ export default function MethodPage() {
           rather than the guard exempting the file.
         */}
         <h2 className="font-display text-2xl font-semibold" style={{ color: INK }}>
-          {numberWordLeading(METHOD_REFUSALS.length)} refusals
+          {t("{count} refusals", { count: locale === "en" ? numberWordLeading(METHOD_REFUSALS.length) : METHOD_REFUSALS.length })}
         </h2>
         <div className="mt-6 space-y-10">
           {METHOD_REFUSALS.map((r) => (
             <div key={r.id} className="border-l-2 border-white/12 pl-5">
-              <h3 className="font-display text-lg font-semibold text-white">{r.what}</h3>
+              <h3 className="font-display text-lg font-semibold text-white">{t(r.what)}</h3>
               <p className="mt-1 text-[0.62rem] font-bold uppercase tracking-[0.22em] text-muted">
-                Refused under {r.rule}
+                {t("Refused under {rule}", { rule: t(r.rule) })}
               </p>
-              {r.kind === "inferred" ? <InferenceMark /> : null}
-              <p className="mt-3 text-[15px] leading-relaxed text-neutral-300">{r.refusal}</p>
+              {r.kind === "inferred" ? <InferenceMark t={t} /> : null}
+              <p className="mt-3 text-[15px] leading-relaxed text-neutral-300">{t(r.refusal)}</p>
               <p className="mt-3 text-[15px] leading-relaxed text-neutral-300">
-                <span className="font-semibold text-white">What it cost. </span>
-                {r.price}
+                <span className="font-semibold text-white">{t("What it cost. ")}</span>
+                {t(r.price)}
               </p>
               <Sources sources={r.sources} />
             </div>
@@ -240,32 +263,33 @@ export default function MethodPage() {
       */}
       <section className="mt-14">
         <h2 className="font-display text-2xl font-semibold" style={{ color: INK }}>
-          {numberWordLeading(METHOD_REVERSALS.length)}{" "}
-          {METHOD_REVERSALS.length === 1 ? "reversal" : "reversals"}
+          {t(METHOD_REVERSALS.length === 1 ? "{count} reversal" : "{count} reversals", {
+            count: locale === "en" ? numberWordLeading(METHOD_REVERSALS.length) : METHOD_REVERSALS.length,
+          })}
         </h2>
         <p className="mt-4 text-[15px] leading-relaxed text-neutral-300">
-          Not a refusal. A constraint this project held, then deliberately relaxed — with what the
-          relaxation bought and what it cost. A page that only ever tightens is a page whose rules
-          were never tested against anything the project wanted.
+          {t(
+            "Not a refusal. A constraint this project held, then deliberately relaxed — with what the relaxation bought and what it cost. A page that only ever tightens is a page whose rules were never tested against anything the project wanted.",
+          )}
         </p>
         <div className="mt-6 space-y-10">
-          {METHOD_REVERSALS.map((r) => (
-            <div key={r.id} className="border-l-2 border-white/12 pl-5">
-              <h3 className="font-display text-lg font-semibold text-white">{r.what}</h3>
+          {METHOD_REVERSALS.map((v) => (
+            <div key={v.id} className="border-l-2 border-white/12 pl-5">
+              <h3 className="font-display text-lg font-semibold text-white">{t(v.what)}</h3>
               <p className="mt-1 text-[0.62rem] font-bold uppercase tracking-[0.22em] text-muted">
-                Relaxed: {r.rule}
+                {t("Relaxed: {rule}", { rule: t(v.rule) })}
               </p>
-              {r.kind === "inferred" ? <InferenceMark /> : null}
-              <p className="mt-3 text-[15px] leading-relaxed text-neutral-300">{r.reversal}</p>
+              {v.kind === "inferred" ? <InferenceMark t={t} /> : null}
+              <p className="mt-3 text-[15px] leading-relaxed text-neutral-300">{t(v.reversal)}</p>
               <p className="mt-3 text-[15px] leading-relaxed text-neutral-300">
-                <span className="font-semibold text-white">What it bought. </span>
-                {r.bought}
+                <span className="font-semibold text-white">{t("What it bought. ")}</span>
+                {t(v.bought)}
               </p>
               <p className="mt-3 text-[15px] leading-relaxed text-neutral-300">
-                <span className="font-semibold text-white">What it cost. </span>
-                {r.price}
+                <span className="font-semibold text-white">{t("What it cost. ")}</span>
+                {t(v.price)}
               </p>
-              <Sources sources={r.sources} />
+              <Sources sources={v.sources} />
             </div>
           ))}
         </div>
@@ -273,23 +297,24 @@ export default function MethodPage() {
 
       <section className="mt-14">
         <h2 className="font-display text-2xl font-semibold" style={{ color: INK }}>
-          The worst finding against itself
+          {t("The worst finding against itself")}
         </h2>
         <p className="mt-4 text-[15px] leading-relaxed text-neutral-300">
-          A review process is only worth describing if it catches things. This is the worst thing
-          this one has caught, dated, with the rule it broke — and it is still open.
+          {t(
+            "A review process is only worth describing if it catches things. This is the worst thing this one has caught, dated, with the rule it broke — and it is still open.",
+          )}
         </p>
         <div className="mt-6 space-y-10">
           {METHOD_FINDINGS.map((f) => (
             <div key={f.id} className="border-l-2 border-white/12 pl-5">
               <p className="text-[0.62rem] font-bold uppercase tracking-[0.22em] text-muted">
-                {f.date} · broke {f.rule}
+                {t("{date} · broke {rule}", { date: f.date, rule: t(f.rule) })}
               </p>
-              {f.kind === "inferred" ? <InferenceMark /> : null}
-              <p className="mt-3 text-[15px] leading-relaxed text-neutral-300">{f.finding}</p>
+              {f.kind === "inferred" ? <InferenceMark t={t} /> : null}
+              <p className="mt-3 text-[15px] leading-relaxed text-neutral-300">{t(f.finding)}</p>
               <p className="mt-3 text-[15px] leading-relaxed text-neutral-300">
-                <span className="font-semibold text-white">Since then. </span>
-                {f.consequence}
+                <span className="font-semibold text-white">{t("Since then. ")}</span>
+                {t(f.consequence)}
               </p>
               <Sources sources={f.sources} />
             </div>
@@ -301,20 +326,20 @@ export default function MethodPage() {
           that shows it in use: paths and hashes, never URLs, by this page's rule. */}
       <section className="mt-14">
         <h2 className="font-display text-2xl font-semibold" style={{ color: INK }}>
-          {METHOD_AGENTS_HEADING}
+          {t(METHOD_AGENTS_HEADING)}
         </h2>
-        {METHOD_AGENTS_LEDE.kind === "inferred" ? <InferenceMark /> : null}
-        <p className="mt-4 text-[15px] leading-relaxed text-neutral-300">{METHOD_AGENTS_LEDE.text}</p>
+        {METHOD_AGENTS_LEDE.kind === "inferred" ? <InferenceMark t={t} /> : null}
+        <p className="mt-4 text-[15px] leading-relaxed text-neutral-300">{t(METHOD_AGENTS_LEDE.text)}</p>
         <Sources sources={METHOD_AGENTS_LEDE.sources} />
         <div className="mt-6 space-y-10">
-          {METHOD_AGENTS.map((t) => (
-            <div key={t.id} className="border-l-2 border-white/12 pl-5">
-              <h3 className="font-display text-lg font-semibold text-white">{t.name}</h3>
-              {t.kind === "inferred" ? <InferenceMark /> : null}
-              <p className="mt-3 text-[15px] leading-relaxed text-neutral-300">{t.text}</p>
-              <Sources sources={t.sources} />
+          {METHOD_AGENTS.map((a) => (
+            <div key={a.id} className="border-l-2 border-white/12 pl-5">
+              <h3 className="font-display text-lg font-semibold text-white">{t(a.name)}</h3>
+              {a.kind === "inferred" ? <InferenceMark t={t} /> : null}
+              <p className="mt-3 text-[15px] leading-relaxed text-neutral-300">{t(a.text)}</p>
+              <Sources sources={a.sources} />
               <p className="mt-1 font-mono text-[11px] leading-relaxed text-muted">
-                at work in commit {t.inUse.commit}
+                {t("at work in commit {commit}", { commit: a.inUse.commit })}
               </p>
             </div>
           ))}
@@ -322,7 +347,11 @@ export default function MethodPage() {
       </section>
 
       <p className="mt-14 text-[13px] leading-relaxed text-muted">
-        {withLinks(methodClosing(METHOD_AS_OF), METHOD_CLOSING_LINKS)}
+        {withLinks(
+          locale === "en" ? methodClosing(METHOD_AS_OF) : t(METHOD_CLOSING, { asOf: METHOD_AS_OF }),
+          METHOD_CLOSING_LINKS.map((l) => ({ ...l, label: t(l.label) })),
+          locale,
+        )}
       </p>
     </article>
   );

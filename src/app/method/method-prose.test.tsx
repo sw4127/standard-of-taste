@@ -29,7 +29,7 @@ import {
   methodClosing,
 } from "@/content/method/prose";
 
-const html = renderToStaticMarkup(MethodPage());
+const html = renderToStaticMarkup(MethodPage({}));
 /** The rendered page as a reader meets it: tags gone, whitespace collapsed. */
 const text = html
   .replace(/<[^>]*>/g, "")

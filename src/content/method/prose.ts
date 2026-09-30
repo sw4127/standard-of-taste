@@ -76,10 +76,12 @@ export const METHOD_CLOSING_LINKS: ProseLink[] = [
  * The closing line. `asOf` is a slot: the date is a standing fact with its own
  * constant, and a deck that printed it resolved invited a writer to freeze it.
  */
+export const METHOD_CLOSING =
+  "Standing facts on this page last checked {asOf}. The library argues why the product exists; " +
+  "the Lab holds the measurements behind the hearing tests, including a page listing what the " +
+  "instruments cannot do.";
+
+/** The closing, filled. A template with a slot since bilingual Part 2, so the Chinese keeps the date's slot. */
 export function methodClosing(asOf: string): string {
-  return (
-    `Standing facts on this page last checked ${asOf}. The library argues why the product exists; ` +
-    "the Lab holds the measurements behind the hearing tests, including a page listing what the " +
-    "instruments cannot do."
-  );
+  return METHOD_CLOSING.replace("{asOf}", asOf);
 }
