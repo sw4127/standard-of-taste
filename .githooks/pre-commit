@@ -44,6 +44,10 @@ docs/activation-2026-09-16-tracks-U-T.md
 docs/activation-2026-09-22-track-V-consistency.md
 "
 
+# A PRIVATE FOLDER, refused whole: the owner's working files live there, and no file in it
+# is named here, because naming one in a public repository would describe it (2026-09-30).
+PRIVATE_DIR="Claude outputs/"
+
 # PATHS MAY CONTAIN SPACES ("Claude outputs/..."), so both lists are split on
 # newlines only. With the default IFS both lists split such a path into words,
 # and the word "Claude" matched itself: every file under "Claude outputs/" was
@@ -60,6 +64,12 @@ staged=$(git diff --cached --name-only --diff-filter=A)
 [ -z "$staged" ] && exit 0
 
 offenders=""
+for file in $staged; do
+  case "$file" in
+    "$PRIVATE_DIR"*) offenders="$offenders  $file
+" ;;
+  esac
+done
 for ruled in $UNTRACKED_BY_RULING; do
   for file in $staged; do
     if [ "$file" = "$ruled" ]; then
@@ -78,7 +88,8 @@ if [ -n "$offenders" ]; then
   echo "  This repository is PUBLIC. Tracking a file publishes it, and publishing"
   echo "  cannot be undone once pushed. blueprint-phase-2/3 and the redirection"
   echo "  blueprint are RT-M:c / RT-X:c; Q3 — whether to bind them — is still the"
-  echo "  on at all."
+  echo "  owner's open decision. Nothing in the private folder is ever tracked."
+  echo "  The rest have never been ruled on at all."
   echo ""
   echo "  If the owner HAS ruled one of them in, delete its line from the list in"
   echo "  .githooks/pre-commit in this same commit. That edit is the record."
