@@ -30,7 +30,18 @@ import {
 } from "@/engine/bias";
 import { BIAS_CLIPS, BIAS_INSTRUMENT_ID, BIAS_POOL_VERSION, type BiasClip } from "@/content/bias/items";
 import { DELICACY_LIVE } from "@/content/delicacy/items";
-import { biasHeadline, shareTextFor } from "@/content/bias/copy";
+import { biasHeadline, controlDisclosure, shareTextFor } from "@/content/bias/copy";
+import { useLocale } from "@/lib/use-locale";
+import { localHref, type Locale } from "@/lib/locale";
+import { rich, tFor } from "@/lib/i18n";
+import BIAS_ZH from "@/content/zh/copy/bias";
+import LanguageBar from "@/components/LanguageBar";
+import {
+  biasHeadlineZh,
+  controlDisclosureZh,
+  creatorLinesBiasZh,
+  shareTextForZh,
+} from "@/content/zh/copy/bias-lines";
 import { numberWord, numberWordLeading } from "@/content/vocabulary/numbers";
 import { BIAS_CLIP_COUNT, BIAS_SESSION_MINUTES } from "@/content/instrument-shape";
 import { creatorLines as biasCreatorLines } from "@/content/vocabulary/bias";
@@ -147,13 +158,20 @@ type Saved = {
   poolVersion: number;
   blind: BiasRatings;
   listen: { blind: Record<string, number>; labeled: Record<string, number> };
+  /**
+   * THE LANGUAGE THE BLIND PASS WAS TAKEN IN (red-team, bilingual Part 4). The two
+   * passes are differenced, so they must share a language: an English blind pass
+   * resumed on /zh/bias would difference against a Chinese labelled pass and be filed
+   * as a Chinese sitting. Absent on sessions saved before this, which were English.
+   */
+  locale?: Locale;
 };
 
-function saveSession(blind: BiasRatings, listen: Saved["listen"]) {
+function saveSession(blind: BiasRatings, listen: Saved["listen"], locale: Locale) {
   try {
     sessionStorage.setItem(
       SESSION_KEY,
-      JSON.stringify({ poolVersion: BIAS_POOL_VERSION, blind, listen } satisfies Saved),
+      JSON.stringify({ poolVersion: BIAS_POOL_VERSION, blind, listen, locale } satisfies Saved),
     );
   } catch {
     // Private browsing or a full quota — the flow still works, it just cannot
@@ -161,16 +179,22 @@ function saveSession(blind: BiasRatings, listen: Saved["listen"]) {
   }
 }
 
-function loadSession(): Saved | null {
+/** Whether a saved blind pass may resume here. Exported for its test. */
+export function restorable(parsed: Saved, locale: Locale): boolean {
+  // A pool change makes stored ratings uninterpretable — positional payloads
+  // and item ids both move. Refuse rather than restore something wrong.
+  if (parsed.poolVersion !== BIAS_POOL_VERSION) return false;
+  if (!parsed.blind || Object.keys(parsed.blind).length !== BIAS_CLIPS.length) return false;
+  // A blind pass taken in the other language starts the sitting over (see `Saved.locale`).
+  return (parsed.locale ?? "en") === locale;
+}
+
+function loadSession(locale: Locale): Saved | null {
   try {
     const raw = sessionStorage.getItem(SESSION_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Saved;
-    // A pool change makes stored ratings uninterpretable — positional payloads
-    // and item ids both move. Refuse rather than restore something wrong.
-    if (parsed.poolVersion !== BIAS_POOL_VERSION) return null;
-    if (!parsed.blind || Object.keys(parsed.blind).length !== BIAS_CLIPS.length) return null;
-    return parsed;
+    return restorable(parsed, locale) ? parsed : null;
   } catch {
     return null;
   }
@@ -182,7 +206,18 @@ const LABELED_ORDER = BIAS_CLIPS.map(
 
 type Phase = "frame" | "blind" | "bridge" | "labeled" | "reveal" | "debrief";
 
+/**
+ * WHERE THE LANGUAGE BUTTON SHOWS (bilingual Part 4): the opening screen only. The two
+ * passes live in this component's state, and switching mid-sitting would lose them;
+ * a retry would then be spoiled, because the listener has heard the clips. The rule
+ * the Ranking and Threshold flows keep.
+ */
+export const languageBarPhases: readonly Phase[] = ["frame"];
+
 export default function BiasFlow() {
+  const locale = useLocale();
+  const t = tFor(locale, BIAS_ZH);
+  const zh = locale === "zh";
   const [phase, setPhase] = useState<Phase>("frame");
   const [idx, setIdx] = useState(0);
   const [blind, setBlind] = useState<BiasRatings>({});
@@ -200,7 +235,11 @@ export default function BiasFlow() {
   const pass = phase === "blind" ? "blind" : "labeled";
   const clip: BiasClip | undefined = (pass === "blind" ? BIAS_CLIPS : LABELED_ORDER)[idx];
   const total = BIAS_CLIPS.length;
-  const question = PASS_QUESTION[pass];
+  const question = {
+    prompt: t(PASS_QUESTION[pass].prompt),
+    low: t(PASS_QUESTION[pass].low),
+    high: t(PASS_QUESTION[pass].high),
+  };
 
   // Restore a blind pass abandoned by navigation or a refresh.
   //
@@ -211,7 +250,7 @@ export default function BiasFlow() {
   // server produced. A microtask lands after paint, so the frame screen shows
   // for an instant and is replaced, which reads as the session being found.
   useEffect(() => {
-    const saved = loadSession();
+    const saved = loadSession(locale);
     if (!saved) return;
     queueMicrotask(() => {
       setBlind(saved.blind);
@@ -220,7 +259,7 @@ export default function BiasFlow() {
       setPhase("bridge");
       track("bias_session_restored", {});
     });
-  }, []);
+  }, [locale]);
 
   useEffect(() => {
     track("bias_frame_view", {});
@@ -245,7 +284,7 @@ export default function BiasFlow() {
       }
       if (pass === "blind") {
         track("bias_blind_complete", {});
-        saveSession(nextRatings, listenMs.current);
+        saveSession(nextRatings, listenMs.current, locale);
         setIdx(0);
         setPhase("bridge");
         return;
@@ -313,28 +352,35 @@ export default function BiasFlow() {
   const shell = `${SHELL_MAIN} py-10`;
   const kicker = (
     <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
-      STANDARD OF TASTE
+      {t("STANDARD OF TASTE")}
     </p>
   );
 
   /* ---------------------------------------------------------------- frame */
   if (phase === "frame") {
     return (
+      <>
+      {languageBarPhases.includes(phase) ? <LanguageBar locale={locale} /> : null}
       <main className={`${shell} justify-center`}>
         <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
         <div className="relative z-10">
           {kicker}
           <h1 className="mt-6 font-display text-4xl font-semibold leading-tight">
-            Do you hear the music — or the name on it?
+            {t("Do you hear the music — or the name on it?")}
           </h1>
           <p className="mt-5 text-base leading-relaxed text-muted">
-            In 1757, David Hume pointed out that reputation gets to a judgment before the ears do —
-            a famous name can make a mediocre thing sound profound. He called it prejudice.
+            {t(
+              "In 1757, David Hume pointed out that reputation gets to a judgment before the ears do — a famous name can make a mediocre thing sound profound. He called it prejudice.",
+            )}
           </p>
           <p className="mt-3 text-base leading-relaxed text-muted">
-            {numberWordLeading(BIAS_CLIP_COUNT)} clips. You rate them twice: once with nothing but your
-            ears, once with the names and
-            the acclaim attached. <span className="text-foreground">The gap is your number.</span>
+            {rich(
+              t(
+                "{count} clips. You rate them twice: once with nothing but your ears, once with the names and the acclaim attached. {strong}",
+                { count: zh ? BIAS_CLIP_COUNT : numberWordLeading(BIAS_CLIP_COUNT) },
+              ),
+              { strong: <span className="text-foreground">{t("The gap is your number.")}</span> },
+            )}
           </p>
           <button
             type="button"
@@ -371,24 +417,25 @@ export default function BiasFlow() {
             className="mt-8 self-start rounded-full px-7 py-3.5 text-base font-bold transition active:scale-[0.98]"
             style={{ color: readableOn(GOLD), background: GOLD, boxShadow: `0 10px 30px ${GOLD_GLOW}` }}
           >
-            Start the blind pass
+            {t("Start the blind pass")}
           </button>
           <p className="mt-4 text-xs text-muted">
-            ~{BIAS_SESSION_MINUTES} minutes. No sign-up. Headphones help.
+            {t("~{minutes} minutes. No sign-up. Headphones help.", { minutes: BIAS_SESSION_MINUTES })}
           </p>
           {/* THE CREDIBILITY CHECK (E7/S24). Only the Threshold frame offered
               one, so on the two instruments people actually start with there
               was no way to ask "should I trust this before I give it eight
               minutes" without leaving the product. */}
           <p className="mt-6 text-sm text-muted">
-            <Jump href="/lab/instrument-health" accent={GOLD}>
-              How this is measured.
+            <Jump href={localHref(locale, "/lab/instrument-health")} accent={GOLD}>
+              {t("How this is measured.")}
             </Jump>{" "}
-            Item behaviour, reliability, and what the numbers can carry.
+            {t("Item behaviour, reliability, and what the numbers can carry.")}
           </p>
 
         </div>
       </main>
+      </>
     );
   }
 
@@ -417,11 +464,12 @@ export default function BiasFlow() {
         <FluidField colors={FLUID} intensity={0.68} scrim={false} vignette />
         <div className="relative z-10">
           {kicker}
-          <h1 className="mt-6 font-display text-4xl font-semibold leading-tight">Round two.</h1>
+          <h1 className="mt-6 font-display text-4xl font-semibold leading-tight">{t("Round two.")}</h1>
           <p className="mt-4 text-base leading-relaxed text-muted">
-            Same {numberWord(BIAS_CLIP_COUNT)} clips — this time the names and the reputations come
-            attached, and the question
-            changes. A couple stay blank on purpose. Rate what you hear.
+            {t(
+              "Same {count} clips — this time the names and the reputations come attached, and the question changes. A couple stay blank on purpose. Rate what you hear.",
+              { count: zh ? BIAS_CLIP_COUNT : numberWord(BIAS_CLIP_COUNT) },
+            )}
           </p>
 
           {/* THE "WHILE YOU'RE HERE" DIVERSION IS GONE (RT-2 (2026-09-22) a). It
@@ -437,9 +485,9 @@ export default function BiasFlow() {
             className="mt-8 rounded-full px-7 py-3.5 text-base font-bold transition active:scale-[0.98]"
             style={{ color: readableOn(GOLD), background: GOLD, boxShadow: `0 10px 30px ${GOLD_GLOW}` }}
           >
-            Start the labeled pass
+            {t("Start the labeled pass")}
           </button>
-          <p className="mt-3 text-xs text-muted">Or carry straight on — nothing is lost either way.</p>
+          <p className="mt-3 text-xs text-muted">{t("Or carry straight on — nothing is lost either way.")}</p>
         </div>
       </main>
     );
@@ -451,17 +499,17 @@ export default function BiasFlow() {
     // Two facts, two signals (PM ruling 2026-07-19): the caption carries the
     // arming state; the ring carries clip progress. Neither implies the other.
     const caption = isPlaceholderSrc(clip.audioSrc)
-      ? "placeholder tone — real clips pending"
+      ? t("placeholder tone — real clips pending")
       : played
-        ? "you can rate now — the clip plays on"
-        : "tap to listen · rating unlocks at the notch";
+        ? t("you can rate now — the clip plays on")
+        : t("tap to listen · rating unlocks at the notch");
     return (
       <main className={shell}>
         <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
         <div className={`relative z-10 flex flex-1 flex-col ${PROSE_MEASURE} lg:max-w-none`}>
           <div className="mb-8">
             <div className="flex items-center justify-between text-xs font-medium text-muted">
-              <span className="tracking-[0.3em]">{pass === "blind" ? "BLIND PASS" : "LABELED PASS"}</span>
+              <span className="tracking-[0.3em]">{pass === "blind" ? t("BLIND PASS") : t("LABELED PASS")}</span>
               <span>
                 {idx + 1} / {total}
               </span>
@@ -479,23 +527,23 @@ export default function BiasFlow() {
           </div>
 
           {pass === "blind" ? (
-            <p className="text-sm text-muted">No names. No context. Just — how good is this?</p>
+            <p className="text-sm text-muted">{t("No names. No context. Just — how good is this?")}</p>
           ) : clip.isControl ? (
             // Control item (v1.1): no label exists for this clip, and saying
             // anything fancier would itself be a label. Neutral frame only.
             <div className="rounded-2xl border border-white/10 p-4" style={{ background: "rgba(255,255,255,0.03)" }}>
-              <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">NO LABEL ON THIS ONE</p>
+              <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">{t("NO LABEL ON THIS ONE")}</p>
               <p className="mt-1.5 text-sm leading-relaxed text-muted">
-                Nothing attached. Just — how good is this, on a second listen?
+                {t("Nothing attached. Just — how good is this, on a second listen?")}
               </p>
             </div>
           ) : (
             <div className="rounded-2xl border p-4" style={{ borderColor: "hsl(42 60% 55% / 0.35)", background: "rgba(255,255,255,0.03)" }}>
-              <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">THE LABEL SAYS</p>
+              <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">{t("THE LABEL SAYS")}</p>
               <p className="mt-1.5 font-display text-xl font-semibold" style={{ color: GOLD }}>
-                {clip.shownArtist}
+                {t(clip.shownArtist)}
               </p>
-              <p className="mt-1 text-sm leading-relaxed text-muted">{clip.shownBlurb}</p>
+              <p className="mt-1 text-sm leading-relaxed text-muted">{t(clip.shownBlurb)}</p>
             </div>
           )}
 
@@ -534,7 +582,7 @@ export default function BiasFlow() {
                   key={v}
                   type="button"
                   onClick={() => rate(v)}
-                  aria-label={`Rate ${v}`}
+                  aria-label={t("Rate {v}", { v })}
                   className="h-12 rounded-xl border text-sm font-bold transition active:scale-95"
                   style={
                     picked === v
@@ -563,24 +611,25 @@ export default function BiasFlow() {
      * The eyebrow goes too: "YOUR NUMBER" above a refusal promises the thing
      * the paragraph underneath is about to say does not exist.
      */
-    const headline = biasHeadline(result);
+    const headline = zh ? biasHeadlineZh(result) : biasHeadline(result);
+    const creator = zh ? creatorLinesBiasZh(result) : biasCreatorLines(result);
     return (
       <main className={`${shell} justify-center text-center`}>
         <FluidField colors={FLUID} intensity={0.78} scrim={false} vignette />
         <div className="relative z-10 flex flex-col items-center">
           {headline.pct ? (
             <>
-              <p className="text-xs font-bold tracking-[0.4em] text-muted">YOUR NUMBER</p>
+              <p className="text-xs font-bold tracking-[0.4em] text-muted">{t("YOUR NUMBER")}</p>
               <p className="mt-4 font-display text-8xl font-semibold leading-none" style={{ color: GOLD, textShadow: `0 0 60px ${GOLD_GLOW}` }}>
                 {headline.pct}
               </p>
               <p className="mt-3 text-sm text-muted">
-                how far your ratings moved toward the names
-                {result.controlDriftPts !== null ? " — corrected for your own re-listen drift" : ""}
+                {t("how far your ratings moved toward the names")}
+                {result.controlDriftPts !== null ? t(" — corrected for your own re-listen drift") : ""}
               </p>
             </>
           ) : (
-            <p className="text-xs font-bold tracking-[0.4em] text-muted">THE PRESTIGE TEST</p>
+            <p className="text-xs font-bold tracking-[0.4em] text-muted">{t("THE PRESTIGE TEST")}</p>
           )}
           <h1 className="mt-8 font-display text-4xl font-semibold">
             {headline.title}
@@ -590,20 +639,22 @@ export default function BiasFlow() {
           </p>
           {result.swayShare !== null ? (
             <p className="mt-5 rounded-full border border-white/10 px-4 py-1.5 text-sm text-muted">
-              You moved with the label on{" "}
-              <span className="font-semibold" style={{ color: GOLD }}>
-                {result.movedCount} of {result.movableCount}
-              </span>{" "}
-              clips that could move.
+              {rich(t("You moved with the label on {strong} clips that could move."), {
+                strong: (
+                  <span className="font-semibold" style={{ color: GOLD }}>
+                    {t("{moved} of {movable}", { moved: result.movedCount, movable: result.movableCount })}
+                  </span>
+                ),
+              })}
             </p>
           ) : null}
-          {biasCreatorLines(result).length > 0 ? (
+          {creator.length > 0 ? (
             <section className="mt-7 w-full rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-left">
               <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: GOLD }}>
-                WHAT THIS MEANS IN YOUR WORK
+                {t("WHAT THIS MEANS IN YOUR WORK")}
               </p>
               <div className="mt-3 flex flex-col gap-3">
-                {biasCreatorLines(result).map((line) => (
+                {creator.map((line) => (
                   <p key={line} className="text-sm leading-relaxed text-neutral-300">
                     {line}
                   </p>
@@ -621,7 +672,7 @@ export default function BiasFlow() {
             E8/S12 omission cannot repeat: the creator block was written for the
             share page and missed on the screen people actually finish on.
           */}
-          <ComparisonReading accent={GOLD} blind={blind} labeled={labeled} />
+          <ComparisonReading accent={GOLD} blind={blind} labeled={labeled} locale={locale} />
           <AcrossSessions
             accent={GOLD}
             own={{
@@ -641,11 +692,13 @@ export default function BiasFlow() {
           />
           {result.edgeCount > 0 ? (
             <p className="mt-3 text-xs text-muted">
-              {result.edgeCount} clip{result.edgeCount > 1 ? "s were" : " was"} already at the edge of the scale blind — your real sway may run higher.
+              {result.edgeCount > 1
+                ? t("{n} clips were already at the edge of the scale blind — your real sway may run higher.", { n: result.edgeCount })
+                : t("{n} clip was already at the edge of the scale blind — your real sway may run higher.", { n: result.edgeCount })}
             </p>
           ) : null}
           <p className="mt-6 text-xs text-muted">
-            Provisional read — you&apos;re early. Percentiles arrive when the cohort does, not before.
+            {t("Provisional read — you're early. Percentiles arrive when the cohort does, not before.")}
           </p>
           <button
             type="button"
@@ -656,7 +709,7 @@ export default function BiasFlow() {
             className="mt-8 rounded-full px-7 py-3.5 text-base font-bold transition active:scale-[0.98]"
             style={{ color: readableOn(GOLD), background: GOLD, boxShadow: `0 10px 30px ${GOLD_GLOW}` }}
           >
-            One more thing — about those names
+            {t("One more thing — about those names")}
           </button>
         </div>
       </main>
@@ -671,7 +724,7 @@ export default function BiasFlow() {
     // Stateless permalink: raw passes in the URL; /bias/result recomputes.
     const b = encodeURIComponent(encodeBiasRatings(BIAS_CLIPS, blind));
     const l = encodeURIComponent(encodeBiasRatings(BIAS_CLIPS, labeled));
-    const resultPath = `/bias/result?pv=${BIAS_POOL_VERSION}&b=${b}&l=${l}`;
+    const resultPath = localHref(locale, `/bias/result?pv=${BIAS_POOL_VERSION}&b=${b}&l=${l}`);
     const origin = typeof window === "undefined" ? "" : window.location.origin;
     return (
       <main className={shell}>
@@ -679,10 +732,13 @@ export default function BiasFlow() {
         <div className="relative z-10">
           {kicker}
           <h1 className="mt-6 font-display text-4xl font-semibold leading-tight">
-            Some of those names were lies.
+            {t("Some of those names were lies.")}
           </h1>
           <p className="mt-4 text-base leading-relaxed text-muted">
-            {`${swapped.length} of the ${labeledCount} labels were deliberately swapped — it's the only clean way to measure prestige, and you deserve to know which ones. Here's what your ratings did when the name in the room was false:`}
+            {t(
+              "{swapped} of the {labeled} labels were deliberately swapped — it's the only clean way to measure prestige, and you deserve to know which ones. Here's what your ratings did when the name in the room was false:",
+              { swapped: swapped.length, labeled: labeledCount },
+            )}
           </p>
 
           <div className="mt-6 flex flex-col gap-3">
@@ -691,15 +747,20 @@ export default function BiasFlow() {
               const clipNo = BIAS_CLIPS.findIndex((x) => x.id === c.id) + 1;
               return (
                 <div key={c.id} className="rounded-2xl border p-4" style={{ borderColor: "hsl(42 60% 55% / 0.3)", background: "rgba(255,255,255,0.03)" }}>
-                  <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">CLIP {clipNo} — SWAPPED</p>
+                  <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">{t("CLIP {n} — SWAPPED", { n: clipNo })}</p>
                   <p className="mt-1.5 text-sm leading-relaxed">
-                    We said <span className="font-semibold" style={{ color: GOLD }}>{c.shownArtist}</span>.
-                    {" "}It&apos;s actually <span className="font-semibold">{c.trueArtist}</span>.
+                    {rich(t("We said {shown}. It's actually {true}."), {
+                      shown: <span className="font-semibold" style={{ color: GOLD }}>{t(c.shownArtist)}</span>,
+                      true: <span className="font-semibold">{t(c.trueArtist)}</span>,
+                    })}
                   </p>
                   {r ? (
                     <p className="mt-1 text-sm text-muted">
-                      You went {r.blind} → {r.labeled}
-                      {r.towardLabel > 0 ? " — toward the lie." : r.towardLabel < 0 ? " — against it." : " — unmoved."}
+                      {r.towardLabel > 0
+                        ? t("You went {a} → {b} — toward the lie.", { a: r.blind, b: r.labeled })
+                        : r.towardLabel < 0
+                          ? t("You went {a} → {b} — against it.", { a: r.blind, b: r.labeled })
+                          : t("You went {a} → {b} — unmoved.", { a: r.blind, b: r.labeled })}
                     </p>
                   ) : null}
                 </div>
@@ -709,34 +770,41 @@ export default function BiasFlow() {
 
           {result.swappedPct !== null ? (
             <p className="mt-5 text-base leading-relaxed">
-              On just those clips, your ratings moved{" "}
-              <span className="font-display text-xl font-semibold" style={{ color: GOLD }}>
-                {result.swappedPct > 0 ? "+" : ""}
-                {result.swappedPct}%
-              </span>{" "}
-              toward a label that wasn&apos;t true.
-              {result.swappedPct <= 0 ? " You didn't take the bait." : " That movement can't be explained by better information — there wasn't any."}
+              {rich(t("On just those clips, your ratings moved {strong} toward a label that wasn't true."), {
+                strong: (
+                  <span className="font-display text-xl font-semibold" style={{ color: GOLD }}>
+                    {result.swappedPct > 0 ? "+" : ""}
+                    {result.swappedPct}%
+                  </span>
+                ),
+              })}
+              {zh ? "" : " "}
+              {result.swappedPct <= 0
+                ? t("You didn't take the bait.")
+                : t("That movement can't be explained by better information — there wasn't any.")}
             </p>
           ) : null}
 
           {/* Controls disclosure (v1.1, N3: no silent machinery) */}
           {result.controlDriftPts !== null ? (
             <p className="mt-5 text-sm leading-relaxed text-muted">
-              {`And ${result.controlCount === 1 ? "one clip" : `${result.controlCount} clips`} never carried a label in either pass — those are controls. They measure how much your ratings drift on a plain second listen (memory, familiarity, fatigue), and that drift — yours ran ${result.controlDriftPts > 0 ? "+" : ""}${result.controlDriftPts} point${Math.abs(result.controlDriftPts) === 1 ? "" : "s"} — is corrected out of your headline number, so "the second pass is just memory" is measured, not assumed.`}
+              {zh
+                ? controlDisclosureZh(result.controlCount, result.controlDriftPts)
+                : controlDisclosure(result.controlCount, result.controlDriftPts)}
             </p>
           ) : null}
 
           {/* Full receipts — every clip, controls included */}
           <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.02] p-4">
-            <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">FULL RECEIPTS</p>
+            <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">{t("FULL RECEIPTS")}</p>
             <div className="mt-2 flex flex-col gap-1 text-sm text-muted">
               {BIAS_CLIPS.map((c, i) => {
                 const r = result.receipts.find((x) => x.id === c.id);
                 const ctrl = result.controlReceipts.find((x) => x.id === c.id);
                 return (
                   <p key={c.id}>
-                    Clip {i + 1}: {r ? `${r.blind} → ${r.labeled}` : `${ctrl?.first} → ${ctrl?.second}`}
-                    {ctrl ? " (control — never labeled)" : r && !r.labelIsTrue ? " (swapped)" : ""}
+                    {t("Clip {n}: {a} → {b}", { n: i + 1, a: r ? r.blind : (ctrl?.first ?? ""), b: r ? r.labeled : (ctrl?.second ?? "") })}
+                    {ctrl ? t(" (control — never labeled)") : r && !r.labelIsTrue ? t(" (swapped)") : ""}
                   </p>
                 );
               })}
@@ -745,26 +813,26 @@ export default function BiasFlow() {
 
           {/* Share — the debrief is behind you; now the number travels. */}
           <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
-            <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">YOUR NUMBER, PORTABLE</p>
+            <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">{t("YOUR NUMBER, PORTABLE")}</p>
             <p className="mt-2 text-sm leading-relaxed text-muted">
-              {"The link carries only your ratings — anyone who opens it sees your number recomputed — then gets dared to do better blind."}
+              {t("The link carries only your ratings — anyone who opens it sees your number recomputed — then gets dared to do better blind.")}
             </p>
             <div className="mt-4 flex flex-wrap items-center gap-3">
               <ShareButton
                 url={`${origin}${resultPath}`}
-                text={shareTextFor(result)}
-                label="Share your number"
+                text={zh ? shareTextForZh(result) : shareTextFor(result)}
+                label={t("Share your number")}
                 event="bias_share"
                 primary
                 accent={GOLD}
               />
               <DownloadButton
                 url={`/api/bias-card?format=story&pv=${BIAS_POOL_VERSION}&b=${b}&l=${l}`}
-                label="Story card"
+                label={t("Story card")}
                 filename="prestige-test-story.png"
               />
               <Jump href={resultPath} accent={GOLD} className="text-muted">
-                View your result page →
+                {t("View your result page →")}
               </Jump>
             </div>
           </div>
@@ -775,32 +843,36 @@ export default function BiasFlow() {
               same cause: one instrument describing another in its own words.
               D3's visible-and-locked door is kept for the case where Delicacy
               is not live. */}
-          <OtherMachines from="bias" onPick={(to) => track("gym_machine_tap", { from: "bias", to })} />
+          <OtherMachines from="bias" locale={locale} onPick={(to) => track("gym_machine_tap", { from: "bias", to })} />
           {!DELICACY_LIVE ? (
             <div className="mt-3 rounded-2xl border border-dashed border-white/20 p-5">
-              <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">NEXT MACHINE · LOCKED</p>
-              <p className="mt-2 font-display text-xl font-semibold">Delicacy Trials</p>
+              <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">{t("NEXT MACHINE · LOCKED")}</p>
+              <p className="mt-2 font-display text-xl font-semibold">{t("Delicacy Trials")}</p>
               <p className="mt-1 text-sm leading-relaxed text-muted">
-                One clip of each pair has been quietly damaged. Prestige tested your prejudice —
-                this one tests whether your ears can actually tell. In the gym soon.
+                {t(
+                  "One clip of each pair has been quietly damaged. Prestige tested your prejudice — this one tests whether your ears can actually tell. In the gym soon.",
+                )}
               </p>
-              <LockedTierButton />
+              <LockedTierButton t={t} />
             </div>
           ) : null}
 
           {/* Attribution — CC credit is a legal requirement, PD listed anyway. */}
           <div className="mt-8 text-[0.65rem] leading-relaxed text-muted">
-            <p className="font-bold tracking-[0.3em]">RECORDINGS</p>
+            <p className="font-bold tracking-[0.3em]">{t("RECORDINGS")}</p>
             {BIAS_CLIPS.map((c) => (
               <p key={c.id}>
-                {c.trueArtist} — {c.license}
+                {/* Credits keep the licensor's wording (a CC requirement); only the licence name is translated. */}
+                {c.trueArtist}
+                {zh ? "·" : " — "}
+                {t(c.license)}
                 {c.attribution ? ` · ${c.attribution}` : ""}
               </p>
             ))}
           </div>
 
-          <Jump href="/bias" accent={GOLD} className="mt-8 text-muted">
-            Run it again →
+          <Jump href={localHref(locale, "/bias")} accent={GOLD} className="mt-8 text-muted">
+            {t("Run it again →")}
           </Jump>
         </div>
       </main>
@@ -811,7 +883,7 @@ export default function BiasFlow() {
 }
 
 /** Demand signal for the locked tier — no fake signup, no email, no DB. */
-function LockedTierButton() {
+function LockedTierButton({ t }: { t: (en: string) => string }) {
   const [noted, setNoted] = useState(false);
   return (
     <button
@@ -824,7 +896,7 @@ function LockedTierButton() {
       className="mt-3 rounded-full border px-5 py-2 text-sm font-bold transition active:scale-[0.98] disabled:opacity-70"
       style={{ borderColor: GOLD_DIM, color: GOLD }}
     >
-      {noted ? "Noted. You're on the record." : "I want this →"}
+      {noted ? t("Noted. You're on the record.") : t("I want this →")}
     </button>
   );
 }

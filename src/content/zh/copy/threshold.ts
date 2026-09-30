@@ -70,7 +70,7 @@ const THRESHOLD: Dict = {
   "Story card": "竖版卡片",
   "WHAT THIS MEANS IN A RENDER": "放进生成的曲子里，这意味着什么",
   "What each flaw is called, and what it sounds like": "每种瑕疵叫什么，听起来是什么样",
-  "THE LADDER · GENTLEST FIRST · {unit}": "阶梯 · 由轻到重 · {unit}",
+  "THE LADDER · GENTLEST FIRST · {unit}": "阶梯 · 最轻的在前 · {unit}",
   CAUGHT: "听出",
   GUESSED: "在猜",
   "Right / shown, per rung. A staircase spends most of its trials near your limit, so the busy rows are where the answer is and the faint ones are rungs you were never asked about.":

@@ -41,6 +41,7 @@ import { beforeAll, describe, expect, it, vi } from "vitest";
 import { attributeText, renderSite, textOf, type RenderedSite } from "@/test-utils/render-site";
 import { renderReadingStates } from "@/test-utils/reading-states";
 import { renderThresholdStates } from "@/test-utils/threshold-states";
+import { renderBiasStates } from "@/test-utils/bias-states";
 // The RT-Z10 carve-out holds on every surface, the card included — one list (BA-5).
 import { CARVE_OUT } from "@/content/carve-out";
 // The Chinese needle (bilingual Part 2): a Chinese page is held to D1 as the English one is.
@@ -151,7 +152,7 @@ const bare = (route: string) => route.split("?")[0];
 beforeAll(async () => {
   site = await renderSite();
   // The reading's later steps in both languages: its lines are where it speaks to the reader.
-  states = [...(await renderReadingStates()), ...(await renderThresholdStates())];
+  states = [...(await renderReadingStates()), ...(await renderThresholdStates()), ...(await renderBiasStates())];
   // Body text, attribute text and metadata: all three are read by somebody.
   hits = [...site.pages, ...states].flatMap((p) =>
     scan(p.route, [textOf(p.html), attributeText(p.html), p.meta.join(".\n")].join("\n")),

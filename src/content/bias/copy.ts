@@ -148,6 +148,14 @@ export function shareTextFor(result: BiasResult): string {
  * No bug today. The point is that there could not have been one and nobody
  * would have known.
  */
+/**
+ * THE CONTROL DISCLOSURE IN THE DEBRIEF (v1.1, N3: no silent machinery). Moved out of the
+ * flow's JSX unchanged (bilingual Part 4), so its Chinese can be held to it line for line.
+ */
+export function controlDisclosure(controlCount: number, driftPts: number): string {
+  return `And ${controlCount === 1 ? "one clip" : `${controlCount} clips`} never carried a label in either pass — those are controls. They measure how much your ratings drift on a plain second listen (memory, familiarity, fatigue), and that drift — yours ran ${driftPts > 0 ? "+" : ""}${driftPts} point${Math.abs(driftPts) === 1 ? "" : "s"} — is corrected out of your headline number, so "the second pass is just memory" is measured, not assumed.`;
+}
+
 export function biasCardSwayLine(movedCount: number, movableCount: number): string {
   return `moved with the label on ${movedCount} of ${movableCount} clips`;
 }

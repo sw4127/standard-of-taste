@@ -65,3 +65,39 @@ export const COMPARISON_ZH: readonly RegExp[] = [
   /(?:不寻常|典型|正常|普通|一般)的(?:听者|量)/,
   /超过了?\s*\d+\s*%\s*的/,
 ];
+
+/**
+ * DIRECTION WORDS SURVIVE (red-team, bilingual Part 4). On the inverted lossy axis the
+ * numbers cannot say which way a result points; the words do. Each English direction word
+ * requires its Chinese one. A pair marked `twoWay` is narrow enough that its Chinese word
+ * also requires the English one, which catches a Chinese line that invents a direction;
+ * the broad pairs ("caught" also means other things) are one-way. Read by
+ * `src/test-utils/zh-parity.ts`, on the template tests and on the instrument dictionaries.
+ */
+export interface DirectionPair {
+  en: RegExp;
+  zh: RegExp;
+  twoWay?: boolean;
+}
+export const DIRECTION_PAIRS_ZH: readonly DirectionPair[] = [
+  // "Below anything this session pinned down" is the gentler side, and Chinese says 更轻.
+  { en: /gentl|below anything/i, zh: /更轻|最轻/ },
+  { en: /harsh|loudest/i, zh: /更重|最重/ },
+  { en: /\bcaught\b|\bcatch(es|ing)?\b|calling it|before you called it/i, zh: /听出|判断得出|仍然听得出/ },
+  // "You were guessing" is a claim about a rung; 随机猜对 ("chance") is not.
+  { en: /were guessing/i, zh: /你是在猜/, twoWay: true },
+  { en: /smaller flaw|smaller rung/i, zh: /更小的瑕疵|更小的一级/, twoWay: true },
+  { en: /larger flaw/i, zh: /更大的瑕疵/, twoWay: true },
+  { en: /closer to\s+zero/i, zh: /近了/ },
+  { en: /further from\s+zero/i, zh: /远了/ },
+  // The Prestige Test: which way the ratings moved relative to the names.
+  { en: /toward the names/i, zh: /朝名字/, twoWay: true },
+  { en: /against the names/i, zh: /逆着名字/, twoWay: true },
+  // The debrief: which way each swapped clip moved, and the two passes' scale ends.
+  { en: /toward the lie|toward a label/i, zh: /朝着谎言|朝一个不真实的标签/, twoWay: true },
+  { en: /— against it/i, zh: /逆着它/, twoWay: true },
+  { en: /— unmoved/i, zh: /，没有动。/, twoWay: true },
+  { en: /moved with the label/i, zh: /顺着标签/, twoWay: true },
+  { en: /^0 — (never again|not at all)$/, zh: /^0：(再也不|完全不)/, twoWay: true },
+  { en: /^10 — (all-timer|right now)$/, zh: /^10：(永远的心头好|马上就想)$/, twoWay: true },
+];

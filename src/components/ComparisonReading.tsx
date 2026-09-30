@@ -1,6 +1,14 @@
 import { BIAS_CLIPS } from "@/content/bias/items";
 import type { BiasRatings } from "@/engine/bias";
 import { computeComparisonResult } from "@/engine/comparison";
+import type { Locale } from "@/lib/locale";
+import {
+  COMPARISON_PANEL_ZH,
+  degreesOfZh,
+  comparisonLinesZh,
+  criticReferenceLinesZh,
+  ourScaleLineZh,
+} from "@/content/zh/copy/bias-lines";
 import { comparisonDegreesClaim } from "@/engine/evidence";
 import {
   COMPARISON_PANEL,
@@ -39,19 +47,24 @@ export default function ComparisonReading({
   accent,
   blind,
   labeled,
+  locale = "en",
 }: {
   accent: string;
   blind: BiasRatings;
   labeled: BiasRatings;
+  /** Passed in, since this renders under a server page and a client flow alike (bilingual Part 4). */
+  locale?: Locale;
 }) {
+  const zh = locale === "zh";
+  const panel = zh ? COMPARISON_PANEL_ZH : COMPARISON_PANEL;
   const result = computeComparisonResult(BIAS_CLIPS, blind, labeled);
   const degrees = comparisonDegreesClaim(result);
-  const lines = comparisonLines(result);
+  const lines = zh ? comparisonLinesZh(result) : comparisonLines(result);
 
   return (
     <section className="mt-7 w-full rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-left">
       <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: accent }}>
-        {COMPARISON_PANEL.eyebrow}
+        {panel.eyebrow}
       </p>
 
       {degrees.ok ? (
@@ -60,9 +73,9 @@ export default function ComparisonReading({
             {degrees.value.degreesUsed}
           </span>{" "}
           <span className="font-display text-2xl font-semibold">
-            of {degrees.value.degreesAvailable}
+            {zh ? degreesOfZh(degrees.value.degreesAvailable) : `of ${degrees.value.degreesAvailable}`}
           </span>{" "}
-          {COMPARISON_PANEL.statLabel}
+          {panel.statLabel}
         </p>
       ) : null}
 
@@ -77,25 +90,25 @@ export default function ComparisonReading({
       <details className="group mt-5 border-t border-white/10 pt-5">
         <summary className="cursor-pointer list-none">
           <span className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: accent }}>
-            {COMPARISON_PANEL.criticsEyebrow}
+            {panel.criticsEyebrow}
           </span>{" "}
           <span className="text-[0.65rem] text-muted group-open:hidden">
-            {COMPARISON_PANEL.show}
+            {panel.show}
           </span>
           <span className="hidden text-[0.65rem] text-muted group-open:inline">
-            {COMPARISON_PANEL.hide}
+            {panel.hide}
           </span>
           <p className="mt-2 text-xs leading-relaxed text-muted">
-            {COMPARISON_PANEL.criticsBlurb}
+            {panel.criticsBlurb}
           </p>
         </summary>
         <div className="mt-4 flex flex-col gap-3">
-          {criticReferenceLines().map((line) => (
+          {(zh ? criticReferenceLinesZh() : criticReferenceLines()).map((line) => (
             <p key={line} className="text-xs leading-relaxed text-muted">
               {line}
             </p>
           ))}
-          <p className="text-xs leading-relaxed text-neutral-300">{ourScaleLine()}</p>
+          <p className="text-xs leading-relaxed text-neutral-300">{zh ? ourScaleLineZh() : ourScaleLine()}</p>
         </div>
       </details>
     </section>

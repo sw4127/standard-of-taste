@@ -40,77 +40,7 @@ import {
 } from "./copy/threshold-lines";
 import { quantityZh, quantityZhGlossed } from "./copy/across";
 import { glossFirstCentsZh } from "./copy/threshold-lines";
-
-const WORDS: Record<string, number> = {
-  one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, twice: 2,
-  eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18,
-  nineteen: 19, twenty: 20,
-};
-const numbers = (s: string) =>
-  [...s.replace(new RegExp(`\\b(${Object.keys(WORDS).join("|")})\\b`, "gi"), (w) => String(WORDS[w.toLowerCase()])).matchAll(/\d+(?:\.\d+)?/g)]
-    .map((m) => m[0]);
-const digitsOf = (s: string) => [...s.matchAll(/\d+(?:\.\d+)?/g)].map((m) => m[0]);
-const enEnds = (s: string) => s.replace(/\d\.\d/g, "0").match(/[.?!](?=\s|$)/g)?.length ?? 0;
-const zhEnds = (s: string) => s.match(/[。？！]/g)?.length ?? 0;
-
-/**
- * THE NUMBERS IN THE ENGLISH'S ORDER (red-team, bilingual Part 4). A set comparison let a
- * template swap "heard" and "missed" and stay green, which reverses the measurement. So the
- * Chinese numbers must appear in the order the English states them: every English figure
- * printed in digits, in sequence, with an English number word ("two-way") optional.
- */
-type Tok = { n: string; word: boolean };
-const tokens = (s: string): Tok[] =>
-  [...s.matchAll(new RegExp(`\\b(${Object.keys(WORDS).join("|")})\\b|\\d+(?:\\.\\d+)?`, "gi"))].map((m) =>
-    m[1] ? { n: String(WORDS[m[1].toLowerCase()]), word: true } : { n: m[0], word: false },
-  );
-function inOrder(en: string, zh: string): boolean {
-  const want = tokens(en);
-  let j = 0;
-  for (const d of digitsOf(zh)) {
-    while (j < want.length && want[j].n !== d) {
-      if (!want[j].word) return false; // a digit the English printed was skipped or moved
-      j++;
-    }
-    if (j === want.length) return false; // a number the English does not state, or out of order
-    j++;
-  }
-  return want.slice(j).every((t) => t.word);
-}
-
-/**
- * DIRECTION WORDS SURVIVE (red-team, bilingual Part 4). On the inverted lossy axis the
- * numbers cannot say which way a result points; the words do. Each English direction word
- * requires its Chinese one, and a Chinese direction word needs its English one.
- */
-const DIRECTIONS: Array<[RegExp, RegExp]> = [
-  // "Below anything this session pinned down" is the gentler side, and Chinese says 更轻.
-  [/gentl|below anything/i, /更轻|最轻/],
-  [/harsh|loudest/i, /更重|最重/],
-  [/\bcaught\b|\bcatch(es|ing)?\b|calling it|called it/i, /听出了|判断得出|仍然听得出|能听出|稳定听出/],
-  // "You were guessing" is a claim about a rung; 随机猜对 ("chance") is not.
-  [/were guessing/i, /你是在猜/],
-  [/smaller flaw|smaller rung/i, /更小的瑕疵|更小的一级/],
-  [/larger flaw/i, /更大的瑕疵/],
-  [/closer to\s+zero/i, /近了/],
-  [/further from\s+zero/i, /远了/],
-];
-function directions(en: string, zh: string): string[] {
-  return DIRECTIONS.flatMap(([e, z]) => (e.test(en) !== z.test(zh) ? [`${e} vs ${z}`] : []));
-}
-
-/** Line for line: same count, same sentences, the numbers in order, the direction words kept. */
-function parity(en: string[], zh: string[], where: string) {
-  expect(zh.length, where).toBe(en.length);
-  for (let i = 0; i < en.length; i++) {
-    expect(inOrder(en[i], zh[i]), `${where} [${i}] numbers out of the English's order: ${en[i]} || ${zh[i]}`).toBe(true);
-    expect(directions(en[i], zh[i]), `${where} [${i}] direction: ${en[i]} || ${zh[i]}`).toEqual([]);
-    expect(zhEnds(zh[i]), `${where} [${i}] sentences: ${zh[i]}`).toBe(enEnds(en[i]));
-    const all = numbers(en[i]);
-    expect(numbers(zh[i]).filter((n) => !all.includes(n)), `${where} [${i}] new number: ${zh[i]}`).toEqual([]);
-    expect(digitsOf(en[i]).filter((n) => !numbers(zh[i]).includes(n)), `${where} [${i}] dropped figure: ${zh[i]}`).toEqual([]);
-  }
-}
+import { digitsOf, numbers, parity } from "@/test-utils/zh-parity";
 
 function rules(text: string, where: string, d1: boolean) {
   expect(zhBanBreaches(text), where).toEqual([]);

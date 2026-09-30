@@ -31,6 +31,8 @@ import { beforeAll, describe, expect, it, vi } from "vitest";
 import { attributeText, renderSite, textOf, type RenderedSite } from "@/test-utils/render-site";
 import { renderReadingStates } from "@/test-utils/reading-states";
 import { renderThresholdStates } from "@/test-utils/threshold-states";
+import { directions } from "@/test-utils/zh-parity";
+import { renderBiasStates } from "@/test-utils/bias-states";
 import { ZH_ROUTES, chinesePath, hasChinese, localeOfPath } from "@/lib/locale";
 import { ZH_TRANSLATION_NOTE } from "@/content/zh/style";
 import { SWITCH_TO_ZH } from "@/content/zh/copy/chrome";
@@ -75,7 +77,7 @@ beforeAll(async () => {
   // Every listener's lines, prompt and creation screen, in both languages (red-team, Part 2).
   states = await renderReadingStates();
   // The Threshold Test's opening screens and replayed results, which renderSite skips (Part 4).
-  states = [...states, ...(await renderThresholdStates())];
+  states = [...states, ...(await renderThresholdStates()), ...(await renderBiasStates())];
 }, 180_000);
 
 const zhPages = () => [...site.pages, ...states].filter((p) => localeOfPath(p.route) === "zh");
@@ -207,6 +209,8 @@ describe("every dictionary entry keeps its English's numbers", () => {
   const zhWords = (s: string) =>
     s
       .replace(/百分(?=点|比|位)/g, " ")
+      // A number inside a word is not a count: a quartet is 四重奏, Broadway is 百老汇, decades are 几十年 (Part 4).
+      .replace(/[三四五]重奏|百老汇|[几数]十年/g, " ")
       // A unit's prefix is part of its name: 千比特 is kilobits, not a thousand of something.
       .replace(/千(?=比特|赫)/g, " ")
       .replace(/十分(?!之)/g, " ")
@@ -237,7 +241,11 @@ describe("every dictionary entry keeps its English's numbers", () => {
    * An English full stop inside an abbreviation or a number is not a sentence end.
    */
   const englishEnds = (s: string) =>
-    s.replace(/\b(No|Op)\.(?=\s*\d)|\b(vs|e\.g|i\.e|St|Dr|Mr|Ms)\./g, "$1$2").match(/[.?!](?=\s|$|["')\]])/g)?.length ?? 0;
+    s
+      .replace(/\b(No|Op)\.(?=\s*\d)|\b(vs|e\.g|i\.e|St|Dr|Mr|Ms)\./g, "$1$2")
+      // A name's initials are not sentence ends: J.S. Bach, F. Chopin (bilingual Part 4).
+      .replace(/\b([A-Z])\.(?=\s*(?:[A-Z]|van |von |de ))/g, "$1")
+      .match(/[.?!](?=\s|$|["')\]])/g)?.length ?? 0;
   const chineseEnds = (s: string) => s.match(/[。？！]/g)?.length ?? 0;
   it("ends as many sentences as its key", () => {
     const bad = entries.filter((e) => englishEnds(e.en) !== chineseEnds(e.zh));
@@ -247,6 +255,22 @@ describe("every dictionary entry keeps its English's numbers", () => {
   it("states no digit its key does not", () => {
     const bad = entries.filter((e) => digits(e.zh).some((d) => !digits(e.en).includes(d)));
     expect(bad.map((e) => `${e.file}: ${e.en.slice(0, 50)} → ${digits(e.zh).join(",")}`)).toEqual([]);
+  });
+
+  /*
+   * THE DIRECTION WORDS SURVIVE IN EVERY DICTIONARY ENTRY TOO (red-team, bilingual Part 4).
+   * The debrief's "toward the lie" and "against it", and the scale's two ends, are
+   * dictionary entries on screens no test renders, so swapping two of them changed what a
+   * listener is told they did with every check green. The template tests read the same pairs.
+   */
+  // The instrument dictionaries, where a direction word describes a measurement; elsewhere
+  // "caught" or "right now" mean other things.
+  const INSTRUMENT_DICTS = /copy\/(bias|threshold|expert|spread)\.ts$/;
+  it("keeps each direction word its key states, in the instrument dictionaries", () => {
+    const read = entries.filter((e) => INSTRUMENT_DICTS.test(e.file));
+    expect(read.length).toBeGreaterThan(100);
+    const bad = read.flatMap((e) => directions(e.en, e.zh).map((d) => `${e.file}: ${e.en.slice(0, 50)} → ${d}`));
+    expect(bad).toEqual([]);
   });
 });
 
@@ -277,21 +301,27 @@ describe("every literal the source looks up has its Chinese", () => {
  * render-site keeps only metadata strings with spaces, so this reads the modules.
  */
 describe("every English page and its Chinese version name each other", () => {
-  const PAGES = import.meta.glob<{ metadata?: { alternates?: { languages?: Record<string, string> } } }>(
+  type Meta = { alternates?: { languages?: Record<string, string> } };
+  const PAGES = import.meta.glob<{ metadata?: Meta; generateMetadata?: (p: object) => Promise<Meta> }>(
     "./**/page.tsx",
     { eager: true },
   );
   const fileOf = (route: string) => `.${route === "/" ? "" : route}/page.tsx`;
-  it("declares the same pair on both sides, for every route in ZH_ROUTES", () => {
-    const wrong = ZH_ROUTES.filter((r) => !r.includes("[")).flatMap((r) => {
+  // A page whose metadata is computed (a result permalink) is asked with an empty address.
+  const empty = { params: Promise.resolve({}), searchParams: Promise.resolve({}) };
+  const languagesOf = async (file: string) => {
+    const mod = PAGES[file];
+    return (mod?.metadata ?? (await mod?.generateMetadata?.(empty)))?.alternates?.languages;
+  };
+  it("declares the same pair on both sides, for every route in ZH_ROUTES", async () => {
+    const wrong: string[] = [];
+    for (const r of ZH_ROUTES.filter((x) => !x.includes("["))) {
       const want = { en: r, "zh-Hans": chinesePath(r) };
-      const en = PAGES[fileOf(r)]?.metadata?.alternates?.languages;
-      const zh = PAGES[fileOf(chinesePath(r))]?.metadata?.alternates?.languages;
-      return [
-        ...(JSON.stringify(en) === JSON.stringify(want) ? [] : [`${r}: ${JSON.stringify(en)}`]),
-        ...(JSON.stringify(zh) === JSON.stringify(want) ? [] : [`${chinesePath(r)}: ${JSON.stringify(zh)}`]),
-      ];
-    });
+      const en = await languagesOf(fileOf(r));
+      const zh = await languagesOf(fileOf(chinesePath(r)));
+      if (JSON.stringify(en) !== JSON.stringify(want)) wrong.push(`${r}: ${JSON.stringify(en)}`);
+      if (JSON.stringify(zh) !== JSON.stringify(want)) wrong.push(`${chinesePath(r)}: ${JSON.stringify(zh)}`);
+    }
     expect(wrong).toEqual([]);
   });
 });

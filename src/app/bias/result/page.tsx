@@ -28,8 +28,13 @@ import Track from "@/components/Track";
 import ShareButton from "@/app/result/ShareButton";
 import DownloadButton from "@/app/result/DownloadButton";
 import { PRESTIGE_GOLD, PRESTIGE_GOLD_GLOW, PRESTIGE_FIELD } from "@/content/instrument-accents";
+import LanguageBar from "@/components/LanguageBar";
+import { localHref, type Locale } from "@/lib/locale";
+import { tFor } from "@/lib/i18n";
+import BIAS_ZH from "@/content/zh/copy/bias";
+import { biasHeadlineZh, creatorLinesBiasZh, shareTextForZh, titleFragmentForZh } from "@/content/zh/copy/bias-lines";
 
-type SearchParams = Promise<Record<string, string | string[] | undefined>>;
+export type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
 const GOLD = PRESTIGE_GOLD;
 const GOLD_GLOW = PRESTIGE_GOLD_GLOW;
@@ -58,22 +63,43 @@ function cardUrl(format: "story" | "square" | "og", b: string, l: string): strin
 }
 
 export async function generateMetadata({ searchParams }: { searchParams: SearchParams }): Promise<Metadata> {
+  return biasResultMetadata(searchParams, "en");
+}
+
+/** In either language (bilingual Part 4); the card image itself stays English (Satori has no Chinese face). */
+export async function biasResultMetadata(searchParams: SearchParams, locale: Locale): Promise<Metadata> {
+  const t = tFor(locale, BIAS_ZH);
+  const zh = locale === "zh";
   const data = resultFrom(await searchParams);
-  if (!data) return { title: "The Prestige Test" };
-  const title = `${titleFragmentFor(data.result)} — The Prestige Test`;
-  const description = `Rate ${numberWord(BIAS_CLIP_COUNT)} clips blind, then with the names attached. The gap is your number.`;
+  const alternates = { languages: { en: "/bias/result", "zh-Hans": "/zh/bias/result" } };
+  if (!data) return { title: t("The Prestige Test"), alternates };
+  const title = t("{fragment} — The Prestige Test", {
+    fragment: zh ? titleFragmentForZh(data.result) : titleFragmentFor(data.result),
+  });
+  const description = t("Rate {n} clips blind, then with the names attached. The gap is your number.", {
+    n: zh ? BIAS_CLIP_COUNT : numberWord(BIAS_CLIP_COUNT),
+  });
   const og = `${baseUrl()}${cardUrl("og", data.b, data.l)}`;
   return {
     title,
     description,
+    alternates,
     openGraph: { title, description, images: [{ url: og, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title, description, images: [og] },
   };
 }
 
-export default async function BiasResultPage({ searchParams }: { searchParams: SearchParams }) {
+export default async function BiasResultPage({
+  searchParams,
+  locale = "en",
+}: {
+  searchParams: SearchParams;
+  locale?: Locale;
+}) {
+  const t = tFor(locale, BIAS_ZH);
+  const zh = locale === "zh";
   const data = resultFrom(await searchParams);
-  if (!data) redirect("/bias");
+  if (!data) redirect(localHref(locale, "/bias"));
   const { result, b, l, blind, labeled } = data;
   /*
    * NO NUMBER WHERE THE ENGINE HAS REFUSED ONE (E19/S8, PM ruling RT-U1 a).
@@ -83,10 +109,13 @@ export default async function BiasResultPage({ searchParams }: { searchParams: S
    * now, and its refusal is a NULL rather than a zero, so this file has no
    * number to leak: it renders what it was handed.
    */
-  const headline = biasHeadline(result);
-  const permalink = `${baseUrl()}/bias/result?pv=${BIAS_POOL_VERSION}&b=${encodeURIComponent(b)}&l=${encodeURIComponent(l)}`;
+  const headline = zh ? biasHeadlineZh(result) : biasHeadline(result);
+  const permalink = `${baseUrl()}${localHref(locale, "/bias/result")}?pv=${BIAS_POOL_VERSION}&b=${encodeURIComponent(b)}&l=${encodeURIComponent(l)}`;
 
   return (
+    <>
+    {/* The permalink recomputes from its address, so switching language keeps the result. */}
+    <LanguageBar locale={locale} width="max-w-lg" />
     <main className="relative mx-auto flex min-h-dvh w-full max-w-lg flex-col justify-center overflow-hidden px-6 py-12 text-center">
       <FluidField colors={FLUID} intensity={0.7} scrim={false} vignette />
       <Track
@@ -95,7 +124,7 @@ export default async function BiasResultPage({ searchParams }: { searchParams: S
       />
       <div className="relative z-10 flex flex-col items-center">
         <p className="text-xs font-bold tracking-[0.4em]" style={{ color: GOLD }}>
-          THE PRESTIGE TEST
+          {t("THE PRESTIGE TEST")}
         </p>
         {headline.pct ? (
           <>
@@ -105,15 +134,15 @@ export default async function BiasResultPage({ searchParams }: { searchParams: S
             >
               {headline.pct}
             </p>
-            <p className="mt-3 text-sm text-muted">how far these ratings moved toward the names</p>
+            <p className="mt-3 text-sm text-muted">{t("how far these ratings moved toward the names")}</p>
           </>
         ) : null}
         <h1 className="mt-6 font-display text-3xl font-semibold">{headline.title}</h1>
         <p className="mt-2 max-w-sm text-base leading-relaxed text-muted">{headline.sub}</p>
 
-        <InYourWork result={result} />
+        <InYourWork result={result} locale={locale} />
 
-        <ComparisonReading accent={GOLD} blind={blind} labeled={labeled} />
+        <ComparisonReading accent={GOLD} blind={blind} labeled={labeled} locale={locale} />
 
         <AcrossTime accent={GOLD} own={{ kind: "bias", blind: b, labeled: l }} />
         <AcrossSessions accent={GOLD} own={{ kind: "bias", blind: b, labeled: l }} />
@@ -124,35 +153,36 @@ export default async function BiasResultPage({ searchParams }: { searchParams: S
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={cardUrl("square", b, l)}
-          alt={`Prestige Test card: ${titleFragmentFor(result)}`}
+          alt={t("Prestige Test card: {fragment}", { fragment: zh ? titleFragmentForZh(result) : titleFragmentFor(result) })}
           className="mt-8 w-full max-w-xs rounded-2xl border border-white/10"
         />
 
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <ShareButton
             url={permalink}
-            text={shareTextFor(result)}
-            label="Share your number"
+            text={zh ? shareTextForZh(result) : shareTextFor(result)}
+            label={t("Share your number")}
             event="bias_share"
             primary
             accent={GOLD}
           />
-          <DownloadButton url={cardUrl("story", b, l)} label="Story card" filename="prestige-test-story.png" />
+          <DownloadButton url={cardUrl("story", b, l)} label={t("Story card")} filename="prestige-test-story.png" />
         </div>
 
-        <p className="mt-8 text-sm text-muted">Someone sent you their number? They&apos;re daring you.</p>
+        <p className="mt-8 text-sm text-muted">{t("Someone sent you their number? They're daring you.")}</p>
         <Link
-          href="/bias"
+          href={localHref(locale, "/bias")}
           className="mt-3 rounded-full px-7 py-3.5 text-base font-bold transition active:scale-[0.98]"
           style={{ color: readableOn(GOLD), background: GOLD, boxShadow: `0 10px 30px ${GOLD_GLOW}` }}
         >
-          Get yours — take the test
+          {t("Get yours — take the test")}
         </Link>
         <p className="mt-6 text-xs text-muted">
-          Provisional read — percentiles arrive when the cohort does, not before.
+          {t("Provisional read — percentiles arrive when the cohort does, not before.")}
         </p>
       </div>
     </main>
+    </>
   );
 }
 
@@ -174,13 +204,14 @@ export default async function BiasResultPage({ searchParams }: { searchParams: S
  * Renders nothing when no rating had headroom to move — `biasClaim` refuses,
  * because "0% swayed" would describe the scale rather than the person (N3).
  */
-function InYourWork({ result }: { result: BiasResult }) {
-  const lines = creatorLines(result);
+function InYourWork({ result, locale }: { result: BiasResult; locale: Locale }) {
+  const t = tFor(locale, BIAS_ZH);
+  const lines = locale === "zh" ? creatorLinesBiasZh(result) : creatorLines(result);
   if (lines.length === 0) return null;
   return (
     <section className="mt-8 w-full rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-left">
       <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: GOLD }}>
-        WHAT THIS MEANS IN YOUR WORK
+        {t("WHAT THIS MEANS IN YOUR WORK")}
       </p>
       <div className="mt-3 flex flex-col gap-3">
         {lines.map((line) => (

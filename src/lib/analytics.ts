@@ -5,6 +5,7 @@
  * attribution lives in the share-link URL + per-client sessionStorage (never a
  * server store). Drop in PostHog later by adding a second sink here.
  */
+import { localeOfPath } from "./locale";
 import { track as vercelTrack } from "@vercel/analytics";
 import { experimentProps } from "./experiment";
 
@@ -81,10 +82,19 @@ function posthogCapture(event: string, properties: TrackProps): void {
 }
 
 /** Fire a loop-measurement event (no-op on the server; attribution auto-attached). */
+/**
+ * THE PAGE'S LANGUAGE RIDES ON EVERY EVENT (bilingual Part 4). A Chinese sitting reads the
+ * Prestige labels and every instruction in Chinese, which is a different stimulus from the
+ * English; without this the two would pool silently the day responses arrive (D6, N3).
+ */
+export function eventPayload(props: TrackProps = {}): TrackProps {
+  return { ...captureAttribution(), ...experimentProps(), lang: localeOfPath(window.location.pathname), ...props };
+}
+
 export function track(event: string, props: TrackProps = {}): void {
   if (typeof window === "undefined") return;
   // §10.A: arm + prior_belief auto-attach to every event (segment the funnel).
-  const payload = { ...captureAttribution(), ...experimentProps(), ...props };
+  const payload = eventPayload(props);
   try {
     vercelTrack(event, payload);
   } catch {

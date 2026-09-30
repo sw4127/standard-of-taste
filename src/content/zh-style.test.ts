@@ -36,6 +36,7 @@ import { ZH_BANS, ZH_DOC_NOTE, ZH_TRANSLATION_NOTE, zhBanBreaches } from "./zh/s
 import { attributeText, renderSite, textOf, type RenderedSite } from "@/test-utils/render-site";
 import { renderReadingStates } from "@/test-utils/reading-states";
 import { renderThresholdStates } from "@/test-utils/threshold-states";
+import { renderBiasStates } from "@/test-utils/bias-states";
 
 vi.mock("next/navigation", async (orig) => ({
   ...(await orig<typeof import("next/navigation")>()),
@@ -48,8 +49,8 @@ vi.mock("next/navigation", async (orig) => ({
 // 2026-09-29: 2 in Part 1 (the two notes); 243 after Part 2's first slice (the chrome, the
 // Company view, the D1 statements, the Chinese blueprint and one rendered page); 655 after
 // the reading (its copy, its line templates read from source, the sound words, /zh/reading); 745
-// after the front door (/zh); 1101 after /learn/why and the Ranking Test; 1383 after /method; 1763 after /lab; 2120 after the Threshold Test.
-const ZH_CORPUS_FLOOR = 2120;
+// after the front door (/zh); 1101 after /learn/why and the Ranking Test; 1383 after /method; 1763 after /lab; 2120 after the Threshold Test; 2418 after the Prestige Test.
+const ZH_CORPUS_FLOOR = 2418;
 
 const CJK = /[　-〿一-鿿＀-￯]/;
 
@@ -236,7 +237,7 @@ beforeAll(async () => {
   site = await renderSite();
   // The reading's later steps too, which no route-by-route render reaches (red-team, Part 2).
   // And the Threshold Test's opening screens and replayed results (bilingual Part 4).
-  const states = [...(await renderReadingStates()), ...(await renderThresholdStates())].filter((p) =>
+  const states = [...(await renderReadingStates()), ...(await renderThresholdStates()), ...(await renderBiasStates())].filter((p) =>
     p.route.startsWith("/zh/"),
   );
   zhPages = [...site.pages.filter((p) => p.route === "/zh" || p.route.startsWith("/zh/")), ...states];

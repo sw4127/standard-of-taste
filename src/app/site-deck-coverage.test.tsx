@@ -117,6 +117,7 @@ const INVISIBLE: Record<string, number> = {
   // the English decks by construction; the Chinese deck (bilingual Part 6) is where they are
   // seen, and each ceiling is lowered when it lands.
   "/zh": 43,
+  "/zh/bias": 11,
   "/zh/company": 79,
   "/zh/lab": 209,
   "/zh/learn/why": 41,
