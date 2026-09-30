@@ -313,6 +313,9 @@ describe("E6/S12 — hardcoded Prestige Test claims still match the pool", () =>
       // docblock names as its reason for existing, which is the whole point.
       "src/app/bias/opengraph-image.tsx", // the Prestige share PNG (the site default until 2026-09-24) — nobody reads a PNG
       "src/content/learn.ts", // the FAQPage JSON-LD — nobody reads structured data either
+      // Bilingual Part 4: the Chinese library's KEYS are learn.ts's English, copied. A pool
+      // change rewrites that English, the keys stop matching, and site-zh's miss test fails.
+      "src/content/zh/copy/library.ts",
       // E7/S25: the event dictionary. It states the pool size while explaining
       // why a number there goes stale — which is exactly the sentence that
       // should be checked rather than trusted.

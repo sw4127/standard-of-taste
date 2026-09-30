@@ -12,6 +12,7 @@ import { DEGRADATION_FAMILIES } from "@/engine/delicacy";
 import { FLAWS_INVITE } from "@/content/flaw-families";
 import DELICACY_ZH from "@/content/zh/copy/delicacy";
 import { FLAW_LABELS_ZH, MAGNITUDE_WORDS_ZH } from "@/content/zh/copy/delicacy-lines";
+import { FAMILY_LABEL_ZH, FLAW_FAMILY_LIST_ZH } from "@/content/zh/copy/across";
 
 describe("the Delicacy flow's lookups by value", () => {
   it("every flaw a listener can pick has a Chinese label and hint", () => {
@@ -28,5 +29,10 @@ describe("the Delicacy flow's lookups by value", () => {
     const hints = [...block.matchAll(/hint: "([^"]+)"/g)].map((m) => m[1]);
     expect(hints.length).toBe(3);
     expect([...hints, FLAWS_INVITE].filter((h) => DELICACY_ZH[h] === undefined)).toEqual([]);
+  });
+  // The library's list of families follows the engine, as flawFamilyList() does (red-team, Part 4).
+  it("the Chinese list of families names every family the engine has, once each", () => {
+    const parts = FLAW_FAMILY_LIST_ZH.split(/、|和/);
+    expect(parts).toEqual(DEGRADATION_FAMILIES.map((f) => FAMILY_LABEL_ZH[f]));
   });
 });

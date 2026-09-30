@@ -12,15 +12,28 @@ import type { AcrossInput } from "@/content/vocabulary/across";
 import type { ReplicationCheck } from "@/engine/replication";
 import type { StaircaseResult } from "@/engine/staircase-session";
 import { quantity, shortUnit } from "@/content/staircase/copy";
+import { DEGRADATION_FAMILIES, type DegradationFamily } from "@/engine/delicacy";
 import { thresholdClaim } from "@/engine/evidence";
 
 /** The Threshold Test's three families (`FAMILY_LABEL` in staircase/copy.ts). */
-export const FAMILY_LABEL_ZH: Record<string, string> = {
+export const FAMILY_LABEL_ZH: Record<DegradationFamily, string> = {
   "pitch-drift": "音高漂移",
   "timing-smear": "节拍模糊",
   "lossy-artifact": "压缩损伤",
 };
-const label = (family: string) => FAMILY_LABEL_ZH[family] ?? family;
+/** A family's Chinese name from an untyped family string (a URL slug's family, a stored result). */
+export const familyLabelZh = (family: string) => FAMILY_LABEL_ZH[family as DegradationFamily] ?? family;
+const label = familyLabelZh;
+
+/**
+ * The families as one list, from the engine's own list in its order, as `flawFamilyList` builds
+ * the English: a family added or removed there changes this too (red-team, bilingual Part 4).
+ */
+const LABELS_IN_ORDER = DEGRADATION_FAMILIES.map((f) => FAMILY_LABEL_ZH[f]);
+export const FLAW_FAMILY_LIST_ZH =
+  LABELS_IN_ORDER.length <= 1
+    ? LABELS_IN_ORDER.join("")
+    : `${LABELS_IN_ORDER.slice(0, -1).join("、")}和${LABELS_IN_ORDER[LABELS_IN_ORDER.length - 1]}`;
 
 /** A unit as Chinese names it: 音分 for cents; ms and kbps stay as written. */
 export function unitZh(unit: string): string {

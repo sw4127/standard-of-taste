@@ -68,7 +68,7 @@ import {
   thresholdCardFigureZh,
   thresholdShareTextZh,
 } from "@/content/zh/copy/threshold-lines";
-import { FAMILY_LABEL_ZH, quantityZh, unitZh } from "@/content/zh/copy/across";
+import { familyLabelZh, quantityZh, unitZh } from "@/content/zh/copy/across";
 
 const ICE = THRESHOLD_VIOLET;
 
@@ -166,7 +166,7 @@ export default function ThresholdResult({
 
         <div className="mt-6 flex items-baseline justify-between gap-3">
           <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: ICE }}>
-            {zh ? FAMILY_LABEL_ZH[result.family] : familyLabel(result.family).toUpperCase()}
+            {zh ? familyLabelZh(result.family) : familyLabel(result.family).toUpperCase()}
             {result.sourceId ? ` · ${result.sourceId}` : ""}
           </p>
           {/*

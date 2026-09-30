@@ -119,7 +119,7 @@ export const LEARN_PAGES: LearnPage[] = [
     faq: [
       {
         q: "How does the Prestige Test work?",
-        a: `You rate ${numberWord(BIAS_CLIP_COUNT)} short music clips blind, then rate the same ${numberWord(BIAS_CLIP_COUNT)} clips again — ${numberWord(BIAS_LABELLED_COUNT)} with artist names and reputations attached, ${numberWord(BIAS_CONTROL_COUNT)} deliberately left unlabeled as drift controls. ${numberWord(BIAS_SWAPPED_COUNT)} of the ${numberWord(BIAS_LABELLED_COUNT)} labels are deliberately swapped. Your score is computed from how far your ratings moved toward the labels, corrected by your measured drift on the unlabeled controls — a measured gap, not a self-report.`,
+        a: `You rate ${numberWord(BIAS_CLIP_COUNT)} short music clips blind, then rate the same ${numberWord(BIAS_CLIP_COUNT)} clips again — ${numberWord(BIAS_LABELLED_COUNT)} with artist names and reputations attached, ${numberWord(BIAS_CONTROL_COUNT)} deliberately left unlabeled as drift controls. ${numberWordLeading(BIAS_SWAPPED_COUNT)} of the ${numberWord(BIAS_LABELLED_COUNT)} labels are deliberately swapped. Your score is computed from how far your ratings moved toward the labels, corrected by your measured drift on the unlabeled controls — a measured gap, not a self-report.`,
       },
       {
         q: "Why does the test lie about some labels?",

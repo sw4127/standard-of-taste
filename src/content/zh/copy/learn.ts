@@ -9,8 +9,12 @@
  * DRAFT: not yet through the owner's writing pass.
  */
 import type { Dict } from "@/lib/i18n";
+import LIBRARY from "./library";
 
 const LEARN: Dict = {
+  // The registry entries and the explainers' prose (bilingual Part 4).
+  ...LIBRARY,
+
   // The shell and the scaffold.
   "The library": "资料室（The Library）",
   "Take the Prestige Test": "做一次名气偏差测试（Prestige Test）",

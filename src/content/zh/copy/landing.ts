@@ -46,7 +46,7 @@ const LANDING: Dict = {
 
   // The machines (src/app/page.tsx).
   "The Prestige Test": "名气偏差测试（Prestige Test）",
-  "Freedom from prejudice": "不受成见左右",
+  "Freedom from prejudice": "不受偏见左右（freedom from prejudice）",
   "Rate {count} clips blind, then again with the famous names attached — asked a different way, in a different order. Your number is the gap.":
     "先盲听给 {count} 段录音打分，再贴上有名的名字重打一遍，问法不同，顺序也不同。差距就是你的数字。",
   "~{minutes} min · {clips} clips": "约 {minutes} 分钟 · {clips} 段录音",

@@ -37,6 +37,8 @@ names, fictional artists and tracks, units and statement IDs (BP-…, BA-…, RT
 | Ranking Test | 排序测试（Ranking Test） |
 | threshold · cents | 阈值（threshold）· 音分（cents） |
 | tuning · timing · fidelity | 音准（tuning）· 节拍（timing）· 保真度（fidelity） |
+| freedom from prejudice · good sense (Hume's criteria; added 2026-09-30) | 不受偏见左右（freedom from prejudice）· 良好的判断力（good sense） |
+| arc (the comparison across sittings; no bracket needed, added 2026-09-30) | 训练线（arc） |
 | pitch drift · timing smear · compression damage (the three flaw families; no bracket needed, added 2026-09-29) | 音高漂移（pitch drift）· 节拍模糊（timing smear）· 压缩损伤（compression damage） |
 | Company view | 公司视角（Company view） |
 | business case | 商业论证（business case） |

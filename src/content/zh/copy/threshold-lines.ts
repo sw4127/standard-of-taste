@@ -25,9 +25,9 @@ import { CONFIDENCE_PCT } from "@/engine/confidence";
 import { isWideBand } from "@/engine/evidence";
 import { thresholdCardFigure } from "@/content/staircase/copy";
 import { DELICACY_ARC_FLOOR } from "@/content/delicacy/arc-floor";
-import { FAMILY_LABEL_ZH, onSourceZh, quantityZh } from "./across";
+import { familyLabelZh, onSourceZh, quantityZh } from "./across";
 
-const label = (family: string) => FAMILY_LABEL_ZH[family] ?? family;
+const label = familyLabelZh;
 
 /* ------------------------------------------------------------------ *
  * The result screen (staircase/copy.ts)

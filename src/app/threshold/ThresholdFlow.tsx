@@ -68,7 +68,7 @@ import { localHref } from "@/lib/locale";
 import { rich, tFor } from "@/lib/i18n";
 import THRESHOLD_ZH from "@/content/zh/copy/threshold";
 import { FAMILY_BLURB_ZH, cooldownBodyZh, cooldownTitleZh } from "@/content/zh/copy/threshold-lines";
-import { FAMILY_LABEL_ZH } from "@/content/zh/copy/across";
+import { familyLabelZh } from "@/content/zh/copy/across";
 
 const ICE = THRESHOLD_VIOLET;
 const ICE_GLOW = THRESHOLD_VIOLET_GLOW;
@@ -415,7 +415,7 @@ export default function ThresholdFlow({ family }: { family: string }) {
       <div className="relative z-10 flex flex-1 flex-col">
         <div className="flex items-center justify-between text-xs font-medium text-muted">
           <span className="tracking-[0.3em]">
-            {zh ? FAMILY_LABEL_ZH[family] : familyLabel(family).toUpperCase()}
+            {zh ? familyLabelZh(family) : familyLabel(family).toUpperCase()}
             {session.sourceId ? ` · ${session.sourceId}` : ""}
           </span>
           {/*

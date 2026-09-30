@@ -11,7 +11,7 @@ import { localHref, type Locale } from "@/lib/locale";
 import { rich, tFor } from "@/lib/i18n";
 import THRESHOLD_ZH from "@/content/zh/copy/threshold";
 import { FAMILY_BLURB_ZH } from "@/content/zh/copy/threshold-lines";
-import { FAMILY_LABEL_ZH, quantityZh, quantityZhGlossed } from "@/content/zh/copy/across";
+import { familyLabelZh, quantityZh, quantityZhGlossed } from "@/content/zh/copy/across";
 
 /**
  * PICK A FLAW (E5/S7).
@@ -115,7 +115,7 @@ export default function ThresholdIndex({ locale = "en" }: { locale?: Locale }) {
                 className="group flex flex-col rounded-2xl border p-5 transition duration-300 active:scale-[0.99]"
                 style={{ borderColor: tint(ICE, 0.3), background: "rgba(255,255,255,0.03)" }}
               >
-                <p className="font-display text-xl font-semibold">{zh ? FAMILY_LABEL_ZH[family] : familyLabel(family)}</p>
+                <p className="font-display text-xl font-semibold">{zh ? familyLabelZh(family) : familyLabel(family)}</p>
                 <p className="mt-1.5 text-sm leading-relaxed text-neutral-300">{zh ? FAMILY_BLURB_ZH[family] : FAMILY_BLURB[family]}</p>
                 <p className="mt-3 flex items-center justify-between text-xs">
                   <span className="text-muted">

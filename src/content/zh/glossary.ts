@@ -55,6 +55,10 @@ export const GLOSSARY: readonly GlossaryTerm[] = [
   { zh: "音高漂移", en: "pitch drift", firstUse: false, alternates: [["音调漂移", "the glossary chose 音高"]] },
   { zh: "节拍模糊", en: "timing smear", firstUse: false, alternates: [] },
   { zh: "压缩损伤", en: "compression damage", firstUse: false, alternates: [] },
+  // Hume's criteria that have no bracket elsewhere, and the arc across sittings (bilingual Part 4).
+  { zh: "不受偏见左右", en: "freedom from prejudice", firstUse: true, alternates: [["不受成见左右", "the glossary chose 偏见"]] },
+  { zh: "良好的判断力", en: "good sense", firstUse: true, alternates: [] },
+  { zh: "训练线", en: "arc", firstUse: false, alternates: [["这条线", "ambiguous: it reads as the noise floor the sentence just named"]] },
   { zh: "阈值", en: "threshold", firstUse: true, alternates: [["门槛值", MT], ["临界值", "a physics term"]] },
   { zh: "音分", en: "cents", firstUse: true, alternates: [["美分", "the currency, the classic machine-translation error"]] },
   { zh: "音准", en: "tuning", firstUse: true, alternates: [["调音", "the act of tuning an instrument"]] },

@@ -189,6 +189,8 @@ describe("every dictionary entry keeps its English's numbers", () => {
   // A compound first ("twenty-eight" is 28, not 20 and 8), then single words.
   const enWords = (s: string) =>
     s
+      // "A hundred and one" is one number (bilingual Part 4: Pitchfork's 101 places).
+      .replace(/\ba hundred and one\b/gi, "101")
       .replace(/\b(twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)-(one|two|three|four|five|six|seven|eight|nine)\b/gi,
         (_m, tens: string, unit: string) => String(EN_WORDS[tens.toLowerCase()] + EN_WORDS[unit.toLowerCase()]))
       .replace(new RegExp(`\\b(${Object.keys(EN_WORDS).join("|")})\\b`, "gi"), (m) => String(EN_WORDS[m.toLowerCase()]));
@@ -245,12 +247,31 @@ describe("every dictionary entry keeps its English's numbers", () => {
     s
       .replace(/\b(No|Op)\.(?=\s*\d)|\b(vs|e\.g|i\.e|St|Dr|Mr|Ms)\./g, "$1$2")
       // A name's initials are not sentence ends: J.S. Bach, F. Chopin (bilingual Part 4).
-      .replace(/\b([A-Z])\.(?=\s*(?:[A-Z]|van |von |de ))/g, "$1")
+      .replace(/\b([A-Z])\.(?=\s*(?:[A-Z]\.|(?:van |von |de )?[A-Z][a-z]+ (?:\u2014|-)))/g, "$1")
       .match(/[.?!](?=\s|$|["')\]])/g)?.length ?? 0;
   const chineseEnds = (s: string) => s.match(/[。？！]/g)?.length ?? 0;
   it("ends as many sentences as its key", () => {
     const bad = entries.filter((e) => englishEnds(e.en) !== chineseEnds(e.zh));
     expect(bad.map((e) => `${e.file}: ${englishEnds(e.en)} vs ${chineseEnds(e.zh)} :: ${e.en.slice(0, 70)}`)).toEqual([]);
+  });
+
+  /*
+   * ONE ENGLISH SENTENCE, ONE CHINESE (red-team, bilingual Part 4). "Freedom from prejudice"
+   * was 不受成见左右 on the front door and 不受偏见左右 in the library: the same criterion named
+   * two ways, with every per-entry check green. A key held by two dictionaries must match.
+   */
+  it("gives each English key the same Chinese in every dictionary that holds it", () => {
+    const seen = new Map<string, { zh: string; file: string }>();
+    const clash: string[] = [];
+    for (const e of entries) {
+      // A glossary bracket is placement, not wording: 名气偏差测试 and 名气偏差测试（Prestige Test）
+      // are the same Chinese, glossed where the page first names it.
+      const bare = (x: string) => x.replace(/（[^）]*）/g, "");
+      const prior = seen.get(e.en);
+      if (prior && bare(prior.zh) !== bare(e.zh)) clash.push(`${e.en.slice(0, 50)}: ${prior.file} ${prior.zh} vs ${e.file} ${e.zh}`);
+      else seen.set(e.en, { zh: e.zh, file: e.file });
+    }
+    expect(clash).toEqual([]);
   });
 
   it("states no digit its key does not", () => {

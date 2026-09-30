@@ -201,10 +201,14 @@ describe("the fourth family that never existed cannot come back", () => {
     const names = DEGRADATION_FAMILIES.map((f) => FAMILY_LABEL[f].toLowerCase());
     const offenders: string[] = [];
     for (const p of tsFiles("src")) {
+      // A Chinese dictionary's KEY is the English the registry renders, copied so an English
+      // edit fails as a miss (bilingual Part 4). Only the key is exempt; code and values in
+      // those files are read like any other line.
+      const zhCopy = posix(p).includes("src/content/zh/copy/");
       readFileSync(p, "utf8")
         .split(NEWLINE)
         .forEach((line, i) => {
-          const low = line.toLowerCase();
+          const low = (zhCopy && /^\s*"/.test(line) ? line.slice(line.indexOf('":') + 2) : line).toLowerCase();
           if (names.filter((n) => low.includes(n)).length >= 2) {
             offenders.push(`${posix(p)}:${i + 1}: ${line.trim().slice(0, 120)}`);
           }
@@ -250,7 +254,8 @@ describe("the fourth family that never existed cannot come back", () => {
     const faq = readFileSync("src/content/learn.ts", "utf8");
     const explainer = readFileSync("src/app/learn/delicacy/page.tsx", "utf8");
     expect(faq).toContain("${FAMILY_LIST}");
-    expect(explainer).toContain("{flawFamilyList()}");
+    // Through the lookup since bilingual Part 4: the call still supplies the list.
+    expect(explainer).toContain("flawFamilyList()");
     expect(flawFamilies().length).toBe(3);
   });
 });

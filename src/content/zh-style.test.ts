@@ -50,8 +50,8 @@ vi.mock("next/navigation", async (orig) => ({
 // 2026-09-29: 2 in Part 1 (the two notes); 243 after Part 2's first slice (the chrome, the
 // Company view, the D1 statements, the Chinese blueprint and one rendered page); 655 after
 // the reading (its copy, its line templates read from source, the sound words, /zh/reading); 745
-// after the front door (/zh); 1101 after /learn/why and the Ranking Test; 1383 after /method; 1763 after /lab; 2120 after the Threshold Test; 2418 after the Prestige Test.
-const ZH_CORPUS_FLOOR = 2418;
+// after the front door (/zh); 1101 after /learn/why and the Ranking Test; 1383 after /method; 1763 after /lab; 2120 after the Threshold Test; 2418 after the Prestige Test; 3194 after the library's first half (the family list became code).
+const ZH_CORPUS_FLOOR = 3194;
 
 const CJK = /[　-〿一-鿿＀-￯]/;
 
