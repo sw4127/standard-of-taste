@@ -39,6 +39,9 @@
 import { readableOn } from "@/lib/readable-on";
 import { DELICACY_ICE, tint } from "@/content/instrument-accents";
 import { useEffect, useRef, useState } from "react";
+import { useLocale } from "@/lib/use-locale";
+import { tFor } from "@/lib/i18n";
+import THRESHOLD_ZH from "@/content/zh/copy/threshold";
 
 /**
  * E7/S21 — THE CONTROL WEARS ITS CALLER'S COLOUR, NOT DELICACY'S.
@@ -71,6 +74,7 @@ export default function AbCompare({
   const bRef = useRef<HTMLAudioElement | null>(null);
   const ctxRef = useRef<AudioContext | null>(null);
   const gainRef = useRef<{ a: GainNode; b: GainNode } | null>(null);
+  const locale = useLocale();
   const [playing, setPlaying] = useState(false);
   const [side, setSide] = useState<"a" | "b">("a");
   const [switches, setSwitches] = useState(0);
@@ -242,26 +246,31 @@ export default function AbCompare({
   };
 
   const pct = duration > 0 ? (pos / duration) * 100 : 0;
+  // In Chinese on a Chinese page (bilingual Part 4); the language comes from the address.
+  const t = tFor(locale, THRESHOLD_ZH);
 
   return (
     <div className="mt-5 rounded-2xl border p-4" style={{ borderColor: tint(accent), background: "rgba(255,255,255,0.03)" }}>
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
         <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: accent }}>
-          COMPARE — SAME MOMENT
+          {t("COMPARE — SAME MOMENT")}
         </p>
         <p className="text-[11px] text-muted">
           {!ready
-            ? "loading both clips"
+            ? t("loading both clips")
             : failed
-            ? "playback blocked"
+            ? t("playback blocked")
             : switches === 0
-              ? "switch as often as you like"
-              : `${switches} switch${switches === 1 ? "" : "es"}`}
+              ? t("switch as often as you like")
+              : switches === 1
+                ? t("{n} switch", { n: switches })
+                : t("{n} switches", { n: switches })}
         </p>
       </div>
       <p className="mt-1.5 text-xs leading-relaxed text-muted">
-        Both clips run together — switching swaps which one you hear, at the same instant of the
-        music. This is how a difference this small is actually found.
+        {t(
+          "Both clips run together — switching swaps which one you hear, at the same instant of the music. This is how a difference this small is actually found.",
+        )}
       </p>
 
       <div className="mt-3 flex items-center gap-3">
@@ -269,11 +278,11 @@ export default function AbCompare({
           type="button"
           onClick={() => (playing ? stop() : void start())}
           disabled={!ready}
-          aria-label={playing ? "Stop comparing" : "Start comparing"}
+          aria-label={playing ? t("Stop comparing") : t("Start comparing")}
           className="shrink-0 rounded-full px-4 py-2 text-sm font-bold transition active:scale-[0.97] disabled:opacity-40"
           style={{ color: readableOn(accent), background: accent }}
         >
-          {playing ? "Stop" : ready ? "Compare" : "Loading"}
+          {playing ? t("Stop") : ready ? t("Compare") : t("Loading")}
         </button>
 
         <div className="flex flex-1 overflow-hidden rounded-full border border-white/15">
@@ -283,7 +292,7 @@ export default function AbCompare({
               type="button"
               onClick={() => side !== s && swap()}
               disabled={!playing}
-              aria-label={`Hear ${s.toUpperCase()}`}
+              aria-label={t("Hear {side}", { side: s.toUpperCase() })}
               aria-pressed={side === s}
               className="flex-1 py-2 text-sm font-bold transition disabled:opacity-40"
               style={
@@ -300,8 +309,9 @@ export default function AbCompare({
 
       {failed && (
         <p className="mt-3 text-xs leading-relaxed" style={{ color: "hsl(0 70% 72%)" }}>
-          Your browser blocked playback. Tap Compare again — a direct tap usually clears it. Until
-          both clips are actually sounding, this control will not pretend they are.
+          {t(
+            "Your browser blocked playback. Tap Compare again — a direct tap usually clears it. Until both clips are actually sounding, this control will not pretend they are.",
+          )}
         </p>
       )}
 

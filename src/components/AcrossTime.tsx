@@ -40,6 +40,10 @@ import { recallBiasArc, recallDelicacyArc, recallThresholdArc } from "@/lib/arc-
 import { arcLines, ARC_DEVICE_NOTE } from "@/content/vocabulary/arc";
 import type { Claim } from "@/engine/evidence";
 import type { ArcReading } from "@/engine/arc";
+import { useLocale } from "@/lib/use-locale";
+import { arcLinesZh } from "@/content/zh/copy/threshold-lines";
+import { tFor } from "@/lib/i18n";
+import THRESHOLD_ZH from "@/content/zh/copy/threshold";
 
 /**
  * Only the slot this screen is about.
@@ -63,6 +67,9 @@ function claimFor(own: StoredPayload): Claim<ArcReading> {
 }
 
 export default function AcrossTime({ accent, own }: { accent: string; own: StoredPayload }) {
+  const locale = useLocale();
+  const zh = locale === "zh";
+  const t = tFor(locale, THRESHOLD_ZH);
   const sig = useSyncExternalStore(subscribeResults, signatureFor(own), serverSignature);
   const claim = useMemo(
     () => (sig === "" || !isOwnResult(own) ? null : claimFor(own)),
@@ -70,7 +77,7 @@ export default function AcrossTime({ accent, own }: { accent: string; own: Store
   );
 
   if (!claim) return null;
-  const lines = arcLines(claim);
+  const lines = zh ? arcLinesZh(claim) : arcLines(claim);
   if (lines.length === 0) return null;
 
   /*
@@ -94,7 +101,7 @@ export default function AcrossTime({ accent, own }: { accent: string; own: Store
   return (
     <section className="mt-7 w-full rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-left">
       <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: accent }}>
-        SINCE LAST TIME
+        {t("SINCE LAST TIME")}
       </p>
       <div className="mt-3 flex flex-col gap-3">
         {lines.map((line) => (
@@ -109,7 +116,7 @@ export default function AcrossTime({ accent, own }: { accent: string; own: Store
         claim anywhere in it — so the limit is stated in the same place, not in
         a footnote on another page (RT-G b, and the disclosure guard).
       */}
-      <p className="mt-4 text-[0.65rem] leading-relaxed text-muted">{ARC_DEVICE_NOTE}</p>
+      <p className="mt-4 text-[0.65rem] leading-relaxed text-muted">{t(ARC_DEVICE_NOTE)}</p>
     </section>
   );
 }

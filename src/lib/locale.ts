@@ -27,7 +27,7 @@ export const ZH_PREFIX = "/zh";
 export const LOCALE_STORAGE_KEY = "gym.locale";
 
 /** Routes with a Chinese page, as English paths. `[slug]` stands for any one segment. */
-export const ZH_ROUTES: readonly string[] = ["/", "/company", "/lab", "/learn/why", "/method", "/reading", "/spread"];
+export const ZH_ROUTES: readonly string[] = ["/", "/company", "/lab", "/learn/why", "/method", "/reading", "/spread", "/threshold", "/threshold/[slug]", "/threshold/[slug]/result"];
 
 export function localeOfPath(path: string): Locale {
   return path === ZH_PREFIX || path.startsWith(`${ZH_PREFIX}/`) || path.startsWith(`${ZH_PREFIX}#`) || path.startsWith(`${ZH_PREFIX}?`)

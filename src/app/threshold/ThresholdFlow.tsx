@@ -62,6 +62,13 @@ import { POOL_VERSIONS } from "@/lib/result-recall";
 import ThresholdResult from "./ThresholdResult";
 import { SLUG_BY_FAMILY } from "./families";
 import { materialForSession } from "@/lib/session-material";
+import LanguageBar from "@/components/LanguageBar";
+import { useLocale } from "@/lib/use-locale";
+import { localHref } from "@/lib/locale";
+import { rich, tFor } from "@/lib/i18n";
+import THRESHOLD_ZH from "@/content/zh/copy/threshold";
+import { FAMILY_BLURB_ZH, cooldownBodyZh, cooldownTitleZh } from "@/content/zh/copy/threshold-lines";
+import { FAMILY_LABEL_ZH } from "@/content/zh/copy/across";
 
 const ICE = THRESHOLD_VIOLET;
 const ICE_GLOW = THRESHOLD_VIOLET_GLOW;
@@ -91,7 +98,19 @@ function newSeed(): number {
   return Math.floor(Date.now() % 2147483647);
 }
 
+/**
+ * WHERE THE LANGUAGE BUTTON SHOWS (bilingual Part 4): the opening screen and the
+ * refusal only. The sitting lives in this component's state, so switching
+ * mid-sitting would throw the answers away, and a retry would be spoiled because
+ * the visitor now knows the clips. The same rule the Ranking Test keeps.
+ */
+export const languageBarPhases: readonly Phase[] = ["frame"];
+
 export default function ThresholdFlow({ family }: { family: string }) {
+  const locale = useLocale();
+  const t = tFor(locale, THRESHOLD_ZH);
+  const zh = locale === "zh";
+  const blurb = zh ? FAMILY_BLURB_ZH[family] : FAMILY_BLURB[family];
   const [phase, setPhase] = useState<Phase>("frame");
   const [session, setSession] = useState<StaircaseSession | null>(null);
   /**
@@ -243,72 +262,82 @@ export default function ThresholdFlow({ family }: { family: string }) {
    */
   if (phase === "frame" && blocked) {
     return (
+      <>
+      {languageBarPhases.includes(phase) ? <LanguageBar locale={locale} width="max-w-lg" /> : null}
       <main className={SHELL + " justify-center"}>
         <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
         <div className="relative z-10">
           <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
-            STANDARD OF TASTE
+            {t("STANDARD OF TASTE")}
           </p>
           <h1 className="mt-6 font-display text-4xl font-semibold leading-tight">
-            {cooldownTitle(family)}
+            {zh ? cooldownTitleZh(family) : cooldownTitle(family)}
           </h1>
-          <p className="mt-5 text-base leading-relaxed text-muted">{cooldownBody(daysLeft)}</p>
+          <p className="mt-5 text-base leading-relaxed text-muted">{zh ? cooldownBodyZh(daysLeft) : cooldownBody(daysLeft)}</p>
           {/* WHERE THE GATE'S MEMORY LIVES (E13/S3, Track G2). The line above
               claims to remember this person; this one says where that memory is
               and that it is not on a server. Quieter than the refusal, because
               it is a disclosure and not the reason to wait. */}
-          <p className="mt-3 text-xs leading-relaxed text-muted">{COOLDOWN_DEVICE_NOTE}</p>
+          <p className="mt-3 text-xs leading-relaxed text-muted">{t(COOLDOWN_DEVICE_NOTE)}</p>
           <Link
-            href="/threshold"
+            href={localHref(locale, "/threshold")}
             className="mt-8 inline-flex min-h-[44px] items-center self-start rounded-full px-7 py-3.5 text-base font-bold transition active:scale-[0.98]"
             style={{ color: readableOn(ICE), background: ICE, boxShadow: `0 10px 30px ${ICE_GLOW}` }}
           >
-            {COOLDOWN_ALTERNATIVE}
+            {t(COOLDOWN_ALTERNATIVE)}
           </Link>
           {/* The second way out (COOLDOWN_READING). In its own block so it sits
               under the button rather than beside it, and a <Jump> because it is
               a text link (jump-affordance.test.ts). */}
           <div className="mt-3">
-            <Jump href="/reading" accent={ICE} className="text-muted">
-              {COOLDOWN_READING}
+            <Jump href={localHref(locale, "/reading")} accent={ICE} className="text-muted">
+              {t(COOLDOWN_READING)}
             </Jump>
           </div>
         </div>
       </main>
+      </>
     );
   }
 
   /* ---------------------------------------------------------------- frame */
   if (phase === "frame") {
     return (
+      <>
+      {languageBarPhases.includes(phase) ? <LanguageBar locale={locale} width="max-w-lg" /> : null}
       <main className={SHELL + " justify-center"}>
         <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
         <div className="relative z-10">
           <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
-            STANDARD OF TASTE
+            {t("STANDARD OF TASTE")}
           </p>
           <h1 className="mt-6 font-display text-4xl font-semibold leading-tight">
-            How small a flaw can you still hear?
+            {t("How small a flaw can you still hear?")}
           </h1>
           <p className="mt-5 text-base leading-relaxed text-muted">
-            Every pair is the same twenty seconds of music twice, and one of them has been damaged —{" "}
-            {FAMILY_BLURB[family]}. Pick the damaged one. Get it right twice and the damage gets{" "}
-            <span className="text-foreground">smaller</span>; get it wrong and it gets bigger again.
+            {rich(
+              t(
+                "Every pair is the same twenty seconds of music twice, and one of them has been damaged — {blurb}. Pick the damaged one. Get it right twice and the damage gets {smaller}; get it wrong and it gets bigger again.",
+                { blurb },
+              ),
+              { smaller: <span className="text-foreground">{t("smaller")}</span> },
+            )}
           </p>
           <p className="mt-3 text-base leading-relaxed text-muted">
-            The test walks down until it finds the size where you stop being sure. That size is your
-            answer, and it is a real physical quantity — not a score out of ten.
+            {t(
+              "The test walks down until it finds the size where you stop being sure. That size is your answer, and it is a real physical quantity — not a score out of ten.",
+            )}
           </p>
           {isSourceLocked(family) ? (
             <p className="mt-3 text-sm text-muted">
-              This session locks to a single recording, named at the top of every trial and on your
-              result. A bitrate does different damage to different music, so the number means nothing
-              without the material it was measured on.
+              {t(
+                "This session locks to a single recording, named at the top of every trial and on your result. A bitrate does different damage to different music, so the number means nothing without the material it was measured on.",
+              )}
             </p>
           ) : null}
           {/* E14/S4 (RT-H4 a): the retest reuses the recording, and says so. */}
           {isSourceLocked(family) ? (
-            <p className="mt-3 text-sm text-muted">{MATERIAL_REUSE_NOTE}</p>
+            <p className="mt-3 text-sm text-muted">{t(MATERIAL_REUSE_NOTE)}</p>
           ) : null}
           <button
             type="button"
@@ -354,14 +383,17 @@ export default function ThresholdFlow({ family }: { family: string }) {
             className="mt-8 self-start rounded-full px-7 py-3.5 text-base font-bold transition active:scale-[0.98] disabled:opacity-40"
             style={{ color: readableOn(ICE), background: ICE, boxShadow: `0 10px 30px ${ICE_GLOW}` }}
           >
-            Start
+            {t("Start")}
           </button>
           <p className="mt-4 text-xs text-muted">
-~{sessionMinutes(family)} minutes. No sign-up. Headphones strongly advised —
-            laptop speakers cannot reproduce most of what this measures.
+            {t(
+              "~{minutes} minutes. No sign-up. Headphones strongly advised — laptop speakers cannot reproduce most of what this measures.",
+              { minutes: sessionMinutes(family) },
+            )}
           </p>
         </div>
       </main>
+      </>
     );
   }
 
@@ -383,7 +415,7 @@ export default function ThresholdFlow({ family }: { family: string }) {
       <div className="relative z-10 flex flex-1 flex-col">
         <div className="flex items-center justify-between text-xs font-medium text-muted">
           <span className="tracking-[0.3em]">
-            {familyLabel(family).toUpperCase()}
+            {zh ? FAMILY_LABEL_ZH[family] : familyLabel(family).toUpperCase()}
             {session.sourceId ? ` · ${session.sourceId}` : ""}
           </span>
           {/*
@@ -392,11 +424,11 @@ export default function ThresholdFlow({ family }: { family: string }) {
             be a number we do not have. Showing a made-up total to feel tidy is
             the sort of small lie N3 exists to stop.
           */}
-          <span>trial {trial.trialNumber}</span>
+          <span>{t("trial {n}", { n: trial.trialNumber })}</span>
         </div>
 
         <p className="mt-6 text-sm text-muted">
-          One of these two has {FAMILY_BLURB[family]}. The other is untouched.
+          {t("One of these two has {blurb}. The other is untouched.", { blurb })}
         </p>
 
         <ClipPlayer
@@ -405,7 +437,7 @@ export default function ThresholdFlow({ family }: { family: string }) {
           src={trial.srcA}
           index={trial.trialNumber}
           label="A"
-          caption="tap to listen"
+          caption={t("tap to listen")}
           minListenMs={MIN_LISTEN_MS_PER_CLIP}
           onArmed={() => setArmedA(true)}
           onProgress={() => {}}
@@ -416,7 +448,7 @@ export default function ThresholdFlow({ family }: { family: string }) {
           src={trial.srcB}
           index={trial.trialNumber}
           label="B"
-          caption="tap to listen"
+          caption={t("tap to listen")}
           minListenMs={MIN_LISTEN_MS_PER_CLIP}
           onArmed={() => setArmedB(true)}
           onProgress={() => {}}
@@ -433,7 +465,7 @@ export default function ThresholdFlow({ family }: { family: string }) {
 
         <div className="mt-7">
           <p className="text-sm font-semibold">
-            {armed ? "Which one is damaged?" : "Hear both all the way through first."}
+            {armed ? t("Which one is damaged?") : t("Hear both all the way through first.")}
           </p>
           <div className="mt-3 flex gap-3">
             {(["a", "b"] as const).map((side) => (
@@ -442,7 +474,7 @@ export default function ThresholdFlow({ family }: { family: string }) {
                 type="button"
                 disabled={!armed}
                 onClick={() => pick(side)}
-                aria-label={`${side.toUpperCase()} is the damaged one`}
+                aria-label={t("{side} is the damaged one", { side: side.toUpperCase() })}
                 className="flex-1 rounded-2xl border border-white/15 py-4 text-base font-bold transition hover:border-white/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-35"
               >
                 {side.toUpperCase()}
@@ -455,7 +487,7 @@ export default function ThresholdFlow({ family }: { family: string }) {
             3.1 cents. It is disclosed on the result screen instead.
           */}
           <p className="mt-4 text-xs text-muted">
-            No feedback until the end — being told would teach you the clip rather than the flaw.
+            {t("No feedback until the end — being told would teach you the clip rather than the flaw.")}
           </p>
         </div>
       </div>

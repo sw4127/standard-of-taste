@@ -123,6 +123,7 @@ const INVISIBLE: Record<string, number> = {
   "/zh/method": 212,
   "/zh/reading": 31,
   "/zh/spread": 16,
+  "/zh/threshold": 14,
 };
 
 /*

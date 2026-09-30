@@ -70,8 +70,29 @@ function modelUse(file: string): string | null {
   return null;
 }
 
+/*
+ * EACH FILE IS READ ONCE (bilingual Part 4). Every entry was walked from scratch, re-reading
+ * and re-resolving every module it reached, so each new route made the walk slower, and at
+ * 61 entries it passed 15 seconds under the full suite. The answers per file do not change
+ * during a run, so they are cached; the walk itself, and what it can find, is unchanged.
+ */
+const useCache = new Map<string, string | null>();
+const cachedModelUse = (f: string): string | null => {
+  if (!useCache.has(f)) useCache.set(f, modelUse(f));
+  return useCache.get(f) ?? null;
+};
+const edgeCache = new Map<string, string[]>();
+function edges(file: string): string[] {
+  let e = edgeCache.get(file);
+  if (!e) {
+    e = specifiers(file).map((spec) => resolve(file, spec)).filter((n): n is string => n !== null);
+    edgeCache.set(file, e);
+  }
+  return e;
+}
+
 /** The first chain from an entry to a model client, or null. */
-function chainToModel(entry: string, classify = modelUse): string[] | null {
+function chainToModel(entry: string, classify = cachedModelUse): string[] | null {
   const seen = new Set<string>();
   const stack: string[][] = [[entry]];
   while (stack.length) {
@@ -81,9 +102,8 @@ function chainToModel(entry: string, classify = modelUse): string[] | null {
     seen.add(file);
     const why = classify(file);
     if (why) return [...path, why];
-    for (const spec of specifiers(file)) {
-      const next = resolve(file, spec);
-      if (next && !seen.has(next)) stack.push([...path, next]);
+    for (const next of edges(file)) {
+      if (!seen.has(next)) stack.push([...path, next]);
     }
   }
   return null;

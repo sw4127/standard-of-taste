@@ -34,6 +34,16 @@ import {
   CARD_PASTE,
 } from "@/content/card/copy";
 import { CARD_STATEMENT } from "@/content/card/statement";
+import { CARD_STATEMENT_ZH } from "@/content/zh/copy/statements";
+import {
+  CARD_COPY_DONE_ZH,
+  CARD_COPY_IDLE_ZH,
+  CARD_COPY_MANUAL_ZH,
+  CARD_KICKER_ZH,
+  CARD_PASTE_ZH,
+  cardSectionsZh,
+} from "@/content/zh/copy/threshold-lines";
+import { useLocale } from "@/lib/use-locale";
 
 export default function PromptCardPanel({
   accent,
@@ -43,8 +53,12 @@ export default function PromptCardPanel({
   /** Every sitting this device holds, current one first in roster order. */
   results: StaircaseResult[];
 }) {
-  const sections = useMemo(() => cardSections(results), [results]);
-  const paste = sections.find((s) => s.heading === CARD_PASTE)?.lines[0] ?? "";
+  // In Chinese (bilingual Part 4): the Chinese templates, the Chinese chrome, and the
+  // Chinese rendering of the amendment's statement, derived from CLAUDE.md as the English is.
+  const zh = useLocale() === "zh";
+  const sections = useMemo(() => (zh ? cardSectionsZh(results, { glossCents: true }) : cardSections(results)), [results, zh]);
+  const pasteHeading = zh ? CARD_PASTE_ZH : CARD_PASTE;
+  const paste = sections.find((s) => s.heading === pasteHeading)?.lines[0] ?? "";
   const [state, setState] = useState<"idle" | "copied" | "manual">("idle");
   const pasteRef = useRef<HTMLParagraphElement>(null);
 
@@ -97,15 +111,16 @@ export default function PromptCardPanel({
       data-testid="prompt-card"
       className="mt-8 rounded-2xl border border-white/12 bg-white/[0.04] px-5 py-6"
     >
-      <p className="text-[0.62rem] font-bold uppercase tracking-[0.22em]" style={{ color: accent }}>
-        {CARD_KICKER}
+      {/* Caps only in English: in Chinese the kicker's bracketed English would render as PROMPT. */}
+      <p className={`text-[0.62rem] font-bold tracking-[0.22em] ${zh ? "" : "uppercase"}`} style={{ color: accent }}>
+        {zh ? CARD_KICKER_ZH : CARD_KICKER}
       </p>
 
       <div className="mt-5 space-y-6">
         {sections.map((section) => (
           <div key={section.heading}>
             <h3 className="font-display text-base font-semibold text-white">{section.heading}</h3>
-            {section.heading === CARD_PASTE ? (
+            {section.heading === pasteHeading ? (
               <div className="mt-2">
                 <p
                   ref={pasteRef}
@@ -120,7 +135,17 @@ export default function PromptCardPanel({
                   data-testid="prompt-card-copy"
                   className="mt-2.5 rounded-full border border-white/20 px-3.5 py-1.5 text-[0.62rem] font-bold uppercase tracking-[0.18em] text-neutral-200 transition hover:border-white/40 hover:text-white active:scale-[0.98]"
                 >
-                  {state === "copied" ? CARD_COPY_DONE : state === "manual" ? CARD_COPY_MANUAL : CARD_COPY_IDLE}
+                  {zh
+                    ? state === "copied"
+                      ? CARD_COPY_DONE_ZH
+                      : state === "manual"
+                        ? CARD_COPY_MANUAL_ZH
+                        : CARD_COPY_IDLE_ZH
+                    : state === "copied"
+                      ? CARD_COPY_DONE
+                      : state === "manual"
+                        ? CARD_COPY_MANUAL
+                        : CARD_COPY_IDLE}
                 </button>
               </div>
             ) : (
@@ -147,7 +172,7 @@ export default function PromptCardPanel({
         data-testid="prompt-card-statement"
         className="mt-6 border-t border-white/10 pt-4 text-[12px] leading-relaxed text-muted"
       >
-        {CARD_STATEMENT}
+        {zh ? CARD_STATEMENT_ZH : CARD_STATEMENT}
       </p>
     </section>
   );

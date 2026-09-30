@@ -31,6 +31,10 @@ export function unitZh(unit: string): string {
 export function quantityZh(value: number, unit: string): string {
   return quantity(value, unit).replace(/ cents$/, " 音分");
 }
+/** `quantityZh`, with the glossary's first-use bracket on cents: 25 音分（cents）. */
+export function quantityZhGlossed(value: number, unit: string): string {
+  return shortUnit(unit) === "cents" ? `${quantityZh(value, unit)}（cents）` : quantityZh(value, unit);
+}
 /** `onSource`, in Chinese: the recording a lossy number was measured on. */
 export function onSourceZh(result: Pick<StaircaseResult, "sourceId">): string {
   return result.sourceId ? `（录音 ${result.sourceId}）` : "";

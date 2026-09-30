@@ -51,6 +51,24 @@ import ExpertPanel from "@/components/ExpertPanel";
 import PromptCardPanel from "@/components/PromptCardPanel";
 import { cardHistory } from "@/lib/card-history";
 import type { StoredPayload } from "@/lib/result-store";
+import LanguageBar from "@/components/LanguageBar";
+import { useLocale } from "@/lib/use-locale";
+import { localHref, type Locale } from "@/lib/locale";
+import { tFor, type T } from "@/lib/i18n";
+import THRESHOLD_ZH from "@/content/zh/copy/threshold";
+import {
+  NO_COHORT_FOOTNOTE_ZH,
+  creatorLinesZh,
+  resultLinesZh,
+  CENTS_GLOSS,
+  cardSectionsZh,
+  glossCentsZh,
+  glossFirstCentsZh,
+  hasCentsZh,
+  thresholdCardFigureZh,
+  thresholdShareTextZh,
+} from "@/content/zh/copy/threshold-lines";
+import { FAMILY_LABEL_ZH, quantityZh, unitZh } from "@/content/zh/copy/across";
 
 const ICE = THRESHOLD_VIOLET;
 
@@ -66,9 +84,16 @@ export default function ThresholdResult({
   result,
   share,
   identity,
+  languageBar = false,
 }: {
   result: StaircaseResult;
   share?: ThresholdShare;
+  /**
+   * The language button, on the permalink only (bilingual Part 4). In the flow the
+   * result is component state, and switching language there would lose it; the
+   * permalink recomputes from its address, so the switch keeps the session.
+   */
+  languageBar?: boolean;
   /**
    * WHO THIS SESSION BELONGS TO — separate from `share` ON PURPOSE (E8/C2).
    *
@@ -101,27 +126,47 @@ export default function ThresholdResult({
           ...(share.sourceId ? { sourceId: share.sourceId } : {}),
         }
       : undefined);
-  const lines = resultLines(result);
-  const [headline, ...rest] = lines;
+  const locale = useLocale();
+  const t = tFor(locale, THRESHOLD_ZH);
+  const zh = locale === "zh";
+  const footnoteText = zh ? NO_COHORT_FOOTNOTE_ZH : NO_COHORT_FOOTNOTE;
+  /*
+   * THE FIRST CENTS ON THE PAGE CARRIES THE GLOSSARY'S BRACKET (bilingual Part 4). The page
+   * reads card, figure, headline, ladder, in that order, and any of the first three may
+   * carry no cents at all (a card line that names no figure, "no reading", a headline
+   * about the ladder's end). So the gloss goes to the first of them that uses the unit,
+   * and to the ladder's heading when none does.
+   */
+  const cardGlossed =
+    zh && cardSectionsZh(cardHistory(result), { glossCents: true }).some((s) => s.lines.some((l) => l.includes(CENTS_GLOSS)));
+  const figureZh = thresholdCardFigureZh(result);
+  const glossFigure = zh && !cardGlossed && hasCentsZh(figureZh);
+  const figure = zh ? (glossFigure ? glossCentsZh(figureZh) : figureZh) : thresholdCardFigure(result);
+  const lines = zh ? resultLinesZh(result) : resultLines(result);
+  const glossHeadline = zh && !cardGlossed && !glossFigure && hasCentsZh(lines[0]);
+  const glossLadder = zh && !cardGlossed && !glossFigure && !glossHeadline;
+  const [headline, ...rest] = glossHeadline ? [glossFirstCentsZh(lines[0]), ...lines.slice(1)] : lines;
   // Partitioned BY IDENTITY, not by position. `resultLines` happens to put the
   // footnote last today; a test that relied on that would pass until somebody
   // reordered the array, and the failure would be a missing footnote nobody
   // notices rather than an error.
-  const footnote = rest.find((l) => l === NO_COHORT_FOOTNOTE) ?? null;
-  const body = rest.filter((l) => l !== NO_COHORT_FOOTNOTE);
-  const unit = shortUnit(result.unit);
+  const footnote = rest.find((l) => l === footnoteText) ?? null;
+  const body = rest.filter((l) => l !== footnoteText);
+  const unit = zh ? unitZh(result.unit) : shortUnit(result.unit);
 
   return (
+    <>
+    {languageBar ? <LanguageBar locale={locale} width="max-w-lg" /> : null}
     <main className="relative mx-auto flex min-h-dvh w-full max-w-lg flex-col overflow-hidden px-6 py-10">
       <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
       <div className="relative z-10">
         <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
-          STANDARD OF TASTE
+          {t("STANDARD OF TASTE")}
         </p>
 
         <div className="mt-6 flex items-baseline justify-between gap-3">
           <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: ICE }}>
-            {familyLabel(result.family).toUpperCase()}
+            {zh ? FAMILY_LABEL_ZH[result.family] : familyLabel(result.family).toUpperCase()}
             {result.sourceId ? ` · ${result.sourceId}` : ""}
           </p>
           {/*
@@ -135,9 +180,9 @@ export default function ThresholdResult({
           */}
           <span
             className="shrink-0 rounded-full border border-dashed border-white/35 px-2.5 py-1 font-mono text-[0.6rem] font-bold tracking-[0.18em] text-muted"
-            title="Measured from your session. No cohort exists to compare it against."
+            title={t("Measured from your session. No cohort exists to compare it against.")}
           >
-            YOUR SESSION · COHORT n = {result.cohortN}
+            {t("YOUR SESSION · COHORT n = {n}", { n: result.cohortN })}
           </span>
         </div>
 
@@ -174,14 +219,14 @@ export default function ThresholdResult({
           className="mt-8 font-display text-5xl font-semibold leading-[1.05] tracking-tight"
           style={{ color: ICE, textShadow: `0 0 60px ${ICE_GLOW}` }}
         >
-          {thresholdCardFigure(result)}
+          {figure}
         </p>
 
         <h1 className="mt-4 font-display text-2xl font-semibold leading-snug tracking-tight">
           {headline}
         </h1>
 
-        <Ladder result={result} unit={unit} />
+        <Ladder result={result} unit={unit} t={t} zh={zh} glossUnit={glossLadder} />
 
         <div className="mt-8 space-y-4">
           {body.map((line) => (
@@ -191,7 +236,7 @@ export default function ThresholdResult({
           ))}
         </div>
 
-        <InRender result={result} />
+        <InRender result={result} t={t} zh={zh} locale={locale} />
 
         {/* Only when this page is showing THIS device's own session — see
             AcrossSessions. Without `share` there is no payload to compare, so
@@ -218,21 +263,21 @@ export default function ThresholdResult({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={thresholdCardPath("square", share)}
-              alt={`Threshold card: ${thresholdCardFigure(result)}`}
+              alt={t("Threshold card: {figure}", { figure })}
               className="w-full max-w-xs rounded-2xl border border-white/10"
             />
             <div className="mt-5 flex flex-wrap items-center gap-3">
               <ShareButton
-                url={`${baseUrl()}${thresholdResultPath(share)}`}
-                text={thresholdShareText(result)}
-                label={THRESHOLD_SHARE_LABEL}
+                url={`${baseUrl()}${localHref(locale, thresholdResultPath(share))}`}
+                text={zh ? thresholdShareTextZh(result) : thresholdShareText(result)}
+                label={t(THRESHOLD_SHARE_LABEL)}
                 event="threshold_share"
                 primary
                 accent={ICE}
               />
               <DownloadButton
                 url={thresholdCardPath("story", share)}
-                label={THRESHOLD_STORY_LABEL}
+                label={t(THRESHOLD_STORY_LABEL)}
                 filename={`threshold-${share.slug}-story.png`}
               />
             </div>
@@ -240,11 +285,11 @@ export default function ThresholdResult({
         ) : null}
 
         <div className="mt-9 flex flex-col gap-2.5 text-sm">
-          <Link href="/lab/instrument-limits" className="group text-muted transition-colors hover:text-white">
+          <Link href={localHref(locale, "/lab/instrument-limits")} className="group text-muted transition-colors hover:text-white">
             <span className="font-semibold transition-colors" style={{ color: ICE }}>
-              What this instrument cannot do.
+              {t("What this instrument cannot do.")}
             </span>{" "}
-            Every limit we measured and could not fix.
+            {t("Every limit we measured and could not fix.")}
           </Link>
 
         </div>
@@ -253,9 +298,10 @@ export default function ThresholdResult({
             that went to the gym floor and named neither of them. Whoever
             finished the longest instrument in the product got the vaguest
             onward door. */}
-        <OtherMachines from="threshold" />
+        <OtherMachines from="threshold" locale={locale} />
       </div>
     </main>
+    </>
   );
 }
 
@@ -278,16 +324,16 @@ export default function ThresholdResult({
  * introducing a second visual language; the only colour is the eyebrow, in the
  * same violet the figure already uses.
  */
-function InRender({ result }: { result: StaircaseResult }) {
+function InRender({ result, t, zh, locale }: { result: StaircaseResult; t: T; zh: boolean; locale: Locale }) {
   const claim = thresholdClaim(result);
   if (!claim.ok) return null;
-  const lines = creatorLines(claim.value);
+  const lines = zh ? creatorLinesZh(claim.value) : creatorLines(claim.value);
   if (lines.length === 0) return null;
 
   return (
     <section className="mt-7 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
       <p className="text-[0.6rem] font-bold tracking-[0.25em]" style={{ color: ICE }}>
-        WHAT THIS MEANS IN A RENDER
+        {t("WHAT THIS MEANS IN A RENDER")}
       </p>
       <div className="mt-3 space-y-3">
         {lines.map((line) => (
@@ -299,8 +345,8 @@ function InRender({ result }: { result: StaircaseResult }) {
       {/* E11/S5: this block names a flaw in the reader's own work and, until
           now, offered nowhere to go with it. One family is measured per
           session here; the reference covers all three. */}
-      <Jump href={FLAWS_HREF} accent={ICE} className="mt-2">
-        {FLAWS_INVITE}
+      <Jump href={localHref(locale, FLAWS_HREF)} accent={ICE} className="mt-2">
+        {t(FLAWS_INVITE)}
       </Jump>
     </section>
   );
@@ -318,14 +364,28 @@ function InRender({ result }: { result: StaircaseResult }) {
  * of where a staircase spent its time IS the measurement, and hiding the unused
  * ends would make every session look thorough.
  */
-function Ladder({ result, unit }: { result: StaircaseResult; unit: string }) {
+function Ladder({
+  result,
+  unit,
+  t,
+  zh,
+  glossUnit,
+}: {
+  result: StaircaseResult;
+  unit: string;
+  t: T;
+  zh: boolean;
+  glossUnit: boolean;
+}) {
   const { rungs, heardIndex, missedIndex } = result.band;
   const busiest = Math.max(1, ...rungs.map((r) => r.shown));
 
   return (
     <div className="mt-7 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
       <p className="text-[0.6rem] font-bold tracking-[0.25em] text-muted">
-        THE LADDER · GENTLEST FIRST · {unit.toUpperCase()}
+        {t("THE LADDER · GENTLEST FIRST · {unit}", {
+          unit: zh ? (glossUnit && shortUnit(result.unit) === "cents" ? `${unit}${CENTS_GLOSS}` : unit) : unit.toUpperCase(),
+        })}
       </p>
       <ul className="mt-3 flex flex-col gap-1.5">
         {rungs.map((rung, i) => {
@@ -340,7 +400,7 @@ function Ladder({ result, unit }: { result: StaircaseResult; unit: string }) {
                 className="w-16 shrink-0 text-right font-mono tabular-nums"
                 style={{ color: isHeard || isMissed ? ICE : rung.shown ? undefined : "rgba(255,255,255,0.3)" }}
               >
-                {quantity(rung.label, result.unit).replace(` ${unit}`, "")}
+                {(zh ? quantityZh(rung.label, result.unit) : quantity(rung.label, result.unit)).replace(` ${unit}`, "")}
               </span>
               <span className="relative h-3 flex-1 overflow-hidden rounded-full bg-white/[0.06]">
                 <span
@@ -352,18 +412,20 @@ function Ladder({ result, unit }: { result: StaircaseResult; unit: string }) {
                 />
               </span>
               <span className="w-16 shrink-0 font-mono tabular-nums text-muted">
-                {rung.shown ? `${rung.correct}/${rung.shown}` : "—"}
+                {/* The dash is banned in Chinese copy; an unasked rung is a dot there. */}
+                {rung.shown ? `${rung.correct}/${rung.shown}` : zh ? "·" : "—"}
               </span>
               <span className="w-14 shrink-0 text-[0.6rem] font-bold tracking-wider" style={{ color: ICE }}>
-                {isHeard ? "CAUGHT" : isMissed ? "GUESSED" : ""}
+                {isHeard ? t("CAUGHT") : isMissed ? t("GUESSED") : ""}
               </span>
             </li>
           );
         })}
       </ul>
       <p className="mt-3 text-[0.65rem] leading-relaxed text-muted">
-        Right / shown, per rung. A staircase spends most of its trials near your limit, so the busy
-        rows are where the answer is and the faint ones are rungs you were never asked about.{" "}
+        {t(
+          "Right / shown, per rung. A staircase spends most of its trials near your limit, so the busy rows are where the answer is and the faint ones are rungs you were never asked about.",
+        )}{" "}
         {/*
           THE MARKED ROWS ARE NOT CONCLUSIONS FROM THE ROW BESIDE THEM. In the
           first render the 160 kbps row read "0/1  GUESSED", which invites a
@@ -373,8 +435,9 @@ function Ladder({ result, unit }: { result: StaircaseResult; unit: string }) {
           scannable.
         */}
         <span className="text-neutral-300">
-          The two marked rungs come from the whole session, not from the count beside them — a
-          boundary row can hold a single trial and still be the boundary.
+          {t(
+            "The two marked rungs come from the whole session, not from the count beside them — a boundary row can hold a single trial and still be the boundary.",
+          )}
         </span>
       </p>
     </div>

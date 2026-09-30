@@ -48,6 +48,8 @@ import type {
   ThresholdExpert,
 } from "@/engine/expert";
 import { quantity, shortUnit } from "@/content/staircase/copy";
+import { quantityZh, unitZh } from "@/content/zh/copy/across";
+import { limitStatementZh } from "@/content/zh/copy/threshold-lines";
 import { FLAW_LABELS } from "@/content/delicacy/items";
 import { SPREAD_POOL } from "@/content/spread/ranking";
 import {
@@ -275,21 +277,24 @@ function DelicacyBody({ d, accent, t, zh }: { d: DelicacyExpert; accent: string;
   );
 }
 
-function ThresholdBody({ t: th, tx: t }: { t: ThresholdExpert; tx: T }) {
-  const u = shortUnit(th.unit);
+function ThresholdBody({ t: th, tx: t, zh }: { t: ThresholdExpert; tx: T; zh: boolean }) {
+  // On a Chinese page (bilingual Part 4): units in Chinese, the range without a dash, the outcome
+  // named rather than printed as a code, and each measured limit from its Chinese template.
+  const u = zh ? unitZh(th.unit) : shortUnit(th.unit);
+  const q = (v: number) => (zh ? quantityZh(v, th.unit) : quantity(v, th.unit));
   return (
     <>
       <Section title={t(SEC.thresholdSession)}>
         <Stats
           items={[
             [t(STAT.trials), String(th.trials)],
-            [t(STAT.outcome), th.kind],
-            [t(STAT.caughtAt), th.heardAt === null ? t(VAL.none) : quantity(th.heardAt, th.unit)],
-            [t(STAT.missedAt), th.missedAt === null ? t(VAL.none) : quantity(th.missedAt, th.unit)],
-            [t(STAT.fittedPoint), th.point === null ? t(VAL.notEarned) : quantity(th.point, th.unit)],
+            [t(STAT.outcome), zh ? t(th.kind) : th.kind],
+            [t(STAT.caughtAt), th.heardAt === null ? t(VAL.none) : q(th.heardAt)],
+            [t(STAT.missedAt), th.missedAt === null ? t(VAL.none) : q(th.missedAt)],
+            [t(STAT.fittedPoint), th.point === null ? t(VAL.notEarned) : q(th.point)],
             [
               t(STAT.interval),
-              th.ci95 === null ? t(VAL.none) : `${quantity(th.ci95[0], th.unit)} – ${quantity(th.ci95[1], th.unit)}`,
+              th.ci95 === null ? t(VAL.none) : t("{lo} – {hi}", { lo: q(th.ci95[0]), hi: q(th.ci95[1]) }),
             ],
           ]}
         />
@@ -298,7 +303,7 @@ function ThresholdBody({ t: th, tx: t }: { t: ThresholdExpert; tx: T }) {
         <Table
           head={[COL.rung, COL.right, COL.shown, COL.where].map((h) => t(h))}
           rows={th.rungs.map((r) => [
-            quantity(r.label, th.unit),
+            q(r.label),
             String(r.correct),
             String(r.shown),
             r.isHeard ? t(VAL.caught) : r.isMissed ? t(VAL.guessed) : r.inBand ? t(VAL.inBand) : "",
@@ -310,7 +315,7 @@ function ThresholdBody({ t: th, tx: t }: { t: ThresholdExpert; tx: T }) {
           <ul className="mt-3 flex flex-col gap-2">
             {th.limits.map((l, i) => (
               <li key={i} className="text-xs leading-relaxed text-neutral-300">
-                {l.statement}
+                {zh ? limitStatementZh(l) : l.statement}
               </li>
             ))}
           </ul>
@@ -491,7 +496,7 @@ export default function ExpertPanel({
       return r ? <SpreadBody s={spreadExpert(r.result)} t={t} /> : null;
     }
     const r = recallThreshold(instrument.slug);
-    return r ? <ThresholdBody t={thresholdExpert(r.result)} tx={t} /> : null;
+    return r ? <ThresholdBody t={thresholdExpert(r.result)} tx={t} zh={zh} /> : null;
     // `t` and `zh` follow `locale`, which is in the list.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sig, own, instrument, accent, locale]);

@@ -122,6 +122,13 @@ const EXPERT: Dict = {
     "距离这一列，是从评论家的排名里取来的全部信息。两部作品中他把哪一部排得更高，从未读入，所以这里没有哪张表能排回他的顺序，也无法从中还原出任何一致程度的数字：这个页面做不到，你做不到，以后也做不到。",
   "What follows is the end of your blind sitting. These six were rated before you knew what they were, and they cannot be again — a second attempt at this instrument would be rating music you have now been told about.":
     "往下看，你的盲听就结束了。这六段是在你不知道它们是什么的时候评的分，以后不会再有这种机会：再做一次这项测试，你评的就是已经被告知名字的音乐。",
+  // An interval's two ends; the dash is banned in Chinese copy.
+  "{lo} – {hi}": "{lo} 至 {hi}",
+  // The Threshold Test's outcome kinds (`StaircaseResult["kind"]`), shown in the session table.
+  threshold: "得出阈值",
+  below: "低于阶梯最轻一级",
+  above: "高于阶梯最重一级",
+  inconclusive: "没有结论",
 };
 
 export default EXPERT;

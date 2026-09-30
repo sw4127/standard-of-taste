@@ -161,6 +161,12 @@ Appended, not overwritten; nothing above is amended by it. The bilingual brief (
 
 **Named routes** (zh rendering, pending owner approval, 2026-09-29; machine-read by `src/app/site-d1.test.tsx`, which reads the newest such line): `/reading` · `/zh/reading`
 
+*[AMENDED 2026-09-30, bilingual Part 4, pending owner approval. The card rendering above is kept verbatim. It rendered "the reading" as 解读（the reading）, which is the glossary's name for the flagship at `/reading`. On the card, "the reading" means this sitting's measured result: the card sits on the Threshold Test's result screen and speaks about what that measurement might mean. Read on the rendered Chinese result page, the first rendering pointed the reader at the wrong surface. `src/content/zh/statements.test.ts` reads the LAST marker for each surface, so the rendering below governs the Chinese card.]*
+
+**zh rendering of the on-surface statement for the card (amended 2026-09-30, pending owner approval):**
+
+> 这张卡片谈的是，这次测出的结果对你可能意味着什么。听辨测试（hearing tests）里的其余内容，只描述你做了什么。
+
 ### D3 amendment — the reading is the flagship (owner-approved 2026-09-23, ruling BA-6)
 Appended, not overwritten. Amends **D3 only**; D1, D2, D4, D5, D6 and N1–N3 are untouched by it. The ruling: `docs/rt-answers-2026-09-23-audit.md`.
 

@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { track } from "@/lib/analytics";
+import { useLocale } from "@/lib/use-locale";
+import { tFor } from "@/lib/i18n";
+import THRESHOLD_ZH from "@/content/zh/copy/threshold";
 
 /**
  * Downloads the card PNG. In normal browsers this triggers a file save; in
@@ -18,6 +21,7 @@ export default function DownloadButton({
   label: string;
   filename: string;
 }) {
+  const t = tFor(useLocale(), THRESHOLD_ZH);
   const [busy, setBusy] = useState(false);
 
   async function download() {
@@ -46,7 +50,7 @@ export default function DownloadButton({
       disabled={busy}
       className="rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold transition hover:bg-white/10 disabled:opacity-50"
     >
-      {busy ? "Preparing…" : label}
+      {busy ? t("Preparing…") : label}
     </button>
   );
 }

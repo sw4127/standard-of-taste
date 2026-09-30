@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { track } from "@/lib/analytics";
 import { readableOn } from "@/lib/readable-on";
+import { useLocale } from "@/lib/use-locale";
+import { tFor } from "@/lib/i18n";
+import THRESHOLD_ZH from "@/content/zh/copy/threshold";
 
 /**
  * Link-first share — the ONLY path back to the app from a social post is a
@@ -26,6 +29,7 @@ export default function ShareButton({
   primary?: boolean;
   accent?: string;
 }) {
+  const t = tFor(useLocale(), THRESHOLD_ZH);
   const [copied, setCopied] = useState(false);
 
   async function share() {
@@ -60,7 +64,7 @@ export default function ShareButton({
 
   return (
     <button type="button" onClick={share} className={base} style={style}>
-      {copied ? "Link copied ✓" : label}
+      {copied ? t("Link copied ✓") : label}
     </button>
   );
 }

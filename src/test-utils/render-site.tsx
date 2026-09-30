@@ -70,11 +70,19 @@ declare global {
   var __SITE_SEARCH: string | undefined;
 }
 
-async function render(route: string, key: string): Promise<{ html: string; meta: string[] }> {
+async function render(
+  route: string,
+  key: string,
+  dynamic: { params?: Record<string, string>; search?: Record<string, string> } = {},
+): Promise<{ html: string; meta: string[] }> {
   globalThis.__SITE_PATH = route;
-  const mod = (await PAGES[key]()) as { default: unknown; metadata?: unknown };
+  const mod = (await PAGES[key]()) as {
+    default: unknown;
+    metadata?: unknown;
+    generateMetadata?: (p: object) => Promise<unknown>;
+  };
   const Page = mod.default as (p: object) => unknown;
-  const props = { searchParams: Promise.resolve({}), params: Promise.resolve({}) };
+  const props = { searchParams: Promise.resolve(dynamic.search ?? {}), params: Promise.resolve(dynamic.params ?? {}) };
   // Server components may be async and must be awaited; client components use
   // hooks and must be rendered as elements, not called.
   let el: ReactElement =
@@ -91,8 +99,27 @@ async function render(route: string, key: string): Promise<{ html: string; meta:
   }
   const html = renderToStaticMarkup(el);
   // Only strings a reader sees: `canonical` and the like are paths, not prose.
-  const meta = stringsIn(mod.metadata).filter((t) => /\s/.test(t));
+  const metadata = mod.generateMetadata ? await mod.generateMetadata(props) : mod.metadata;
+  const meta = stringsIn(metadata).filter((t) => /\s/.test(t));
   return { html, meta };
+}
+
+/**
+ * A DYNAMIC ROUTE AT GIVEN PARAMS AND QUERY, e.g. a Threshold result at
+ * `/zh/threshold/pitch/result?s=…&r=…` (bilingual Part 4). `renderSite` skips every
+ * `[slug]` route, so an instrument's result screen was read by no rendered-page
+ * guard in either language. `pattern` is the route as its file names it.
+ */
+export async function renderDynamic(
+  pattern: string,
+  params: Record<string, string>,
+  search: Record<string, string> = {},
+): Promise<RenderedPage> {
+  const key = Object.keys(PAGES).find((k) => routeOf(k) === pattern);
+  if (!key) throw new Error(`no page for ${pattern}`);
+  const path = pattern.replace(/\[(\w+)\]/g, (_, n: string) => params[n]);
+  const q = new URLSearchParams(search).toString();
+  return { route: q ? `${path}?${q}` : path, ...(await render(path, key, { params, search })) };
 }
 
 let cached: Promise<RenderedSite> | null = null;

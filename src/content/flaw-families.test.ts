@@ -424,8 +424,10 @@ describe("the route from a result to the reference", () => {
     const threshold = readFileSync("src/app/threshold/ThresholdResult.tsx", "utf8");
     const delicacy = readFileSync("src/app/delicacy/RevealBlocks.tsx", "utf8");
     const bias = readFileSync("src/app/bias/result/page.tsx", "utf8");
+    // Through the language lookup since bilingual Part 4: `{t(FLAWS_INVITE)}` is the same
+    // route, in Chinese on a Chinese page.
     expect(threshold, "the Threshold result offers no route to the reference").toContain(
-      "{FLAWS_INVITE}",
+      "{t(FLAWS_INVITE)}",
     );
     expect(delicacy, "the Delicacy result offers no route to the reference").toContain(
       "{FLAWS_INVITE}",

@@ -7,6 +7,10 @@ import { sessionResult } from "@/engine/staircase-session";
 import { thresholdCardFigure, thresholdCardCaption } from "@/content/staircase/copy";
 import { baseUrl } from "@/lib/site";
 import { thresholdCardPath } from "../../share-links";
+import type { Locale } from "@/lib/locale";
+import { tFor } from "@/lib/i18n";
+import THRESHOLD_ZH from "@/content/zh/copy/threshold";
+import { thresholdCardCaptionZh, thresholdCardFigureZh } from "@/content/zh/copy/threshold-lines";
 
 /**
  * A RESULT RECOMPUTED FROM RAW ANSWERS (E5/S6) — never from a number in the URL.
@@ -38,8 +42,15 @@ export async function generateMetadata({
   params: Params;
   searchParams: Search;
 }): Promise<Metadata> {
+  return thresholdResultMetadata(params, searchParams, "en");
+}
+
+/** In either language (bilingual Part 4); the card image itself stays English (Satori has no Chinese face). */
+export async function thresholdResultMetadata(params: Params, searchParams: Search, locale: Locale): Promise<Metadata> {
+  const t = tFor(locale, THRESHOLD_ZH);
+  const zh = locale === "zh";
   const base: Metadata = {
-    title: "Your threshold — Standard of Taste",
+    title: t("Your threshold — Standard of Taste"),
     robots: { index: false, follow: false },
   };
   const { slug } = await params;
@@ -58,8 +69,8 @@ export async function generateMetadata({
   }
 
   const og = `${baseUrl()}${thresholdCardPath("og", { slug, seed, answers: responses, sourceId })}`;
-  const title = `${thresholdCardFigure(result)} — Standard of Taste`;
-  const description = thresholdCardCaption(result);
+  const title = t("{figure} — Standard of Taste", { figure: zh ? thresholdCardFigureZh(result) : thresholdCardFigure(result) });
+  const description = zh ? thresholdCardCaptionZh(result) : thresholdCardCaption(result);
   return {
     ...base,
     title,
@@ -69,8 +80,8 @@ export async function generateMetadata({
   };
 }
 
-type Params = Promise<{ slug: string }>;
-type Search = Promise<Record<string, string | string[] | undefined>>;
+export type Params = Promise<{ slug: string }>;
+export type Search = Promise<Record<string, string | string[] | undefined>>;
 
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 
@@ -121,6 +132,7 @@ export default async function ThresholdResultPage({
   return (
     <ThresholdResult
       result={result}
+      languageBar
       identity={{ kind: "threshold", slug, seed, answers: responses, ...(sourceId ? { sourceId } : {}) }}
     />
   );

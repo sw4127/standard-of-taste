@@ -30,6 +30,7 @@ import { join } from "node:path";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { attributeText, renderSite, textOf, type RenderedSite } from "@/test-utils/render-site";
 import { renderReadingStates } from "@/test-utils/reading-states";
+import { renderThresholdStates } from "@/test-utils/threshold-states";
 import { ZH_ROUTES, chinesePath, hasChinese, localeOfPath } from "@/lib/locale";
 import { ZH_TRANSLATION_NOTE } from "@/content/zh/style";
 import { SWITCH_TO_ZH } from "@/content/zh/copy/chrome";
@@ -73,6 +74,8 @@ beforeAll(async () => {
   site = await renderSite();
   // Every listener's lines, prompt and creation screen, in both languages (red-team, Part 2).
   states = await renderReadingStates();
+  // The Threshold Test's opening screens and replayed results, which renderSite skips (Part 4).
+  states = [...states, ...(await renderThresholdStates())];
 }, 180_000);
 
 const zhPages = () => [...site.pages, ...states].filter((p) => localeOfPath(p.route) === "zh");
