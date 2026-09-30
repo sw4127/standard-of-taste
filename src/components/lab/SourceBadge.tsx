@@ -60,14 +60,25 @@ const STYLES: Record<BadgeSource, { className: string; style?: React.CSSProperti
   },
 };
 
+// Full-width brackets, built rather than typed: Chinese characters live only in the dictionaries.
+const OPEN = String.fromCharCode(0xff08);
+const CLOSE = String.fromCharCode(0xff09);
+
 export default function SourceBadge({
   source,
   className = "",
   locale = "en",
+  defining = false,
 }: {
   source: BadgeSource;
   className?: string;
   locale?: Locale;
+  /**
+   * The badge in a legend that defines it. On a Chinese page it carries its
+   * English word too, in the glossary's first-use form, so a reader
+   * can match the badge to the English page and the documents.
+   */
+  defining?: boolean;
 }) {
   const s = STYLES[source];
   // On a Chinese page the word and its explanation are Chinese (bilingual Part 2).
@@ -80,7 +91,7 @@ export default function SourceBadge({
       className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[0.6rem] font-bold tracking-[0.18em] ${s.className} ${className}`}
       style={s.style}
     >
-      {t(source)}
+      {defining && locale === "zh" ? `${t(source)}${OPEN}${source}${CLOSE}` : t(source)}
     </span>
   );
 }

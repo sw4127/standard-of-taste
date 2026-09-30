@@ -177,6 +177,8 @@ describe("every dictionary entry keeps its English's numbers", () => {
     eighty: 80, ninety: 90, hundred: 100, quarter: 4,
     thousand: 1000, second: 2, third: 3, fourth: 4, fifth: 5, sixth: 6, tenth: 10, twice: 2, double: 2, pair: 2,
     once: 1, both: 2,
+    // Plurals are number words too: "a few hundred" and "thousands" name a scale (red-team, /lab).
+    hundreds: 100, thousands: 1000,
   };
   // A compound first ("twenty-eight" is 28, not 20 and 8), then single words.
   const enWords = (s: string) =>

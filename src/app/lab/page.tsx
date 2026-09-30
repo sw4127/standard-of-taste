@@ -6,6 +6,10 @@ import { LAB_PANELS, LIVE_PANELS, PENDING_PANELS } from "@/content/lab/panels";
 import { FUNNEL_SPEC, sessionsForPrecision, stepTrigger } from "@/content/lab/funnel-spec";
 import { DEMO_ARRIVALS, DEMO_DATA_SOURCE, DEMO_REPLICATIONS, demoRecovery } from "@/content/lab/funnel-demo";
 import { GYM_INK } from "@/content/instrument-accents";
+import { localHref, type Locale } from "@/lib/locale";
+import { rich, tFor } from "@/lib/i18n";
+import LAB_ZH from "@/content/zh/copy/lab";
+import READING_ZH from "@/content/zh/copy/reading";
 
 /**
  * The Lab index (artifact pivot §4) — the analytics surface, in the product,
@@ -17,17 +21,31 @@ import { GYM_INK } from "@/content/instrument-accents";
  * slice that builds it, so the claim stays checkable.
  */
 
-export const metadata: Metadata = {
-  title: "The Lab — Standard of Taste",
-  description:
-    "The measurement layer, in the open: every metric defined with its formula, owner, acceptance band, and caveat — plus the provenance of every number shown.",
-  alternates: { canonical: "/lab" },
-  openGraph: {
-    title: "The Lab — Standard of Taste",
-    description: "Every metric this product computes, defined in the open — formula, owner, target, caveat.",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
-  },
-};
+/*
+ * ONE PAGE, TWO LANGUAGES (bilingual Part 2). `/zh/lab` renders this page with
+ * `locale="zh"`: every sentence goes through the Chinese dictionary, including the
+ * metric dictionary's definitions and the funnel's event descriptions, which are
+ * looked up by their English so a reworded definition stops being found rather
+ * than keeping a stale Chinese. Metric ids, event names and file paths stay as
+ * they are: they are names in the code, and a reader checks them against it.
+ */
+export function labMetadata(locale: Locale): Metadata {
+  const t = tFor(locale, LAB_ZH);
+  return {
+    title: t("The Lab — Standard of Taste"),
+    description: t(
+      "The measurement layer, in the open: every metric defined with its formula, owner, acceptance band, and caveat — plus the provenance of every number shown.",
+    ),
+    alternates: { canonical: localHref(locale, "/lab"), languages: { en: "/lab", "zh-Hans": "/zh/lab" } },
+    openGraph: {
+      title: t("The Lab — Standard of Taste"),
+      description: t("Every metric this product computes, defined in the open — formula, owner, target, caveat."),
+      images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
+    },
+  };
+}
+
+export const metadata = labMetadata("en");
 
 /* The Lab belongs to no instrument (RT-AG, RT-AR:a). */
 const INK = GYM_INK;
@@ -57,7 +75,12 @@ const OWNER_BLURB: Record<MetricDefinition["owner"], string> = {
 /** Group the dictionary by owner so it reads as a structure, not a list. */
 const OWNER_ORDER: MetricDefinition["owner"][] = ["instrument", "psychometrics", "ops"];
 
-export default function LabIndex() {
+export default function LabIndex({ locale = "en" }: { locale?: Locale }) {
+  const t = tFor(locale, LAB_ZH);
+  // The dash is banned in Chinese copy, so the index's no-target mark is a circle there.
+  const NO_TARGET = locale === "zh" ? "○" : "—";
+  // The legend names two badges; their words come from the badge's own dictionary.
+  const badgeWord = tFor(locale, READING_ZH);
   const grouped = OWNER_ORDER.map((owner) => ({
     owner,
     metrics: METRICS.filter((m) => m.owner === owner),
@@ -65,35 +88,37 @@ export default function LabIndex() {
 
   return (
     <div>
-      <p className="mt-10 text-[0.65rem] font-bold tracking-[0.3em] text-muted">THE LAB</p>
+      <p className="mt-10 text-[0.65rem] font-bold tracking-[0.3em] text-muted">{t("THE LAB")}</p>
       <h1 className="mt-2 max-w-3xl font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl">
-        The measurement layer, with the lid off.
+        {t("The measurement layer, with the lid off.")}
       </h1>
       <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-neutral-300">
-        Most products show you a score and hide the machine. This page is the machine. Every number
-        the gym computes is defined here — the formula, who owns it, what good would look like, and
-        the caveat that has to travel with it. Where a number has no defensible target yet, it says
-        so instead of inventing one.
+        {t(
+          "Most products show you a score and hide the machine. This page is the machine. Every number the gym computes is defined here — the formula, who owns it, what good would look like, and the caveat that has to travel with it. Where a number has no defensible target yet, it says so instead of inventing one.",
+        )}
       </p>
 
       {/* The honesty notice is not a footnote. It is the first thing that
           establishes what kind of page this is. */}
       <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
         <div className="flex flex-wrap items-center gap-3">
-          <SourceBadge source="SIMULATED" />
-          <SourceBadge source="REAL" />
-          <SourceBadge source="MIXED" />
-          <SourceBadge source="MEASURED" />
+          <SourceBadge locale={locale} defining source="SIMULATED" />
+          <SourceBadge locale={locale} defining source="REAL" />
+          <SourceBadge locale={locale} defining source="MIXED" />
+          <SourceBadge locale={locale} defining source="MEASURED" />
         </div>
         <p className="mt-4 text-sm leading-relaxed text-neutral-300">
-          Every panel that shows data carries one of these badges. Right now the instrument has
-          never been fielded, so <strong className="font-semibold text-white">no real cohort
-          exists</strong> and nothing here is a percentile. Numbers generated from a known model to
-          validate the pipeline are labelled <span className="font-mono text-xs">SIMULATED</span>{" "}
-          wherever they appear. When real responses arrive they flow through the identical
-          pipeline — the only thing that changes is the badge. Figures taken off the audio files
-          themselves, which involve nobody, are labelled{" "}
-          <span className="font-mono text-xs">MEASURED</span>.
+          {rich(
+            t(
+              "Every panel that shows data carries one of these badges. Right now the instrument has never been fielded, so {strong} and nothing here is a percentile. Numbers generated from a known model to validate the pipeline are labelled {sim} wherever they appear. When real responses arrive they flow through the identical pipeline — the only thing that changes is the badge. Figures taken off the audio files themselves, which involve nobody, are labelled {meas}.",
+            ),
+            {
+              strong: <strong className="font-semibold text-white">{t("no real cohort exists")}</strong>,
+              // The badge's own word, from the badge's own dictionary, so legend and badge agree.
+              sim: <span className="font-mono text-xs">{badgeWord("SIMULATED")}</span>,
+              meas: <span className="font-mono text-xs">{badgeWord("MEASURED")}</span>,
+            },
+          )}
         </p>
       </div>
 
@@ -101,22 +126,22 @@ export default function LabIndex() {
       {LIVE_PANELS.some((p) => p.href) && (
         <section className="mt-14" aria-labelledby="panels">
           <h2 id="panels" className="font-display text-2xl font-semibold tracking-tight">
-            Panels
+            {t("Panels")}
           </h2>
           <div className="mt-5 flex flex-col gap-3">
             {LIVE_PANELS.filter((p) => p.href).map((p) => (
               <Link
                 key={p.id}
-                href={p.href!}
+                href={localHref(locale, p.href!)}
                 className="group rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition hover:border-white/25"
               >
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
                   <h3 className="font-display text-lg font-semibold transition-colors group-hover:text-[hsl(225_8%_90%)]">
-                    {p.title}
+                    {t(p.title)}
                   </h3>
-                  {p.dataSource && <SourceBadge source={p.dataSource} />}
+                  {p.dataSource && <SourceBadge locale={locale} source={p.dataSource} />}
                 </div>
-                <p className="mt-1.5 text-sm text-muted">{p.blurb}</p>
+                <p className="mt-1.5 text-sm text-muted">{t(p.blurb)}</p>
               </Link>
             ))}
           </div>
@@ -127,27 +152,27 @@ export default function LabIndex() {
       <section className="mt-14" aria-labelledby="metric-dictionary">
         <div className="flex flex-wrap items-baseline justify-between gap-3">
           <h2 id="metric-dictionary" className="font-display text-2xl font-semibold tracking-tight">
-            Metric dictionary
+            {t("Metric dictionary")}
           </h2>
           <p className="font-mono text-[0.6rem] tracking-[0.18em] text-muted">
-            {METRICS.length} METRICS · {grouped.length} OWNERS
+            {t("{metrics} METRICS · {owners} OWNERS", { metrics: METRICS.length, owners: grouped.length })}
           </p>
         </div>
         <p className="mt-2 max-w-2xl text-sm text-muted">
-          {LAB_PANELS[0].blurb}
+          {t(LAB_PANELS[0].blurb)}
         </p>
 
         {/* The index. Sixteen definitions is reference material, and reference
             material without a way in is hostile — this is the KPI tree at a
             glance, and it is what makes the cards below anchor targets rather
             than a scroll. */}
-        <nav aria-label="Metric index" className="mt-7 grid gap-x-8 gap-y-6 sm:grid-cols-3">
+        <nav aria-label={t("Metric index")} className="mt-7 grid gap-x-8 gap-y-6 sm:grid-cols-3">
           {grouped.map((group) => (
             <div key={group.owner}>
               <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: INK }}>
-                {OWNER_LABEL[group.owner].toUpperCase()}
+                {t(OWNER_LABEL[group.owner]).toUpperCase()}
               </p>
-              <p className="mt-1.5 text-xs leading-relaxed text-muted">{OWNER_BLURB[group.owner]}</p>
+              <p className="mt-1.5 text-xs leading-relaxed text-muted">{t(OWNER_BLURB[group.owner])}</p>
               <ul className="mt-3 flex flex-col gap-1.5">
                 {group.metrics.map((m) => (
                   <li key={m.id}>
@@ -155,9 +180,9 @@ export default function LabIndex() {
                       href={`#metric-${m.id}`}
                       className="group flex items-baseline justify-between gap-3 text-[13px] text-neutral-300 transition hover:text-white"
                     >
-                      <span className="underline-offset-4 group-hover:underline">{m.label}</span>
+                      <span className="underline-offset-4 group-hover:underline">{t(m.label)}</span>
                       <span className="shrink-0 font-mono text-[0.6rem] text-muted">
-                        {m.target ? "▸" : "—"}
+                        {m.target ? "▸" : NO_TARGET}
                       </span>
                     </a>
                   </li>
@@ -167,13 +192,13 @@ export default function LabIndex() {
           ))}
         </nav>
         <p className="mt-5 font-mono text-[0.6rem] tracking-[0.15em] text-muted">
-          ▸ HAS AN ACCEPTANCE TARGET · — NO DEFENSIBLE TARGET YET
+          {t("▸ HAS AN ACCEPTANCE TARGET · — NO DEFENSIBLE TARGET YET")}
         </p>
 
         {grouped.map((group) => (
           <div key={group.owner} className="mt-12">
             <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: INK }}>
-              {OWNER_LABEL[group.owner].toUpperCase()}
+              {t(OWNER_LABEL[group.owner]).toUpperCase()}
             </p>
             <div className="mt-3 flex flex-col gap-3">
               {group.metrics.map((m) => (
@@ -185,39 +210,39 @@ export default function LabIndex() {
                   className="scroll-mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition target:border-white/30"
                 >
                   <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                    <h3 className="font-display text-lg font-semibold">{m.label}</h3>
+                    <h3 className="font-display text-lg font-semibold">{t(m.label)}</h3>
                     <code className="font-mono text-[0.6rem] tracking-[0.15em] text-muted">{m.id}</code>
                   </div>
-                  <p className="mt-2 text-sm leading-relaxed text-neutral-300">{m.definition}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-neutral-300">{t(m.definition)}</p>
 
                   {/* Wide content scrolls inside its own box — the page body
                       must never scroll sideways on a phone. */}
                   <div className="mt-3 overflow-x-auto">
                     <code className="block whitespace-pre rounded-lg bg-black/40 px-3 py-2 font-mono text-xs text-neutral-200">
-                      {m.formula}
+                      {t(m.formula)}
                     </code>
                   </div>
 
                   <dl className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-xs">
                     <div className="flex gap-1.5">
-                      <dt className="text-muted">Target</dt>
+                      <dt className="text-muted">{t("Target")}</dt>
                       <dd className={m.target ? "text-neutral-200" : "text-muted italic"}>
-                        {m.target ?? "none defensible yet"}
+                        {t(m.target ?? "none defensible yet")}
                       </dd>
                     </div>
                     <div className="flex gap-1.5">
-                      <dt className="text-muted">Unit</dt>
-                      <dd className="text-neutral-200">{m.unit}</dd>
+                      <dt className="text-muted">{t("Unit")}</dt>
+                      <dd className="text-neutral-200">{t(m.unit)}</dd>
                     </div>
                     <div className="flex min-w-0 gap-1.5">
-                      <dt className="text-muted">Computed in</dt>
+                      <dt className="text-muted">{t("Computed in")}</dt>
                       <dd className="truncate font-mono text-[0.7rem] text-neutral-200">{m.computedIn}</dd>
                     </div>
                   </dl>
 
                   {m.caveat && (
                     <p className="mt-3 border-l-2 border-white/15 pl-3 text-xs leading-relaxed text-muted">
-                      {m.caveat}
+                      {t(m.caveat)}
                     </p>
                   )}
                 </article>
@@ -230,11 +255,12 @@ export default function LabIndex() {
       {/* ---------------------------------------------------------- roadmap */}
       <section className="mt-16" aria-labelledby="pending">
         <h2 id="pending" className="font-display text-2xl font-semibold tracking-tight">
-          Not built yet
+          {t("Not built yet")}
         </h2>
         <p className="mt-2 max-w-2xl text-sm text-muted">
-          Listed rather than mocked up. An empty panel is not a panel — and a date is not a
-          reason, so each of these says what is actually in the way.
+          {t(
+            "Listed rather than mocked up. An empty panel is not a panel — and a date is not a reason, so each of these says what is actually in the way.",
+          )}
         </p>
         <ul className="mt-5 flex flex-col gap-3">
           {PENDING_PANELS.map((p) => (
@@ -244,7 +270,7 @@ export default function LabIndex() {
             >
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 <span className="font-display text-base font-semibold text-neutral-300">
-                  {p.title}
+                  {t(p.title)}
                 </span>
                 {p.plannedIn && (
                   <span className="font-mono text-[0.6rem] tracking-[0.18em] text-muted">
@@ -252,11 +278,11 @@ export default function LabIndex() {
                   </span>
                 )}
               </div>
-              <p className="mt-1 text-xs leading-relaxed text-muted">{p.blurb}</p>
+              <p className="mt-1 text-xs leading-relaxed text-muted">{t(p.blurb)}</p>
               {/* The reason is the point of this list, so it is set apart from
                   the description rather than trailing it as an aside. */}
               <p className="mt-2 border-l-2 border-white/15 pl-3 text-xs leading-relaxed text-neutral-300">
-                {p.absent}
+                {p.absent ? t(p.absent) : null}
               </p>
             </li>
           ))}
@@ -276,13 +302,12 @@ export default function LabIndex() {
       */}
       <section className="mt-16" aria-labelledby="funnel-spec">
         <h2 id="funnel-spec" className="font-display text-2xl font-semibold tracking-tight">
-          The funnel, specified
+          {t("The funnel, specified")}
         </h2>
         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
-          The panel above is not built, so here is what it would be. Every step names the event it
-          would be counted from, and each description is the one the code&apos;s own event registry
-          carries — not a second copy written here, which would be free to drift from what actually
-          fires.
+          {t(
+            "The panel above is not built, so here is what it would be. Every step names the event it would be counted from, and each description is the one the code's own event registry carries — not a second copy written here, which would be free to drift from what actually fires.",
+          )}
         </p>
 
         <ol className="mt-6 flex flex-col gap-px overflow-hidden rounded-2xl border border-white/10">
@@ -295,19 +320,19 @@ export default function LabIndex() {
                 {String(i + 1).padStart(2, "0")}
               </span>
               <span className="font-display text-sm font-semibold text-neutral-200">
-                {step.label}
+                {t(step.label)}
               </span>
               <code className="font-mono text-[0.65rem]" style={{ color: INK }}>
                 {step.event}
               </code>
               <span className="w-full text-xs leading-relaxed text-muted sm:w-auto sm:flex-1">
-                {stepTrigger(step)}
+                {t(stepTrigger(step))}
               </span>
               {/* RT-J5(b): a step that is not a clean denominator says so
                   where it sits, not in a footnote nobody reaches. */}
               {step.caveat && (
                 <p className="w-full border-l-2 border-white/15 pl-3 text-xs leading-relaxed text-neutral-300">
-                  {step.caveat}
+                  {t(step.caveat)}
                 </p>
               )}
             </li>
@@ -316,22 +341,31 @@ export default function LabIndex() {
 
         <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
           <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: INK }}>
-            WHAT IT WOULD TAKE
+            {t("WHAT IT WOULD TAKE")}
           </p>
           <p className="mt-3 text-sm leading-relaxed text-neutral-300">
-            A step&apos;s rate cannot be published until it can be estimated. At the worst case for
-            a proportion — a rate near half, where the uncertainty is largest — one step needs{" "}
-            <strong className="font-semibold text-white">
-              {sessionsForPrecision(5)} sessions reaching it
-            </strong>{" "}
-            before its rate is known to within five percentage points, and{" "}
-            {sessionsForPrecision(10)} to within ten. Those are requirements per step, not for the
-            funnel: the last step is the expensive one.
+            {rich(
+              t(
+                "A step's rate cannot be published until it can be estimated. At the worst case for a proportion — a rate near half, where the uncertainty is largest — one step needs {strong} before its rate is known to within five percentage points, and {ten} to within ten. Those are requirements per step, not for the funnel: the last step is the expensive one.",
+                { ten: sessionsForPrecision(10) },
+              ),
+              {
+                strong: (
+                  <strong className="font-semibold text-white">
+                    {t("{n} sessions reaching it", { n: sessionsForPrecision(5) })}
+                  </strong>
+                ),
+              },
+            )}
           </p>
           <p className="mt-3 text-sm leading-relaxed text-neutral-300">
-            How many arrivals it takes to put {sessionsForPrecision(5)} people at the bottom depends
-            on the pass-through between steps, which has never been measured here — so this page
-            does not estimate it. {REAL_PANELS === 0 ? "No panel on this page carries a REAL badge." : null}
+            {t(
+              "How many arrivals it takes to put {n} people at the bottom depends on the pass-through between steps, which has never been measured here — so this page does not estimate it. {noReal}",
+              {
+                n: sessionsForPrecision(5),
+                noReal: REAL_PANELS === 0 ? t("No panel on this page carries a REAL badge.") : "",
+              },
+            ).trim()}
           </p>
         </div>
 
@@ -352,33 +386,34 @@ export default function LabIndex() {
         <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
           <div className="flex flex-wrap items-baseline gap-3">
             <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: INK }}>
-              THE ESTIMATOR, DEMONSTRATED
+              {t("THE ESTIMATOR, DEMONSTRATED")}
             </p>
-            <SourceBadge source={DEMO_DATA_SOURCE} />
+            <SourceBadge locale={locale} source={DEMO_DATA_SOURCE} />
           </div>
           <p className="mt-3 text-sm leading-relaxed text-neutral-300">
-            The panel is absent because there is no traffic. The ANALYSIS is not absent, and this
-            shows it working. {DEMO_ARRIVALS.toLocaleString()} synthetic arrivals were pushed
-            through the steps below {DEMO_REPLICATIONS} times, each step keeping people at a rate{" "}
-            <strong className="font-semibold text-white">chosen in advance</strong>. The estimator
-            then read those rates back off the counts, knowing nothing about how they were made.
+            {rich(
+              t(
+                "The panel is absent because there is no traffic. The ANALYSIS is not absent, and this shows it working. {arrivals} synthetic arrivals were pushed through the steps below {reps} times, each step keeping people at a rate {strong}. The estimator then read those rates back off the counts, knowing nothing about how they were made.",
+                { arrivals: DEMO_ARRIVALS.toLocaleString("en-US"), reps: DEMO_REPLICATIONS },
+              ),
+              { strong: <strong className="font-semibold text-white">{t("chosen in advance")}</strong> },
+            )}
           </p>
           <p className="mt-3 text-sm leading-relaxed text-muted">
-            The pass-through rates in the first column are inventions. They are not this
-            product&apos;s rates, they are not anybody&apos;s rates, and nothing here should be read
-            as an estimate of what real visitors would do. They are the answer key: the point is
-            whether the estimator finds them.
+            {t(
+              "The pass-through rates in the first column are inventions. They are not this product's rates, they are not anybody's rates, and nothing here should be read as an estimate of what real visitors would do. They are the answer key: the point is whether the estimator finds them.",
+            )}
           </p>
 
           <div className="mt-5 overflow-x-auto">
             <table className="w-full min-w-[34rem] border-collapse text-left text-xs">
               <thead>
                 <tr className="text-[0.6rem] uppercase tracking-[0.18em] text-muted">
-                  <th className="py-2 pr-3 font-semibold">Step</th>
-                  <th className="py-2 pr-3 font-semibold">True rate</th>
-                  <th className="py-2 pr-3 font-semibold">Recovered</th>
-                  <th className="py-2 pr-3 font-semibold">Error</th>
-                  <th className="py-2 font-semibold">95% interval covered it</th>
+                  <th className="py-2 pr-3 font-semibold">{t("Step")}</th>
+                  <th className="py-2 pr-3 font-semibold">{t("True rate")}</th>
+                  <th className="py-2 pr-3 font-semibold">{t("Recovered")}</th>
+                  <th className="py-2 pr-3 font-semibold">{t("Error")}</th>
+                  <th className="py-2 font-semibold">{t("95% interval covered it")}</th>
                 </tr>
               </thead>
               <tbody className="text-neutral-300">
@@ -390,8 +425,7 @@ export default function LabIndex() {
                     <td className="py-2 pr-3 font-mono">{(row.truth * 100).toFixed(1)}%</td>
                     <td className="py-2 pr-3 font-mono">{(row.estimated * 100).toFixed(1)}%</td>
                     <td className="py-2 pr-3 font-mono">
-                      {row.biasPoints >= 0 ? "+" : ""}
-                      {row.biasPoints.toFixed(2)} pts
+                      {t("{n} pts", { n: `${row.biasPoints >= 0 ? "+" : ""}${row.biasPoints.toFixed(2)}` })}
                     </td>
                     <td className="py-2 font-mono">{(row.coverage * 100).toFixed(1)}%</td>
                   </tr>
@@ -401,24 +435,26 @@ export default function LabIndex() {
           </div>
 
           <p className="mt-4 text-sm leading-relaxed text-neutral-300">
-            <strong className="font-semibold text-white">What the last column is for.</strong>{" "}A
-            rate without an interval is decoration, and an interval that does not contain the truth
-            as often as it claims is worse than none. A 95% interval should contain the answer key
-            about 95 times in 100, and that column is the measurement of whether it does.
+            {rich(
+              t(
+                "{lead} A rate without an interval is decoration, and an interval that does not contain the truth as often as it claims is worse than none. A 95% interval should contain the answer key about 95 times in 100, and that column is the measurement of whether it does.",
+              ),
+              { lead: <strong className="font-semibold text-white">{t("What the last column is for.")}</strong> },
+            )}
           </p>
           <p className="mt-3 text-sm leading-relaxed text-neutral-300">
-            <strong className="font-semibold text-white">Read it down the column, not across.</strong>{" "}
-            Coverage sits on 95 at the top and slips a point or two at the bottom, and that is the
-            most useful thing on this page. Each step&apos;s denominator is the step above it, so a
-            run that starts with {DEMO_ARRIVALS.toLocaleString()} arrivals has a few hundred left by
-            the debrief — and an interval built on a few hundred is doing worse than one built on
-            thousands, exactly where a funnel is most often quoted. That is the arithmetic reason
-            this panel is not built, shown rather than asserted.
+            {rich(
+              t(
+                "{lead} Coverage sits on 95 at the top and slips a point or two at the bottom, and that is the most useful thing on this page. Each step's denominator is the step above it, so a run that starts with {arrivals} arrivals has a few hundred left by the debrief — and an interval built on a few hundred is doing worse than one built on thousands, exactly where a funnel is most often quoted. That is the arithmetic reason this panel is not built, shown rather than asserted.",
+                { arrivals: DEMO_ARRIVALS.toLocaleString("en-US") },
+              ),
+              { lead: <strong className="font-semibold text-white">{t("Read it down the column, not across.")}</strong> },
+            )}
           </p>
           <p className="mt-3 text-sm leading-relaxed text-muted">
-            The same code is what would run the day traffic arrives; it is exercised on the real
-            event names above. Everything it cannot do without respondents — say what any of these
-            rates IS — it still cannot do, and this page will go on saying so.
+            {t(
+              "The same code is what would run the day traffic arrives; it is exercised on the real event names above. Everything it cannot do without respondents — say what any of these rates IS — it still cannot do, and this page will go on saying so.",
+            )}
           </p>
         </div>
       </section>

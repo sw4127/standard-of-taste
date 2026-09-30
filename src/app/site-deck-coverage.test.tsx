@@ -118,6 +118,7 @@ const INVISIBLE: Record<string, number> = {
   // seen, and each ceiling is lowered when it lands.
   "/zh": 43,
   "/zh/company": 79,
+  "/zh/lab": 209,
   "/zh/learn/why": 41,
   "/zh/method": 212,
   "/zh/reading": 31,
