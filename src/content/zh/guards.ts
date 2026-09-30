@@ -83,13 +83,13 @@ export const DIRECTION_PAIRS_ZH: readonly DirectionPair[] = [
   // "Below anything this session pinned down" is the gentler side, and Chinese says 更轻.
   { en: /gentl|below anything/i, zh: /更轻|最轻/ },
   { en: /harsh|loudest/i, zh: /更重|最重/ },
-  { en: /\bcaught\b|\bcatch(es|ing)?\b|calling it|before you called it/i, zh: /听出|判断得出|仍然听得出/ },
+  { en: /\bcaught\b|\bcatch(es|ing)?\b|calling it|before you called it/i, zh: /听出|判断得出|仍然听得出|认出/ },
   // "You were guessing" is a claim about a rung; 随机猜对 ("chance") is not.
   { en: /were guessing/i, zh: /你是在猜/, twoWay: true },
   { en: /smaller flaw|smaller rung/i, zh: /更小的瑕疵|更小的一级/, twoWay: true },
   { en: /larger flaw/i, zh: /更大的瑕疵/, twoWay: true },
-  { en: /closer to\s+zero/i, zh: /近了/ },
-  { en: /further from\s+zero/i, zh: /远了/ },
+  { en: /closer to\s+zero/i, zh: /靠近了|更接近零/ },
+  { en: /further from\s+zero/i, zh: /远离了|离零更远/ },
   // The Prestige Test: which way the ratings moved relative to the names.
   { en: /toward the names/i, zh: /朝名字/, twoWay: true },
   { en: /against the names/i, zh: /逆着名字/, twoWay: true },
@@ -100,4 +100,41 @@ export const DIRECTION_PAIRS_ZH: readonly DirectionPair[] = [
   { en: /moved with the label/i, zh: /顺着标签/, twoWay: true },
   { en: /^0 — (never again|not at all)$/, zh: /^0：(再也不|完全不)/, twoWay: true },
   { en: /^10 — (all-timer|right now)$/, zh: /^10：(永远的心头好|马上就想)$/, twoWay: true },
+  // The Delicacy calibration verdict and the Brier score's direction (red-team, Part 4).
+  { en: /claim more than your ears deliver/i, zh: /你说的比你的耳朵做到的多/, twoWay: true },
+  { en: /ears deliver more than you claim/i, zh: /你的耳朵做到的比你说的多/, twoWay: true },
+  { en: /lower is better/i, zh: /越低越好/ },
 ];
+
+/**
+ * THE NUMBERS A CHINESE LINE STATES, IN ORDER, WHETHER IN DIGITS OR IN CHINESE NUMERALS
+ * (red-team, bilingual Part 4). A parity check that read only digits let 十次里有九次 become
+ * 十次里有三次 with every test green. A bare 一 is skipped (Chinese uses it where English
+ * writes "a"), a unit's prefix or an idiom is not a count (百分点, 千比特, 十分, 四重奏,
+ * 百老汇, 几十年), and 一半 is a half. Read by `src/test-utils/zh-parity.ts`.
+ */
+const ZH_DIGIT: Record<string, number> = { 零: 0, 〇: 0, 一: 1, 二: 2, 两: 2, 三: 3, 四: 4, 五: 5, 六: 6, 七: 7, 八: 8, 九: 9 };
+const ZH_UNIT: Record<string, number> = { 十: 10, 百: 100, 千: 1000 };
+function zhNumber(run: string): number {
+  let total = 0;
+  let digit = 0;
+  for (const ch of run) {
+    if (ch in ZH_DIGIT) digit = ZH_DIGIT[ch];
+    else {
+      total += (digit || 1) * ZH_UNIT[ch];
+      digit = 0;
+    }
+  }
+  return total + digit;
+}
+export function zhNumeralsIn(s: string): string[] {
+  const cleaned = s
+    .replace(/百分(?=点|比|位)|千(?=比特|赫)|十分(?!之)|[三四五]重奏|百老汇|[几数]十年/g, " ")
+    .replace(/一半/g, " 0.5 ");
+  const out: string[] = [];
+  for (const m of cleaned.matchAll(/\d+(?:\.\d+)?|[零〇一二两三四五六七八九十百千]+/g)) {
+    if (/^\d/.test(m[0])) out.push(m[0]);
+    else if (m[0] !== "一") out.push(String(zhNumber(m[0])));
+  }
+  return out;
+}

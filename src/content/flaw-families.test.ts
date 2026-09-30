@@ -430,7 +430,7 @@ describe("the route from a result to the reference", () => {
       "{t(FLAWS_INVITE)}",
     );
     expect(delicacy, "the Delicacy result offers no route to the reference").toContain(
-      "{FLAWS_INVITE}",
+      "{t(FLAWS_INVITE)}",
     );
     expect(bias, "the Prestige result links to the flaw reference, which it does not measure").not.toContain(
       "FLAWS_INVITE",

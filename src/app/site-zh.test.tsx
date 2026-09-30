@@ -33,6 +33,7 @@ import { renderReadingStates } from "@/test-utils/reading-states";
 import { renderThresholdStates } from "@/test-utils/threshold-states";
 import { directions } from "@/test-utils/zh-parity";
 import { renderBiasStates } from "@/test-utils/bias-states";
+import { renderDelicacyStates } from "@/test-utils/delicacy-states";
 import { ZH_ROUTES, chinesePath, hasChinese, localeOfPath } from "@/lib/locale";
 import { ZH_TRANSLATION_NOTE } from "@/content/zh/style";
 import { SWITCH_TO_ZH } from "@/content/zh/copy/chrome";
@@ -77,7 +78,7 @@ beforeAll(async () => {
   // Every listener's lines, prompt and creation screen, in both languages (red-team, Part 2).
   states = await renderReadingStates();
   // The Threshold Test's opening screens and replayed results, which renderSite skips (Part 4).
-  states = [...states, ...(await renderThresholdStates()), ...(await renderBiasStates())];
+  states = [...states, ...(await renderThresholdStates()), ...(await renderBiasStates()), ...(await renderDelicacyStates())];
 }, 180_000);
 
 const zhPages = () => [...site.pages, ...states].filter((p) => localeOfPath(p.route) === "zh");
@@ -265,11 +266,13 @@ describe("every dictionary entry keeps its English's numbers", () => {
    */
   // The instrument dictionaries, where a direction word describes a measurement; elsewhere
   // "caught" or "right now" mean other things.
-  const INSTRUMENT_DICTS = /copy\/(bias|threshold|expert|spread)\.ts$/;
+  const INSTRUMENT_DICTS = /copy\/(bias|delicacy|threshold|expert|spread)\.ts$/;
   it("keeps each direction word its key states, in the instrument dictionaries", () => {
     const read = entries.filter((e) => INSTRUMENT_DICTS.test(e.file));
     expect(read.length).toBeGreaterThan(100);
-    const bad = read.flatMap((e) => directions(e.en, e.zh).map((d) => `${e.file}: ${e.en.slice(0, 50)} → ${d}`));
+    // A slot's name ("{loudest}") is not a word the reader sees; the slot's own entry is checked.
+    const bare = (x: string) => x.replace(/\{\w+\}/g, "");
+    const bad = read.flatMap((e) => directions(bare(e.en), bare(e.zh)).map((d) => `${e.file}: ${e.en.slice(0, 50)} → ${d}`));
     expect(bad).toEqual([]);
   });
 });
@@ -290,6 +293,39 @@ describe("every literal the source looks up has its Chinese", () => {
         .filter((k) => !ALL_KEYS.has(k))
         .map((k) => `${f.replace(/\\/g, "/")}: ${k.slice(0, 60)}`),
     );
+    expect(missing).toEqual([]);
+  });
+
+  /*
+   * IN THE DICTIONARY ITS OWN FILE READS, IN ANY QUOTE STYLE (red-team, bilingual Part 4).
+   * The scan above checks the union of every dictionary and double quotes only, so a key
+   * deleted from the Delicacy dictionary still passed while another dictionary held it,
+   * and a single-quoted key was never read. `tFor(locale, X)` names the dictionary; a
+   * literal must be in one its file reads. Template literals with a slot are skipped.
+   */
+  it("finds each t(...) literal in the dictionary its own file reads", () => {
+    const byName = new Map(
+      Object.entries(DICTIONARIES).map(([path, m]) => [path.replace(/^.*\/copy\//, "").replace(/\.ts$/, ""), m.default ?? {}]),
+    );
+    const missing: string[] = [];
+    let read = 0;
+    for (const f of walk("src")) {
+      const src = readFileSync(f, "utf8");
+      const imports = new Map(
+        [...src.matchAll(/import (\w+) from "@\/content\/zh\/copy\/([\w/-]+)"/g)].map((m) => [m[1], m[2]]),
+      );
+      const dicts = [...src.matchAll(/\btFor\(\s*[\w.]+\s*,\s*(\w+)\s*\)/g)]
+        .map((m) => byName.get(imports.get(m[1]) ?? ""))
+        .filter((d): d is Record<string, string> => d !== undefined);
+      if (dicts.length === 0) continue;
+      for (const m of src.matchAll(/\bt\(\s*(["'`])((?:\\.|(?!\1)[^\\])*)\1/g)) {
+        if (m[1] === "`" && m[2].includes("${")) continue;
+        const key = m[1] === '"' ? (JSON.parse(`"${m[2]}"`) as string) : m[2].replace(/\\(.)/g, "$1");
+        read++;
+        if (!dicts.some((d) => key in d)) missing.push(`${f.replace(/\\/g, "/")}: ${key.slice(0, 60)}`);
+      }
+    }
+    expect(read).toBeGreaterThan(300);
     expect(missing).toEqual([]);
   });
 });

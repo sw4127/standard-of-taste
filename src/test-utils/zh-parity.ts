@@ -8,7 +8,7 @@
  * It cannot read meaning; the owner's writing pass does that.
  */
 import { expect } from "vitest";
-import { DIRECTION_PAIRS_ZH } from "@/content/zh/guards";
+import { DIRECTION_PAIRS_ZH, zhNumeralsIn } from "@/content/zh/guards";
 
 /** Chinese sentence ends: the full stop, question mark and exclamation mark, full width. */
 const ZH_ENDS = /[\u3002\uff1f\uff01]/g;
@@ -17,6 +17,8 @@ export const WORDS: Record<string, number> = {
   zero: 0, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, twice: 2,
   eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18,
   nineteen: 19, twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90,
+  // Read since the Chinese numerals are (red-team, Part 4): a half, an ordinal, both.
+  half: 0.5, second: 2, both: 2,
 };
 const TENS = "twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety";
 const UNITS = "one|two|three|four|five|six|seven|eight|nine";
@@ -41,21 +43,22 @@ export const zhEnds = (s: string) => s.match(ZH_ENDS)?.length ?? 0;
  */
 type Tok = { n: string; word: boolean };
 const tokens = (s: string): Tok[] =>
-  [...s.matchAll(new RegExp(`${WORD_SOURCE}|\\d+(?:\\.\\d+)?`, "gi"))].map((m) =>
+  [...s.replace(/\ba hundred and one\b/gi, "101").matchAll(new RegExp(`${WORD_SOURCE}|\\d+(?:\\.\\d+)?`, "gi"))].map((m) =>
     m[1] || m[3] ? { n: String(wordValue(m)), word: true } : { n: m[0], word: false },
   );
 export function inOrder(en: string, zh: string): boolean {
   const want = tokens(en);
-  let j = 0;
-  for (const d of digitsOf(zh)) {
-    while (j < want.length && want[j].n !== d) {
-      if (!want[j].word) return false; // a digit the English printed was skipped or moved
-      j++;
-    }
+  // Digits and Chinese numerals both (red-team, Part 4): "nine times in ten" in Chinese is two numbers.
+  const got = zhNumeralsIn(zh);
+  // Backtracking, because a number word may or may not be the one a Chinese digit stands for:
+  // "one skill ... 1 of 1" must not spend a digit on "one" (bilingual Part 4).
+  const match = (i: number, j: number): boolean => {
+    if (i === got.length) return want.slice(j).every((t) => t.word); // every printed digit kept
     if (j === want.length) return false; // a number the English does not state, or out of order
-    j++;
-  }
-  return want.slice(j).every((t) => t.word);
+    if (want[j].n === got[i] && match(i + 1, j + 1)) return true;
+    return want[j].word && match(i, j + 1); // a digit the English printed cannot be skipped
+  };
+  return match(0, 0);
 }
 
 export function directions(en: string, zh: string): string[] {

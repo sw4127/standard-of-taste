@@ -125,10 +125,18 @@ describe("every copy template in src/content can be reached by a test", () => {
 
   it("has no template that nothing calls — not code, not a test, not a script", () => {
     const callers = [...ALL.filter((f) => /\.tsx?$/.test(f)), ...walk("scripts")];
+    // Each file read once (bilingual Part 4): reading every caller again for every template
+    // was quadratic, and it neared the timeout as the Chinese templates arrived.
+    const cache = new Map<string, string>();
+    const text = (f: string) => {
+      let s = cache.get(f);
+      if (s === undefined) cache.set(f, (s = readFileSync(f, "utf8")));
+      return s;
+    };
     const dead = all
       .filter((t) => {
-        const own = readFileSync(t.file, "utf8").split(new RegExp(`\\b${t.name}\\b`)).length - 1;
-        return own < 2 && !callers.some((f) => f !== t.file && named(t.name, readFileSync(f, "utf8")));
+        const own = text(t.file).split(new RegExp(`\\b${t.name}\\b`)).length - 1;
+        return own < 2 && !callers.some((f) => f !== t.file && named(t.name, text(f)));
       })
       .map((t) => `${t.file} ${t.name}`);
     expect(dead, "copy that can never render — delete it or call it").toEqual([]);

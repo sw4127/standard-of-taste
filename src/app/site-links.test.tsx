@@ -47,6 +47,7 @@ const NEEDS_A_PAYLOAD: Record<string, string> = {
   "/bias/result": "the Prestige result; the payload is the share code",
   "/zh/bias/result": "the Prestige result in Chinese; the same share code (bilingual Part 4)",
   "/delicacy/result": "the Delicacy result; the payload is the share code",
+  "/zh/delicacy/result": "the Delicacy result in Chinese; the same share code (bilingual Part 4)",
 };
 
 /**
@@ -74,6 +75,7 @@ const ORPHAN_BY_DESIGN: Record<string, string> = {
   "/bias/result": "reached by finishing the Prestige Test, or by a share link",
   "/zh/bias/result": "reached by finishing the Prestige Test in Chinese, or by a Chinese share link",
   "/delicacy/result": "reached by finishing the Delicacy Trials, or by a share link",
+  "/zh/delicacy/result": "reached by finishing the Delicacy Trials in Chinese, or by a Chinese share link",
 };
 
 interface Anchor {

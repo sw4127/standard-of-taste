@@ -57,6 +57,19 @@ import {
   PROVISIONAL_FOOTNOTE,
   shareText, detectionTitle, detectionBody } from "@/content/delicacy/copy";
 import { DELICACY_ICE, DELICACY_ICE_SOFT, DELICACY_ICE_GLOW, DELICACY_FIELD, DELICACY_PALETTE } from "@/content/instrument-accents";
+import LanguageBar from "@/components/LanguageBar";
+import { useLocale } from "@/lib/use-locale";
+import { localHref } from "@/lib/locale";
+import { rich, tFor } from "@/lib/i18n";
+import DELICACY_ZH from "@/content/zh/copy/delicacy";
+import {
+  FLAW_LABELS_ZH,
+  MAGNITUDE_WORDS_ZH,
+  PROVISIONAL_FOOTNOTE_ZH,
+  detectionBodyZh,
+  detectionTitleZh,
+  shareTextDelicacyZh,
+} from "@/content/zh/copy/delicacy-lines";
 
 /* One accent in play (design bar): delicacy ice — the cold, fine-grained room
  * of the gym, deliberately opposite the prestige gold. Same formula, new hue. */
@@ -104,7 +117,20 @@ const SESSION_MINUTES = Math.ceil(
   (DELICACY_TRIALS.length * 2 * (MIN_LISTEN_MS_PER_CLIP / 1000) * 1.9) / 60,
 );
 
+/**
+ * WHERE THE LANGUAGE BUTTON SHOWS (bilingual Part 4): the opening screen only. The answers
+ * live in this component's state, and switching mid-sitting would lose them; a retry
+ * would then be spoiled, because the listener has heard the pairs. The rule every flow keeps.
+ */
+export const languageBarPhases: readonly Phase[] = ["frame"];
+
 export default function DelicacyFlow() {
+  const locale = useLocale();
+  const t = tFor(locale, DELICACY_ZH);
+  const zh = locale === "zh";
+  const flaws = zh ? FLAW_LABELS_ZH : FLAW_LABELS;
+  // The English lowercases a flaw's label mid-sentence; Chinese has no case to change.
+  const flawInline = (f: DegradationFamily) => (zh ? FLAW_LABELS_ZH[f].label : FLAW_LABELS[f].label.toLowerCase());
   const [phase, setPhase] = useState<Phase>("frame");
   const [idx, setIdx] = useState(0);
   const [step, setStep] = useState<TrialStep>("listen");
@@ -212,30 +238,35 @@ export default function DelicacyFlow() {
   const shell = "relative mx-auto flex min-h-dvh w-full max-w-lg flex-col overflow-hidden px-6 py-10";
   const kicker = (
     <p className="text-xs font-bold tracking-[0.4em]" style={{ color: BRAND }}>
-      STANDARD OF TASTE
+      {t("STANDARD OF TASTE")}
     </p>
   );
 
   /* ---------------------------------------------------------------- frame */
   if (phase === "frame") {
     return (
+      <>
+      {languageBarPhases.includes(phase) ? <LanguageBar locale={locale} width="max-w-lg" /> : null}
       <main className={`${shell} justify-center`}>
         <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
         <div className="relative z-10">
           {kicker}
           <h1 className="mt-6 font-display text-4xl font-semibold leading-tight">
-            Two of Sancho&apos;s kinsmen tasted the wine.
+            {t("Two of Sancho's kinsmen tasted the wine.")}
           </h1>
           <p className="mt-5 text-base leading-relaxed text-muted">
-            One said it was good — except for a faint taste of leather. The other agreed — except
-            for the iron. The village laughed at both. Then the barrel ran dry, and at the bottom:
-            an old key on a leather thong.
+            {t(
+              "One said it was good — except for a faint taste of leather. The other agreed — except for the iron. The village laughed at both. Then the barrel ran dry, and at the bottom: an old key on a leather thong.",
+            )}
           </p>
           <p className="mt-3 text-base leading-relaxed text-muted">
-            Hume&apos;s point: delicacy of taste is real, physical, and checkable.{" "}
-            <span className="text-foreground">Now you taste.</span> {PRACTICE_TRIALS.length} practice
-            pairs with the answers shown, then {MEASURED_TRIALS.length} scored ones. In each, one clip
-            is the original and one has been quietly damaged. Find the key in the wine.
+            {rich(
+              t(
+                "Hume's point: delicacy of taste is real, physical, and checkable. {strong} {practice} practice pairs with the answers shown, then {scored} scored ones. In each, one clip is the original and one has been quietly damaged. Find the key in the wine.",
+                { practice: PRACTICE_TRIALS.length, scored: MEASURED_TRIALS.length },
+              ),
+              { strong: <span className="text-foreground">{t("Now you taste.")}</span> },
+            )}
           </p>
           <button
             type="button"
@@ -275,24 +306,25 @@ export default function DelicacyFlow() {
             className="mt-8 self-start rounded-full px-7 py-3.5 text-base font-bold transition active:scale-[0.98]"
             style={{ color: readableOn(ICE), background: ICE, boxShadow: `0 10px 30px ${ICE_GLOW}` }}
           >
-            Start the trials
+            {t("Start the trials")}
           </button>
           <p className="mt-4 text-xs text-muted">
-            ~{SESSION_MINUTES} minutes. No sign-up. Headphones strongly advised.
+            {t("~{minutes} minutes. No sign-up. Headphones strongly advised.", { minutes: SESSION_MINUTES })}
           </p>
           {/* THE CREDIBILITY CHECK (E7/S24). Only the Threshold frame offered
               one, so on the two instruments people actually start with there
               was no way to ask "should I trust this before I give it eight
               minutes" without leaving the product. */}
           <p className="mt-6 text-sm text-muted">
-            <Jump href="/lab/instrument-health" accent={ICE}>
-              How this is measured.
+            <Jump href={localHref(locale, "/lab/instrument-health")} accent={ICE}>
+              {t("How this is measured.")}
             </Jump>{" "}
-            Item behaviour, reliability, and what the numbers can carry.
+            {t("Item behaviour, reliability, and what the numbers can carry.")}
           </p>
 
         </div>
       </main>
+      </>
     );
   }
 
@@ -314,18 +346,22 @@ export default function DelicacyFlow() {
         <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
         <div className="relative z-10 flex flex-1 flex-col">
           <div className="flex items-center justify-between text-xs font-medium text-muted">
-            <span className="tracking-[0.3em]">PRACTICE — NOT SCORED</span>
+            <span className="tracking-[0.3em]">{t("PRACTICE — NOT SCORED")}</span>
             <span>
               {practiceIdx + 1} / {PRACTICE_TRIALS.length}
             </span>
           </div>
 
           <p className="mt-6 text-sm text-muted">
-            These three are the <span className="text-foreground">loudest</span> examples of each
-            kind of damage, and the answers are shown. Learn what to listen for.
+            {rich(
+              t(
+                "These three are the {loudest} examples of each kind of damage, and the answers are shown. Learn what to listen for.",
+              ),
+              { loudest: <span className="text-foreground">{t("loudest")}</span> },
+            )}
           </p>
           <p className="mt-2 font-display text-lg font-semibold" style={{ color: ICE }}>
-            {FLAW_LABELS[p.family].label} — {FLAW_LABELS[p.family].hint}
+            {t("{label} — {hint}", { label: flaws[p.family].label, hint: flaws[p.family].hint })}
           </p>
 
           <ClipPlayer
@@ -333,8 +369,8 @@ export default function DelicacyFlow() {
             key={`${p.id}-pa`}
             src={p.srcA}
             index={practiceIdx}
-            label={`Practice ${practiceIdx + 1} — A`}
-            caption="tap to listen"
+            label={t("Practice {n} — A", { n: practiceIdx + 1 })}
+            caption={t("tap to listen")}
             minListenMs={MIN_LISTEN_MS_PER_CLIP}
             onArmed={() => {}}
             onProgress={() => {}}
@@ -344,8 +380,8 @@ export default function DelicacyFlow() {
             key={`${p.id}-pb`}
             src={p.srcB}
             index={practiceIdx}
-            label={`Practice ${practiceIdx + 1} — B`}
-            caption="tap to listen"
+            label={t("Practice {n} — B", { n: practiceIdx + 1 })}
+            caption={t("tap to listen")}
             minListenMs={MIN_LISTEN_MS_PER_CLIP}
             onArmed={() => {}}
             onProgress={() => {}}
@@ -354,14 +390,14 @@ export default function DelicacyFlow() {
 
           {!answered ? (
             <div className="mt-7">
-              <p className="text-sm font-semibold">Which one is the original?</p>
+              <p className="text-sm font-semibold">{t("Which one is the original?")}</p>
               <div className="mt-3 flex gap-3">
                 {(["a", "b"] as const).map((sideKey) => (
                   <button
                     key={sideKey}
                     type="button"
                     onClick={() => setPracticePick(sideKey)}
-                    aria-label={`${sideKey.toUpperCase()} is the original`}
+                    aria-label={t("{side} is the original", { side: sideKey.toUpperCase() })}
                     className="flex-1 rounded-2xl border border-white/15 py-4 text-base font-bold transition hover:border-white/40 active:scale-[0.98]"
                   >
                     {sideKey.toUpperCase()}
@@ -372,14 +408,19 @@ export default function DelicacyFlow() {
           ) : (
             <div className="mt-7 rounded-2xl border p-5" style={{ borderColor: right ? "hsl(150 60% 50% / 0.45)" : "hsl(0 60% 60% / 0.4)", background: "rgba(255,255,255,0.03)" }}>
               <p className="font-display text-xl font-semibold">
-                {right ? "That's it." : "Not this time."}
+                {right ? t("That's it.") : t("Not this time.")}
               </p>
               <p className="mt-1.5 text-sm leading-relaxed text-neutral-300">
-                <span className="text-foreground">{p.originalSide.toUpperCase()}</span> was the
-                original. The damage in {p.originalSide === "a" ? "B" : "A"} was{" "}
-                <span style={{ color: ICE }}>{FLAW_LABELS[p.family].label.toLowerCase()}</span> —{" "}
-                {FLAW_LABELS[p.family].hint}. Go back and switch between them until you can hear it;
-                that is the whole skill.
+                {rich(
+                  t(
+                    "{original} was the original. The damage in {other} was {flaw} — {hint}. Go back and switch between them until you can hear it; that is the whole skill.",
+                    { other: p.originalSide === "a" ? "B" : "A", hint: flaws[p.family].hint },
+                  ),
+                  {
+                    original: <span className="text-foreground">{p.originalSide.toUpperCase()}</span>,
+                    flaw: <span style={{ color: ICE }}>{flawInline(p.family)}</span>,
+                  },
+                )}
               </p>
               <button
                 type="button"
@@ -392,8 +433,8 @@ export default function DelicacyFlow() {
                 style={{ color: readableOn(ICE), background: ICE }}
               >
                 {practiceIdx + 1 < PRACTICE_TRIALS.length
-                  ? "Next practice pair"
-                  : `Start the ${MEASURED_TRIALS.length} scored trials`}
+                  ? t("Next practice pair")
+                  : t("Start the {n} scored trials", { n: MEASURED_TRIALS.length })}
               </button>
             </div>
           )}
@@ -405,14 +446,14 @@ export default function DelicacyFlow() {
   if (phase === "trial") {
     if (!trial) return null;
     const caption = (armed: boolean) =>
-      armed ? "heard enough — it plays on" : "tap to listen · unlocks at the notch";
+      armed ? t("heard enough — it plays on") : t("tap to listen · unlocks at the notch");
     return (
       <main className={shell}>
         <FluidField colors={FLUID} intensity={0.6} scrim={false} vignette />
         <div className="relative z-10 flex flex-1 flex-col">
           <div className="mb-6">
             <div className="flex items-center justify-between text-xs font-medium text-muted">
-              <span className="tracking-[0.3em]">DELICACY TRIALS</span>
+              <span className="tracking-[0.3em]">{t("DELICACY TRIALS")}</span>
               <span>
                 {idx + 1} / {total}
               </span>
@@ -426,7 +467,7 @@ export default function DelicacyFlow() {
           </div>
 
           <p className="text-sm text-muted">
-            One of these is the original. The other has something wrong with it. Listen to both.
+            {t("One of these is the original. The other has something wrong with it. Listen to both.")}
           </p>
 
           <ClipPlayer
@@ -434,7 +475,7 @@ export default function DelicacyFlow() {
             key={`${trial.id}-a`}
             src={trial.srcA}
             index={idx}
-            label={`Pair ${idx + 1} — A`}
+            label={t("Pair {n} — A", { n: idx + 1 })}
             caption={caption(armedA)}
             minListenMs={MIN_LISTEN_MS_PER_CLIP}
             onArmed={() => setArmedA(true)}
@@ -447,7 +488,7 @@ export default function DelicacyFlow() {
             key={`${trial.id}-b`}
             src={trial.srcB}
             index={idx}
-            label={`Pair ${idx + 1} — B`}
+            label={t("Pair {n} — B", { n: idx + 1 })}
             caption={caption(armedB)}
             minListenMs={MIN_LISTEN_MS_PER_CLIP}
             onArmed={() => setArmedB(true)}
@@ -479,14 +520,14 @@ export default function DelicacyFlow() {
               bothArmed ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-1.5 opacity-35"
             }`}
           >
-            <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">WHICH IS THE ORIGINAL?</p>
+            <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">{t("WHICH IS THE ORIGINAL?")}</p>
             <div className="mt-2 grid grid-cols-2 gap-2">
               {(["a", "b"] as const).map((side) => (
                 <button
                   key={side}
                   type="button"
                   onClick={() => pickSide(side)}
-                  aria-label={`${side.toUpperCase()} is the original`}
+                  aria-label={t("{side} is the original", { side: side.toUpperCase() })}
                   className="h-14 rounded-xl border text-base font-bold uppercase transition active:scale-95"
                   style={
                     pickedSide === side
@@ -504,7 +545,7 @@ export default function DelicacyFlow() {
           {step !== "listen" && pickedSide ? (
             <div className="mt-6">
               <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">
-                WHAT&apos;S WRONG WITH {pickedSide === "a" ? "B" : "A"}?
+                {t("WHAT'S WRONG WITH {side}?", { side: pickedSide === "a" ? "B" : "A" })}
               </p>
               <div className="mt-2 flex flex-col gap-2">
                 {DEGRADATION_FAMILIES.map((family) => (
@@ -512,7 +553,7 @@ export default function DelicacyFlow() {
                     key={family}
                     type="button"
                     onClick={() => pickFlaw(family)}
-                    aria-label={FLAW_LABELS[family].label}
+                    aria-label={flaws[family].label}
                     className="rounded-xl border px-4 py-3 text-left transition active:scale-[0.99]"
                     style={
                       flawPick === family
@@ -521,9 +562,9 @@ export default function DelicacyFlow() {
                     }
                   >
                     <span className="text-sm font-bold" style={flawPick === family ? { color: ICE } : undefined}>
-                      {FLAW_LABELS[family].label}
+                      {flaws[family].label}
                     </span>
-                    <span className="ml-2 text-xs text-muted">{FLAW_LABELS[family].hint}</span>
+                    <span className="ml-2 text-xs text-muted">{flaws[family].hint}</span>
                   </button>
                 ))}
               </div>
@@ -534,7 +575,7 @@ export default function DelicacyFlow() {
           {step === "confidence" && pickedSide ? (
             <div className="mt-6">
               <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">
-                HOW SURE ARE YOU {pickedSide.toUpperCase()} IS THE ORIGINAL?
+                {t("HOW SURE ARE YOU {side} IS THE ORIGINAL?", { side: pickedSide.toUpperCase() })}
               </p>
               <div className="mt-2 grid grid-cols-3 gap-2">
                 {CONFIDENCE_TAPS.map((c) => (
@@ -542,7 +583,7 @@ export default function DelicacyFlow() {
                     key={c.value}
                     type="button"
                     onClick={() => pickConfidence(c.value)}
-                    aria-label={`${c.label} — ${c.hint}`}
+                    aria-label={t("{label} — {hint}", { label: c.label, hint: t(c.hint) })}
                     className="rounded-xl border px-2 py-3 transition active:scale-95"
                     style={
                       confPick === c.value
@@ -553,12 +594,12 @@ export default function DelicacyFlow() {
                     <span className="block text-base font-bold" style={confPick === c.value ? { color: ICE } : undefined}>
                       {c.label}
                     </span>
-                    <span className="mt-0.5 block text-[0.65rem] text-muted">{c.hint}</span>
+                    <span className="mt-0.5 block text-[0.65rem] text-muted">{t(c.hint)}</span>
                   </button>
                 ))}
               </div>
               <p className="mt-2 text-[0.65rem] text-muted">
-                Honesty pays here — your confidence is scored against your accuracy at the end.
+                {t("Honesty pays here — your confidence is scored against your accuracy at the end.")}
               </p>
             </div>
           ) : null}
@@ -574,7 +615,7 @@ export default function DelicacyFlow() {
     // MEASURED_TRIALS, not the pool: practice trials are never answered into
     // `responses`, and the share payload is positional against the SCORED set.
     const p = encodeURIComponent(encodeDelicacyResponses(MEASURED_TRIALS, responses));
-    const resultPath = `/delicacy/result?pv=${DELICACY_POOL_VERSION}&p=${p}`;
+    const resultPath = localHref(locale, `/delicacy/result?pv=${DELICACY_POOL_VERSION}&p=${p}`);
     const origin = typeof window === "undefined" ? "" : window.location.origin;
     const credits = [...new Set(DELICACY_TRIALS.map((t) => `${t.sourceCredit} — ${t.license} · ${t.attribution}`))];
     return (
@@ -582,25 +623,25 @@ export default function DelicacyFlow() {
         <FluidField colors={FLUID} intensity={0.72} scrim={false} vignette />
         <div className="relative z-10">
           <div className="text-center">
-            <p className="text-xs font-bold tracking-[0.4em] text-muted">YOUR EARS, MEASURED</p>
+            <p className="text-xs font-bold tracking-[0.4em] text-muted">{t("YOUR EARS, MEASURED")}</p>
             <p className="mt-4 font-display text-8xl font-semibold leading-none" style={{ color: ICE, textShadow: `0 0 60px ${ICE_GLOW}` }}>
               {result.nCorrect}
               <span className="text-5xl text-muted">/{result.nTrials}</span>
             </p>
-            <p className="mt-3 text-sm text-muted">originals identified</p>
-            <h1 className="mt-7 font-display text-4xl font-semibold">{detectionTitle(band)}</h1>
+            <p className="mt-3 text-sm text-muted">{t("originals identified")}</p>
+            <h1 className="mt-7 font-display text-4xl font-semibold">{zh ? detectionTitleZh(band) : detectionTitle(band)}</h1>
             <p className="mx-auto mt-3 max-w-sm text-left text-base leading-relaxed text-muted">
-              {detectionBody(band)}
+              {zh ? detectionBodyZh(band) : detectionBody(band)}
             </p>
-            <FlawLine result={result} />
+            <FlawLine result={result} locale={locale} />
           </div>
 
-          <InYourWork result={result} />
+          <InYourWork result={result} locale={locale} />
 
           {/* Good sense. SHARED with the permalink (RevealBlocks) since RT-142a:
               two copies of one paragraph is how a flow and its page start
               describing the same session differently. */}
-          <CalibrationBlock cal={cal} />
+          <CalibrationBlock cal={cal} locale={locale} />
 
           {/*
             THE COMBINED VIEW BELONGS HERE MOST OF ALL (E8/S12). It was mounted
@@ -620,22 +661,32 @@ export default function DelicacyFlow() {
 
           {/* The reveal — every pair, full disclosure (N3) */}
           <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
-            <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">WHAT WAS ACTUALLY WRONG</p>
+            <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">{t("WHAT WAS ACTUALLY WRONG")}</p>
             <div className="mt-3 flex flex-col gap-3">
               {result.receipts.map((r, i) => (
                 <div key={r.id} className="border-b border-white/5 pb-3 text-sm last:border-b-0 last:pb-0">
                   <p>
                     <span className="font-semibold" style={{ color: r.correct ? ICE : undefined }}>
-                      Pair {i + 1}: {r.correct ? "caught it" : "fooled you"}
+                      {r.correct ? t("Pair {n}: caught it", { n: i + 1 }) : t("Pair {n}: fooled you", { n: i + 1 })}
                     </span>
                     <span className="text-muted">
-                      {" "}
-                      — the original was {DELICACY_TRIALS.find((t) => t.id === r.id)!.originalSide.toUpperCase()}, you picked {r.pickedSide.toUpperCase()} at {r.confidence}%.
+                      {t(" — the original was {original}, you picked {picked} at {conf}%.", {
+                        original: DELICACY_TRIALS.find((x) => x.id === r.id)!.originalSide.toUpperCase(),
+                        picked: r.pickedSide.toUpperCase(),
+                        conf: r.confidence,
+                      })}
                     </span>
                   </p>
                   <p className="mt-0.5 text-xs text-muted">
-                    The flaw: {FLAW_LABELS[r.family].label.toLowerCase()} ({MAGNITUDE_WORDS[r.magnitude]})
-                    {r.flawCorrect !== null ? (r.flawCorrect ? " — you named it." : ` — you said "${FLAW_LABELS[r.flawPick].label.toLowerCase()}".`) : ""}
+                    {t("The flaw: {flaw} ({size})", {
+                      flaw: flawInline(r.family),
+                      size: zh ? MAGNITUDE_WORDS_ZH[r.magnitude] : MAGNITUDE_WORDS[r.magnitude],
+                    })}
+                    {r.flawCorrect !== null
+                      ? r.flawCorrect
+                        ? t(" — you named it.")
+                        : t(' — you said "{flaw}".', { flaw: flawInline(r.flawPick) })
+                      : ""}
                   </p>
                 </div>
               ))}
@@ -644,49 +695,50 @@ export default function DelicacyFlow() {
 
           {/* Share — the number travels (see the engine's answer-key honesty note) */}
           <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
-            <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">YOUR EARS, PORTABLE</p>
+            <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">{t("YOUR EARS, PORTABLE")}</p>
             <p className="mt-2 text-sm leading-relaxed text-muted">
-              The link carries only your answers — anyone who opens it sees your session rescored, then gets
-              dared to beat it.
+              {t(
+                "The link carries only your answers — anyone who opens it sees your session rescored, then gets dared to beat it.",
+              )}
             </p>
             <div className="mt-4 flex flex-wrap items-center gap-3">
               <ShareButton
                 url={`${origin}${resultPath}`}
-                text={shareText(result.nCorrect, result.nTrials)}
-                label="Share your ears"
+                text={zh ? shareTextDelicacyZh(result.nCorrect, result.nTrials) : shareText(result.nCorrect, result.nTrials)}
+                label={t("Share your ears")}
                 event="delicacy_share"
                 primary
                 accent={ICE}
               />
               <DownloadButton
                 url={`/api/delicacy-card?format=story&pv=${DELICACY_POOL_VERSION}&p=${p}`}
-                label="Story card"
+                label={t("Story card")}
                 filename="delicacy-trials-story.png"
               />
               <Jump href={resultPath} accent={ICE} className="text-muted">
-                View your result page →
+                {t("View your result page →")}
               </Jump>
             </div>
           </div>
 
           {/* One string, assembled in the copy deck so the voice gate sees the
               whole paragraph rather than the middle third (copy.ts). */}
-          <p className="mt-6 text-xs leading-relaxed text-muted">{PROVISIONAL_FOOTNOTE}</p>
+          <p className="mt-6 text-xs leading-relaxed text-muted">{zh ? PROVISIONAL_FOOTNOTE_ZH : PROVISIONAL_FOOTNOTE}</p>
 
           {/* Attribution — CC credit is a legal requirement, PD listed anyway. */}
           <div className="mt-6 text-[0.65rem] leading-relaxed text-muted">
-            <p className="font-bold tracking-[0.3em]">RECORDINGS</p>
+            <p className="font-bold tracking-[0.3em]">{t("RECORDINGS")}</p>
             {credits.map((c) => (
               <p key={c}>{c}</p>
             ))}
           </div>
 
           <div className="mt-8 flex flex-wrap items-center gap-5">
-            <Jump href="/delicacy" accent={ICE} className="text-muted">
-              Run it again →
+            <Jump href={localHref(locale, "/delicacy")} accent={ICE} className="text-muted">
+              {t("Run it again →")}
             </Jump>
           </div>
-          <OtherMachines from="delicacy" onPick={(to) => track("gym_machine_tap", { from: "delicacy", to })} />
+          <OtherMachines from="delicacy" locale={locale} onPick={(to) => track("gym_machine_tap", { from: "delicacy", to })} />
         </div>
       </main>
     );

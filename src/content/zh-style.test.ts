@@ -37,6 +37,7 @@ import { attributeText, renderSite, textOf, type RenderedSite } from "@/test-uti
 import { renderReadingStates } from "@/test-utils/reading-states";
 import { renderThresholdStates } from "@/test-utils/threshold-states";
 import { renderBiasStates } from "@/test-utils/bias-states";
+import { renderDelicacyStates } from "@/test-utils/delicacy-states";
 
 vi.mock("next/navigation", async (orig) => ({
   ...(await orig<typeof import("next/navigation")>()),
@@ -237,7 +238,7 @@ beforeAll(async () => {
   site = await renderSite();
   // The reading's later steps too, which no route-by-route render reaches (red-team, Part 2).
   // And the Threshold Test's opening screens and replayed results (bilingual Part 4).
-  const states = [...(await renderReadingStates()), ...(await renderThresholdStates()), ...(await renderBiasStates())].filter((p) =>
+  const states = [...(await renderReadingStates()), ...(await renderThresholdStates()), ...(await renderBiasStates()), ...(await renderDelicacyStates())].filter((p) =>
     p.route.startsWith("/zh/"),
   );
   zhPages = [...site.pages.filter((p) => p.route === "/zh" || p.route.startsWith("/zh/")), ...states];

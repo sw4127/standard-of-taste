@@ -21,12 +21,36 @@ import { creatorLines } from "@/content/vocabulary/delicacy";
 import Jump from "@/components/Jump";
 import { FLAWS_HREF, FLAWS_INVITE } from "@/content/flaw-families";
 import { DELICACY_ICE } from "@/content/instrument-accents";
+import { localHref, type Locale } from "@/lib/locale";
+import { tFor } from "@/lib/i18n";
+import DELICACY_ZH from "@/content/zh/copy/delicacy";
+import {
+  FLAW_LINE_PREFIX_ZH,
+  calibrationLineZh,
+  creatorLinesDelicacyZh,
+  flawCountZh,
+} from "@/content/zh/copy/delicacy-lines";
 
 const ICE = DELICACY_ICE;
 
 /** "And on the ones you caught, you named the flaw 3 of 5 times." */
-export function FlawLine({ result }: { result: DelicacyResult }) {
+/*
+ * IN EITHER LANGUAGE (bilingual Part 4). These blocks render under the client flow and
+ * the server permalink alike, so the language is passed in rather than read from the address.
+ */
+export function FlawLine({ result, locale = "en" }: { result: DelicacyResult; locale?: Locale }) {
   if (result.flawAccuracy === null) return null;
+  if (locale === "zh") {
+    return (
+      <p className="mt-5 inline-block rounded-full border border-white/10 px-4 py-1.5 text-sm text-muted">
+        {FLAW_LINE_PREFIX_ZH}{" "}
+        <span className="font-semibold" style={{ color: ICE }}>
+          {flawCountZh(result.flawCorrect, result.flawEligible)}
+        </span>
+        {String.fromCharCode(0x3002)}
+      </p>
+    );
+  }
   return (
     <p className="mt-5 inline-block rounded-full border border-white/10 px-4 py-1.5 text-sm text-muted">
       {FLAW_LINE_PREFIX}{" "}
@@ -60,13 +84,14 @@ export function FlawLine({ result }: { result: DelicacyResult }) {
  * this length centred is unreadable — `detectionBody` already opts out the same
  * way, for the same reason.
  */
-export function InYourWork({ result }: { result: DelicacyResult }) {
-  const lines = creatorLines(result);
+export function InYourWork({ result, locale = "en" }: { result: DelicacyResult; locale?: Locale }) {
+  const t = tFor(locale, DELICACY_ZH);
+  const lines = locale === "zh" ? creatorLinesDelicacyZh(result) : creatorLines(result);
   if (lines.length === 0) return null;
   return (
     <section className="mt-8 w-full rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-left">
       <p className="text-[0.65rem] font-bold tracking-[0.3em]" style={{ color: ICE }}>
-        WHAT THIS MEANS IN YOUR WORK
+        {t("WHAT THIS MEANS IN YOUR WORK")}
       </p>
       <div className="mt-3 flex flex-col gap-3">
         {lines.map((line) => (
@@ -77,15 +102,16 @@ export function InYourWork({ result }: { result: DelicacyResult }) {
       </div>
       {/* E11/S5: all three families are scored here, so the reference is the
           long form of what this block says in a clause each. */}
-      <Jump href={FLAWS_HREF} accent={ICE} className="mt-2">
-        {FLAWS_INVITE}
+      <Jump href={localHref(locale, FLAWS_HREF)} accent={ICE} className="mt-2">
+        {t(FLAWS_INVITE)}
       </Jump>
     </section>
   );
 }
 
 /** Good sense — whole-session numbers lead; bins only when they stand (S4 ruling). */
-export function CalibrationBlock({ cal }: { cal: CalibrationResult }) {
+export function CalibrationBlock({ cal, locale = "en" }: { cal: CalibrationResult; locale?: Locale }) {
+  const t = tFor(locale, DELICACY_ZH);
   const showableBins = cal.bins.filter((b) => binDisplayPct(b) !== null);
   return (
     /*
@@ -98,24 +124,25 @@ export function CalibrationBlock({ cal }: { cal: CalibrationResult }) {
      * the two alignments disagreed on screen.
      */
     <div className="mt-8 w-full rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-left">
-      <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">DID YOU KNOW WHEN YOU KNEW?</p>
-      <p className="mt-2 text-sm leading-relaxed">{calibrationLine(cal)}</p>
+      <p className="text-[0.65rem] font-bold tracking-[0.3em] text-muted">{t("DID YOU KNOW WHEN YOU KNEW?")}</p>
+      <p className="mt-2 text-sm leading-relaxed">{locale === "zh" ? calibrationLineZh(cal) : calibrationLine(cal)}</p>
       <p className="mt-2 text-xs leading-relaxed text-muted">
-        Brier score {cal.brier.toFixed(3)} — pure coin-flip guessing scores {BRIER_COIN_FLIP.toFixed(2)}; lower is better,
-        but only next to the direction above.
+        {t(
+          "Brier score {b} — pure coin-flip guessing scores {c}; lower is better, but only next to the direction above.",
+          { b: cal.brier.toFixed(3), c: BRIER_COIN_FLIP.toFixed(2) },
+        )}
       </p>
       {showableBins.length > 0 ? (
         <div className="mt-3 flex flex-col gap-1 text-xs text-muted">
           {showableBins.map((b) => (
             <p key={b.confidencePct}>
-              When you said {b.confidencePct}%: right {b.correct} of {b.n}.
+              {t("When you said {p}%: right {c} of {n}.", { p: b.confidencePct, c: b.correct, n: b.n })}
             </p>
           ))}
         </div>
       ) : (
         <p className="mt-2 text-xs text-muted">
-          Per-level breakdowns need 3+ answers at a level. The whole-session
-          read above is the honest number.
+          {t("Per-level breakdowns need 3+ answers at a level. The whole-session read above is the honest number.")}
         </p>
       )}
     </div>

@@ -372,7 +372,7 @@ export const ARC_REFUSAL_ZH: Record<string, string> = {
     "这意味着两次测试之间的差别会是关于音乐的事实，与你无关。",
   "arc-instrument-unsupported": delicacyArcRefusalZh(DELICACY_ARC_FLOOR),
   "no-arc-floor":
-    "还没有人测量过这项测试的数字在两次之间会漂多少，所以这里分不清变化和抛硬币。在那之前，它什么也不说。",
+    "还没有人测量过这项测试的数字在前后测试之间会漂多少，所以这里分不清变化和抛硬币。在那之前，它什么也不说。",
   "no-scoreable-trials": "这两次测试里有一次没有可以计分的回答，所以没有可以比较的一对。",
 };
 
@@ -433,12 +433,12 @@ function biasArcZh(reading: ArcReading): string[] {
   const moved = Math.round(reading.distance);
   if (reading.direction === "closer") {
     return [
-      `标签在之前让你偏了 ${before}，之后偏了 ${after}，离零近了 ${moved} 个百分点，零代表名字什么也没改变。` +
+      `标签在之前让你偏了 ${before}，之后偏了 ${after}，靠近了 ${moved} 个百分点，更接近零，零代表名字什么也没改变。` +
         `这超过了这项测试自身会漂动的 ${floor} 个百分点，所以名字对你听到的东西，影响比以前小了。`,
     ];
   }
   return [
-    `标签在之前让你偏了 ${before}，之后偏了 ${after}，离零远了 ${moved} 个百分点，` +
+    `标签在之前让你偏了 ${before}，之后偏了 ${after}，远离了 ${moved} 个百分点，离零更远，` +
       `也超过了这项测试自身会漂动的 ${floor} 个百分点。` +
       `名字对你听到的东西，影响比以前大了。` +
       `两个方向都算数：把一段带标签的录音打低分，仍然是名字在做决定，并非你的耳朵。`,

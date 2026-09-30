@@ -42,6 +42,7 @@ import { attributeText, renderSite, textOf, type RenderedSite } from "@/test-uti
 import { renderReadingStates } from "@/test-utils/reading-states";
 import { renderThresholdStates } from "@/test-utils/threshold-states";
 import { renderBiasStates } from "@/test-utils/bias-states";
+import { renderDelicacyStates } from "@/test-utils/delicacy-states";
 // The RT-Z10 carve-out holds on every surface, the card included — one list (BA-5).
 import { CARVE_OUT } from "@/content/carve-out";
 // The Chinese needle (bilingual Part 2): a Chinese page is held to D1 as the English one is.
@@ -152,7 +153,7 @@ const bare = (route: string) => route.split("?")[0];
 beforeAll(async () => {
   site = await renderSite();
   // The reading's later steps in both languages: its lines are where it speaks to the reader.
-  states = [...(await renderReadingStates()), ...(await renderThresholdStates()), ...(await renderBiasStates())];
+  states = [...(await renderReadingStates()), ...(await renderThresholdStates()), ...(await renderBiasStates()), ...(await renderDelicacyStates())];
   // Body text, attribute text and metadata: all three are read by somebody.
   hits = [...site.pages, ...states].flatMap((p) =>
     scan(p.route, [textOf(p.html), attributeText(p.html), p.meta.join(".\n")].join("\n")),
@@ -306,11 +307,12 @@ describe("no surface but the card speaks about the person (D1, as amended)", () 
     // listed. None today: `ResearchPanel` was the case until the snack retired (BA-7).
     const namedDirs = NAMED.map((r) => `src/app${r}/`);
     const everything = walk("src").filter((f) => /\.tsx?$/.test(f) && !f.includes(".test."));
+    // Each file read once (bilingual Part 4): re-reading all of src for every file checked
+    // made this quadratic, and it passed 15 seconds as the Chinese files arrived.
+    const text = new Map(everything.map((g) => [g, readFileSync(g, "utf8")]));
     const onlyOnNamedSurfaces = (f: string) => {
       const name = f.split("/").pop()!.replace(/\.tsx$/, "");
-      const importers = everything.filter(
-        (g) => g !== f && new RegExp(`from "[^"]*/${name}"`).test(readFileSync(g, "utf8")),
-      );
+      const importers = everything.filter((g) => g !== f && new RegExp(`from "[^"]*/${name}"`).test(text.get(g)!));
       return importers.length > 0 && importers.every((g) => namedDirs.some((d) => g.startsWith(d)));
     };
     const found = files.filter((f) => !onlyOnNamedSurfaces(f)).flatMap((f) => {

@@ -33,8 +33,13 @@ import ExpertPanel from "@/components/ExpertPanel";
 import { computeCalibration } from "@/engine/calibration";
 import DownloadButton from "@/app/result/DownloadButton";
 import { DELICACY_ICE, DELICACY_ICE_GLOW, DELICACY_FIELD } from "@/content/instrument-accents";
+import LanguageBar from "@/components/LanguageBar";
+import { localHref, type Locale } from "@/lib/locale";
+import { tFor } from "@/lib/i18n";
+import DELICACY_ZH from "@/content/zh/copy/delicacy";
+import { detectionBodyZh, detectionTitleZh, shareTextDelicacyZh } from "@/content/zh/copy/delicacy-lines";
 
-type SearchParams = Promise<Record<string, string | string[] | undefined>>;
+export type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
 const ICE = DELICACY_ICE;
 const ICE_GLOW = DELICACY_ICE_GLOW;
@@ -62,25 +67,44 @@ function cardUrl(format: "story" | "square" | "og", p: string): string {
 }
 
 export async function generateMetadata({ searchParams }: { searchParams: SearchParams }): Promise<Metadata> {
+  return delicacyResultMetadata(searchParams, "en");
+}
+
+/** In either language (bilingual Part 4); the card image itself stays English (Satori has no Chinese face). */
+export async function delicacyResultMetadata(searchParams: SearchParams, locale: Locale): Promise<Metadata> {
+  const t = tFor(locale, DELICACY_ZH);
+  const alternates = { languages: { en: "/delicacy/result", "zh-Hans": "/zh/delicacy/result" } };
   const data = resultFrom(await searchParams);
-  if (!data) return { title: "The Delicacy Trials" };
-  const title = `${data.result.nCorrect}/${data.result.nTrials} originals caught — The Delicacy Trials`;
+  if (!data) return { title: t("The Delicacy Trials"), alternates };
+  const title = t("{k}/{n} originals caught — The Delicacy Trials", { k: data.result.nCorrect, n: data.result.nTrials });
   // The score is out of the SCORED set, so the description counts that set —
   // quoting the 18-pair pool next to an out-of-15 score would overstate it (N3).
-  const description = `${MEASURED_TRIALS.length} scored pairs of clips; one of each is quietly damaged. A coin flip gets half. Find the key in the wine.`;
+  const description = t(
+    "{n} scored pairs of clips; one of each is quietly damaged. A coin flip gets half. Find the key in the wine.",
+    { n: MEASURED_TRIALS.length },
+  );
   const og = `${baseUrl()}${cardUrl("og", data.p)}`;
   return {
     title,
     description,
     robots: DELICACY_POOL_VERSION > 0 ? undefined : { index: false },
+    alternates,
     openGraph: { title, description, images: [{ url: og, width: 1200, height: 630 }] },
     twitter: { card: "summary_large_image", title, description, images: [og] },
   };
 }
 
-export default async function DelicacyResultPage({ searchParams }: { searchParams: SearchParams }) {
+export default async function DelicacyResultPage({
+  searchParams,
+  locale = "en",
+}: {
+  searchParams: SearchParams;
+  locale?: Locale;
+}) {
+  const t = tFor(locale, DELICACY_ZH);
+  const zh = locale === "zh";
   const data = resultFrom(await searchParams);
-  if (!data) redirect("/delicacy");
+  if (!data) redirect(localHref(locale, "/delicacy"));
   const { result, p } = data;
   const band = detectionBand(result.nCorrect, result.nTrials);
   // Recomputed here exactly as the flow recomputes it — the payload carries the
@@ -88,15 +112,18 @@ export default async function DelicacyResultPage({ searchParams }: { searchParam
   const calibration = computeCalibration(
     result.receipts.map((r) => ({ confidence: r.confidence, correct: r.correct })),
   );
-  const permalink = `${baseUrl()}/delicacy/result?pv=${DELICACY_POOL_VERSION}&p=${encodeURIComponent(p)}`;
+  const permalink = `${baseUrl()}${localHref(locale, "/delicacy/result")}?pv=${DELICACY_POOL_VERSION}&p=${encodeURIComponent(p)}`;
 
   return (
+    <>
+    {/* The permalink recomputes from its address, so switching language keeps the result. */}
+    <LanguageBar locale={locale} width="max-w-lg" />
     <main className="relative mx-auto flex min-h-dvh w-full max-w-lg flex-col justify-center overflow-hidden px-6 py-12 text-center">
       <FluidField colors={FLUID} intensity={0.7} scrim={false} vignette />
       <Track event="delicacy_result_view" props={{ nCorrect: result.nCorrect }} />
       <div className="relative z-10 flex flex-col items-center">
         <p className="text-xs font-bold tracking-[0.4em]" style={{ color: ICE }}>
-          THE DELICACY TRIALS
+          {t("THE DELICACY TRIALS")}
         </p>
         <p className="mt-6 font-display text-7xl font-semibold leading-none" style={{ color: ICE, textShadow: `0 0 60px ${ICE_GLOW}` }}>
           {result.nCorrect}
@@ -104,10 +131,10 @@ export default async function DelicacyResultPage({ searchParams }: { searchParam
             /{result.nTrials}
           </span>
         </p>
-        <p className="mt-3 text-sm text-muted">originals identified</p>
-        <h1 className="mt-6 font-display text-3xl font-semibold">{detectionTitle(band)}</h1>
+        <p className="mt-3 text-sm text-muted">{t("originals identified")}</p>
+        <h1 className="mt-6 font-display text-3xl font-semibold">{zh ? detectionTitleZh(band) : detectionTitle(band)}</h1>
         <p className="mt-3 max-w-sm text-left text-base leading-relaxed text-muted">
-          {detectionBody(band)}
+          {zh ? detectionBodyZh(band) : detectionBody(band)}
         </p>
 
         {/* RT-142(a), E7/S10b: the taker's OWN performance, recomputed from the
@@ -116,9 +143,9 @@ export default async function DelicacyResultPage({ searchParams }: { searchParam
             you had already seen — your calibration read vanished.
             NOT the per-pair disclosure: that is the answer key, and this page is
             a share target (see the docblock at the top of this file). */}
-        <FlawLine result={result} />
-        <InYourWork result={result} />
-        <CalibrationBlock cal={calibration} />
+        <FlawLine result={result} locale={locale} />
+        <InYourWork result={result} locale={locale} />
+        <CalibrationBlock cal={calibration} locale={locale} />
         <AcrossTime accent={ICE} own={{ kind: "delicacy", picks: p }} />
         <AcrossSessions accent={ICE} own={{ kind: "delicacy", picks: p }} />
         <ExpertPanel accent={ICE} instrument={{ kind: "delicacy" }} own={{ kind: "delicacy", picks: p }} />
@@ -127,34 +154,35 @@ export default async function DelicacyResultPage({ searchParams }: { searchParam
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={cardUrl("square", p)}
-          alt={`Delicacy Trials card: ${result.nCorrect} of ${result.nTrials} originals caught`}
+          alt={t("Delicacy Trials card: {k} of {n} originals caught", { k: result.nCorrect, n: result.nTrials })}
           className="mt-8 w-full max-w-xs rounded-2xl border border-white/10"
         />
 
         <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
           <ShareButton
             url={permalink}
-            text={shareText(result.nCorrect, result.nTrials)}
-            label="Share these ears"
+            text={zh ? shareTextDelicacyZh(result.nCorrect, result.nTrials) : shareText(result.nCorrect, result.nTrials)}
+            label={t("Share these ears")}
             event="delicacy_share"
             primary
             accent={ICE}
           />
-          <DownloadButton url={cardUrl("story", p)} label="Story card" filename="delicacy-trials-story.png" />
+          <DownloadButton url={cardUrl("story", p)} label={t("Story card")} filename="delicacy-trials-story.png" />
         </div>
 
-        <p className="mt-8 text-sm text-muted">Someone sent you their score? They&apos;re daring you.</p>
+        <p className="mt-8 text-sm text-muted">{t("Someone sent you their score? They're daring you.")}</p>
         <Link
-          href="/delicacy"
+          href={localHref(locale, "/delicacy")}
           className="mt-3 rounded-full px-7 py-3.5 text-base font-bold transition active:scale-[0.98]"
           style={{ color: readableOn(ICE), background: ICE, boxShadow: `0 10px 30px ${ICE_GLOW}` }}
         >
-          Get your ears tested
+          {t("Get your ears tested")}
         </Link>
         <p className="mt-6 text-xs text-muted">
-          Provisional read — percentiles arrive when the cohort does, not before.
+          {t("Provisional read — percentiles arrive when the cohort does, not before.")}
         </p>
       </div>
     </main>
+    </>
   );
 }

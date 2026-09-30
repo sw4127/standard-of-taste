@@ -77,7 +77,7 @@ export function creatorLinesBiasZh(result: BiasResult): string[] {
 /** The control disclosure in the debrief (`controlDisclosure`). */
 export function controlDisclosureZh(controlCount: number, driftPts: number): string {
   return (
-    `另有 ${controlCount} 段录音在两轮里都没有带过标签：它们是对照组。` +
+    `另有 ${controlCount} 段录音在任何一轮里都没有带过标签：它们是对照组。` +
     `它们测量你的评分在单纯重听时漂移了多少（记忆、熟悉感、疲劳），而这个漂移（你的是 ${signed(driftPts)} 分）` +
     `已经从你的主数字里校正掉了，所以「第二轮只是记忆」这件事是测出来的，并非假设。`
   );
@@ -137,7 +137,7 @@ export function stabilityLineZh(say: { asserted: number; kept: number; tied: num
     `只计屏幕上的名字把两段往同一方向推的配对）`;
   if (say.reversed === 0) return `${scope}，你每一对都放回了同样的顺序。`;
   const ties = say.tied === 0 ? "" : `，另有 ${say.tied} 对变成了同分`;
-  return `${scope}，第二次有 ${say.reversed} 对被你颠倒了顺序${ties}。`;
+  return `${scope}，有 ${say.reversed} 对在第二次被你颠倒了顺序${ties}。`;
 }
 
 const CRITIC_ZH: Record<string, string> = {
@@ -147,12 +147,12 @@ const CRITIC_ZH: Record<string, string> = {
 
 const FINDING_ZH: Record<string, string> = {
   "The scale runs from 0.0 to 10.0 in tenths, which is a hundred and one places a record can land.":
-    "这个量表从 0.0 到 10.0，以十分之一为一档，一张唱片可以落在一百零一个位置上。",
+    "这个量表从 0.0 到 10.0，精确到小数点后一位，一张唱片可以落在一百零一个位置上。",
   "Across more than 18,000 reviews published between January 1999 and January 2017, the mean score was 7.0.":
     "在 18,000 多篇评论里（发表于 1999 年一月至 2017 年一月），平均分是 7.0。",
   "Most of those scores lie between 6.4 and 7.8.": "这些分数大多落在 6.4 到 7.8 之间。",
   "Scores ending in .0 appear nearly twice as often as scores ending in .1 — the reviewers avoid the decimals their own scale offers them.":
-    "以 .0 结尾的分数，出现次数几乎是以 .1 结尾的两倍：评论者回避了自己的量表提供给他们的小数。",
+    "以 .0 结尾的分数，出现得几乎两倍于以 .1 结尾的分数：评论者回避了自己的量表提供给他们的小数。",
   "The Consumer Guide's letter grades ran from A+ down to E−.": "Consumer Guide 的字母等级从 A+ 一路排到 E−。",
   "From 1990 he used fewer letter grades for records below B+, replacing the bottom of his own ladder with honourable mentions and the categories Choice Cuts, Neither and Duds.":
     "从 1990 年起，他给 B+ 以下的唱片用的字母等级变少了，把自己等级阶梯的底部换成了荣誉提名（honourable mentions），以及 Choice Cuts、Neither 和 Duds 这几个类别。",

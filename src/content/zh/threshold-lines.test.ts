@@ -40,6 +40,7 @@ import {
 } from "./copy/threshold-lines";
 import { quantityZh, quantityZhGlossed } from "./copy/across";
 import { glossFirstCentsZh } from "./copy/threshold-lines";
+import { zhNumeralsIn } from "./guards";
 import { digitsOf, numbers, parity } from "@/test-utils/zh-parity";
 
 function rules(text: string, where: string, d1: boolean) {
@@ -156,5 +157,11 @@ describe("the Chinese Threshold result", () => {
       "你在 12.5 音分（cents）上听出了损伤。到了 3.1 音分，你是在猜。",
     );
     expect(glossFirstCentsZh("你在 48 kbps 上听出了损伤。")).toBe("你在 48 kbps 上听出了损伤。");
+  });
+  it("reads Chinese numerals as numbers, in order, skipping the article and the idioms (planted)", () => {
+    expect(zhNumeralsIn("大约十次里有九次")).toEqual(["10", "9"]);
+    expect(zhNumeralsIn("一百零一个位置，二十五次")).toEqual(["101", "25"]);
+    expect(zhNumeralsIn("一次，一眼，十分重要，三个百分点")).toEqual(["3"]);
+    expect(zhNumeralsIn("相当于先送了你一半分，共 15 对")).toEqual(["0.5", "15"]);
   });
 });
