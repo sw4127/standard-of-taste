@@ -104,6 +104,8 @@ statements live in `CLAUDE.md`, which is append-only: Cowork's revisions are app
 rendering, pending the owner's approval, never edited in place.
 
 ```text
+Send this in the same conversation as the PRD check, after it: it uses that check's rule list.
+
 You are revising the Chinese text of my project's website and its Chinese blueprint. If you already
 have my earlier brief for revising the Chinese site, this adds to it; where the two disagree, this one
 is newer.
