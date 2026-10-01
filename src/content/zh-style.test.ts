@@ -50,10 +50,24 @@ vi.mock("next/navigation", async (orig) => ({
 // 2026-09-29: 2 in Part 1 (the two notes); 243 after Part 2's first slice (the chrome, the
 // Company view, the D1 statements, the Chinese blueprint and one rendered page); 655 after
 // the reading (its copy, its line templates read from source, the sound words, /zh/reading); 745
-// after the front door (/zh); 1101 after /learn/why and the Ranking Test; 1383 after /method; 1763 after /lab; 2120 after the Threshold Test; 2418 after the Prestige Test; 3194 after the library's first half (the family list became code).
-const ZH_CORPUS_FLOOR = 3194;
+// after the front door (/zh); 1101 after /learn/why and the Ranking Test; 1383 after /method; 1763 after /lab; 2120 after the Threshold Test; 2418 after the Prestige Test; 3194 after the library's first half (the family list became code); 3593 after the Chinese PRD (docs/prd-1..4.zh.md).
+const ZH_CORPUS_FLOOR = 3593;
 
 const CJK = /[　-〿一-鿿＀-￯]/;
+
+/**
+ * The Chinese PRD glosses only specialised technical terms (owner, 2026-09-30,
+ * docs/handoff-2026-09-30.md): everyday words such as 解读 or 提示词 take no
+ * English. The first-use rule glosses every glossary term, so it would force the
+ * glosses the owner refused. Exempt from that one rule and nothing else: every
+ * ban and every alternate check still reads these files.
+ */
+const TECHNICAL_GLOSS_ONLY = [
+  "docs/prd-1-use-cases.zh.md",
+  "docs/prd-2-features.zh.md",
+  "docs/prd-3-requirements.zh.md",
+  "docs/prd-4-screens.zh.md",
+];
 
 // ---- the corpus ---------------------------------------------------------------------------------
 
@@ -320,8 +334,18 @@ describe("every Chinese string on the site and in the documents keeps the rules"
   });
 
   it("every Chinese document writes each term bilingually at first use", () => {
-    const hits = zhDocuments().flatMap((f) =>
+    // An exemption for a file that is gone would sit here exempting nothing, unseen.
+    expect(zhDocuments()).toEqual(expect.arrayContaining(TECHNICAL_GLOSS_ONLY));
+    const hits = zhDocuments().filter((f) => !TECHNICAL_GLOSS_ONLY.includes(f)).flatMap((f) =>
       firstUseBreaches(documentProse(readFileSync(f, "utf8")).join("\n")).map((b) => `${f}: ${b}`),
+    );
+    expect(hits).toEqual([]);
+  });
+
+  it("the Chinese PRD calls musical taste 品味, never 口味 (owner, 2026-09-30)", () => {
+    // Narrower than a site-wide ban: the glossary still lists 口味, and the site's pages await Cowork's revision.
+    const hits = TECHNICAL_GLOSS_ONLY.flatMap((f) =>
+      documentProse(readFileSync(f, "utf8")).filter((l) => l.includes("口味")).map((l) => `${f}: ${l.slice(0, 40)}`),
     );
     expect(hits).toEqual([]);
   });

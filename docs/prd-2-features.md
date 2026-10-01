@@ -150,6 +150,6 @@ constant exists.
 2. **Rank under at least two weightings.** A feature that is first under one and tenth under another
    depends on the audience, and that should be known before it is built.
 3. **The features that survive every weighting are the core.** Here that is three, out of
-   twenty-three, and they are the three BP-UNMET names.
+   twenty-four, and they are the three BP-UNMET names.
 4. **Turn a pass-or-fail clause into a gate, not an axis.** "Labelled as illustrative" cannot be
    done a little. Scoring it would let a well-scored feature carry an unlabelled mock.

@@ -63,6 +63,8 @@ export const BLUEPRINT_COPIES: readonly BlueprintCopy[] = [
   { path: "docs/prd-1-use-cases.md", id: "BP-F2", mode: "quoted" },
   // Part 2 scores every feature against the goal's clauses (BA-2), so it quotes the goal.
   { path: "docs/prd-2-features.md", id: "BP-GOAL", mode: "quoted" },
+  // Its Chinese translation quotes the Chinese goal (2026-09-30).
+  { path: "docs/prd-2-features.zh.md", id: "BP-GOAL", mode: "quoted", lang: "zh" },
   { path: "docs/mrd-prompt-card-2026-09-16.md", id: "BP-F1", mode: "quoted" },
   // The front door's paraphrase of what incumbents lack (change list C).
   { path: "src/content/landing.ts", id: "BP-UNMET", mode: "derived", anchor: "export const LANDING_ALGORITHM" },
