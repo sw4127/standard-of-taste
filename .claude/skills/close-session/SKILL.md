@@ -52,6 +52,9 @@ work remains, do not close: continue.
 <!-- source: CLAUDE.md -->
 > Do not wait to be asked. A session that ends without an activation prompt is not finished.
 
+   **Open Cowork jobs** (owner, 2026-09-30): before the activation prompt, remind the owner of
+   every job still open in `docs/cowork-jobs.md`, each with its copy-paste prompt or a pointer to it.
+   A job assigned to Cowork during the session gets its prompt written into that file first.
 5. **The DECISIONS block** ends the reply, in `docs/redteam-protocol.md`'s format, holding
    only what passes the bar:
 
