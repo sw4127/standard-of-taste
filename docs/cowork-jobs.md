@@ -8,7 +8,10 @@ guard catches. A job leaves this file when its result is committed.
 
 ---
 
-## Job 1 · Check the Chinese PRD, line by line (opened 2026-09-30, URGENT: needed for the résumé)
+## Job 1 · Check the Chinese PRD, line by line — DONE 2026-09-30 (`2e5e701`)
+
+Cowork's checked parts are committed unchanged. Kept here because Job 2's prompt uses this one's
+rule list (C.1 to C.10).
 
 Files: `docs/prd-1-use-cases.zh.md` to `docs/prd-4-screens.zh.md` (commit `70ae414`). Cowork returns whole
 files, so engineering diffs the return against `70ae414` and merges it: anything committed to these files
@@ -104,7 +107,8 @@ statements live in `CLAUDE.md`, which is append-only: Cowork's revisions are app
 rendering, pending the owner's approval, never edited in place.
 
 ```text
-Send this in the same conversation as the PRD check, after it: it uses that check's rule list.
+Send this in the same conversation as the PRD check, after it: it uses that check's rule list. In a
+new conversation, paste rules C.1 to C.10 from the PRD check's prompt first.
 
 You are revising the Chinese text of my project's website and its Chinese blueprint. If you already
 have my earlier brief for revising the Chinese site, this adds to it; where the two disagree, this one
