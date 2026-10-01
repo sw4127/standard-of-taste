@@ -96,7 +96,8 @@ const INVISIBLE: Record<string, number> = {
   // its session storage (blueprint Part 5). Part 7 decks /legal's new copy.
   // 2 -> 4 on 2026-09-29 (bilingual Part 2), on purpose: /legal now discloses the language
   // choice the switch keeps in local storage. Decked in bilingual Part 6.
-  "/legal": 4,
+  // 4 -> 2 on 2026-09-30: the page deck now reads `t("...")`, so the two disclosure lines are decked.
+  "/legal": 2,
   "/method": 8,
   // Measured 2026-09-23 when the reading shipped (blueprint Part 5): its copy and
   // the argument rendered from docs/blueprint.md are in no deck yet. Part 7 decks

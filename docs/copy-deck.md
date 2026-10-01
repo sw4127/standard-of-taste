@@ -1235,10 +1235,10 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > The point of the story is not that the kinsmen had refined opinions. It's that their perception was verifiable. There was a fact at the bottom of the barrel, and their palates found it while everyone else's missed it. Delicacy, in Hume's account, is exactly this: the capacity to register fine ingredients in a composition that most perceivers never notice — and the key in the wine is what separates delicacy from pretension. A claim of fine taste that can never be checked is just a claim.
 
 `PAGE-LEARN-DELICACY-03` · OPEN
-> Most taste tests never leave opinion territory, which is why they can't measure delicacy at all. The Delicacy Trials are built the other way around: start from recordings in the public domain or under Creative Commons licenses, introduce controlled degradations — {flawFamilyList()} — and ask which version is the original and what, precisely, is wrong with the other. Every trial has a key at the bottom of the barrel: an objectively correct answer. Difficulty is tunable, so the trials can find the exact threshold where your ears give out, and the items can be calibrated with item-response theory as real response data accumulates.
+> Most taste tests never leave opinion territory, which is why they can't measure delicacy at all. The Delicacy Trials are built the other way around: start from recordings in the public domain or under Creative Commons licenses, introduce controlled degradations — {list} — and ask which version is the original and what, precisely, is wrong with the other. Every trial has a key at the bottom of the barrel: an objectively correct answer. Difficulty is tunable, so the trials can find the exact threshold where your ears give out, and the items can be calibrated with item-response theory as real response data accumulates.
 
 `PAGE-LEARN-DELICACY-04` · OPEN
-> In the gym, the Delicacy Trials are {DELICACY_LIVE ? "machine 02, and they are open" : "machine 02, visible and locked until their pool clears validation"} — built after the Prestige Test. And where prejudice is something to be caught in the act, delicacy is something Hume says training improves — which is what practice is for.
+> In the gym, the Delicacy Trials are {status} — built after the Prestige Test. And where prejudice is something to be caught in the act, delicacy is something Hume says training improves — which is what practice is for.
 
 ---
 
@@ -1349,7 +1349,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > The gym takes the claim literally, with the same honesty rule as everything else: an improvement you can't measure is an improvement you can't claim. Sit a threshold ladder twice in the same browser and the result screen compares the two — against a noise floor we measured first, so that a difference smaller than the instrument's own run-to-run wobble is reported as no change rather than as progress.
 
 `PAGE-LEARN-PRACTICE-04` · OPEN
-> That floor is high, and saying so is the point. Two sittings on the pitch ladder have to differ by roughly {PITCH_FLOOR_TIMES} times before the arc will call it movement; on the prestige test the label's pull has to shift by {numberWord(BIAS_FLOOR_POINTS)} points of the scale. Most retests are therefore told that nothing changed the instrument could hear — which is the honest answer, and the reason the sentence names what it would have taken instead of leaving you to guess. The delicacy trials get no arc at all: {numberWord(DELICACY_ARC_FLOOR.trials)} pairs cannot resolve a change smaller than {numberWord(DELICACY_ARC_FLOOR.itemsToMove)} of them, so that screen says so and points here.
+> That floor is high, and saying so is the point. Two sittings on the pitch ladder have to differ by roughly {times} before the arc will call it movement; on the prestige test the label's pull has to shift by {points} points of the scale. Most retests are therefore told that nothing changed the instrument could hear — which is the honest answer, and the reason the sentence names what it would have taken instead of leaving you to guess. The delicacy trials get no arc at all: {trials} pairs cannot resolve a change smaller than {items} of them, so that screen says so and points here.
 
 `PAGE-LEARN-PRACTICE-05` · OPEN
 > What a second sitting genuinely buys is precision. The wobble of an average falls as the square root of the number of sittings, so the more often you come back, the smaller a real change has to be before this can see it. That is the whole return: not a badge or a streak, but a number that gets harder to argue with.
@@ -1369,13 +1369,13 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > The Prestige Test measures one thing: how far a famous name can move your ratings. Not whether you like the right music — whether the label in the room changes what your ears report.
 
 `PAGE-LEARN-PRESTIGEBIASTEST-02` · OPEN
-> The design is a within-subject experiment, about {BIAS_SESSION_MINUTES} minutes long. You hear {numberWord(BIAS_CLIP_COUNT)} short clips and rate each one blind — no artist, no context, just sound. Then you hear the same {numberWord(BIAS_CLIP_COUNT)} clips again with names and reputations attached, and rate them again. Your score is computed from the gap between the two passes: the share of your rating movement that flowed toward the labels.
+> The design is a within-subject experiment, about {minutes} minutes long. You hear {count} short clips and rate each one blind — no artist, no context, just sound. Then you hear the same {count} clips again with names and reputations attached, and rate them again. Your score is computed from the gap between the two passes: the share of your rating movement that flowed toward the labels.
 
 `PAGE-LEARN-PRESTIGEBIASTEST-03` · OPEN
-> Here is the part that makes it an instrument instead of a party trick: {numberWord(BIAS_SWAPPED_COUNT)} of the {numberWord(BIAS_LABELLED_COUNT)} labels are deliberately false. A modest work arrives wearing borrowed acclaim; a distinguished one arrives dressed down. If your ratings follow the labels even when the labels lie, the movement can't be explained by the music — only by the prestige. You serve as your own control, which is why the test needs no external ground truth about which clip is "objectively better."
+> Here is the part that makes it an instrument instead of a party trick: {strong} A modest work arrives wearing borrowed acclaim; a distinguished one arrives dressed down. If your ratings follow the labels even when the labels lie, the movement can't be explained by the music — only by the prestige. You serve as your own control, which is why the test needs no external ground truth about which clip is "objectively better."
 
 `PAGE-LEARN-PRESTIGEBIASTEST-04` · OPEN
-> {numberWordLeading(BIAS_CONTROL_COUNT)} of the {numberWord(BIAS_CLIP_COUNT)} clips are controls: they carry no label in either pass. They measure how much your ratings drift on a plain second listen — memory, familiarity, fatigue — and that measured drift is corrected out of your headline number. The obvious objection to any re-rating design, "the second pass just tests memory," is thereby a published control rather than a caveat.
+> {count} of the {total} clips are controls: they carry no label in either pass. They measure how much your ratings drift on a plain second listen — memory, familiarity, fatigue — and that measured drift is corrected out of your headline number. The obvious objection to any re-rating design, "the second pass just tests memory," is thereby a published control rather than a caveat.
 
 `PAGE-LEARN-PRESTIGEBIASTEST-05` · OPEN
 > Every swap is confessed. The test ends with a mandatory debrief that names each false label, shows the true attribution, and shows exactly what your ratings did when the name was a lie. You cannot exit around it. An instrument built on deception owes you the disclosure — and the disclosure is the part worth staying for.
@@ -1468,15 +1468,18 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > Your sessions are stored on your device. When you finish an instrument we keep your raw answers in this browser's local storage — never a computed score, so nothing here can be edited into a better result. It is what lets a later session say whether your ear moved, and it is why the seven-day retest gate knows you. Switch device or clear your browsing data and it is gone; there is no copy anywhere else.
 
 `PAGE-LEGAL-08` · OPEN
-> If you argue with a reading, which lines you rejected and which readings you chose are kept in this tab's session storage so the prompt stays as you left it. They are gone when the tab closes and never leave the browser.
+> If you press the language button, the language you chose is kept in this browser's local storage, so an English page you later open from outside this site takes you to its Chinese version, where there is one. Nothing else about you goes with it, and the button below clears it with everything else.
 
 `PAGE-LEGAL-09` · OPEN
-> No sentence on this site is generated by a language model when you visit, and nothing you do here is sent to one. Every sentence is a fixed template and every result is computed here, in code.
+> If you argue with a reading, which lines you rejected and which readings you chose are kept in this tab's session storage so the prompt stays as you left it. They are gone when the tab closes and never leave the browser.
 
 `PAGE-LEGAL-10` · OPEN
-> We collect anonymised usage events (page views, session completion, shares) through Vercel Web Analytics and PostHog, to see whether the product works. No advertising trackers, no selling data.
+> No sentence on this site is generated by a language model when you visit, and nothing you do here is sent to one. Every sentence is a fixed template and every result is computed here, in code.
 
 `PAGE-LEGAL-11` · OPEN
+> We collect anonymised usage events (page views, session completion, shares) through Vercel Web Analytics and PostHog, to see whether the product works. No advertising trackers, no selling data.
+
+`PAGE-LEGAL-12` · OPEN
 > Want anything else gone? There is no server-side record of you to delete, but the button below clears everything this browser holds, and you can contact us ({support ? support : "through the address on the repository"}) with any question about it.
 
 *4 further blocks on this page are filled entirely from content modules, so the words are reviewed in the earlier parts rather than here.*
@@ -1493,20 +1496,17 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 > **A critic ranked these works. Do your gaps fall where his did?**
 
 `PAGE-SPREAD-FRAME-02` · OPEN
-> {numberWordLeading(SPREAD_WORK_COUNT)} pieces of music, {numberWord(SPREAD_CLIP_SECONDS)} seconds each. Rate what you hear, and nothing else. A published critic once ranked all of these against each other — some he placed far apart, some he bracketed together.
+> {count} pieces of music, {seconds} seconds each. Rate what you hear, and nothing else. A published critic once ranked all of these against each other — some he placed far apart, some he bracketed together.
 
 `PAGE-SPREAD-FRAME-03` · OPEN
 > What comes out is two numbers: how far apart your ratings fell on the pairs he separated, and how far apart they fell on the pairs he did not. Agreeing with him is not the point and is not measured. Nothing here can even see which of two works he ranked higher.
 
 `PAGE-SPREAD-FRAME-04` · OPEN
-> About {numberWord(SPREAD_SESSION_MINUTES)} minutes of listening. Headphones help.
-
-`PAGE-SPREAD-FRAME-05` · OPEN
-> Listen, then say whether you know it — and only then rate it.
+> About {minutes} minutes of listening. Headphones help.
 
 > Had you heard this before?
 
-`PAGE-SPREAD-FRAME-06` · OPEN
+`PAGE-SPREAD-FRAME-05` · OPEN
 > Saying yes leaves the clip out of the result. It is never counted against you.
 
 > How good is it?
@@ -1515,20 +1515,13 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 > **Where your gaps fell**
 
-> across works he placed far apart
-
-> across works he bracketed together
-
 > How this is measured
 
-`PAGE-SPREAD-FRAME-07` · OPEN
-> Rating at random gives {baseline.toFixed(1)} on both.
-
-*5 further blocks on this page are filled entirely from content modules, so the words are reviewed in the earlier parts rather than here.*
+*6 further blocks on this page are filled entirely from content modules, so the words are reviewed in the earlier parts rather than here.*
 
 ---
 
-**97 blocks, roughly 4314 words, across 12 surfaces.**
+**94 blocks, roughly 4311 words, across 12 surfaces.**
 
 
 ---
@@ -2544,9 +2537,19 @@ Generated by `node scripts/export-reading-deck.mjs`. Do not edit this file; edit
 `READ-READING-PAGE-03` · OPEN
 > Each is four weeks of plays by someone who does not exist. Read one as if the plays were yours: every line is computed from them, and every line shows the plays it counted.
 
-*`READ_LEAD`:*
+*`LISTENER_FACTS`:*
 
 `READ-READING-PAGE-04` · OPEN
+> {plays} plays · {tracks} tracks · four weeks
+
+*`PLAY_LINE`:*
+
+`READ-READING-PAGE-05` · OPEN
+> Day {day} · {time} · {title} — {artist}{mark}
+
+*`READ_LEAD`:*
+
+`READ-READING-PAGE-06` · OPEN
 > Each line names a pattern in the plays and offers two things it might mean. Keep a line or reject it; pick the reading that fits, or neither.
 
 *`SHOW_PLAYS`:*
@@ -2595,12 +2598,12 @@ Generated by `node scripts/export-reading-deck.mjs`. Do not edit this file; edit
 
 *`PROMPT_NOTE`:*
 
-`READ-READING-PAGE-05` · OPEN
+`READ-READING-PAGE-07` · OPEN
 > Built only from the lines you kept and the readings you chose. Change either above and this changes.
 
 *`PROMPT_EMPTY`:*
 
-`READ-READING-PAGE-06` · OPEN
+`READ-READING-PAGE-08` · OPEN
 > You rejected every line, so there is nothing left to make a prompt from. Put one back.
 
 *`COPY_PROMPT`:*
@@ -2629,12 +2632,12 @@ Generated by `node scripts/export-reading-deck.mjs`. Do not edit this file; edit
 
 *`BRIDGE_DEVICE_NOTE`:*
 
-`READ-READING-PAGE-07` · OPEN
+`READ-READING-PAGE-09` · OPEN
 > Any mark here is read from a Threshold sitting stored in this browser. There is no account; on another device, or after clearing site data, the marks are gone.
 
 *`BRIDGE_LINE`:*
 
-`READ-READING-PAGE-08` · OPEN
+`READ-READING-PAGE-10` · OPEN
 > Tuning, timing and fidelity are the three kinds of damage the Threshold Test measures. A word for a difference you cannot hear is a word the generator can ignore without you noticing.
 
 *`TO_CREATE`:*
@@ -2643,7 +2646,7 @@ Generated by `node scripts/export-reading-deck.mjs`. Do not edit this file; edit
 
 *`CREATE_LABEL`:*
 
-`READ-READING-PAGE-09` · OPEN
+`READ-READING-PAGE-11` · OPEN
 > Illustrative. Tessavox is a fictional company, and this is a mock of its creation screen.
 
 *`CREATE_HEADING`:*
@@ -2668,17 +2671,17 @@ Generated by `node scripts/export-reading-deck.mjs`. Do not edit this file; edit
 
 *`WHY_HEADING`:*
 
-`READ-READING-PAGE-10` · OPEN
+`READ-READING-PAGE-12` · OPEN
 > Why this works, and where it might not
 
 *`WHY_LEAD`:*
 
-`READ-READING-PAGE-11` · OPEN
+`READ-READING-PAGE-13` · OPEN
 > The reading rests on an argument. Here it is in full, each step labelled with what supports it.
 
 *`READING_SHARE_LINE`:*
 
-`READ-READING-PAGE-12` · OPEN
+`READ-READING-PAGE-14` · OPEN
 > A reading of a listener's recent plays, in lines you can check, argue with, and carry into a prompt.
 
 *`NEITHER`:*
@@ -2687,7 +2690,7 @@ Generated by `node scripts/export-reading-deck.mjs`. Do not edit this file; edit
 
 *`READING_STATEMENT`:*
 
-`READ-READING-PAGE-13` · OPEN
+`READ-READING-PAGE-15` · OPEN
 > This reading speaks to you about what a listener's recent plays might mean. It names patterns and offers readings; which one is right, if either, is yours to say. The hearing tests describe only what you did.
 
 ### 4. The lines the three listeners render — `src/content/reading/lines.ts`
@@ -3298,5 +3301,5 @@ Generated by `node scripts/export-reading-deck.mjs`. Do not edit this file; edit
 
 ---
 
-**360 sentences, each with an id.** 18 further lines are additional RENDERINGS of sentences already listed — they carry the id they belong to and are not separate strings to edit. Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.
+**361 sentences, each with an id.** 18 further lines are additional RENDERINGS of sentences already listed — they carry the id they belong to and are not separate strings to edit. Which surfaces have ever been through a writer is in `docs/copy-review-ledger.md`.
 

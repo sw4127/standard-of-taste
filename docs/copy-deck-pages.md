@@ -58,9 +58,9 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 > The point of the story is not that the kinsmen had refined opinions. It's that their perception was verifiable. There was a fact at the bottom of the barrel, and their palates found it while everyone else's missed it. Delicacy, in Hume's account, is exactly this: the capacity to register fine ingredients in a composition that most perceivers never notice — and the key in the wine is what separates delicacy from pretension. A claim of fine taste that can never be checked is just a claim.
 
-> Most taste tests never leave opinion territory, which is why they can't measure delicacy at all. The Delicacy Trials are built the other way around: start from recordings in the public domain or under Creative Commons licenses, introduce controlled degradations — {flawFamilyList()} — and ask which version is the original and what, precisely, is wrong with the other. Every trial has a key at the bottom of the barrel: an objectively correct answer. Difficulty is tunable, so the trials can find the exact threshold where your ears give out, and the items can be calibrated with item-response theory as real response data accumulates.
+> Most taste tests never leave opinion territory, which is why they can't measure delicacy at all. The Delicacy Trials are built the other way around: start from recordings in the public domain or under Creative Commons licenses, introduce controlled degradations — {list} — and ask which version is the original and what, precisely, is wrong with the other. Every trial has a key at the bottom of the barrel: an objectively correct answer. Difficulty is tunable, so the trials can find the exact threshold where your ears give out, and the items can be calibrated with item-response theory as real response data accumulates.
 
-> In the gym, the Delicacy Trials are {DELICACY_LIVE ? "machine 02, and they are open" : "machine 02, visible and locked until their pool clears validation"} — built after the Prestige Test. And where prejudice is something to be caught in the act, delicacy is something Hume says training improves — which is what practice is for.
+> In the gym, the Delicacy Trials are {status} — built after the Prestige Test. And where prejudice is something to be caught in the act, delicacy is something Hume says training improves — which is what practice is for.
 
 ---
 
@@ -148,7 +148,7 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 > The gym takes the claim literally, with the same honesty rule as everything else: an improvement you can't measure is an improvement you can't claim. Sit a threshold ladder twice in the same browser and the result screen compares the two — against a noise floor we measured first, so that a difference smaller than the instrument's own run-to-run wobble is reported as no change rather than as progress.
 
-> That floor is high, and saying so is the point. Two sittings on the pitch ladder have to differ by roughly {PITCH_FLOOR_TIMES} times before the arc will call it movement; on the prestige test the label's pull has to shift by {numberWord(BIAS_FLOOR_POINTS)} points of the scale. Most retests are therefore told that nothing changed the instrument could hear — which is the honest answer, and the reason the sentence names what it would have taken instead of leaving you to guess. The delicacy trials get no arc at all: {numberWord(DELICACY_ARC_FLOOR.trials)} pairs cannot resolve a change smaller than {numberWord(DELICACY_ARC_FLOOR.itemsToMove)} of them, so that screen says so and points here.
+> That floor is high, and saying so is the point. Two sittings on the pitch ladder have to differ by roughly {times} before the arc will call it movement; on the prestige test the label's pull has to shift by {points} points of the scale. Most retests are therefore told that nothing changed the instrument could hear — which is the honest answer, and the reason the sentence names what it would have taken instead of leaving you to guess. The delicacy trials get no arc at all: {trials} pairs cannot resolve a change smaller than {items} of them, so that screen says so and points here.
 
 > What a second sitting genuinely buys is precision. The wobble of an average falls as the square root of the number of sittings, so the more often you come back, the smaller a real change has to be before this can see it. That is the whole return: not a badge or a streak, but a number that gets harder to argue with.
 
@@ -164,11 +164,11 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 > The Prestige Test measures one thing: how far a famous name can move your ratings. Not whether you like the right music — whether the label in the room changes what your ears report.
 
-> The design is a within-subject experiment, about {BIAS_SESSION_MINUTES} minutes long. You hear {numberWord(BIAS_CLIP_COUNT)} short clips and rate each one blind — no artist, no context, just sound. Then you hear the same {numberWord(BIAS_CLIP_COUNT)} clips again with names and reputations attached, and rate them again. Your score is computed from the gap between the two passes: the share of your rating movement that flowed toward the labels.
+> The design is a within-subject experiment, about {minutes} minutes long. You hear {count} short clips and rate each one blind — no artist, no context, just sound. Then you hear the same {count} clips again with names and reputations attached, and rate them again. Your score is computed from the gap between the two passes: the share of your rating movement that flowed toward the labels.
 
-> Here is the part that makes it an instrument instead of a party trick: {numberWord(BIAS_SWAPPED_COUNT)} of the {numberWord(BIAS_LABELLED_COUNT)} labels are deliberately false. A modest work arrives wearing borrowed acclaim; a distinguished one arrives dressed down. If your ratings follow the labels even when the labels lie, the movement can't be explained by the music — only by the prestige. You serve as your own control, which is why the test needs no external ground truth about which clip is "objectively better."
+> Here is the part that makes it an instrument instead of a party trick: {strong} A modest work arrives wearing borrowed acclaim; a distinguished one arrives dressed down. If your ratings follow the labels even when the labels lie, the movement can't be explained by the music — only by the prestige. You serve as your own control, which is why the test needs no external ground truth about which clip is "objectively better."
 
-> {numberWordLeading(BIAS_CONTROL_COUNT)} of the {numberWord(BIAS_CLIP_COUNT)} clips are controls: they carry no label in either pass. They measure how much your ratings drift on a plain second listen — memory, familiarity, fatigue — and that measured drift is corrected out of your headline number. The obvious objection to any re-rating design, "the second pass just tests memory," is thereby a published control rather than a caveat.
+> {count} of the {total} clips are controls: they carry no label in either pass. They measure how much your ratings drift on a plain second listen — memory, familiarity, fatigue — and that measured drift is corrected out of your headline number. The obvious objection to any re-rating design, "the second pass just tests memory," is thereby a published control rather than a caveat.
 
 > Every swap is confessed. The test ends with a mandatory debrief that names each false label, shows the true attribution, and shows exactly what your ratings did when the name was a lie. You cannot exit around it. An instrument built on deception owes you the disclosure — and the disclosure is the part worth staying for.
 
@@ -240,6 +240,8 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 > Your sessions are stored on your device. When you finish an instrument we keep your raw answers in this browser's local storage — never a computed score, so nothing here can be edited into a better result. It is what lets a later session say whether your ear moved, and it is why the seven-day retest gate knows you. Switch device or clear your browsing data and it is gone; there is no copy anywhere else.
 
+> If you press the language button, the language you chose is kept in this browser's local storage, so an English page you later open from outside this site takes you to its Chinese version, where there is one. Nothing else about you goes with it, and the button below clears it with everything else.
+
 > If you argue with a reading, which lines you rejected and which readings you chose are kept in this tab's session storage so the prompt stays as you left it. They are gone when the tab closes and never leave the browser.
 
 > No sentence on this site is generated by a language model when you visit, and nothing you do here is sent to one. Every sentence is a fixed template and every result is computed here, in code.
@@ -260,13 +262,11 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 > **A critic ranked these works. Do your gaps fall where his did?**
 
-> {numberWordLeading(SPREAD_WORK_COUNT)} pieces of music, {numberWord(SPREAD_CLIP_SECONDS)} seconds each. Rate what you hear, and nothing else. A published critic once ranked all of these against each other — some he placed far apart, some he bracketed together.
+> {count} pieces of music, {seconds} seconds each. Rate what you hear, and nothing else. A published critic once ranked all of these against each other — some he placed far apart, some he bracketed together.
 
 > What comes out is two numbers: how far apart your ratings fell on the pairs he separated, and how far apart they fell on the pairs he did not. Agreeing with him is not the point and is not measured. Nothing here can even see which of two works he ranked higher.
 
-> About {numberWord(SPREAD_SESSION_MINUTES)} minutes of listening. Headphones help.
-
-> Listen, then say whether you know it — and only then rate it.
+> About {minutes} minutes of listening. Headphones help.
 
 > Had you heard this before?
 
@@ -278,16 +278,10 @@ Every paragraph, heading and caption a reader meets on these pages, pulled from 
 
 > **Where your gaps fell**
 
-> across works he placed far apart
-
-> across works he bracketed together
-
 > How this is measured
 
-> Rating at random gives {baseline.toFixed(1)} on both.
-
-*5 further blocks on this page are filled entirely from content modules, so the words are reviewed in the earlier parts rather than here.*
+*6 further blocks on this page are filled entirely from content modules, so the words are reviewed in the earlier parts rather than here.*
 
 ---
 
-**97 blocks, roughly 4314 words, across 12 surfaces.**
+**94 blocks, roughly 4311 words, across 12 surfaces.**

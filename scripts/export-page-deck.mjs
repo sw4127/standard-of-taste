@@ -70,6 +70,33 @@ const ENTITIES = [
 ];
 
 /**
+ * The English line handed to the language switch (bilingual Part 2): `{t("...")}`,
+ * `{rich(t("..."), ...)}` or `{fill(t("..."), ...)}`. The English page renders the
+ * literal, so the deck shows it; the `{name}` slots inside stay as slots.
+ */
+function translated(inner) {
+  const m = /^(?:(?:rich|fill)\(\s*)?t\(\s*(["'])/.exec(inner);
+  if (!m) return null;
+  const q = m[1];
+  let j = m[0].length;
+  let lit = "";
+  while (j < inner.length && inner[j] !== q) {
+    if (inner[j] === "\\") j += 1;
+    lit += inner[j];
+    j += 1;
+  }
+  if (j >= inner.length) return null;
+  // A slot whose value is one element wrapping English (`key: <em>{t("...")}</em>` or
+  // `link: <Link ...>words</Link>`) is shown as those words, as the English page shows it.
+  return lit.replace(/\{([A-Za-z]\w*)\}/g, (whole, name) => {
+    const v = new RegExp(name + `:\\s*<[^>]*>\\s*(?:\\{t\\(\\s*(["'])([\\s\\S]*?)\\1\\s*\\)\\}|([^<{]+?))\\s*</`).exec(
+      inner.slice(j),
+    );
+    return v ? (v[2] ?? v[3]) : whole;
+  });
+}
+
+/**
  * Strip JSX tags and expressions from a block, leaving what renders.
  *
  * AN EXPRESSION BECOMES A VISIBLE SLOT rather than vanishing. A reader has to
@@ -117,6 +144,7 @@ function flatten(source) {
       const inner = source.slice(start + 1, i - 1).trim();
       if (inner === DQ + " " + DQ || inner === SQ + " " + SQ) out += " ";
       else if (inner.startsWith(DQ) || inner.startsWith(SQ)) out += inner.slice(1, -1);
+      else if (translated(inner) !== null) out += translated(inner);
       else out += "{" + inner.split(NL).join(" ") + "}";
       continue;
     }

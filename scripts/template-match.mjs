@@ -239,7 +239,13 @@ function escapeForRegex(text) {
 
 /** A chain becomes a full-match pattern, its slots becoming wildcards. */
 export function matcherFor(chain) {
-  const parts = chain.split(SLOT).map(escapeForRegex);
+  // A `{name}` placeholder, filled at render time by `fill()`, is a slot too (bilingual Part 2),
+  // but only in a sentence with real text around it: a chain that is mostly placeholder would
+  // match every line and collapse unrelated sentences into one.
+  const BRACE = /\{[A-Za-z]\w*\}/g;
+  const literal = chain.replace(BRACE, "").split(SLOT).join("");
+  const slotted = literal.length >= 40 ? chain.replace(BRACE, SLOT) : chain;
+  const parts = slotted.split(SLOT).map(escapeForRegex);
   return new RegExp("^" + parts.join("[" + BACKSLASH + "s" + BACKSLASH + "S]*?") + "$");
 }
 
