@@ -9,7 +9,7 @@ Brief and definition of done: `docs/task-prd.md`.
 **Derived from the blueprint, then checked against the routes.** The first version of this part
 walked the routes in `src/app` and wrote a use case for each, so it described what had been built
 rather than what the blueprint asked for. This version starts from `docs/blueprint.md`: every use
-case below names the BP statement it serves. Then the routes are walked — 38 render a page — and
+case below names the BP statement it serves. Then the routes are walked — 50 render a page — and
 every one is placed: as serving a use case, as serving **no** BP statement (listed, not hidden), or
 as out of scope with a reason.
 

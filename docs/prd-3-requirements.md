@@ -13,7 +13,7 @@ is the reason a PRD written *after* the build is worth more than one written bef
 engineering design document; `ARCHITECTURE.md` is the closest thing that exists.
 
 **The order follows part 1.** The reading is the product (BA-6), so its requirements come first,
-FR-1 to FR-10. The hearing section follows, FR-11 to FR-18. `prd-numbering.test.ts` fails if the
+FR-1 to FR-10. The hearing section follows, FR-11 to FR-18, and the Chinese site closes the list, FR-19. `prd-numbering.test.ts` fails if the
 first requirement stops serving the core, or if any use case in part 1 has no requirement.
 
 ---
@@ -140,7 +140,7 @@ that throws on every call.
 | **Computed by** | `promptCard` in `src/engine/prompt-card.ts` |
 | **Recalled by** | `recallThreshold` in `src/lib/result-recall.ts` |
 
-- **FR-6.1** Each flaw family's prompt words are marked "you can hear this" or "at your threshold
+- **FR-6.1** Each flaw family's prompt words are marked "you heard this in the test" or "at your threshold
   you may not tell" **only from a Threshold sitting stored on this device.**
 - **FR-6.2** With no stored sitting, or a stored sitting that cannot be read, no mark is shown. No
   mark means no claim, never a default claim.
@@ -227,7 +227,7 @@ prompt through the bridge (FR-6) and from the hearing section of `/`.
 - **FR-11.2** Ratings are integers on a fixed scale. `BIAS_SCALE_MIN` and `BIAS_SCALE_MAX` are the
   only definition of its ends; no surface may state them independently.
 - **FR-11.3** A fixed number of clips carry no label in either pass. Their movement between passes
-  is drift (memory, regression, fatigue) and is subtracted from the labelled movement.
+  is drift (memory, regression to the mean, fatigue) and is subtracted from the labelled movement.
 - **FR-11.4** Some labels are false. Every deception is disclosed on a debrief the sitting cannot
   skip.
 - **FR-11.5** The verdict is a signed percentage. A negative result means ratings moved away from

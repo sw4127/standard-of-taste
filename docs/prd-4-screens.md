@@ -71,8 +71,8 @@ One tap from the front door. Measured on the first listener, Mira.
 **Each line, top to bottom:** the pattern · the receipt · "Show the plays" · the two offered
 readings and "Neither" · "This isn't right".
 
-**States per line:** kept (the default) · rejected, which replaces the offers with "Rejected. It is
-out of your prompt." and "Put it back" · a reading chosen · plays shown or hidden. The page's
+**States per line:** kept (the default) · rejected, which replaces the offers with "Rejected. It won't
+be in your prompt." and "Put it back" · a reading chosen · plays shown or hidden. The page's
 statement of what it does sits under the title, above the first line (FR-8.3).
 
 ## S-3 · The prompt `&step=prompt`

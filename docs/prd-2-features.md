@@ -85,18 +85,15 @@ screen" both score 4.0 for fifth, and the alphabet picks.
 
 **50 / 50 — the balanced view**
 
-1. Arguing with a line: two readings, neither, or reject · 2. The prompt, recomposed from what was kept ·
-3. The reading's lines, with receipts · 4. Reading what is new, not what is old · 5. The mock creation screen
+1. Arguing with a line: two readings, neither, or reject · 2. The prompt, recomposed from what was kept · 3. The reading's lines, with receipts · 4. Reading what is new, not what is old · 5. The mock creation screen
 
 **70 TRY / 30 FUND — a reviewer trying the product**
 
-1. Arguing with a line: two readings, neither, or reject · 2. The prompt, recomposed from what was kept ·
-3. The reading's lines, with receipts · 4. Three illustrative listeners · 5. Reading what is new, not what is old
+1. Arguing with a line: two readings, neither, or reject · 2. The prompt, recomposed from what was kept · 3. The reading's lines, with receipts · 4. Three illustrative listeners · 5. Reading what is new, not what is old
 
 **30 TRY / 70 FUND — a reviewer judging the business case**
 
-1. Arguing with a line: two readings, neither, or reject · 2. The prompt, recomposed from what was kept ·
-3. The reading's lines, with receipts · 4. Reading what is new, not what is old · 5. The mock creation screen
+1. Arguing with a line: two readings, neither, or reject · 2. The prompt, recomposed from what was kept · 3. The reading's lines, with receipts · 4. Reading what is new, not what is old · 5. The mock creation screen
 
 ## What survives all three
 
@@ -106,7 +103,7 @@ carry into a prompt. They survive because they are the only features that score 
 clauses. A reviewer trying the product meets them, and the business case rests on them.
 
 **The business case is not in the top five, even under the weighting built for it.** The Company
-view's two scored features each score 5 on FUND and 1 on TRY, and land sixth and seventh at 30 / 70. That is what BA-12 intends: the
+view's two features that score 5 on FUND each score 1 on TRY, and land sixth and seventh at 30 / 70. That is what BA-12 intends: the
 core is real and the surroundings are mock. A labelled mock of a company can support the core; it
 cannot replace it. If `/company` were ranked first, the prototype would be a pitch deck.
 
@@ -126,7 +123,7 @@ The owner reopened that rule (**BA-2**, `docs/rt-answers-2026-09-23-audit.md`). 
 it cannot be recovered, and scoring features on what building them proved conflicts with BP-GOAL,
 which asks what a reviewer can try and what a funder can see. N2 calls that justification resume
 theatre. Nothing about the registry or the refusals changed. What changed is the question they were
-scored against, and that alone moved them from first to last.
+scored against, and that alone moved them from first to near the bottom.
 
 ## Gate: everything simulated is labelled
 
