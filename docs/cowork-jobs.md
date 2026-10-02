@@ -97,7 +97,29 @@ RETURN
 
 ---
 
-## Job 2 · Bring the Chinese site and blueprint into line with the PRD's rules (opened 2026-09-30, ruling (a))
+## Job 2 · Bring the Chinese site and blueprint into line with the PRD's rules — DONE 2026-10-01 (`b97005a`, `ed2fae8`)
+
+**Returned and closed, 2026-10-01.** Cowork read every line of all four messages. Its return is
+committed as written (`b97005a`): 21 dictionaries, the blueprint, the glossary (a third column, gloss at
+first use yes or no; 口味 refused beside 趣味), the 趣味 ban's hint, and the two revised D1 statements,
+appended to `CLAUDE.md` as a new stamp **still pending the owner's approval**. A guard followed
+(`ed2fae8`): an everyday term now never carries English, site-wide.
+
+**The owner's rulings on Cowork's five questions (2026-10-01), all accepted:**
+1. The three sentences reworded after the 口味 / 品味 split stand as written.
+2. The site name, the four instrument names, Hume's criteria and 音准 · 节拍 · 保真度 keep their
+   English at first use.
+3. The button 「把留下的内容写成提示词」 loses its gloss.
+4. `method.ts`: 「被砍掉，没有被改进」 becomes 「被撤下，没有被改进」, and the sentence pinned in
+   `src/app/site-d1.test.tsx` changes with it.
+5. `lab.ts`: the funnel paragraph keeps saying its descriptions are translated from the event registry.
+
+**Left open by the return.** Cowork's PRD check (Job 1) kept four glosses that its Job 2 table marks
+everyday: 训练线（retest arc）, 证伪记录（falsified registry）, 改判（reversal）, 公司视角（Company view）.
+The guard holds them in the PRD only, in `PRD_GLOSSES_AWAITING_RULING`, until the owner rules.
+
+The prompt as sent is kept below.
+
 
 The owner ruled (a) on 2026-09-30: the same two rules apply site-wide. Musical taste becomes 品味 (口味
 appears in `docs/blueprint.zh.md`, `docs/glossary-zh.md` and four dictionaries), and only specialised
