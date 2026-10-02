@@ -114,9 +114,14 @@ appended to `CLAUDE.md` as a new stamp **still pending the owner's approval**. A
    `src/app/site-d1.test.tsx` changes with it.
 5. `lab.ts`: the funnel paragraph keeps saying its descriptions are translated from the event registry.
 
-**Left open by the return.** Cowork's PRD check (Job 1) kept four glosses that its Job 2 table marks
-everyday: 训练线（retest arc）, 证伪记录（falsified registry）, 改判（reversal）, 公司视角（Company view）.
-The guard holds them in the PRD only, in `PRD_GLOSSES_AWAITING_RULING`, until the owner rules.
+**Two further rulings, owner, 2026-10-01.**
+- 1a: the two revised D1 statements are approved. An APPROVED stamp follows them in `CLAUDE.md`;
+  `src/content/zh/statements.test.ts` reads it, and a rendering appended later is pending until its own.
+- 2a: Cowork's PRD check (Job 1) had kept four glosses that its Job 2 table marks everyday:
+  训练线（retest arc）, 证伪记录（falsified registry）, 改判（reversal）, 公司视角（Company view）.
+  They are dropped from the Chinese PRD: eight English brackets deleted, no Chinese word changed.
+  This is the only edit to the PRD since Cowork's check, so its 已逐句校对 mark still describes the
+  Chinese words.
 
 The prompt as sent is kept below.
 

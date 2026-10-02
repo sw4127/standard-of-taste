@@ -4,7 +4,7 @@
  * Copies of the sentences in CLAUDE.md's "D1 on-surface statements in Chinese"
  * stamp, which `zh/statements.test.ts` extracts on every run and compares with
  * these, as the English statements are held. To change one, change the stamp.
- * Pending the owner's approval; the English statements govern.
+ * Approved by the owner on 2026-10-01 (ruling 1a); the English statements govern.
  */
 
 /** The Chinese of `READING_STATEMENT` (src/content/reading/statement.ts). */

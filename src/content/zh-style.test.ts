@@ -70,14 +70,6 @@ const TECHNICAL_GLOSS_ONLY = [
   "docs/prd-4-screens.zh.md",
 ];
 
-/**
- * Glosses the checked PRD keeps on terms the glossary now calls everyday (Cowork's
- * Job 2 table, 2026-10-01, which came after its PRD check). Held here, in the PRD
- * only, until the owner rules which of the two Cowork judgements stands; any other
- * everyday gloss in the PRD still fails.
- */
-const PRD_GLOSSES_AWAITING_RULING = ["训练线（retest arc）", "证伪记录（falsified registry）", "改判（reversal）", "公司视角（Company view）"];
-
 // ---- the corpus ---------------------------------------------------------------------------------
 
 /*
@@ -371,19 +363,13 @@ describe("every Chinese string on the site and in the documents keeps the rules"
 
   it("no everyday term carries English, in any string or on any rendered page (owner, ruling (a), 2026-09-30)", () => {
     const hits = [
-      ...corpus().flatMap((s) => {
-        const held = TECHNICAL_GLOSS_ONLY.includes(s.where) ? PRD_GLOSSES_AWAITING_RULING : [];
-        return everydayGlossBreaches(held.reduce((t, g) => t.split(g).join(" "), s.text)).map((b) => `${s.where}: ${b}`);
-      }),
+      ...corpus().flatMap((s) => everydayGlossBreaches(s.text).map((b) => `${s.where}: ${b}`)),
       // Title, metadata and attributes too: a gloss in a tab title is still read.
       ...zhPages.flatMap((p) =>
         everydayGlossBreaches([textOf(p.html), ...attributeText(p.html).split(".\n"), ...p.meta].join("\n")).map((b) => `${p.route}: ${b}`),
       ),
     ];
     expect(hits).toEqual([]);
-    // A hold for a gloss the PRD no longer has would sit here holding nothing, unseen.
-    const prd = TECHNICAL_GLOSS_ONLY.map((f) => readFileSync(f, "utf8")).join("\n");
-    expect(PRD_GLOSSES_AWAITING_RULING.filter((g) => !prd.includes(g))).toEqual([]);
   });
 
   it("every rendered Chinese page keeps the bans everywhere a reader looks, and writes each term bilingually at first use in its body", () => {

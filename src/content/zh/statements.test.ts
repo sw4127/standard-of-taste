@@ -29,13 +29,44 @@ export function zhStatementFor(constitution: string, surface: "card" | "reading"
   return quoted.length ? quoted.join("") : null;
 }
 
+/**
+ * Whether the renderings in force carry a status: the last marker of each surface
+ * says "pending owner approval", or an APPROVED stamp naming the zh renderings sits
+ * after both (owner ruling 1a, 2026-10-01). A rendering appended after an approval
+ * is unapproved until its own stamp, and without the pending mark it fails.
+ */
+export function zhStatementStatus(constitution: string): "approved" | "pending" | "unmarked" {
+  const lines = constitution.split(/\r?\n/);
+  const last = (["card", "reading"] as const).map((surface) =>
+    lines.findLastIndex((l) => l.startsWith("**zh rendering of the on-surface statement for the " + surface)),
+  );
+  const approval = lines.findLastIndex((l) => l.startsWith("*[APPROVED ") && l.includes("zh renderings"));
+  // In the same section: an approval stamp under a later heading approves something else.
+  const sameSection = !lines.slice(Math.max(...last), approval).some((l) => l.startsWith("#"));
+  if (approval > Math.max(...last) && sameSection) return "approved";
+  return last.every((i) => i >= 0 && lines[i].includes("pending owner approval")) ? "pending" : "unmarked";
+}
+
 describe("the Chinese statements are the constitution's", () => {
   const constitution = readFileSync("CLAUDE.md", "utf8");
 
-  it("found the stamp, marked pending the owner's approval", () => {
-    expect(constitution).toContain("zh rendering, pending owner approval");
+  it("found the stamp, and the renderings in force are approved by the owner (ruling 1a, 2026-10-01)", () => {
+    expect(zhStatementStatus(constitution)).toBe("approved");
     expect(zhStatementFor(constitution, "reading")?.length ?? 0).toBeGreaterThan(40);
     expect(zhStatementFor(constitution, "card")?.length ?? 0).toBeGreaterThan(30);
+  });
+
+  it("reads a rendering's status from the stamps, not from the newest line alone", () => {
+    const card = "**zh rendering of the on-surface statement for the card (pending owner approval):**";
+    const reading = "**zh rendering of the on-surface statement for the reading (pending owner approval):**";
+    const ok = "*[APPROVED 2026-10-01, the zh renderings above.]*";
+    expect(zhStatementStatus([card, reading].join(NL))).toBe("pending");
+    expect(zhStatementStatus([card, reading, ok].join(NL))).toBe("approved");
+    // A new rendering after the approval is not covered by it.
+    expect(zhStatementStatus([card, reading, ok, card].join(NL))).toBe("pending");
+    expect(zhStatementStatus([card, reading, ok, "**zh rendering of the on-surface statement for the card:**"].join(NL))).toBe("unmarked");
+    // An approval under a later heading is another section's.
+    expect(zhStatementStatus([card, reading, "### D3 amendment", ok].join(NL))).toBe("pending");
   });
 
   it("renders the stamp's sentences, character for character", () => {

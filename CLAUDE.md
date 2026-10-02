@@ -177,6 +177,8 @@ Appended, not overwritten; nothing above is amended by it. The bilingual brief (
 
 > 这份解读告诉你，一位听者近来的播放记录可能意味着什么。它说出规律，提示几种读法；哪一种对，或者都不对，由你来说。听辨测试只描述你做了什么。
 
+*[APPROVED 2026-10-01, owner ruling 1a on the Cowork Job 2 return: the two zh renderings amended 2026-10-01 above are approved and govern the Chinese card and the Chinese reading. Their markers are kept verbatim, "pending owner approval" included, per the keep-intact rule; this stamp settles them. The English statements still govern where the two languages differ. A later rendering appended below this stamp is pending until approved in its own stamp. This approves two sentences and nothing else: the `/zh/reading` "Named routes" line above keeps its own status.]*
+
 ### D3 amendment — the reading is the flagship (owner-approved 2026-09-23, ruling BA-6)
 Appended, not overwritten. Amends **D3 only**; D1, D2, D4, D5, D6 and N1–N3 are untouched by it. The ruling: `docs/rt-answers-2026-09-23-audit.md`.
 
