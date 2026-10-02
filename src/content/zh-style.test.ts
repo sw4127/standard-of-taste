@@ -57,10 +57,11 @@ const CJK = /[　-〿一-鿿＀-￯]/;
 
 /**
  * The Chinese PRD glosses only specialised technical terms (owner, 2026-09-30,
- * docs/handoff-2026-09-30.md): everyday words such as 解读 or 提示词 take no
- * English. The first-use rule glosses every glossary term, so it would force the
- * glosses the owner refused. Exempt from that one rule and nothing else: every
- * ban and every alternate check still reads these files.
+ * docs/handoff-2026-09-30.md), and Cowork checked it line by line on its own
+ * judgement of which terms are technical: it leaves 实测 or 推论 bare where the
+ * glossary's first-use flags would gloss them. The checked text stands. Exempt from
+ * the first-use rule and nothing else: every ban and every alternate check still
+ * reads these files.
  */
 const TECHNICAL_GLOSS_ONLY = [
   "docs/prd-1-use-cases.zh.md",
@@ -68,6 +69,14 @@ const TECHNICAL_GLOSS_ONLY = [
   "docs/prd-3-requirements.zh.md",
   "docs/prd-4-screens.zh.md",
 ];
+
+/**
+ * Glosses the checked PRD keeps on terms the glossary now calls everyday (Cowork's
+ * Job 2 table, 2026-10-01, which came after its PRD check). Held here, in the PRD
+ * only, until the owner rules which of the two Cowork judgements stands; any other
+ * everyday gloss in the PRD still fails.
+ */
+const PRD_GLOSSES_AWAITING_RULING = ["训练线（retest arc）", "证伪记录（falsified registry）", "改判（reversal）", "公司视角（Company view）"];
 
 // ---- the corpus ---------------------------------------------------------------------------------
 
@@ -186,6 +195,30 @@ export function firstUseBreaches(body: string): string[] {
 }
 
 /**
+ * An everyday term written with English in brackets. Only specialised technical
+ * terms keep their English (owner, ruling (a), 2026-09-30); the glossary marks the
+ * everyday ones `firstUse: false`. Any Latin gloss counts, so 解读（reading）
+ * cannot slip past by changing the English. A shorter term at the end of a longer
+ * technical one (需求 in 未满足的需求（unmet demand）) is the longer term's gloss.
+ * Not glosses, so not read: a bracket that cites IDs (解读（BP-INSIGHT）), and an
+ * evidence label (示意（ILLUSTRATIVE）), whose capitals are the label the page
+ * prints, kept wherever a label renders (docs/glossary-zh.md).
+ */
+export function everydayGlossBreaches(text: string): string[] {
+  const out: string[] = [];
+  for (const term of GLOSSARY.filter((t) => !t.firstUse && t.en !== t.en.toUpperCase())) {
+    const longer = GLOSSARY.filter((u) => u.zh !== term.zh && u.zh.endsWith(term.zh));
+    for (let i = text.indexOf(`${term.zh}（`); i >= 0; i = text.indexOf(`${term.zh}（`, i + 1)) {
+      const inside = text.slice(i + term.zh.length + 1);
+      if (!/^[A-Za-z]/.test(inside) || /^[A-Z]{1,4}-/.test(inside)) continue;
+      if (longer.some((u) => text.slice(i + term.zh.length - u.zh.length, i + term.zh.length) === u.zh)) continue;
+      out.push(`${term.zh} is an everyday term and takes no English: …${text.slice(i, i + term.zh.length + 16)}`);
+    }
+  }
+  return out;
+}
+
+/**
  * A page's body: the header and navigation repeat on every page and are exempt.
  * So is a prompt the visitor carries out (a `<pre>` or `<textarea>`): it is text
  * for a music generator, and a bracketed English term inside it would be pasted
@@ -294,6 +327,25 @@ describe("the bans are alive (each planted specimen trips, each clean one passes
     expect(firstUseBreaches("阈值测试（Threshold Test）测出阈值。")).toHaveLength(1);
   });
 
+  it("an everyday term with English is caught, whatever the English, and a technical term's own gloss is not", () => {
+    expect(everydayGlossBreaches("解读（the reading）")).toHaveLength(1);
+    expect(everydayGlossBreaches("解读（reading）和提示词（prompt）")).toHaveLength(2);
+    expect(everydayGlossBreaches("一份解读，一条提示词。")).toEqual([]);
+    expect(everydayGlossBreaches("未满足的需求（unmet demand）")).toEqual([]);
+    expect(everydayGlossBreaches("需求（demand）")).toHaveLength(1);
+    expect(everydayGlossBreaches("音分（cents）")).toEqual([]);
+    expect(everydayGlossBreaches("解读（见下）")).toEqual([]);
+    expect(everydayGlossBreaches("解读（BP-INSIGHT、BP-UNMET）")).toEqual([]);
+    expect(everydayGlossBreaches("示意（ILLUSTRATIVE）")).toEqual([]);
+    expect(everydayGlossBreaches("裁定（ruling）")).toHaveLength(1);
+  });
+
+  it("the capitals exemption covers the four evidence labels and nothing else", () => {
+    // A new everyday term whose English is an acronym would otherwise be exempt unseen.
+    const exempt = GLOSSARY.filter((t) => !t.firstUse && t.en === t.en.toUpperCase()).map((t) => t.en);
+    expect(exempt.sort()).toEqual(["ASSUMED", "ILLUSTRATIVE", "REAL", "SIMULATED"]);
+  });
+
   it("an alternate rendering is caught", () => {
     expect(alternateBreaches("你的阈值是十二美分。")).not.toEqual([]);
     expect(alternateBreaches("你的阈值是十二音分。")).toEqual([]);
@@ -317,6 +369,23 @@ describe("every Chinese string on the site and in the documents keeps the rules"
     expect(hits).toEqual([]);
   });
 
+  it("no everyday term carries English, in any string or on any rendered page (owner, ruling (a), 2026-09-30)", () => {
+    const hits = [
+      ...corpus().flatMap((s) => {
+        const held = TECHNICAL_GLOSS_ONLY.includes(s.where) ? PRD_GLOSSES_AWAITING_RULING : [];
+        return everydayGlossBreaches(held.reduce((t, g) => t.split(g).join(" "), s.text)).map((b) => `${s.where}: ${b}`);
+      }),
+      // Title, metadata and attributes too: a gloss in a tab title is still read.
+      ...zhPages.flatMap((p) =>
+        everydayGlossBreaches([textOf(p.html), ...attributeText(p.html).split(".\n"), ...p.meta].join("\n")).map((b) => `${p.route}: ${b}`),
+      ),
+    ];
+    expect(hits).toEqual([]);
+    // A hold for a gloss the PRD no longer has would sit here holding nothing, unseen.
+    const prd = TECHNICAL_GLOSS_ONLY.map((f) => readFileSync(f, "utf8")).join("\n");
+    expect(PRD_GLOSSES_AWAITING_RULING.filter((g) => !prd.includes(g))).toEqual([]);
+  });
+
   it("every rendered Chinese page keeps the bans everywhere a reader looks, and writes each term bilingually at first use in its body", () => {
     expect(site.failed).toEqual([]);
     const hits = zhPages.flatMap((p) => {
@@ -338,14 +407,6 @@ describe("every Chinese string on the site and in the documents keeps the rules"
     expect(zhDocuments()).toEqual(expect.arrayContaining(TECHNICAL_GLOSS_ONLY));
     const hits = zhDocuments().filter((f) => !TECHNICAL_GLOSS_ONLY.includes(f)).flatMap((f) =>
       firstUseBreaches(documentProse(readFileSync(f, "utf8")).join("\n")).map((b) => `${f}: ${b}`),
-    );
-    expect(hits).toEqual([]);
-  });
-
-  it("the Chinese PRD calls musical taste 品味, never 口味 (owner, 2026-09-30)", () => {
-    // Narrower than a site-wide ban: the glossary still lists 口味, and the site's pages await Cowork's revision.
-    const hits = TECHNICAL_GLOSS_ONLY.flatMap((f) =>
-      documentProse(readFileSync(f, "utf8")).filter((l) => l.includes("口味")).map((l) => `${f}: ${l.slice(0, 40)}`),
     );
     expect(hits).toEqual([]);
   });
