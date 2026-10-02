@@ -14,15 +14,15 @@ const COMPANY: Dict = {
     "示意：一家虚构的流媒体平台为什么会做解读，会盯哪些指标，又用哪一次 A/B 测试来定去留。",
 
   "Illustrative. A fictional company; nothing here was measured.": "示意（ILLUSTRATIVE）。公司是虚构的，这里的数字都未经测量。",
-  "THE COMPANY VIEW": "公司视角（Company view）",
+  "THE COMPANY VIEW": "公司视角",
   "Why Tessavox would build the reading, and how it would find out if it was wrong.":
-    "Tessavox 为什么会做解读（the reading），做错了又怎样查得出来。",
+    "Tessavox 为什么会做解读，做错了又怎样查得出来。",
 
   "The business case": "商业论证（business case）",
   "Tessavox already holds what the reading needs: every listener's recent plays. Nobody is asked to describe their taste, which the interviews behind this project found almost nobody can do.":
-    "解读需要的东西，Tessavox 手里已经有了：每位听者近来的播放记录（plays）。它无须请任何人描述自己的口味（taste），而本项目的访谈发现，这件事几乎没有人做得到。",
+    "解读需要的东西，Tessavox 手里已经有了：每位听者近来的播放记录。解读不需要任何人描述自己的品味，本项目背后的访谈发现，这件事几乎没有人做得到。",
   "The prompt the reading ends in is pasted into Tessavox's own creation tool, trained on music it has licensed. The reading is the way in; the tool is what it feeds.":
-    "解读最后给出的提示词（prompt），贴进 Tessavox 自己的创作工具；这个工具用它获得授权的音乐训练而成。解读是入口，它产出的提示词交给工具去用。",
+    "解读最后给出的提示词，会贴进 Tessavox 自己的创作工具，这个工具用 Tessavox 获得授权的音乐训练而成。解读是入口，它的产出交给工具使用。",
   "What a listener rejects and what they choose is a signal a recommender does not collect: a person correcting a description of their own listening.":
     "听者删去哪一条、选了哪种读法，是推荐系统收集不到的信号：一个人在纠正对自己收听的描述。",
 
@@ -30,7 +30,7 @@ const COMPANY: Dict = {
   "NORTH STAR": "北极星指标（north star）",
   "Readings that end in a creation start": "以开始创作收尾的解读",
   "Of the readings a listener opens, the share that reach the creation screen and start a track.":
-    "听者打开的解读中，走到创作界面（creation screen，示意）并开始做一首曲子的比例。",
+    "听者打开的解读中，走到创作界面并开始做一首曲子的比例。",
   "It is the whole claim in one number: a reading worth having is one somebody carries into something they make.":
     "整个主张压成一个数：值得拥有的解读，是有人会把它带进自己作品里的解读。",
   SUPPORTING: "辅助指标",
@@ -41,12 +41,12 @@ const COMPANY: Dict = {
   "Kept lines where the listener picked one of the two offered readings, over kept lines.":
     "保留下来的条目中，听者从提示的两种读法里选了一种的，占保留条数的比例。",
   'It says whether the offers land. A line kept with "neither" every time names a real pattern and misreads it.':
-    "它看提示的读法有没有说中。一条每次都被保留、却每次都选「都不对」的条目，说中了真实的规律（pattern），却读错了它的意思。",
+    "这个比率反映提示的读法有没有说中。一条每次都被保留、却每次都选「都不对」的条目，说中了真实的规律，却读错了它的意思。",
   GUARDRAILS: "护栏指标（guardrail）",
   "Rejection rate, per template": "删去率，按模板统计",
   "For each line template, rejections over showings.": "每个条目模板被删去的次数除以展示次数。",
   "High means the template is wrong. Near zero is its own warning: a line nobody ever rejects may be true of everyone, which is the Barnum effect the receipts exist to prevent.":
-    "删去率高，说明模板写错了。接近零也是一种警告：一条从来没人删去的条目，可能对谁都成立，这就是巴纳姆效应（Barnum effect），依据（receipt）就是为防它而设的。",
+    "删去率高，说明模板写错了。接近零也是一种警告：一条从来没人删去的条目，可能对谁都成立，这就是巴纳姆效应（Barnum effect），依据就是为防它而设的。",
   "Carve-out hits": "红线条款（carve-out）命中数",
   "Rendered sentences that match the carve-out patterns.": "页面上出现的、与红线条款所列词语相符的句子。",
   "The target is zero, always: nothing on any surface asserts anything about trauma, abuse or mental health.":
@@ -100,7 +100,7 @@ const COMPANY: Dict = {
   Personalization: "个性化推荐",
   "Doesn't the recommender already do this?": "推荐系统不已经在做这件事了吗？",
   "The recommender acts on a listener's taste without ever showing it to them. The reading shows the pattern, points at the plays behind it, and lets the listener correct it; a correction is a signal the recommender never gets.":
-    "推荐系统按听者的口味行事，却从不把口味摆给听者看。解读把规律摆出来，指出背后的播放记录，并让听者纠正它；一次纠正，就是推荐系统永远拿不到的信号。",
+    "推荐系统按听者的品味行事，却从不把品味摆给听者看。解读把规律摆出来，指出背后的播放记录，并让听者纠正它；一次纠正，就是推荐系统永远拿不到的信号。",
   "Trust & safety": "信任与安全",
   "Are we inferring how people feel from what they play?": "我们在从人们播放的歌里推断他们的感受吗？",
   "We don't infer it, and the design refuses to. A line names a pattern and offers two readings as questions, because the same pattern can come from opposite feelings; the listener says which, if either. No model writes any sentence, and nothing on any surface asserts anything about trauma, abuse or mental health. In 2021 a streaming service's patent for detecting a listener's emotional state from their voice drew a public campaign against it.":
@@ -117,7 +117,7 @@ const COMPANY: Dict = {
   Growth: "增长",
   "Which number does it move, and how would we know it didn't?": "它会让哪个数变化，没变的话我们又怎么知道？",
   "Creation starts, tested against today's plain prompt box, with the result that kills it written down before the test runs. The demand underneath is assumed, not shown: nobody has yet been observed wanting this.":
-    "开始创作的次数，与今天普通的提示词输入框对照测试；终止条件在测试开始前就写下来。背后的需求（demand）只是假设，还没有证据：至今没有观察到任何人想要它。",
+    "开始创作的次数，与今天普通的提示词输入框对照测试；终止条件在测试开始前就写下来。背后的需求只是假设，并未得到证明：至今没有观察到任何人想要它。",
   "Label partnerships": "唱片公司合作",
   "Will labels see this as a tool that competes with their artists?": "唱片公司会不会把它看成与旗下艺人竞争的工具？",
   "The prompt feeds Tessavox's licensed tool, which is the direction the industry has taken in public: in October 2025 a major streaming service announced AI music products built with the labels rather than around them.":

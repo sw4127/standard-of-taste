@@ -28,7 +28,7 @@ const BIAS: Dict = {
   "STANDARD OF TASTE": "鉴衡",
   "Do you hear the music — or the name on it?": "你听到的是音乐，还是上面的名字？",
   "In 1757, David Hume pointed out that reputation gets to a judgment before the ears do — a famous name can make a mediocre thing sound profound. He called it prejudice.":
-    "1757 年，大卫·休谟（David Hume）指出，名声总是先于耳朵抵达判断：一个有名的名字，能让平庸的东西听起来深刻。他称之为偏见。",
+    "1757 年，大卫·休谟（David Hume）指出，名声总是先于耳朵抵达判断：一个响亮的名字，能让平庸的东西听起来深刻。他称之为偏见。",
   "{count} clips. You rate them twice: once with nothing but your ears, once with the names and the acclaim attached. {strong}":
     "{count} 段录音。你给它们打两次分：一次只凭耳朵，一次带着名字和赞誉。{strong}",
   "The gap is your number.": "前后的差距，就是你的数字。",
@@ -83,7 +83,7 @@ const BIAS: Dict = {
   "Noé Calvet": "Noé Calvet",
 
   // The label blurbs (`src/content/bias/items.ts`), which are the stimulus.
-  "One of thirty variations, and not one of the ones anybody quotes.": "三十首变奏中的一首，而且并非任何人会引用的那几首。",
+  "One of thirty variations, and not one of the ones anybody quotes.": "三十首变奏中的一首，也不属于常被人引用的那几首。",
   "Written to be dropped into other people's games, and released by the album-load.": "写来塞进别人的游戏里，整张整张地发布。",
   "The nocturne recital programmers skip; even devoted Chopin listeners rarely defend it.":
     "独奏会排曲目时会跳过的那首夜曲；就连忠实的肖邦听众也很少为它辩护。",
@@ -123,7 +123,7 @@ const BIAS: Dict = {
   "{n} clip was already at the edge of the scale blind — your real sway may run higher.":
     "盲听时已有 {n} 段录音停在量表边缘：你真实的摇摆度可能更高。",
   "Provisional read — you're early. Percentiles arrive when the cohort does, not before.":
-    "暂定读数：你来得早。百分位要等样本人群到来才会有，在那之前不会有。",
+    "暂定读数：你来得早。百分位要等有了样本人群才会出现，不会更早。",
   "One more thing — about those names": "还有一件事：关于那些名字",
 
   // The debrief.
@@ -140,13 +140,13 @@ const BIAS: Dict = {
   "You didn't take the bait.": "你没有上钩。",
   "That movement can't be explained by better information — there wasn't any.":
     "这个移动无法用更好的信息来解释：根本没有更好的信息。",
-  "FULL RECEIPTS": "全部依据（receipt）",
+  "FULL RECEIPTS": "全部依据",
   "Clip {n}: {a} → {b}": "第 {n} 段：{a} → {b}",
   " (control — never labeled)": "（对照组：从未带标签）",
   " (swapped)": "（被调换）",
   "YOUR NUMBER, PORTABLE": "带得走的数字",
   "The link carries only your ratings — anyone who opens it sees your number recomputed — then gets dared to do better blind.":
-    "链接里只带着你的评分：打开它的人会看到你的数字被重新计算出来，然后被激将去盲听做得更好。",
+    "链接里只带着你的评分：打开它的人会看到据此重新算出的你的数字，然后被激去盲听一次，看能不能做得更好。",
   "Share your number": "分享你的数字",
   "Story card": "竖版卡片",
   "View your result page →": "查看你的结果页 →",
@@ -154,7 +154,7 @@ const BIAS: Dict = {
   "Delicacy Trials": "细辨测试（Delicacy Trials）",
   "One clip of each pair has been quietly damaged. Prestige tested your prejudice — this one tests whether your ears can actually tell. In the gym soon.":
     "每一对里有一段被悄悄损坏过。名气偏差测试测的是你的偏见，这一项测你的耳朵到底分不分得出。很快上线。",
-  "Noted. You're on the record.": "记下了。你已在记录上。",
+  "Noted. You're on the record.": "记下了。你已经登记在册。",
   "I want this →": "我想要这个 →",
   RECORDINGS: "录音",
   "Public Domain (Musopen Kickstarter release)": "公有领域（Musopen Kickstarter 发行）",
@@ -169,7 +169,7 @@ const BIAS: Dict = {
   "Someone sent you their number? They're daring you.": "有人把他们的数字发给了你？他们在激你。",
   "Get yours — take the test": "测出你自己的：来做这项测试",
   "Provisional read — percentiles arrive when the cohort does, not before.":
-    "暂定读数：百分位要等样本人群到来才会有，在那之前不会有。",
+    "暂定读数：百分位要等有了样本人群才会出现，不会更早。",
 };
 
 export default BIAS;

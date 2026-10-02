@@ -111,7 +111,7 @@ const REFUSALS: Record<string, string> = {
   // The Chinese pages' renderings of the refusals above, each with the same reason.
   "任何页面都不对创伤、虐待或心理健康作出任何断言": "/zh/company stating the RT-Z10 carve-out, not breaking it",
   "测的并非人格，也并非氛围": "the Chinese front door refusing D1's subject by name, as the English \"Not a personality.\" does",
-  "一个背后没有任何测量的五次点击人格判定被砍掉": "/zh/method recording why D1 exists, as the English refusal above does",
+  "一个背后没有任何测量的五次点击人格判定被撤下": "/zh/method recording why D1 exists, as the English refusal above does",
 };
 
 interface Hit {

@@ -20,10 +20,10 @@ const LAB: Dict = {
   Methodology: "方法论",
 
   // The page.
-  "THE LAB": "实验室（The Lab）",
+  "THE LAB": "实验室",
   "The measurement layer, with the lid off.": "测量层，揭开盖子给你看。",
   "Most products show you a score and hide the machine. This page is the machine. Every number the gym computes is defined here — the formula, who owns it, what good would look like, and the caveat that has to travel with it. Where a number has no defensible target yet, it says so instead of inventing one.":
-    "大多数产品给你看一个分数，把机器藏起来。这一页就是那台机器。各项听辨测试（hearing tests）计算的每一个数字都在这里定义：公式、由谁负责、好的结果是什么样、必须随它一起出现的注意事项。一个数字若还没有站得住的目标，这里就照直说，不去编一个。",
+    "大多数产品给你看一个分数，把机器藏起来。这一页就是那台机器。各项听辨测试计算的每一个数字都在这里定义：公式、由谁负责、好的结果是什么样、必须随它一起出现的注意事项。一个数字若还没有站得住的目标，这里就照直说，不去编一个。",
   "Every panel that shows data carries one of these badges. Right now the instrument has never been fielded, so {strong} and nothing here is a percentile. Numbers generated from a known model to validate the pipeline are labelled {sim} wherever they appear. When real responses arrive they flow through the identical pipeline — the only thing that changes is the badge. Figures taken off the audio files themselves, which involve nobody, are labelled {meas}.":
     "每一个展示数据的面板都带着其中一个标记。目前这些测试从未投入使用，所以{strong}，这里也没有任何百分位。为验证处理流程、由已知模型生成的数字，出现在哪里都标为{sim}。真实作答到来时，会走完全相同的流程，唯一变的是标记。直接从音频文件本身测得、不涉及任何人的数字，标为{meas}。",
   "no real cohort exists": "还不存在真实的样本人群",
@@ -41,20 +41,20 @@ const LAB: Dict = {
     "只列出来，不做假样子。空面板算不上面板，日期也算不上理由，所以每一项都说明了真正挡在路上的是什么。",
   "The funnel, specified": "漏斗，按规格写出",
   "The panel above is not built, so here is what it would be. Every step names the event it would be counted from, and each description is the one the code's own event registry carries — not a second copy written here, which would be free to drift from what actually fires.":
-    "上面的面板没有建成，所以这里写出它建成后的样子。每一步都注明据以计数的事件，每一条描述都译自代码自己的事件登记表，按英文原文逐条对应；登记表里的英文一改，这里的译文就对不上号，测试会把它拦下，所以它不会悄悄变成一份和实际触发的事件对不上的副本。",
+    "上面的面板没有建成，所以这里写出它建成后的样子。每一步都注明据以计数的事件，每一条描述都译自代码自身的事件登记表，并非另写的一份副本；登记表里的英文一改，测试就会把对不上的译文拦下，所以这里不会悄悄偏离实际触发的事件。",
   "WHAT IT WOULD TAKE": "需要什么条件",
   "A step's rate cannot be published until it can be estimated. At the worst case for a proportion — a rate near half, where the uncertainty is largest — one step needs {strong} before its rate is known to within five percentage points, and {ten} to within ten. Those are requirements per step, not for the funnel: the last step is the expensive one.":
-    "一个步骤的比率，在能被估计之前不能发布。在比例最坏的情况下，也就是比率接近一半、不确定性最大的时候，一个步骤需要 {strong}，才能把它的比率确定在五个百分点以内；要确定在十个百分点以内，需要 {ten} 次。这些是每一步的要求，并非整个漏斗的要求：最后一步最贵。",
+    "一个步骤的比率，在能被估计之前不能发布。按比例最坏的情况算，即比率接近一半、不确定性最大时，一个步骤需要 {strong}，才能把它的比率确定在五个百分点以内；要确定在十个百分点以内，需要 {ten} 次。这些是每一步的要求，并非整个漏斗的要求：最后一步最贵。",
   "{n} sessions reaching it": "{n} 次到达这一步的测试",
   "How many arrivals it takes to put {n} people at the bottom depends on the pass-through between steps, which has never been measured here — so this page does not estimate it. {noReal}":
     "要让 {n} 个人走到底需要多少访客，取决于步骤之间的通过率，而这里从未测量过它，所以本页不作估计。{noReal}",
   "No panel on this page carries a REAL badge.": "本页没有任何面板带着真实标记。",
   "THE ESTIMATOR, DEMONSTRATED": "估计量，演示一遍",
   "The panel is absent because there is no traffic. The ANALYSIS is not absent, and this shows it working. {arrivals} synthetic arrivals were pushed through the steps below {reps} times, each step keeping people at a rate {strong}. The estimator then read those rates back off the counts, knowing nothing about how they were made.":
-    "面板缺席，是因为没有流量。分析并没有缺席，这里就演示它怎样工作。{arrivals} 个合成访客被推过下面各个步骤，重复 {reps} 次，每一步按{strong}的比率留下人。随后，估计量从计数里把这些比率读回来，对它们是怎么产生的一无所知。",
+    "面板空缺，是因为没有流量。分析并没有空缺，下面演示它怎样运作。{arrivals} 个合成访客依次经过下面各个步骤，共重复 {reps} 次，每一步按{strong}的比率留下访客。随后，估计量在完全不知道这些比率如何产生的情况下，从计数里把它们读了回来。",
   "chosen in advance": "事先选定",
   "The pass-through rates in the first column are inventions. They are not this product's rates, they are not anybody's rates, and nothing here should be read as an estimate of what real visitors would do. They are the answer key: the point is whether the estimator finds them.":
-    "第一列的通过率是编出来的。它们并非这个产品的比率，也并非任何人的比率，这里的任何东西都不应被读成对真实访客行为的估计。它们是答案：要看的是估计量能不能找到它们。",
+    "第一列的通过率是编出来的。它们并非这个产品的比率，也并非任何人的比率，这里的任何东西都不应被读成对真实访客行为的估计。它们是答案：关键在于估计量能不能找到它们。",
   Step: "步骤",
   "True rate": "设定比率",
   Recovered: "复原值",
@@ -66,7 +66,7 @@ const LAB: Dict = {
     "{lead}没有区间的比率只是装饰；一个区间若不像它声称的那样经常包含真值，还不如没有。一个 95% 区间应该在大约 100 次里有 95 次包含答案，最后一列测的就是它有没有做到。",
   "Read it down the column, not across.": "这一列要从上往下读，不要横着读。",
   "{lead} Coverage sits on 95 at the top and slips a point or two at the bottom, and that is the most useful thing on this page. Each step's denominator is the step above it, so a run that starts with {arrivals} arrivals has a few hundred left by the debrief — and an interval built on a few hundred is doing worse than one built on thousands, exactly where a funnel is most often quoted. That is the arithmetic reason this panel is not built, shown rather than asserted.":
-    "{lead}覆盖率在顶部停在 95，到底部掉了一两个点，这是本页最有用的一样东西。每一步的分母是它上面那一步，所以一次从 {arrivals} 个访客开始的运行，到结果说明页时只剩几百人；建立在几百人上的区间，比建立在几千人上的差，而漏斗最常被引用的，正是这里。这就是这个面板没有建成的算术理由，摆出来给你看，并非只是声称。",
+    "{lead}覆盖率在顶部停在 95，到底部掉了一两个点，这是本页最有用的一条信息。每一步的分母是它上面那一步，所以一次从 {arrivals} 个访客开始的运行，到结果说明页时只剩几百人；建立在几百人上的区间，比建立在几千人上的差，偏偏这里是漏斗最常被引用的地方。这就是这个面板没有建成的算术理由，摆出来给你看，并非只是声称。",
   "The same code is what would run the day traffic arrives; it is exercised on the real event names above. Everything it cannot do without respondents — say what any of these rates IS — it still cannot do, and this page will go on saying so.":
     "等流量到来的那天，跑的就是同一份代码；它已经在上面代码实际使用的事件名上运行过。没有作答者就做不到的事，也就是说出这些比率到底是多少，它现在仍然做不到，本页也会一直这样说明。",
 
@@ -113,8 +113,8 @@ const LAB: Dict = {
     "听者在盲听一轮中实际用到了评分量表上多少个不同的分值；这对应休谟的比较标准：只有把作品相互掂量过的人，才能给出不同程度的称赞。",
   "degreesUsed = |{ blind rating : every clip rated, controls included }|": "degreesUsed = |{ 盲听评分：所有录音，含对照组 }|",
   "Bounded by the number of clips as well as by the scale, and a narrow spread may simply be the correct answer if the clips really are close in quality. The instrument cannot tell those two cases apart. Read it against the indifferent-rater figure, never against the ceiling.":
-    "它既受量表限制，也受录音数量限制；如果录音的质量确实接近，窄的分布可能就是正确答案。测试分不清这两种情况。要拿它和随手乱打分的人的数字对照着读，永远不要拿它和上限比。",
-  "Degrees an indifferent rater would use": "随手乱打分的人会用到的分档数",
+    "它既受量表限制，也受录音数量限制；如果录音的质量确实接近，窄的分布可能就是正确答案。测试分不清这两种情况。要拿它和随意打分会得出的数字对照着读，永远不要拿它和上限比。",
+  "Degrees an indifferent rater would use": "随意打分会用到的分档数",
   "How many distinct scale points somebody rating every clip at random would be expected to land on. The reference point for the degrees-used count, because the top of the scale is reachable by accident.":
     "一个随机给每段录音打分的人，预计会用到多少个不同的分值。这是分档数的参照点，因为量表的最高档也可能碰巧达到。",
   "D · (1 − ((D−1)/D)^n) for n clips on a D-point scale": "n 段录音、D 点量表时为 D · (1 − ((D−1)/D)^n)",
@@ -143,17 +143,17 @@ const LAB: Dict = {
     "只在选对的试次上计分：在选错的文件里判断瑕疵，无从计分，谈不上错。",
   "Your spread across works the critic separated": "你在评论家拉开的作品之间的评分差距",
   "The average distance between your two ratings, across pairs of works a published critic placed at least ten positions apart in his own ranking.":
-    "在一位发表过评论的评论家自己的排名里相隔至少 10 位的作品配对上，你的两个评分之间的平均距离。",
+    "一位评论家在自己公开发表的排名里，把一些作品排得相隔至少 10 位；在这些作品配对上，你的两个评分之间的平均距离。",
   "mean |rating(a) − rating(b)| over pairs with |Δposition| ≥ 10": "取 |Δposition| ≥ 10 的配对：mean |rating(a) − rating(b)|",
   "Read it beside the close-pairs figure and beside the indifferent-rater figure; alone it says nothing. It measures whether your ratings moved, never whether they moved the same way the critic's did — agreement is not scored and cannot be computed from what this instrument stores. Three further limits travel with it: a forty-second excerpt cannot carry a critic's verdict on a work up to forty minutes long, so the clip is longer than this product's others and that is a mitigation rather than a fix; clips the listener says they already knew are removed on their word alone, unverified; and the difference between the two figures is never reported, because four pairs against four drawn from clips that appear in several pairs each, with nobody having sat the instrument twice, leaves no measured wobble against which a difference could be called real.":
-    "要和挨得很近的配对的数字、以及随手乱打分的人的数字放在一起读；单独看它什么也说明不了。它测的是你的评分有没有拉开，从不看拉开的方向是否和评论家一致：一致与否不计分，也无法从这项测试存下的数据里算出来。还有三条限制随它一起：40 秒的片段承载不了评论家对一部长达 40 分钟作品的评判，所以这里的片段比本产品其他测试的长，这是缓解，并非解决；听者说以前听过的录音，只凭本人的话就被剔除，未经核实；两个数字之间的差距从不报告，因为每边只有 4 对，取自每段都出现在好几对里的录音，而且还没有人做过两次，没有测得的波动可以用来判断一个差距确实存在。",
+    "要和挨得很近的配对的数字、以及随意打分会得出的数字放在一起读；单独看它什么也说明不了。它测的是你的评分有没有拉开，从不看拉开的方向是否和评论家一致：一致与否不计分，也无法从这项测试存下的数据里算出来。还有三条限制随它一起：40 秒的片段承载不了评论家对一部长达 40 分钟作品的评判，所以这里的片段比本产品其他测试的长，这是缓解，并非解决；听者说以前听过的录音，只凭本人的话就被剔除，未经核实；两个数字之间的差距从不报告，因为每边只有 4 对，取自每段都出现在好几对里的录音，而且还没有人做过两次，没有测得的波动可以用来判断一个差距确实存在。",
   "Your spread across works the critic bracketed together": "你在评论家排得挨在一起的作品之间的评分差距",
   "The average distance between your two ratings, across pairs of works the same critic placed within three positions of each other.":
     "在同一位评论家排得相距 3 位以内的作品配对上，你的两个评分之间的平均距离。",
   "mean |rating(a) − rating(b)| over pairs with |Δposition| ≤ 3": "取 |Δposition| ≤ 3 的配对：mean |rating(a) − rating(b)|",
   "The recordings in this pool differ in where their spectrum ends by 10,002 Hz, for reasons no ranking caused — one source is a 128 kbps mp3 that stops at 8,624 Hz. Measured, that difference is larger across these pairs (6,498 Hz mean) than across the separated ones (3,758 Hz), so the confound works against finding a difference rather than for it. It cannot be removed without destroying the recordings; its direction is guarded instead.":
-    "这个曲库里的录音，频谱截止的位置相差可达 10,002 Hz，原因与任何排名无关：其中一个来源是 128 kbps 的 mp3，在 8,624 Hz 就截止了。实测下来，这种差别在这些配对上（平均 6,498 Hz）比在拉开的配对上（3,758 Hz）更大，所以这个混淆因素只会让差异更难被发现，不会让它更容易出现。不毁掉录音就去不掉它；取而代之的做法是守住它的方向。",
-  "What an indifferent rater would produce": "随手乱打分的人会得出的数字",
+    "这个曲库里的录音，频谱截止的位置相差可达 10,002 Hz，原因与任何排名无关：其中一个来源是 128 kbps 的 mp3，在 8,624 Hz 就截止了。实测下来，这种差别在这些配对上（平均 6,498 Hz）比在拉开的配对上（3,758 Hz）更大，所以这个混淆因素只会让差异更难被发现，不会让它更容易出现。不毁掉录音就去不掉它，于是改为守住它的方向。",
+  "What an indifferent rater would produce": "随意打分会得出的数字",
   "The average distance between two ratings chosen at random on this scale. Chance does not know which works a critic separated, so it produces this same figure on both kinds of pair — which is what makes it the reference point for both.":
     "在这个量表上随机选出的两个评分之间的平均距离。随机不知道评论家拉开了哪些作品，所以在两类配对上给出同一个数字，这正是它能作为两者参照点的原因。",
   "(D² − 1) / (3D) for a D-point scale": "D 点量表时为 (D² − 1) / (3D)",
@@ -163,7 +163,7 @@ const LAB: Dict = {
   "the magnitude at which the fitted psychometric curve crosses the target detection rate, from all (magnitude, correct) observations in the run — reported in cents, milliseconds or kbps depending on the family":
     "拟合出的心理测量曲线与目标察觉率相交处的量级，用本次运行中全部的量级与对错观测拟合；按类别以音分、毫秒或 kbps 报告",
   "A fact about one person on one sitting, not a statistic describing the instrument, and not comparable across families because the units differ. Most sittings report a BAND rather than a single number, because a point estimate from a noisy measurement is a claim the measurement cannot support. The estimator that averaged reversal levels was retired for printing a 95% interval that covered the truth 49-72% of the time; this one was measured at 94-100%, and 94-98% even when the psychometric model is wrong.":
-    "这是关于一个人某一次测试的事实，并非描述测试本身的统计量；由于单位不同，不同类别之间也不可比较。大多数测试报告的是一个区间，并非单个数字，因为从有噪声的测量得出的点估计，是这个测量撑不起的论断。原先对阶梯拐点取平均的估计量已经撤下，因为它给出的 95% 区间只有 49% 到 72% 的时候覆盖真值；现在这个测得的覆盖率是 94% 到 100%，即使心理测量模型设错了，也有 94% 到 98%。",
+    "这是关于一个人某一次测试的事实，并非描述测试本身的统计量；由于单位不同，不同类别之间也不可比较。大多数测试报告的是一个区间，并非单个数字，因为从有噪声的测量得出的点估计，是这个测量撑不起的论断。原先对阶梯转折点所在级别取平均的估计量已经撤下，因为它给出的 95% 区间只有 49% 到 72% 的时候覆盖真值；现在这个测得的覆盖率是 94% 到 100%，即使心理测量模型设错了，也有 94% 到 98%。",
   "Brier score": "布里尔分数（Brier score）",
   "Mean squared error between claimed confidence and what actually happened. Lower is better; it rewards knowing how right you are.":
     "自报把握与实际结果之间的均方误差。越低越好；它奖励的是知道自己有多对。",
@@ -179,7 +179,7 @@ const LAB: Dict = {
     "±10 这个界限是暂定的判断，并非数据。以一次测试的长度，差距的标准误可能超过这个界限本身。",
   "Item difficulty (p)": "题目难度（p）",
   "Proportion of respondents who answered the item correctly. Higher means EASIER — the field's unfortunate convention, kept because the acceptance band is written in it.":
-    "答对这道题的作答者比例。数值越高表示越容易，这是这个领域不太走运的惯例，保留它是因为验收区间就是按它写的。",
+    "答对这道题的作答者比例。数值越高表示越容易，这是这个领域一个不太理想的惯例，保留它是因为验收区间就是按它写的。",
   "p = (number correct) / (number who answered)": "p =（答对人数）/（作答人数）",
   "0.55 – 0.85": "0.55 至 0.85",
   "Population-dependent: the same item is 'easier' in an abler cohort. Not an intrinsic property of the item.":
@@ -242,8 +242,8 @@ const LAB: Dict = {
   "Calibration & bias distributions": "校准与偏差分布",
   "Brier scores, over- and under-confidence, and the distribution of prestige sway across respondents.": "布里尔分数、过度与不足的自信，以及名气摇摆度在作答者之间的分布。",
   "A distribution is a fact about a group of people, and no group has been through this yet. Simulating one would draw the model we assumed rather than anything measured — a shape with no information in it, wearing the badge of a finding.":
-    "分布是关于一群人的事实，而还没有任何一群人做过这些测试。模拟出一个分布，画的只是我们假定的模型，并非任何测量结果：一个不含任何信息的形状，却戴着发现的标记。",
-  "Falsified hypotheses": "证伪记录（falsified registry）",
+    "分布是关于一群人的事实，而还没有任何一群人做过这些测试。模拟出一个分布，画的只是我们假定的模型，并非任何测量结果：一个不含任何信息的形状，却挂着研究发现的标记。",
+  "Falsified hypotheses": "证伪记录",
   "Everything this project believed, tested, and had to abandon — with the measurement that killed it and where the derivation lives.":
     "这个项目曾经认定、检验过、又不得不放弃的一切，附上否定它的测量，以及推导所在的位置。",
   "Funnel & cohorts": "漏斗与人群",

@@ -61,8 +61,8 @@ function parts(f: Fact, k: Lookup): Parts {
           pattern: `有三首歌占了你 ${f.total} 次播放中的 ${pct(f.topPlays, f.total)}：${list(f.top.map((t) => k.title(t.trackId)))}。`,
           receipt: `${f.total} 次播放中的 ${f.topPlays} 次`,
           offers: [
-            { id: "a", question: "这几首歌是在让某样东西保持平稳，好让你不必再挑新的吗？", words: ["平稳", "回旋", "熟悉"] },
-            { id: "b", question: "还是说，你还在这几首歌里面，听一样还没找到的东西？", words: ["寻找", "回返", "贴近"] },
+            { id: "a", question: "这几首歌是在稳住某样东西，好让你不必再挑新的吗？", words: ["平稳", "回旋", "熟悉"] },
+            { id: "b", question: "还是说，你还沉在这几首歌里，想听出一样还没找到的东西？", words: ["寻找", "回返", "贴近"] },
           ],
           cue: { label: "曲式", text: "一段绕回原处的循环，为反复播放而写" },
         };
@@ -70,7 +70,7 @@ function parts(f: Fact, k: Lookup): Parts {
         pattern: `你听了 ${f.distinct} 首不同的歌，播放最多的三首合起来占了你 ${f.total} 次播放中的 ${pct(f.topPlays, f.total)}。`,
         receipt: `${f.total} 次播放中的 ${f.topPlays} 次，分布在 ${f.distinct} 首歌上`,
         offers: [
-          { id: "a", question: "眼下图的就是多换几样，不让哪一样扎下根来吗？", words: ["游移", "开阔", "流动"] },
+          { id: "a", question: "眼下要的就是多换几样，不让任何一首扎下根来吗？", words: ["游移", "开阔", "流动"] },
           { id: "b", question: "还是说，还没有哪一首抓住你？", words: ["漂流", "轻盈", "掠过"] },
         ],
         cue: { label: "曲式", text: "通谱体，没有哪一段重复很久" },
@@ -139,7 +139,7 @@ function parts(f: Fact, k: Lookup): Parts {
       if (f.direction === "high") {
         const kept = f.keptCluster ? `你让它们多放一会儿的那些歌里，以${k.texture(f.keptCluster)}为主的最多。` : "";
         return {
-          pattern: `你试听的 ${f.tried} 首新歌里，有 ${f.skipped} 首在开头 30 秒内就被跳过。${kept}`,
+          pattern: `你试听的 ${f.tried} 首新歌里，有 ${f.skipped} 首你在开头 30 秒内就跳过了。${kept}`,
           receipt: `${f.tried} 次首次播放中的 ${f.skipped} 次`,
           offers: [
             { id: "a", question: "你几秒钟之内就知道自己不要什么吗？", words: ["果断", "利落", "确定"] },
@@ -149,13 +149,13 @@ function parts(f: Fact, k: Lookup): Parts {
         };
       }
       return {
-        pattern: `你试听的 ${f.tried} 首新歌里，有 ${f.tried - f.skipped} 首你让它放过了开头 30 秒。`,
+        pattern: `你试听的 ${f.tried} 首新歌里，有 ${f.tried - f.skipped} 首你听过了开头 30 秒。`,
         receipt: `${f.tried} 次首次播放中的 ${f.tried - f.skipped} 次`,
         offers: [
           { id: "a", question: "你眼下愿意给新东西一些时间吗？", words: ["耐心", "开放", "从容"] },
           { id: "b", question: "还是说，这些歌在你按下播放之前就已经仔细挑过？", words: ["审慎", "细心", "精选"] },
         ],
-        cue: { label: "开头", text: "慢慢才进入" },
+        cue: { label: "开头", text: "不急着进入正题" },
       };
     }
   }

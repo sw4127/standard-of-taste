@@ -167,6 +167,16 @@ Appended, not overwritten; nothing above is amended by it. The bilingual brief (
 
 > 这张卡片谈的是，这次测出的结果对你可能意味着什么。听辨测试（hearing tests）里的其余内容，只描述你做了什么。
 
+*[AMENDED 2026-10-01, Cowork's Chinese revision (Job 2), pending owner approval. The renderings above are kept verbatim. Both opened with 谈的是， and glossed everyday words; the owner ruled on 2026-09-30 that only specialised technical terms keep their English. The renderings below govern, because `src/content/zh/statements.test.ts` reads the LAST marker for each surface.]*
+
+**zh rendering of the on-surface statement for the card (amended 2026-10-01, pending owner approval):**
+
+> 这张卡片告诉你，这次测出的结果对你可能意味着什么。听辨测试里的其余内容只描述你做了什么。
+
+**zh rendering of the on-surface statement for the reading (amended 2026-10-01, pending owner approval):**
+
+> 这份解读告诉你，一位听者近来的播放记录可能意味着什么。它说出规律，提示几种读法；哪一种对，或者都不对，由你来说。听辨测试只描述你做了什么。
+
 ### D3 amendment — the reading is the flagship (owner-approved 2026-09-23, ruling BA-6)
 Appended, not overwritten. Amends **D3 only**; D1, D2, D4, D5, D6 and N1–N3 are untouched by it. The ruling: `docs/rt-answers-2026-09-23-audit.md`.
 

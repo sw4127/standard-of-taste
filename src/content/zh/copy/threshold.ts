@@ -38,10 +38,10 @@ const THRESHOLD: Dict = {
   // The flow.
   "How small a flaw can you still hear?": "你还能听出多小的瑕疵？",
   "Every pair is the same twenty seconds of music twice, and one of them has been damaged — {blurb}. Pick the damaged one. Get it right twice and the damage gets {smaller}; get it wrong and it gets bigger again.":
-    "每一对都是同样的二十秒音乐放两遍，其中一遍被损坏了：{blurb}。选出被损坏的那一遍。连续答对两次，损坏就变得{smaller}；答错一次，它又会变大。",
+    "每一对都是同一段二十秒的音乐放两遍，其中一遍被损坏了：{blurb}。选出被损坏的那一遍。连续答对两次，损坏就变得{smaller}；答错一次，它又会变大。",
   smaller: "更小",
   "The test walks down until it finds the size where you stop being sure. That size is your answer, and it is a real physical quantity — not a score out of ten.":
-    "测试一步步往下走，直到找到你不再有把握的那个大小。那个大小就是你的答案，它是一个真实的物理量，并非十分制的分数。",
+    "测试一级级往下调，直到找到你不再有把握的那个大小。这个大小就是你的答案，它是一个真实的物理量，并非十分制的分数。",
   "This session locks to a single recording, named at the top of every trial and on your result. A bitrate does different damage to different music, so the number means nothing without the material it was measured on.":
     "这次测试锁定在一段录音上，它的名字写在每个试次的顶部和你的结果上。同样的比特率对不同的音乐造成的损伤不同，所以离开测量所用的素材，这个数字没有意义。",
   "If you have measured this in this browser before, the retest reuses the same recording, so the two sittings can be compared — no account, nothing on a server. Clearing your browsing data starts you on a fresh one.":
@@ -58,9 +58,9 @@ const THRESHOLD: Dict = {
   "No feedback until the end — being told would teach you the clip rather than the flaw.":
     "结束前不给反馈：告诉你对错，你学到的会是这段录音，学不到瑕疵本身。",
   "Measure a different flaw instead": "改测另一种瑕疵",
-  "Try the reading while you wait": "等待期间，试试解读（the reading）",
+  "Try the reading while you wait": "等待期间，试试解读",
   "Remembered in this browser only — no account, nothing on a server. Another device, or cleared browsing data, and the gym has never met you.":
-    "只记在本浏览器里：没有账户，服务器上也什么都没有。换一台设备，或清除浏览数据，这里就从未见过你。",
+    "只记在本浏览器里：没有账户，服务器上也什么都没有。换一台设备，或清除浏览数据之后，对本站来说你就从未来过。",
 
   // The result screen.
   "YOUR SESSION · COHORT n = {n}": "你的测试 · 样本人群 n = {n}",
@@ -79,7 +79,7 @@ const THRESHOLD: Dict = {
     "两个标出的级别来自整次测试，与旁边的计数无关：一个边界行可能只有一个试次，仍然是边界。",
   "SINCE LAST TIME": "与上次相比",
   "Read from this browser only — there are no accounts and nothing on a server, so another device has no history to compare and starts over.":
-    "只读自本浏览器：没有账户，服务器上也什么都没有，所以换一台设备就没有历史可比，要从头开始。",
+    "数据只来自本浏览器：没有账户，服务器上也什么都没有，所以换一台设备就没有历史可比，要从头开始。",
 
   // Shared controls.
   "Link copied ✓": "链接已复制 ✓",

@@ -35,7 +35,7 @@ const DELICACY: Dict = {
   // Practice.
   "PRACTICE — NOT SCORED": "练习 · 不计分",
   "These three are the {loudest} examples of each kind of damage, and the answers are shown. Learn what to listen for.":
-    "这三对是每种损伤里{loudest}的例子，答案都会揭晓。学会该听什么。",
+    "这三对是每种损伤里{loudest}的例子，答案都会揭晓。先学会该听什么。",
   loudest: "最重",
   "Practice {n} — A": "练习 {n} · A",
   "Practice {n} — B": "练习 {n} · B",
@@ -45,7 +45,7 @@ const DELICACY: Dict = {
   "That's it.": "就是它。",
   "Not this time.": "这次没对。",
   "{original} was the original. The damage in {other} was {flaw} — {hint}. Go back and switch between them until you can hear it; that is the whole skill.":
-    "{original} 是原版。{other} 里的损伤是{flaw}：{hint}。回去在这一对里来回切换，直到你听出来；这就是全部的本事。",
+    "{original} 是原版。{other} 里的损伤是{flaw}：{hint}。回去在这一对里来回切换，直到你听出来；这项本事全在于此。",
   "Next practice pair": "下一对练习",
   "Start the {n} scored trials": "开始 {n} 对计分测试",
 
@@ -72,7 +72,7 @@ const DELICACY: Dict = {
   "originals identified": "认出的原版",
   "WHAT THIS MEANS IN YOUR WORK": "放进你自己的作品里，这意味着什么",
   "What each flaw is called, and what it sounds like": "每种瑕疵叫什么，听起来是什么样",
-  "DID YOU KNOW WHEN YOU KNEW?": "你知道自己什么时候是真的知道吗？",
+  "DID YOU KNOW WHEN YOU KNEW?": "你自报的把握准不准？",
   "Brier score {b} — pure coin-flip guessing scores {c}; lower is better, but only next to the direction above.":
     "布里尔分数（Brier score）{b}：纯抛硬币式的猜测得 {c}；越低越好，但只有和上面的方向放在一起看才算数。",
   "When you said {p}%: right {c} of {n}.": "你说 {p}% 时：对了 {c} 次（共 {n} 次）。",
@@ -87,7 +87,7 @@ const DELICACY: Dict = {
   ' — you said "{flaw}".': "，你说的是「{flaw}」。",
   "YOUR EARS, PORTABLE": "带得走的耳朵",
   "The link carries only your answers — anyone who opens it sees your session rescored, then gets dared to beat it.":
-    "链接里只带着你的回答：打开它的人会看到你的测试被重新计分，然后被激将去超过它。",
+    "链接里只带着你的回答：打开它的人会看到你的测试被重新计分，然后被激去打破这个成绩。",
   "Share your ears": "分享你的耳朵",
   "Story card": "竖版卡片",
   "View your result page →": "查看你的结果页 →",
@@ -101,7 +101,7 @@ const DELICACY: Dict = {
   "Someone sent you their score? They're daring you.": "有人把他们的分数发给了你？他们在激你。",
   "Get your ears tested": "测测你的耳朵",
   "Provisional read — percentiles arrive when the cohort does, not before.":
-    "暂定读数：百分位要等样本人群到来才会有，在那之前不会有。",
+    "暂定读数：百分位要等有了样本人群才会出现，不会更早。",
 };
 
 export default DELICACY;

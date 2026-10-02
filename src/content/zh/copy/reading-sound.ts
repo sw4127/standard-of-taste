@@ -19,7 +19,7 @@ const SOUND: Dict = {
   "rubato, off the grid": "自由速度，不贴网格",
   "clean and close, room hiss left in": "干净贴近，保留房间底噪",
   // Mira · haze
-  "mid-tempo on half-time drums": "中速，半拍鼓",
+  "mid-tempo on half-time drums": "中速，半速律动的鼓",
   "washed-out synth pads": "朦胧的合成器长音",
   "a low, breathy vocal": "低沉、带气声的人声",
   "tape-saturated": "磁带饱和",

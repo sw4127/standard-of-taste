@@ -106,8 +106,8 @@ export function evidenceLineZh(band: ThresholdBand): string {
 
 export const NO_COHORT_FOOTNOTE_ZH =
   "这里没有任何比较，在真实的人做过这项测试之前也不会有。" +
-  "目前还没有人做过：这项测试背后的样本人群现在有 0 次测试，所以实验室（The Lab）里的每一条参照曲线" +
-  "都由模型生成，并标为模拟（SIMULATED）。你刚才做的，是在你身上、对照物理量测出来的，它自己就站得住。";
+  "目前还没有人做过：这项测试背后的样本人群现在有 0 次测试，所以实验室里的每一条参照曲线" +
+  "都由模型生成，并标为模拟（SIMULATED）。你刚才的结果是在你身上、对照物理量测出来的，不靠比较也站得住。";
 
 export function materialLineZh(result: StaircaseResult): string | null {
   if (!result.sourceId) return null;
@@ -252,7 +252,7 @@ export function creatorLinesZh(say: ThresholdSay): string[] {
 export const CARD_SEPARATES_ZH = "你的耳朵分得开什么";
 export const CARD_WORTH_ZH = "这在提示词里值多少";
 export const CARD_PASTE_ZH = "粘贴这一段";
-export const CARD_KICKER_ZH = "你的提示词（prompt）卡片";
+export const CARD_KICKER_ZH = "你的提示词卡片";
 export const CARD_COPY_IDLE_ZH = "复制";
 export const CARD_COPY_DONE_ZH = "已复制";
 export const CARD_COPY_MANUAL_ZH = "已选中，请按复制";
@@ -402,7 +402,7 @@ function thresholdArcZh(reading: ArcReading): string[] {
     return [
       `你的几次${name}测试相差 ${moved}，这把阶梯分不清它和自身的噪声。` +
         `要差到约 ${floor}，这里的变化才有意义。` +
-        `这句话并没有说你停在原地：它说的是，这么小的变化低于这项测试能看见的范围。`,
+        `这句话并没有说你停在原地，只是说这么小的变化低于这项测试能看见的范围。`,
     ];
   }
   const way = reading.direction === "closer" ? "你现在能听出比以前更小的瑕疵" : "现在要更大的瑕疵才能被你听出";

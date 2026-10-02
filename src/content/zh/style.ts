@@ -42,7 +42,7 @@ export const ZH_BANS: readonly ZhBan[] = [
   { pattern: /显著|高效|深度|全方位|多维度|无缝|极致|沉浸式|底层逻辑|颗粒度|链路|闭环|抓手/, why: "an adjective with no anchor, or jargon as ornament (guide §3)" },
   // 也许是 and 或许是 are how an offer is phrased (BA-3) and must pass.
   { pattern: /滥觞|厚颜|遂|罢|(?<![也或])许是/, why: "classical register (guide §3)" },
-  { pattern: /趣味/, why: "owner ruling 2026-09-29: 趣味 is the wrong sense of taste; use 口味 or 品味" },
+  { pattern: /趣味/, why: "owner ruling 2026-09-29: 趣味 is the wrong sense of taste; musical taste is 品味" },
   // 商业模式 is the ordinary word for a business model, and no loan translation.
   { pattern: /杀掉|收据|(?<!商业)模式/, why: "a loan translation (guide §3): cut, 依据, 规律" },
   // The avoid-verbs (guide §2). Each fails the substitution test by construction.

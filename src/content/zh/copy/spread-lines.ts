@@ -12,7 +12,7 @@ import type { SpreadResult } from "@/engine/spread";
 import { MIN_PAIRS_PER_KIND, SPREAD_POOL } from "@/content/spread/ranking";
 
 export const RECOGNITION_DISCLOSURE_ZH =
-  "你说了其中哪些以前听过，这里照单全收，不做任何核实。认出来的录音只会被剔除；你认出的内容从来不进入结果。";
+  "哪些录音你以前听过，由你自己说，这里照单全收，不做任何核实。认出的录音只会被剔除；你认出了什么，从来不进入结果。";
 
 export const SPREAD_BOUNDARY_ZH =
   "两个数字都不代表你同意他，也不可能代表：这里只看同一对作品上你的两个评分差了多远，从不看你把哪一部排得更高。" +
@@ -26,7 +26,7 @@ export function recognitionLineZh(result: SpreadResult): string {
   if (n === 0) return "你说这些都不熟悉，所以全部计入。" + RECOGNITION_DISCLOSURE_ZH;
   if (left === 0) return `这里的每一段你以前都听过，所以 ${n} 段全部剔除。` + RECOGNITION_DISCLOSURE_ZH;
   return (
-    `你以前听过的 ${n} 段录音，在计算之前就被剔除了，所以下面的结果只基于另外 ${left} 段新录音。` +
+    `你以前听过的 ${n} 段录音在计算之前已经剔除，下面的结果只基于另外 ${left} 段新录音。` +
     RECOGNITION_DISCLOSURE_ZH
   );
 }
@@ -38,7 +38,7 @@ export function spreadRefusalZh(result: SpreadResult): string {
     return (
       `这 ${set} 段你以前全都听过，所以这里没有可读的东西。这项测试只适用于你没听过的音乐：` +
       "对已经熟悉的东西，评分有一部分来自记忆，事后没有任何测量工具能把两者分开。" +
-      "再做一次也补不回来，除非曲库里的音乐比现在多。曲库扩充之后再来。"
+      "再做一次也解决不了，除非曲库里的音乐比现在多。曲库扩充之后再来。"
     );
   }
   const far = result.refusal === "too-few-far-pairs";
@@ -78,9 +78,9 @@ export function directionLineZh(result: SpreadResult): string {
         ? "在他判断没有拉开的地方，你的评分拉得更开"
         : "两种情况下，你的评分拉开的幅度一样";
   return (
-    `${shape}。这是否说明什么，这里无法回答：${result.far.count} 对比 ${result.close.count} 对，` +
-    "出自一组每段都出现在好几对里的录音，而且还没有人做过两次，看这些数字自己会漂移多少。" +
-    "两者之间的差距大到多少才算结果，没有诚实的标准，所以这里不给。"
+    `${shape}。这说明了什么，这项测试回答不了：一边 ${result.far.count} 对，一边 ${result.close.count} 对，` +
+    "取自同一组录音，每段录音都出现在好几对里；也还没有人做过两次，看这些数字自己会漂移多少。" +
+    "差距大到多少才算结果，没有一个诚实的标准，所以这里不给。"
   );
 }
 

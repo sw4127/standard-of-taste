@@ -61,8 +61,8 @@ export function dossierLineZh(input: AcrossInput): string | null {
   if (input.spread) parts.push("你的评分是否在评论家判断拉开的地方拉开");
   if (parts.length < 2) return null;
   return (
-    `你已经回答了 ${parts.length} 个关于你耳朵的不同问题：${parts.join("；")}。` +
-    `它们并非同一件事的 ${parts.length} 个分数，也不能相加：每一个都以自己的单位测量。`
+    `关于你的耳朵，你已经回答了 ${parts.length} 个不同的问题：${parts.join("；")}。` +
+    `它们并非同一件事的 ${parts.length} 个分数，也不能相加：每一个都用各自的尺度测量。`
   );
 }
 
@@ -73,13 +73,13 @@ export function replicationLineZh(check: ReplicationCheck): string {
   if (check.disagree === 0) {
     return (
       `两次独立的测试用不同的方法测了${what}，${tested} 项检查全部一致${material}。` +
-      "这是这里最接近证据的东西，说明这个数字确有其事，并非一个下午的偶然。"
+      "在这里，这是最接近证据的结果：这个数字确有其事，并非某个下午的偶然。"
     );
   }
   if (check.agree === 0) {
     return (
       `两次独立的测试测了${what}，${tested} 项检查全部不一致${material}。` +
-      "两次中有一次没有描述你的耳朵，这比一个从未测过第二次的数字更有价值。"
+      "两次之中有一次没有如实描述你的耳朵；知道这一点，比拿着一个从未复测的数字更有价值。"
     );
   }
   return (
@@ -90,11 +90,11 @@ export function replicationLineZh(check: ReplicationCheck): string {
 
 export function coverageLineZh(input: AcrossInput): string | null {
   if (input.unmeasured.length === 0) {
-    return "阶梯测试能跑的每一条梯级，在这台设备上都有测试记录。现在能让数字变化的，是两次测试之间隔开的时间。";
+    return "本站能运行的每一条阶梯，在这台设备上都有测试记录。现在能让数字变化的，是两次测试之间相隔的时间。";
   }
   const names = input.unmeasured.map(label);
   const list = names.length === 1 ? names[0] : `${names.slice(0, -1).join("、")}和${names[names.length - 1]}`;
-  return `这台设备上还没测过：${list}。这里对你在${names.length === 1 ? "这一项" : "这些项目"}上的表现，什么也说不出。`;
+  return `这台设备上还没测过：${list}。你在${names.length === 1 ? "这一项" : "这些项目"}上会有怎样的表现，这里什么也说不出。`;
 }
 
 export function thresholdRosterZh(input: AcrossInput): string[] {
@@ -120,17 +120,17 @@ export function acrossLinesZh(input: AcrossInput, count: number): string[] {
 const ACROSS: Dict = {
   "ACROSS YOUR SESSIONS": "跨测试汇总",
   "Read from this browser only — there are no accounts, so another device starts empty.":
-    "只读自本浏览器：没有账户，所以换一台设备就从空白开始。",
+    "数据只来自本浏览器：本站没有账户，换一台设备就从空白开始。",
   // The forget control (src/content/forget.ts).
   "Forget this browser": "让本浏览器忘掉一切",
   "This removes everything the gym has kept in this browser: the sessions you have finished and the answers behind them, the seven-day retest gate that goes with them, the language you chose, and the in-flight state of anything open right now.":
-    "这会删去本站在本浏览器里保存的一切：你完成的测试和背后的作答、随之而来的七天重测限制、你选择的语言，以及此刻打开着的任何未完成的状态。",
+    "这会删去本站在本浏览器里保存的一切：你完成的测试及其作答、与之相关的七天重测限制、你选择的语言，以及当前打开的页面里尚未完成的进度。",
   "It cannot undo usage events already sent to our analytics, and it changes nothing in any other browser — there was never an account to change.":
     "它无法撤回已经发送到我们统计工具的使用事件，也不会改变任何其他浏览器里的东西：本来就没有账户可改。",
   "Yes, forget it": "确定，全部删去",
   "Keep it": "保留",
   "Cleared. Nothing measured on this browser is left, and the gym has never met you.":
-    "已清除。本浏览器上测得的一切都不在了，本站也从未认识过你。",
+    "已清除。本浏览器上测得的一切都已删去，对本站来说，你从未来过。",
 };
 
 export default ACROSS;

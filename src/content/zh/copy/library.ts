@@ -17,15 +17,15 @@ const LIBRARY: Dict = {
   "Sixteen clips, rated twice — once blind, once with names attached. Some names are deliberately false. The gap between your two ratings is your prestige-bias number.":
     "16 段录音，打两次分：一次盲听，一次带着名字。有些名字是故意写错的。两次评分之间的差距，就是你的名气偏差数字。",
   "The flagship machine: how far can a famous name move your ratings?":
-    "旗舰测试：一个有名的名字，能把你的评分挪动多远？",
+    "旗舰测试：一个响亮的名字，能让你的评分偏移多远？",
   "How does the Prestige Test work?":
     "名气偏差测试是怎么做的？",
   "You rate sixteen short music clips blind, then rate the same sixteen clips again — fourteen with artist names and reputations attached, two deliberately left unlabeled as drift controls. Two of the fourteen labels are deliberately swapped. Your score is computed from how far your ratings moved toward the labels, corrected by your measured drift on the unlabeled controls — a measured gap, not a self-report.":
-    "你先盲听给 16 段短录音打分，再给同样这 16 段打一次：其中 14 段带着艺术家的名字和名声，2 段故意不带标签，作为漂移对照组。14 个标签里有 2 个是故意调换的。你的分数由你的评分朝标签移动了多远算出，并按你在无标签对照组上测得的漂移校正：这是测出来的差距，并非自我报告。",
+    "你先盲听给 16 段短录音打分，再给同样这 16 段打一次：其中 14 段带着艺人的名字和名声，2 段故意不带标签，作为漂移对照组。14 个标签里有 2 个是故意调换的。你的分数由你的评分朝标签移动了多远算出，并按你在无标签对照组上测得的漂移校正：这是测出来的差距，并非自我报告。",
   "Why does the test lie about some labels?":
     "测试为什么要在一些标签上说谎？",
   "If every label were true, a rating shift toward acclaimed names could just mean the acclaimed clips were genuinely better. Swapped labels separate the name from the sound: when your rating follows a false name, only prestige can explain the move. Every swap is disclosed on a mandatory debrief screen before you leave — the deception is the instrument, and you always learn the truth.":
-    "如果每个标签都是真的，评分朝有名的名字移动，也可能只是因为那些有名的录音确实更好。调换标签能把名字和声音拆开：当你的评分跟着一个假名字走，能解释这个移动的只有名气。每一次调换，都会在你离开前的必读结果说明里披露：欺骗就是这项测试本身，而你总会得知真相。",
+    "如果每个标签都是真的，评分朝知名艺人的名字移动，也可能只是因为那些有名的录音确实更好。调换标签能把名字和声音拆开：当你的评分跟着一个假名字走，能解释这个移动的只有名气。每一次调换，都会在你离开前的必读结果说明里披露：欺骗就是这项测试本身，而你总会得知真相。",
   "Is my result a percentile?":
     "我的结果是百分位吗？",
   "Not yet. Results are labeled provisional until a calibration cohort exists — the product does not fabricate norms. You get your measured gap and what it means; percentiles arrive when there are enough real sessions to compute them honestly.":
@@ -33,17 +33,17 @@ const LIBRARY: Dict = {
   "Is the Prestige Test free?":
     "名气偏差测试免费吗？",
   "Yes, and so is everything else. There is no paid tier here: the assessment, your headline score, and the training arc when it exists are all free. The only gate anywhere in the gym is a seven-day wait before you retake a family of trials — sooner than that and a retest measures your memory of the clips rather than your ear.":
-    "免费，其他一切也都免费。这里没有付费版：测试本身、你的主要分数，以及日后会有的训练，全都免费。整个训练馆唯一的限制，是同一类测试要隔七天才能重测：早于这个时间，重测测到的是你对录音的记忆，并非你的耳朵。",
+    "是的，其他一切也都免费。这里没有付费版：测试本身、你的主要分数，以及日后会有的训练线，全都免费。整个训练馆唯一的限制，是同一类测试要隔七天才能重测：早于这个时间，重测测到的是你对录音的记忆，并非你的耳朵。",
   "Freedom from prejudice":
     "不受偏见左右",
   "Freedom from Prejudice — Hume's Criterion, Measured":
     "不受偏见左右：休谟的标准，测出来",
   "Hume required a true judge to clear their mind of every consideration except the work itself. The Prestige Test measures how far you actually manage it.":
-    "休谟要求一位真正的评判者，除了作品本身，把一切考虑都从心里清出去。名气偏差测试测的是，你实际上能做到多少。",
+    "休谟要求一位真正的评判者，除了作品本身，把一切考虑都从心里清出去。名气偏差测试测量你实际上能做到多少。",
   "Hume's fourth criterion — the one the flagship machine measures.":
     "休谟的第四条标准，也就是旗舰测试测量的那一条。",
   "What did Hume mean by freedom from prejudice?":
-    "休谟说的「不受偏见左右」是什么意思？",
+    "休谟所说的不受偏见左右，指的是什么？",
   "In 'Of the Standard of Taste' (1757), Hume argued a critic must set aside everything about the work except the work — reputation, fashion, friendship, rivalry — and judge only what is in front of them. A judgment moved by the author's name rather than the object is, in his account, corrupted.":
     "休谟在 1757 年的《论品味的标准》（Of the Standard of Taste）里主张，评论者必须把作品之外的一切都放到一边，包括名声、潮流、交情、竞争，只评判摆在面前的东西。在他看来，被作者的名字左右、没有被对象本身左右的判断，就是被败坏了的判断。",
   "Can prestige bias be measured?":
@@ -59,17 +59,17 @@ const LIBRARY: Dict = {
   "Machine 02: can your ears find the key in the wine?":
     "第 02 台机器：你的耳朵能找到酒里的钥匙吗？",
   "What is the key-in-the-wine story?":
-    "「酒里的钥匙」是什么故事？",
+    "酒里的钥匙是个什么故事？",
   "Hume retells it from Don Quixote: two of Sancho's kinsmen were asked to judge a hogshead of wine. One found a faint taste of leather, the other of iron, and both were laughed at — until the cask was drained and an old key on a leathern thong was found at the bottom. Their perception was real and verifiable, and that is delicacy.":
     "休谟转述的是《堂吉诃德》里的故事：桑丘的两位亲戚被请去评一大桶酒。一位尝出一丝皮革味，另一位尝出铁味，两人都被人嘲笑，直到酒桶喝空，桶底露出一把拴着皮绳的旧钥匙。他们的感知是真实的、可以核查的，这就是鉴赏力。",
   "How do the Delicacy Trials work?":
     "细辨测试是怎么做的？",
   "Public-domain and Creative-Commons recordings are damaged on purpose, by a known amount — pitch drift, timing smear and compression damage — and you pick the original and name the flaw. Unlike a taste quiz, the answers are right or wrong, the difficulty is tunable, and the items can be calibrated with item-response theory.":
-    "公有领域和知识共享许可的录音被有意地、按已知的程度损坏，损坏方式有音高漂移、节拍模糊和压缩损伤；你选出原版，并说出瑕疵的名字。和口味小测验不同，这里的答案有对有错，难度可以调，题目也可以用项目反应理论来校准。",
+    "公有领域和知识共享许可的录音被有意地、按已知的程度损坏，损坏方式有音高漂移、节拍模糊和压缩损伤；你选出原版，并说出瑕疵的名字。和一般的品味小测验不同，这里的答案有对有错，难度可以调，题目也可以用项目反应理论来校准。",
   "Where do the Delicacy Trials sit in the gym?":
     "细辨测试在训练馆里处于什么位置？",
   "They are machine 02, and the door is open. They were built after the Prestige Test, on the principle that a gym leaves its equipment in plain view long before anyone is ready for it. This one is no longer roped off.":
-    "它是第 02 台机器，门已经开了。它建在名气偏差测试之后，按照的原则是：训练馆会早早把器材摆在明处，远在任何人准备好之前。这一台已经不再拦着了。",
+    "它是第 02 台机器，门已经开了。它建在名气偏差测试之后，按照的原则是：训练馆会早早把器材摆在明处，远在任何人准备好之前。这一台已不再用围绳拦着。",
   "Naming what went wrong":
     "说出哪里出了问题",
   "Naming what went wrong — Standard of Taste":
@@ -105,7 +105,7 @@ const LIBRARY: Dict = {
   "How does the Taste Gym use practice?":
     "品味训练馆怎样使用练习？",
   "Sit a threshold ladder twice in the same browser and the result screen compares the two sittings. It is free, because charging for the training loop would put the one honest question — did your ear actually move — behind a wall. The comparison is judged against a noise floor measured first, so a difference smaller than the instrument's own run-to-run wobble is reported as no change rather than as progress: on the pitch ladder two sittings must differ by roughly 3.5 times before it will call it movement. Most retests are therefore told that nothing changed the instrument could hear, which is the honest answer.":
-    "在同一个浏览器里把阈值阶梯做两次，结果页就会比较这两次测试。它是免费的，因为给训练收费，会把唯一诚实的问题，也就是你的耳朵到底有没有变化，关进一堵墙后面。这种比较对照的是先测出来的噪声下限，所以小于这项测试自身前后起伏的差别，会被报告为没有变化，不会被当成进步：在音高阶梯上，两次测试要相差大约 3.5 倍，它才会称之为变化。所以大多数重测得到的回答是，这项测试没听出任何变化，这是诚实的回答。",
+    "在同一个浏览器里把阈值阶梯做两次，结果页就会比较这两次测试。它是免费的，因为给训练收费，会把唯一诚实的问题，也就是你的耳朵到底有没有变化，关进一堵墙后面。这种比较对照的是事先测出的噪声底，所以小于这项测试自身前后起伏的差别，会被报告为没有变化，不会被当成进步：在音高阶梯上，两次测试要相差大约 3.5 倍，它才会称之为变化。所以大多数复测得到的回答都是这项测试没听出任何变化，这是诚实的回答。",
   "Comparison":
     "比较",
   "Comparison — Ogilby, Milton, and Degrees of Praise":
@@ -125,19 +125,19 @@ const LIBRARY: Dict = {
   "Is a narrow spread a bad result?":
     "分布窄是不好的结果吗？",
   "No, and the instrument is built so it can never say otherwise. The clips were chosen for licence clarity and genre spread, never for being equally good, so nobody knows how far apart they truly are — a listener who heard them as close together and rated them that way did the task correctly. The count is also read against what an indifferent rater would produce rather than against the top of the scale, because rating sixteen clips at random already lands on about nine distinct values.":
-    "不算，这项测试的设计就让它永远不会这样说。选这些录音，看的是许可清楚和体裁分布，从来没有看它们是否同样好，所以没人知道它们实际上相距多远；一位听者如果觉得它们很接近，并照此打分，就是正确地完成了任务。这个计数也要对照随手乱打分的人会得出的结果来读，不去对照量表的上限，因为随机给 16 段录音打分，本来就会落在大约 9 个不同的分值上。",
+    "不算，这项测试的设计就让它永远不会这样说。选这些录音，看的是许可清楚和体裁分布，从来没有看它们是否同样好，所以没人知道它们实际上相距多远；一位听者如果觉得它们很接近，并照此打分，就是正确地完成了任务。这个计数也要对照随意打分会得出的结果来读，不去对照量表的上限，因为随机给 16 段录音打分，本来就会落在大约 9 个不同的分值上。",
   "Why does it quote Pitchfork and Robert Christgau?":
     "它为什么引用 Pitchfork 和 Robert Christgau？",
   "As a reference point for what assigning degrees looks like in practice, never as an answer to agree with. Pitchfork's scale offers a hundred and one places to put a record, yet across more than 18,000 reviews the mean was 7.0 and most scores sat between 6.4 and 7.8. Christgau graded from A+ down to E− and, from 1990, stopped using most of the letters below B+. Scoring your agreement with a prestigious critic would contradict the Prestige Test on the same screen, so this product does not do it.":
-    "作为给出分档在实践中是什么样子的参照点，从来不作为要去认同的答案。Pitchfork 的量表提供了一百零一个位置来放一张唱片，可是在 18,000 多篇评论里，平均分是 7.0，大多数分数落在 6.4 到 7.8 之间。Christgau 的等级从 A+ 排到 E−，而从 1990 年起，B+ 以下的大部分字母他都不再用了。给你和一位有声望的评论家的一致程度打分，会在同一屏上和名气偏差测试自相矛盾，所以这个产品不这样做。",
+    "这是一个参照，让人看到给出分档在实践中是什么样子，从来不作为要去认同的答案。Pitchfork 的量表提供了一百零一个位置来放一张唱片，可是在 18,000 多篇评论里，平均分是 7.0，大多数分数落在 6.4 到 7.8 之间。Christgau 的等级从 A+ 排到 E−，而从 1990 年起，B+ 以下的大部分字母他都不再用了。给你和一位有声望的评论家的一致程度打分，会在同一屏上和名气偏差测试自相矛盾，所以这个产品不这样做。",
   "The Ranking Test":
     "排序测试",
   "The Ranking Test — Do Your Gaps Fall Where a Critic's Did?":
-    "排序测试：你的评分差距，是否落在评论家拉开的地方？",
+    "排序测试：你的评分差距，是否落在评论家拉开差距的地方？",
   "Six works a published critic ranked against each other, rated blind. It reports how far apart your ratings fell on the pairs he separated, beside the same figure on the pairs he bracketed together. Agreeing with him is never scored.":
-    "6 部作品，一位发表过评论的评论家把它们彼此排过先后，你盲听打分。它报告在他拉开的配对上你的评分相差多远，旁边是在他排得挨在一起的配对上的同一个数字。和他意见一致，从不计分。",
+    "一位评论家公开发表过这 6 部作品的排名，你盲听打分。它报告在他拉开的配对上你的评分相差多远，旁边是在他排得挨在一起的配对上的同一个数字。和他意见一致，从不计分。",
   "A critic ranked six works. Do your gaps fall where his did?":
-    "一位评论家给 6 部作品排过先后。你的评分差距，会落在他拉开的地方吗？",
+    "一位评论家给 6 部作品排过先后。你的评分差距，会落在他拉开差距的地方吗？",
   "What does the Ranking Test actually measure?":
     "排序测试实际测的是什么？",
   "Whether your ratings move where a critic's judgment moved. Michael Tanner ranked twenty-one Beethoven works against each other for BBC Music Magazine; six of them are played here as forty-second excerpts and you rate what you hear. The result is two numbers: the average distance between your two ratings across pairs he placed at least ten positions apart, and the same figure across pairs he placed within three. It is a question about whether you discriminate at all, not about whether you discriminate correctly.":
@@ -145,11 +145,11 @@ const LIBRARY: Dict = {
   "Am I being scored on agreeing with the critic?":
     "我和评论家意见一致会被计分吗？",
   "No, and the instrument could not do it if it tried. The only thing it takes from the ranking is the DISTANCE between two positions — never which of the two he placed higher. That sign was never imported, so there is no stored number from which agreement could be worked out afterwards. Preferring the work he ranked lower costs you nothing here. Scoring your agreement with a prestigious critic would also contradict the Prestige Test, which measures being moved by prestige, on the same product.":
-    "不会，这项测试就算想这样做也做不到。它从排名里只取两个位置之间的距离，从不取他把两者中的哪一个排得更高。这个方向从来没有导入过，所以事后也没有存下的数字能算出一致程度。偏爱他排得更低的那部作品，在这里不会让你失去什么。给你和一位有声望的评论家的一致程度打分，也会和名气偏差测试自相矛盾，而那项测试测的正是被名气左右，就在同一个产品里。",
+    "不会，这项测试就算想这样做也做不到。它从排名里只取两个位置之间的距离，从不取他把两者中的哪一个排得更高。这个方向从来没有导入过，所以事后也没有存下的数字能算出一致程度。偏爱他排得更低的那部作品，在这里不会让你失去什么。给你和一位有声望的评论家的一致程度打分，也会和名气偏差测试自相矛盾：两者同在一个产品里，而那项测试测的正是人会不会被名气左右。",
   "Why are the two numbers not combined into one?":
     "两个数字为什么不合成一个？",
   "Because nobody can say yet how much of a difference between them is real. The two figures rest on four pairs each, drawn from six clips that appear in several pairs apiece, and nobody has sat this instrument twice, so its wobble has never been measured. There is no honest size at which the gap between the numbers becomes a result, so none is offered — you get both figures and the number an indifferent rater would produce, which is the same on both kinds of pair because chance does not know which works a critic separated.":
-    "因为还没人能说它们之间的差别有多少是真的。两个数字各自只建立在 4 对上，取自 6 段录音，每段都出现在好几对里，而且还没有人做过两次，所以它的起伏从未被测量过。差距大到多少才算一个结果，没有诚实的答案，所以不给：你得到两个数字，以及随手乱打分的人会得出的数字；这个数字在两类配对上相同，因为随机不知道评论家拉开了哪些作品。",
+    "因为还没人能说它们之间的差别有多少是真的。两个数字各自只建立在 4 对上，取自 6 段录音，每段都出现在好几对里，而且还没有人做过两次，所以它的起伏从未被测量过。差距大到多少才算一个结果，没有诚实的答案，所以不给：你得到两个数字，以及随意打分会得出的数字；这个数字在两类配对上相同，因为随机不知道评论家拉开了哪些作品。",
   "What happens if I already know the music?":
     "如果我已经知道这段音乐呢？",
   "You say so, before you rate it, and the clip is removed. Recognising a famous work means part of your rating is memory of a reputation rather than what you just heard — which is the thing the Prestige Test measures on purpose and this one must not measure by accident. It is taken on your word alone: nothing checks, and what you recognised is never reported as a fact about you. If too little is left, you get no number and a plain statement of why, rather than a smaller one.":
@@ -171,7 +171,7 @@ const LIBRARY: Dict = {
   "Do you know when you're right? That's measurable too.":
     "你知道自己什么时候是对的吗？这也能测。",
   "What is good sense in Hume's essay?":
-    "休谟文章里的「良好的判断力」是什么？",
+    "休谟文章里说的良好的判断力，指的是什么？",
   "The supervising faculty: reason keeping the judge's other capacities honest — noticing purpose, consistency, and context, and guarding against one's own errors. A judge with delicate perception but no sense of when to trust it still judges badly.":
     "监督性的能力：理性让评判者的其他能力保持诚实，留意目的、一致性和背景，并防备自己的错误。一位感知灵敏、却不知道什么时候该信任这种感知的评判者，照样会判断失误。",
   "How does calibration measure good sense?":
@@ -189,7 +189,7 @@ const LIBRARY: Dict = {
   "Why performance tasks instead of a questionnaire?":
     "为什么用表现类任务，不用问卷？",
   "Self-report measures self-image. On a performance task you can be wrong, and being wrong is informative: the prestige gap, the detection rate, and the calibration curve are all computed from what you did, not what you said about yourself.":
-    "自我报告测的是自我形象。在表现类任务上你可能答错，而答错本身就有信息：名气差距、识别率和校准曲线，都由你做了什么算出，并非由你怎么描述自己算出。",
+    "自我报告测的是自我形象。在表现类任务上你可能答错，而答错本身就有信息：名气差距、检出率和校准曲线，都由你做了什么算出，并非由你怎么描述自己算出。",
   "Does an AI score my taste?":
     "是 AI 在给我的品味打分吗？",
   "No. Every score is computed by a deterministic engine in code — the same inputs always produce the same number, and the scoring rules are inspectable. No model classifies you.":
@@ -217,7 +217,7 @@ const LIBRARY: Dict = {
   "Hume's five criteria of taste, and the instruments that turn them into measured numbers.":
     "休谟关于品味的五条标准，以及把它们变成测量数字的测试。",
   "THE LIBRARY":
-    "资料室（The Library）",
+    "资料室",
   "The gym has a library.":
     "训练馆有一间资料室。",
   "In 1757 David Hume wrote {em} and named the five things a true judge needs: delicacy, practice, comparison, freedom from prejudice, and good sense. He never got to measure any of them. We built the machines. These pages explain each criterion, the instrument that operationalizes it, and the methodology — including the claims we deliberately refuse to make.":
@@ -239,19 +239,19 @@ const LIBRARY: Dict = {
   "The Prestige Test measures one thing: {strong}. Not whether you like the right music — whether the label in the room changes what your ears report.":
     "名气偏差测试（Prestige Test）只测一件事：{strong}。它不看你喜不喜欢对的音乐，只看屋里的标签会不会改变你耳朵的报告。",
   "how far a famous name can move your ratings":
-    "一个有名的名字能把你的评分挪动多远",
+    "一个响亮的名字能让你的评分偏移多远",
   "The design is a within-subject experiment, about {minutes} minutes long. You hear {count} short clips and rate each one {blind} — no artist, no context, just sound. Then you hear the same {count} clips again with names and reputations attached, and rate them again. Your score is computed from the gap between the two passes: the share of your rating movement that flowed {toward} the labels.":
-    "这个设计是一个被试内实验，大约 {minutes} 分钟。你听 {count} 段短录音，每段都{blind}打分：没有艺术家，没有背景，只有声音。然后你再听同样这 {count} 段，这次带着名字和名声，再打一次分。你的分数由两轮之间的差距算出：你的评分移动里，有多大比例是{toward}标签去的。",
+    "这个设计是一个被试内实验，大约 {minutes} 分钟。你听 {count} 段短录音，每段都{blind}打分：没有艺人名字，没有背景，只有声音。然后你再听同样这 {count} 段，这次带着名字和名声，再打一次分。你的分数由两轮之间的差距算出：你的评分移动里，有多大比例是{toward}标签去的。",
   "blind":
     "盲听",
   "toward":
     "朝着",
   "Here is the part that makes it an instrument instead of a party trick: {strong} A modest work arrives wearing borrowed acclaim; a distinguished one arrives dressed down. If your ratings follow the labels even when the labels lie, the movement can't be explained by the music — only by the prestige. You serve as your own control, which is why the test needs no external ground truth about which clip is \"objectively better.\"":
-    "下面这一点，让它成了一件测量仪器，算不上派对把戏：{strong}一件平庸的作品披着借来的赞誉登场；一件出色的作品却穿得朴素。如果标签说谎时你的评分仍然跟着标签走，这个移动就没法用音乐解释，只能用名气解释。你自己就是自己的对照组，所以这项测试不需要任何关于哪段录音「客观上更好」的外部标准答案。",
+    "下面这一点，让它成为一件测量仪器，并非派对把戏：{strong}一件平庸的作品披着借来的赞誉登场；一件出色的作品却穿得朴素。如果标签说谎时你的评分仍然跟着标签走，这个移动就没法用音乐解释，只能用名气解释。你自己就是自己的对照组，所以这项测试不需要任何关于哪段录音「客观上更好」的外部标准答案。",
   "{swapped} of the {labeled} labels are deliberately false.":
     "{labeled} 个标签里有 {swapped} 个是故意写错的。",
   "{count} of the {total} clips are {controls}: they carry no label in either pass. They measure how much your ratings drift on a plain second listen — memory, familiarity, fatigue — and that measured drift is corrected out of your headline number. The obvious objection to any re-rating design, \"the second pass just tests memory,\" is thereby a published control rather than a caveat.":
-    "{total} 段录音中有 {count} 段是{controls}：它们在任何一轮里都不带标签。它们测量你的评分在单纯重听时漂移了多少（记忆、熟悉感、疲劳），这个测得的漂移会从你的主数字里校正掉。任何重复打分设计都会遇到的那个明显的反对意见，「第二轮只是在测记忆」，于是成了一个公开的对照组，并非一条附注。",
+    "{total} 段录音中有 {count} 段是{controls}：它们在任何一轮里都不带标签。它们测量你的评分在单纯重听时漂移了多少（记忆、熟悉感、疲劳），这个测得的漂移会从你的主数字里校正掉。任何重复打分的设计都会碰到一个明显的反对意见，即「第二轮只是在测记忆」；在这里，它对应的是一个公开的对照组，并非一条附注。",
   "controls":
     "对照组",
   "Every swap is confessed. The test ends with a {strong} that names each false label, shows the true attribution, and shows exactly what your ratings did when the name was a lie. You cannot exit around it. An instrument built on deception owes you the disclosure — and the disclosure is the part worth staying for.":
@@ -271,7 +271,7 @@ const LIBRARY: Dict = {
   "\"free from all prejudice\"":
     "「不受任何偏见左右」",
   "Hume was blunt about how rarely anyone manages this. Reputation arrives before the art does; by the time you press play on an acclaimed record, the acclaim has already voted. The striking thing is that in 1757 he described what is now a replicated experimental finding: attach a prestigious label to a work and evaluations move, even when the label is false. Wine tastes better wearing an expensive price tag; the same manuscript reads worse under an unknown byline.":
-    "休谟直言，能做到这一点的人少之又少。名声总比艺术先到；等你按下一张备受赞誉的唱片的播放键，赞誉早就投过票了。惊人的是，他在 1757 年描述的，正是今天一个已被重复验证的实验发现：给作品贴上有声望的标签，评价就会移动，即使标签是假的。贴着昂贵价签的酒尝起来更好；同一份稿子署上无名作者的名字，读起来就更差。",
+    "休谟直言，能做到这一点的人少之又少。名声总比艺术先到；等你按下一张备受赞誉的唱片的播放键，赞誉早就投过票了。令人吃惊的地方在于，他在 1757 年描述的，正是今天一个已被重复验证的实验发现：给作品贴上有声望的标签，评价就会变动，即使标签是假的。贴着昂贵价签的酒尝起来更好；同一份稿子署上无名作者的名字，读起来就更差。",
   "Most people, asked whether they judge music by the name on it, say no. That answer is worthless — not because people lie, but because prejudice doesn't announce itself to the person having it. The only honest way to know is to be caught in the act.":
     "问大多数人会不会凭名字评判音乐，他们都说不会。这个回答毫无价值：原因在于偏见从来不会向怀着它的人自报家门，与人们说不说谎无关。唯一诚实的办法，是当场被抓个正着。",
   "That is the entire design brief of {link}: same clips, rated blind and then labeled, with some labels deliberately swapped. When your rating follows a false name, prejudice is the only suspect left in the room. The gap between your two passes is Hume's criterion turned into a number — and because you are your own control, the number never depends on anyone's opinion of what the \"right\" rating was.":
@@ -289,17 +289,17 @@ const LIBRARY: Dict = {
   "good sense":
     "良好的判断力（good sense）",
   "Hume anchors delicacy in a story he borrows from {dq}. Two of Sancho's kinsmen are asked to judge a hogshead of wine. One tastes leather in it; the other tastes iron. The company ridicules them — the wine is excellent, everyone else agrees. Then the hogshead is drained, and at the bottom lies {key}.":
-    "休谟把鉴赏力落在一个借自{dq}的故事上。桑丘的两位亲戚被请去评一大桶酒。一位尝出里面有皮革味；另一位尝出铁味。在场的人都嘲笑他们：酒好极了，别人都这么说。后来酒桶喝空了，桶底躺着{key}。",
+    "休谟用一个借自{dq}的故事来说明鉴赏力。桑丘的两位亲戚被请去评一大桶酒。一位尝出里面有皮革味；另一位尝出铁味。在场的人都嘲笑他们：酒好极了，别人都这么说。后来酒桶喝空了，桶底躺着{key}。",
   "Don Quixote":
     "《堂吉诃德》",
   "an old key on a leathern thong":
     "一把拴着皮绳的旧钥匙",
   "The point of the story is not that the kinsmen had refined opinions. It's that their perception was {verifiable}. There was a fact at the bottom of the barrel, and their palates found it while everyone else's missed it. Delicacy, in Hume's account, is exactly this: the capacity to register fine ingredients in a composition that most perceivers never notice — and the key in the wine is what separates delicacy from pretension. A claim of fine taste that can never be checked is just a claim.":
-    "这个故事的重点并非那些亲戚的见解有多精致。它的重点是，他们的感知是{verifiable}。桶底有一个事实，他们的味觉找到了它，别人的都错过了。在休谟看来，鉴赏力正是这样：能察觉一部作品里大多数人从未注意到的细微成分；而酒里的钥匙，正是把鉴赏力和装腔作势分开的东西。一种永远无法核查的精致品味（taste），只是一句声称。",
+    "这个故事的重点并非那些亲戚的见解有多精致。重点在于，他们的感知是{verifiable}。桶底有一个事实，他们的味觉找到了它，别人的都错过了。在休谟看来，鉴赏力正是这样：能察觉一部作品里大多数人从未注意到的细微成分；而酒里的钥匙，正是把鉴赏力和装腔作势分开的东西。一种永远无法核查的精致品味，只是一句声称。",
   "verifiable":
     "可以核查的",
   "Most taste tests never leave opinion territory, which is why they can't measure delicacy at all. The {trials} are built the other way around: start from recordings in the public domain or under Creative Commons licenses, introduce controlled degradations — {list} — and ask which version is the original and what, precisely, is wrong with the other. Every trial has a key at the bottom of the barrel: {answer}. Difficulty is tunable, so the trials can find the exact threshold where your ears give out, and the items can be calibrated with item-response theory as real response data accumulates.":
-    "大多数口味（taste）测试从不离开观点的地盘，所以它们根本测不了鉴赏力。{trials}反过来建：从公有领域或知识共享许可的录音出发，加入受控的损伤，也就是{list}；然后问哪个版本是原版，另一个到底哪里不对。每个试次的桶底都有一把钥匙：{answer}。难度可以调，所以这些试次能找出你的耳朵失灵的确切阈值（threshold），题目也能随着真实作答数据的积累，用项目反应理论（IRT）来校准。",
+    "大多数品味测试从不走出观点的范围，所以根本测不了鉴赏力。{trials}反过来建：从公有领域或知识共享许可的录音出发，加入受控的损伤，也就是{list}；然后问哪个版本是原版，另一个到底哪里不对。每个试次的桶底都有一把钥匙：{answer}。难度可以调，所以这些试次能找出你的耳朵失灵的确切阈值（threshold），题目也能随着真实作答数据的积累，用项目反应理论（IRT）来校准。",
   "Delicacy Trials":
     "细辨测试（Delicacy Trials）",
   "an objectively correct answer":
@@ -311,7 +311,7 @@ const LIBRARY: Dict = {
   "machine 02, visible and locked until their pool clears validation":
     "第 02 台机器，在题库通过验证之前看得见、进不去",
   "Practice is the criterion that makes this product a {gym} rather than a mirror. Hume is unambiguous: nothing improves the faculty of judging more than {em} — the repeated, attentive survey of works of one kind. Taste, in his account, is not an endowment you check once and frame. It's a capacity that sharpens with reps and dulls with neglect.":
-    "练习这条标准，让这个产品成为一个{gym}，算不上一面镜子。休谟说得毫不含糊：没有什么比{em}更能提高判断的能力，也就是对同一类作品反复、专注的审视。在他看来，品味（taste）并非一种查验一次就能裱起来挂着的天赋。它是一种能力，反复练习会变敏锐，荒废了会变迟钝。",
+    "练习这条标准，让这个产品成为一个{gym}，并非一面镜子。休谟说得毫不含糊：没有什么比{em}更能提高判断的能力，也就是对同一类作品反复、专注的审视。在他看来，品味并非一种查验一次就能裱起来挂着的天赋。它是一种能力，反复练习会变敏锐，荒废了会变迟钝。",
   "gym":
     "训练馆",
   "practice in a particular art":
@@ -323,9 +323,9 @@ const LIBRARY: Dict = {
   "The gym takes the claim literally, with the same honesty rule as everything else: an improvement you can't measure is an improvement you can't claim. Sit a threshold ladder twice in the same browser and the result screen compares the two — {strong}, so that a difference smaller than the instrument's own run-to-run wobble is reported as no change rather than as progress.":
     "训练馆按字面去理解这个主张，并遵守和其他一切相同的诚实规则：测不出的进步，就不能声称。在同一个浏览器里把阈值（threshold）阶梯做两次，结果页会把两次相互比较，{strong}，所以小于这项测试自身前后起伏的差别，会被报告为没有变化，不会被当成进步。",
   "against a noise floor we measured first":
-    "对照的是我们先测出来的噪声下限",
+    "对照的是我们事先测出的噪声底",
   "That floor is high, and saying so is the point. Two sittings on the pitch ladder have to differ by roughly {times} before the arc will call it movement; on the prestige test the label's pull has to shift by {points} points of the scale. Most retests are therefore told that nothing changed the instrument could hear — which is the honest answer, and the reason the sentence names what it would have taken instead of leaving you to guess. The delicacy trials get no arc at all: {trials} pairs cannot resolve a change smaller than {items} of them, so that screen says so and points here.":
-    "这个下限很高，照直说出来正是重点。音高阶梯上的两次测试要相差大约{times}，训练线（arc）才会称之为变化；在名气偏差测试（Prestige Test）里，标签的拉力要移动 {points} 个量表分。所以大多数重测得到的回答是，这项测试没听出任何变化；这是诚实的回答，也是为什么那句话会说出需要多大的变化，不让你去猜。细辨测试（Delicacy Trials）根本没有训练线：{trials} 对试次分辨不出小于 {items} 对的变化，所以那一屏就照直说明，并指到这里。",
+    "这个下限很高，照直说出来正是重点。音高阶梯上的两次测试要相差大约{times}，训练线才会称之为变化；在名气偏差测试（Prestige Test）里，标签的拉力要移动 {points} 个量表分。所以大多数复测得到的回答都是：这项测试没听出任何变化；这是诚实的回答，也是为什么那句话会说出需要多大的变化，不让你去猜。细辨测试（Delicacy Trials）根本没有训练线：{trials} 对试次分辨不出小于 {items} 对的变化，所以那一屏就照直说明，并指到这里。",
   "{n} times":
     "{n} 倍",
   "What a second sitting genuinely buys is {precision}. The wobble of an average falls as the square root of the number of sittings, so the more often you come back, the smaller a real change has to be before this can see it. That is the whole return: not a badge or a streak, but a number that gets harder to argue with.":
@@ -347,11 +347,11 @@ const LIBRARY: Dict = {
   "95%, 70%, or 50%":
     "95%、70% 或 50%",
   "One honesty note, because it's the house rule: confidence input never inflates or weights your scores — it's measured {against} your accuracy, never blended into it. A confident wrong answer costs you calibration; it cannot buy you points. The gym opens with {prestige}; the full measurement rules live in the {methodology}.":
-    "说明一件诚实的事，因为这是这里的规矩：你输入的把握从不抬高你的分数，也不给它加权；它是{against}你的准确率来测量的，从不掺进去。一个有把握的错误答案，会让你在校准上失分；它买不来分数。训练馆从{prestige}开始；完整的测量规则写在{methodology}里。",
+    "关于诚实，有一点要说明，因为这是这里的规矩：你输入的把握从不抬高你的分数，也不给它加权；它是{against}你的准确率来测量的，从不掺进去。一个有把握的错误答案，会让你在校准上失分；它买不来分数。训练馆从{prestige}开始；完整的测量规则写在{methodology}里。",
   "against":
     "对照着",
   "The argument the reading rests on, with the weakest step marked.":
-    "解读（the reading）所依托的论证，最弱的一步已经标出。",
+    "解读所依托的论证，最弱的一步已经标出。",
 };
 
 export default LIBRARY;

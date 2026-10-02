@@ -58,7 +58,7 @@ export function shareTextForZh(result: BiasResult): string {
 
 export const CUE_IN_YOUR_WORK_ZH =
   "在你自己的作品里，标签很少是作曲家的名字。" +
-  "它是哪个模型生成的、你在提示词（prompt）上花了多久，以及你是否已经跟别人说过，这一版就是好的那一版。";
+  "它是哪个模型生成的、你在提示词上花了多久，以及你是否已经跟别人说过，这一版就是好的那一版。";
 
 export function whatToDoAboutItZh(verdict: BiasVerdict): string {
   if (verdict === "contrarian") {

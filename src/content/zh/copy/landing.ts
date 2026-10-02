@@ -15,9 +15,9 @@ const ZH_NUMERALS = ["零", "一", "两", "三", "四", "五", "六", "七", "�
 export function landingLeadZh(machineCount: number): string {
   const n = ZH_NUMERALS[machineCount] ?? String(machineCount);
   return (
-    `测的并非人格，也并非氛围。${n}台机器，各测一样休谟认为真正的评判者必须具备的东西：` +
+    `这里测的并非人格，也并非氛围。${n}台机器，各测一样休谟认为真正的评判者必须具备的东西：` +
     "名气能不能左右你的评分；没人告诉你损伤在哪里时，你的耳朵能不能抓到它；" +
-    "损伤小到什么程度你就听不出了；你听出的差距，是否落在评论家当初听出的地方。"
+    "损伤小到什么程度你就听不出了；你听出的差距，是否落在评论家拉开差距的地方。"
   );
 }
 
@@ -30,13 +30,13 @@ const LANDING: Dict = {
 
   // The opening (src/content/landing.ts).
   "Your last month of listening holds a pattern you have probably never put into words.":
-    "你过去一个月的收听里藏着一种规律（pattern），你多半从没把它说出来过。",
+    "你过去一个月的收听里藏着一种规律，你多半从没把它说出来过。",
   "So does every algorithm that has ever recommended you a song. It just never tells you, because what it knows about you is a row of numbers no person can read.":
-    "给你推荐过歌的每一个算法，也都握着这种规律。它只是从来不告诉你，因为它对你的了解，是一行没有人读得懂的数字。",
+    "给你推荐过歌的每一个算法，也都掌握着这种规律。只是它从来不告诉你，因为它对你的了解是一行数字，没有人读得懂。",
   "Here a month of someone's listening is read back line by line, with the plays behind every line. Keep what fits, reject what doesn't, and carry what is left into a prompt.":
-    "一个人一个月的播放记录（plays），逐条读出，每条附上依据（receipt）。相符的留下，不符的删去，剩下的带进提示词（prompt）。",
+    "一个人一个月的播放记录，逐条读出，每条附上依据。相符的留下，不符的删去，剩下的带进提示词。",
   "Try it on a month that isn't yours.": "用别人的一个月试试。",
-  "THE HEARING TESTS": "听辨测试（hearing tests）",
+  "THE HEARING TESTS": "听辨测试",
   "Then find out which words in a prompt you can actually hear.": "然后，看看提示词里哪些词你真的听得出来。",
   "You can be wrong, and that is the point.": "你可能会错，测试的意义就在这里。",
   "Something sounds wrong.": "听着有点不对劲。",
@@ -48,7 +48,7 @@ const LANDING: Dict = {
   "The Prestige Test": "名气偏差测试（Prestige Test）",
   "Freedom from prejudice": "不受偏见左右（freedom from prejudice）",
   "Rate {count} clips blind, then again with the famous names attached — asked a different way, in a different order. Your number is the gap.":
-    "先盲听给 {count} 段录音打分，再贴上有名的名字重打一遍，问法不同，顺序也不同。差距就是你的数字。",
+    "先盲听给 {count} 段录音打分，再附上知名艺人的名字重打一遍，问法不同，顺序也不同。前后的差距就是你的数字。",
   "~{minutes} min · {clips} clips": "约 {minutes} 分钟 · {clips} 段录音",
   "The Delicacy Trials": "细辨测试（Delicacy Trials）",
   "Delicacy of taste": "鉴赏力（delicacy of taste）",
@@ -58,12 +58,12 @@ const LANDING: Dict = {
   "The Threshold Test": "阈值测试（Threshold Test）",
   "Delicacy of taste · measured": "鉴赏力 · 实测（MEASURED）",
   "The damage gets smaller every time you catch it, and bigger every time you miss. It stops at the size where you stop being sure — and that size is your number.":
-    "你每抓到一次，损伤就变小一点；每漏掉一次，就变大一点。它停在你开始拿不准的那个大小上，那个大小就是你的数字。",
+    "你每听出一次，损伤就变小一点；每漏听一次，就变大一点。损伤最后停在你开始拿不准的大小，这个大小就是你的数字。",
   "14-26 min · a number in cents, ms or kbps": "14 到 26 分钟 · 一个以音分（cents）、ms 或 kbps 计的数字",
   "The Ranking Test": "排序测试（Ranking Test）",
   "Comparison · heard": "比较 · 凭耳朵",
   "A critic ranked {count} works against each other. Rate them with your ears alone and find out whether your gaps fall where his did — agreeing with him is not the point, and is not measured.":
-    "一位评论家给 {count} 部作品排过先后。只凭耳朵给它们打分，看你的评分差距是否落在他拉开的地方；和他意见一致并非目的，也不会被测量。",
+    "一位评论家给 {count} 部作品排过先后。只凭耳朵给它们打分，看你的评分差距是否落在他拉开差距的地方；和他意见一致并非目的，也不会被测量。",
   "~{minutes} min · {works} works, {seconds} seconds each": "约 {minutes} 分钟 · {works} 部作品，每段 {seconds} 秒",
 
   // The floor (src/app/GymFloor.tsx).
@@ -74,7 +74,7 @@ const LANDING: Dict = {
   "Tap again to start →": "再点一次开始 →",
   Choose: "选择",
   "Tap it again when you're ready. Nothing has started yet.": "准备好了就再点一次。现在什么都还没开始。",
-  "Free · no sign-up · headphones help · pick one, the room follows": "免费 · 无须注册 · 戴耳机更好 · 选一台，房间跟着换颜色",
+  "Free · no sign-up · headphones help · pick one, the room follows": "免费 · 无须注册 · 戴耳机效果更好 · 选一台，房间随之变色",
 };
 
 export default LANDING;

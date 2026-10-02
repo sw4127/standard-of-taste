@@ -10,22 +10,22 @@ import type { Dict } from "@/lib/i18n";
 
 const SPREAD: Dict = {
   // Page metadata and structured data (src/app/spread/page.tsx).
-  "The Ranking Test — do your gaps fall where a critic's did?": "排序测试：你的评分差距，是否落在评论家拉开的地方？",
+  "The Ranking Test — do your gaps fall where a critic's did?": "排序测试：你的评分差距，是否落在评论家拉开差距的地方？",
   "Six works a published critic ranked against each other, forty seconds each. Two numbers: how far apart your ratings fell on the pairs he separated, and on the pairs he did not. Agreement is never scored.":
-    "一位发表过评论的评论家给六部作品排过先后，每段 40 秒。两个数字：在他分开的配对上，你的评分相差多远；在他没有分开的配对上，又相差多远。是否同意他，从不计分。",
+    "一位公开发表过排名的评论家给六部作品排过先后，每段 40 秒。结果是两个数字：在他拉开的配对上，你的评分相差多远；在他没有拉开的配对上，又相差多远。你是否同意他，从不计分。",
   "Six works a published critic ranked against each other. Whether your ratings move where his judgment moved — never whether you agree with him.":
-    "一位发表过评论的评论家给六部作品排过先后。看你的评分是否在他判断拉开的地方拉开，从不看你是否同意他。",
+    "一位公开发表过排名的评论家给六部作品排过先后。这里看你的评分是否在他判断拉开的地方拉开，从不看你是否同意他。",
   "The Ranking Test": "排序测试（Ranking Test）",
   "Standard of Taste": "鉴衡",
   "Six Beethoven works from a published critic's ranked list, played as forty-second excerpts and rated blind. Reports the mean gap between ratings across pairs the critic placed ten or more positions apart, beside the same figure across pairs he placed within three, both read against what an indifferent rater produces. Agreement with the critic is never scored and cannot be computed: only the distance between his positions is used, never their order.":
-    "从一位发表过评论的评论家的排名中选出六部贝多芬作品，各截取 40 秒，盲听打分。报告评论家排名相隔 10 位以上的配对上的平均差距，并列出相隔 3 位以内的配对上的同一数字，两者都与随手乱打分的人会得出的数字对照。是否同意评论家，从不计分，也算不出来：这里只用他排名之间的距离，从不用先后顺序。",
+    "六部贝多芬作品选自一位评论家公开发表的排名，各截取 40 秒，盲听打分。结果报告两个平均差距：一个来自评论家排名相隔 10 位以上的配对，一个来自相隔 3 位以内的配对，两者都与随意打分会得出的数字对照。与评论家的一致程度从不计分，也无法计算：这里只用他排名之间的距离，从不用先后顺序。",
 
   // The frame.
-  "A critic ranked these works. Do your gaps fall where his did?": "一位评论家给这些作品排过先后。你的评分差距，会落在他拉开的地方吗？",
+  "A critic ranked these works. Do your gaps fall where his did?": "一位评论家给这些作品排过先后。你的评分差距，会落在他拉开差距的地方吗？",
   "{count} pieces of music, {seconds} seconds each. Rate what you hear, and nothing else. A published critic once ranked all of these against each other — some he placed far apart, some he bracketed together.":
-    "{count} 段音乐，每段 {seconds} 秒。只给你听到的东西打分。一位发表过评论的评论家，曾把这些作品彼此排过先后：有的相隔很远，有的挨在一起。",
+    "{count} 段音乐，每段 {seconds} 秒。只给你听到的东西打分。一位公开发表过排名的评论家曾给这些作品排过先后：有的相隔很远，有的挨在一起。",
   "What comes out is two numbers: how far apart your ratings fell on the pairs he separated, and how far apart they fell on the pairs he did not. {strong} Nothing here can even see which of two works he ranked higher.":
-    "结果是两个数字：在他分开的配对上，你的评分相差多远；在他没有分开的配对上，又相差多远。{strong}这里甚至看不到他把两部作品中的哪一部排得更高。",
+    "结果是两个数字：在他拉开的配对上，你的评分相差多远；在他没有拉开的配对上，又相差多远。{strong}两部作品中他把哪一部排得更高，这里根本看不到。",
   "Agreeing with him is not the point and is not measured.": "和他意见一致并非目的，也不会被测量。",
   "About {minutes} minutes of listening. Headphones help.": "大约 {minutes} 分钟的聆听。戴耳机更好。",
   "Start listening": "开始聆听",
@@ -37,7 +37,7 @@ const SPREAD: Dict = {
   "Had you heard this before?": "你以前听过这一段吗？",
   "Yes, I know it": "听过",
   "No, it is new": "没听过，是新的",
-  "Saying yes leaves the clip out of the result. It is never counted against you.": "回答听过，这一段就不计入结果。这绝不会算作你的失分。",
+  "Saying yes leaves the clip out of the result. It is never counted against you.": "回答听过，这一段就不计入结果。这不会让你失分。",
   "How good is it?": "它有多好？",
   "Rate {v}": "打 {v} 分",
   "Nothing there": "毫无可取",
@@ -47,13 +47,13 @@ const SPREAD: Dict = {
   "Where your gaps fell": "你的差距落在哪里",
   "across works he placed far apart": "他排得相隔很远的作品之间",
   "across works he bracketed together": "他排得挨在一起的作品之间",
-  "Rating at random gives {value} on both.": "随机评分在两者上都得到 {value}。",
+  "Rating at random gives {value} on both.": "随机打分在两者上都会得到 {value}。",
   "How this is measured": "测量方法",
 
   // The other machines (src/components/OtherMachines.tsx).
   "THE OTHER MACHINES": "其他机器",
   "The Prestige Test": "名气偏差测试（Prestige Test）",
-  "How far a famous name moves what you hear.": "一个有名的名字，能把你听到的东西挪动多远。",
+  "How far a famous name moves what you hear.": "一个响亮的名字，能让你听到的东西偏移多远。",
   "The Delicacy Trials": "细辨测试（Delicacy Trials）",
   "One clip of each pair is quietly damaged. Find it, then name what is wrong.": "每一对录音里，有一段被悄悄损坏过。把它找出来，再说出哪里出了问题。",
   "The Threshold Test": "阈值测试（Threshold Test）",

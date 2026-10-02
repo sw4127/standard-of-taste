@@ -14,7 +14,7 @@ const METHOD: Dict = {
   // Metadata and chrome.
   "The method — Standard of Taste": "方法 · 鉴衡",
   "How this project is run: the rules it refuses work under, what each refusal cost, and the worst finding it has recorded against itself. Every claim cites a document in the repository.":
-    "这个项目怎样运作：它拒绝在什么规则下工作，每一次否决付出了什么代价，以及它记下的对自己最不利的发现。每一条陈述都注明代码仓库里的一份文件。",
+    "这个项目怎样运作：它拒绝在什么规则下工作，每一次否决付出了什么代价，以及它记下的对自己最不利的发现。每一条陈述都注明出自代码仓库里的哪份文件。",
   "The rules, the refusals, the price each one carried, and the finding this project recorded against itself.":
     "规则、否决、每一次否决的代价，以及这个项目记下的对自己不利的发现。",
   "Terms · Privacy": "条款 · 隐私",
@@ -22,15 +22,15 @@ const METHOD: Dict = {
   "Refused under {rule}": "否决的理由：{rule}",
   "What it cost. ": "代价。",
   "{count} refusals": "{count} 项否决",
-  "{count} reversals": "{count} 次改判（reversal）",
-  "{count} reversal": "{count} 次改判（reversal）",
+  "{count} reversals": "{count} 次改判",
+  "{count} reversal": "{count} 次改判",
   "Not a refusal. A constraint this project held, then deliberately relaxed — with what the relaxation bought and what it cost. A page that only ever tightens is a page whose rules were never tested against anything the project wanted.":
     "这里记的并非否决。它们是这个项目曾经坚持、后来有意放宽的约束，附上放宽换来了什么、付出了什么。一个只会收紧的页面，它的规则从来没有和项目想要的东西较量过。",
   "Relaxed: {rule}": "放宽的规则：{rule}",
   "What it bought. ": "换来的。",
   "The worst finding against itself": "对自己最不利的发现",
   "A review process is only worth describing if it catches things. This is the worst thing this one has caught, dated, with the rule it broke — and it is still open.":
-    "一套审查流程，只有真能抓到问题才值得描述。这是它抓到的最糟的一件事，注明日期和违反的规则，至今没有收尾。",
+    "一套审查流程，只有真能抓到问题才值得描述。这是它抓到的最糟的一件事，注明日期和违反的规则，至今仍未了结。",
   "{date} · broke {rule}": "{date} · 违反 {rule}",
   "Since then. ": "此后。",
   "at work in commit {commit}": "在提交 {commit} 中可见其运作",
@@ -39,12 +39,12 @@ const METHOD: Dict = {
   "THE HOUSE RULES · HOW THIS IS RUN": "规矩 · 这个项目怎么运作",
   "What this project refused, and what each refusal cost.": "这个项目否决了什么，每一次否决付出了什么代价。",
   "Start with the reading; it is the product. This page is for afterwards: how it was built — by one owner and an AI engineer, under a written constitution, two review protocols, and a decision record that has repeatedly deleted finished work for being untrue rather than for being broken.":
-    "先看解读（the reading），它就是产品本身。这一页留到之后再看，讲的是它怎样建成：建它的是一位项目负责人和一位 AI 工程师，按照一部成文的项目章程（constitution，即 CLAUDE.md）、两套审查协议和一份决策记录；这份记录多次删掉已经完成的工作，理由是它说的不真，并非它坏了。",
+    "先看解读，它就是产品本身。这一页留到之后再看，讲的是它怎样建成：建它的是一位项目负责人和一位 AI 工程师，按照一部成文的项目章程（constitution，即 CLAUDE.md）、两套审查协议和一份决策记录；这份记录多次删掉已经完成的工作，理由是它说的不真，并非它坏了。",
   "Any project can list what it built. This page lists what it refused, because a refusal is the only decision with a verifiable cost attached, and because a page of things that went well is a brochure. Each block below names the document it comes from. Those documents are in the repository, and a test opens every one of them on every run to check the quoted passage is still there — if a source is reworded, this page fails the build instead of quietly becoming false.":
-    "任何项目都能列出自己建了什么。这一页列的是它否决了什么，因为在所有决定里，只有拒绝附带可以核查的代价，也因为一页只写顺利之事的纸，只是宣传册。下面每一块都注明了出处文件。这些文件都在代码仓库里，每次运行都有一个测试逐一打开它们，核对引用的段落是否还在；来源一旦改写，测试就会失败，这一页随之发布不了，不会悄悄变成假话。",
+    "任何项目都能列出自己建了什么。这一页列的是它否决了什么，因为在所有决定里，只有拒绝附带可以核查的代价，也因为只写顺利之事的页面，不过是宣传册。下面每一块都注明了出处文件。这些文件都在代码仓库里，每次运行都有一个测试逐一打开它们，核对引用的段落是否还在；来源一旦改写，测试就会失败，这一页随之发布不了，不会悄悄变成假话。",
   refused: "否决",
   "Standing facts on this page last checked {asOf}. The library argues why the product exists; the Lab holds the measurements behind the hearing tests, including a page listing what the instruments cannot do.":
-    "本页的常设事实最后核对于 {asOf}。资料室论证了产品为什么存在；实验室存放听辨测试（hearing tests）背后的测量，其中有一页列出了各项测试做不到的事。",
+    "本页的常设事实最后核对于 {asOf}。资料室论证了产品为什么存在；实验室存放听辨测试背后的测量，其中有一页列出了各项测试做不到的事。",
   "why the product exists": "产品为什么存在",
   "a page listing what the instruments cannot do": "一页列出了各项测试做不到的事",
 
@@ -52,7 +52,7 @@ const METHOD: Dict = {
   "For a product manager": "写给产品经理",
   "How a decision gets made, and stays made": "一个决定怎样做出，又怎样不被推翻",
   "The project runs on a written constitution and two review protocols. What is unusual is not that they exist. It is that they constrain the engineer more than the owner, and that they are enforced by tests rather than by good intentions.":
-    "项目按照一部成文的章程和两套审查协议运作。它们的存在本身并不稀奇。稀奇的是，它们对工程师的约束多于对负责人的约束，而且靠测试执行，并非靠善意。",
+    "项目按照一部成文的章程和两套审查协议运作。它们的存在本身并不稀奇。稀奇之处在于，它们对工程师的约束多于对负责人的约束，而且靠测试执行，并非靠善意。",
   "For a business analyst": "写给业务分析师",
   "How a written requirement stays true": "一条成文的要求怎样保持为真",
   "Documentation drifting away from the system it describes is the normal condition of software, and it is usually filed under untidiness. Here it is a defect with a failing test attached — because a document describing a gate nobody performs sends the next reader to ask for a sign-off that cannot be given.":
@@ -60,7 +60,7 @@ const METHOD: Dict = {
   "For a data analyst": "写给数据分析师",
   "How a number earns the right to be shown": "一个数字怎样赢得被展示的资格",
   "There are no real respondents yet. That single fact governs every figure on this site, and the interesting part is what it forbids rather than what it permits.":
-    "目前还没有真实的作答者。这一个事实支配着本站的每一个数字，值得看的是它禁止了什么，并非它允许了什么。",
+    "目前还没有真实的作答者。这一个事实支配着本站的每一个数字，有意思的地方在于它禁止了什么，并非它允许了什么。",
 
   // The claims.
   "The guardrail this project runs on is not a preference for simplicity. It is written down as a cost: complexity is a cost, not a value — and either party may object by citing it.":
@@ -72,9 +72,9 @@ const METHOD: Dict = {
   "Every request for a decision goes in one fixed block at the end of a reply, and anything outside it does not count: any ask NOT in this block is deemed not asked.":
     "每一个请求决定的问题，都放在回复末尾一个固定的区块里，区块之外的一概不算：没写进这个区块的请求，视为没有提出。",
   "Both protocols are aimed at the same weakness, and it is not incompetence — it is ownership. A reviewer goes soft on work they built, so the rules shrink what is under review and force the ask into a place it cannot be buried.":
-    "两套协议针对的是同一个弱点，这个弱点在于审查的是自己做的东西，与能力无关。审查者对自己建的东西会手软，所以规则缩小每次审查的范围，并把请求逼到一个埋不掉的位置。",
+    "两套协议针对同一个弱点：审查的对象是自己做的东西，问题出在这里，与能力无关。审查者对自己建的东西会手软，所以规则缩小每次审查的范围，并把请求逼到一个埋不掉的位置。",
   "The constitution constrains how the engineer must write, not what the owner must know: explain tradeoffs in plain language and teach as you go. Every option put to them has to be legible without the jargon, or the ruling that comes back is a rubber stamp on a sentence nobody understood — so the rule is enforced against the writer, and a decision taken on an unread sentence is the failure it exists to prevent.":
-    "项目章程约束的是工程师必须怎样写，并非负责人必须懂什么：用平实的语言解释取舍，边做边讲。交给负责人的每一个选项，不靠术语也要读得懂，否则回来的裁定（ruling）只是给一句没人看懂的话盖章；所以这条规则针对写的人执行，一个基于没读懂的句子做出的决定，正是它要防止的失败。",
+    "项目章程约束的是工程师必须怎样写，并非负责人必须懂什么：用平实的语言解释取舍，边做边讲。交给负责人的每一个选项，不靠术语也要读得懂，否则回来的裁定只是给一句没人看懂的话盖章；所以这条规则针对写的人执行，一个基于没读懂的句子做出的决定，正是它要防止的失败。",
   "Each open question carries a default that applies if nobody answers, and the default is constrained rather than chosen: Defaults must be reversible choices, never one-way doors (pricing, data schema, deletions = no default, PM must answer). Silence can therefore only ever produce the undoable option.":
     "每个悬而未决的问题都带一个默认选项，没人回答时就按它执行；默认选项受约束，并非随意挑选：默认必须是可撤销的选择，永远不能是单向门（定价、数据结构、删除一律没有默认，必须由负责人回答）。因此，沉默只可能产生可以撤销的选项。",
   "Two documents once described a quality gate that had been abolished months earlier, as though it were still owed. The rule that came out of it is stated as a matter of truth rather than tidiness: a gate nobody performs any more, written as a thing still to be done, is a false statement in the repository.":
@@ -91,22 +91,22 @@ const METHOD: Dict = {
     "测量有噪声时，产品必须把不确定性摆出来，不许藏在一个标签后面：报告区间，永远不报点，因为从有噪声的测量得出的点估计，是这个测量撑不起的论断。",
 
   // The refusals.
-  "A fifth instrument, to turn preference into words": "第五项测试：把口味（taste）变成文字",
+  "A fifth instrument, to turn preference into words": "第五项测试：把偏好变成文字",
   "N3, and the arithmetic the proposal produced about itself": "N3，以及这项提议对自己算出的账",
   "The four instruments here each have a right answer — damage you can or cannot hear, a label's pull, a critic's gaps. None of them touches the thing listeners actually report, which is that they cannot say what they like. Another was specified for exactly that: you say what you prefer, then choose blind between two versions of the same passage differing in one respect, and the product is the moment your words and your ears disagree. It was approved, sized, and killed by the first slice that did its arithmetic. A preference has no right answer, so the only measurable thing is whether blind choices agree with each other — and that takes twenty-eight of them per dimension from a decisive listener. Three dimensions is eighty-four pairs; at sixty seconds a pair, eighty-four minutes — longer than all four shipped instruments together. It had been sized against a figure a quarter that size, which engineering stated without deriving. Run against the numbers in its own specification, two of its four findings did not survive, the contradiction it existed to deliver among them. Nothing further is added to this product on easier terms than these: an instrument arrives with the arithmetic for its own sitting length, or it does not arrive.":
     "这里的四项测试各有一个正确答案：你听不听得出的损伤、一个标签的拉力、一位评论家拉开的差距。它们都碰不到听者真正反映的那件事：他们说不出自己喜欢什么。为此曾专门设计过另一项测试：你先说出自己的偏好，再在同一段音乐的两个版本之间盲选，两个版本只有一处不同；产品就是你的话和你的耳朵出现分歧的那一刻。它获得了批准、估算了规模，然后在第一个真正算账的切片里被否决。偏好没有正确答案，所以唯一能测的，是几次盲选彼此是否一致；对一位果断的听者，每个维度要选二十八次。三个维度就是八十四对；每对六十秒，就是八十四分钟，比已上线的四项测试加起来还长。它原先估算时用的数字只有实际的四分之一，而那个数字是工程方面直接给出的，没有推导。用它自己规格里的数字一跑，它的四项发现有两项没能成立，其中就包括它存在的意义所在的那个矛盾。今后任何东西加进这个产品，条件都不会比这更宽松：一项测试要么带着自己测试时长的算术到来，要么不来。",
   "The largest one on this page, and it is unpaid rather than accepted. Two findings came out of listening to people: that past listening predicts less than present and forming taste, and that almost nobody can describe their own taste in words. This product serves the first and does nothing at all for the second, which is the one with somebody in front of it. The refusal does not say that instrument was a bad idea — it says this design could not be built at a length anyone would sit, and no better design has been found. Somebody else may well find one.":
-    "这是本页最大的一笔代价，而且它没有被接受，只是还欠着。倾听人们之后得到了两条发现：过去的收听，预测力不如现在的口味和正在形成的口味；几乎没有人能用文字描述自己的口味。这个产品服务了第一条，对第二条毫无作为，而第二条的面前站着真实的人。这项否决并没有说那项测试是个坏主意，它说的是：这种设计做不到任何人愿意坐完的长度，而更好的设计还没找到。别人也许能找到。",
+    "这是本页最大的一笔代价，而且它没有被接受，只是还欠着。倾听人们之后得到了两条发现：过去的收听，预测力不如现在的品味和正在形成的品味；几乎没有人能用文字描述自己的品味。这个产品服务了第一条，对第二条毫无作为，而第二条的面前站着真实的人。这项否决并没有说那项测试是个坏主意，只是说这种设计做不到任何人愿意坐完的长度，而更好的设计还没找到。别人也许能找到。",
   "The Taste Gem — a five-faceted picture of your result": "Taste Gem：用五个切面呈现你的结果",
-  "the anti-clone clause, and the writing pass that made it unnecessary": "反克隆条款，以及让它变得多余的那次写作校订",
+  "the anti-clone clause, and the writing pass that made it unnecessary": "防同质化条款，以及让它变得多余的那次写作校订",
   "A visual was held back until the product's sentences had been through a writer, on the rule that if the sentences landed the picture was decoration. Three batches of them have now been written, applied and shipped, and every result screen ends in prose rather than in a unit. The picture would add no fact the sentences do not already carry. What it would add is five facets, most of them dark for most people — because a reader has usually taken one instrument, not four — and a shape with slots to fill in is a completion meter however carefully it is drawn. This product refuses those by name.":
-    "一个视觉设计被搁置，要等产品的句子先经过写作者的手；规则是：句子立得住，图就只是装饰。如今已有三批句子写完、用上、上线，每个结果页都以文字收尾，并非以一个单位收尾。这张图不会带来任何句子里没有的事实。它会带来的是五个切面，其中大多数对大多数人是暗的，因为读者通常只做过一项测试，并非四项；而一个留着空位等人填满的形状，不管画得多用心，都是一个完成度进度条。这个产品点名否决这类东西。",
+    "一个视觉设计被搁置，要等产品的句子先经过写作者的手；规则是：句子立得住，图就只是装饰。如今已有三批句子写完、用上、上线，每个结果页都以文字收尾，并非停在一个带单位的数字上。这张图不会带来任何句子里没有的事实。它会带来的是五个切面，其中大多数对大多数人是暗的，因为读者通常只做过一项测试，并非四项；而一个留着空位等人填满的形状，不管画得多用心，都是一个完成度进度条。这个产品点名否决这类东西。",
   "The one thing the product will never have is an image a person can post without reading a word. Every result here has to be read to be understood, which costs the share loop most of its reach and is the second time that trade has been made deliberately: the ranked verdict went the same way. What it buys is that nothing on a result screen can be understood as a score out of five.":
     "这个产品永远不会有的一样东西，是一张人们不读一个字就能发出去的图。这里的每个结果都得读了才懂，这让分享循环失去了大部分传播力，而这已是第二次有意做出这种取舍：分级评语也是这样被撤下的。换来的是：结果页上没有任何东西能被理解成一个满分五分的分数。",
-  "The Taste Index — one number standing for a person's taste": "Taste Index：用一个数字代表一个人的品味（taste）",
+  "The Taste Index — one number standing for a person's taste": "Taste Index：用一个数字代表一个人的品味",
   "N3, and the ruling on ranked tiers that it would have repeated": "N3，以及它本会重蹈的那次关于分级的裁定",
   "The design that opened this phase ended at a single composite over five sub-scores. The five are a percentage of movement toward a label, a detection band, a threshold in cents, a count of distinguished works and a calibration score — five different units measuring five different things. Adding them requires deciding how much each is worth, and that weighting can only be argued from a population this product does not have: the cohort is zero. A number assembled from an unjustifiable weighting is not a summary of five measurements, it is a sixth claim resting on none of them. There is no Taste Index, and there will not be one.":
-    "开启这一阶段的设计，终点是五个子分数之上的一个综合分。这五个分别是：向标签靠拢的百分比、一个识别区间、一个以音分（cents）计的阈值（threshold）、分辨出的作品数，以及一个校准分，五种不同的单位测着五种不同的东西。把它们加起来，就得决定每一项值多少，而这种权重只能靠一个本产品没有的人群来论证：样本量为零。用一个无法论证的权重拼出来的数字，算不上五项测量的汇总；它是第六个论断，哪一项测量都撑不起它。Taste Index 不存在，将来也不会有。",
+    "开启这一阶段的设计，终点是五个子分数之上的一个综合分。这五个分别是：向标签靠拢的百分比、一个检出区间、一个以音分（cents）计的阈值（threshold）、分辨出的作品数，以及一个校准分，五种不同的单位测着五种不同的东西。把它们加起来，就得决定每一项值多少，而这种权重只能靠一个本产品没有的人群来论证：样本量为零。用一个无法论证的权重拼出来的数字，算不上五项测量的汇总；它是第六个论断，哪一项测量都撑不起它。Taste Index 不存在，将来也不会有。",
   "The product gave up the one thing it could have put on a share card and in a headline — a single figure a person could compare, remember and repeat. What ships instead is five readings in their own units, each meaningless outside its own context, on five screens nobody has to visit in order. That is a worse product to market and the only honest one available, and it is the same trade the six ranked tiers lost: a sharper claim given up, rather than kept in the hope nobody checked.":
     "产品放弃了本可以放进分享卡片和标题里的那一样东西：一个人们可以比较、记住、转述的数字。取而代之上线的，是五个各用自身单位的读数，离开各自的语境就毫无意义，分布在五个不必按顺序访问的页面上。这样的产品更难推销，却是唯一诚实的选项；六个分级评语输掉的也是同一种取舍：放弃一个更锋利的说法，不去保留它、指望没人核查。",
   "Six ranked verdict tiers on the Delicacy result": "细辨测试（Delicacy Trials）结果上的六个分级评语",
@@ -120,7 +120,7 @@ const METHOD: Dict = {
   "The plan was to give the assessment away and charge for the training arc. It was withdrawn in one line — there is no paid tier, and no pricing question — because a paywall on the training loop would have put the honest deliverable, whether your ear actually moved, behind the wall.":
     "原计划是免费提供评估，对训练线收费。这个计划用一句话撤回了：没有付费层级，也没有定价问题；因为在训练循环上设付费墙，会把诚实的交付物，也就是你的耳朵到底有没有进步，关在墙后面。",
   "The project gave up its only means of showing that anyone would pay for this, at a point where monetization remains a goal but as proof of commercial viability, not income. It also created upkeep nobody budgeted for: six weeks after the ruling, three published sentences still promised the tier — on two reading-room pages and in the file the product serves to AI crawlers. Writing a rule down does not enforce it.":
-    "项目放弃了唯一能证明有人愿意为此付费的手段，而当时的定位是：变现仍是目标，但作为商业可行性的证明，并非收入。它还带来了没人列进预算的维护工作：裁定六周之后，仍有三句已发布的话在承诺那个层级，两句在资料室（The Library）的页面上，一句在产品提供给 AI 爬虫的文件里。把规则写下来，并不等于执行了它。",
+    "项目放弃了唯一能证明有人愿意为此付费的手段，而当时的定位是：变现仍是目标，但作为商业可行性的证明，并非收入。它还带来了没人列进预算的维护工作：裁定六周之后，仍有三句已发布的话在承诺那个层级，两句在资料室的页面上，一句在产品提供给 AI 爬虫的文件里。把规则写下来，并不等于执行了它。",
   "The $3.99 consumer product, and the funnel built to feed it": "3.99 美元的消费级产品，以及为它搭建的漏斗",
   "memo C1 — a conclusion of record rather than a rule": "备忘录 C1：一项记录在案的结论，并非规则",
   "Viral consumer distribution for a $3.99 impulse product is dead, concluded on twenty-nine visitors across a month, with the World Cup front door spreading to nobody at all.":
@@ -138,14 +138,14 @@ const METHOD: Dict = {
   "Speaking about the person, on one surface only": "只在一个页面上谈论人本身",
   "D1 — the product describes what you did, never what you are": "D1：产品描述你做了什么，从不描述你是什么",
   "Every reading on this site is a statement about a performance. That was a rule rather than a habit: it is written into the constitution as D1, and it is why a five-tap personality verdict with no measurement behind it was killed rather than improved. On 2026-09-16 the owner relaxed it, against the engineering recommendation on file. The card that turns a measured threshold into words a person can use may speak to the reader about themselves. The amendment's own wording was that D1 is suspended for the prompt card, and for nothing else; a second named surface followed a week later, recorded below. Every instrument readout on this site still says only what you did.":
-    "本站的每一个读数，都是关于一次表现的陈述。这曾是一条规则，并非习惯：它作为 D1 写进了项目章程，也正因为它，一个背后没有任何测量的五次点击人格判定被砍掉，没有被改进。2026-09-16，负责人放宽了它，违背了记录在案的工程建议。那张把测得的阈值变成人能用的文字的卡片，可以对读者谈论读者自己。修正案的原话是：D1 只对提示卡片暂停，别处一概不变；一周后又有第二个点名的页面，记在下面。本站每一个测试读数，仍然只说你做了什么。",
+    "本站的每一个读数，都是关于一次表现的陈述。这曾是一条规则，并非习惯：它作为 D1 写进了项目章程，也正因为它，一个背后没有任何测量的五次点击人格判定被撤下，没有被改进。2026-09-16，负责人放宽了它，违背了记录在案的工程建议。那张把测得的阈值变成人能用的文字的卡片，可以对读者谈论读者自己。修正案的原话是：D1 只对提示卡片暂停，别处一概不变；一周后又有第二个点名的页面，记在下面。本站每一个测试读数，仍然只说你做了什么。",
   "The one thing here anybody would keep. The measurement ends in a threshold in cents, the number is evidence, and it had been standing in the position of the deliverable — which is why a technically sound instrument was neither enjoyable to use nor convincing to look at. A sentence that is only about a performance cannot be the thing somebody leaves with.":
     "这里唯一有人会保留下来的东西。测量的终点是一个以音分计的阈值，这个数字是证据，却一直站在交付物的位置上；所以一项技术上可靠的测试，用起来不愉快，看起来也没有说服力。一句只关于表现的话，成不了人们带走的东西。",
   "This project can no longer say that every sentence it shows is about performance. That was true, it was one of the plainest things the product could say about itself, and it is now false — the exception is real even though it is one surface wide. The constitution also gains an exception, which is complexity it did not have, and every surface built from here has to ask which side of it it falls on. The rule that survives is narrower and harder to hold: offer, do not assert.":
-    "这个项目再也不能说，它展示的每一句话都关于表现。这句话曾经为真，是产品能说出的关于自己最平实的话之一，如今却是假的：例外只有一个页面宽，但它确实存在。项目章程也多了一个例外，这是它原本没有的复杂度，此后每建一个页面，都得问它落在例外的哪一边。留下来的规则更窄，也更难守：只提示，不断言（offer, do not assert）。",
+    "这个项目再也不能说，它展示的每一句话都关于表现。这句话曾经为真，是产品能说出的关于自己最平实的话之一，如今却是假的：例外只有一个页面宽，但它确实存在。项目章程也多了一个例外，这是它原本没有的复杂度，此后每建一个页面，都得问它落在例外的哪一边。留下来的规则更窄，也更难守：只提示，不断言。",
   "A second surface that speaks about the person: the snack": "第二个谈论人本身的页面：小测验",
   "On the morning of 2026-09-23 the five-tap music snack was retired so that two sentences on this site would be true. The same day the owner restored it, on the argument that it was the part of the product carrying the product's own thesis — that taste carries cues about feeling, and that the gap between what a person's taste reveals and what they know about themselves is where insight lives. The constitution records the decision in one line: it extends the 2026-09-16 suspension to one more named surface. A reading built from that thesis later is not covered until it, too, is named.":
-    "2026-09-23 上午，五次点击的音乐小测验被撤下，为的是让本站的两句话为真。同一天，负责人又恢复了它，理由是它承载着产品自己的论点：口味带着关于感受的线索，而一个人的口味透露的东西和这个人对自己的了解之间的落差，正是领悟所在。项目章程用一句话记下这个决定：它把 2026-09-16 的暂停扩展到另一个点名的页面。之后按这个论点做出的解读，在它也被点名之前不受覆盖。",
+    "2026-09-23 上午，五次点击的音乐小测验被撤下，为的是让本站的两句话为真。同一天，负责人又恢复了它，理由是它承载着产品自己的论点：品味带着关于感受的线索，而一个人的品味透露的东西和这个人对自己的了解之间的落差，正是洞察所在。项目章程用一句话记下这个决定：它把 2026-09-16 的暂停扩展到另一个点名的页面。之后按这个论点做出的解读，在它也被点名之前不受覆盖。",
   "The part of the product people could enjoy, and the half of its thesis the instruments never reached. The instruments test whether a listener can hear; the snack is where the product speaks to what a listener might be going through — as a playful verdict that says at its own door there is no measurement behind it.":
     "产品里人们能乐在其中的那一部分，也是论点中测试从未触及的那一半。测试检验的是听者能否听出；小测验则是产品对听者可能正在经历的事说话的地方，形式是一个玩笑式的判定，并在自己门口就说明背后没有任何测量。",
   'The pivot concluded the five-tap verdict dead, and the reversal above names it as the reason D1 exists. It is back, beside the instruments. The line between a reading about the person and a measurement of a performance is now held only by naming surfaces one at a time, and the card\'s own disclosure had to narrow from "on this site" to "in the gym". One line did not move: nothing on any surface asserts anything about trauma, abuse or mental health.':
@@ -153,23 +153,23 @@ const METHOD: Dict = {
   "The snack retired again, and the reading made the product": "小测验再次撤下，解读成为产品本身",
   "D1 and D3 — the product describes what you did, and the Prestige Test was the flagship": "D1 与 D3：产品描述你做了什么，名气偏差测试（Prestige Test）曾是旗舰",
   "Hours after the snack came back, on 2026-09-23, the owner retired it for good and withdrew its exemption from D1. Its questions asked people to describe their own taste, which is the one thing the interviews behind this project found almost nobody can do, and its verdict was written by a language model. The same ruling moved the flagship: the Prestige Test is no longer the front door. A reading of a listener's recent plays is, and the four instruments become the hearing section behind it. The ruling adds the rule the reading is built under: no surface may assert a feeling. And nothing on any surface asserts anything about trauma, abuse or mental health.":
-    "小测验回来几个小时之后，同在 2026-09-23，负责人将它永久撤下，并收回它对 D1 的豁免。它的问题要人们描述自己的口味，而本项目背后的访谈发现，这件事几乎没有人做得到；它的判定还是由语言模型写的。同一项裁定挪动了旗舰：名气偏差测试不再是前门。一位听者近来播放记录（plays）的解读成了前门，四项测试成为它身后的听辨部分。这项裁定还加上了解读赖以建立的规则：任何页面都不许断言一种感受。而且，任何页面都不对创伤、虐待或心理健康作出任何断言。",
+    "小测验回来几个小时之后，同在 2026-09-23，负责人将它永久撤下，并收回它对 D1 的豁免。它的问题要人们描述自己的品味，而本项目背后的访谈发现，这件事几乎没有人做得到；它的判定还是由语言模型写的。同一项裁定挪动了旗舰：名气偏差测试不再是前门。一位听者近来播放记录的解读成了前门，四项测试成为它身后的听辨部分。这项裁定还加上了解读赖以建立的规则：任何页面都不许断言一种感受。而且，任何页面都不对创伤、虐待或心理健康作出任何断言。",
   "A front door that shows the idea the project was started for: a listener's recent taste read into lines that can be checked against the plays, argued with, and carried into a prompt. And no sentence on this site is generated by a model when a visitor arrives any more, so every one of them is a fixed template a test can read.":
-    "一扇展示项目初衷的前门：把一位听者近来的口味读成一条条文字，可以对照播放记录核对，可以反驳，可以带进提示词（prompt）。而且，访客到来时，本站再也没有任何一句话由模型生成，所以每一句都是测试读得到的固定模板。",
+    "一扇展示项目初衷的前门：把一位听者近来的品味读成一条条文字，可以对照播放记录核对，可以反驳，可以带进提示词。而且，访客到来时，本站再也没有任何一句话由模型生成，所以每一句都是测试读得到的固定模板。",
   "The snack was the one part of the product a person could enjoy without headphones, and it is gone. The reading that replaces it at the door runs on three illustrative listeners, so the first thing a visitor meets is simulated plays, labelled as such, where it used to be a measurement of the visitor. And the reversal above now records a decision that lasted less than a day.":
-    "小测验是产品里唯一不戴耳机也能乐在其中的部分，现在没有了。在门口取代它的解读，运行在三位示例听者（illustrative listener）身上，所以访客遇到的第一样东西，是标明为模拟的播放记录，而这里原先是对访客本人的测量。上面那条改判，如今记录的是一个持续不到一天的决定。",
+    "小测验是产品里唯一不戴耳机也能乐在其中的部分，现在没有了。在门口取代它的解读，运行在三位示例听者身上，所以访客遇到的第一样东西，是标明为模拟的播放记录，而这里原先是对访客本人的测量。上面那条改判，如今记录的是一个持续不到一天的决定。",
 
   // The findings.
   "N3 — nothing the data cannot support": "N3：数据撑不起的东西一概不说",
   "Before the retest arc was allowed to tell anyone their ear had moved, the size of change it can resolve was measured: the whole hazard here is that subtracting two noisy numbers manufactures progress. Simulating the same unchanged person through two sessions at the shipped length puts the floor on the pitch ladder at roughly 3.5 times — the threshold has to more than halve before the difference can be told from ordinary run-to-run wobble. On the prestige test it is eight points of the scale. The delicacy trials cannot support an arc at all: six of their fifteen pairs would have to change hands.":
-    "在允许重测线告诉任何人其耳朵有了进步之前，先测了它能分辨多大的变化：这里的全部风险在于，两个有噪声的数相减，会凭空造出进步。用上线时的测试长度，模拟同一个没有变化的人做两次测试，音高梯级上的下限约为 3.5 倍：阈值要缩小一半以上，差别才能和每次运行之间的正常波动区分开。在名气偏差测试上，这个下限是量表上的 8 分。细辨测试根本撑不起一条重测线：15 对里得有 6 对易手。",
+    "在允许复测训练线告诉任何人耳朵有了进步之前，先测了它能分辨多大的变化：这里的全部风险在于，两个有噪声的数相减，会凭空造出进步。用上线时的测试长度，模拟同一个没有变化的人做两次测试，音高梯级上的下限约为 3.5 倍：阈值要缩小一半以上，差别才能和每次运行之间的正常波动区分开。在名气偏差测试上，这个下限是量表上的 8 分。细辨测试根本撑不起复测训练线：15 对里得有 6 对易手。",
   "Most retests are therefore told, in as many words, that nothing changed the instrument could hear. That refusal is the ordinary output of this feature rather than its edge case, and the sentence names the floor in the reader's own units so it reads as a fact about the instrument rather than a verdict on them. The only thing that lowers the floor is returning: pooled across four sittings it falls to about two and a half times, which is the entire reward this product offers for coming back.":
-    "因此，大多数重测得到的回答，都明明白白地说：没有发生测试能听出的变化。这种拒绝是这项功能的常规输出，并非边缘情况；那句话用读者自己的单位说出下限，读起来是关于测试的事实，并非对读者的评判。唯一能降低下限的是再来：合并四次测试，下限降到约两倍半，这就是这个产品为回访提供的全部回报。",
+    "因此，大多数复测得到的回答，都明明白白地说：没有发生测试能听出的变化。这种拒绝是这项功能的常规输出，并非边缘情况；那句话用读者自己的单位说出下限，读起来是关于测试的事实，并非对读者的评判。唯一能降低下限的是再来：合并四次测试，下限降到约两倍半，这就是这个产品为回访提供的全部回报。",
   "N2 — the anti-theater guardrail": "N2：反作秀护栏",
   "A ruling had already been made: post the flagship instrument on its own, within one to two weeks, and do not let the second instrument gate it. The second instrument got built instead. The plan written that day says it without softening: Delicacy got built instead. That is the N2 launch-avoidance pattern, on the record. And directly above it, the diagnosis: Nothing is blocked by engineering. Everything is blocked by the launch not having happened.":
     "当时已有一项裁定：单独发布旗舰测试，一到两周之内，不许第二项测试挡住它。结果建出来的是第二项测试。那天写下的计划毫不掩饰：结果建出来的是细辨测试。这是 N2 所说的逃避发布的表现，记录在案。就在它上面，是诊断：没有任何事被工程卡住。所有事都卡在发布没有发生。",
   "As of the revision date at the foot of this page, it still has not been posted. The product has had 29 real visitors, ever. There are Zero real responses, which is why every psychometric figure in the Lab is generated from a known model and badged as simulated — the dataset that was named as the project's proprietary asset does not exist. Building is the part that feels like progress, and it is the part that was never the constraint.":
-    "截至本页底部的修订日期，它仍未发布。产品至今一共只有 29 位真实访客。真实作答为零，所以实验室（The Lab）里的每一个心理测量数字，都由已知模型生成并标为模拟；那个被称为项目专有资产的数据集并不存在。建造让人感觉在进步，而瓶颈从来都不在它。",
+    "截至本页底部的修订日期，它仍未发布。产品至今一共只有 29 位真实访客。真实作答为零，所以实验室里的每一个心理测量数字，都由已知模型生成并标为模拟；那个被称为项目专有资产的数据集并不存在。建造让人感觉在进步，而瓶颈从来都不在它。",
   "N2 — the same guardrail, applied to the response rather than the act": "N2：同一条护栏，用在回应上，并非用在行为上",
   "What happened next is the part that is harder to read, and this reading is mine rather than a recorded ruling. Within the same week the project adopted a direction that made the avoided thing optional: Resume value cannot be hostage to a launch the owner has no energy to run, and after it, The 2026-09-15 deadline is not a live constraint. That argument is sound on its own terms. It is also, in sequence, a project noticing that it was avoiding something and then removing the requirement to do it.":
     "接下来发生的事更难看懂，下面的看法出自我本人，并非记录在案的裁定。同一周内，项目采纳了一个让被逃避的事变成可选的方向：简历价值不能被一次负责人没有精力去做的发布绑架；随后又写道：2026-09-15 的截止日期已不再是一项有效约束。就其自身而言，这个论证站得住。按先后顺序看，它同时也是一个项目发现自己在逃避某件事，随即取消了做这件事的要求。",
